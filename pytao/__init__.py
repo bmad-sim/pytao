@@ -10,3 +10,7 @@ from .tao_ctypes import Tao, TaoModel, run_tao
 from .tao_ctypes.evaluate import evaluate_tao
 from .tao_interface import tao_interface
 
+
+from ._version import get_versions
+__version__ = get_versions()['version']
+del get_versions
