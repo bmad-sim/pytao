@@ -1,6 +1,8 @@
 from setuptools import setup, find_packages
 from os import path, environ
 
+import versioneer
+
 cur_dir = path.abspath(path.dirname(__file__))
 
 with open(path.join(cur_dir, 'requirements.txt'), 'r') as f:
@@ -8,7 +10,8 @@ with open(path.join(cur_dir, 'requirements.txt'), 'r') as f:
 
 setup(
     name='pytao',
-    version = '0.1.0',
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     packages=find_packages(),  
     package_dir={'pytao':'pytao'},
     url='https://www.classe.cornell.edu/bmad/tao.html',
