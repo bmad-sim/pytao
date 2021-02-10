@@ -1,0 +1,40 @@
+It is sometimes convenient to be able to run *Tao* via Python. For example,in an
+online control system environment.
+
+Installation
+============
+
+PyTao is wrapper on top of *Tao* and allow users to access it in one
+of two ways as mentioned above.
+For instructions on how to install *Tao* and *Bmad* please refer to the instructions
+available at the *Bmad* website.
+
+Since PyTao is a python package, it can be installed in a couple of different
+ways:
+
+Using setuptools
+----------------
+
+.. code-block:: bash
+
+    python setup.py install
+
+Using pip
+---------
+
+.. code-block:: bash
+
+    # From PyPI distribution
+    pip install pytao
+
+    # or from the source folder
+    pip install .
+
+Using conda
+-----------
+
+.. code-block:: bash
+
+    conda install -c conda-forge pytao
+
+
