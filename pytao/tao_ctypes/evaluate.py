@@ -1,5 +1,5 @@
-from pytao import run_tao
-from pytao.misc.csr import parse_csr_wake, write_csr_wake_data_h5
+from .core import run_tao
+from ..misc.csr import parse_csr_wake, write_csr_wake_data_h5
 
 from .tools import fingerprint
 
