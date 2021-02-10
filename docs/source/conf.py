@@ -64,3 +64,8 @@ html_static_path = ['_static']
 autoapi_dirs = ['../../pytao']
 
 autoapi_root = 'dev_docs/api'
+
+# -- Options for nbsphinx extension -------------------------------------------
+
+nbsphinx_execute = 'never'
+
