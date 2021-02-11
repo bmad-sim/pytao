@@ -4,3 +4,4 @@ sphinxcontrib-napoleon
 nbsphinx
 nbsphinx-link
 sphinx-autoapi
+astroid >=2.4.0
