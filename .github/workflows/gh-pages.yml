@@ -18,29 +18,17 @@ jobs:
         python-version: [3.7]
     steps:
       - uses: actions/checkout@v2
-      
-      - name: Set up conda
-        uses: s-weigand/setup-conda@v1
-        with:
-          update-conda: true
-          python-version: ${{ matrix.python-version }}
-          conda-channels: conda-forge
-      - name: Configure conda
+      - name: Install dependencies
         run: |
-          conda info
-          conda config --set always_yes yes --set changeps1 no
-          conda config --add channels conda-forge
-          conda config --set channel_priority strict
-          conda install --file docs-requirements.txt
+          pip3 install -r docs-requirements.txt
       - name: Build Docs
         run: |
           pushd docs
-          SPHINXOPTS="-vvv" make html
+          make html
           popd
-
-      - name: Deploy
+      - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
-        if: github.ref != 'refs/heads/master'
+        if: github.ref == 'refs/heads/master'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/build/html/
