@@ -1,11 +1,6 @@
-It is sometimes convenient to be able to run *Tao* via Python. For example,in an
-online control system environment.
-
 Installation
 ============
 
-PyTao is wrapper on top of *Tao* and allow users to access it in one
-of two ways as mentioned above.
 For instructions on how to install *Tao* and *Bmad* please refer to the instructions
 available at the *Bmad* website.
 
