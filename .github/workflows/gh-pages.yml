@@ -3,7 +3,10 @@ name: Publish Documentation
 on:
   push:
     branches:
-      - master  # Set a branch name to trigger deployment
+      - master
+  pull-request:
+    branches:
+      - master
 
 jobs:
   deploy:
@@ -32,11 +35,12 @@ jobs:
       - name: Build Docs
         run: |
           pushd docs
-          make clean html
+          SPHINXOPTS="-vvv" make html
           popd
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
+        if: github.ref != 'refs/heads/master'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/build/html/
