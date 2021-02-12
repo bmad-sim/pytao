@@ -3,7 +3,10 @@ name: Publish Documentation
 on:
   push:
     branches:
-      - master  # Set a branch name to trigger deployment
+      - master
+  pull_request:
+    branches:
+      - '**'
 
 jobs:
   deploy:
@@ -15,28 +18,19 @@ jobs:
         python-version: [3.7]
     steps:
       - uses: actions/checkout@v2
-      
-      - name: Set up conda
-        uses: s-weigand/setup-conda@v1
-        with:
-          update-conda: true
-          python-version: ${{ matrix.python-version }}
-          conda-channels: conda-forge
-      - name: Configure conda
+      - name: Install dependencies
         run: |
-          conda info
-          conda config --set always_yes yes --set changeps1 no
-          conda config --add channels conda-forge
-          conda config --set channel_priority strict
-          conda install --file docs-requirements.txt
+          sudo apt-get install pandoc -y
+          pip3 install -U setuptools wheel
+          pip3 install -U -r docs-requirements.txt
       - name: Build Docs
         run: |
           pushd docs
-          make clean html
+          python3 -m sphinx -b html source build
           popd
-
-      - name: Deploy
+      - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
+        if: github.ref == 'refs/heads/master'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/build/html/
