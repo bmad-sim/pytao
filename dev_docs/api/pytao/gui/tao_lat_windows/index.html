@@ -1,0 +1,519 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pytao.gui.tao_lat_windows &mdash; PyTao 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="pytao.gui.tao_misc_windows" href="../tao_misc_windows/index.html" />
+    <link rel="prev" title="pytao.gui.tao_interface" href="../tao_interface/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> PyTao
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../user_docs/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../user_docs/interfaces.html">Scripting Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../user_docs/gui/index.html">Graphical Interface</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/basic.html">PyTao basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/advanced.html">PyTao advanced usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/lattice.html">Tao python lattice functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/bunch.html">Bunch commands for pyTao</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/data.html">Data command examples</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.gui</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../misc/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.misc</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tao_ctypes/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tao_pexpect/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_pexpect</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../util/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.util</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../development.html">Development Guidelines</a></li>
+</ul>
+<p class="caption"><span class="caption-text">External Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/bmad-sim/pytao">PyTao GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.classe.cornell.edu/bmad">Bmad website</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.classe.cornell.edu/bmad/tao.html">Tao website</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">PyTao</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">API Reference</a> &raquo;</li>
+        
+          <li><a href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao</span></code></a> &raquo;</li>
+        
+          <li><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.gui</span></code></a> &raquo;</li>
+        
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.gui.tao_lat_windows</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../../../_sources/dev_docs/api/pytao/gui/tao_lat_windows/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="module-pytao.gui.tao_lat_windows">
+<span id="pytao-gui-tao-lat-windows"></span><h1><a class="reference internal" href="#module-pytao.gui.tao_lat_windows" title="pytao.gui.tao_lat_windows"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.gui.tao_lat_windows</span></code></a><a class="headerlink" href="#module-pytao.gui.tao_lat_windows" title="Permalink to this headline">¶</a></h1>
+<p>Provides windows for viewing the lattice and editting element attributes</p>
+<div class="section" id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.gui.tao_lat_windows.tao_ele_window" title="pytao.gui.tao_lat_windows.tao_ele_window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tao_ele_window</span></code></a></p></td>
+<td><p>Window for displaying and modifying element info.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pytao.gui.tao_lat_windows.tao_multipole_frame" title="pytao.gui.tao_lat_windows.tao_multipole_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tao_multipole_frame</span></code></a></p></td>
+<td><p>Displays multipole information (output of a</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.gui.tao_lat_windows.tao_lattice_window" title="pytao.gui.tao_lat_windows.tao_lattice_window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tao_lattice_window</span></code></a></p></td>
+<td><p>Shows lattice elements in a read-only table view</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pytao.gui.tao_lat_windows.tao_ele_browser" title="pytao.gui.tao_lat_windows.tao_ele_browser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tao_ele_browser</span></code></a></p></td>
+<td><p>Very similar to the tao_lattice_window, but is</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="pytao.gui.tao_lat_windows.tao_ele_window">
+<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_lat_windows.</code><code class="sig-name descname">tao_ele_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">pipe</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_ele_window" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../tao_base_windows/index.html#pytao.gui.tao_base_windows.tao_list_window" title="pytao.gui.tao_base_windows.tao_list_window"><code class="xref py py-class docutils literal notranslate"><span class="pre">pytao.gui.tao_base_windows.tao_list_window</span></code></a></p>
+<p>Window for displaying and modifying element info.
+default specifies the element that should be
+displayed when the window is created
+Format for default: [universe, branch, element, base/model/design]</p>
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_ele_window.refresh">
+<code class="sig-name descname">refresh</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ask</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_ele_window.refresh" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is where most of the element information is actually created</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_ele_window.close_cmd">
+<code class="sig-name descname">close_cmd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_ele_window.close_cmd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ask the user to save any unsaved changes before closing</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_ele_window.s_callback">
+<code class="sig-name descname">s_callback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_ele_window.s_callback" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_ele_window.show">
+<code class="sig-name descname">show</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_ele_window.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grids the parameter frame with given index to the body frame</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_ele_window.h_callback">
+<code class="sig-name descname">h_callback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_ele_window.h_callback" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_ele_window.hide">
+<code class="sig-name descname">hide</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_ele_window.hide" title="Permalink to this definition">¶</a></dt>
+<dd><p>Un-grids the paramter frame with the given index</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_ele_window.ele_set">
+<code class="sig-name descname">ele_set</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">refresh_self</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_ele_window.ele_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs set commands for all the parameter frames and refreshes the window
+This window will only be refreshed if refresh_self=True</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_ele_window.check_for_changes">
+<code class="sig-name descname">check_for_changes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_ele_window.check_for_changes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the current element has unsaved changes</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pytao.gui.tao_lat_windows.tao_multipole_frame">
+<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_lat_windows.</code><code class="sig-name descname">tao_multipole_frame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">tao_output</span></em>, <em class="sig-param"><span class="n">pipe</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_multipole_frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pytao.gui.tao_base_windows.tk.Frame</span></code></p>
+<p>Displays multipole information (output of a
+python ele:multipoles or ele:elec_multipoles
+command in a table with certain elements editable
+parent: the parent widget of this frame
+tao_output: the raw, unfiltered output of the tao command that gave</p>
+<blockquote>
+<div><p>the multipole information</p>
+</div></blockquote>
+<p>pipe: tao_interface object</p>
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_multipole_frame.show_all_orders">
+<code class="sig-name descname">show_all_orders</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_multipole_frame.show_all_orders" title="Permalink to this definition">¶</a></dt>
+<dd><p>Expands the table to include all orders of multipoles</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_multipole_frame.set_params">
+<code class="sig-name descname">set_params</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">set_str</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_multipole_frame.set_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_multipole_frame.check_for_changes">
+<code class="sig-name descname">check_for_changes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_multipole_frame.check_for_changes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pytao.gui.tao_lat_windows.tao_lattice_window">
+<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_lat_windows.</code><code class="sig-name descname">tao_lattice_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">pipe</span></em>, <em class="sig-param"><span class="n">switches</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_lattice_window" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../tao_base_windows/index.html#pytao.gui.tao_base_windows.Tao_Toplevel" title="pytao.gui.tao_base_windows.Tao_Toplevel"><code class="xref py py-class docutils literal notranslate"><span class="pre">pytao.gui.tao_base_windows.Tao_Toplevel</span></code></a></p>
+<p>Shows lattice elements in a read-only table view
+with an interface to select which rows/columns
+are displayed</p>
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_lattice_window.save_template">
+<code class="sig-name descname">save_template</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_lattice_window.save_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes the current switches to the file in self.template_file
+using the name given in self.temp_save.tk_var (if any)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_lattice_window.temp_file_load">
+<code class="sig-name descname">temp_file_load</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_lattice_window.temp_file_load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tries to load the specified template file, and creates an OptionMenu to pick
+from defined templates if successful.  Also creates a save template button
+and entry for the name
+self.temp_dict is a dictionary whose keys are the names of templates and
+whose values are the switches for those templates</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_lattice_window.temp_chooser_callback">
+<code class="sig-name descname">temp_chooser_callback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_lattice_window.temp_chooser_callback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fills in the switches specified by the template and refreshes</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_lattice_window.col_filter_callback">
+<code class="sig-name descname">col_filter_callback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_lattice_window.col_filter_callback" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_lattice_window.ele_list_callback">
+<code class="sig-name descname">ele_list_callback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_lattice_window.ele_list_callback" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_lattice_window.open_filter_menu">
+<code class="sig-name descname">open_filter_menu</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_lattice_window.open_filter_menu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens a menu to set the various row filters</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_lattice_window.toggle_advanced">
+<code class="sig-name descname">toggle_advanced</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_lattice_window.toggle_advanced" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggles self.use_advanced and enables/disables the appropriate widgets</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_lattice_window.fill_switches">
+<code class="sig-name descname">fill_switches</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_lattice_window.fill_switches" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fills the switch widgets to reflect the values in self.switches</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_lattice_window.get_switches">
+<code class="sig-name descname">get_switches</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_lattice_window.get_switches" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scans all widgets to get the switches that will be used</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_lattice_window.refresh">
+<code class="sig-name descname">refresh</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_lattice_window.refresh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetches the lattice table with the new table
+parameters and updates the window
+Returns the number of elements found</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_lattice_window.open_ele_window">
+<code class="sig-name descname">open_ele_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_lattice_window.open_ele_window" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens an element window for the currently selected row</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pytao.gui.tao_lat_windows.tao_ele_browser">
+<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_lat_windows.</code><code class="sig-name descname">tao_ele_browser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">pipe</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">parent_type</span></em>, <em class="sig-param"><span class="n">which</span><span class="o">=</span><span class="default_value">'name'</span></em>, <em class="sig-param"><span class="n">uni</span><span class="o">=</span><span class="default_value">'All'</span></em>, <em class="sig-param"><span class="n">autosize</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_ele_browser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pytao.gui.tao_lat_windows.tao_lattice_window" title="pytao.gui.tao_lat_windows.tao_lattice_window"><code class="xref py py-class docutils literal notranslate"><span class="pre">pytao.gui.tao_lat_windows.tao_lattice_window</span></code></a></p>
+<p>Very similar to the tao_lattice_window, but is
+intendend for selecting elements to be assigned
+to data as ele_name/ele_start_name/ele_ref_name
+root: the tk root window
+pipe: tao_interface instance
+name: the name of the d1/v1 array this is browsing for
+parent: the new_d1/v1_frame this is browsing for
+parent_type: must be either “data” or “var”
+which: must be “name”, “start_name”, or “ref_name”
+uni: a universe index as a string, or “All”
+autosize: if set True, the parent d1/v1 array’s length
+will be set to match the number of elements found,
+and the base index for the array will be set to 1 if
+it is not already set</p>
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_ele_browser.apply_callback">
+<code class="sig-name descname">apply_callback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_ele_browser.apply_callback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that good indices have been input in self.ix_min_var
+and self.ix_max_var, and then copies ele names into ele_which
+for the selected data/var indices</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_ele_browser._autosize_apply_callback">
+<code class="sig-name descname">_autosize_apply_callback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_ele_browser._autosize_apply_callback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply callback implementation when operating with autosize == True</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_ele_browser._fixed_size_apply_callback">
+<code class="sig-name descname">_fixed_size_apply_callback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_ele_browser._fixed_size_apply_callback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply callback implementation when operating with autosize == False</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pytao.gui.tao_lat_windows.tao_ele_browser.refresh">
+<code class="sig-name descname">refresh</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_lat_windows.tao_ele_browser.refresh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overload of tao_lattice_window.refresh() that prints the number
+of elements found</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="../tao_misc_windows/index.html" class="btn btn-neutral float-right" title="pytao.gui.tao_misc_windows" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../tao_interface/index.html" class="btn btn-neutral float-left" title="pytao.gui.tao_interface" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, David Sagan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

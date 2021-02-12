@@ -1,0 +1,186 @@
+:mod:`pytao.gui.tao_widget`
+===========================
+
+.. py:module:: pytao.gui.tao_widget
+
+.. autoapi-nested-parse::
+
+   This module defines some basic constructs used by the GUI, including the
+   tk_tao_parameter class, which handles displaying and editing a single
+   parameter in tao
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pytao.gui.tao_widget.tk_tao_parameter
+   pytao.gui.tao_widget.d1_data_list_entry
+   pytao.gui.tao_widget.v1_var_list_entry
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pytao.gui.tao_widget.enum_fetch
+   pytao.gui.tao_widget.inum_fetch
+   pytao.gui.tao_widget.tk_tao_linker
+
+
+.. class:: tk_tao_parameter(tao_parameter, frame, pipe=0, data_source='', plot='', struct_name='')
+
+
+   Takes a tao_parameter (defined in parameters.py) and a tk frame,
+   and creates an object containing the parameter and appropriate tk widget(s)
+   for displaying and modifying the parameter and value
+   pipe: the tao_interface object
+   data_source: for DAT_TYPE and DAT_TYPE_Z, filters allowed data types
+   plot: for DAT_TYPE_Z, the plot where x_axis_type should be checked
+   struct_name: for the components of a STRUCT, pass the struct name here
+
+   .. method:: print_info(self, *args)
+
+      Prints diagnostic info about this widget for testing purposes
+
+
+   .. method:: value(self)
+
+      Returns the value in the input field(s) of self, appropriately typed
+      If an invalid value is input, returns None
+
+
+   .. method:: copy(self, ttp)
+
+      Copy the the value(s) of the tk_var(s) of ttp into self
+      Does nothing if ttp.param.type != self.param.type
+
+
+   .. method:: param_copy(self, tao_param)
+
+      Copies tao_param.value into self.tk_var (and slaves if appropriate)
+
+
+   .. method:: _show_hide_struct(self, event=None, *args)
+
+      Shows or hides a struct's components as appropriate
+
+
+   .. method:: _update_real_arr(self, event=None, *args, **kwargs)
+
+      Takes a real array's slave variables and puts their data
+      into the master tk_var
+
+
+   .. method:: _get_dat_types(self, filter_data_source=False)
+
+      Parses the data_type_list (from data_type_list.py) and
+      returns a list of allowed master data types
+      If filter_data_source is set True, data types whose
+      data_source does not match self._data_source are removed
+      (no difference if self._data_source is not defined)
+      Returns existing d1_data arrays if self._data_source == 'data'
+      and existing v1_var arrays if self._data_source == 'var'
+
+
+   .. method:: _s_refresh(self, event=None, dat_source_swap=False, *args)
+
+      Clears the existing slave widgets and variables,
+      makes new slave widgets and variables, and populates them
+      if necessary
+
+
+   .. method:: _update_tk_var(self, event=None, *args, **kwargs)
+
+      Updates self.tk_var with the current contents of
+      self._mvar and self._svar
+
+
+   .. method:: _is_valid_dat_type(self, x)
+
+      Returns True if the string x is a valid data_type and False otherwise
+
+
+   .. method:: _fill_widgets(self, event=None, *args)
+
+      Runs self._s_refresh() and then fills the slave widgets
+      with data from self.tk_var, but only if self.is_valid_dat_type(self.tk_var.get()) is True
+
+
+   .. method:: _has_ele(self, *args)
+
+      Returns True if self.tk_var.get() can take associated ele names
+      If pipe == 0, returns True by default
+      If self.param.type != DAT_TYPE, returns false
+
+
+   .. method:: _has_s_offset(self, *args)
+
+      Returns True if self.tk_var.get() can take an s_offset
+      Returns False if self.param.type != DAT_TYPE
+
+
+   .. method:: _c_refresh(self)
+
+      Reads the contents of self.tk_var and creates the proper number of
+      OptionMenu widgets
+
+
+   .. method:: _write_comps(self, *args)
+
+      Writes the contents of self._svar into self.tk_var (for COMPONENT
+      parameters only), then calls self._c_refresh()
+
+
+   .. method:: open_file(self)
+
+      Provides a dialog window for selecting a file
+
+
+   .. method:: __eq__(self, name)
+
+      Return self==value.
+
+
+
+.. class:: d1_data_list_entry(master, d_list)
+
+
+   Creates various tk widgets to display attributes of a single datum.
+   Takes one line of output from python data_d_array as input.
+
+
+.. class:: v1_var_list_entry(master, v_list)
+
+
+   Creates the widgets needed to display a single variable held in a v1_var array
+   v_list should be one row of output from
+   python var_v_array [variable name]
+
+
+.. function:: enum_fetch(enum, pipe)
+
+   Takes the name of an enum variable and returns a list of its allowed values
+   using the given pipe
+
+
+.. function:: inum_fetch(inum, pipe)
+
+   Takes the name of an inum variable and returns a list of its allowed values
+   using the given pipe
+
+
+.. function:: tk_tao_linker(tk_tao_list)
+
+   Takes a list of tk_tao_parameters as input and returns a list of tk_tao_parameters
+   The output list will have parameters marked with I either removed or
+   added to their appropriate parent parameter's tk_wid
+
+

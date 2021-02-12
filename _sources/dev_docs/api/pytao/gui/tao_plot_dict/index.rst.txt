@@ -1,0 +1,89 @@
+:mod:`pytao.gui.tao_plot_dict`
+==============================
+
+.. py:module:: pytao.gui.tao_plot_dict
+
+.. autoapi-nested-parse::
+
+   This module defines the tao_plot_dict class, which keeps track of what
+   plots have been placed in tao along with what region they have been placed in.
+   Comes with methods for adding and removing plots to/from the dictionary.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pytao.gui.tao_plot_dict.tao_plot_dict
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pytao.gui.tao_plot_dict.region_to_max_rcl
+
+
+.. class:: tao_plot_dict(mode, pipe, *args, **kwargs)
+
+
+   Bases: :class:`dict`
+
+   Specialized dictionary for keeping track of plots and regions in tao
+   mode should be either "matplotlib" or "pgplot"
+
+   .. method:: place_template(self, template, region=None)
+
+      Places the given template plot in the specified region
+      If no region is specified, automatically chooses the next available region
+      Returns the name of the region where the plot was placed
+      In pgplot mode, it is the caller's responsibility to ensure
+      that a valid region name is provided, otherwise the plot will not be placed
+
+
+   .. method:: _pgplot_place_template(self, template, region)
+
+      Implementation of place_template for pgplot mode
+      Will only place the plot if a valid region name is provided
+
+
+   .. method:: _mpl_place_template(self, template, region=None)
+
+      Implementation of place_template specific to matplotlib mode
+
+
+   .. method:: unplace_template(self, template)
+
+      Remove the given template from self and unplace it in tao
+
+
+   .. method:: unplace_region(self, region)
+
+      Unplace whatever template is in the specified region, and remove the
+      corresponding entry(ies) from self
+
+
+   .. method:: pgplot_update(self)
+
+      Reads the current state of plot regions in Tao, and
+      sets self.pgplot_settings appropriately
+
+
+
+.. function:: region_to_max_rcl(region_name)
+
+   Converts the region name (e.g. r2312) to a
+   (row number, column number, lat_layout) tuple
+   where the counts in the tuple are the maximum number of
+   rows/columns/lat_layouts that are needed to accomadate
+   the given region
+   returns (-1,-1,-1) if the region_name is invalid
+
+

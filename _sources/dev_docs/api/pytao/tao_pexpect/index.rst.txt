@@ -1,0 +1,44 @@
+:mod:`pytao.tao_pexpect`
+========================
+
+.. py:module:: pytao.tao_pexpect
+
+.. autoapi-nested-parse::
+
+   This package provides the pexpect implementation of the interface between
+   tao and python.  The ctypes implementaion is much faster and should be
+   used if possible.
+
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   tao_pipe/index.rst
+
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pytao.tao_pexpect.tao_io
+
+
+
+.. class:: tao_io(init_args='', tao_exe='', timeout=600, expect_str='Tao>')
+
+
+   .. method:: cmd_in(self, cmd_str)
+
+
+   .. method:: cmd(self, cmd_str)
+
+
+

@@ -1,0 +1,77 @@
+:mod:`pytao.gui.tao_misc_windows`
+=================================
+
+.. py:module:: pytao.gui.tao_misc_windows
+
+.. autoapi-nested-parse::
+
+   Provides miscellaneous windows needed in the GUI for tao
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pytao.gui.tao_misc_windows.tao_global_vars_window
+   pytao.gui.tao_misc_windows.tao_bmad_com_window
+   pytao.gui.tao_misc_windows.tao_history_window
+
+
+
+.. class:: tao_global_vars_window(root)
+
+
+   Bases: :class:`pytao.gui.tao_base_windows.tao_parameter_window`
+
+   Generic window for displaying and editing a list of parameters
+
+   .. method:: set_callback(self)
+
+
+
+.. class:: tao_bmad_com_window(root)
+
+
+   Bases: :class:`pytao.gui.tao_base_windows.tao_parameter_window`
+
+   Generic window for displaying and editing a list of parameters
+
+   .. method:: set_callback(self)
+
+
+
+.. class:: tao_history_window(root, *args, **kwargs)
+
+
+   Bases: :class:`pytao.gui.tao_base_windows.tao_list_window`
+
+   Skeleton class with several commonly used features.
+   Comes with a scrollable region and supports adding other widgets
+   Subclasses set tao_id before running this __init__ to handle
+   adding/removing themselves from root window lists
+
+   .. method:: refresh(self)
+
+
+   .. method:: re_run(self, cmd_string, mode, event=None)
+
+      Re-runs the given command or command file (cmd_string),
+      using the specified mode.
+      mode == 0 -> Run in Tao/system shell
+      mode == 1 -> Run in system shell
+      mode == 2 -> Re-run command file
+      Using modes 4, 5, and 6 simply respawns cmd_string in
+      the command line or call_file box, and does not run it
+
+
+   .. method:: re_run_callback(self, cmd_string, mode, event=None)
+
+      Formats a callback to self.re_run
+
+
+

@@ -1,0 +1,104 @@
+:mod:`pytao.gui.tao_mpl_toolbar`
+================================
+
+.. py:module:: pytao.gui.tao_mpl_toolbar
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pytao.gui.tao_mpl_toolbar.taotoolbar
+
+
+
+.. class:: taotoolbar(canvas_, parent_, width_, GUI_DIR_)
+
+
+   Bases: :class:`matplotlib.backends.backend_tkagg.NavigationToolbar2Tk`
+
+   .. attribute:: cid
+      :annotation: = none
+
+      
+
+   .. attribute:: cidKeyP
+      :annotation: = none
+
+      
+
+   .. attribute:: cidKeyR
+      :annotation: = none
+
+      
+
+   .. attribute:: cur_ax
+      :annotation: = none
+
+      
+
+   .. attribute:: xzoom
+      :annotation: = True
+
+      
+
+   .. attribute:: yzoom
+      :annotation: = True
+
+      
+
+   .. method:: enter_axes(self, event)
+
+      handles the mouse entering axes
+
+
+   .. method:: leave_axes(self, event)
+
+      handles the mouse leaving axes
+
+
+   .. method:: onKeyPress(self, event)
+
+      handles key presses
+
+
+   .. method:: onKeyRelease(self, event)
+
+      handles releasing key presses
+
+
+   .. method:: zoom_factory(self, axes, canv, event, on=False, cid='none', base_scale=1.5)
+
+      controls connections for scroll wheel zooming
+
+
+   .. method:: home(self, *args)
+
+      Restore the original view.
+
+
+   .. method:: pan(self, *args)
+
+      Activate the pan/zoom tool. pan with left button, zoom with right or with with scroll wheel
+
+
+   .. method:: help(self)
+
+      help tool which opens a tk window with instructions on graph interaction
+
+
+   .. method:: redraw(self)
+
+      forces recalculation of points in window
+
+
+   .. method:: slider(self)
+
+      opens a new matplotlib figure with a slider that adjusts the size of a lat layout if one is present or adjusts the width of floor plan elements if a floor plan is present
+
+
+

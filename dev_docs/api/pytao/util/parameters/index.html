@@ -1,0 +1,393 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pytao.util.parameters &mdash; PyTao 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="pytao._version" href="../../_version/index.html" />
+    <link rel="prev" title="pytao.util.lattice_element" href="../lattice_element/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> PyTao
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../user_docs/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../user_docs/interfaces.html">Scripting Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../user_docs/gui/index.html">Graphical Interface</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/basic.html">PyTao basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/advanced.html">PyTao advanced usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/lattice.html">Tao python lattice functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/bunch.html">Bunch commands for pyTao</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/data.html">Data command examples</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../../gui/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.gui</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../misc/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.misc</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tao_ctypes/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tao_pexpect/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_pexpect</span></code></a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.util</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../development.html">Development Guidelines</a></li>
+</ul>
+<p class="caption"><span class="caption-text">External Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/bmad-sim/pytao">PyTao GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.classe.cornell.edu/bmad">Bmad website</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.classe.cornell.edu/bmad/tao.html">Tao website</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">PyTao</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">API Reference</a> &raquo;</li>
+        
+          <li><a href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao</span></code></a> &raquo;</li>
+        
+          <li><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.util</span></code></a> &raquo;</li>
+        
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.util.parameters</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../../../_sources/dev_docs/api/pytao/util/parameters/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="module-pytao.util.parameters">
+<span id="pytao-util-parameters"></span><h1><a class="reference internal" href="#module-pytao.util.parameters" title="pytao.util.parameters"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.util.parameters</span></code></a><a class="headerlink" href="#module-pytao.util.parameters" title="Permalink to this headline">¶</a></h1>
+<p>This module defines the tao_parameter class, which stores the value of a single parameter in tao.
+Also defined are a few functions for parsing data into a single tao_parameter or a dictionary of tao_parameters</p>
+<div class="section" id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.util.parameters.tao_parameter" title="pytao.util.parameters.tao_parameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tao_parameter</span></code></a></p></td>
+<td><p>Basic class for holding the properties of a parameter in Tao.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.util.parameters.tao_parameter_dict" title="pytao.util.parameters.tao_parameter_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tao_parameter_dict</span></code></a>(param_list)</p></td>
+<td><p>Takes a list of strings, each string looks something like: ‘param_name;STR;T;abcd’</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pytao.util.parameters.str_to_tao_param" title="pytao.util.parameters.str_to_tao_param"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str_to_tao_param</span></code></a>(param_str)</p></td>
+<td><p>Takes a parameter string (EG: ‘param_name;STR;T;abcd’)</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py data">
+<dt id="pytao.util.parameters.tao_startup_param_list">
+<code class="sig-prename descclassname">pytao.util.parameters.</code><code class="sig-name descname">tao_startup_param_list</code><em class="property"> = ['beam_file;FILE;T;', 'beam_init_position_file;FILE;T;', 'beam_track_data_file;FILE;T;', 'building_wall_file;FILE;T;', 'data_file;FILE;T;', 'hook_init_file;FILE;T;', 'init_file;FILE;T;', 'noinit;LOGIC;T;F', 'lattice_file;FILE;T;', 'plot_file;FILE;T;', 'startup_file;FILE;T;', 'noplot;LOGIC;T;F', 'var_file;FILE;T;', 'slice_lattice;FILE;T;', 'disable_smooth_line_calc;LOGIC;T;F', 'log_startup;LOGIC;T;F', 'no_stopping;LOGIC;T;F', 'rf_on;LOGIC;T;F']</em><a class="headerlink" href="#pytao.util.parameters.tao_startup_param_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt id="pytao.util.parameters.tao_parameter">
+<em class="property">class </em><code class="sig-prename descclassname">pytao.util.parameters.</code><code class="sig-name descname">tao_parameter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">param_name</span></em>, <em class="sig-param"><span class="n">param_type</span></em>, <em class="sig-param"><span class="n">can_vary</span></em>, <em class="sig-param"><span class="n">param_value</span></em>, <em class="sig-param"><span class="n">sub_param</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.parameters.tao_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Basic class for holding the properties of a parameter in Tao.</p>
+<p>name:           The name of the parameter
+type:           “STR”, “INT”, “REAL”, “LOGIC”, “ENUM”, etc…
+can_vary:       Either ‘T’, ‘F’, or ‘I’, indicating whether or not the</p>
+<blockquote>
+<div><p>user may change the value of the paramter. ‘I’ indicates
+that the parameter is to be ignored by the gui, except
+to possibly be displayed as a sub-parameter to another
+tao_parameter.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>value:          The value held in the parameter, should be of the</dt><dd><p>appropriate type for the specified param_type
+(or ‘T’/’F’ for LOGIC)</p>
+</dd>
+</dl>
+<p>NOTE: It is unclear if sub_param is actually ever set by a Tao python command. – DCS 11/2020
+sub_param:      The name of the sub_parameter associated with this parameter,</p>
+<blockquote>
+<div><p>For example: ele_name has the sub parameter ix_ele.</p>
+</div></blockquote>
+<dl class="py method">
+<dt id="pytao.util.parameters.tao_parameter.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.parameters.tao_parameter.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pytao.util.parameters.tao_parameter.__repr__">
+<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.parameters.tao_parameter.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return repr(self).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pytao.util.parameters.tao_parameter.get_component">
+<code class="sig-name descname">get_component</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">comp_name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.parameters.tao_parameter.get_component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Looks for a component called comp_name in self, and returns the component
+with the matching name
+Returns None if comp_name was not found or if self.type != STRUCT</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt id="pytao.util.parameters.InvalidParamError">
+<em class="property">exception </em><code class="sig-prename descclassname">pytao.util.parameters.</code><code class="sig-name descname">InvalidParamError</code><a class="headerlink" href="#pytao.util.parameters.InvalidParamError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Provides an exception for when a param_string is improperly formatted
+Examples of improper formatting include: not enough semicolons
+(3 minimum), bad sub-parameter formatting (for STRUCTs), etc</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pytao.util.parameters.tao_parameter_dict">
+<code class="sig-prename descclassname">pytao.util.parameters.</code><code class="sig-name descname">tao_parameter_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">param_list</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.parameters.tao_parameter_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a list of strings, each string looks something like: ‘param_name;STR;T;abcd’
+and returns a dictionary with keys being the param_name.
+Blank strings will be ignored.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pytao.util.parameters.str_to_tao_param">
+<code class="sig-prename descclassname">pytao.util.parameters.</code><code class="sig-name descname">str_to_tao_param</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">param_str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.parameters.str_to_tao_param" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a parameter string (EG: ‘param_name;STR;T;abcd’)
+and returns a tao_parameter instance
+param_str MUST have at least 3 semicolons</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="pytao.util.parameters.tao_startup_param_dict">
+<code class="sig-prename descclassname">pytao.util.parameters.</code><code class="sig-name descname">tao_startup_param_dict</code><a class="headerlink" href="#pytao.util.parameters.tao_startup_param_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="../../_version/index.html" class="btn btn-neutral float-right" title="pytao._version" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../lattice_element/index.html" class="btn btn-neutral float-left" title="pytao.util.lattice_element" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, David Sagan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

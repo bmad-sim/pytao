@@ -1,0 +1,87 @@
+:mod:`pytao.tao_ctypes.util`
+============================
+
+.. py:module:: pytao.tao_ctypes.util
+
+.. autoapi-nested-parse::
+
+   pytao specific utilities
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pytao.tao_ctypes.util.parse_bool
+   pytao.tao_ctypes.util.parse_tao_lat_ele_list
+   pytao.tao_ctypes.util.pytype
+   pytao.tao_ctypes.util.parse_tao_python_data1
+   pytao.tao_ctypes.util.parse_tao_python_data
+   pytao.tao_ctypes.util.simple_lat_table
+
+
+.. function:: parse_bool(s)
+
+
+.. function:: parse_tao_lat_ele_list(lines)
+
+   returns mapping of names to index
+
+   TODO: if elements are duplicated, this returns only the last one.
+
+   Example:
+   ixlist = parse_tao_lat_ele_list(tao.cmd('python lat_ele_list 1@0'))
+
+
+.. function:: pytype(type)
+
+   Returns python type for type =  REAL, INT, STR, ENUM, LOGIC
+
+
+.. function:: parse_tao_python_data1(line, clean_key=True)
+
+   Parses most common data output from a Tao>python command
+   <component_name>;<type>;<is_variable>;<component_value>
+
+   and returns a dict
+   .. rubric:: Example
+
+   eta_x;REAL;F;  9.0969865321048662E+00
+
+   parses to:
+       {'eta_x':9.0969865321048662E+00}
+
+   If clean key, the key will be cleaned up by replacing '.' with '_' for use as class attributes.
+
+   See: tao_python_cmd.f90
+
+
+.. function:: parse_tao_python_data(lines, clean_key=True)
+
+   returns dict with data
+
+
+.. function:: simple_lat_table(tao, ix_universe=1, ix_branch=0, which='model', who='twiss')
+
+   Takes the tao object, and returns columns of parameters associated with lattice elements
+   "which" is one of:
+     model
+     base
+     design
+   and "who" is one of:
+     general         ! ele%xxx compnents where xxx is "simple" component (not a structure nor an array, nor allocatable, nor pointer).
+     parameters      ! parameters in ele%value array
+     multipole       ! nonzero multipole components.
+     floor           ! floor coordinates.
+     twiss           ! twiss parameters at exit end.
+     orbit           ! orbit at exit end.
+   Example:
+
+
+

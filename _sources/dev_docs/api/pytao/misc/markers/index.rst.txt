@@ -1,0 +1,25 @@
+:mod:`pytao.misc.markers`
+=========================
+
+.. py:module:: pytao.misc.markers
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pytao.misc.markers.make_markers
+
+
+.. function:: make_markers(slist, filename=None, ref=None)
+
+   Makes markers relative to ref ele.
+
+   If filename is given, the lines will be written to ta file.
+
+

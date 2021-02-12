@@ -1,0 +1,1650 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Bunch commands for pyTao &mdash; PyTao 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Data command examples" href="data.html" />
+    <link rel="prev" title="Tao python lattice functions" href="lattice.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> PyTao
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_docs/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_docs/interfaces.html">Scripting Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_docs/gui/index.html">Graphical Interface</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="basic.html">PyTao basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">PyTao advanced usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lattice.html">Tao python lattice functions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Bunch commands for pyTao</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#bunch1">bunch1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Plot-in-matplotlib">Plot in matplotlib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Plot-in-Bokeh">Plot in Bokeh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Data-for-ParticleGroup">Data for ParticleGroup</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Data command examples</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev_docs/api/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev_docs/development.html">Development Guidelines</a></li>
+</ul>
+<p class="caption"><span class="caption-text">External Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/bmad-sim/pytao">PyTao GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.classe.cornell.edu/bmad">Bmad website</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.classe.cornell.edu/bmad/tao.html">Tao website</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PyTao</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Bunch commands for pyTao</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/examples/bunch.nblink.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="Bunch-commands-for-pyTao">
+<h1>Bunch commands for pyTao<a class="headerlink" href="#Bunch-commands-for-pyTao" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from pytao import Tao
+from pytao.tao_ctypes import util
+import numpy as np
+
+import os
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Point to local installation
+BASE_DIR=os.environ[&#39;ACC_ROOT_DIR&#39;]
+print(&#39;Bmad installation: &#39;, BASE_DIR)
+
+
+# Pick an example init
+root = os.path.join(BASE_DIR,&#39;tao/examples/csr_beam_tracking/&#39;)
+os.chdir(root)
+init = root+&#39;tao.init&#39;
+# Make tao instance
+tao=Tao()
+tao.init(&#39;-noplot -init &#39;+init);
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Bmad installation:  /Users/slepicka/sandbox/git-lume/bmad/bmad_dist_2020_1110
+</pre></div></div>
+</div>
+<hr class="docutils" />
+<div class="section" id="bunch1">
+<h2>bunch1<a class="headerlink" href="#bunch1" title="Permalink to this headline">¶</a></h2>
+!----------------------------------------------------------------------
+! Bunch parameters at the exit end of a given lattice element.
+! Command syntax:
+!   python bunch1 {ix_universe}@{ix_branch}>>{ix_ele}|{which} coordinate
+! where {which} is one of:
+!   model
+!   base
+!   design
+!
+! Optional coordinate is one of:
+! x, px, y, py, z, pz, 's', 't', 'charge', 'p0c'
+! and will return an array.
+!
+!<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Bunch data for universe 1, branch 0, element 0 (beginnig) for the model.
+tao.cmd(&#39;python bunch1 1@0&gt;&gt;0|model 1&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;beta_x;REAL;F;  3.1454698480000E-01&#39;,
+ &#39;alpha_x;REAL;F; -2.2075642140000E+00&#39;,
+ &#39;gamma_x;REAL;F;  1.8672376601123E+01&#39;,
+ &#39;phi_x;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;eta_x;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;etap_x;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;sigma_x;REAL;F;  6.1862593312857E-05&#39;,
+ &#39;sigma_p_x;REAL;F;  4.7663415233375E-04&#39;,
+ &#39;emit_x;REAL;F;  1.2166641666667E-08&#39;,
+ &#39;norm_emit_x;REAL;F;  9.9992598367606E-07&#39;,
+ &#39;beta_y;REAL;F;  3.4385689760000E-01&#39;,
+ &#39;alpha_y;REAL;F;  1.9751085275000E+00&#39;,
+ &#39;gamma_y;REAL;F;  1.4253178370452E+01&#39;,
+ &#39;phi_y;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;eta_y;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;etap_y;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;sigma_y;REAL;F;  6.4680628148703E-05&#39;,
+ &#39;sigma_p_y;REAL;F;  4.1642924230219E-04&#39;,
+ &#39;emit_y;REAL;F;  1.2166641666667E-08&#39;,
+ &#39;norm_emit_y;REAL;F;  9.9992598367606E-07&#39;,
+ &#39;beta_z;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;alpha_z;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;gamma_z;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;phi_z;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;eta_z;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;etap_z;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;sigma_z;REAL;F;  8.9937699999999E-04&#39;,
+ &#39;sigma_p_z;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;emit_z;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;norm_emit_z;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;beta_a;REAL;F;  3.1454699769776E-01&#39;,
+ &#39;alpha_a;REAL;F; -2.2075642572015E+00&#39;,
+ &#39;gamma_a;REAL;F;  1.8672376441873E+01&#39;,
+ &#39;phi_a;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;eta_a;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;etap_a;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;sigma_a;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;sigma_p_a;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;emit_a;REAL;F;  1.2166641916167E-08&#39;,
+ &#39;norm_emit_a;REAL;F;  9.9992600418147E-07&#39;,
+ &#39;beta_b;REAL;F;  3.4379058964936E-01&#39;,
+ &#39;alpha_b;REAL;F;  1.9747277058156E+00&#39;,
+ &#39;gamma_b;REAL;F;  1.4250431076174E+01&#39;,
+ &#39;phi_b;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;eta_b;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;etap_b;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;sigma_b;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;sigma_p_b;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;emit_b;REAL;F;  1.2166641916167E-08&#39;,
+ &#39;norm_emit_b;REAL;F;  9.9992600418147E-07&#39;,
+ &#39;beta_c;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;alpha_c;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;gamma_c;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;phi_c;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;eta_c;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;etap_c;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;sigma_c;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;sigma_p_c;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;emit_c;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;norm_emit_c;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;sigma_11;REAL;F;  3.8269804513920E-09&#39;,
+ &#39;sigma_12;REAL;F;  2.6858642747894E-08&#39;,
+ &#39;sigma_13;REAL;F;  1.0671046119802E-25&#39;,
+ &#39;sigma_14;REAL;F; -4.4332929802440E-25&#39;,
+ &#39;sigma_15;REAL;F;  4.1035439155977E-25&#39;,
+ &#39;sigma_16;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;sigma_21;REAL;F;  2.6858642747894E-08&#39;,
+ &#39;sigma_22;REAL;F;  2.2718011517092E-07&#39;,
+ &#39;sigma_23;REAL;F;  4.3233766253619E-25&#39;,
+ &#39;sigma_24;REAL;F; -6.8685508872981E-24&#39;,
+ &#39;sigma_25;REAL;F; -7.8162741249481E-25&#39;,
+ &#39;sigma_26;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;sigma_31;REAL;F;  1.0671046119802E-25&#39;,
+ &#39;sigma_32;REAL;F;  4.3233766253619E-25&#39;,
+ &#39;sigma_33;REAL;F;  4.1835836577108E-09&#39;,
+ &#39;sigma_34;REAL;F; -2.4030437706870E-08&#39;,
+ &#39;sigma_35;REAL;F;  4.3722283386428E-25&#39;,
+ &#39;sigma_36;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;sigma_41;REAL;F; -4.4332929802440E-25&#39;,
+ &#39;sigma_42;REAL;F; -6.8685508872981E-24&#39;,
+ &#39;sigma_43;REAL;F; -2.4030437706870E-08&#39;,
+ &#39;sigma_44;REAL;F;  1.7341331384438E-07&#39;,
+ &#39;sigma_45;REAL;F; -8.3829539990068E-24&#39;,
+ &#39;sigma_46;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;sigma_51;REAL;F;  4.1035439155977E-25&#39;,
+ &#39;sigma_52;REAL;F; -7.8162741249481E-25&#39;,
+ &#39;sigma_53;REAL;F;  4.3722283386428E-25&#39;,
+ &#39;sigma_54;REAL;F; -8.3829539990068E-24&#39;,
+ &#39;sigma_55;REAL;F;  8.0887898812899E-07&#39;,
+ &#39;sigma_56;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;sigma_61;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;sigma_62;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;sigma_63;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;sigma_64;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;sigma_65;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;sigma_66;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;rel_min_1;REAL;F; -1.9106679619042E-04&#39;,
+ &#39;rel_max_1;REAL;F;  1.9076166571869E-04&#39;,
+ &#39;centroid_vec_1;REAL;F; -8.5041062479435E-22&#39;,
+ &#39;rel_min_2;REAL;F; -1.4007949240860E-03&#39;,
+ &#39;rel_max_2;REAL;F;  1.4682832680569E-03&#39;,
+ &#39;centroid_vec_2;REAL;F; -4.6422415282892E-21&#39;,
+ &#39;rel_min_3;REAL;F; -2.0161923897109E-04&#39;,
+ &#39;rel_max_3;REAL;F;  1.9951741503984E-04&#39;,
+ &#39;centroid_vec_3;REAL;F; -1.3519027726510E-21&#39;,
+ &#39;rel_min_4;REAL;F; -1.3687543783974E-03&#39;,
+ &#39;rel_max_4;REAL;F;  1.3697689473136E-03&#39;,
+ &#39;centroid_vec_4;REAL;F;  6.2230048073187E-21&#39;,
+ &#39;rel_min_5;REAL;F; -2.6211048199747E-03&#39;,
+ &#39;rel_max_5;REAL;F;  2.7994025548108E-03&#39;,
+ &#39;centroid_vec_5;REAL;F;  2.2410821171051E-20&#39;,
+ &#39;rel_min_6;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;rel_max_6;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;centroid_vec_6;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;centroid_t;REAL;F; -5.2346232810055E-39&#39;,
+ &#39;centroid_p0c;REAL;F;  4.1996891314395E+07&#39;,
+ &#39;centroid_beta;REAL;F;  9.9992598367607E-01&#39;,
+ &#39;ix_ele;INT;F;0&#39;,
+ &#39;direction;INT;F;1&#39;,
+ &#39;species;SPECIES;F;Electron&#39;,
+ &#39;location;ENUM;F;Downstream_End&#39;,
+ &#39;s;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;charge_live;REAL;F;  7.7000000000001E-11&#39;,
+ &#39;n_particle_tot;INT;F;1000&#39;,
+ &#39;n_particle_live;INT;F;1000&#39;,
+ &#39;n_particle_lost_in_ele;INT;F;0&#39;,
+ &#39;beam_saved;LOGIC;T;T&#39;]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>%%tao
+sho beam 0
+write beam -at 0
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+-------------------------
+Tao&gt; sho beam 0
+Cached bunch parameters:
+  Parameters for bunch:       1
+  Particles surviving:        1000
+  Particles lost:             0
+  Particles lost (%):         .000
+  Charge live (C):              7.70000000E-11
+  Centroid: -8.50410625E-22 -4.64224153E-21 -1.35190277E-21  6.22300481E-21  2.24108212E-20  0.00000000E+00
+  RMS:       6.18625933E-05  4.76634152E-04  6.46806281E-05  4.16429242E-04  8.99377000E-04  0.00000000E+00
+             norm_emitt           beta             alpha
+  a:         9.99926004E-07  3.14546998E-01 -2.20756426E+00
+  b:         9.99926004E-07  3.43790590E-01  1.97472771E+00
+  x:         9.99925984E-07  3.14546985E-01 -2.20756421E+00
+  y:         9.99925984E-07  3.43856898E-01  1.97510853E+00
+  z:         0.00000000E+00  0.00000000E+00
+
+Sigma Mat       x              px               y              py              z             pz
+X     3.82698045E-09  2.68586427E-08  1.06710461E-25 -4.43329298E-25  4.10354392E-25  0.00000000E+00
+Px    2.68586427E-08  2.27180115E-07  4.32337663E-25 -6.86855089E-24 -7.81627412E-25  0.00000000E+00
+Y     1.06710461E-25  4.32337663E-25  4.18358366E-09 -2.40304377E-08  4.37222834E-25  0.00000000E+00
+Py   -4.43329298E-25 -6.86855089E-24 -2.40304377E-08  1.73413314E-07 -8.38295400E-24  0.00000000E+00
+Z     4.10354392E-25 -7.81627412E-25  4.37222834E-25 -8.38295400E-24  8.08878988E-07  0.00000000E+00
+Pz    0.00000000E+00  0.00000000E+00  0.00000000E+00  0.00000000E+00  0.00000000E+00  0.00000000E+00
+
+Note: Individual particle positions are saved at this element.
+-------------------------
+Tao&gt; write beam -at 0
+[INFO] tao_write_cmd:
+    Written: beam_1.hdf5
+-------------------------
+Tao&gt;
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Parse output into dict
+bdata = util.parse_tao_python_data(tao.cmd(&#39;python bunch1 1@0&gt;&gt;0|model 1&#39;))
+bdata.keys()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+dict_keys([&#39;beta_x&#39;, &#39;alpha_x&#39;, &#39;gamma_x&#39;, &#39;phi_x&#39;, &#39;eta_x&#39;, &#39;etap_x&#39;, &#39;sigma_x&#39;, &#39;sigma_p_x&#39;, &#39;emit_x&#39;, &#39;norm_emit_x&#39;, &#39;beta_y&#39;, &#39;alpha_y&#39;, &#39;gamma_y&#39;, &#39;phi_y&#39;, &#39;eta_y&#39;, &#39;etap_y&#39;, &#39;sigma_y&#39;, &#39;sigma_p_y&#39;, &#39;emit_y&#39;, &#39;norm_emit_y&#39;, &#39;beta_z&#39;, &#39;alpha_z&#39;, &#39;gamma_z&#39;, &#39;phi_z&#39;, &#39;eta_z&#39;, &#39;etap_z&#39;, &#39;sigma_z&#39;, &#39;sigma_p_z&#39;, &#39;emit_z&#39;, &#39;norm_emit_z&#39;, &#39;beta_a&#39;, &#39;alpha_a&#39;, &#39;gamma_a&#39;, &#39;phi_a&#39;, &#39;eta_a&#39;, &#39;etap_a&#39;, &#39;sigma_a&#39;, &#39;sigma_p_a&#39;, &#39;emit_a&#39;, &#39;norm_emit_a&#39;, &#39;beta_b&#39;, &#39;alpha_b&#39;, &#39;gamma_b&#39;, &#39;phi_b&#39;, &#39;eta_b&#39;, &#39;etap_b&#39;, &#39;sigma_b&#39;, &#39;sigma_p_b&#39;, &#39;emit_b&#39;, &#39;norm_emit_b&#39;, &#39;beta_c&#39;, &#39;alpha_c&#39;, &#39;gamma_c&#39;, &#39;phi_c&#39;, &#39;eta_c&#39;, &#39;etap_c&#39;, &#39;sigma_c&#39;, &#39;sigma_p_c&#39;, &#39;emit_c&#39;, &#39;norm_emit_c&#39;, &#39;sigma_11&#39;, &#39;sigma_12&#39;, &#39;sigma_13&#39;, &#39;sigma_14&#39;, &#39;sigma_15&#39;, &#39;sigma_16&#39;, &#39;sigma_21&#39;, &#39;sigma_22&#39;, &#39;sigma_23&#39;, &#39;sigma_24&#39;, &#39;sigma_25&#39;, &#39;sigma_26&#39;, &#39;sigma_31&#39;, &#39;sigma_32&#39;, &#39;sigma_33&#39;, &#39;sigma_34&#39;, &#39;sigma_35&#39;, &#39;sigma_36&#39;, &#39;sigma_41&#39;, &#39;sigma_42&#39;, &#39;sigma_43&#39;, &#39;sigma_44&#39;, &#39;sigma_45&#39;, &#39;sigma_46&#39;, &#39;sigma_51&#39;, &#39;sigma_52&#39;, &#39;sigma_53&#39;, &#39;sigma_54&#39;, &#39;sigma_55&#39;, &#39;sigma_56&#39;, &#39;sigma_61&#39;, &#39;sigma_62&#39;, &#39;sigma_63&#39;, &#39;sigma_64&#39;, &#39;sigma_65&#39;, &#39;sigma_66&#39;, &#39;rel_min_1&#39;, &#39;rel_max_1&#39;, &#39;centroid_vec_1&#39;, &#39;rel_min_2&#39;, &#39;rel_max_2&#39;, &#39;centroid_vec_2&#39;, &#39;rel_min_3&#39;, &#39;rel_max_3&#39;, &#39;centroid_vec_3&#39;, &#39;rel_min_4&#39;, &#39;rel_max_4&#39;, &#39;centroid_vec_4&#39;, &#39;rel_min_5&#39;, &#39;rel_max_5&#39;, &#39;centroid_vec_5&#39;, &#39;rel_min_6&#39;, &#39;rel_max_6&#39;, &#39;centroid_vec_6&#39;, &#39;centroid_t&#39;, &#39;centroid_p0c&#39;, &#39;centroid_beta&#39;, &#39;ix_ele&#39;, &#39;direction&#39;, &#39;species&#39;, &#39;location&#39;, &#39;s&#39;, &#39;charge_live&#39;, &#39;n_particle_tot&#39;, &#39;n_particle_live&#39;, &#39;n_particle_lost_in_ele&#39;, &#39;beam_saved&#39;])
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>bdata[&#39;beam_saved&#39;]
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+True
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>xdat = tao.cmd_real(&#39;python bunch1 1@0&gt;&gt;8|model 1 x&#39;)
+pxdat = tao.cmd_real(&#39;python bunch1 1@0&gt;&gt;8|model 1 px&#39;)
+ydat = tao.cmd_real(&#39;python bunch1 1@0&gt;&gt;8|model 1 y&#39;)
+pydat = tao.cmd_real(&#39;python bunch1 1@0&gt;&gt;8|model 1 py&#39;)
+zdat = tao.cmd_real(&#39;python bunch1 1@0&gt;&gt;8|model 1 z&#39;)
+pzdat = tao.cmd_real(&#39;python bunch1 1@0&gt;&gt;8|model 1 pz&#39;)
+chargedat = tao.cmd_real(&#39;python bunch1 1@0&gt;&gt;8|model 1 charge&#39;)
+p0cdat = tao.cmd_real(&#39;python bunch1 1@0&gt;&gt;8|model 1 p0c&#39;)
+state = tao.cmd_integer(&#39;python bunch1 1@0&gt;&gt;8|model 1 state&#39;) # integers
+# Unique p0C (eV), charge (pC)
+set(p0cdat), sum(chargedat)*1e12
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+({41996891.31439491}, 77.0000000000011)
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Plot-in-matplotlib">
+<h2>Plot in matplotlib<a class="headerlink" href="#Plot-in-matplotlib" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>import matplotlib.pyplot as plt
+%matplotlib inline
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>xdata = 1000*xdat
+ydata = 1000*pxdat
+weights = chargedat
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># hist2d
+
+mycmap = plt.get_cmap(&#39;plasma&#39;) # viridis plasma inferno magma and _r versions
+mycmap.set_under(color=&#39;white&#39;) # map 0 to this color
+myvmin = 1e-30 # something tiny
+# Bin particles
+plt.hist2d(x=1000*xdata, y=ydata,  bins=2*[40], weights=weights, cmap=mycmap, vmin=myvmin)
+plt.xlabel(&#39;x (mm)&#39;)
+plt.ylabel(&#39;px (mrad)&#39;)
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/slepicka/mc/envs/lume/lib/python3.7/site-packages/ipykernel_launcher.py:4: MatplotlibDeprecationWarning: You are modifying the state of a globally registered colormap. In future versions, you will not be able to modify a registered colormap in-place. To remove this warning, you can make a copy of the colormap first. cmap = copy.copy(mpl.cm.get_cmap(&#34;plasma&#34;))
+  after removing the cwd from sys.path.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_bunch_13_1.png" src="../_images/examples_bunch_13_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Numpy histogram 2d, with custom color map
+
+import matplotlib.colors as colors
+
+mycmap = plt.get_cmap(&#39;viridis&#39;) # viridis plasma inferno magma and _r versions
+mycmap.set_under(color=&#39;white&#39;) # map 0 to this color
+H, xedges, yedges = np.histogram2d(xdata, ydata, weights=chargedat, bins=40)
+
+xmin, xmax = min(xedges), max(xedges)
+ymin, ymax = min(yedges), max(yedges)
+
+image = np.flip(H.T, axis=0) #
+imax = np.max(image)
+norm=colors.Normalize(vmin=1e-12*imax, vmax=imax)
+plt.xlabel(&#39;x (mm)&#39;)
+plt.ylabel(&#39;px (mrad)&#39;)
+plt.imshow(image, cmap=mycmap, norm=norm, extent=[xmin, xmax, ymin, ymax], aspect=&#39;auto&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/slepicka/mc/envs/lume/lib/python3.7/site-packages/ipykernel_launcher.py:6: MatplotlibDeprecationWarning: You are modifying the state of a globally registered colormap. In future versions, you will not be able to modify a registered colormap in-place. To remove this warning, you can make a copy of the colormap first. cmap = copy.copy(mpl.cm.get_cmap(&#34;viridis&#34;))
+
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.image.AxesImage at 0x7facb92a7210&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_bunch_14_2.png" src="../_images/examples_bunch_14_2.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>np.min(image), np.max(image)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(0.0, 8.469999999999999e-13)
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Plot-in-Bokeh">
+<h2>Plot in Bokeh<a class="headerlink" href="#Plot-in-Bokeh" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from bokeh.plotting import figure, show, output_notebook
+from bokeh import palettes, colors
+from bokeh.models import ColumnDataSource, HoverTool
+output_notebook(verbose=False, hide_banner=True)
+
+pal = palettes.Viridis[256]
+#white=colors.named.white
+#pal[0] = white # replace 0 with white
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="output_javascript"></div>
+<script type="text/javascript">
+var element = document.currentScript.previousSibling.previousSibling;
+
+(function(root) {
+  function now() {
+    return new Date();
+  }
+
+  var force = true;
+
+  if (typeof root._bokeh_onload_callbacks === "undefined" || force === true) {
+    root._bokeh_onload_callbacks = [];
+    root._bokeh_is_loading = undefined;
+  }
+
+  var JS_MIME_TYPE = 'application/javascript';
+  var HTML_MIME_TYPE = 'text/html';
+  var EXEC_MIME_TYPE = 'application/vnd.bokehjs_exec.v0+json';
+  var CLASS_NAME = 'output_bokeh rendered_html';
+
+  /**
+   * Render data to the DOM node
+   */
+  function render(props, node) {
+    var script = document.createElement("script");
+    node.appendChild(script);
+  }
+
+  /**
+   * Handle when an output is cleared or removed
+   */
+  function handleClearOutput(event, handle) {
+    var cell = handle.cell;
+
+    var id = cell.output_area._bokeh_element_id;
+    var server_id = cell.output_area._bokeh_server_id;
+    // Clean up Bokeh references
+    if (id != null && id in Bokeh.index) {
+      Bokeh.index[id].model.document.clear();
+      delete Bokeh.index[id];
+    }
+
+    if (server_id !== undefined) {
+      // Clean up Bokeh references
+      var cmd = "from bokeh.io.state import curstate; print(curstate().uuid_to_server['" + server_id + "'].get_sessions()[0].document.roots[0]._id)";
+      cell.notebook.kernel.execute(cmd, {
+        iopub: {
+          output: function(msg) {
+            var id = msg.content.text.trim();
+            if (id in Bokeh.index) {
+              Bokeh.index[id].model.document.clear();
+              delete Bokeh.index[id];
+            }
+          }
+        }
+      });
+      // Destroy server and session
+      var cmd = "import bokeh.io.notebook as ion; ion.destroy_server('" + server_id + "')";
+      cell.notebook.kernel.execute(cmd);
+    }
+  }
+
+  /**
+   * Handle when a new output is added
+   */
+  function handleAddOutput(event, handle) {
+    var output_area = handle.output_area;
+    var output = handle.output;
+
+    // limit handleAddOutput to display_data with EXEC_MIME_TYPE content only
+    if ((output.output_type != "display_data") || (!output.data.hasOwnProperty(EXEC_MIME_TYPE))) {
+      return
+    }
+
+    var toinsert = output_area.element.find("." + CLASS_NAME.split(' ')[0]);
+
+    if (output.metadata[EXEC_MIME_TYPE]["id"] !== undefined) {
+      toinsert[toinsert.length - 1].firstChild.textContent = output.data[JS_MIME_TYPE];
+      // store reference to embed id on output_area
+      output_area._bokeh_element_id = output.metadata[EXEC_MIME_TYPE]["id"];
+    }
+    if (output.metadata[EXEC_MIME_TYPE]["server_id"] !== undefined) {
+      var bk_div = document.createElement("div");
+      bk_div.innerHTML = output.data[HTML_MIME_TYPE];
+      var script_attrs = bk_div.children[0].attributes;
+      for (var i = 0; i < script_attrs.length; i++) {
+        toinsert[toinsert.length - 1].firstChild.setAttribute(script_attrs[i].name, script_attrs[i].value);
+        toinsert[toinsert.length - 1].firstChild.textContent = bk_div.children[0].textContent
+      }
+      // store reference to server id on output_area
+      output_area._bokeh_server_id = output.metadata[EXEC_MIME_TYPE]["server_id"];
+    }
+  }
+
+  function register_renderer(events, OutputArea) {
+
+    function append_mime(data, metadata, element) {
+      // create a DOM node to render to
+      var toinsert = this.create_output_subarea(
+        metadata,
+        CLASS_NAME,
+        EXEC_MIME_TYPE
+      );
+      this.keyboard_manager.register_events(toinsert);
+      // Render to node
+      var props = {data: data, metadata: metadata[EXEC_MIME_TYPE]};
+      render(props, toinsert[toinsert.length - 1]);
+      element.append(toinsert);
+      return toinsert
+    }
+
+    /* Handle when an output is cleared or removed */
+    events.on('clear_output.CodeCell', handleClearOutput);
+    events.on('delete.Cell', handleClearOutput);
+
+    /* Handle when a new output is added */
+    events.on('output_added.OutputArea', handleAddOutput);
+
+    /**
+     * Register the mime type and append_mime function with output_area
+     */
+    OutputArea.prototype.register_mime_type(EXEC_MIME_TYPE, append_mime, {
+      /* Is output safe? */
+      safe: true,
+      /* Index of renderer in `output_area.display_order` */
+      index: 0
+    });
+  }
+
+  // register the mime type if in Jupyter Notebook environment and previously unregistered
+  if (root.Jupyter !== undefined) {
+    var events = require('base/js/events');
+    var OutputArea = require('notebook/js/outputarea').OutputArea;
+
+    if (OutputArea.prototype.mime_types().indexOf(EXEC_MIME_TYPE) == -1) {
+      register_renderer(events, OutputArea);
+    }
+  }
+
+
+  if (typeof (root._bokeh_timeout) === "undefined" || force === true) {
+    root._bokeh_timeout = Date.now() + 5000;
+    root._bokeh_failed_load = false;
+  }
+
+  var NB_LOAD_WARNING = {'data': {'text/html':
+     "<div style='background-color: #fdd'>\n"+
+     "<p>\n"+
+     "BokehJS does not appear to have successfully loaded. If loading BokehJS from CDN, this \n"+
+     "may be due to a slow or bad network connection. Possible fixes:\n"+
+     "</p>\n"+
+     "<ul>\n"+
+     "<li>re-rerun `output_notebook()` to attempt to load from CDN again, or</li>\n"+
+     "<li>use INLINE resources instead, as so:</li>\n"+
+     "</ul>\n"+
+     "<code>\n"+
+     "from bokeh.resources import INLINE\n"+
+     "output_notebook(resources=INLINE)\n"+
+     "</code>\n"+
+     "</div>"}};
+
+  function display_loaded() {
+    var el = document.getElementById(null);
+    if (el != null) {
+      el.textContent = "BokehJS is loading...";
+    }
+    if (root.Bokeh !== undefined) {
+      if (el != null) {
+        el.textContent = "BokehJS " + root.Bokeh.version + " successfully loaded.";
+      }
+    } else if (Date.now() < root._bokeh_timeout) {
+      setTimeout(display_loaded, 100)
+    }
+  }
+
+
+  function run_callbacks() {
+    try {
+      root._bokeh_onload_callbacks.forEach(function(callback) {
+        if (callback != null)
+          callback();
+      });
+    } finally {
+      delete root._bokeh_onload_callbacks
+    }
+    console.debug("Bokeh: all callbacks have finished");
+  }
+
+  function load_libs(css_urls, js_urls, callback) {
+    if (css_urls == null) css_urls = [];
+    if (js_urls == null) js_urls = [];
+
+    root._bokeh_onload_callbacks.push(callback);
+    if (root._bokeh_is_loading > 0) {
+      console.debug("Bokeh: BokehJS is being loaded, scheduling callback at", now());
+      return null;
+    }
+    if (js_urls == null || js_urls.length === 0) {
+      run_callbacks();
+      return null;
+    }
+    console.debug("Bokeh: BokehJS not loaded, scheduling load and callback at", now());
+    root._bokeh_is_loading = css_urls.length + js_urls.length;
+
+    function on_load() {
+      root._bokeh_is_loading--;
+      if (root._bokeh_is_loading === 0) {
+        console.debug("Bokeh: all BokehJS libraries/stylesheets loaded");
+        run_callbacks()
+      }
+    }
+
+    function on_error() {
+      console.error("failed to load " + url);
+    }
+
+    for (var i = 0; i < css_urls.length; i++) {
+      var url = css_urls[i];
+      const element = document.createElement("link");
+      element.onload = on_load;
+      element.onerror = on_error;
+      element.rel = "stylesheet";
+      element.type = "text/css";
+      element.href = url;
+      console.debug("Bokeh: injecting link tag for BokehJS stylesheet: ", url);
+      document.body.appendChild(element);
+    }
+
+    const hashes = {"https://cdn.bokeh.org/bokeh/release/bokeh-2.2.3.min.js": "T2yuo9Oe71Cz/I4X9Ac5+gpEa5a8PpJCDlqKYO0CfAuEszu1JrXLl8YugMqYe3sM", "https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.2.3.min.js": "98GDGJ0kOMCUMUePhksaQ/GYgB3+NH9h996V88sh3aOiUNX3N+fLXAtry6xctSZ6", "https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.2.3.min.js": "89bArO+nlbP3sgakeHjCo1JYxYR5wufVgA3IbUvDY+K7w4zyxJqssu7wVnfeKCq8"};
+
+    for (var i = 0; i < js_urls.length; i++) {
+      var url = js_urls[i];
+      var element = document.createElement('script');
+      element.onload = on_load;
+      element.onerror = on_error;
+      element.async = false;
+      element.src = url;
+      if (url in hashes) {
+        element.crossOrigin = "anonymous";
+        element.integrity = "sha384-" + hashes[url];
+      }
+      console.debug("Bokeh: injecting script tag for BokehJS library: ", url);
+      document.head.appendChild(element);
+    }
+  };
+
+  function inject_raw_css(css) {
+    const element = document.createElement("style");
+    element.appendChild(document.createTextNode(css));
+    document.body.appendChild(element);
+  }
+
+
+  var js_urls = ["https://cdn.bokeh.org/bokeh/release/bokeh-2.2.3.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.2.3.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.2.3.min.js"];
+  var css_urls = [];
+
+
+  var inline_js = [
+    function(Bokeh) {
+      Bokeh.set_log_level("info");
+    },
+    function(Bokeh) {
+
+
+    }
+  ];
+
+  function run_inline_js() {
+
+    if (root.Bokeh !== undefined || force === true) {
+
+    for (var i = 0; i < inline_js.length; i++) {
+      inline_js[i].call(root, root.Bokeh);
+    }
+    } else if (Date.now() < root._bokeh_timeout) {
+      setTimeout(run_inline_js, 100);
+    } else if (!root._bokeh_failed_load) {
+      console.log("Bokeh: BokehJS failed to load within specified timeout.");
+      root._bokeh_failed_load = true;
+    } else if (force !== true) {
+      var cell = $(document.getElementById(null)).parents('.cell').data().cell;
+      cell.output_area.append_execute_result(NB_LOAD_WARNING)
+    }
+
+  }
+
+  if (root._bokeh_is_loading === 0) {
+    console.debug("Bokeh: BokehJS loaded, going straight to plotting");
+    run_inline_js();
+  } else {
+    load_libs(css_urls, js_urls, function() {
+      console.debug("Bokeh: BokehJS plotting callback run at", now());
+      run_inline_js();
+    });
+  }
+}(window));
+</script></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>H, xedges, yedges = np.histogram2d(xdata, ydata, weights=chargedat, bins=40)
+xmin, xmax = min(xedges), max(xedges)
+ymin, ymax = min(yedges), max(yedges)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>ds = ColumnDataSource(data=dict(image=[H.transpose()]))
+p = figure(x_range=[xmin, xmax], y_range=[ymin, ymax], title=&#39;Bunch at end&#39;,
+           x_axis_label=&#39;z (mm)&#39;, y_axis_label=&#39;pz (1e-3)&#39;,
+           plot_width=500, plot_height=500)
+p.image(image=&#39;image&#39;, source=ds,
+    x=xmin, y=ymin, dw=xmax-xmin, dh=ymax-ymin, palette=pal)
+show(p)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div class="bk-root" id="9f7b46d2-7622-4866-ac68-b734e6772e30" data-root-id="1002"></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="output_javascript"></div>
+<script type="text/javascript">
+var element = document.currentScript.previousSibling.previousSibling;
+(function(root) {
+  function embed_document(root) {
+
+  var docs_json = {"0666bcd0-893a-4670-acac-7275fd39bbf5":{"roots":{"references":[{"attributes":{"below":[{"id":"1013"}],"center":[{"id":"1016"},{"id":"1020"}],"left":[{"id":"1017"}],"plot_height":500,"plot_width":500,"renderers":[{"id":"1040"}],"title":{"id":"1003"},"toolbar":{"id":"1028"},"x_range":{"id":"1005"},"x_scale":{"id":"1009"},"y_range":{"id":"1007"},"y_scale":{"id":"1011"}},"id":"1002","subtype":"Figure","type":"Plot"},{"attributes":{},"id":"1026","type":"HelpTool"},{"attributes":{"color_mapper":{"id":"1039"},"dh":{"units":"data","value":2.793174652876961},"dw":{"units":"data","value":0.3657897152551198},"global_alpha":0.1,"image":{"field":"image"},"x":{"value":-0.1907975005876315},"y":{"value":-1.4600746259000226}},"id":"1038","type":"Image"},{"attributes":{},"id":"1014","type":"BasicTicker"},{"attributes":{"color_mapper":{"id":"1037"},"dh":{"units":"data","value":2.793174652876961},"dw":{"units":"data","value":0.3657897152551198},"image":{"field":"image"},"x":{"value":-0.1907975005876315},"y":{"value":-1.4600746259000226}},"id":"1036","type":"Image"},{"attributes":{"source":{"id":"1001"}},"id":"1041","type":"CDSView"},{"attributes":{"axis":{"id":"1013"},"ticker":null},"id":"1016","type":"Grid"},{"attributes":{"end":1.3331000269769384,"start":-1.4600746259000226},"id":"1007","type":"Range1d"},{"attributes":{"axis":{"id":"1017"},"dimension":1,"ticker":null},"id":"1020","type":"Grid"},{"attributes":{},"id":"1018","type":"BasicTicker"},{"attributes":{"axis_label":"pz (1e-3)","formatter":{"id":"1046"},"ticker":{"id":"1018"}},"id":"1017","type":"LinearAxis"},{"attributes":{"axis_label":"z (mm)","formatter":{"id":"1044"},"ticker":{"id":"1014"}},"id":"1013","type":"LinearAxis"},{"attributes":{"active_drag":"auto","active_inspect":"auto","active_multi":null,"active_scroll":"auto","active_tap":"auto","tools":[{"id":"1021"},{"id":"1022"},{"id":"1023"},{"id":"1024"},{"id":"1025"},{"id":"1026"}]},"id":"1028","type":"Toolbar"},{"attributes":{},"id":"1049","type":"UnionRenderers"},{"attributes":{},"id":"1048","type":"Selection"},{"attributes":{"bottom_units":"screen","fill_alpha":0.5,"fill_color":"lightgrey","left_units":"screen","level":"overlay","line_alpha":1.0,"line_color":"black","line_dash":[4,4],"line_width":2,"right_units":"screen","top_units":"screen"},"id":"1027","type":"BoxAnnotation"},{"attributes":{"palette":["#440154","#440255","#440357","#450558","#45065A","#45085B","#46095C","#460B5E","#460C5F","#460E61","#470F62","#471163","#471265","#471466","#471567","#471669","#47186A","#48196B","#481A6C","#481C6E","#481D6F","#481E70","#482071","#482172","#482273","#482374","#472575","#472676","#472777","#472878","#472A79","#472B7A","#472C7B","#462D7C","#462F7C","#46307D","#46317E","#45327F","#45347F","#453580","#453681","#443781","#443982","#433A83","#433B83","#433C84","#423D84","#423E85","#424085","#414186","#414286","#404387","#404487","#3F4587","#3F4788","#3E4888","#3E4989","#3D4A89","#3D4B89","#3D4C89","#3C4D8A","#3C4E8A","#3B508A","#3B518A","#3A528B","#3A538B","#39548B","#39558B","#38568B","#38578C","#37588C","#37598C","#365A8C","#365B8C","#355C8C","#355D8C","#345E8D","#345F8D","#33608D","#33618D","#32628D","#32638D","#31648D","#31658D","#31668D","#30678D","#30688D","#2F698D","#2F6A8D","#2E6B8E","#2E6C8E","#2E6D8E","#2D6E8E","#2D6F8E","#2C708E","#2C718E","#2C728E","#2B738E","#2B748E","#2A758E","#2A768E","#2A778E","#29788E","#29798E","#287A8E","#287A8E","#287B8E","#277C8E","#277D8E","#277E8E","#267F8E","#26808E","#26818E","#25828E","#25838D","#24848D","#24858D","#24868D","#23878D","#23888D","#23898D","#22898D","#228A8D","#228B8D","#218C8D","#218D8C","#218E8C","#208F8C","#20908C","#20918C","#1F928C","#1F938B","#1F948B","#1F958B","#1F968B","#1E978A","#1E988A","#1E998A","#1E998A","#1E9A89","#1E9B89","#1E9C89","#1E9D88","#1E9E88","#1E9F88","#1EA087","#1FA187","#1FA286","#1FA386","#20A485","#20A585","#21A685","#21A784","#22A784","#23A883","#23A982","#24AA82","#25AB81","#26AC81","#27AD80","#28AE7F","#29AF7F","#2AB07E","#2BB17D","#2CB17D","#2EB27C","#2FB37B","#30B47A","#32B57A","#33B679","#35B778","#36B877","#38B976","#39B976","#3BBA75","#3DBB74","#3EBC73","#40BD72","#42BE71","#44BE70","#45BF6F","#47C06E","#49C16D","#4BC26C","#4DC26B","#4FC369","#51C468","#53C567","#55C666","#57C665","#59C764","#5BC862","#5EC961","#60C960","#62CA5F","#64CB5D","#67CC5C","#69CC5B","#6BCD59","#6DCE58","#70CE56","#72CF55","#74D054","#77D052","#79D151","#7CD24F","#7ED24E","#81D34C","#83D34B","#86D449","#88D547","#8BD546","#8DD644","#90D643","#92D741","#95D73F","#97D83E","#9AD83C","#9DD93A","#9FD938","#A2DA37","#A5DA35","#A7DB33","#AADB32","#ADDC30","#AFDC2E","#B2DD2C","#B5DD2B","#B7DD29","#BADE27","#BDDE26","#BFDF24","#C2DF22","#C5DF21","#C7E01F","#CAE01E","#CDE01D","#CFE11C","#D2E11B","#D4E11A","#D7E219","#DAE218","#DCE218","#DFE318","#E1E318","#E4E318","#E7E419","#E9E419","#ECE41A","#EEE51B","#F1E51C","#F3E51E","#F6E61F","#F8E621","#FAE622","#FDE724"]},"id":"1037","type":"LinearColorMapper"},{"attributes":{"palette":["#440154","#440255","#440357","#450558","#45065A","#45085B","#46095C","#460B5E","#460C5F","#460E61","#470F62","#471163","#471265","#471466","#471567","#471669","#47186A","#48196B","#481A6C","#481C6E","#481D6F","#481E70","#482071","#482172","#482273","#482374","#472575","#472676","#472777","#472878","#472A79","#472B7A","#472C7B","#462D7C","#462F7C","#46307D","#46317E","#45327F","#45347F","#453580","#453681","#443781","#443982","#433A83","#433B83","#433C84","#423D84","#423E85","#424085","#414186","#414286","#404387","#404487","#3F4587","#3F4788","#3E4888","#3E4989","#3D4A89","#3D4B89","#3D4C89","#3C4D8A","#3C4E8A","#3B508A","#3B518A","#3A528B","#3A538B","#39548B","#39558B","#38568B","#38578C","#37588C","#37598C","#365A8C","#365B8C","#355C8C","#355D8C","#345E8D","#345F8D","#33608D","#33618D","#32628D","#32638D","#31648D","#31658D","#31668D","#30678D","#30688D","#2F698D","#2F6A8D","#2E6B8E","#2E6C8E","#2E6D8E","#2D6E8E","#2D6F8E","#2C708E","#2C718E","#2C728E","#2B738E","#2B748E","#2A758E","#2A768E","#2A778E","#29788E","#29798E","#287A8E","#287A8E","#287B8E","#277C8E","#277D8E","#277E8E","#267F8E","#26808E","#26818E","#25828E","#25838D","#24848D","#24858D","#24868D","#23878D","#23888D","#23898D","#22898D","#228A8D","#228B8D","#218C8D","#218D8C","#218E8C","#208F8C","#20908C","#20918C","#1F928C","#1F938B","#1F948B","#1F958B","#1F968B","#1E978A","#1E988A","#1E998A","#1E998A","#1E9A89","#1E9B89","#1E9C89","#1E9D88","#1E9E88","#1E9F88","#1EA087","#1FA187","#1FA286","#1FA386","#20A485","#20A585","#21A685","#21A784","#22A784","#23A883","#23A982","#24AA82","#25AB81","#26AC81","#27AD80","#28AE7F","#29AF7F","#2AB07E","#2BB17D","#2CB17D","#2EB27C","#2FB37B","#30B47A","#32B57A","#33B679","#35B778","#36B877","#38B976","#39B976","#3BBA75","#3DBB74","#3EBC73","#40BD72","#42BE71","#44BE70","#45BF6F","#47C06E","#49C16D","#4BC26C","#4DC26B","#4FC369","#51C468","#53C567","#55C666","#57C665","#59C764","#5BC862","#5EC961","#60C960","#62CA5F","#64CB5D","#67CC5C","#69CC5B","#6BCD59","#6DCE58","#70CE56","#72CF55","#74D054","#77D052","#79D151","#7CD24F","#7ED24E","#81D34C","#83D34B","#86D449","#88D547","#8BD546","#8DD644","#90D643","#92D741","#95D73F","#97D83E","#9AD83C","#9DD93A","#9FD938","#A2DA37","#A5DA35","#A7DB33","#AADB32","#ADDC30","#AFDC2E","#B2DD2C","#B5DD2B","#B7DD29","#BADE27","#BDDE26","#BFDF24","#C2DF22","#C5DF21","#C7E01F","#CAE01E","#CDE01D","#CFE11C","#D2E11B","#D4E11A","#D7E219","#DAE218","#DCE218","#DFE318","#E1E318","#E4E318","#E7E419","#E9E419","#ECE41A","#EEE51B","#F1E51C","#F3E51E","#F6E61F","#F8E621","#FAE622","#FDE724"]},"id":"1039","type":"LinearColorMapper"},{"attributes":{},"id":"1046","type":"BasicTickFormatter"},{"attributes":{},"id":"1044","type":"BasicTickFormatter"},{"attributes":{"data":{"image":[{"__ndarray__":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACTUy5Lb6xFPQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACTUy5Lb6w1PQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJNTLktvrDU9AAAAAAAAAAAAAAAAAAAAAJNTLktvrDU9AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAk1MuS2+sNT0AAAAAAAAAAJNTLktvrDU9AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACTUy5Lb6w1PQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJNTLktvrDU9k1MuS2+sNT2TUy5Lb6w1PQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJNTLktvrDU9AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAk1MuS2+sNT0AAAAAAAAAAAAAAAAAAAAAk1MuS2+sNT0AAAAAAAAAAJNTLktvrDU9k1MuS2+sNT0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJNTLktvrDU9k1MuS2+sNT2TUy5Lb6w1PZNTLktvrDU9AAAAAAAAAACTUy5Lb6w1PQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACTUy5Lb6w1PZNTLktvrEU9k1MuS2+sNT2TUy5Lb6w1PQAAAAAAAAAAk1MuS2+sNT2uvmJ4U0FQPQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJNTLktvrDU9AAAAAAAAAACTUy5Lb6w1PZNTLktvrEU9k1MuS2+sNT2TUy5Lb6w1PZNTLktvrEU9k1MuS2+sNT2TUy5Lb6xFPQAAAAAAAAAAAAAAAAAAAACTUy5Lb6w1PQAAAAAAAAAAAAAAAAAAAAAAAAAA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AAAAAAAAAACuvmJ4U0FQPQAAAAAAAAAAk1MuS2+sNT2TUy5Lb6w1PZNTLktvrEU9AAAAAAAAAACTUy5Lb6w1PQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAk1MuS2+sNT2TUy5Lb6w1PZNTLktvrDU9AAAAAAAAAACTUy5Lb6xFPZNTLktvrDU9AAAAAAAAAACTUy5Lb6w1PQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAk1MuS2+sNT0AAAAAAAAAAJNTLktvrDU9k1MuS2+sRT0AAAAAAAAAAAAAAAAAAAAAk1MuS2+sRT2TUy5Lb6w1PZNTLktvrDU9AAAAAAAAAACTUy5Lb6w1PQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAk1MuS2+sNT2TUy5Lb6w1PZNTLktvrDU9k1MuS2+sNT0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACTUy5Lb6w1PQAAAAAAAAAAk1MuS2+sNT0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACTUy5Lb6w1PQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJNTLktvrDU9AAAAAAAAAACTUy5Lb6w1PQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJNTLktvrDU9k1MuS2+sNT0=","dtype":"float64","order":"little","shape":[40,40]}]},"selected":{"id":"1048"},"selection_policy":{"id":"1049"}},"id":"1001","type":"ColumnDataSource"},{"attributes":{},"id":"1021","type":"PanTool"},{"attributes":{"data_source":{"id":"1001"},"glyph":{"id":"1036"},"hover_glyph":null,"muted_glyph":null,"nonselection_glyph":{"id":"1038"},"selection_glyph":null,"view":{"id":"1041"}},"id":"1040","type":"GlyphRenderer"},{"attributes":{},"id":"1022","type":"WheelZoomTool"},{"attributes":{"end":0.17499221466748827,"start":-0.1907975005876315},"id":"1005","type":"Range1d"},{"attributes":{"overlay":{"id":"1027"}},"id":"1023","type":"BoxZoomTool"},{"attributes":{},"id":"1009","type":"LinearScale"},{"attributes":{"text":"Bunch at end"},"id":"1003","type":"Title"},{"attributes":{},"id":"1024","type":"SaveTool"},{"attributes":{},"id":"1025","type":"ResetTool"},{"attributes":{},"id":"1011","type":"LinearScale"}],"root_ids":["1002"]},"title":"Bokeh Application","version":"2.2.3"}};
+  var render_items = [{"docid":"0666bcd0-893a-4670-acac-7275fd39bbf5","root_ids":["1002"],"roots":{"1002":"9f7b46d2-7622-4866-ac68-b734e6772e30"}}];
+  root.Bokeh.embed.embed_items_notebook(docs_json, render_items);
+
+  }
+  if (root.Bokeh !== undefined) {
+    embed_document(root);
+  } else {
+    var attempts = 0;
+    var timer = setInterval(function(root) {
+      if (root.Bokeh !== undefined) {
+        clearInterval(timer);
+        embed_document(root);
+      } else {
+        attempts++;
+        if (attempts > 100) {
+          clearInterval(timer);
+          console.log("Bokeh: ERROR: Unable to run BokehJS code because BokehJS library is missing");
+        }
+      }
+    }, 10, root)
+  }
+})(window);
+</script></div>
+</div>
+</div>
+<div class="section" id="Data-for-ParticleGroup">
+<h2>Data for ParticleGroup<a class="headerlink" href="#Data-for-ParticleGroup" title="Permalink to this headline">¶</a></h2>
+<p>The above commands have been packaged into two functions for easier use, and to easily create ParticleGroup objects</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from pytao.tao_ctypes.bunch import get_bunch_stats, get_bunch_data
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Get typical stats
+stats = get_bunch_stats(tao, &#39;end&#39;)
+stats
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;beta_x&#39;: 0.30134457142882,
+ &#39;alpha_x&#39;: -2.1521049823636,
+ &#39;gamma_x&#39;: 18.68809459023,
+ &#39;phi_x&#39;: 0.0,
+ &#39;eta_x&#39;: -0.048190545736803,
+ &#39;etap_x&#39;: -0.45493969485518,
+ &#39;sigma_x&#39;: 6.0545051529212e-05,
+ &#39;sigma_p_x&#39;: 0.00047679256976393,
+ &#39;emit_x&#39;: 1.2164490793028e-08,
+ &#39;norm_emit_x&#39;: 9.9974344364893e-07,
+ &#39;beta_y&#39;: 0.40783204147832,
+ &#39;alpha_y&#39;: 1.9440813313188,
+ &#39;gamma_y&#39;: 11.719168031668,
+ &#39;phi_y&#39;: 0.0,
+ &#39;eta_y&#39;: -0.045730121878916,
+ &#39;etap_y&#39;: 0.026397863550044,
+ &#39;sigma_y&#39;: 7.0434481918443e-05,
+ &#39;sigma_p_y&#39;: 0.00037756614304414,
+ &#39;emit_y&#39;: 1.2164361154991e-08,
+ &#39;norm_emit_y&#39;: 9.9973278929603e-07,
+ &#39;beta_z&#39;: 95.824240685781,
+ &#39;alpha_z&#39;: -1.2405916961694,
+ &#39;gamma_z&#39;: 0.026497134111715,
+ &#39;phi_z&#39;: 0.0,
+ &#39;eta_z&#39;: 0.0,
+ &#39;etap_z&#39;: 0.0,
+ &#39;sigma_z&#39;: 0.00089945844475665,
+ &#39;sigma_p_z&#39;: 1.4956943815201e-05,
+ &#39;emit_z&#39;: 8.4428062049241e-09,
+ &#39;norm_emit_z&#39;: 6.9387533707609e-07,
+ &#39;beta_a&#39;: 0.2485349129631,
+ &#39;alpha_a&#39;: -1.7750276192378,
+ &#39;gamma_a&#39;: 15.413909307857,
+ &#39;phi_a&#39;: 0.0,
+ &#39;eta_a&#39;: 0.0012487244918932,
+ &#39;etap_a&#39;: 0.01111242863781,
+ &#39;sigma_a&#39;: 0.0,
+ &#39;sigma_p_a&#39;: 0.0,
+ &#39;emit_a&#39;: 1.2165553897603e-08,
+ &#39;norm_emit_a&#39;: 9.9983081531509e-07,
+ &#39;beta_b&#39;: 0.33555107831616,
+ &#39;alpha_b&#39;: 1.5990060762921,
+ &#39;gamma_b&#39;: 9.6386271084489,
+ &#39;phi_b&#39;: 0.0,
+ &#39;eta_b&#39;: 0.0045461603964579,
+ &#39;etap_b&#39;: -0.021897187061854,
+ &#39;sigma_b&#39;: 0.0,
+ &#39;sigma_p_b&#39;: 0.0,
+ &#39;emit_b&#39;: 1.2173246410896e-08,
+ &#39;norm_emit_b&#39;: 1.0004630275351e-06,
+ &#39;beta_c&#39;: 95.714812384062,
+ &#39;alpha_c&#39;: -1.2389724892557,
+ &#39;gamma_c&#39;: 0.026443029653139,
+ &#39;phi_c&#39;: 0.0,
+ &#39;eta_c&#39;: 1.2389724892557,
+ &#39;etap_c&#39;: 0.026443029653139,
+ &#39;sigma_c&#39;: 0.0,
+ &#39;sigma_p_c&#39;: 0.0,
+ &#39;emit_c&#39;: 8.4334992322965e-09,
+ &#39;norm_emit_c&#39;: 6.9311043988287e-07,
+ &#39;sigma_11&#39;: 3.6662227932189e-09,
+ &#39;sigma_12&#39;: 2.6184165818828e-08,
+ &#39;sigma_13&#39;: -1.4839326446185e-13,
+ &#39;sigma_14&#39;: -4.7428373301124e-14,
+ &#39;sigma_15&#39;: -4.6787120378287e-10,
+ &#39;sigma_16&#39;: -1.078071509682e-11,
+ &#39;sigma_21&#39;: 2.6184165818828e-08,
+ &#39;sigma_22&#39;: 2.273774559038e-07,
+ &#39;sigma_23&#39;: -1.4033913862281e-12,
+ &#39;sigma_24&#39;: 4.9266504816739e-14,
+ &#39;sigma_25&#39;: -4.4486030631188e-09,
+ &#39;sigma_26&#39;: -1.0177463569835e-10,
+ &#39;sigma_31&#39;: -1.4839326446185e-13,
+ &#39;sigma_32&#39;: -1.4033913862281e-12,
+ &#39;sigma_33&#39;: 4.9614840756771e-09,
+ &#39;sigma_34&#39;: -2.3648777486723e-08,
+ &#39;sigma_35&#39;: 1.5126882298839e-13,
+ &#39;sigma_36&#39;: -1.0230293261504e-11,
+ &#39;sigma_41&#39;: -4.7428373301124e-14,
+ &#39;sigma_42&#39;: 4.9266504816739e-14,
+ &#39;sigma_43&#39;: -2.3648777486723e-08,
+ &#39;sigma_44&#39;: 1.4255634826503e-07,
+ &#39;sigma_45&#39;: -3.2740194093271e-13,
+ &#39;sigma_46&#39;: 5.9054704973057e-12,
+ &#39;sigma_51&#39;: -4.6787120378287e-10,
+ &#39;sigma_52&#39;: -4.4486030631188e-09,
+ &#39;sigma_53&#39;: 1.5126882298839e-13,
+ &#39;sigma_54&#39;: -3.2740194093271e-13,
+ &#39;sigma_55&#39;: 8.0902549384405e-07,
+ &#39;sigma_56&#39;: 1.0474075270196e-08,
+ &#39;sigma_61&#39;: -1.078071509682e-11,
+ &#39;sigma_62&#39;: -1.0177463569835e-10,
+ &#39;sigma_63&#39;: -1.0230293261504e-11,
+ &#39;sigma_64&#39;: 5.9054704973057e-12,
+ &#39;sigma_65&#39;: 1.0474075270196e-08,
+ &#39;sigma_66&#39;: 2.2371016829109e-10,
+ &#39;rel_min_1&#39;: -0.00019069672065915,
+ &#39;rel_max_1&#39;: 0.00017509299459597,
+ &#39;centroid_vec_1&#39;: -1.0077992847861e-07,
+ &#39;rel_min_2&#39;: -0.0014591534608898,
+ &#39;rel_max_2&#39;: 0.0013340211919872,
+ &#39;centroid_vec_2&#39;: -9.2116501024669e-07,
+ &#39;rel_min_3&#39;: -0.00020552439918535,
+ &#39;rel_max_3&#39;: 0.00020426791940824,
+ &#39;centroid_vec_3&#39;: 5.3540016377261e-13,
+ &#39;rel_min_4&#39;: -0.0011968534953946,
+ &#39;rel_max_4&#39;: 0.0012544439653187,
+ &#39;centroid_vec_4&#39;: -2.5367392358199e-11,
+ &#39;rel_min_5&#39;: -0.0026171546062299,
+ &#39;rel_max_5&#39;: 0.0027836715577578,
+ &#39;centroid_vec_5&#39;: -7.5359703312885e-08,
+ &#39;rel_min_6&#39;: -1.6798312444375e-05,
+ &#39;rel_max_6&#39;: 2.8011710031615e-05,
+ &#39;centroid_vec_6&#39;: -5.7700611889016e-06,
+ &#39;centroid_t&#39;: 1.1430421695331e-19,
+ &#39;centroid_p0c&#39;: 41996891.314395,
+ &#39;centroid_beta&#39;: 0.99992598157275,
+ &#39;ix_ele&#39;: 8,
+ &#39;direction&#39;: 1,
+ &#39;species&#39;: &#39;Electron&#39;,
+ &#39;location&#39;: &#39;Downstream_End&#39;,
+ &#39;s&#39;: 0.445,
+ &#39;charge_live&#39;: 7.7000000000001e-11,
+ &#39;n_particle_tot&#39;: 1000,
+ &#39;n_particle_live&#39;: 1000,
+ &#39;n_particle_lost_in_ele&#39;: 0,
+ &#39;beam_saved&#39;: True}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Get data
+data = get_bunch_data(tao, &#39;end&#39;)
+data.keys()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+dict_keys([&#39;x&#39;, &#39;px&#39;, &#39;y&#39;, &#39;py&#39;, &#39;t&#39;, &#39;pz&#39;, &#39;weight&#39;, &#39;status&#39;, &#39;z&#39;, &#39;species&#39;])
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from pmd_beamphysics import ParticleGroup
+
+P = ParticleGroup(data=data)
+P
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/slepicka/mc/envs/lume/lib/python3.7/site-packages/pmd_beamphysics/plot.py:13: MatplotlibDeprecationWarning: You are modifying the state of a globally registered colormap. In future versions, you will not be able to modify a registered colormap in-place. To remove this warning, you can make a copy of the colormap first. cmap = copy.copy(mpl.cm.get_cmap(&#34;viridis&#34;))
+  cmap.set_under(&#39;white&#39;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;ParticleGroup with 1000 particles at 0x7fac682be810&gt;
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>P.plot(&#39;x&#39;, &#39;px&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_bunch_25_0.png" src="../_images/examples_bunch_25_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Note the z is 0 by definition
+P[&#39;mean_z&#39;]
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.0
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># t it the total time
+P[&#39;mean_t&#39;]*P[&#39;mean_beta&#39;]*299792458, stats[&#39;s&#39;]
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(0.44500007497959254, 0.445)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>P[&#39;norm_emit_x&#39;], P[&#39;norm_emit_y&#39;]
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(1.0008549032579537e-06, 1.0009242252848607e-06)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>stats[&#39;norm_emit_x&#39;], stats[&#39;norm_emit_y&#39;]
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(9.9974344364893e-07, 9.9973278929603e-07)
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="data.html" class="btn btn-neutral float-right" title="Data command examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="lattice.html" class="btn btn-neutral float-left" title="Tao python lattice functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, David Sagan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

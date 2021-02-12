@@ -1,0 +1,377 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pytao.tao_ctypes.tools &mdash; PyTao 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="pytao.tao_ctypes.util" href="../util/index.html" />
+    <link rel="prev" title="pytao.tao_ctypes.evaluate" href="../evaluate/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> PyTao
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../user_docs/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../user_docs/interfaces.html">Scripting Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../user_docs/gui/index.html">Graphical Interface</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/basic.html">PyTao basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/advanced.html">PyTao advanced usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/lattice.html">Tao python lattice functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/bunch.html">Bunch commands for pyTao</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/data.html">Data command examples</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../../gui/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.gui</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../misc/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.misc</span></code></a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tao_pexpect/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_pexpect</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../util/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.util</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../development.html">Development Guidelines</a></li>
+</ul>
+<p class="caption"><span class="caption-text">External Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/bmad-sim/pytao">PyTao GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.classe.cornell.edu/bmad">Bmad website</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.classe.cornell.edu/bmad/tao.html">Tao website</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">PyTao</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">API Reference</a> &raquo;</li>
+        
+          <li><a href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao</span></code></a> &raquo;</li>
+        
+          <li><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes</span></code></a> &raquo;</li>
+        
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes.tools</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../../../_sources/dev_docs/api/pytao/tao_ctypes/tools/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="module-pytao.tao_ctypes.tools">
+<span id="pytao-tao-ctypes-tools"></span><h1><a class="reference internal" href="#module-pytao.tao_ctypes.tools" title="pytao.tao_ctypes.tools"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes.tools</span></code></a><a class="headerlink" href="#module-pytao.tao_ctypes.tools" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.tao_ctypes.tools.NpEncoder" title="pytao.tao_ctypes.tools.NpEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NpEncoder</span></code></a></p></td>
+<td><p>See: <a class="reference external" href="https://stackoverflow.com/questions/50916422/python-typeerror-object-of-type-int64-is-not-json-serializable/50916741">https://stackoverflow.com/questions/50916422/python-typeerror-object-of-type-int64-is-not-json-serializable/50916741</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.tao_ctypes.tools.full_path" title="pytao.tao_ctypes.tools.full_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">full_path</span></code></a>(path)</p></td>
+<td><p>Helper function to expand enviromental variables and return the absolute path</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pytao.tao_ctypes.tools.fingerprint" title="pytao.tao_ctypes.tools.fingerprint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fingerprint</span></code></a>(keyed_data, digest_size=16)</p></td>
+<td><p>Creates a cryptographic fingerprint from keyed data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.tao_ctypes.tools.execute" title="pytao.tao_ctypes.tools.execute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">execute</span></code></a>(cmd, cwd=None)</p></td>
+<td><p>Constantly print Subprocess output while process is running</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pytao.tao_ctypes.tools.execute2" title="pytao.tao_ctypes.tools.execute2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">execute2</span></code></a>(cmd, timeout=None, cwd=None)</p></td>
+<td><p>Execute with time limit (timeout) in seconds, catching run errors.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt id="pytao.tao_ctypes.tools.full_path">
+<code class="sig-prename descclassname">pytao.tao_ctypes.tools.</code><code class="sig-name descname">full_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.tools.full_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function to expand enviromental variables and return the absolute path</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pytao.tao_ctypes.tools.NpEncoder">
+<em class="property">class </em><code class="sig-prename descclassname">pytao.tao_ctypes.tools.</code><code class="sig-name descname">NpEncoder</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">skipkeys</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">ensure_ascii</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">check_circular</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">allow_nan</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">sort_keys</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">indent</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">separators</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.tools.NpEncoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">json.JSONEncoder</span></code></p>
+<p>See: <a class="reference external" href="https://stackoverflow.com/questions/50916422/python-typeerror-object-of-type-int64-is-not-json-serializable/50916741">https://stackoverflow.com/questions/50916422/python-typeerror-object-of-type-int64-is-not-json-serializable/50916741</a></p>
+<dl class="py method">
+<dt id="pytao.tao_ctypes.tools.NpEncoder.default">
+<code class="sig-name descname">default</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.tools.NpEncoder.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement this method in a subclass such that it returns
+a serializable object for <code class="docutils literal notranslate"><span class="pre">o</span></code>, or calls the base implementation
+(to raise a <code class="docutils literal notranslate"><span class="pre">TypeError</span></code>).</p>
+<p>For example, to support arbitrary iterators, you could
+implement default like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">iterable</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span>
+    <span class="c1"># Let the base class default method raise the TypeError</span>
+    <span class="k">return</span> <span class="n">JSONEncoder</span><span class="o">.</span><span class="n">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="pytao.tao_ctypes.tools.fingerprint">
+<code class="sig-prename descclassname">pytao.tao_ctypes.tools.</code><code class="sig-name descname">fingerprint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keyed_data</span></em>, <em class="sig-param"><span class="n">digest_size</span><span class="o">=</span><span class="default_value">16</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.tools.fingerprint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a cryptographic fingerprint from keyed data.
+Used JSON dumps to form strings, and the blake2b algorithm to hash.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pytao.tao_ctypes.tools.execute">
+<code class="sig-prename descclassname">pytao.tao_ctypes.tools.</code><code class="sig-name descname">execute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cmd</span></em>, <em class="sig-param"><span class="n">cwd</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.tools.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constantly print Subprocess output while process is running
+from: <a class="reference external" href="https://stackoverflow.com/questions/4417546/constantly-print-subprocess-output-while-process-is-running">https://stackoverflow.com/questions/4417546/constantly-print-subprocess-output-while-process-is-running</a></p>
+<dl class="simple">
+<dt># Example usage:</dt><dd><p>for path in execute([“locate”, “a”]):
+print(path, end=””)</p>
+</dd>
+</dl>
+<p>Useful in Jupyter notebook</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pytao.tao_ctypes.tools.execute2">
+<code class="sig-prename descclassname">pytao.tao_ctypes.tools.</code><code class="sig-name descname">execute2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cmd</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cwd</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.tools.execute2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute with time limit (timeout) in seconds, catching run errors.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="../util/index.html" class="btn btn-neutral float-right" title="pytao.tao_ctypes.util" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../evaluate/index.html" class="btn btn-neutral float-left" title="pytao.tao_ctypes.evaluate" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, David Sagan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

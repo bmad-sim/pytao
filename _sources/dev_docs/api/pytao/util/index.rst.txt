@@ -1,0 +1,185 @@
+:mod:`pytao.util`
+=================
+
+.. py:module:: pytao.util
+
+.. autoapi-nested-parse::
+
+   This package contains some useful classes for dealing with data from tao
+
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   data/index.rst
+   evaluate_expression/index.rst
+   lattice_element/index.rst
+   parameters/index.rst
+
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pytao.util.tao_parameter
+   pytao.util.lat_element
+   pytao.util.tao_parameter
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pytao.util.tao_parameter_dict
+   pytao.util.tao_parameter_dict
+   pytao.util.str_to_tao_param
+
+
+.. class:: tao_parameter(param_name, param_type, can_vary, param_value, sub_param=None)
+
+
+   Basic class for holding the properties of a parameter in Tao.
+
+   name:           The name of the parameter
+   type:           "STR", "INT", "REAL", "LOGIC", "ENUM", etc...
+   can_vary:       Either 'T', 'F', or 'I', indicating whether or not the
+                   user may change the value of the paramter. 'I' indicates
+                   that the parameter is to be ignored by the gui, except
+                   to possibly be displayed as a sub-parameter to another
+                   tao_parameter.
+   value:          The value held in the parameter, should be of the
+                   appropriate type for the specified param_type
+                   (or 'T'/'F' for LOGIC)
+   NOTE: It is unclear if sub_param is actually ever set by a Tao python command. -- DCS 11/2020
+   sub_param:      The name of the sub_parameter associated with this parameter,
+                   For example: ele_name has the sub parameter ix_ele.
+
+   .. method:: __str__(self)
+
+      Return str(self).
+
+
+   .. method:: __repr__(self)
+
+      Return repr(self).
+
+
+   .. method:: get_component(self, comp_name)
+
+      Looks for a component called comp_name in self, and returns the component
+      with the matching name
+      Returns None if comp_name was not found or if self.type != STRUCT
+
+
+
+.. function:: tao_parameter_dict(param_list)
+
+   Takes a list of strings, each string looks something like: 'param_name;STR;T;abcd'
+   and returns a dictionary with keys being the param_name.
+   Blank strings will be ignored.
+
+
+.. class:: lat_element(u_ix, ix_branch, ix_ele, which, pipe)
+
+
+   Holds the essential information for a given lattice element.
+   A lat_element has the following properties:
+   self.id: the ele identifier in the form uni@branch>>ele_ix|which
+   self.params: An ordered dictionary of tao_parameters
+       This holds the general parameters related to the element
+   self.has: An ordered dictionary of bools
+       This holds whether or not this element has a given property
+   self.num: An ordered dictionary of ints
+       This holds the number of something this element has
+
+   Init arguments:
+   u_ix: the universe index of the desired element
+   ix_branch: the branch index of the desired element
+   ix_ele: the element index of the desired element
+   which: one of 'base', 'model', or 'design'
+   pipe: the tao_interface object to use for fetching the element info
+           from tao (MUST be a tao_interface instance
+           and not a tao_ctypes.Tao instance)
+
+
+.. data:: tao_startup_param_list
+   :annotation: = ['beam_file;FILE;T;', 'beam_init_position_file;FILE;T;', 'beam_track_data_file;FILE;T;', 'building_wall_file;FILE;T;', 'data_file;FILE;T;', 'hook_init_file;FILE;T;', 'init_file;FILE;T;', 'noinit;LOGIC;T;F', 'lattice_file;FILE;T;', 'plot_file;FILE;T;', 'startup_file;FILE;T;', 'noplot;LOGIC;T;F', 'var_file;FILE;T;', 'slice_lattice;FILE;T;', 'disable_smooth_line_calc;LOGIC;T;F', 'log_startup;LOGIC;T;F', 'no_stopping;LOGIC;T;F', 'rf_on;LOGIC;T;F']
+
+   
+
+.. class:: tao_parameter(param_name, param_type, can_vary, param_value, sub_param=None)
+
+
+   Basic class for holding the properties of a parameter in Tao.
+
+   name:           The name of the parameter
+   type:           "STR", "INT", "REAL", "LOGIC", "ENUM", etc...
+   can_vary:       Either 'T', 'F', or 'I', indicating whether or not the
+                   user may change the value of the paramter. 'I' indicates
+                   that the parameter is to be ignored by the gui, except
+                   to possibly be displayed as a sub-parameter to another
+                   tao_parameter.
+   value:          The value held in the parameter, should be of the
+                   appropriate type for the specified param_type
+                   (or 'T'/'F' for LOGIC)
+   NOTE: It is unclear if sub_param is actually ever set by a Tao python command. -- DCS 11/2020
+   sub_param:      The name of the sub_parameter associated with this parameter,
+                   For example: ele_name has the sub parameter ix_ele.
+
+   .. method:: __str__(self)
+
+      Return str(self).
+
+
+   .. method:: __repr__(self)
+
+      Return repr(self).
+
+
+   .. method:: get_component(self, comp_name)
+
+      Looks for a component called comp_name in self, and returns the component
+      with the matching name
+      Returns None if comp_name was not found or if self.type != STRUCT
+
+
+
+.. exception:: InvalidParamError
+
+
+   Bases: :class:`Exception`
+
+   Provides an exception for when a param_string is improperly formatted
+   Examples of improper formatting include: not enough semicolons
+   (3 minimum), bad sub-parameter formatting (for STRUCTs), etc
+
+
+.. function:: tao_parameter_dict(param_list)
+
+   Takes a list of strings, each string looks something like: 'param_name;STR;T;abcd'
+   and returns a dictionary with keys being the param_name.
+   Blank strings will be ignored.
+
+
+.. function:: str_to_tao_param(param_str)
+
+   Takes a parameter string (EG: 'param_name;STR;T;abcd')
+   and returns a tao_parameter instance
+   param_str MUST have at least 3 semicolons
+
+
+.. data:: tao_startup_param_dict
+   
+
+   
+

@@ -1,0 +1,970 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Tao python lattice functions &mdash; PyTao 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Bunch commands for pyTao" href="bunch.html" />
+    <link rel="prev" title="PyTao advanced usage" href="advanced.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> PyTao
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_docs/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_docs/interfaces.html">Scripting Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_docs/gui/index.html">Graphical Interface</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="basic.html">PyTao basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">PyTao advanced usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tao python lattice functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#branch1">branch1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#global">global</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lat_ele_list">lat_ele_list</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lat_ele1">lat_ele1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lat_general">lat_general</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lat_list">lat_list</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lat_param_units">lat_param_units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#orbit_at_s">orbit_at_s</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#twiss_at_s">twiss_at_s</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bunch.html">Bunch commands for pyTao</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Data command examples</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev_docs/api/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev_docs/development.html">Development Guidelines</a></li>
+</ul>
+<p class="caption"><span class="caption-text">External Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/bmad-sim/pytao">PyTao GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.classe.cornell.edu/bmad">Bmad website</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.classe.cornell.edu/bmad/tao.html">Tao website</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PyTao</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Tao python lattice functions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/examples/lattice.nblink.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="Tao-python-lattice-functions">
+<h1>Tao python lattice functions<a class="headerlink" href="#Tao-python-lattice-functions" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from pytao import Tao
+from pytao.tao_ctypes import util
+import os
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Point to local installation
+BASE_DIR=os.environ[&#39;ACC_ROOT_DIR&#39;]
+print(&#39;Bmad installation: &#39;, BASE_DIR)
+
+
+# Pick an example init
+root = os.path.join(BASE_DIR,&#39;tao/examples/cesr/&#39;)
+os.chdir(root)
+init = root+&#39;tao.init&#39;
+# Make tao instance
+tao=Tao()
+tao.init(&#39;-noplot -init &#39;+init);
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Bmad installation:  /Users/slepicka/sandbox/git-lume/bmad/bmad_dist_2020_1110
+</pre></div></div>
+</div>
+<hr class="docutils" />
+<div class="section" id="branch1">
+<h2>branch1<a class="headerlink" href="#branch1" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!----------------------------------------------------------------------
+! Lattice element list.
+! Command syntax:
+!   python branch1 {ix_universe}@{ix_branch}
+! where
+!   {ix_universe} is a universe index
+!   {ix_branch} is a lattice branch index
+</pre></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>tao.cmd(&#39;python branch1 1@0&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;name;STR;F;CESR&#39;,
+ &#39;ix_branch;INT;F;0&#39;,
+ &#39;ix_from_branch;INT;F;-1&#39;,
+ &#39;ix_from_ele;INT;F;-1&#39;,
+ &#39;param.n_part;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;param.total_length;REAL;F;  7.6842642141617E+02&#39;,
+ &#39;param.unstable_factor;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;param.particle;SPECIES;T;Electron&#39;,
+ &#39;param.default_tracking_species;SPECIES;T;Ref_Particle&#39;,
+ &#39;param.geometry;ENUM;T;Closed&#39;,
+ &#39;param.stable;LOGIC;F;T&#39;]
+</pre></div></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="global">
+<h2>global<a class="headerlink" href="#global" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!----------------------------------------------------------------------
+! Global parameters
+! Command syntax:
+!   python global
+! Output syntax is variable list form. See documentation at beginning of this file.
+</pre></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>tao.cmd(&#39;python global&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;lm_opt_deriv_reinit;REAL;T; -1.0000000000000E+00&#39;,
+ &#39;de_lm_step_ratio;REAL;T;  1.0000000000000E+00&#39;,
+ &#39;de_var_to_population_factor;REAL;T;  5.0000000000000E+00&#39;,
+ &#39;lmdif_eps;REAL;T;  9.9999999600420E-13&#39;,
+ &#39;svd_cutoff;REAL;T;  9.9999997473788E-06&#39;,
+ &#39;unstable_penalty;REAL;T;  1.0000000474975E-03&#39;,
+ &#39;merit_stop_value;REAL;T; -1.0000000000000E+00&#39;,
+ &#39;dmerit_stop_value;REAL;T;  0.0000000000000E+00&#39;,
+ &#39;random_sigma_cutoff;REAL;T; -1.0000000000000E+00&#39;,
+ &#39;delta_e_chrom;REAL;T;  1.0000000000000E-04&#39;,
+ &#39;n_opti_cycles;INT;T;20&#39;,
+ &#39;n_opti_loops;INT;T;1&#39;,
+ &#39;phase_units;ENUM;T;radians&#39;,
+ &#39;bunch_to_plot;INT;T;1&#39;,
+ &#39;random_seed;INT;T;0&#39;,
+ &#39;n_top10_merit;INT;T;10&#39;,
+ &#39;srdt_gen_n_slices;INT;T;10&#39;,
+ &#39;srdt_sxt_n_slices;INT;T;20&#39;,
+ &#39;srdt_use_cache;LOGIC;T;T&#39;,
+ &#39;random_engine;STR;T;pseudo&#39;,
+ &#39;random_gauss_converter;STR;T;exact&#39;,
+ &#39;track_type;ENUM;T;single&#39;,
+ &#39;optimizer;ENUM;T;lm&#39;,
+ &#39;print_command;STR;T;lpr&#39;,
+ &#39;var_out_file;FILE;T;var#.out&#39;,
+ &#39;external_plotting;LOGIC;I;F&#39;,
+ &#39;opt_with_ref;LOGIC;T;F&#39;,
+ &#39;opt_with_base;LOGIC;T;F&#39;,
+ &#39;label_lattice_elements;LOGIC;T;T&#39;,
+ &#39;label_keys;LOGIC;T;T&#39;,
+ &#39;concatenate_maps;LOGIC;T;F&#39;,
+ &#39;derivative_recalc;LOGIC;T;T&#39;,
+ &#39;derivative_uses_design;LOGIC;T;F&#39;,
+ &#39;orm_analysis;LOGIC;T;F&#39;,
+ &#39;plot_on;LOGIC;T;F&#39;,
+ &#39;lattice_calc_on;LOGIC;T;T&#39;,
+ &#39;svd_retreat_on_merit_increase;LOGIC;T;T&#39;,
+ &#39;stop_on_error;LOGIC;T;T&#39;,
+ &#39;box_plots;LOGIC;T;F&#39;,
+ &#39;beam_timer_on;LOGIC;T;F&#39;,
+ &#39;var_limits_on;LOGIC;T;T&#39;,
+ &#39;only_limit_opt_vars;LOGIC;T;F&#39;,
+ &#39;optimizer_var_limit_warn;LOGIC;T;T&#39;,
+ &#39;rf_on;LOGIC;T;F&#39;,
+ &#39;draw_curve_off_scale_warn;LOGIC;T;T&#39;,
+ &#39;wait_for_cr_in_single_mode;LOGIC;T;F&#39;,
+ &#39;disable_smooth_line_calc;LOGIC;T;F&#39;,
+ &#39;debug_on;LOGIC;T;F&#39;]
+</pre></div></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="lat_ele_list">
+<h2>lat_ele_list<a class="headerlink" href="#lat_ele_list" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!----------------------------------------------------------------------
+! Lattice element list.
+! Command syntax:
+!   python lat_ele {branch_name}
+! {branch_name} should have the form:
+!   {ix_uni}@{ix_branch}
+</pre></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>tao.cmd(&#39;python lat_ele_list 1@0&#39;)[0:10]
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;0;BEGINNING&#39;,
+ &#39;1;IP_L0&#39;,
+ &#39;2;CLEO_SOL#3&#39;,
+ &#39;3;DET_00W&#39;,
+ &#39;4;CLEO_SOL#4&#39;,
+ &#39;5;Q00W\\CLEO_SOL&#39;,
+ &#39;6;Q00W#1&#39;,
+ &#39;7;D003&#39;,
+ &#39;8;DET_01W&#39;,
+ &#39;9;D004&#39;]
+</pre></div></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="lat_ele1">
+<h2>lat_ele1<a class="headerlink" href="#lat_ele1" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!----------------------------------------------------------------------
+! parameters associated with given lattice element.
+! Command syntax:
+!   python lat_ele1 {ix_universe}@{ix_branch}&gt;&gt;{ix_ele}|{which} {who}
+! where {which} is one of:
+!   model
+!   base
+!   design
+! and {who} is one of:
+!   general         ! ele%xxx compnents where xxx is &quot;simple&quot; component (not a structure nor an array, nor allocatable, nor pointer).
+!   parameters      ! parameters in ele%value array
+!   multipole       ! nonzero multipole components.
+!   floor           ! floor coordinates.
+!   twiss           ! twiss parameters at exit end.
+!   orbit           ! orbit at exit end.
+! Example:
+!   python lat_ele1 1@0&gt;&gt;547|design twiss
+</pre></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>tao.cmd(&#39;python lat_ele1 1@0&gt;&gt;547|design twiss&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;[ERROR | 2021-FEB-09 14:57:42] tao_python_cmd:&#39;,
+ &#39;    python what? &#34;What&#34; not recognized:&#39;]
+</pre></div></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="lat_general">
+<h2>lat_general<a class="headerlink" href="#lat_general" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!----------------------------------------------------------------------
+! Lattice general
+! Command syntax:
+!   python lat_general {ix_universe}
+!
+! Output syntax:
+!   list of:
+!   branch_index;branch_name;n_ele_track;n_ele_max
+</pre></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>tao.cmd(&#39;python lat_general 1&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;0;CESR;869;1017&#39;]
+</pre></div></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="lat_list">
+<h2>lat_list<a class="headerlink" href="#lat_list" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!----------------------------------------------------------------------
+! List of parameters at ends of lattice elements
+! Command syntax:
+!   python lat_list {ix_uni}@{ix_branch}&gt;&gt;{elements}|{which} {who}
+! where
+!   {which} is one of:
+!     model
+!     base
+!     design
+!   {who} is a comma deliminated list of:
+!     orbit.spin.1, orbit.spin.2, orbit.spin.3,
+!     orbit.vec.1, orbit.vec.2, orbit.vec.3, orbit.vec.4, orbit.vec.5, orbit.vec.6,
+!     orbit.t, orbit.beta,
+!     orbit.state,     ! Note: state is an integer. alive$ = 1, anything else is lost.
+!     orbit.energy, orbit.pc,
+!     ele.a.beta, ele.a.alpha, ele.a.eta, ele.a.etap, ele.a.gamma, ele.a.phi,
+!     ele.b.beta, ele.b.alpha, ele.b.eta, ele.b.etap, ele.b.gamma, ele.b.phi,
+!     ele.x.eta, ele.x.etap,
+!     ele.y.eta, ele.y.etap,
+!     ele.s, ele.l
+!   {elements} is a string to match element names to.
+!     Use &quot;*&quot; to match to all elements.
+!     Use the prefix &quot;track:&quot; to exclude lord elements.
+! Note: To output through the real array buffer, add the prefix &quot;real:&quot; to {who}. In this
+! case, {who} must only contain a single item
+!
+! Examples:
+!   python lat_list 3@0&gt;&gt;track:Q*|base ele.s,orbit.vec.2
+!   python lat_list 3@0&gt;&gt;Q*|base real:ele.s    ! Only a single item permitted with real buffer out.
+</pre></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>tao.cmd(&#39;python lat_list 1@0&gt;&gt;track:Q*|base ele.s,orbit.vec.2&#39;)[0:10]
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;[ERROR | 2021-FEB-09 14:57:49] lat_ele_locator:&#39;,
+ &#39;    NO ELEMENT ASSOCIATED WITH: TRACK&#39;,
+ &#39;    THIS IS NOT PERMITTED IN A RANGE CONSTRUCT: 0&gt;&gt;TRACK:Q*&#39;]
+</pre></div></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="lat_param_units">
+<h2>lat_param_units<a class="headerlink" href="#lat_param_units" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!----------------------------------------------------------------------
+! Units of a parameter associated with a lattice or lattice element.
+! Command syntax:
+!   python lat_param_units {param_name}
+</pre></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>tao.cmd(&#39;python lat_param_units DELTA_REF_TIME&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;sec&#39;]
+</pre></div></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="orbit_at_s">
+<h2>orbit_at_s<a class="headerlink" href="#orbit_at_s" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!----------------------------------------------------------------------
+! Twiss at given s position.
+! Command syntax:
+!   python orbit_at_s {ix_uni}@{ix_branch}&gt;&gt;{s}|{which}
+! where:
+!   {which} is one of:
+!     model
+!     base
+!     design
+!   {s} is the longitudinal s-position.
+</pre></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>tao.cmd(&#39;python orbit_at_s 1@0&gt;&gt;123.4|model&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;x;REAL;F; -1.4283315486862E-02&#39;,
+ &#39;px;REAL;F; -9.1770651474887E-04&#39;,
+ &#39;y;REAL;F; -2.4362775299887E-05&#39;,
+ &#39;py;REAL;F;  3.2695403944196E-06&#39;,
+ &#39;z;REAL;F;  7.5560847477352E-04&#39;,
+ &#39;pz;REAL;F; -1.2705494208815E-21&#39;,
+ &#39;spin;REAL_ARR;F;  0.0000000000000E+00;  0.0000000000000E+00;  0.0000000000000E+00&#39;,
+ &#39;field;REAL_ARR;F;  0.0000000000000E+00;  0.0000000000000E+00&#39;,
+ &#39;phase;REAL_ARR;F;  0.0000000000000E+00;  0.0000000000000E+00&#39;,
+ &#39;s;REAL;F;  1.2340000000000E+02&#39;,
+ &#39;t;REAL;F;  4.1161558338335E-07&#39;,
+ &#39;charge;REAL;F;  0.0000000000000E+00&#39;,
+ &#39;path_len;REAL;F; -6.9342643606307E-14&#39;,
+ &#39;p0c;REAL;F;  5.2889999753148E+09&#39;,
+ &#39;beta;REAL;F;  9.9999999533273E-01&#39;,
+ &#39;ix_ele;INT;F;154&#39;,
+ &#39;state;STR;F;Alive&#39;,
+ &#39;direction;INT;F;1&#39;,
+ &#39;species;SPECIES;F;Electron&#39;,
+ &#39;location;STR;F;Inside&#39;]
+</pre></div></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="twiss_at_s">
+<h2>twiss_at_s<a class="headerlink" href="#twiss_at_s" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!----------------------------------------------------------------------
+! Twiss at given s position
+! Command syntax:
+!   python twiss_at_s {ix_uni}@{ix_branch}&gt;&gt;{s}|{which}
+! where {which} is one of:
+!   model
+!   base
+!   design
+</pre></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>tao.cmd(&#39;python twiss_at_s 1@0&gt;&gt;123.4|model&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;beta_a;REAL;F;  2.3936476433966E+01&#39;,
+ &#39;alpha_a;REAL;F; -1.6582993556091E+00&#39;,
+ &#39;gamma_a;REAL;F;  1.5666285566961E-01&#39;,
+ &#39;phi_a;REAL;F;  1.2012730929449E+01&#39;,
+ &#39;eta_a;REAL;F;  1.8962892868192E+00&#39;,
+ &#39;etap_a;REAL;F;  9.0584781814619E-02&#39;,
+ &#39;beta_b;REAL;F;  6.6597108588283E+00&#39;,
+ &#39;alpha_b;REAL;F;  7.4925178541384E-01&#39;,
+ &#39;gamma_b;REAL;F;  2.3445135547830E-01&#39;,
+ &#39;phi_b;REAL;F;  9.3632575766679E+00&#39;,
+ &#39;eta_b;REAL;F; -8.6363973096461E-03&#39;,
+ &#39;etap_b;REAL;F;  1.1319913823843E-03&#39;]
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="bunch.html" class="btn btn-neutral float-right" title="Bunch commands for pyTao" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="advanced.html" class="btn btn-neutral float-left" title="PyTao advanced usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, David Sagan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

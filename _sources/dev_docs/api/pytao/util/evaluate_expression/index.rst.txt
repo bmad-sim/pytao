@@ -1,0 +1,26 @@
+:mod:`pytao.util.evaluate_expression`
+=====================================
+
+.. py:module:: pytao.util.evaluate_expression
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pytao.util.evaluate_expression.eval_expr
+
+
+.. data:: local_funcs
+   
+
+   
+
+.. function:: eval_expr(expr)
+
+

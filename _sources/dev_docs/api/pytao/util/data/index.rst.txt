@@ -1,0 +1,53 @@
+:mod:`pytao.util.data`
+======================
+
+.. py:module:: pytao.util.data
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pytao.util.data.create_d2_data_cmd
+   pytao.util.data.create_datum_cmd
+   pytao.util.data.create_variable_cmd
+
+
+.. function:: create_d2_data_cmd(d2_name, d1_names, upper_bounds=[], lower_bounds=None)
+
+   Helper function to create a d2_data with several d1_data.
+
+   Returns the command string for use in Tao.
+
+   Example usage:
+       cmd = create_d2_data_cmd('X', ['A', 'B'], [2,4] )
+       tao.cmd(cmd)
+
+
+.. function:: create_datum_cmd(datum_name='d2.d1[1]', data_type='beta.a', ele_ref_name='', ele_start_name='', ele_name='end', merit_type='target', meas=0, good_meas=False, ref=0, good_ref=False, weight=0, good_user=True, data_source='', eval_point='end', s_offset=0, ix_bunch=0, invalid_value=0, spin_n0_x=0, spin_n0_y=0, spin_n0_z=0)
+
+   Helper function to create a datum, with defaults.
+
+   Returns the command string for use in Tao.
+
+   Example usage:
+       cmd=create_datum_cmd('X.A[1]', meas=1, good_meas=True)
+       tao.cmd(cmd)
+       tao.cmd('python data_set_design_value') # Needed to initialize
+
+
+.. function:: create_variable_cmd(var_name='', ele_name='', attribute='', universes='1', weight=0, step=0, low_lim=0, high_lim=0, merit_type='target', good_user=True, key_bound=False, key_delta=1)
+
+   TODO: this doesn't work.
+
+   Create a single variable
+   Command syntax:
+   python var_create {var_name}^^{ele_name}^^{attribute}^^{universes}^^{weight}^^{step}^^{low_lim}^^{high_lim}^^
+                                                                        {merit_type}^^{good_user}^^{key_bound}^^{key_delta}
+
+

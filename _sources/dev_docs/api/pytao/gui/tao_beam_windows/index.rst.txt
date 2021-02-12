@@ -1,0 +1,41 @@
+:mod:`pytao.gui.tao_beam_windows`
+=================================
+
+.. py:module:: pytao.gui.tao_beam_windows
+
+.. autoapi-nested-parse::
+
+   Provides windows for viewing and editing beam properties in tao
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pytao.gui.tao_beam_windows.tao_beam_init_window
+
+
+
+.. class:: tao_beam_init_window(root, pipe)
+
+
+   Bases: :class:`pytao.gui.tao_base_windows.tao_parameter_window`
+
+   Window for viewing and editing the beam_init struct
+
+   .. method:: refresh(self, event=None)
+
+      Pulls beam settings from tao and updates the window contents
+
+
+   .. method:: apply(self, event=None)
+
+      Runs set commands to apply changes from this window to tao
+
+
+

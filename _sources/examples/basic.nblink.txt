@@ -1,0 +1,5 @@
+{
+  "path": "../../../examples/basic.ipynb",
+  "extra-media": [
+  ]
+}

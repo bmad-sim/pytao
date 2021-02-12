@@ -1,0 +1,28 @@
+:mod:`pytao.gui.taoplot`
+========================
+
+.. py:module:: pytao.gui.taoplot
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pytao.gui.taoplot.taoplot
+
+
+
+.. class:: taoplot(pipe, PlotRegion)
+
+
+   .. method:: plot(self, width)
+
+      Returns a figure containing graphs using the data in the region PlotRegion of the tao instance in pipe, and plots a lat_layout below if applicable.
+      Also returns information about the indices and locations of elements, width is used to modify the width of floor plan elements and the size of the lat layout.
+
+
+

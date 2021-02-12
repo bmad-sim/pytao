@@ -1,0 +1,17 @@
+:mod:`pytao.misc`
+=================
+
+.. py:module:: pytao.misc
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   csr/index.rst
+   csr_plot/index.rst
+   markers/index.rst
+
+
