@@ -109,6 +109,7 @@
 <li class="toctree-l4 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.misc</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../tao_ctypes/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../tao_pexpect/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_pexpect</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tests/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tests</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../util/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.util</span></code></a></li>
 </ul>
 </li>
@@ -253,7 +254,7 @@
 </table>
 <dl class="py function">
 <dt id="pytao.misc.csr.parse_csr_wake">
-<code class="sig-prename descclassname">pytao.misc.csr.</code><code class="sig-name descname">parse_csr_wake</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file</span></em>, <em class="sig-param"><span class="n">prepend_index</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.misc.csr.parse_csr_wake" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.misc.csr.</span></code><code class="sig-name descname"><span class="pre">parse_csr_wake</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prepend_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.misc.csr.parse_csr_wake" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parses CSR wake file and returns a dict of elements with</p>
 <p>ix_ele: index of the element</p>
 <p>s_positions: np.array of s possitions correponding to the steps in data</p>
@@ -270,7 +271,7 @@ column 4: S_Source</p>
 
 <dl class="py function">
 <dt id="pytao.misc.csr.process_csr_wake_data">
-<code class="sig-prename descclassname">pytao.misc.csr.</code><code class="sig-name descname">process_csr_wake_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.misc.csr.process_csr_wake_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.misc.csr.</span></code><code class="sig-name descname"><span class="pre">process_csr_wake_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.misc.csr.process_csr_wake_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process csr_wake data by concatenating the data.</p>
 <p>Returns a dict of np.array with labels and shapes:</p>
 <blockquote>
@@ -291,7 +292,7 @@ s_source            (steps, bins)</p>
 
 <dl class="py function">
 <dt id="pytao.misc.csr.csr_wake_stats_at_step">
-<code class="sig-prename descclassname">pytao.misc.csr.</code><code class="sig-name descname">csr_wake_stats_at_step</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">step</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.misc.csr.csr_wake_stats_at_step" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.misc.csr.</span></code><code class="sig-name descname"><span class="pre">csr_wake_stats_at_step</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.misc.csr.csr_wake_stats_at_step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates stats from a single step of processed csr_wake data.</p>
 <p>Useful for plotting.</p>
 <p>Returns tuple:</p>
@@ -302,13 +303,13 @@ s_source            (steps, bins)</p>
 
 <dl class="py function">
 <dt id="pytao.misc.csr.write_csr_wake_data_h5">
-<code class="sig-prename descclassname">pytao.misc.csr.</code><code class="sig-name descname">write_csr_wake_data_h5</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">h5</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.misc.csr.write_csr_wake_data_h5" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.misc.csr.</span></code><code class="sig-name descname"><span class="pre">write_csr_wake_data_h5</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.misc.csr.write_csr_wake_data_h5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write parsed csr_wake data to an open h5 handle</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="pytao.misc.csr.read_csr_wake_data_h5">
-<code class="sig-prename descclassname">pytao.misc.csr.</code><code class="sig-name descname">read_csr_wake_data_h5</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">h5</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.misc.csr.read_csr_wake_data_h5" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.misc.csr.</span></code><code class="sig-name descname"><span class="pre">read_csr_wake_data_h5</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.misc.csr.read_csr_wake_data_h5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read csr_wake data from h5 file.</p>
 <p>See: write_csr_wake_data_h5</p>
 </dd></dl>

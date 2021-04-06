@@ -1,0 +1,16 @@
+:mod:`pytao.tests`
+==================
+
+.. py:module:: pytao.tests
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   conftest/index.rst
+   test_interface_commands/index.rst
+
+

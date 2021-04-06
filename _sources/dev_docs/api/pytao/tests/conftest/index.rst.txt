@@ -1,0 +1,25 @@
+:mod:`pytao.tests.conftest`
+===========================
+
+.. py:module:: pytao.tests.conftest
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pytao.tests.conftest.rootdir
+   pytao.tests.conftest.config_file
+
+
+.. function:: rootdir()
+
+
+.. function:: config_file(rootdir)
+
+

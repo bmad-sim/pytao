@@ -1,0 +1,425 @@
+:mod:`pytao.tests.test_interface_commands`
+==========================================
+
+.. py:module:: pytao.tests.test_interface_commands
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pytao.tests.test_interface_commands.test_beam_1
+   pytao.tests.test_interface_commands.test_beam_init_1
+   pytao.tests.test_interface_commands.test_bmad_com_1
+   pytao.tests.test_interface_commands.test_branch1_1
+   pytao.tests.test_interface_commands.test_bunch1_1
+   pytao.tests.test_interface_commands.test_bunch1_2
+   pytao.tests.test_interface_commands.test_building_wall_list_1
+   pytao.tests.test_interface_commands.test_building_wall_list_2
+   pytao.tests.test_interface_commands.test_building_wall_graph_1
+   pytao.tests.test_interface_commands.test_building_wall_point_1
+   pytao.tests.test_interface_commands.test_building_wall_section_1
+   pytao.tests.test_interface_commands.test_constraints_1
+   pytao.tests.test_interface_commands.test_constraints_2
+   pytao.tests.test_interface_commands.test_da_aperture_1
+   pytao.tests.test_interface_commands.test_da_params_1
+   pytao.tests.test_interface_commands.test_data_1
+   pytao.tests.test_interface_commands.test_data_2
+   pytao.tests.test_interface_commands.test_data_d2_create_1
+   pytao.tests.test_interface_commands.test_data_d2_destroy_1
+   pytao.tests.test_interface_commands.test_data_d2_1
+   pytao.tests.test_interface_commands.test_data_d_array_1
+   pytao.tests.test_interface_commands.test_data_d1_array_1
+   pytao.tests.test_interface_commands.test_data_parameter_1
+   pytao.tests.test_interface_commands.test_data_d2_array_1
+   pytao.tests.test_interface_commands.test_data_set_design_value_1
+   pytao.tests.test_interface_commands.test_datum_create_1
+   pytao.tests.test_interface_commands.test_datum_has_ele_1
+   pytao.tests.test_interface_commands.test_derivative_1
+   pytao.tests.test_interface_commands.test_ele_head_1
+   pytao.tests.test_interface_commands.test_ele_methods_1
+   pytao.tests.test_interface_commands.test_ele_gen_attribs_1
+   pytao.tests.test_interface_commands.test_ele_multipoles_1
+   pytao.tests.test_interface_commands.test_ele_ac_kicker_1
+   pytao.tests.test_interface_commands.test_ele_cartesian_map_1
+   pytao.tests.test_interface_commands.test_ele_chamber_wall_1
+   pytao.tests.test_interface_commands.test_ele_cylindrical_map_1
+   pytao.tests.test_interface_commands.test_ele_taylor_1
+   pytao.tests.test_interface_commands.test_ele_spin_taylor_1
+   pytao.tests.test_interface_commands.test_ele_wake_1
+   pytao.tests.test_interface_commands.test_ele_wall3d_1
+   pytao.tests.test_interface_commands.test_ele_twiss_1
+   pytao.tests.test_interface_commands.test_ele_control_1
+   pytao.tests.test_interface_commands.test_ele_orbit_1
+   pytao.tests.test_interface_commands.test_ele_mat6_1
+   pytao.tests.test_interface_commands.test_ele_taylor_field_1
+   pytao.tests.test_interface_commands.test_ele_grid_field_1
+   pytao.tests.test_interface_commands.test_ele_floor_1
+   pytao.tests.test_interface_commands.test_ele_floor_2
+   pytao.tests.test_interface_commands.test_ele_photon_1
+   pytao.tests.test_interface_commands.test_ele_lord_slave_1
+   pytao.tests.test_interface_commands.test_ele_elec_multipoles_1
+   pytao.tests.test_interface_commands.test_evaluate_1
+   pytao.tests.test_interface_commands.test_em_field_1
+   pytao.tests.test_interface_commands.test_enum_1
+   pytao.tests.test_interface_commands.test_floor_plan_1
+   pytao.tests.test_interface_commands.test_floor_orbit_1
+   pytao.tests.test_interface_commands.test_globals_1
+   pytao.tests.test_interface_commands.test_help_1
+   pytao.tests.test_interface_commands.test_inum_1
+   pytao.tests.test_interface_commands.test_lat_calc_done_1
+   pytao.tests.test_interface_commands.test_lat_ele_list_1
+   pytao.tests.test_interface_commands.test_lat_general_1
+   pytao.tests.test_interface_commands.test_lat_list_1
+   pytao.tests.test_interface_commands.test_lat_param_units_1
+   pytao.tests.test_interface_commands.test_matrix_1
+   pytao.tests.test_interface_commands.test_merit_1
+   pytao.tests.test_interface_commands.test_orbit_at_s_1
+   pytao.tests.test_interface_commands.test_place_buffer_1
+   pytao.tests.test_interface_commands.test_plot_curve_1
+   pytao.tests.test_interface_commands.test_plot_lat_layout_1
+   pytao.tests.test_interface_commands.test_plot_list_1
+   pytao.tests.test_interface_commands.test_plot_graph_1
+   pytao.tests.test_interface_commands.test_plot_histogram_1
+   pytao.tests.test_interface_commands.test_plot_plot_manage_1
+   pytao.tests.test_interface_commands.test_plot_curve_manage_1
+   pytao.tests.test_interface_commands.test_plot_graph_manage_1
+   pytao.tests.test_interface_commands.test_plot_line_1
+   pytao.tests.test_interface_commands.test_plot_symbol_1
+   pytao.tests.test_interface_commands.test_plot_transfer_1
+   pytao.tests.test_interface_commands.test_plot1_1
+   pytao.tests.test_interface_commands.test_shape_list_1
+   pytao.tests.test_interface_commands.test_shape_manage_1
+   pytao.tests.test_interface_commands.test_shape_pattern_list_1
+   pytao.tests.test_interface_commands.test_shape_pattern_list_2
+   pytao.tests.test_interface_commands.test_shape_pattern_manage_1
+   pytao.tests.test_interface_commands.test_shape_pattern_point_manage_1
+   pytao.tests.test_interface_commands.test_shape_set_1
+   pytao.tests.test_interface_commands.test_show_1
+   pytao.tests.test_interface_commands.test_species_to_int_1
+   pytao.tests.test_interface_commands.test_species_to_str_1
+   pytao.tests.test_interface_commands.test_spin_polarization_1
+   pytao.tests.test_interface_commands.test_super_universe_1
+   pytao.tests.test_interface_commands.test_twiss_at_s_1
+   pytao.tests.test_interface_commands.test_universe_1
+   pytao.tests.test_interface_commands.test_var_1
+   pytao.tests.test_interface_commands.test_var_create_1
+   pytao.tests.test_interface_commands.test_var_general_1
+   pytao.tests.test_interface_commands.test_var_v_array_1
+   pytao.tests.test_interface_commands.test_var_v1_array_1
+   pytao.tests.test_interface_commands.test_var_v1_create_1
+   pytao.tests.test_interface_commands.test_var_v1_destroy_1
+   pytao.tests.test_interface_commands.test_wave_1
+
+
+.. function:: test_beam_1()
+
+
+.. function:: test_beam_init_1()
+
+
+.. function:: test_bmad_com_1()
+
+
+.. function:: test_branch1_1()
+
+
+.. function:: test_bunch1_1()
+
+
+.. function:: test_bunch1_2()
+
+
+.. function:: test_building_wall_list_1()
+
+
+.. function:: test_building_wall_list_2()
+
+
+.. function:: test_building_wall_graph_1()
+
+
+.. function:: test_building_wall_point_1()
+
+
+.. function:: test_building_wall_section_1()
+
+
+.. function:: test_constraints_1()
+
+
+.. function:: test_constraints_2()
+
+
+.. function:: test_da_aperture_1()
+
+
+.. function:: test_da_params_1()
+
+
+.. function:: test_data_1()
+
+
+.. function:: test_data_2()
+
+
+.. function:: test_data_d2_create_1()
+
+
+.. function:: test_data_d2_destroy_1()
+
+
+.. function:: test_data_d2_1()
+
+
+.. function:: test_data_d_array_1()
+
+
+.. function:: test_data_d1_array_1()
+
+
+.. function:: test_data_parameter_1()
+
+
+.. function:: test_data_d2_array_1()
+
+
+.. function:: test_data_set_design_value_1()
+
+
+.. function:: test_datum_create_1()
+
+
+.. function:: test_datum_has_ele_1()
+
+
+.. function:: test_derivative_1()
+
+
+.. function:: test_ele_head_1()
+
+
+.. function:: test_ele_methods_1()
+
+
+.. function:: test_ele_gen_attribs_1()
+
+
+.. function:: test_ele_multipoles_1()
+
+
+.. function:: test_ele_ac_kicker_1()
+
+
+.. function:: test_ele_cartesian_map_1()
+
+
+.. function:: test_ele_chamber_wall_1()
+
+
+.. function:: test_ele_cylindrical_map_1()
+
+
+.. function:: test_ele_taylor_1()
+
+
+.. function:: test_ele_spin_taylor_1()
+
+
+.. function:: test_ele_wake_1()
+
+
+.. function:: test_ele_wall3d_1()
+
+
+.. function:: test_ele_twiss_1()
+
+
+.. function:: test_ele_control_1()
+
+
+.. function:: test_ele_orbit_1()
+
+
+.. function:: test_ele_mat6_1()
+
+
+.. function:: test_ele_taylor_field_1()
+
+
+.. function:: test_ele_grid_field_1()
+
+
+.. function:: test_ele_floor_1()
+
+
+.. function:: test_ele_floor_2()
+
+
+.. function:: test_ele_photon_1()
+
+
+.. function:: test_ele_lord_slave_1()
+
+
+.. function:: test_ele_elec_multipoles_1()
+
+
+.. function:: test_evaluate_1()
+
+
+.. function:: test_em_field_1()
+
+
+.. function:: test_enum_1()
+
+
+.. function:: test_floor_plan_1()
+
+
+.. function:: test_floor_orbit_1()
+
+
+.. function:: test_globals_1()
+
+
+.. function:: test_help_1()
+
+
+.. function:: test_inum_1()
+
+
+.. function:: test_lat_calc_done_1()
+
+
+.. function:: test_lat_ele_list_1()
+
+
+.. function:: test_lat_general_1()
+
+
+.. function:: test_lat_list_1()
+
+
+.. function:: test_lat_param_units_1()
+
+
+.. function:: test_matrix_1()
+
+
+.. function:: test_merit_1()
+
+
+.. function:: test_orbit_at_s_1()
+
+
+.. function:: test_place_buffer_1()
+
+
+.. function:: test_plot_curve_1()
+
+
+.. function:: test_plot_lat_layout_1()
+
+
+.. function:: test_plot_list_1()
+
+
+.. function:: test_plot_graph_1()
+
+
+.. function:: test_plot_histogram_1()
+
+
+.. function:: test_plot_plot_manage_1()
+
+
+.. function:: test_plot_curve_manage_1()
+
+
+.. function:: test_plot_graph_manage_1()
+
+
+.. function:: test_plot_line_1()
+
+
+.. function:: test_plot_symbol_1()
+
+
+.. function:: test_plot_transfer_1()
+
+
+.. function:: test_plot1_1()
+
+
+.. function:: test_shape_list_1()
+
+
+.. function:: test_shape_manage_1()
+
+
+.. function:: test_shape_pattern_list_1()
+
+
+.. function:: test_shape_pattern_list_2()
+
+
+.. function:: test_shape_pattern_manage_1()
+
+
+.. function:: test_shape_pattern_point_manage_1()
+
+
+.. function:: test_shape_set_1()
+
+
+.. function:: test_show_1()
+
+
+.. function:: test_species_to_int_1()
+
+
+.. function:: test_species_to_str_1()
+
+
+.. function:: test_spin_polarization_1()
+
+
+.. function:: test_super_universe_1()
+
+
+.. function:: test_twiss_at_s_1()
+
+
+.. function:: test_universe_1()
+
+
+.. function:: test_var_1()
+
+
+.. function:: test_var_create_1()
+
+
+.. function:: test_var_general_1()
+
+
+.. function:: test_var_v_array_1()
+
+
+.. function:: test_var_v1_array_1()
+
+
+.. function:: test_var_v1_create_1()
+
+
+.. function:: test_var_v1_destroy_1()
+
+
+.. function:: test_wave_1()
+
+

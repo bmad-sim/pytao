@@ -109,6 +109,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../misc/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.misc</span></code></a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../tao_pexpect/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_pexpect</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tests/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tests</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../util/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.util</span></code></a></li>
 </ul>
 </li>
@@ -257,12 +258,12 @@
 </table>
 <dl class="py function">
 <dt id="pytao.tao_ctypes.util.parse_bool">
-<code class="sig-prename descclassname">pytao.tao_ctypes.util.</code><code class="sig-name descname">parse_bool</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.util.parse_bool" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.util.</span></code><code class="sig-name descname"><span class="pre">parse_bool</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.util.parse_bool" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt id="pytao.tao_ctypes.util.parse_tao_lat_ele_list">
-<code class="sig-prename descclassname">pytao.tao_ctypes.util.</code><code class="sig-name descname">parse_tao_lat_ele_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lines</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.util.parse_tao_lat_ele_list" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.util.</span></code><code class="sig-name descname"><span class="pre">parse_tao_lat_ele_list</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lines</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.util.parse_tao_lat_ele_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns mapping of names to index</p>
 <p>TODO: if elements are duplicated, this returns only the last one.</p>
 <p>Example:
@@ -271,13 +272,13 @@ ixlist = parse_tao_lat_ele_list(tao.cmd(‘python lat_ele_list 1&#64;0’))</p>
 
 <dl class="py function">
 <dt id="pytao.tao_ctypes.util.pytype">
-<code class="sig-prename descclassname">pytao.tao_ctypes.util.</code><code class="sig-name descname">pytype</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">type</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.util.pytype" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.util.</span></code><code class="sig-name descname"><span class="pre">pytype</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.util.pytype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns python type for type =  REAL, INT, STR, ENUM, LOGIC</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="pytao.tao_ctypes.util.parse_tao_python_data1">
-<code class="sig-prename descclassname">pytao.tao_ctypes.util.</code><code class="sig-name descname">parse_tao_python_data1</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">line</span></em>, <em class="sig-param"><span class="n">clean_key</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.util.parse_tao_python_data1" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.util.</span></code><code class="sig-name descname"><span class="pre">parse_tao_python_data1</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clean_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.util.parse_tao_python_data1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parses most common data output from a Tao&gt;python command
 &lt;component_name&gt;;&lt;type&gt;;&lt;is_variable&gt;;&lt;component_value&gt;</p>
 <p>and returns a dict
@@ -293,13 +294,13 @@ ixlist = parse_tao_lat_ele_list(tao.cmd(‘python lat_ele_list 1&#64;0’))</p>
 
 <dl class="py function">
 <dt id="pytao.tao_ctypes.util.parse_tao_python_data">
-<code class="sig-prename descclassname">pytao.tao_ctypes.util.</code><code class="sig-name descname">parse_tao_python_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lines</span></em>, <em class="sig-param"><span class="n">clean_key</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.util.parse_tao_python_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.util.</span></code><code class="sig-name descname"><span class="pre">parse_tao_python_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lines</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clean_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.util.parse_tao_python_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns dict with data</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="pytao.tao_ctypes.util.simple_lat_table">
-<code class="sig-prename descclassname">pytao.tao_ctypes.util.</code><code class="sig-name descname">simple_lat_table</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tao</span></em>, <em class="sig-param"><span class="n">ix_universe</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">ix_branch</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">which</span><span class="o">=</span><span class="default_value">'model'</span></em>, <em class="sig-param"><span class="n">who</span><span class="o">=</span><span class="default_value">'twiss'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.util.simple_lat_table" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.util.</span></code><code class="sig-name descname"><span class="pre">simple_lat_table</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_universe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'model'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">who</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'twiss'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.util.simple_lat_table" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes the tao object, and returns columns of parameters associated with lattice elements
 “which” is one of:</p>
 <blockquote>

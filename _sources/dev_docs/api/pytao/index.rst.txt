@@ -23,6 +23,7 @@ Subpackages
    misc/index.rst
    tao_ctypes/index.rst
    tao_pexpect/index.rst
+   tests/index.rst
    util/index.rst
 
 
@@ -33,6 +34,7 @@ Submodules
    :maxdepth: 1
 
    _version/index.rst
+   interface_commands/index.rst
    tao_interface/index.rst
 
 

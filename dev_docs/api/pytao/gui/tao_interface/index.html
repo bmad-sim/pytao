@@ -109,6 +109,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../misc/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.misc</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../tao_ctypes/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../tao_pexpect/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_pexpect</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tests/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tests</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../util/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.util</span></code></a></li>
 </ul>
 </li>
@@ -243,13 +244,13 @@ a few extra features to facilitate communication with the GUI</p>
 </table>
 <dl class="py class">
 <dt id="pytao.gui.tao_interface.tao_interface">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_interface.</code><code class="sig-name descname">tao_interface</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">'ctypes'</span></em>, <em class="sig-param"><span class="n">init_args</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">tao_exe</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">expect_str</span><span class="o">=</span><span class="default_value">'Tao&gt;'</span></em>, <em class="sig-param"><span class="n">so_lib</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_interface.tao_interface" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_interface.</span></code><code class="sig-name descname"><span class="pre">tao_interface</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ctypes'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tao_exe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expect_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Tao&gt;'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">so_lib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_interface.tao_interface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../../tao_interface/index.html#module-pytao.tao_interface" title="pytao.tao_interface"><code class="xref py py-class docutils literal notranslate"><span class="pre">pytao.tao_interface</span></code></a></p>
 <p>Provides an interface between the GUI and
 the Tao command line</p>
 <dl class="py method">
 <dt id="pytao.gui.tao_interface.tao_interface.cmd_in">
-<code class="sig-name descname">cmd_in</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">cmd_str</span></em>, <em class="sig-param"><span class="n">no_warn</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_interface.tao_interface.cmd_in" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">cmd_in</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_warn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_interface.tao_interface.cmd_in" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs cmd_str at the Tao command line and returns the as a string
 Warning messages generated by this command are suppressed when
 no_warn is set True</p>
@@ -257,7 +258,7 @@ no_warn is set True</p>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_interface.tao_interface.cmd">
-<code class="sig-name descname">cmd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">cmd_str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_interface.tao_interface.cmd" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">cmd</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_interface.tao_interface.cmd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs cmd_str at the Tao command line and prints the output</p>
 </dd></dl>
 

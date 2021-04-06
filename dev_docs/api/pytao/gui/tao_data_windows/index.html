@@ -109,6 +109,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../misc/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.misc</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../tao_ctypes/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../tao_pexpect/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_pexpect</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tests/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tests</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../util/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.util</span></code></a></li>
 </ul>
 </li>
@@ -254,7 +255,7 @@
 </table>
 <dl class="py class">
 <dt id="pytao.gui.tao_data_windows.tao_d2_data_window">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_data_windows.</code><code class="sig-name descname">tao_d2_data_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">pipe</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_d2_data_window" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_data_windows.</span></code><code class="sig-name descname"><span class="pre">tao_d2_data_window</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_d2_data_window" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../tao_base_windows/index.html#pytao.gui.tao_base_windows.tao_list_window" title="pytao.gui.tao_base_windows.tao_list_window"><code class="xref py py-class docutils literal notranslate"><span class="pre">pytao.gui.tao_base_windows.tao_list_window</span></code></a></p>
 <p>Skeleton class with several commonly used features.
 Comes with a scrollable region and supports adding other widgets
@@ -262,7 +263,7 @@ Subclasses set tao_id before running this __init__ to handle
 adding/removing themselves from root window lists</p>
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.tao_d2_data_window.refresh">
-<code class="sig-name descname">refresh</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_d2_data_window.refresh" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">refresh</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_d2_data_window.refresh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clears self.list_frame and fills it with the current universe’s
 d2/d1 data</p>
 </dd></dl>
@@ -271,7 +272,7 @@ d2/d1 data</p>
 
 <dl class="py class">
 <dt id="pytao.gui.tao_data_windows.d2_data_frame">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_data_windows.</code><code class="sig-name descname">d2_data_frame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">master</span></em>, <em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">pipe</span></em>, <em class="sig-param"><span class="n">d2_data_name</span></em>, <em class="sig-param"><span class="n">u_ix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.d2_data_frame" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_data_windows.</span></code><code class="sig-name descname"><span class="pre">d2_data_frame</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">master</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_data_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_ix</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.d2_data_frame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets up an object with the following attributes:
 self.frame = a tk frame that will hold all relevant widgets and labels
 self.name = holds the name of the d2_data this frame represents
@@ -280,23 +281,23 @@ NOTE: master should be the frame that this frame is gridded into
 (usually a list_frame), while root should be the application root window</p>
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.d2_data_frame.open_d1_callback">
-<code class="sig-name descname">open_d1_callback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">d2_data_name</span></em>, <em class="sig-param"><span class="n">d1_data_name</span></em>, <em class="sig-param"><span class="n">pipe</span></em>, <em class="sig-param"><span class="n">ix_lb</span></em>, <em class="sig-param"><span class="n">ix_ub</span></em>, <em class="sig-param"><span class="n">u_ix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.d2_data_frame.open_d1_callback" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">open_d1_callback</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_data_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d1_data_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_lb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_ub</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_ix</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.d2_data_frame.open_d1_callback" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.d2_data_frame.edit_d2_callback">
-<code class="sig-name descname">edit_d2_callback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">d2_data_name</span></em>, <em class="sig-param"><span class="n">pipe</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.d2_data_frame.edit_d2_callback" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">edit_d2_callback</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_data_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.d2_data_frame.edit_d2_callback" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.d2_data_frame.edit_d2">
-<code class="sig-name descname">edit_d2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">d2_data_name</span></em>, <em class="sig-param"><span class="n">pipe</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.d2_data_frame.edit_d2" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">edit_d2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_data_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.d2_data_frame.edit_d2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Opens the new data window and clones this d2_array in for editing</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.d2_data_frame.open_d1">
-<code class="sig-name descname">open_d1</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">d2_data_name</span></em>, <em class="sig-param"><span class="n">d1_data_name</span></em>, <em class="sig-param"><span class="n">pipe</span></em>, <em class="sig-param"><span class="n">ix_lb</span></em>, <em class="sig-param"><span class="n">ix_ub</span></em>, <em class="sig-param"><span class="n">u_ix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.d2_data_frame.open_d1" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">open_d1</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_data_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d1_data_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_lb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_ub</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_ix</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.d2_data_frame.open_d1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Opens a window with detailed information for d2_data_name.d1_data_name</p>
 </dd></dl>
 
@@ -304,50 +305,50 @@ NOTE: master should be the frame that this frame is gridded into
 
 <dl class="py class">
 <dt id="pytao.gui.tao_data_windows.tao_d1_data_window">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_data_windows.</code><code class="sig-name descname">tao_d1_data_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">pipe</span></em>, <em class="sig-param"><span class="n">d1_data_name</span></em>, <em class="sig-param"><span class="n">u_ix</span></em>, <em class="sig-param"><span class="n">ix_lb</span></em>, <em class="sig-param"><span class="n">ix_ub</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_d1_data_window" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_data_windows.</span></code><code class="sig-name descname"><span class="pre">tao_d1_data_window</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d1_data_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_ix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_lb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_ub</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_d1_data_window" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../tao_base_windows/index.html#pytao.gui.tao_base_windows.lw_table_window" title="pytao.gui.tao_base_windows.lw_table_window"><code class="xref py py-class docutils literal notranslate"><span class="pre">pytao.gui.tao_base_windows.lw_table_window</span></code></a></p>
 <p>With lw set to True, opens a lw_table_window instead</p>
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.tao_d1_data_window.refresh">
-<code class="sig-name descname">refresh</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_d1_data_window.refresh" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">refresh</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_d1_data_window.refresh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a treeview to display the table information,
 and binds double click to open one item</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.tao_d1_data_window.list_row_fetch">
-<code class="sig-name descname">list_row_fetch</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_d1_data_window.list_row_fetch" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">list_row_fetch</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_d1_data_window.list_row_fetch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns row number index to be appended to self.list_rows</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.tao_d1_data_window.lw_list_row_fetch">
-<code class="sig-name descname">lw_list_row_fetch</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_d1_data_window.lw_list_row_fetch" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">lw_list_row_fetch</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_d1_data_window.lw_list_row_fetch" title="Permalink to this definition">¶</a></dt>
 <dd><p>For use with lw_table_window.  Returns a list of the values
 to be displayed in each column of row #index.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.tao_d1_data_window.lw_detail_callback">
-<code class="sig-name descname">lw_detail_callback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_d1_data_window.lw_detail_callback" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">lw_detail_callback</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_d1_data_window.lw_detail_callback" title="Permalink to this definition">¶</a></dt>
 <dd><p>Callback for the light-weight table to open a detail window</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.tao_d1_data_window.bulk_set">
-<code class="sig-name descname">bulk_set</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">fill_choices</span></em>, <em class="sig-param"><span class="n">parent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_d1_data_window.bulk_set" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">bulk_set</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_choices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_d1_data_window.bulk_set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Overload of lw_table_window.bulk_set that calls refresh data and plot windows</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.tao_d1_data_window.open_detail_window">
-<code class="sig-name descname">open_detail_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_d1_data_window.open_detail_window" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">open_detail_window</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_d1_data_window.open_detail_window" title="Permalink to this definition">¶</a></dt>
 <dd><p>Opens up a detail window for the given index.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.tao_d1_data_window.detail_set_callback">
-<code class="sig-name descname">detail_set_callback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">tao_list</span></em>, <em class="sig-param"><span class="n">set_str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_d1_data_window.detail_set_callback" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">detail_set_callback</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tao_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_d1_data_window.detail_set_callback" title="Permalink to this definition">¶</a></dt>
 <dd><p>Overload of lw_table_window.detail_set_callback that refreshes
 data-related windows</p>
 </dd></dl>
@@ -356,23 +357,23 @@ data-related windows</p>
 
 <dl class="py class">
 <dt id="pytao.gui.tao_data_windows.tao_new_data_window">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_data_windows.</code><code class="sig-name descname">tao_new_data_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">pipe</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_new_data_window" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_data_windows.</span></code><code class="sig-name descname"><span class="pre">tao_new_data_window</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_new_data_window" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../tao_base_windows/index.html#pytao.gui.tao_base_windows.Tao_Toplevel" title="pytao.gui.tao_base_windows.Tao_Toplevel"><code class="xref py py-class docutils literal notranslate"><span class="pre">pytao.gui.tao_base_windows.Tao_Toplevel</span></code></a></p>
 <p>Provides a window for creating new d2 data arrays (and their associated d1 arrays)
 Pass the name of an existing d2_array to open that array and start editing its d1_arrays</p>
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.tao_new_data_window.fill_d2_frame">
-<code class="sig-name descname">fill_d2_frame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_new_data_window.fill_d2_frame" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">fill_d2_frame</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_new_data_window.fill_d2_frame" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.tao_new_data_window.load_d2_frame">
-<code class="sig-name descname">load_d2_frame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_new_data_window.load_d2_frame" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">load_d2_frame</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_new_data_window.load_d2_frame" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.tao_new_data_window.load_d1_frame">
-<code class="sig-name descname">load_d1_frame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">ask</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_new_data_window.load_d1_frame" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">load_d1_frame</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_new_data_window.load_d1_frame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ungrids self.d2_frame, grids self.d1_frame, and sets up a notebook
 for the d1_frames if necessary.
 Set ask=False to skip message boxes</p>
@@ -380,7 +381,7 @@ Set ask=False to skip message boxes</p>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.tao_new_data_window.create_data">
-<code class="sig-name descname">create_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_new_data_window.create_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">create_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_new_data_window.create_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes the information from the d2_frame and d1_frames and runs
 the necessary commands to create the data in tao, then closes
 the create data window</p>
@@ -388,13 +389,13 @@ the create data window</p>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.tao_new_data_window.tab_handler">
-<code class="sig-name descname">tab_handler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_new_data_window.tab_handler" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">tab_handler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_new_data_window.tab_handler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handles new tab creation and updates self.d1_index as necessary</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.tao_new_data_window.add_d1_frame">
-<code class="sig-name descname">add_d1_frame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">d1_name</span></em>, <em class="sig-param"><span class="n">d2_name</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_new_data_window.add_d1_frame" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">add_d1_frame</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d1_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_new_data_window.add_d1_frame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new d1_frame for d1_name and reads existing data in from Tao if present
 Takes a line of output from python data_d1_array for d1_name
 d2_name should be “<a class="reference external" href="mailto:uni&#37;&#52;&#48;d2_name">uni<span>&#64;</span>d2_name</a>”</p>
@@ -402,7 +403,7 @@ d2_name should be “<a class="reference external" href="mailto:uni&#37;&#52;&#4
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.tao_new_data_window.refresh">
-<code class="sig-name descname">refresh</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_new_data_window.refresh" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">refresh</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.tao_new_data_window.refresh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Only here in case something tries to refresh this window</p>
 </dd></dl>
 
@@ -410,7 +411,7 @@ d2_name should be “<a class="reference external" href="mailto:uni&#37;&#52;&#4
 
 <dl class="py class">
 <dt id="pytao.gui.tao_data_windows.new_d1_frame">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_data_windows.</code><code class="sig-name descname">new_d1_frame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">d2_array</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">full_name</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_data_windows.</span></code><code class="sig-name descname"><span class="pre">new_d1_frame</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d2_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pytao.gui.tao_base_windows.tk.Frame</span></code></p>
 <p>Provides a frame for inputting properties of a d1_data array.
 To load an existing d1_array, pass the d1_array name as name
@@ -419,41 +420,41 @@ Also pass the full name that should be used for data lookup
 (e.g. <a class="reference external" href="mailto:1&#37;&#52;&#48;orbit&#46;x">1<span>&#64;</span>orbit<span>&#46;</span>x</a>)</p>
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.new_d1_frame.fill_defaults">
-<code class="sig-name descname">fill_defaults</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame.fill_defaults" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">fill_defaults</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame.fill_defaults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Copies the properties of the first datum and makes them the defaults at the d1 level</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.new_d1_frame.delete">
-<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">ask</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame.delete" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">delete</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame.delete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes this d1_array frame
 Call with ask = False to skip confirmation</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.new_d1_frame.duplicate">
-<code class="sig-name descname">duplicate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame.duplicate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">duplicate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame.duplicate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a new d1_frame to self.d2_array.d1_frame_list that is a copy of
 this frame, and changes focus to that frame</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.new_d1_frame.make_datum_frame">
-<code class="sig-name descname">make_datum_frame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame.make_datum_frame" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">make_datum_frame</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame.make_datum_frame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds an entry to self.data_dict if necessary, and updates
 self.datum_frame to show the values for the current datum</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.new_d1_frame.datum_fill">
-<code class="sig-name descname">datum_fill</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">ix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame.datum_fill" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">datum_fill</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame.datum_fill" title="Permalink to this definition">¶</a></dt>
 <dd><p>“Fills” the value in self.d1_array_wids[ix] to all datums in self.data_dict
 Actually just erases the values in self.data_dict, which produces the same effect</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.new_d1_frame.lat_browser">
-<code class="sig-name descname">lat_browser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">which</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame.lat_browser" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">lat_browser</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame.lat_browser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Opens a modified lattice table window to select elements en masse
 which should be either ‘name’, ‘start_name’, or ‘ref_name’
 When the elements are chosen, ele_which will be set for each of this
@@ -462,7 +463,7 @@ d1_array’s data sequentially</p>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.new_d1_frame.name_handler">
-<code class="sig-name descname">name_handler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">strict</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame.name_handler" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">name_handler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame.name_handler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks whether the input name is valid, and
 sets the tab name to it if it is
 Returns True if the name is valid,
@@ -474,7 +475,7 @@ for an empty name</p>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.new_d1_frame.ix_min_handler">
-<code class="sig-name descname">ix_min_handler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">strict</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame.ix_min_handler" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">ix_min_handler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame.ix_min_handler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks if the starting index is valid,
 and updates self.ix_min if it is.
 Returns True if a good index is set,
@@ -487,7 +488,7 @@ for an empty ix_min</p>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.new_d1_frame.length_handler">
-<code class="sig-name descname">length_handler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">strict</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame.length_handler" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">length_handler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame.length_handler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks that the d1 array length has been set
 to a valid value, and updates self.length if it has.
 Returns True if the length has been set to a valid
@@ -497,14 +498,14 @@ value, and None if left blank.</p>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.new_d1_frame.data_source_handler">
-<code class="sig-name descname">data_source_handler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame.data_source_handler" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">data_source_handler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame.data_source_handler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the data_source widget to only show valid data types
 for the currently selected data source</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_data_windows.new_d1_frame.data_type_handler">
-<code class="sig-name descname">data_type_handler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame.data_type_handler" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">data_type_handler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_data_windows.new_d1_frame.data_type_handler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the state of the ele buttons appropriately for the currently selected data type</p>
 </dd></dl>
 

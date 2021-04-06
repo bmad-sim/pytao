@@ -109,6 +109,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../misc/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.misc</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../tao_ctypes/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../tao_pexpect/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_pexpect</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tests/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tests</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../util/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.util</span></code></a></li>
 </ul>
 </li>
@@ -279,7 +280,7 @@ in the GUI for tao.</p>
 </table>
 <dl class="py class">
 <dt id="pytao.gui.tao_base_windows.Tao_Toplevel">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_base_windows.</code><code class="sig-name descname">Tao_Toplevel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.Tao_Toplevel" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_base_windows.</span></code><code class="sig-name descname"><span class="pre">Tao_Toplevel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.Tao_Toplevel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pytao.gui.tao_widget.tk.Toplevel</span></code></p>
 <p>Skeleton class that handles adding/removing windows
 from the root refresh windows dictionary
@@ -289,7 +290,7 @@ Subclasses MUST set self.root before running this
 __init__ method.</p>
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.Tao_Toplevel.destroy">
-<code class="sig-name descname">destroy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.Tao_Toplevel.destroy" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">destroy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.Tao_Toplevel.destroy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Overloaded here to remove self from root.refresh_windows</p>
 </dd></dl>
 
@@ -297,7 +298,7 @@ __init__ method.</p>
 
 <dl class="py class">
 <dt id="pytao.gui.tao_base_windows.Tao_Popup">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_base_windows.</code><code class="sig-name descname">Tao_Popup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">tao_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.Tao_Popup" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_base_windows.</span></code><code class="sig-name descname"><span class="pre">Tao_Popup</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tao_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.Tao_Popup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pytao.gui.tao_base_windows.Tao_Toplevel" title="pytao.gui.tao_base_windows.Tao_Toplevel"><code class="xref py py-class docutils literal notranslate"><span class="pre">pytao.gui.tao_base_windows.Tao_Toplevel</span></code></a></p>
 <p>Provides a more convenient way to initialize a toplevel
 window that doesn’t need to be its own subclass, used for
@@ -309,7 +310,7 @@ tao_id: which set of refresh windows this window should belong to (optional)</p>
 
 <dl class="py class">
 <dt id="pytao.gui.tao_base_windows.tao_list_window">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_base_windows.</code><code class="sig-name descname">tao_list_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">title</span></em>, <em class="sig-param"><span class="n">use_upper</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">min_width</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">parent</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_list_window" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_base_windows.</span></code><code class="sig-name descname"><span class="pre">tao_list_window</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_upper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_list_window" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pytao.gui.tao_base_windows.Tao_Toplevel" title="pytao.gui.tao_base_windows.Tao_Toplevel"><code class="xref py py-class docutils literal notranslate"><span class="pre">pytao.gui.tao_base_windows.Tao_Toplevel</span></code></a></p>
 <p>Skeleton class with several commonly used features.
 Comes with a scrollable region and supports adding other widgets
@@ -317,24 +318,24 @@ Subclasses set tao_id before running this __init__ to handle
 adding/removing themselves from root window lists</p>
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tao_list_window.bind_mouse">
-<code class="sig-name descname">bind_mouse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_list_window.bind_mouse" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">bind_mouse</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_list_window.bind_mouse" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tao_list_window.unbind_mouse">
-<code class="sig-name descname">unbind_mouse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_list_window.unbind_mouse" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">unbind_mouse</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_list_window.unbind_mouse" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tao_list_window.mouse_scroll">
-<code class="sig-name descname">mouse_scroll</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_list_window.mouse_scroll" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">mouse_scroll</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_list_window.mouse_scroll" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt id="pytao.gui.tao_base_windows.tao_scroll_frame">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_base_windows.</code><code class="sig-name descname">tao_scroll_frame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">min_width</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_scroll_frame" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_base_windows.</span></code><code class="sig-name descname"><span class="pre">tao_scroll_frame</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_scroll_frame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pytao.gui.tao_widget.tk.Frame</span></code></p>
 <p>Provides a frame with a vertical scrollbar attached
 parent: the parent of this frame
@@ -343,52 +344,52 @@ self.frame should be used for placing widgets into
 this frame</p>
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tao_scroll_frame.frame_handler">
-<code class="sig-name descname">frame_handler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_scroll_frame.frame_handler" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">frame_handler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_scroll_frame.frame_handler" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tao_scroll_frame.canvas_handler">
-<code class="sig-name descname">canvas_handler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_scroll_frame.canvas_handler" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">canvas_handler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_scroll_frame.canvas_handler" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tao_scroll_frame.scrollhelper">
-<code class="sig-name descname">scrollhelper</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_scroll_frame.scrollhelper" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">scrollhelper</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_scroll_frame.scrollhelper" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tao_scroll_frame.bind_mouse">
-<code class="sig-name descname">bind_mouse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_scroll_frame.bind_mouse" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">bind_mouse</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_scroll_frame.bind_mouse" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tao_scroll_frame.unbind_mouse">
-<code class="sig-name descname">unbind_mouse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_scroll_frame.unbind_mouse" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">unbind_mouse</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_scroll_frame.unbind_mouse" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tao_scroll_frame.mouse_scroll">
-<code class="sig-name descname">mouse_scroll</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_scroll_frame.mouse_scroll" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">mouse_scroll</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_scroll_frame.mouse_scroll" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt id="pytao.gui.tao_base_windows.tao_parameter_frame">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_base_windows.</code><code class="sig-name descname">tao_parameter_frame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">tao_list</span></em>, <em class="sig-param"><span class="n">n_col</span></em>, <em class="sig-param"><span class="n">pipe</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_parameter_frame" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_base_windows.</span></code><code class="sig-name descname"><span class="pre">tao_parameter_frame</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tao_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_parameter_frame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pytao.gui.tao_widget.tk.Frame</span></code></p>
 <p>Meant to display a list of parameters in a given
 number of columns
 tao_list should be a list of tao_parameters</p>
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tao_parameter_frame.set_params">
-<code class="sig-name descname">set_params</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">set_str</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_parameter_frame.set_params" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">set_params</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_parameter_frame.set_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs tao_set on self.tao_list</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tao_parameter_frame.check_for_changes">
-<code class="sig-name descname">check_for_changes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_parameter_frame.check_for_changes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">check_for_changes</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_parameter_frame.check_for_changes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs check_for_changes (from tao_set) on self.tao_list</p>
 </dd></dl>
 
@@ -396,14 +397,14 @@ tao_list should be a list of tao_parameters</p>
 
 <dl class="py class">
 <dt id="pytao.gui.tao_base_windows.tao_parameter_window">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_base_windows.</code><code class="sig-name descname">tao_parameter_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">title</span></em>, <em class="sig-param"><span class="n">tao_list</span></em>, <em class="sig-param"><span class="n">pipe</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">parent</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_parameter_window" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_base_windows.</span></code><code class="sig-name descname"><span class="pre">tao_parameter_window</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tao_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_parameter_window" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pytao.gui.tao_base_windows.tao_list_window" title="pytao.gui.tao_base_windows.tao_list_window"><code class="xref py py-class docutils literal notranslate"><span class="pre">pytao.gui.tao_base_windows.tao_list_window</span></code></a></p>
 <p>Generic window for displaying and editing a list of parameters</p>
 </dd></dl>
 
 <dl class="py class">
 <dt id="pytao.gui.tao_base_windows.table_window">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_base_windows.</code><code class="sig-name descname">table_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">pipe</span></em>, <em class="sig-param"><span class="n">array_name</span></em>, <em class="sig-param"><span class="n">title_list</span></em>, <em class="sig-param"><span class="n">bulk_template</span></em>, <em class="sig-param"><span class="n">bulk_set_format</span></em>, <em class="sig-param"><span class="n">set_format</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.table_window" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_base_windows.</span></code><code class="sig-name descname"><span class="pre">table_window</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bulk_template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bulk_set_format</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_format</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.table_window" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pytao.gui.tao_base_windows.tao_list_window" title="pytao.gui.tao_base_windows.tao_list_window"><code class="xref py py-class docutils literal notranslate"><span class="pre">pytao.gui.tao_base_windows.tao_list_window</span></code></a></p>
 <p>Meant for showing large amounts of information in a table
 (e.g. d1_data and v1_vars).  Comes with bulk editing, detailed view of
@@ -431,12 +432,12 @@ example format strings: “set data 1&#64;{}|”, “set data 1&#64;{}[{}]|”</
 </dl>
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.table_window.refresh">
-<code class="sig-name descname">refresh</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.table_window.refresh" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">refresh</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.table_window.refresh" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.table_window.fill">
-<code class="sig-name descname">fill</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">index</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.table_window.fill" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">fill</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.table_window.fill" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fills the column specified by bulk_template to the bulk edit value,
 saves the bulk edit value for efficient calls to tao_set,
 and clears the bulk edit box</p>
@@ -444,34 +445,34 @@ and clears the bulk edit box</p>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.table_window.fill_callback">
-<code class="sig-name descname">fill_callback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">index</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.table_window.fill_callback" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">fill_callback</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.table_window.fill_callback" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.table_window.apply">
-<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.table_window.apply" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">apply</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.table_window.apply" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.table_window.open_detail_window_callback">
-<code class="sig-name descname">open_detail_window_callback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.table_window.open_detail_window_callback" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">open_detail_window_callback</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.table_window.open_detail_window_callback" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.table_window.open_detail_window">
-<code class="sig-name descname">open_detail_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.table_window.open_detail_window" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">open_detail_window</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.table_window.open_detail_window" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.table_window.detail_set_callback">
-<code class="sig-name descname">detail_set_callback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">tao_list</span></em>, <em class="sig-param"><span class="n">set_str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.table_window.detail_set_callback" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">detail_set_callback</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tao_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.table_window.detail_set_callback" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt id="pytao.gui.tao_base_windows.lw_table_window">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_base_windows.</code><code class="sig-name descname">lw_table_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">pipe</span></em>, <em class="sig-param"><span class="n">array_name</span></em>, <em class="sig-param"><span class="n">title_list</span></em>, <em class="sig-param"><span class="n">bulk_format</span></em>, <em class="sig-param"><span class="n">bulk_set_format</span></em>, <em class="sig-param"><span class="n">set_format</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.lw_table_window" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_base_windows.</span></code><code class="sig-name descname"><span class="pre">lw_table_window</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bulk_format</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bulk_set_format</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_format</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.lw_table_window" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pytao.gui.tao_base_windows.Tao_Toplevel" title="pytao.gui.tao_base_windows.Tao_Toplevel"><code class="xref py py-class docutils literal notranslate"><span class="pre">pytao.gui.tao_base_windows.Tao_Toplevel</span></code></a></p>
 <p>Light-weight version of table_window, intended to be less
 graphically/computationally intensive (for use with networked
@@ -479,40 +480,40 @@ machines, for example).  Table is read only but individual
 entries can still be opened for editing with double click.</p>
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.lw_table_window.toggle_show_all">
-<code class="sig-name descname">toggle_show_all</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.lw_table_window.toggle_show_all" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">toggle_show_all</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.lw_table_window.toggle_show_all" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.lw_table_window.refresh">
-<code class="sig-name descname">refresh</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.lw_table_window.refresh" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">refresh</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.lw_table_window.refresh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a treeview to display the table information,
 and binds double click to open one item</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.lw_table_window.open_detail_window_callback">
-<code class="sig-name descname">open_detail_window_callback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.lw_table_window.open_detail_window_callback" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">open_detail_window_callback</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.lw_table_window.open_detail_window_callback" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks the table for the currently selected row and
 makes a call to open_detail_window_callback</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.lw_table_window.open_bulk_window">
-<code class="sig-name descname">open_bulk_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.lw_table_window.open_bulk_window" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">open_bulk_window</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.lw_table_window.open_bulk_window" title="Permalink to this definition">¶</a></dt>
 <dd><p>Opens a window with bulk settings for meas_value,
 ref_value, weight, and good_user.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.lw_table_window.bulk_set">
-<code class="sig-name descname">bulk_set</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">fill_choices</span></em>, <em class="sig-param"><span class="n">parent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.lw_table_window.bulk_set" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">bulk_set</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_choices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.lw_table_window.bulk_set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs set commands to set variables specified in a bulk window
 appropriately.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.lw_table_window.make_bulk_frame">
-<code class="sig-name descname">make_bulk_frame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">bulk_item</span></em>, <em class="sig-param"><span class="n">usebmd</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.lw_table_window.make_bulk_frame" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">make_bulk_frame</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bulk_item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usebmd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.lw_table_window.make_bulk_frame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a frame with all the widgets needed for one parameter in the
 bulk settings window.
 parent: parent widget for this frame
@@ -526,20 +527,20 @@ usebmd: if set true, and option will be given to set to the</p>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.lw_table_window.open_detail_window">
-<code class="sig-name descname">open_detail_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.lw_table_window.open_detail_window" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">open_detail_window</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.lw_table_window.open_detail_window" title="Permalink to this definition">¶</a></dt>
 <dd><p>Opens up a detail window for the given index.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.lw_table_window.detail_set_callback">
-<code class="sig-name descname">detail_set_callback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">tao_list</span></em>, <em class="sig-param"><span class="n">set_str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.lw_table_window.detail_set_callback" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">detail_set_callback</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tao_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.lw_table_window.detail_set_callback" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt id="pytao.gui.tao_base_windows.tao_branch_widgets">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_base_windows.</code><code class="sig-name descname">tao_branch_widgets</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">pipe</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_branch_widgets" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_base_windows.</span></code><code class="sig-name descname"><span class="pre">tao_branch_widgets</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_branch_widgets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provides several widgets for slecting universe,
 branch, and elements
 Available widgets:
@@ -557,7 +558,7 @@ In addition, the class provides tk variables for each of these widgets,</p>
 </div></blockquote>
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tao_branch_widgets.make_branch">
-<code class="sig-name descname">make_branch</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_branch_widgets.make_branch" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">make_branch</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_branch_widgets.make_branch" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is necessary because the list of options
 to show in the branch chooser depends on what
 universe you are in</p>
@@ -565,21 +566,21 @@ universe you are in</p>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tao_branch_widgets.make_ele_chooser">
-<code class="sig-name descname">make_ele_chooser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_branch_widgets.make_ele_chooser" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">make_ele_chooser</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_branch_widgets.make_ele_chooser" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is necessary because different branches
 have different lists of elements to display</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tao_branch_widgets.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_branch_widgets.update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">update</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_branch_widgets.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets self.ele to its index value (as a string)
 Returns 0 if setting self.ele failed, 1 if succeeded</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tao_branch_widgets.update_branch">
-<code class="sig-name descname">update_branch</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_branch_widgets.update_branch" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">update_branch</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_branch_widgets.update_branch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Trace callback for self.branch_name to update self.branch</p>
 </dd></dl>
 
@@ -587,7 +588,7 @@ Returns 0 if setting self.ele failed, 1 if succeeded</p>
 
 <dl class="py class">
 <dt id="pytao.gui.tao_base_windows.tao_progress_window">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_base_windows.</code><code class="sig-name descname">tao_progress_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">num_bars</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_progress_window" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_base_windows.</span></code><code class="sig-name descname"><span class="pre">tao_progress_window</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_bars</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_progress_window" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pytao.gui.tao_widget.tk.Toplevel</span></code></p>
 <p>Provides a window for displaying progress bars for long running processes
 Use the grid geometry manager for placing extra widgets in this window
@@ -602,13 +603,13 @@ num_bars: the number of progress bars
 Other init arguments are passed to the tk.Toplevel.__init__ method</p>
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tao_progress_window.set_max">
-<code class="sig-name descname">set_max</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">ix</span></em>, <em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_progress_window.set_max" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">set_max</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_progress_window.set_max" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the max value for self.bars[ix] to val</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tao_progress_window.set_val">
-<code class="sig-name descname">set_val</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">ix</span></em>, <em class="sig-param"><span class="n">val</span></em>, <em class="sig-param"><span class="n">update</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_progress_window.set_val" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">set_val</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_progress_window.set_val" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets to value of self.bars[ix] to val
 Note that self.set_max should be used first to set the progress bar max
 Use update=False to prevent running self.parent.update_idletaks()
@@ -619,7 +620,7 @@ Use update=False to prevent running self.parent.update_idletaks()
 
 <dl class="py class">
 <dt id="pytao.gui.tao_base_windows.tao_message_box">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_base_windows.</code><code class="sig-name descname">tao_message_box</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">tk_var</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">message</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">choices</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">orient</span><span class="o">=</span><span class="default_value">'horizontal'</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_message_box" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_base_windows.</span></code><code class="sig-name descname"><span class="pre">tao_message_box</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tk_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'horizontal'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_message_box" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pytao.gui.tao_widget.tk.Toplevel</span></code></p>
 <p>Custom messageboxes for when tkinter.messagebox does not suffice
 root: the Tk root window
@@ -632,24 +633,24 @@ orient: grid the buttons horizontally or vertically (may be ‘horizontal’ or 
 Other arguments are passed to the tk.Toplevel.__init__ method</p>
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tao_message_box.button_callback">
-<code class="sig-name descname">button_callback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">choice</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_message_box.button_callback" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">button_callback</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choice</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_message_box.button_callback" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tao_message_box.button_cmd">
-<code class="sig-name descname">button_cmd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">choice</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_message_box.button_cmd" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">button_cmd</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choice</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_message_box.button_cmd" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tao_message_box.cancel">
-<code class="sig-name descname">cancel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_message_box.cancel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">cancel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tao_message_box.cancel" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt id="pytao.gui.tao_base_windows.tabbed_frame">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_base_windows.</code><code class="sig-name descname">tabbed_frame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">new_tab_func</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tabbed_frame" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_base_windows.</span></code><code class="sig-name descname"><span class="pre">tabbed_frame</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_tab_func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tabbed_frame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pytao.gui.tao_widget.tk.Frame</span></code></p>
 <p>Provides a frame for showing multiple frames one at a time
 in a tabbed view.
@@ -663,13 +664,13 @@ new_tab_func will likely be the init method for a tk.Frame subclass
 pipe: the tao_interface in use</p>
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tabbed_frame._tab_handler">
-<code class="sig-name descname">_tab_handler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tabbed_frame._tab_handler" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_tab_handler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tabbed_frame._tab_handler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handles new tab creation and updates self.tab_index as necessary</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tabbed_frame.add_tab">
-<code class="sig-name descname">add_tab</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">ix</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tabbed_frame.add_tab" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">add_tab</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tabbed_frame.add_tab" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a new tab at the specified index
 If ix is not specified, the tab is added at the end of the list
 <a href="#id1"><span class="problematic" id="id2">*</span></a>args and <a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs are passed to self.new_tab_func after self</p>
@@ -677,14 +678,14 @@ If ix is not specified, the tab is added at the end of the list
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tabbed_frame.remove_tab">
-<code class="sig-name descname">remove_tab</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">ix</span></em>, <em class="sig-param"><span class="n">destroy</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tabbed_frame.remove_tab" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">remove_tab</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destroy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tabbed_frame.remove_tab" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes the tab at the specified position
 Does not destroy the removed frame unless destroy==True</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.tabbed_frame.update_name">
-<code class="sig-name descname">update_name</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">ix</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tabbed_frame.update_name" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">update_name</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.tabbed_frame.update_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the tab title to match the frame name for the
 tab in the specified position
 If ix==None, runs this method for all tabs</p>
@@ -694,7 +695,7 @@ If ix==None, runs this method for all tabs</p>
 
 <dl class="py class">
 <dt id="pytao.gui.tao_base_windows.ele_shape_frame">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_base_windows.</code><code class="sig-name descname">ele_shape_frame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">pipe</span></em>, <em class="sig-param"><span class="n">which</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_base_windows.</span></code><code class="sig-name descname"><span class="pre">ele_shape_frame</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pytao.gui.tao_widget.tk.Frame</span></code></p>
 <p>Provides a frame for viewing and editing the shapes that are used to
 display lat_layout and floor_plan graphs in tao</p>
@@ -703,74 +704,74 @@ pipe: the tao_interface used to querry/set ele shapes
 which: either “lat_layout” or “floor_plan”</p>
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.ele_shape_frame.refresh">
-<code class="sig-name descname">refresh</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame.refresh" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">refresh</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame.refresh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the table contents equal to the output of
 python shape_list lat_layout/floor_plan as requested</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.ele_shape_frame.width_adjust">
-<code class="sig-name descname">width_adjust</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame.width_adjust" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">width_adjust</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame.width_adjust" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adjusts column widths and total table width to show all contents</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.ele_shape_frame.get_focus_ix">
-<code class="sig-name descname">get_focus_ix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame.get_focus_ix" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_focus_ix</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame.get_focus_ix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the index of the focus row (lowest index = 0, not 1)</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.ele_shape_frame.edit_shape">
-<code class="sig-name descname">edit_shape</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame.edit_shape" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">edit_shape</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame.edit_shape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Opens a window for editing the selected ele_shape</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.ele_shape_frame.swap_shapes">
-<code class="sig-name descname">swap_shapes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">ix1</span></em>, <em class="sig-param"><span class="n">ix2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame.swap_shapes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">swap_shapes</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame.swap_shapes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Swaps the shapes with indices ix1 and ix2
 (0 based) and refreshes the window</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.ele_shape_frame.move_up">
-<code class="sig-name descname">move_up</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame.move_up" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">move_up</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame.move_up" title="Permalink to this definition">¶</a></dt>
 <dd><p>Moves the selected item up one position, and shifts
 the others down by one</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.ele_shape_frame.move_down">
-<code class="sig-name descname">move_down</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame.move_down" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">move_down</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame.move_down" title="Permalink to this definition">¶</a></dt>
 <dd><p>Moves the selected item down one position, and shifts
 the others down by one</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.ele_shape_frame.duplicate_item">
-<code class="sig-name descname">duplicate_item</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame.duplicate_item" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">duplicate_item</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame.duplicate_item" title="Permalink to this definition">¶</a></dt>
 <dd><p>Copies the selected shape and adds a duplicate of it to
 the shape table at the next index</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.ele_shape_frame.delete_item">
-<code class="sig-name descname">delete_item</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame.delete_item" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">delete_item</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame.delete_item" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes the selected item from the ele_shape table
 and shifts other ele_shapes accordingly</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.ele_shape_frame.new_at_top">
-<code class="sig-name descname">new_at_top</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame.new_at_top" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">new_at_top</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame.new_at_top" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a new empty shape to the top of the ele_list
 and shifts other elements down</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_base_windows.ele_shape_frame.new_at_bottom">
-<code class="sig-name descname">new_at_bottom</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">event</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame.new_at_bottom" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">new_at_bottom</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_base_windows.ele_shape_frame.new_at_bottom" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a new empty shape to the bottom of the ele_list
 and shifts other elements down</p>
 </dd></dl>

@@ -41,7 +41,7 @@
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
     <link rel="next" title="pytao.util.data" href="data/index.html" />
-    <link rel="prev" title="pytao.tao_pexpect.tao_pipe" href="../tao_pexpect/tao_pipe/index.html" /> 
+    <link rel="prev" title="pytao.tests.test_interface_commands" href="../tests/test_interface_commands/index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -109,6 +109,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../misc/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.misc</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../tao_ctypes/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../tao_pexpect/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_pexpect</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../tests/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tests</span></code></a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.util</span></code></a></li>
 </ul>
 </li>
@@ -277,7 +278,7 @@
 </table>
 <dl class="py class">
 <dt id="pytao.util.tao_parameter">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.util.</code><code class="sig-name descname">tao_parameter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">param_name</span></em>, <em class="sig-param"><span class="n">param_type</span></em>, <em class="sig-param"><span class="n">can_vary</span></em>, <em class="sig-param"><span class="n">param_value</span></em>, <em class="sig-param"><span class="n">sub_param</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.tao_parameter" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.util.</span></code><code class="sig-name descname"><span class="pre">tao_parameter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">can_vary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.tao_parameter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Basic class for holding the properties of a parameter in Tao.</p>
 <p>name:           The name of the parameter
 type:           “STR”, “INT”, “REAL”, “LOGIC”, “ENUM”, etc…
@@ -300,19 +301,19 @@ sub_param:      The name of the sub_parameter associated with this parameter,</p
 </div></blockquote>
 <dl class="py method">
 <dt id="pytao.util.tao_parameter.__str__">
-<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.tao_parameter.__str__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__str__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.tao_parameter.__str__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return str(self).</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.util.tao_parameter.__repr__">
-<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.tao_parameter.__repr__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__repr__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.tao_parameter.__repr__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return repr(self).</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.util.tao_parameter.get_component">
-<code class="sig-name descname">get_component</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">comp_name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.tao_parameter.get_component" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_component</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.tao_parameter.get_component" title="Permalink to this definition">¶</a></dt>
 <dd><p>Looks for a component called comp_name in self, and returns the component
 with the matching name
 Returns None if comp_name was not found or if self.type != STRUCT</p>
@@ -322,7 +323,7 @@ Returns None if comp_name was not found or if self.type != STRUCT</p>
 
 <dl class="py function">
 <dt id="pytao.util.tao_parameter_dict">
-<code class="sig-prename descclassname">pytao.util.</code><code class="sig-name descname">tao_parameter_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">param_list</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.tao_parameter_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.util.</span></code><code class="sig-name descname"><span class="pre">tao_parameter_dict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.tao_parameter_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a list of strings, each string looks something like: ‘param_name;STR;T;abcd’
 and returns a dictionary with keys being the param_name.
 Blank strings will be ignored.</p>
@@ -330,7 +331,7 @@ Blank strings will be ignored.</p>
 
 <dl class="py class">
 <dt id="pytao.util.lat_element">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.util.</code><code class="sig-name descname">lat_element</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">u_ix</span></em>, <em class="sig-param"><span class="n">ix_branch</span></em>, <em class="sig-param"><span class="n">ix_ele</span></em>, <em class="sig-param"><span class="n">which</span></em>, <em class="sig-param"><span class="n">pipe</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.lat_element" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.util.</span></code><code class="sig-name descname"><span class="pre">lat_element</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_ix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_ele</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.lat_element" title="Permalink to this definition">¶</a></dt>
 <dd><p>Holds the essential information for a given lattice element.
 A lat_element has the following properties:
 self.id: the ele identifier in the form <a class="reference external" href="mailto:uni&#37;&#52;&#48;branch">uni<span>&#64;</span>branch</a>&gt;&gt;ele_ix|which
@@ -358,12 +359,12 @@ and not a tao_ctypes.Tao instance)</p>
 
 <dl class="py data">
 <dt id="pytao.util.tao_startup_param_list">
-<code class="sig-prename descclassname">pytao.util.</code><code class="sig-name descname">tao_startup_param_list</code><em class="property"> = ['beam_file;FILE;T;', 'beam_init_position_file;FILE;T;', 'beam_track_data_file;FILE;T;', 'building_wall_file;FILE;T;', 'data_file;FILE;T;', 'hook_init_file;FILE;T;', 'init_file;FILE;T;', 'noinit;LOGIC;T;F', 'lattice_file;FILE;T;', 'plot_file;FILE;T;', 'startup_file;FILE;T;', 'noplot;LOGIC;T;F', 'var_file;FILE;T;', 'slice_lattice;FILE;T;', 'disable_smooth_line_calc;LOGIC;T;F', 'log_startup;LOGIC;T;F', 'no_stopping;LOGIC;T;F', 'rf_on;LOGIC;T;F']</em><a class="headerlink" href="#pytao.util.tao_startup_param_list" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.util.</span></code><code class="sig-name descname"><span class="pre">tao_startup_param_list</span></code><em class="property"> <span class="pre">=</span> <span class="pre">['beam_file;FILE;T;',</span> <span class="pre">'beam_init_position_file;FILE;T;',</span> <span class="pre">'beam_track_data_file;FILE;T;',</span> <span class="pre">'building_wall_file;FILE;T;',</span> <span class="pre">'data_file;FILE;T;',</span> <span class="pre">'hook_init_file;FILE;T;',</span> <span class="pre">'init_file;FILE;T;',</span> <span class="pre">'noinit;LOGIC;T;F',</span> <span class="pre">'lattice_file;FILE;T;',</span> <span class="pre">'plot_file;FILE;T;',</span> <span class="pre">'startup_file;FILE;T;',</span> <span class="pre">'noplot;LOGIC;T;F',</span> <span class="pre">'var_file;FILE;T;',</span> <span class="pre">'slice_lattice;FILE;T;',</span> <span class="pre">'disable_smooth_line_calc;LOGIC;T;F',</span> <span class="pre">'log_startup;LOGIC;T;F',</span> <span class="pre">'no_stopping;LOGIC;T;F',</span> <span class="pre">'rf_on;LOGIC;T;F']</span></em><a class="headerlink" href="#pytao.util.tao_startup_param_list" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
 <dt id="id0">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.util.</code><code class="sig-name descname">tao_parameter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">param_name</span></em>, <em class="sig-param"><span class="n">param_type</span></em>, <em class="sig-param"><span class="n">can_vary</span></em>, <em class="sig-param"><span class="n">param_value</span></em>, <em class="sig-param"><span class="n">sub_param</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.util.</span></code><code class="sig-name descname"><span class="pre">tao_parameter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">can_vary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
 <dd><p>Basic class for holding the properties of a parameter in Tao.</p>
 <p>name:           The name of the parameter
 type:           “STR”, “INT”, “REAL”, “LOGIC”, “ENUM”, etc…
@@ -386,19 +387,19 @@ sub_param:      The name of the sub_parameter associated with this parameter,</p
 </div></blockquote>
 <dl class="py method">
 <dt id="id1">
-<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__str__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return str(self).</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="id2">
-<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__repr__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return repr(self).</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="id3">
-<code class="sig-name descname">get_component</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">comp_name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_component</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
 <dd><p>Looks for a component called comp_name in self, and returns the component
 with the matching name
 Returns None if comp_name was not found or if self.type != STRUCT</p>
@@ -408,7 +409,7 @@ Returns None if comp_name was not found or if self.type != STRUCT</p>
 
 <dl class="py exception">
 <dt id="pytao.util.InvalidParamError">
-<em class="property">exception </em><code class="sig-prename descclassname">pytao.util.</code><code class="sig-name descname">InvalidParamError</code><a class="headerlink" href="#pytao.util.InvalidParamError" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.util.</span></code><code class="sig-name descname"><span class="pre">InvalidParamError</span></code><a class="headerlink" href="#pytao.util.InvalidParamError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <p>Provides an exception for when a param_string is improperly formatted
 Examples of improper formatting include: not enough semicolons
@@ -417,7 +418,7 @@ Examples of improper formatting include: not enough semicolons
 
 <dl class="py function">
 <dt id="id4">
-<code class="sig-prename descclassname">pytao.util.</code><code class="sig-name descname">tao_parameter_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">param_list</span></em><span class="sig-paren">)</span><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.util.</span></code><code class="sig-name descname"><span class="pre">tao_parameter_dict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a list of strings, each string looks something like: ‘param_name;STR;T;abcd’
 and returns a dictionary with keys being the param_name.
 Blank strings will be ignored.</p>
@@ -425,7 +426,7 @@ Blank strings will be ignored.</p>
 
 <dl class="py function">
 <dt id="pytao.util.str_to_tao_param">
-<code class="sig-prename descclassname">pytao.util.</code><code class="sig-name descname">str_to_tao_param</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">param_str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.str_to_tao_param" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.util.</span></code><code class="sig-name descname"><span class="pre">str_to_tao_param</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.str_to_tao_param" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a parameter string (EG: ‘param_name;STR;T;abcd’)
 and returns a tao_parameter instance
 param_str MUST have at least 3 semicolons</p>
@@ -433,7 +434,7 @@ param_str MUST have at least 3 semicolons</p>
 
 <dl class="py data">
 <dt id="pytao.util.tao_startup_param_dict">
-<code class="sig-prename descclassname">pytao.util.</code><code class="sig-name descname">tao_startup_param_dict</code><a class="headerlink" href="#pytao.util.tao_startup_param_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.util.</span></code><code class="sig-name descname"><span class="pre">tao_startup_param_dict</span></code><a class="headerlink" href="#pytao.util.tao_startup_param_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -447,7 +448,7 @@ param_str MUST have at least 3 semicolons</p>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="data/index.html" class="btn btn-neutral float-right" title="pytao.util.data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="../tao_pexpect/tao_pipe/index.html" class="btn btn-neutral float-left" title="pytao.tao_pexpect.tao_pipe" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../tests/test_interface_commands/index.html" class="btn btn-neutral float-left" title="pytao.tests.test_interface_commands" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

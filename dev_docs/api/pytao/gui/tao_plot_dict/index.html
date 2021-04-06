@@ -109,6 +109,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../misc/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.misc</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../tao_ctypes/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../tao_pexpect/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_pexpect</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tests/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tests</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../util/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.util</span></code></a></li>
 </ul>
 </li>
@@ -258,13 +259,13 @@ Comes with methods for adding and removing plots to/from the dictionary.</p>
 </table>
 <dl class="py class">
 <dt id="pytao.gui.tao_plot_dict.tao_plot_dict">
-<em class="property">class </em><code class="sig-prename descclassname">pytao.gui.tao_plot_dict.</code><code class="sig-name descname">tao_plot_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span></em>, <em class="sig-param"><span class="n">pipe</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_dict.tao_plot_dict" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_plot_dict.</span></code><code class="sig-name descname"><span class="pre">tao_plot_dict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_dict.tao_plot_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
 <p>Specialized dictionary for keeping track of plots and regions in tao
 mode should be either “matplotlib” or “pgplot”</p>
 <dl class="py method">
 <dt id="pytao.gui.tao_plot_dict.tao_plot_dict.place_template">
-<code class="sig-name descname">place_template</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">template</span></em>, <em class="sig-param"><span class="n">region</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_dict.tao_plot_dict.place_template" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">place_template</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_dict.tao_plot_dict.place_template" title="Permalink to this definition">¶</a></dt>
 <dd><p>Places the given template plot in the specified region
 If no region is specified, automatically chooses the next available region
 Returns the name of the region where the plot was placed
@@ -274,33 +275,33 @@ that a valid region name is provided, otherwise the plot will not be placed</p>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_plot_dict.tao_plot_dict._pgplot_place_template">
-<code class="sig-name descname">_pgplot_place_template</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">template</span></em>, <em class="sig-param"><span class="n">region</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_dict.tao_plot_dict._pgplot_place_template" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_pgplot_place_template</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_dict.tao_plot_dict._pgplot_place_template" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implementation of place_template for pgplot mode
 Will only place the plot if a valid region name is provided</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_plot_dict.tao_plot_dict._mpl_place_template">
-<code class="sig-name descname">_mpl_place_template</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">template</span></em>, <em class="sig-param"><span class="n">region</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_dict.tao_plot_dict._mpl_place_template" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_mpl_place_template</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_dict.tao_plot_dict._mpl_place_template" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implementation of place_template specific to matplotlib mode</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_plot_dict.tao_plot_dict.unplace_template">
-<code class="sig-name descname">unplace_template</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">template</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_dict.tao_plot_dict.unplace_template" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">unplace_template</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_dict.tao_plot_dict.unplace_template" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove the given template from self and unplace it in tao</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_plot_dict.tao_plot_dict.unplace_region">
-<code class="sig-name descname">unplace_region</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">region</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_dict.tao_plot_dict.unplace_region" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">unplace_region</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_dict.tao_plot_dict.unplace_region" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unplace whatever template is in the specified region, and remove the
 corresponding entry(ies) from self</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="pytao.gui.tao_plot_dict.tao_plot_dict.pgplot_update">
-<code class="sig-name descname">pgplot_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_dict.tao_plot_dict.pgplot_update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">pgplot_update</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_dict.tao_plot_dict.pgplot_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads the current state of plot regions in Tao, and
 sets self.pgplot_settings appropriately</p>
 </dd></dl>
@@ -309,7 +310,7 @@ sets self.pgplot_settings appropriately</p>
 
 <dl class="py function">
 <dt id="pytao.gui.tao_plot_dict.region_to_max_rcl">
-<code class="sig-prename descclassname">pytao.gui.tao_plot_dict.</code><code class="sig-name descname">region_to_max_rcl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">region_name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_dict.region_to_max_rcl" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_plot_dict.</span></code><code class="sig-name descname"><span class="pre">region_to_max_rcl</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_dict.region_to_max_rcl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts the region name (e.g. r2312) to a
 (row number, column number, lat_layout) tuple
 where the counts in the tuple are the maximum number of
