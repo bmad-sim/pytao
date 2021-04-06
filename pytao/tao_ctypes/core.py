@@ -3,9 +3,11 @@ import ctypes
 import numpy as np
 from pytao import tao_ctypes
 from pytao.util.parameters import tao_parameter_dict
+from pytao import interface_commands
 from .tools import full_path
 import tempfile
 import shutil
+import types
 
 
 #--------------------------------------
@@ -54,6 +56,12 @@ class Tao:
 
         # Attributes
         ##self.initialized = False
+
+        # Add in methods from `interface_commands`
+        methods = [m for m in dir(interface_commands) if not m.startswith('__')]
+        for m in methods:
+            func = interface_commands.__dict__[m]
+            setattr(self, m, types.MethodType(func, self))
 
         try:
             self.register_cell_magic()
@@ -448,5 +456,3 @@ def run_tao(settings=None,
         os.chdir(init_dir)    
 
     return M
-
-

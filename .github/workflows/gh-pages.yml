@@ -21,6 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get install pandoc -y
+          sudo apt install python3-testresources
           pip3 install -U setuptools wheel
           pip3 install -U -r docs-requirements.txt
       - name: Build Docs

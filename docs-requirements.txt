@@ -4,3 +4,5 @@ sphinxcontrib-napoleon
 nbsphinx
 nbsphinx-link
 sphinx-autoapi
+Pygments>=2.4.1
+docutils<0.17
