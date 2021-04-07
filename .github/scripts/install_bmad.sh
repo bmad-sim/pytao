@@ -6,9 +6,9 @@ echo "**** Download and Extract Tarball"
 
 # Download Bmad
 curl -O https://www.classe.cornell.edu/~cesrulib/downloads/tarballs/${BMADDIST}.tgz \
-  && tar -xzf /$BMADDIST.tgz \
+  && tar -xzf $BMADDIST.tgz \
   && mv $BMADDIST bmad_dist \
-  && rm -rf /$BMADDIST.tgz
+  && rm -rf $BMADDIST.tgz
 
 cd bmad_dist
 
