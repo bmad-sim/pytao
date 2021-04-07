@@ -31,7 +31,7 @@ EOF
 echo "**** Invoking dist_source_me"
 source ./util/dist_source_me
 
-echo "**** Invoking dist_build_production"
-./util/dist_build_production
+#echo "**** Invoking dist_build_production"
+#./util/dist_build_production
 
 popd

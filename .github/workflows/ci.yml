@@ -9,6 +9,9 @@ jobs:
     env:
       BMADDIST: "bmad_dist_2021_0406"
     runs-on: ${{ matrix.os }}
+    defaults:
+        run:
+          shell: bash
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -37,15 +40,19 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: .github/scripts/install_bmad.sh
 
+      - name: Sanity Check for Tao
+        run: |
+          which tao || true
+
       - name: Setup Bmad
         run: |
-          pushd ~/bmad/bmad_dist/
-          source ./util/dist_source_me
-          popd
+          echo "ACC_ROOT_DIR=~/bmad/bmad_dist/" >> $GITHUB_ENV
+          echo "ACC_EXE=~/bmad/bmad_dist/production/bin" >> $GITHUB_ENV
+          echo "~/bmad/bmad_dist/production/bin" >> $GITHUB_PATH
 
       - name: Sanity Check for Tao
         run: |
-          which tao
+          which tao || true
 
       - name: Install Python Dependencies
         run: |
