@@ -40,19 +40,11 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: .github/scripts/install_bmad.sh
 
-      - name: Sanity Check for Tao
-        run: |
-          which tao || true
-
       - name: Setup Bmad
         run: |
-          echo "ACC_ROOT_DIR=~/bmad/bmad_dist/" >> $GITHUB_ENV
-          echo "ACC_EXE=~/bmad/bmad_dist/production/bin" >> $GITHUB_ENV
-          echo "~/bmad/bmad_dist/production/bin" >> $GITHUB_PATH
-
-      - name: Sanity Check for Tao
-        run: |
-          which tao || true
+          echo "ACC_ROOT_DIR=/home/runner/bmad/bmad_dist" >> $GITHUB_ENV
+          echo "ACC_EXE=/home/runner/bmad/bmad_dist/production/bin" >> $GITHUB_ENV
+          echo "/home/runner/bmad/bmad_dist/production/bin/" >> $GITHUB_PATH
 
       - name: Install Python Dependencies
         run: |
