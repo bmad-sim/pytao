@@ -40,8 +40,8 @@ code if needed is given on the `Bmad web site <https://www.classe.cornell.edu/bm
    :caption: Developer Documentation
 
    dev_docs/api/index
+   dev_docs/documentation
    dev_docs/development
-
 
 .. toctree::
    :hidden:
