@@ -7,7 +7,7 @@
 Module Contents
 ---------------
 
-.. function:: beam(tao, *, ix_universe='1', verbose=False, as_dict=True)
+.. function:: beam(tao, ix_universe='1', *, verbose=False, as_dict=True)
 
    Output beam parameters that are not in the beam_init structure.
    Command syntax:
@@ -31,7 +31,7 @@ Module Contents
       ix_universe: 1
 
 
-.. function:: beam_init(tao, *, ix_universe='1', verbose=False, as_dict=True)
+.. function:: beam_init(tao, ix_universe='1', *, verbose=False, as_dict=True)
 
    Output beam_init parameters.
    Command syntax:
@@ -144,7 +144,7 @@ Module Contents
       coordinate: x
 
 
-.. function:: building_wall_list(tao, *, ix_section='', verbose=False, as_dict=True)
+.. function:: building_wall_list(tao, ix_section='', *, verbose=False, as_dict=True)
 
    List of building wall sections or section points
    Command syntax:
@@ -315,7 +315,7 @@ Module Contents
       who:var
 
 
-.. function:: da_aperture(tao, *, ix_uni='1', verbose=False, as_dict=True)
+.. function:: da_aperture(tao, ix_uni='1', *, verbose=False, as_dict=True)
 
    Dynamic aperture data
    Command syntax:
@@ -336,7 +336,7 @@ Module Contents
       ix_uni:1
 
 
-.. function:: da_params(tao, *, ix_uni='1', verbose=False, as_dict=True)
+.. function:: da_params(tao, ix_uni='1', *, verbose=False, as_dict=True)
 
    Dynamic aperture input parameters
    Command syntax:
@@ -739,7 +739,7 @@ Module Contents
     args:
 
 
-.. function:: ele_head(tao, *, ele_id, which='model', verbose=False, as_dict=True)
+.. function:: ele_head(tao, ele_id, which='model', *, verbose=False, as_dict=True)
 
    "Head" Element attributes
    Command syntax:
@@ -771,7 +771,7 @@ Module Contents
      which: model
 
 
-.. function:: ele_methods(tao, *, ele_id, which='model', verbose=False, as_dict=True)
+.. function:: ele_methods(tao, ele_id, which='model', *, verbose=False, as_dict=True)
 
    Element methods
    Command syntax:
@@ -803,7 +803,7 @@ Module Contents
      which: model
 
 
-.. function:: ele_gen_attribs(tao, *, ele_id, which='model', verbose=False, as_dict=True)
+.. function:: ele_gen_attribs(tao, ele_id, which='model', *, verbose=False, as_dict=True)
 
    Element general attributes
    Command syntax:
@@ -835,7 +835,7 @@ Module Contents
      which: model
 
 
-.. function:: ele_multipoles(tao, *, ele_id, which='model', verbose=False, as_dict=True)
+.. function:: ele_multipoles(tao, ele_id, which='model', *, verbose=False, as_dict=True)
 
    Element multipoles
    Command syntax:
@@ -867,7 +867,7 @@ Module Contents
      which: model
 
 
-.. function:: ele_ac_kicker(tao, *, ele_id, which='model', verbose=False, as_dict=True)
+.. function:: ele_ac_kicker(tao, ele_id, which='model', *, verbose=False, as_dict=True)
 
    Element ac_kicker
    Command syntax:
@@ -1738,7 +1738,7 @@ Module Contents
       branch_name: 1@0
 
 
-.. function:: lat_general(tao, *, ix_universe='1', verbose=False, as_dict=True)
+.. function:: lat_general(tao, ix_universe='1', *, verbose=False, as_dict=True)
 
    Lattice general
    Command syntax:
@@ -2333,7 +2333,7 @@ Module Contents
       add_or_delete: add
 
 
-.. function:: shape_pattern_list(tao, *, ix_pattern='', verbose=False, as_dict=True)
+.. function:: shape_pattern_list(tao, ix_pattern='', *, verbose=False, as_dict=True)
 
    List of shape patterns
    Command syntax:
