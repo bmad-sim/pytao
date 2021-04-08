@@ -214,6 +214,58 @@
 <h1>ctypes<a class="headerlink" href="#ctypes" title="Permalink to this headline">¶</a></h1>
 <p>A ctypes based python module for interfacing <em>Tao</em> to Python is provided via
 <cite>pytao.tao_ctypes</cite>.</p>
+<dl class="py class">
+<dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.core.</span></code><code class="sig-name descname"><span class="pre">Tao</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">so_lib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Class to run and interact with Tao. Requires libtao shared object.</p>
+<p>Setup:</p>
+<p>import os
+import sys
+TAO_PYTHON_DIR=os.environ[‘ACC_ROOT_DIR’] + ‘/tao/python’
+sys.path.insert(0, TAO_PYTHON_DIR)</p>
+<p>import tao_ctypes
+tao = tao_ctypes.Tao()
+tao.init(“command line args here…”)</p>
+<dl class="py method">
+<dt>
+<code class="sig-name descname"><span class="pre">cmd</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exception_on_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Runs a command, and returns the text output</p>
+<p>cmd: command string
+exception_on_error: will raise an exception of [ERROR or [FATAL is detected in the output</p>
+<p>Returns a list of strings</p>
+</dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname"><span class="pre">cmd_integer</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname"><span class="pre">cmd_real</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname"><span class="pre">get_output</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname"><span class="pre">init</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt>
+<code class="sig-name descname"><span class="pre">register_cell_magic</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Registers a cell magic in Jupyter notebooks
+Invoke by
+%%tao
+sho lat</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
