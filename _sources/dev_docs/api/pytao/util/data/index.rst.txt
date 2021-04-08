@@ -7,17 +7,6 @@
 Module Contents
 ---------------
 
-
-Functions
-~~~~~~~~~
-
-.. autoapisummary::
-
-   pytao.util.data.create_d2_data_cmd
-   pytao.util.data.create_datum_cmd
-   pytao.util.data.create_variable_cmd
-
-
 .. function:: create_d2_data_cmd(d2_name, d1_names, upper_bounds=[], lower_bounds=None)
 
    Helper function to create a d2_data with several d1_data.

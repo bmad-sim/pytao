@@ -13,15 +13,6 @@
 Module Contents
 ---------------
 
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   pytao.gui.tao_interface.tao_interface
-
-
-
 .. class:: tao_interface(mode='ctypes', init_args='', tao_exe='', expect_str='Tao>', so_lib='')
 
 

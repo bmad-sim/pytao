@@ -114,7 +114,6 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../index.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../index.html#package-contents">Package Contents</a></li>
 </ul>
 </li>
 </ul>
@@ -228,19 +227,6 @@
 <span id="pytao-gui-tao-console"></span><h1><a class="reference internal" href="#module-pytao.gui.tao_console" title="pytao.gui.tao_console"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.gui.tao_console</span></code></a><a class="headerlink" href="#module-pytao.gui.tao_console" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="classes">
-<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.gui.tao_console.tao_console" title="pytao.gui.tao_console.tao_console"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tao_console</span></code></a></p></td>
-<td><p>Console for running tao commands and displaying</p></td>
-</tr>
-</tbody>
-</table>
 <dl class="py class">
 <dt id="pytao.gui.tao_console.tao_console">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_console.</span></code><code class="sig-name descname"><span class="pre">tao_console</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_console.tao_console" title="Permalink to this definition">¶</a></dt>
@@ -287,70 +273,8 @@ displays the output.    Appends self.command to
 self.root.history and clears self.command.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="pytao.gui.tao_console.tao_console._get_curs_l">
-<code class="sig-name descname"><span class="pre">_get_curs_l</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_console.tao_console._get_curs_l" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the cursor’s current line as an int</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="pytao.gui.tao_console.tao_console._get_curs_c">
-<code class="sig-name descname"><span class="pre">_get_curs_c</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_console.tao_console._get_curs_c" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the cursor’s current column as an int</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="pytao.gui.tao_console.tao_console._curs_check">
-<code class="sig-name descname"><span class="pre">_curs_check</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_console.tao_console._curs_check" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns True if the cursor is after the start of
-the current command and false otherwise.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="pytao.gui.tao_console.tao_console._key_handler">
-<code class="sig-name descname"><span class="pre">_key_handler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_console.tao_console._key_handler" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="pytao.gui.tao_console.tao_console._ret_handler">
-<code class="sig-name descname"><span class="pre">_ret_handler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_console.tao_console._ret_handler" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="pytao.gui.tao_console.tao_console._bs_handler">
-<code class="sig-name descname"><span class="pre">_bs_handler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_console.tao_console._bs_handler" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="pytao.gui.tao_console.tao_console._l_handler">
-<code class="sig-name descname"><span class="pre">_l_handler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_console.tao_console._l_handler" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="pytao.gui.tao_console.tao_console._r_handler">
-<code class="sig-name descname"><span class="pre">_r_handler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_console.tao_console._r_handler" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="pytao.gui.tao_console.tao_console._u_handler">
-<code class="sig-name descname"><span class="pre">_u_handler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_console.tao_console._u_handler" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="pytao.gui.tao_console.tao_console._d_handler">
-<code class="sig-name descname"><span class="pre">_d_handler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_console.tao_console._d_handler" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="pytao.gui.tao_console.tao_console._shortcut_handler">
-<code class="sig-name descname"><span class="pre">_shortcut_handler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_console.tao_console._shortcut_handler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Used to unbind default shortuts on the Text widget, and
-fixes root window keyboard shortcuts</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
 </div>
 </div>
 

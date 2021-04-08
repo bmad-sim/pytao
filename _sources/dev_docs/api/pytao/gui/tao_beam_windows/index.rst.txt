@@ -12,15 +12,6 @@
 Module Contents
 ---------------
 
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   pytao.gui.tao_beam_windows.tao_beam_init_window
-
-
-
 .. class:: tao_beam_init_window(root, pipe)
 
 

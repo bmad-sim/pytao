@@ -14,23 +14,6 @@
 Module Contents
 ---------------
 
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   pytao.gui.tao_plot_dict.tao_plot_dict
-
-
-
-Functions
-~~~~~~~~~
-
-.. autoapisummary::
-
-   pytao.gui.tao_plot_dict.region_to_max_rcl
-
-
 .. class:: tao_plot_dict(mode, pipe, *args, **kwargs)
 
 
@@ -46,17 +29,6 @@ Functions
       Returns the name of the region where the plot was placed
       In pgplot mode, it is the caller's responsibility to ensure
       that a valid region name is provided, otherwise the plot will not be placed
-
-
-   .. method:: _pgplot_place_template(self, template, region)
-
-      Implementation of place_template for pgplot mode
-      Will only place the plot if a valid region name is provided
-
-
-   .. method:: _mpl_place_template(self, template, region=None)
-
-      Implementation of place_template specific to matplotlib mode
 
 
    .. method:: unplace_template(self, template)

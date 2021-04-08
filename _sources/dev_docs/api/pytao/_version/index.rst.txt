@@ -1,3 +1,5 @@
+:orphan:
+
 :mod:`pytao._version`
 =====================
 
@@ -11,39 +13,6 @@
 
 Module Contents
 ---------------
-
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   pytao._version.VersioneerConfig
-
-
-
-Functions
-~~~~~~~~~
-
-.. autoapisummary::
-
-   pytao._version.get_keywords
-   pytao._version.get_config
-   pytao._version.register_vcs_handler
-   pytao._version.run_command
-   pytao._version.versions_from_parentdir
-   pytao._version.git_get_keywords
-   pytao._version.git_versions_from_keywords
-   pytao._version.git_pieces_from_vcs
-   pytao._version.plus_or_dot
-   pytao._version.render_pep440
-   pytao._version.render_pep440_pre
-   pytao._version.render_pep440_post
-   pytao._version.render_pep440_old
-   pytao._version.render_git_describe
-   pytao._version.render_git_describe_long
-   pytao._version.render
-   pytao._version.get_versions
-
 
 .. function:: get_keywords()
 

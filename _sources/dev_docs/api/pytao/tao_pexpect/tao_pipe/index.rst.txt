@@ -22,15 +22,6 @@
 Module Contents
 ---------------
 
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   pytao.tao_pexpect.tao_pipe.tao_io
-
-
-
 .. class:: tao_io(init_args='', tao_exe='', timeout=600, expect_str='Tao>')
 
 

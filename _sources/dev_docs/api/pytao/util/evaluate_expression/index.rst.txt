@@ -7,15 +7,6 @@
 Module Contents
 ---------------
 
-
-Functions
-~~~~~~~~~
-
-.. autoapisummary::
-
-   pytao.util.evaluate_expression.eval_expr
-
-
 .. data:: local_funcs
    
 

@@ -7,15 +7,6 @@
 Module Contents
 ---------------
 
-
-Functions
-~~~~~~~~~
-
-.. autoapisummary::
-
-   pytao.misc.markers.make_markers
-
-
 .. function:: make_markers(slist, filename=None, ref=None)
 
    Makes markers relative to ref ele.

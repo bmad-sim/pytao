@@ -13,27 +13,6 @@
 Module Contents
 ---------------
 
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   pytao.gui.tao_base_windows.Tao_Toplevel
-   pytao.gui.tao_base_windows.Tao_Popup
-   pytao.gui.tao_base_windows.tao_list_window
-   pytao.gui.tao_base_windows.tao_scroll_frame
-   pytao.gui.tao_base_windows.tao_parameter_frame
-   pytao.gui.tao_base_windows.tao_parameter_window
-   pytao.gui.tao_base_windows.table_window
-   pytao.gui.tao_base_windows.lw_table_window
-   pytao.gui.tao_base_windows.tao_branch_widgets
-   pytao.gui.tao_base_windows.tao_progress_window
-   pytao.gui.tao_base_windows.tao_message_box
-   pytao.gui.tao_base_windows.tabbed_frame
-   pytao.gui.tao_base_windows.ele_shape_frame
-
-
-
 .. class:: Tao_Toplevel(parent, *args, **kwargs)
 
 
@@ -363,11 +342,6 @@ Classes
    self.name, a string that should be used for the initial tab name
    new_tab_func will likely be the init method for a tk.Frame subclass
    pipe: the tao_interface in use
-
-   .. method:: _tab_handler(self, event=None)
-
-      Handles new tab creation and updates self.tab_index as necessary
-
 
    .. method:: add_tab(self, ix=None, *args, **kwargs)
 

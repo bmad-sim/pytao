@@ -41,7 +41,7 @@
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
     <link rel="next" title="pytao.tao_interface" href="../tao_interface/index.html" />
-    <link rel="prev" title="pytao._version" href="../_version/index.html" /> 
+    <link rel="prev" title="pytao.util.parameters" href="../util/parameters/index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -106,12 +106,10 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao</span></code></a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../index.html#subpackages">Subpackages</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="../_version/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao._version</span></code></a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.interface_commands</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../tao_interface/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_interface</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../index.html#package-contents">Package Contents</a></li>
 </ul>
 </li>
 </ul>
@@ -223,336 +221,6 @@
 <span id="pytao-interface-commands"></span><h1><a class="reference internal" href="#module-pytao.interface_commands" title="pytao.interface_commands"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.interface_commands</span></code></a><a class="headerlink" href="#module-pytao.interface_commands" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="functions">
-<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.__exec_no_return" title="pytao.interface_commands.__exec_no_return"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__exec_no_return</span></code></a>(tao, cmd, as_dict=True)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.__exec_string" title="pytao.interface_commands.__exec_string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__exec_string</span></code></a>(tao, cmd, as_dict=True)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.__exec_integer" title="pytao.interface_commands.__exec_integer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__exec_integer</span></code></a>(tao, cmd, as_dict=True)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.__exec_real" title="pytao.interface_commands.__exec_real"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__exec_real</span></code></a>(tao, cmd, as_dict=True)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.beam" title="pytao.interface_commands.beam"><code class="xref py py-obj docutils literal notranslate"><span class="pre">beam</span></code></a>(tao, *, ix_universe='1', verbose=False, as_dict=True)</p></td>
-<td><p>Output beam parameters that are not in the beam_init structure.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.beam_init" title="pytao.interface_commands.beam_init"><code class="xref py py-obj docutils literal notranslate"><span class="pre">beam_init</span></code></a>(tao, *, ix_universe='1', verbose=False, as_dict=True)</p></td>
-<td><p>Output beam_init parameters.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.bmad_com" title="pytao.interface_commands.bmad_com"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bmad_com</span></code></a>(tao, *, verbose=False, as_dict=True)</p></td>
-<td><p>Bmad_com structure components</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.branch1" title="pytao.interface_commands.branch1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">branch1</span></code></a>(tao, *, ix_universe='1', ix_branch='0', verbose=False, as_dict=True)</p></td>
-<td><p>Lattice element list.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.bunch1" title="pytao.interface_commands.bunch1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bunch1</span></code></a>(tao, *, ele_id, which='model', ix_bunch='1', coordinate='', verbose=False, as_dict=True)</p></td>
-<td><p>Bunch parameters at the exit end of a given lattice element.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.building_wall_list" title="pytao.interface_commands.building_wall_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">building_wall_list</span></code></a>(tao, *, ix_section='', verbose=False, as_dict=True)</p></td>
-<td><p>List of building wall sections or section points</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.building_wall_graph" title="pytao.interface_commands.building_wall_graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">building_wall_graph</span></code></a>(tao, graph, *, verbose=False, as_dict=True)</p></td>
-<td><p>(x, y) points for drawing the building wall for a particular graph.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.building_wall_point" title="pytao.interface_commands.building_wall_point"><code class="xref py py-obj docutils literal notranslate"><span class="pre">building_wall_point</span></code></a>(tao, *, ix_section, ix_point, z, x, radius, z_center, x_center, verbose=False, as_dict=True)</p></td>
-<td><p>add or delete a building wall point</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.building_wall_section" title="pytao.interface_commands.building_wall_section"><code class="xref py py-obj docutils literal notranslate"><span class="pre">building_wall_section</span></code></a>(tao, *, ix_section, sec_name, sec_constraint, verbose=False, as_dict=True)</p></td>
-<td><p>add or delete a building wall section</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.constraints" title="pytao.interface_commands.constraints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">constraints</span></code></a>(tao, who, *, verbose=False, as_dict=True)</p></td>
-<td><p>Optimization data and variables that contribute to the merit function.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.da_aperture" title="pytao.interface_commands.da_aperture"><code class="xref py py-obj docutils literal notranslate"><span class="pre">da_aperture</span></code></a>(tao, *, ix_uni='1', verbose=False, as_dict=True)</p></td>
-<td><p>Dynamic aperture data</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.da_params" title="pytao.interface_commands.da_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">da_params</span></code></a>(tao, *, ix_uni='1', verbose=False, as_dict=True)</p></td>
-<td><p>Dynamic aperture input parameters</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.data" title="pytao.interface_commands.data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code></a>(tao, *, ix_universe='1', d2_name, d1_datum, dat_index='1', verbose=False, as_dict=True)</p></td>
-<td><p>Individual datum info.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.data_d2_create" title="pytao.interface_commands.data_d2_create"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_d2_create</span></code></a>(tao, *, ix_uni='1', d2_name, n_d1_data, d_data_arrays_name_min_max, verbose=False, as_dict=True)</p></td>
-<td><p>Create a d2 data structure along with associated d1 and data arrays.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.data_d2_destroy" title="pytao.interface_commands.data_d2_destroy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_d2_destroy</span></code></a>(tao, *, ix_uni='1', d2_datum, verbose=False, as_dict=True)</p></td>
-<td><p>Destroy a d2 data structure along with associated d1 and data arrays.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.data_d2" title="pytao.interface_commands.data_d2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_d2</span></code></a>(tao, *, ix_uni='1', d2_datum, verbose=False, as_dict=True)</p></td>
-<td><p>Information on a d2_datum.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.data_d_array" title="pytao.interface_commands.data_d_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_d_array</span></code></a>(tao, *, ix_uni='1', d1_datum, verbose=False, as_dict=True)</p></td>
-<td><p>List of datums for a given data_d1.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.data_d1_array" title="pytao.interface_commands.data_d1_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_d1_array</span></code></a>(tao, *, ix_uni='1', d2_datum, verbose=False, as_dict=True)</p></td>
-<td><p>List of d1 arrays for a given data_d2.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.data_parameter" title="pytao.interface_commands.data_parameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_parameter</span></code></a>(tao, data_array, parameter, *, verbose=False, as_dict=True)</p></td>
-<td><p>Given an array of datums, generate an array of values for a particular datum parameter.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.data_d2_array" title="pytao.interface_commands.data_d2_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_d2_array</span></code></a>(tao, ix_universe, *, verbose=False, as_dict=True)</p></td>
-<td><p>Data d2 info for a given universe.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.data_set_design_value" title="pytao.interface_commands.data_set_design_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_set_design_value</span></code></a>(tao, *, verbose=False, as_dict=True)</p></td>
-<td><p>Set the design (and base &amp; model) values for all datums.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.datum_create" title="pytao.interface_commands.datum_create"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datum_create</span></code></a>(tao, *, datum_name, data_type, ele_ref_name='', ele_start_name='', ele_name, merit_type, meas, good_meas, ref, good_ref, weight, good_user, data_source, eval_point, s_offset, ix_bunch, invalid_value, spin_axis_n0_1='', spin_axis_n0_2='', spin_axis_n0_3='', spin_axis_l_1='', spin_axis_l_2='', spin_axis_l_3='', verbose=False, as_dict=True)</p></td>
-<td><p>Create a datum.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.datum_has_ele" title="pytao.interface_commands.datum_has_ele"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datum_has_ele</span></code></a>(tao, datum_type, *, verbose=False, as_dict=True)</p></td>
-<td><p>Does datum type have an associated lattice element?</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.derivative" title="pytao.interface_commands.derivative"><code class="xref py py-obj docutils literal notranslate"><span class="pre">derivative</span></code></a>(tao, *, verbose=False, as_dict=True)</p></td>
-<td><p>Optimization derivatives</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.ele_head" title="pytao.interface_commands.ele_head"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ele_head</span></code></a>(tao, *, ele_id, which='model', verbose=False, as_dict=True)</p></td>
-<td><p>“Head” Element attributes</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.ele_methods" title="pytao.interface_commands.ele_methods"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ele_methods</span></code></a>(tao, *, ele_id, which='model', verbose=False, as_dict=True)</p></td>
-<td><p>Element methods</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.ele_gen_attribs" title="pytao.interface_commands.ele_gen_attribs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ele_gen_attribs</span></code></a>(tao, *, ele_id, which='model', verbose=False, as_dict=True)</p></td>
-<td><p>Element general attributes</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.ele_multipoles" title="pytao.interface_commands.ele_multipoles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ele_multipoles</span></code></a>(tao, *, ele_id, which='model', verbose=False, as_dict=True)</p></td>
-<td><p>Element multipoles</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.ele_ac_kicker" title="pytao.interface_commands.ele_ac_kicker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ele_ac_kicker</span></code></a>(tao, *, ele_id, which='model', verbose=False, as_dict=True)</p></td>
-<td><p>Element ac_kicker</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.ele_cartesian_map" title="pytao.interface_commands.ele_cartesian_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ele_cartesian_map</span></code></a>(tao, *, ele_id, which='model', index, who, verbose=False, as_dict=True)</p></td>
-<td><p>Element cartesian_map</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.ele_chamber_wall" title="pytao.interface_commands.ele_chamber_wall"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ele_chamber_wall</span></code></a>(tao, *, ele_id, which='model', index, who, verbose=False, as_dict=True)</p></td>
-<td><p>Element beam chamber wall</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.ele_cylindrical_map" title="pytao.interface_commands.ele_cylindrical_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ele_cylindrical_map</span></code></a>(tao, *, ele_id, which, index, who, verbose=False, as_dict=True)</p></td>
-<td><p>Element cylindrical_map</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.ele_taylor" title="pytao.interface_commands.ele_taylor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ele_taylor</span></code></a>(tao, ele_id, which, *, verbose=False, as_dict=True)</p></td>
-<td><p>Element taylor</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.ele_spin_taylor" title="pytao.interface_commands.ele_spin_taylor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ele_spin_taylor</span></code></a>(tao, ele_id, which, *, verbose=False, as_dict=True)</p></td>
-<td><p>Element spin_taylor</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.ele_wake" title="pytao.interface_commands.ele_wake"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ele_wake</span></code></a>(tao, *, ele_id, which, who, verbose=False, as_dict=True)</p></td>
-<td><p>Element wake</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.ele_wall3d" title="pytao.interface_commands.ele_wall3d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ele_wall3d</span></code></a>(tao, *, ele_id, which, index, who, verbose=False, as_dict=True)</p></td>
-<td><p>Element wall3d</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.ele_twiss" title="pytao.interface_commands.ele_twiss"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ele_twiss</span></code></a>(tao, ele_id, which, *, verbose=False, as_dict=True)</p></td>
-<td><p>Element twiss</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.ele_control" title="pytao.interface_commands.ele_control"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ele_control</span></code></a>(tao, ele_id, which, *, verbose=False, as_dict=True)</p></td>
-<td><p>Element control</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.ele_orbit" title="pytao.interface_commands.ele_orbit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ele_orbit</span></code></a>(tao, ele_id, which, *, verbose=False, as_dict=True)</p></td>
-<td><p>Element orbit</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.ele_mat6" title="pytao.interface_commands.ele_mat6"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ele_mat6</span></code></a>(tao, *, ele_id, which, who, verbose=False, as_dict=True)</p></td>
-<td><p>Element mat6</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.ele_taylor_field" title="pytao.interface_commands.ele_taylor_field"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ele_taylor_field</span></code></a>(tao, *, ele_id, which, index, who, verbose=False, as_dict=True)</p></td>
-<td><p>Element taylor_field</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.ele_grid_field" title="pytao.interface_commands.ele_grid_field"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ele_grid_field</span></code></a>(tao, *, ele_id, which, index, who, verbose=False, as_dict=True)</p></td>
-<td><p>Element grid_field</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.ele_floor" title="pytao.interface_commands.ele_floor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ele_floor</span></code></a>(tao, *, ele_id, which, where='end', verbose=False, as_dict=True)</p></td>
-<td><p>Element floor coordinates. The output gives two lines. “Reference” is</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.ele_photon" title="pytao.interface_commands.ele_photon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ele_photon</span></code></a>(tao, *, ele_id, which, who, verbose=False, as_dict=True)</p></td>
-<td><p>Element photon</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.ele_lord_slave" title="pytao.interface_commands.ele_lord_slave"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ele_lord_slave</span></code></a>(tao, ele_id, which, *, verbose=False, as_dict=True)</p></td>
-<td><p>Lists the lord/slave tree of an element.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.ele_elec_multipoles" title="pytao.interface_commands.ele_elec_multipoles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ele_elec_multipoles</span></code></a>(tao, ele_id, which, *, verbose=False, as_dict=True)</p></td>
-<td><p>Element electric multipoles</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.evaluate" title="pytao.interface_commands.evaluate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">evaluate</span></code></a>(tao, expression, *, verbose=False, as_dict=True)</p></td>
-<td><p>Evaluate an expression. The result may be a vector.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.em_field" title="pytao.interface_commands.em_field"><code class="xref py py-obj docutils literal notranslate"><span class="pre">em_field</span></code></a>(tao, *, ele_id, which, x, y, z, t_or_z, verbose=False, as_dict=True)</p></td>
-<td><p>EM field at a given point generated by a given element.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.enum" title="pytao.interface_commands.enum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enum</span></code></a>(tao, enum_name, *, verbose=False, as_dict=True)</p></td>
-<td><p>List of possible values for enumerated numbers.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.floor_plan" title="pytao.interface_commands.floor_plan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">floor_plan</span></code></a>(tao, graph, *, verbose=False, as_dict=True)</p></td>
-<td><p>Floor plan elements</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.floor_orbit" title="pytao.interface_commands.floor_orbit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">floor_orbit</span></code></a>(tao, graph, *, verbose=False, as_dict=True)</p></td>
-<td><p>(x, y) coordinates for drawing the particle orbit on a floor plan.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.globals" title="pytao.interface_commands.globals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">globals</span></code></a>(tao, *, verbose=False, as_dict=True)</p></td>
-<td><p>Global parameters</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.help" title="pytao.interface_commands.help"><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code></a>(tao, *, verbose=False, as_dict=True)</p></td>
-<td><p>returns list of “help xxx” topics</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.inum" title="pytao.interface_commands.inum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inum</span></code></a>(tao, who, *, verbose=False, as_dict=True)</p></td>
-<td><p>INUM</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.lat_calc_done" title="pytao.interface_commands.lat_calc_done"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lat_calc_done</span></code></a>(tao, branch_name, *, verbose=False, as_dict=True)</p></td>
-<td><p>Check if a lattice recalculation has been proformed since the last time</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.lat_ele_list" title="pytao.interface_commands.lat_ele_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lat_ele_list</span></code></a>(tao, branch_name, *, verbose=False, as_dict=True)</p></td>
-<td><p>Lattice element list.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.lat_general" title="pytao.interface_commands.lat_general"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lat_general</span></code></a>(tao, *, ix_universe='1', verbose=False, as_dict=True)</p></td>
-<td><p>Lattice general</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.lat_list" title="pytao.interface_commands.lat_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lat_list</span></code></a>(tao, *, ix_uni, ix_branch, elements, which, who, verbose=False, as_dict=True)</p></td>
-<td><p>List of parameters at ends of lattice elements</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.lat_param_units" title="pytao.interface_commands.lat_param_units"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lat_param_units</span></code></a>(tao, param_name, *, verbose=False, as_dict=True)</p></td>
-<td><p>Units of a parameter associated with a lattice or lattice element.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.matrix" title="pytao.interface_commands.matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matrix</span></code></a>(tao, ele1_id, ele2_id, *, verbose=False, as_dict=True)</p></td>
-<td><p>Matrix value from the exit end of one element to the exit end of the other.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.merit" title="pytao.interface_commands.merit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merit</span></code></a>(tao, *, verbose=False, as_dict=True)</p></td>
-<td><p>Merit value.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.orbit_at_s" title="pytao.interface_commands.orbit_at_s"><code class="xref py py-obj docutils literal notranslate"><span class="pre">orbit_at_s</span></code></a>(tao, *, ix_uni, ix_branch, s, which, verbose=False, as_dict=True)</p></td>
-<td><p>Twiss at given s position.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.place_buffer" title="pytao.interface_commands.place_buffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">place_buffer</span></code></a>(tao, *, verbose=False, as_dict=True)</p></td>
-<td><p>Output place command buffer and reset the buffer.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.plot_curve" title="pytao.interface_commands.plot_curve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_curve</span></code></a>(tao, curve_name, *, verbose=False, as_dict=True)</p></td>
-<td><p>Curve information for a plot</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.plot_lat_layout" title="pytao.interface_commands.plot_lat_layout"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_lat_layout</span></code></a>(tao, ix_universe: 1, ix_branch: 0, *, verbose=False, as_dict=True)</p></td>
-<td><p>Plot Lat_layout info</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.plot_list" title="pytao.interface_commands.plot_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_list</span></code></a>(tao, r_or_g, *, verbose=False, as_dict=True)</p></td>
-<td><p>List of plot templates or plot regions.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.plot_graph" title="pytao.interface_commands.plot_graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_graph</span></code></a>(tao, graph_name, *, verbose=False, as_dict=True)</p></td>
-<td><p>Graph</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.plot_histogram" title="pytao.interface_commands.plot_histogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_histogram</span></code></a>(tao, curve_name, *, verbose=False, as_dict=True)</p></td>
-<td><p>Plot Histogram</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.plot_plot_manage" title="pytao.interface_commands.plot_plot_manage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_plot_manage</span></code></a>(tao, *, plot_location, plot_name, n_graph, graph1_name, graph2_name, graphN_name, verbose=False, as_dict=True)</p></td>
-<td><p>Template plot creation or destruction.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.plot_curve_manage" title="pytao.interface_commands.plot_curve_manage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_curve_manage</span></code></a>(tao, *, graph_name, curve_index, curve_name, verbose=False, as_dict=True)</p></td>
-<td><p>Template plot curve creation/destruction</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.plot_graph_manage" title="pytao.interface_commands.plot_graph_manage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_graph_manage</span></code></a>(tao, *, plot_name, graph_index, graph_name, verbose=False, as_dict=True)</p></td>
-<td><p>Template plot graph creation/destruction</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.plot_line" title="pytao.interface_commands.plot_line"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_line</span></code></a>(tao, *, region_name, graph_name, curve_name, x_or_y, verbose=False, as_dict=True)</p></td>
-<td><p>Points used to construct a smooth line for a plot curve.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.plot_symbol" title="pytao.interface_commands.plot_symbol"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_symbol</span></code></a>(tao, *, region_name, graph_name, curve_name, x_or_y, verbose=False, as_dict=True)</p></td>
-<td><p>Locations to draw symbols for a plot curve.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.plot_transfer" title="pytao.interface_commands.plot_transfer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_transfer</span></code></a>(tao, from_plot, to_plot, *, verbose=False, as_dict=True)</p></td>
-<td><p>Transfer plot parameters from the “from plot” to the “to plot” (or plots).</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.plot1" title="pytao.interface_commands.plot1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot1</span></code></a>(tao, name, *, verbose=False, as_dict=True)</p></td>
-<td><p>Info on a given plot.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.shape_list" title="pytao.interface_commands.shape_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shape_list</span></code></a>(tao, who, *, verbose=False, as_dict=True)</p></td>
-<td><p>lat_layout and floor_plan shapes list</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.shape_manage" title="pytao.interface_commands.shape_manage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shape_manage</span></code></a>(tao, *, who, index, add_or_delete, verbose=False, as_dict=True)</p></td>
-<td><p>element shape creation or destruction</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.shape_pattern_list" title="pytao.interface_commands.shape_pattern_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shape_pattern_list</span></code></a>(tao, *, ix_pattern='', verbose=False, as_dict=True)</p></td>
-<td><p>List of shape patterns</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.shape_pattern_manage" title="pytao.interface_commands.shape_pattern_manage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shape_pattern_manage</span></code></a>(tao, *, ix_pattern, pat_name, pat_line_width, verbose=False, as_dict=True)</p></td>
-<td><p>Add or remove shape pattern</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.shape_pattern_point_manage" title="pytao.interface_commands.shape_pattern_point_manage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shape_pattern_point_manage</span></code></a>(tao, *, ix_pattern, ix_point, s, x, verbose=False, as_dict=True)</p></td>
-<td><p>Add or remove shape pattern point</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.shape_set" title="pytao.interface_commands.shape_set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shape_set</span></code></a>(tao, *, who, shape_index, ele_name, shape, color, shape_size, type_label, shape_draw, multi_shape, line_width, verbose=False, as_dict=True)</p></td>
-<td><p>lat_layout or floor_plan shape set</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.show" title="pytao.interface_commands.show"><code class="xref py py-obj docutils literal notranslate"><span class="pre">show</span></code></a>(tao, line, *, verbose=False, as_dict=True)</p></td>
-<td><p>Show command pass through</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.species_to_int" title="pytao.interface_commands.species_to_int"><code class="xref py py-obj docutils literal notranslate"><span class="pre">species_to_int</span></code></a>(tao, species_str, *, verbose=False, as_dict=True)</p></td>
-<td><p>Convert species name to corresponding integer</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.species_to_str" title="pytao.interface_commands.species_to_str"><code class="xref py py-obj docutils literal notranslate"><span class="pre">species_to_str</span></code></a>(tao, species_int, *, verbose=False, as_dict=True)</p></td>
-<td><p>Convert species integer id to corresponding</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.spin_polarization" title="pytao.interface_commands.spin_polarization"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spin_polarization</span></code></a>(tao, *, ix_uni='1', ix_branch='0', which, verbose=False, as_dict=True)</p></td>
-<td><p>Spin information</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.super_universe" title="pytao.interface_commands.super_universe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">super_universe</span></code></a>(tao, *, verbose=False, as_dict=True)</p></td>
-<td><p>Super_Universe information</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.twiss_at_s" title="pytao.interface_commands.twiss_at_s"><code class="xref py py-obj docutils literal notranslate"><span class="pre">twiss_at_s</span></code></a>(tao, *, ix_uni, ix_branch, s, which, verbose=False, as_dict=True)</p></td>
-<td><p>Twiss at given s position</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.universe" title="pytao.interface_commands.universe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">universe</span></code></a>(tao, ix_universe, *, verbose=False, as_dict=True)</p></td>
-<td><p>Universe info</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.var" title="pytao.interface_commands.var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">var</span></code></a>(tao, var, *, verbose=False, as_dict=True)</p></td>
-<td><p>Info on an individual variable</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.var_create" title="pytao.interface_commands.var_create"><code class="xref py py-obj docutils literal notranslate"><span class="pre">var_create</span></code></a>(tao, *, var_name, ele_name, attribute, universes, weight, step, low_lim, high_lim, merit_type, good_user, key_bound, key_delta, verbose=False, as_dict=True)</p></td>
-<td><p>Create a single variable</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.var_general" title="pytao.interface_commands.var_general"><code class="xref py py-obj docutils literal notranslate"><span class="pre">var_general</span></code></a>(tao, *, verbose=False, as_dict=True)</p></td>
-<td><p>List of all variable v1 arrays</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.var_v_array" title="pytao.interface_commands.var_v_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">var_v_array</span></code></a>(tao, v1_var, *, verbose=False, as_dict=True)</p></td>
-<td><p>List of variables for a given data_v1.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.var_v1_array" title="pytao.interface_commands.var_v1_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">var_v1_array</span></code></a>(tao, v1_var, *, verbose=False, as_dict=True)</p></td>
-<td><p>List of variables in a given variable v1 array</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.var_v1_create" title="pytao.interface_commands.var_v1_create"><code class="xref py py-obj docutils literal notranslate"><span class="pre">var_v1_create</span></code></a>(tao, *, v1_name, n_var_min, n_var_max, verbose=False, as_dict=True)</p></td>
-<td><p>Create a v1 variable structure along with associated var array.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.interface_commands.var_v1_destroy" title="pytao.interface_commands.var_v1_destroy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">var_v1_destroy</span></code></a>(tao, v1_datum, *, verbose=False, as_dict=True)</p></td>
-<td><p>Destroy a v1 var structure along with associated var sub-array.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.interface_commands.wave" title="pytao.interface_commands.wave"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wave</span></code></a>(tao, what, *, verbose=False, as_dict=True)</p></td>
-<td><p>Wave analysis info.</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="py function">
-<dt id="pytao.interface_commands.__exec_no_return">
-<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">__exec_no_return</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.__exec_no_return" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="pytao.interface_commands.__exec_string">
-<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">__exec_string</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.__exec_string" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="pytao.interface_commands.__exec_integer">
-<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">__exec_integer</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.__exec_integer" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="pytao.interface_commands.__exec_real">
-<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">__exec_real</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.__exec_real" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="py function">
 <dt id="pytao.interface_commands.beam">
 <code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">beam</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_universe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.beam" title="Permalink to this definition">¶</a></dt>
@@ -4508,7 +4176,6 @@ args:</p>
 
 </div>
 </div>
-</div>
 
 
            </div>
@@ -4517,7 +4184,7 @@ args:</p>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="../tao_interface/index.html" class="btn btn-neutral float-right" title="pytao.tao_interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="../_version/index.html" class="btn btn-neutral float-left" title="pytao._version" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../util/parameters/index.html" class="btn btn-neutral float-left" title="pytao.util.parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

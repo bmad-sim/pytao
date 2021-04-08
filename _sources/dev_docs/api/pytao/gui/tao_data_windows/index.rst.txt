@@ -12,19 +12,6 @@
 Module Contents
 ---------------
 
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   pytao.gui.tao_data_windows.tao_d2_data_window
-   pytao.gui.tao_data_windows.d2_data_frame
-   pytao.gui.tao_data_windows.tao_d1_data_window
-   pytao.gui.tao_data_windows.tao_new_data_window
-   pytao.gui.tao_data_windows.new_d1_frame
-
-
-
 .. class:: tao_d2_data_window(root, pipe, *args, **kwargs)
 
 

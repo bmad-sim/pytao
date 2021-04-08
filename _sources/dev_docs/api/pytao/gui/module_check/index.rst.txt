@@ -7,15 +7,6 @@
 Module Contents
 ---------------
 
-
-Functions
-~~~~~~~~~
-
-.. autoapisummary::
-
-   pytao.gui.module_check.module_check
-
-
 .. function:: module_check()
 
    Checks for the required modules (listed in the required list).

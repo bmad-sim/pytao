@@ -39,9 +39,7 @@
 
     
     <link rel="index" title="Index" href="../../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="pytao.interface_commands" href="../interface_commands/index.html" />
-    <link rel="prev" title="pytao.util.parameters" href="../util/parameters/index.html" /> 
+    <link rel="search" title="Search" href="../../../../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -101,21 +99,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples/data.html">Data command examples</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Reference</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao</span></code></a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="../index.html#subpackages">Subpackages</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao._version</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../interface_commands/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.interface_commands</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../tao_interface/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_interface</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../index.html#package-contents">Package Contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../documentation.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development Guidelines</a></li>
 </ul>
@@ -172,10 +157,6 @@
     
       <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="../../index.html">API Reference</a> &raquo;</li>
-        
-          <li><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao</span></code></a> &raquo;</li>
-        
       <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao._version</span></code></li>
     
     
@@ -224,81 +205,6 @@
 <p>Git implementation of _version.py.</p>
 <div class="section" id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="classes">
-<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao._version.VersioneerConfig" title="pytao._version.VersioneerConfig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VersioneerConfig</span></code></a></p></td>
-<td><p>Container for Versioneer configuration parameters.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section" id="functions">
-<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao._version.get_keywords" title="pytao._version.get_keywords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_keywords</span></code></a>()</p></td>
-<td><p>Get the keywords needed to look up the version information.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao._version.get_config" title="pytao._version.get_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_config</span></code></a>()</p></td>
-<td><p>Create, populate and return the VersioneerConfig() object.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao._version.register_vcs_handler" title="pytao._version.register_vcs_handler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_vcs_handler</span></code></a>(vcs, method)</p></td>
-<td><p>Create decorator to mark a method as the handler of a VCS.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao._version.run_command" title="pytao._version.run_command"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_command</span></code></a>(commands, args, cwd=None, verbose=False, hide_stderr=False, env=None)</p></td>
-<td><p>Call the given command(s).</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao._version.versions_from_parentdir" title="pytao._version.versions_from_parentdir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">versions_from_parentdir</span></code></a>(parentdir_prefix, root, verbose)</p></td>
-<td><p>Try to determine the version from the parent directory name.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao._version.git_get_keywords" title="pytao._version.git_get_keywords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">git_get_keywords</span></code></a>(versionfile_abs)</p></td>
-<td><p>Extract version information from the given file.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao._version.git_versions_from_keywords" title="pytao._version.git_versions_from_keywords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">git_versions_from_keywords</span></code></a>(keywords, tag_prefix, verbose)</p></td>
-<td><p>Get version information from git keywords.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao._version.git_pieces_from_vcs" title="pytao._version.git_pieces_from_vcs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">git_pieces_from_vcs</span></code></a>(tag_prefix, root, verbose, run_command=run_command)</p></td>
-<td><p>Get version from ‘git describe’ in the root of the source tree.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao._version.plus_or_dot" title="pytao._version.plus_or_dot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plus_or_dot</span></code></a>(pieces)</p></td>
-<td><p>Return a + if we don’t already have one, else return a .</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao._version.render_pep440" title="pytao._version.render_pep440"><code class="xref py py-obj docutils literal notranslate"><span class="pre">render_pep440</span></code></a>(pieces)</p></td>
-<td><p>Build up version string, with post-release “local version identifier”.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao._version.render_pep440_pre" title="pytao._version.render_pep440_pre"><code class="xref py py-obj docutils literal notranslate"><span class="pre">render_pep440_pre</span></code></a>(pieces)</p></td>
-<td><p>TAG[.post0.devDISTANCE] – No -dirty.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao._version.render_pep440_post" title="pytao._version.render_pep440_post"><code class="xref py py-obj docutils literal notranslate"><span class="pre">render_pep440_post</span></code></a>(pieces)</p></td>
-<td><p>TAG[.postDISTANCE[.dev0]+gHEX] .</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao._version.render_pep440_old" title="pytao._version.render_pep440_old"><code class="xref py py-obj docutils literal notranslate"><span class="pre">render_pep440_old</span></code></a>(pieces)</p></td>
-<td><p>TAG[.postDISTANCE[.dev0]] .</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao._version.render_git_describe" title="pytao._version.render_git_describe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">render_git_describe</span></code></a>(pieces)</p></td>
-<td><p>TAG[-DISTANCE-gHEX][-dirty].</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao._version.render_git_describe_long" title="pytao._version.render_git_describe_long"><code class="xref py py-obj docutils literal notranslate"><span class="pre">render_git_describe_long</span></code></a>(pieces)</p></td>
-<td><p>TAG-DISTANCE-gHEX[-dirty].</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao._version.render" title="pytao._version.render"><code class="xref py py-obj docutils literal notranslate"><span class="pre">render</span></code></a>(pieces, style)</p></td>
-<td><p>Render the given version pieces into the requested style.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao._version.get_versions" title="pytao._version.get_versions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_versions</span></code></a>()</p></td>
-<td><p>Get version information or return default if unable to do so.</p></td>
-</tr>
-</tbody>
-</table>
 <dl class="py function">
 <dt id="pytao._version.get_keywords">
 <code class="sig-prename descclassname"><span class="pre">pytao._version.</span></code><code class="sig-name descname"><span class="pre">get_keywords</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao._version.get_keywords" title="Permalink to this definition">¶</a></dt>
@@ -453,17 +359,12 @@ The distance/hash is unconditional.</p>
 
 </div>
 </div>
-</div>
 
 
            </div>
            
           </div>
           <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../interface_commands/index.html" class="btn btn-neutral float-right" title="pytao.interface_commands" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="../util/parameters/index.html" class="btn btn-neutral float-left" title="pytao.util.parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-    </div>
 
   <hr/>
 

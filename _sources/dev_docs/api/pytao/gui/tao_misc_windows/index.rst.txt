@@ -12,17 +12,6 @@
 Module Contents
 ---------------
 
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   pytao.gui.tao_misc_windows.tao_global_vars_window
-   pytao.gui.tao_misc_windows.tao_bmad_com_window
-   pytao.gui.tao_misc_windows.tao_history_window
-
-
-
 .. class:: tao_global_vars_window(root)
 
 

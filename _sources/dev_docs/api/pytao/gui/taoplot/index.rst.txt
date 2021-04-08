@@ -7,15 +7,6 @@
 Module Contents
 ---------------
 
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   pytao.gui.taoplot.taoplot
-
-
-
 .. class:: taoplot(pipe, PlotRegion)
 
 

@@ -7,15 +7,6 @@
 Module Contents
 ---------------
 
-
-Functions
-~~~~~~~~~
-
-.. autoapisummary::
-
-   pytao.tao_ctypes.evaluate.evaluate_tao
-
-
 .. function:: evaluate_tao(settings, run_commands=['set global track_type=beam'], expressions=['lat::orbit.x[end]'], input_file=None, ploton=False, beam_archive_path=None, archive_csr_wake=False, workdir=None, so_lib='', verbose=False)
 
    settings: dict of set_command:value where set_command is a string.

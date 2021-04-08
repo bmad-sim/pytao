@@ -16,17 +16,6 @@
 Module Contents
 ---------------
 
-
-Functions
-~~~~~~~~~
-
-.. autoapisummary::
-
-   pytao.gui.tao_set.check_for_changes
-   pytao.gui.tao_set.tao_dict_set
-   pytao.gui.tao_set.tao_set
-
-
 .. function:: check_for_changes(tao_list)
 
    Takes a list of tk_tao_parameters and returns True

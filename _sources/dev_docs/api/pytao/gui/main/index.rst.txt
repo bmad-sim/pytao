@@ -7,15 +7,6 @@
 Module Contents
 ---------------
 
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   pytao.gui.main.tao_root_window
-
-
-
 .. class:: tao_root_window(*args, **kwargs)
 
 

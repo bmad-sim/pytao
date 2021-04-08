@@ -114,7 +114,6 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../index.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../index.html#package-contents">Package Contents</a></li>
 </ul>
 </li>
 </ul>
@@ -228,45 +227,6 @@
 <span id="pytao-tao-ctypes-core"></span><h1><a class="reference internal" href="#module-pytao.tao_ctypes.core" title="pytao.tao_ctypes.core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes.core</span></code></a><a class="headerlink" href="#module-pytao.tao_ctypes.core" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="classes">
-<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.tao_ctypes.core.Tao" title="pytao.tao_ctypes.core.Tao"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Tao</span></code></a></p></td>
-<td><p>Class to run and interact with Tao. Requires libtao shared object.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.tao_ctypes.core.TaoModel" title="pytao.tao_ctypes.core.TaoModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TaoModel</span></code></a></p></td>
-<td><p>Base class for setting up a Tao model in a directory. Builds upon the Tao class.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section" id="functions">
-<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.tao_ctypes.core.tao_object_evaluate" title="pytao.tao_ctypes.core.tao_object_evaluate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tao_object_evaluate</span></code></a>(tao_object, expression)</p></td>
-<td><p>Evaluates an expression and returns</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.tao_ctypes.core.form_set_command" title="pytao.tao_ctypes.core.form_set_command"><code class="xref py py-obj docutils literal notranslate"><span class="pre">form_set_command</span></code></a>(s, value, delim=':')</p></td>
-<td><p>Forms a set command string that is separated by delim.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytao.tao_ctypes.core.apply_settings" title="pytao.tao_ctypes.core.apply_settings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply_settings</span></code></a>(tao_object, settings)</p></td>
-<td><p>Applies multiple settings to a tao object.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pytao.tao_ctypes.core.run_tao" title="pytao.tao_ctypes.core.run_tao"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_tao</span></code></a>(settings=None, run_commands=['set global track_type=single'], input_file='tao.init', ploton=False, workdir=None, so_lib='', verbose=False)</p></td>
-<td><p>Creates an LCLSTaoModel object, applies settings, and runs the beam.</p></td>
-</tr>
-</tbody>
-</table>
 <dl class="py class">
 <dt id="pytao.tao_ctypes.core.Tao">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.core.</span></code><code class="sig-name descname"><span class="pre">Tao</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">so_lib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.Tao" title="Permalink to this definition">¶</a></dt>
@@ -354,29 +314,11 @@ Note that the name of this function cannot be named ‘global’</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pytao.tao_ctypes.core.TaoModel.__setitem__">
-<code class="sig-name descname"><span class="pre">__setitem__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.TaoModel.__setitem__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Issue a set command separated by :</p>
-<p class="rubric">Example</p>
-<p>TaoModel[‘global:track_type’] = ‘beam’</p>
-<dl class="simple">
-<dt>will issue command:</dt><dd><p>set global track_type = beam</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt id="pytao.tao_ctypes.core.TaoModel.evaluate">
 <code class="sig-name descname"><span class="pre">evaluate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.TaoModel.evaluate" title="Permalink to this definition">¶</a></dt>
 <dd><p class="rubric">Example</p>
 <p>.evaluate(‘lat::orbit.x[beginning:end]’)</p>
 <p>Returns an np.array of floats</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="pytao.tao_ctypes.core.TaoModel.__str__">
-<code class="sig-name descname"><span class="pre">__str__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.TaoModel.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return str(self).</p>
 </dd></dl>
 
 </dd></dl>
@@ -417,7 +359,6 @@ Checks for lattice_calc_on and plot_on, and temporarily disables these for speed
 <dd><p>Creates an LCLSTaoModel object, applies settings, and runs the beam.</p>
 </dd></dl>
 
-</div>
 </div>
 </div>
 

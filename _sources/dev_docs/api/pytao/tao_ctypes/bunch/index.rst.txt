@@ -7,16 +7,6 @@
 Module Contents
 ---------------
 
-
-Functions
-~~~~~~~~~
-
-.. autoapisummary::
-
-   pytao.tao_ctypes.bunch.get_bunch_stats
-   pytao.tao_ctypes.bunch.get_bunch_data
-
-
 .. function:: get_bunch_stats(tao, ele=0, ix_universe=1, ix_branch=0, ix_bunch=1, verbose=False)
 
    Gets bunch statistics by calling:

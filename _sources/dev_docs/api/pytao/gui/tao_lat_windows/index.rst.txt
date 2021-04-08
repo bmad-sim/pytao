@@ -12,18 +12,6 @@
 Module Contents
 ---------------
 
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   pytao.gui.tao_lat_windows.tao_ele_window
-   pytao.gui.tao_lat_windows.tao_multipole_frame
-   pytao.gui.tao_lat_windows.tao_lattice_window
-   pytao.gui.tao_lat_windows.tao_ele_browser
-
-
-
 .. class:: tao_ele_window(root, pipe, default=None, *args, **kwargs)
 
 
@@ -190,16 +178,6 @@ Classes
       Checks that good indices have been input in self.ix_min_var
       and self.ix_max_var, and then copies ele names into ele_which
       for the selected data/var indices
-
-
-   .. method:: _autosize_apply_callback(self)
-
-      Apply callback implementation when operating with autosize == True
-
-
-   .. method:: _fixed_size_apply_callback(self)
-
-      Apply callback implementation when operating with autosize == False
 
 
    .. method:: refresh(self, event=None)

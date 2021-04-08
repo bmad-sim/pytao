@@ -7,19 +7,6 @@
 Module Contents
 ---------------
 
-
-Functions
-~~~~~~~~~
-
-.. autoapisummary::
-
-   pytao.misc.csr.parse_csr_wake
-   pytao.misc.csr.process_csr_wake_data
-   pytao.misc.csr.csr_wake_stats_at_step
-   pytao.misc.csr.write_csr_wake_data_h5
-   pytao.misc.csr.read_csr_wake_data_h5
-
-
 .. function:: parse_csr_wake(file, prepend_index=True)
 
    Parses CSR wake file and returns a dict of elements with

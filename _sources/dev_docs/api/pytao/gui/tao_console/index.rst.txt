@@ -7,15 +7,6 @@
 Module Contents
 ---------------
 
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   pytao.gui.tao_console.tao_console
-
-
-
 .. class:: tao_console(parent, root, pipe)
 
 
@@ -56,49 +47,6 @@ Classes
       Runs self.command at the Tao command line and
       displays the output.    Appends self.command to
       self.root.history and clears self.command.
-
-
-   .. method:: _get_curs_l(self)
-
-      Returns the cursor's current line as an int
-
-
-   .. method:: _get_curs_c(self)
-
-      Returns the cursor's current column as an int
-
-
-   .. method:: _curs_check(self)
-
-      Returns True if the cursor is after the start of
-      the current command and false otherwise.
-
-
-   .. method:: _key_handler(self, event)
-
-
-   .. method:: _ret_handler(self, event)
-
-
-   .. method:: _bs_handler(self, event)
-
-
-   .. method:: _l_handler(self, event)
-
-
-   .. method:: _r_handler(self, event)
-
-
-   .. method:: _u_handler(self, event=None)
-
-
-   .. method:: _d_handler(self, event=None)
-
-
-   .. method:: _shortcut_handler(self, key, event=None)
-
-      Used to unbind default shortuts on the Text widget, and
-      fixes root window keyboard shortcuts
 
 
 

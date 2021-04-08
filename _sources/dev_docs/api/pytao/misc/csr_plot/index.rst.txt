@@ -7,16 +7,6 @@
 Module Contents
 ---------------
 
-
-Functions
-~~~~~~~~~
-
-.. autoapisummary::
-
-   pytao.misc.csr_plot.plot_csr_wake
-   pytao.misc.csr_plot.plot_csr_stats
-
-
 .. function:: plot_csr_wake(data, step=0, **kwargs)
 
    Plots a step from process CSR wake data

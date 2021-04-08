@@ -13,15 +13,6 @@
 Module Contents
 ---------------
 
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   pytao.util.lattice_element.lat_element
-
-
-
 .. class:: lat_element(u_ix, ix_branch, ix_ele, which, pipe)
 
 

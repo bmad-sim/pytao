@@ -12,25 +12,6 @@
 Module Contents
 ---------------
 
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   pytao.gui.tao_plot_windows.tao_place_plot_window
-   pytao.gui.tao_plot_windows.tao_plot_window
-   pytao.gui.tao_plot_windows.tao_new_plot_template_window
-   pytao.gui.tao_plot_windows.new_graph_frame
-   pytao.gui.tao_plot_windows.new_curve_frame
-   pytao.gui.tao_plot_windows.tao_pgplot_canvas
-   pytao.gui.tao_plot_windows.tao_pgplot_config_window
-   pytao.gui.tao_plot_windows.tao_pgplot_place_window
-   pytao.gui.tao_plot_windows.tao_ele_shape_window
-   pytao.gui.tao_plot_windows.tao_building_wall_window
-   pytao.gui.tao_plot_windows.building_wall_point_window
-
-
-
 .. class:: tao_place_plot_window(root, pipe, *args, **kwargs)
 
 
@@ -121,12 +102,6 @@ Classes
       Will always run if overide is set to True
 
 
-   .. method:: x_axis_type_handler(self, *args)
-
-      Updates self.x_axis_type to match the chosen x_axis_type, then calls
-      graph_type_handler for each graph
-
-
    .. method:: clone_plot_method(self, ask=True)
 
       Clone the plot specified by plot_name
@@ -149,17 +124,6 @@ Classes
 
       Sets self.x_axis_type to the selected x_axis_type
       Pass the keyword argument skip_graph_handlers=True to skip graph_type handlers
-
-
-   .. method:: _index_trace(self, *args)
-
-      Updates self._plot_id when self.plot_var changes
-      (self.plot_var contains actual plot name, self._plot_id is e.g. @T3)
-
-
-   .. method:: _overwrite_trace(self, *args)
-
-      Updates self._overwrite_ix when self.overwrite_var changes
 
 
    .. method:: refresh(self, event=None)

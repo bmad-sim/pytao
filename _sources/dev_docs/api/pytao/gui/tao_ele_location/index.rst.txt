@@ -7,16 +7,6 @@
 Module Contents
 ---------------
 
-
-Functions
-~~~~~~~~~
-
-.. autoapisummary::
-
-   pytao.gui.tao_ele_location.in_rectangle
-   pytao.gui.tao_ele_location.in_element
-
-
 .. function:: in_rectangle(a, b, c, d, x, y)
 
    returns True if the point (x,y) is in a rectangle with corners a, b, c, and d, False otherwise

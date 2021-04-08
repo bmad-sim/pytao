@@ -7,26 +7,6 @@
 Module Contents
 ---------------
 
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   pytao.tao_ctypes.tools.NpEncoder
-
-
-
-Functions
-~~~~~~~~~
-
-.. autoapisummary::
-
-   pytao.tao_ctypes.tools.full_path
-   pytao.tao_ctypes.tools.fingerprint
-   pytao.tao_ctypes.tools.execute
-   pytao.tao_ctypes.tools.execute2
-
-
 .. function:: full_path(path)
 
    Helper function to expand enviromental variables and return the absolute path

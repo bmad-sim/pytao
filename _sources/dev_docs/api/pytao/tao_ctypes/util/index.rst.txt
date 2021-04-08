@@ -12,20 +12,6 @@
 Module Contents
 ---------------
 
-
-Functions
-~~~~~~~~~
-
-.. autoapisummary::
-
-   pytao.tao_ctypes.util.parse_bool
-   pytao.tao_ctypes.util.parse_tao_lat_ele_list
-   pytao.tao_ctypes.util.pytype
-   pytao.tao_ctypes.util.parse_tao_python_data1
-   pytao.tao_ctypes.util.parse_tao_python_data
-   pytao.tao_ctypes.util.simple_lat_table
-
-
 .. function:: parse_bool(s)
 
 

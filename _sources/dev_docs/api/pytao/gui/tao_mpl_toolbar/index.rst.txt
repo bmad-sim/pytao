@@ -7,15 +7,6 @@
 Module Contents
 ---------------
 
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   pytao.gui.tao_mpl_toolbar.taotoolbar
-
-
-
 .. class:: taotoolbar(canvas_, parent_, width_, GUI_DIR_)
 
 

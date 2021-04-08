@@ -9,6 +9,7 @@ implementations.  Also defined here are a couple of helper functions for the
 
 .. autoclass:: pytao.tao_interface.tao_interface
    :members:
+   :noindex:
 
 
 Tao Command Interface
@@ -24,3 +25,4 @@ and also automated tests based on the examples defined on the docstrings.
 
 .. automodule:: pytao.interface_commands
    :members:
+   :noindex:

@@ -20,25 +20,3 @@ Submodules
    tao_pipe/index.rst
 
 
-Package Contents
-----------------
-
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   pytao.tao_pexpect.tao_io
-
-
-
-.. class:: tao_io(init_args='', tao_exe='', timeout=600, expect_str='Tao>')
-
-
-   .. method:: cmd_in(self, cmd_str)
-
-
-   .. method:: cmd(self, cmd_str)
-
-
-

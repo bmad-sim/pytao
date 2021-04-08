@@ -7,27 +7,6 @@
 Module Contents
 ---------------
 
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   pytao.tao_ctypes.core.Tao
-   pytao.tao_ctypes.core.TaoModel
-
-
-
-Functions
-~~~~~~~~~
-
-.. autoapisummary::
-
-   pytao.tao_ctypes.core.tao_object_evaluate
-   pytao.tao_ctypes.core.form_set_command
-   pytao.tao_ctypes.core.apply_settings
-   pytao.tao_ctypes.core.run_tao
-
-
 .. class:: Tao(init='', so_lib='')
 
 
@@ -104,18 +83,6 @@ Functions
       Note that the name of this function cannot be named 'global'
 
 
-   .. method:: __setitem__(self, key, item)
-
-      Issue a set command separated by :
-
-      .. rubric:: Example
-
-      TaoModel['global:track_type'] = 'beam'
-
-      will issue command:
-          set global track_type = beam
-
-
    .. method:: evaluate(self, expression)
 
       .. rubric:: Example
@@ -123,11 +90,6 @@ Functions
       .evaluate('lat::orbit.x[beginning:end]')
 
       Returns an np.array of floats
-
-
-   .. method:: __str__(self)
-
-      Return str(self).
 
 
 

@@ -7,16 +7,6 @@
 Module Contents
 ---------------
 
-
-Functions
-~~~~~~~~~
-
-.. autoapisummary::
-
-   pytao.tests.conftest.rootdir
-   pytao.tests.conftest.config_file
-
-
 .. function:: rootdir()
 
 
