@@ -555,15 +555,6 @@ class tao_new_plot_template_window(Tao_Toplevel):
                         self._plot_display_list[self._plot_list.index(self.plot_var.get())])
         self.refresh()
 
-    def x_axis_type_handler(self, *args):
-        '''
-        Updates self.x_axis_type to match the chosen x_axis_type, then calls
-        graph_type_handler for each graph
-        '''
-        self.x_axis_type = self.plot_param_list[2].tk_var.get()
-        for graph in self.graph_frame.tab_list:
-            graph.graph_type_handler()
-
     def clone_plot_method(self, ask=True):
         '''
         Clone the plot specified by plot_name
