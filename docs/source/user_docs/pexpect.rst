@@ -26,3 +26,4 @@ API
 .. autoclass:: pytao.tao_pexpect.tao_pipe.tao_io
    :members:
    :undoc-members:
+   :noindex:
