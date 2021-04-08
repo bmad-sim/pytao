@@ -65,13 +65,14 @@ def generate_params(params):
     param_list = ['tao']
     if len(params) > 2:
         param_list.append('*')
-    for p in params:
+    num_params = len(params)
+    for idx, p in enumerate(params):
         name = sanitize(p.name)
         dtype = p.type
         optional = '=""' if 'optional' in dtype else ''
         default = f'="{dtype[dtype.find("=")+1:].strip()}"' if 'default=' in dtype else ''
         extra = optional if not default else default
-        if extra and len(params) <= 2 and '*' not in param_list:
+        if extra and len(params) <= 2 and '*' not in param_list and idx < num_params-1:
             param_list.insert(1, '*')
         param_list.append(f'{name}{extra}')
         
