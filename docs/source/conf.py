@@ -60,12 +60,18 @@ html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
 # -- Options for autoapi extension -------------------------------------------
+autoapi_type = "python"
 
 autoapi_dirs = ['../../pytao']
 
 autoapi_root = 'dev_docs/api'
 
+autoapi_options = [
+'members', 'undoc-members', 'show-inheritance'
+]
+autoapi_add_toctree_entry = True
+
+
 # -- Options for nbsphinx extension -------------------------------------------
 
 nbsphinx_execute = 'never'
-
