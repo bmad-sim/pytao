@@ -30,7 +30,7 @@ def __exec_real(tao, cmd, as_dict=True):
     return ret
 
 
-def beam(tao, *, ix_universe="1", verbose=False, as_dict=True):
+def beam(tao, ix_universe="1", *, verbose=False, as_dict=True):
     """
     Output beam parameters that are not in the beam_init structure.
     Command syntax:
@@ -64,7 +64,7 @@ def beam(tao, *, ix_universe="1", verbose=False, as_dict=True):
     return __exec_string(tao, cmd, as_dict)
 
 
-def beam_init(tao, *, ix_universe="1", verbose=False, as_dict=True):
+def beam_init(tao, ix_universe="1", *, verbose=False, as_dict=True):
     """
     Output beam_init parameters.
     Command syntax:
@@ -221,7 +221,7 @@ def bunch1(tao, *, ele_id, which="model", ix_bunch="1", coordinate="", verbose=F
         return __exec_real(tao, cmd, as_dict)
 
 
-def building_wall_list(tao, *, ix_section="", verbose=False, as_dict=True):
+def building_wall_list(tao, ix_section="", *, verbose=False, as_dict=True):
     """
     List of building wall sections or section points
     Command syntax:
@@ -446,7 +446,7 @@ def constraints(tao, who, *, verbose=False, as_dict=True):
     return __exec_string(tao, cmd, as_dict)
 
 
-def da_aperture(tao, *, ix_uni="1", verbose=False, as_dict=True):
+def da_aperture(tao, ix_uni="1", *, verbose=False, as_dict=True):
     """
     Dynamic aperture data
     Command syntax:
@@ -477,7 +477,7 @@ def da_aperture(tao, *, ix_uni="1", verbose=False, as_dict=True):
     return __exec_string(tao, cmd, as_dict)
 
 
-def da_params(tao, *, ix_uni="1", verbose=False, as_dict=True):
+def da_params(tao, ix_uni="1", *, verbose=False, as_dict=True):
     """
     Dynamic aperture input parameters
     Command syntax:
@@ -999,7 +999,7 @@ def derivative(tao, *, verbose=False, as_dict=True):
     return __exec_string(tao, cmd, as_dict)
 
 
-def ele_head(tao, *, ele_id, which="model", verbose=False, as_dict=True):
+def ele_head(tao, ele_id, which="model", *, verbose=False, as_dict=True):
     """
     "Head" Element attributes
     Command syntax:
@@ -1039,7 +1039,7 @@ def ele_head(tao, *, ele_id, which="model", verbose=False, as_dict=True):
     return __exec_string(tao, cmd, as_dict)
 
 
-def ele_methods(tao, *, ele_id, which="model", verbose=False, as_dict=True):
+def ele_methods(tao, ele_id, which="model", *, verbose=False, as_dict=True):
     """
     Element methods
     Command syntax:
@@ -1079,7 +1079,7 @@ def ele_methods(tao, *, ele_id, which="model", verbose=False, as_dict=True):
     return __exec_string(tao, cmd, as_dict)
 
 
-def ele_gen_attribs(tao, *, ele_id, which="model", verbose=False, as_dict=True):
+def ele_gen_attribs(tao, ele_id, which="model", *, verbose=False, as_dict=True):
     """
     Element general attributes
     Command syntax:
@@ -1119,7 +1119,7 @@ def ele_gen_attribs(tao, *, ele_id, which="model", verbose=False, as_dict=True):
     return __exec_string(tao, cmd, as_dict)
 
 
-def ele_multipoles(tao, *, ele_id, which="model", verbose=False, as_dict=True):
+def ele_multipoles(tao, ele_id, which="model", *, verbose=False, as_dict=True):
     """
     Element multipoles
     Command syntax:
@@ -1159,7 +1159,7 @@ def ele_multipoles(tao, *, ele_id, which="model", verbose=False, as_dict=True):
     return __exec_string(tao, cmd, as_dict)
 
 
-def ele_ac_kicker(tao, *, ele_id, which="model", verbose=False, as_dict=True):
+def ele_ac_kicker(tao, ele_id, which="model", *, verbose=False, as_dict=True):
     """
     Element ac_kicker
     Command syntax:
@@ -2299,7 +2299,7 @@ def lat_ele_list(tao, branch_name, *, verbose=False, as_dict=True):
     return __exec_string(tao, cmd, as_dict)
 
 
-def lat_general(tao, *, ix_universe="1", verbose=False, as_dict=True):
+def lat_general(tao, ix_universe="1", *, verbose=False, as_dict=True):
     """
     Lattice general
     Command syntax:
@@ -3120,7 +3120,7 @@ def shape_manage(tao, *, who, index, add_or_delete, verbose=False, as_dict=True)
     return __exec_string(tao, cmd, as_dict)
 
 
-def shape_pattern_list(tao, *, ix_pattern="", verbose=False, as_dict=True):
+def shape_pattern_list(tao, ix_pattern="", *, verbose=False, as_dict=True):
     """
     List of shape patterns
     Command syntax:
