@@ -15,7 +15,7 @@ Module Contents
 .. class:: tao_ele_window(root, pipe, default=None, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.tao_list_window`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.tao_list_window`
 
    Window for displaying and modifying element info.
    default specifies the element that should be
@@ -63,7 +63,7 @@ Module Contents
 .. class:: tao_multipole_frame(parent, tao_output, pipe, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.tk.Frame`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.tk.Frame`
 
    Displays multipole information (output of a
    python ele:multipoles or ele:elec_multipoles
@@ -88,7 +88,7 @@ Module Contents
 .. class:: tao_lattice_window(root, pipe, switches='', *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.Tao_Toplevel`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.Tao_Toplevel`
 
    Shows lattice elements in a read-only table view
    with an interface to select which rows/columns
@@ -156,7 +156,7 @@ Module Contents
 .. class:: tao_ele_browser(root, pipe, name, parent, parent_type, which='name', uni='All', autosize=False, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_lat_windows.tao_lattice_window`
+   Bases: :py:obj:`tao_lattice_window`
 
    Very similar to the tao_lattice_window, but is
    intendend for selecting elements to be assigned

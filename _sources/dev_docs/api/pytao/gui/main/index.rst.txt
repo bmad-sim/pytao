@@ -10,7 +10,7 @@ Module Contents
 .. class:: tao_root_window(*args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_beam_windows.tk.Tk`
+   Bases: :py:obj:`pytao.gui.tao_beam_windows.tk.Tk`
 
    .. method:: start_main(self)
 

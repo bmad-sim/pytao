@@ -32,7 +32,7 @@ Module Contents
 .. exception:: NotThisMethod
 
 
-   Bases: :class:`Exception`
+   Bases: :py:obj:`Exception`
 
    Exception raised if a method is not valid for the current scenario.
 

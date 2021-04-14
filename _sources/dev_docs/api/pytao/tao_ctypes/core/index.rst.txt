@@ -57,7 +57,7 @@ Module Contents
 .. class:: TaoModel(input_file='tao.init', ploton=True, use_tempdir=True, workdir=None, verbose=True, so_lib='', auto_configure=True)
 
 
-   Bases: :class:`pytao.tao_ctypes.core.Tao`
+   Bases: :py:obj:`Tao`
 
    Base class for setting up a Tao model in a directory. Builds upon the Tao class.
 

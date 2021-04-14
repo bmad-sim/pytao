@@ -15,7 +15,7 @@ Module Contents
 .. class:: tao_beam_init_window(root, pipe)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.tao_parameter_window`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.tao_parameter_window`
 
    Window for viewing and editing the beam_init struct
 

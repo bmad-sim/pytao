@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>pytao.gui.tao_plot_dict &mdash; PyTao 0.1.0 documentation</title>
+  <title>pytao.util.parsers &mdash; PyTao 0.1.0 documentation</title>
   
 
   
@@ -40,8 +40,8 @@
     
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
-    <link rel="next" title="pytao.gui.tao_plot_windows" href="../tao_plot_windows/index.html" />
-    <link rel="prev" title="pytao.gui.tao_mpl_toolbar" href="../tao_mpl_toolbar/index.html" /> 
+    <link rel="next" title="pytao.interface_commands" href="../../interface_commands/index.html" />
+    <link rel="prev" title="pytao.util.parameters" href="../parameters/index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -105,12 +105,12 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">API Reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao</span></code></a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../../index.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.gui</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../gui/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.gui</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../misc/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.misc</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../tao_ctypes/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../tao_pexpect/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_pexpect</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../tests/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tests</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../util/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.util</span></code></a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.util</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../index.html#submodules">Submodules</a></li>
@@ -178,15 +178,15 @@
         
           <li><a href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao</span></code></a> &raquo;</li>
         
-          <li><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.gui</span></code></a> &raquo;</li>
+          <li><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.util</span></code></a> &raquo;</li>
         
-      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.gui.tao_plot_dict</span></code></li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.util.parsers</span></code></li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../../../../_sources/dev_docs/api/pytao/gui/tao_plot_dict/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../../../_sources/dev_docs/api/pytao/util/parsers/index.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -223,60 +223,30 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="module-pytao.gui.tao_plot_dict">
-<span id="pytao-gui-tao-plot-dict"></span><h1><a class="reference internal" href="#module-pytao.gui.tao_plot_dict" title="pytao.gui.tao_plot_dict"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.gui.tao_plot_dict</span></code></a><a class="headerlink" href="#module-pytao.gui.tao_plot_dict" title="Permalink to this headline">¶</a></h1>
-<p>This module defines the tao_plot_dict class, which keeps track of what
-plots have been placed in tao along with what region they have been placed in.
-Comes with methods for adding and removing plots to/from the dictionary.</p>
+<div class="section" id="module-pytao.util.parsers">
+<span id="pytao-util-parsers"></span><h1><a class="reference internal" href="#module-pytao.util.parsers" title="pytao.util.parsers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.util.parsers</span></code></a><a class="headerlink" href="#module-pytao.util.parsers" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt id="pytao.gui.tao_plot_dict.tao_plot_dict">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_plot_dict.</span></code><code class="sig-name descname"><span class="pre">tao_plot_dict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_dict.tao_plot_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code></p>
-<p>Specialized dictionary for keeping track of plots and regions in tao
-mode should be either “matplotlib” or “pgplot”</p>
-<dl class="py method">
-<dt id="pytao.gui.tao_plot_dict.tao_plot_dict.place_template">
-<code class="sig-name descname"><span class="pre">place_template</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_dict.tao_plot_dict.place_template" title="Permalink to this definition">¶</a></dt>
-<dd><p>Places the given template plot in the specified region
-If no region is specified, automatically chooses the next available region
-Returns the name of the region where the plot was placed
-In pgplot mode, it is the caller’s responsibility to ensure
-that a valid region name is provided, otherwise the plot will not be placed</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="pytao.gui.tao_plot_dict.tao_plot_dict.unplace_template">
-<code class="sig-name descname"><span class="pre">unplace_template</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_dict.tao_plot_dict.unplace_template" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove the given template from self and unplace it in tao</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="pytao.gui.tao_plot_dict.tao_plot_dict.unplace_region">
-<code class="sig-name descname"><span class="pre">unplace_region</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_dict.tao_plot_dict.unplace_region" title="Permalink to this definition">¶</a></dt>
-<dd><p>Unplace whatever template is in the specified region, and remove the
-corresponding entry(ies) from self</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="pytao.gui.tao_plot_dict.tao_plot_dict.pgplot_update">
-<code class="sig-name descname"><span class="pre">pgplot_update</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_dict.tao_plot_dict.pgplot_update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reads the current state of plot regions in Tao, and
-sets self.pgplot_settings appropriately</p>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="py function">
-<dt id="pytao.gui.tao_plot_dict.region_to_max_rcl">
-<code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_plot_dict.</span></code><code class="sig-name descname"><span class="pre">region_to_max_rcl</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_dict.region_to_max_rcl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts the region name (e.g. r2312) to a
-(row number, column number, lat_layout) tuple
-where the counts in the tuple are the maximum number of
-rows/columns/lat_layouts that are needed to accomadate
-the given region
-returns (-1,-1,-1) if the region_name is invalid</p>
+<dt id="pytao.util.parsers.parse_tao_derivative">
+<code class="sig-prename descclassname"><span class="pre">pytao.util.parsers.</span></code><code class="sig-name descname"><span class="pre">parse_tao_derivative</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lines</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.parsers.parse_tao_derivative" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses the output of tao python derivative</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lines</strong> (<em>list of str</em>) – The output of the ‘python derivative’ command to parse</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p><strong>out</strong> – Dictionary with keys corresponding to universe indexes (int),
+with dModel_dVar as the value:</p>
+<blockquote>
+<div><p>np.ndarray with shape (n_data, n_var)</p>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -288,8 +258,8 @@ returns (-1,-1,-1) if the region_name is invalid</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../tao_plot_windows/index.html" class="btn btn-neutral float-right" title="pytao.gui.tao_plot_windows" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="../tao_mpl_toolbar/index.html" class="btn btn-neutral float-left" title="pytao.gui.tao_mpl_toolbar" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../interface_commands/index.html" class="btn btn-neutral float-right" title="pytao.interface_commands" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../parameters/index.html" class="btn btn-neutral float-left" title="pytao.util.parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

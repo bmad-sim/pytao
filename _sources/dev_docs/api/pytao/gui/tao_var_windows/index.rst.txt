@@ -15,7 +15,7 @@ Module Contents
 .. class:: tao_var_general_window(root, pipe, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.tao_list_window`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.tao_list_window`
 
    Skeleton class with several commonly used features.
    Comes with a scrollable region and supports adding other widgets
@@ -47,7 +47,7 @@ Module Contents
 .. class:: tao_v1_var_window(root, pipe, v1_var_name, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.lw_table_window`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.lw_table_window`
 
    Light-weight version of table_window, intended to be less
    graphically/computationally intensive (for use with networked
@@ -96,7 +96,7 @@ Module Contents
 .. class:: tao_new_var_window(root, pipe, default=None, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.Tao_Toplevel`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.Tao_Toplevel`
 
    Provides a window for creating new v1_variable arrays
 
@@ -121,7 +121,7 @@ Module Contents
 .. class:: new_v1_frame(parent)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.tk.Frame`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.tk.Frame`
 
    Provides a frame for inputting properties of a v1_variable array.
 

@@ -16,7 +16,7 @@ Module Contents
 .. class:: Tao_Toplevel(parent, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_widget.tk.Toplevel`
+   Bases: :py:obj:`pytao.gui.tao_widget.tk.Toplevel`
 
    Skeleton class that handles adding/removing windows
    from the root refresh windows dictionary
@@ -34,7 +34,7 @@ Module Contents
 .. class:: Tao_Popup(parent, root, tao_id=None, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.Tao_Toplevel`
+   Bases: :py:obj:`Tao_Toplevel`
 
    Provides a more convenient way to initialize a toplevel
    window that doesn't need to be its own subclass, used for
@@ -48,7 +48,7 @@ Module Contents
 .. class:: tao_list_window(root, title, use_upper=False, min_width=0, parent=None, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.Tao_Toplevel`
+   Bases: :py:obj:`Tao_Toplevel`
 
    Skeleton class with several commonly used features.
    Comes with a scrollable region and supports adding other widgets
@@ -68,7 +68,7 @@ Module Contents
 .. class:: tao_scroll_frame(parent, min_width=0, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_widget.tk.Frame`
+   Bases: :py:obj:`pytao.gui.tao_widget.tk.Frame`
 
    Provides a frame with a vertical scrollbar attached
    parent: the parent of this frame
@@ -98,7 +98,7 @@ Module Contents
 .. class:: tao_parameter_frame(parent, tao_list, n_col, pipe, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_widget.tk.Frame`
+   Bases: :py:obj:`pytao.gui.tao_widget.tk.Frame`
 
    Meant to display a list of parameters in a given
    number of columns
@@ -118,7 +118,7 @@ Module Contents
 .. class:: tao_parameter_window(root, title, tao_list, pipe, plot='', parent=None, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.tao_list_window`
+   Bases: :py:obj:`tao_list_window`
 
    Generic window for displaying and editing a list of parameters
 
@@ -126,7 +126,7 @@ Module Contents
 .. class:: table_window(root, pipe, array_name, title_list, bulk_template, bulk_set_format, set_format, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.tao_list_window`
+   Bases: :py:obj:`tao_list_window`
 
    Meant for showing large amounts of information in a table
    (e.g. d1_data and v1_vars).  Comes with bulk editing, detailed view of
@@ -177,7 +177,7 @@ Module Contents
 .. class:: lw_table_window(root, pipe, array_name, title_list, bulk_format, bulk_set_format, set_format, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.Tao_Toplevel`
+   Bases: :py:obj:`Tao_Toplevel`
 
    Light-weight version of table_window, intended to be less
    graphically/computationally intensive (for use with networked
@@ -274,7 +274,7 @@ Module Contents
 .. class:: tao_progress_window(root, parent, num_bars, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_widget.tk.Toplevel`
+   Bases: :py:obj:`pytao.gui.tao_widget.tk.Toplevel`
 
    Provides a window for displaying progress bars for long running processes
    Use the grid geometry manager for placing extra widgets in this window
@@ -305,7 +305,7 @@ Module Contents
 .. class:: tao_message_box(root, parent, tk_var, title='', message='', choices=[], orient='horizontal', *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_widget.tk.Toplevel`
+   Bases: :py:obj:`pytao.gui.tao_widget.tk.Toplevel`
 
    Custom messageboxes for when tkinter.messagebox does not suffice
    root: the Tk root window
@@ -330,7 +330,7 @@ Module Contents
 .. class:: tabbed_frame(parent, new_tab_func)
 
 
-   Bases: :class:`pytao.gui.tao_widget.tk.Frame`
+   Bases: :py:obj:`pytao.gui.tao_widget.tk.Frame`
 
    Provides a frame for showing multiple frames one at a time
    in a tabbed view.
@@ -367,7 +367,7 @@ Module Contents
 .. class:: ele_shape_frame(parent, root, pipe, which)
 
 
-   Bases: :class:`pytao.gui.tao_widget.tk.Frame`
+   Bases: :py:obj:`pytao.gui.tao_widget.tk.Frame`
 
    Provides a frame for viewing and editing the shapes that are used to
    display lat_layout and floor_plan graphs in tao

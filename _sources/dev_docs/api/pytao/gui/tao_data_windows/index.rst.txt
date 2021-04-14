@@ -15,7 +15,7 @@ Module Contents
 .. class:: tao_d2_data_window(root, pipe, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.tao_list_window`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.tao_list_window`
 
    Skeleton class with several commonly used features.
    Comes with a scrollable region and supports adding other widgets
@@ -59,7 +59,7 @@ Module Contents
 .. class:: tao_d1_data_window(root, pipe, d1_data_name, u_ix, ix_lb, ix_ub, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.lw_table_window`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.lw_table_window`
 
    With lw set to True, opens a lw_table_window instead
 
@@ -105,7 +105,7 @@ Module Contents
 .. class:: tao_new_data_window(root, pipe, default=None, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.Tao_Toplevel`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.Tao_Toplevel`
 
    Provides a window for creating new d2 data arrays (and their associated d1 arrays)
    Pass the name of an existing d2_array to open that array and start editing its d1_arrays
@@ -151,7 +151,7 @@ Module Contents
 .. class:: new_d1_frame(d2_array, name='', full_name='')
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.tk.Frame`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.tk.Frame`
 
    Provides a frame for inputting properties of a d1_data array.
    To load an existing d1_array, pass the d1_array name as name

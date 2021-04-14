@@ -15,7 +15,7 @@ Module Contents
 .. class:: tao_place_plot_window(root, pipe, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.Tao_Toplevel`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.Tao_Toplevel`
 
    Allows the user to choose from defined template
    plots and plot them in matplotlib windows
@@ -54,7 +54,7 @@ Module Contents
 .. class:: tao_plot_window(root, template, pipe, region=None, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.Tao_Toplevel`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.Tao_Toplevel`
 
    Displays one (perhaps multiple) matplotlib plots that the user has specified from the plotting
    template window that they want to plot. Creating a window in tkinter is necessary rather than using
@@ -76,7 +76,7 @@ Module Contents
 .. class:: tao_new_plot_template_window(root, pipe, default=None, mode='N', *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.Tao_Toplevel`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.Tao_Toplevel`
 
    Provides a window for creating new plot templates (and their
    associated graphs and curves)
@@ -136,7 +136,7 @@ Module Contents
 .. class:: new_graph_frame(parent, plot)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.tk.Frame`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.tk.Frame`
 
    New and improved frame for editing graph properties
 
@@ -185,7 +185,7 @@ Module Contents
 .. class:: new_curve_frame(parent, graph)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.tk.Frame`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.tk.Frame`
 
    Provides a frame to configure curve properties as necessary
 
@@ -230,7 +230,7 @@ Module Contents
 .. class:: tao_pgplot_canvas(parent, mode, root, pipe, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.tk.Frame`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.tk.Frame`
 
    Provides a widget that represents the pgplot window
    This widget has three modes of operation:
@@ -267,7 +267,7 @@ Module Contents
 .. class:: tao_pgplot_config_window(root, pipe, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.Tao_Toplevel`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.Tao_Toplevel`
 
    Provides a window for setting the pgplot window layout
    (number of rows/columns, number of lat_layouts, etc)
@@ -289,7 +289,7 @@ Module Contents
 .. class:: tao_pgplot_place_window(root, plot, pipe, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.Tao_Toplevel`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.Tao_Toplevel`
 
    Provides a window that prompts the user for which
    pgplot region a new plot should be placed in,
@@ -312,7 +312,7 @@ Module Contents
 .. class:: tao_ele_shape_window(root, pipe, which, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.Tao_Toplevel`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.Tao_Toplevel`
 
    Provides a window for holding an ele_shape_frame,
    which allows the user to view and edit the ele shapes
@@ -328,7 +328,7 @@ Module Contents
 .. class:: tao_building_wall_window(root, pipe, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.Tao_Toplevel`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.Tao_Toplevel`
 
    Provides a window for viewing and editing building_wall
    settings.
@@ -383,7 +383,7 @@ Module Contents
 .. class:: building_wall_point_window(parent, root, pipe, section_ix, point_ix, is_new)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.Tao_Popup`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.Tao_Popup`
 
    Window for specifying building wall point properties.
    Handles both creating new points and editing existing points.

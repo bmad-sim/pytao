@@ -19,5 +19,6 @@ Submodules
    evaluate_expression/index.rst
    lattice_element/index.rst
    parameters/index.rst
+   parsers/index.rst
 
 

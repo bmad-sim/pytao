@@ -14,7 +14,7 @@ Module Contents
 ---------------
 
 .. data:: tao_startup_param_list
-   :annotation: = ['beam_file;FILE;T;', 'beam_init_position_file;FILE;T;', 'beam_track_data_file;FILE;T;', 'building_wall_file;FILE;T;', 'data_file;FILE;T;', 'hook_init_file;FILE;T;', 'init_file;FILE;T;', 'noinit;LOGIC;T;F', 'lattice_file;FILE;T;', 'plot_file;FILE;T;', 'startup_file;FILE;T;', 'noplot;LOGIC;T;F', 'var_file;FILE;T;', 'slice_lattice;FILE;T;', 'disable_smooth_line_calc;LOGIC;T;F', 'log_startup;LOGIC;T;F', 'no_stopping;LOGIC;T;F', 'rf_on;LOGIC;T;F']
+   :annotation: = ['beam_file;FILE;T;', 'beam_init_position_file;FILE;T;', 'beam_track_data_file;FILE;T;',...
 
    
 
@@ -48,7 +48,7 @@ Module Contents
 .. exception:: InvalidParamError
 
 
-   Bases: :class:`Exception`
+   Bases: :py:obj:`Exception`
 
    Provides an exception for when a param_string is improperly formatted
    Examples of improper formatting include: not enough semicolons

@@ -16,7 +16,7 @@ Module Contents
 .. class:: tao_interface(mode='ctypes', init_args='', tao_exe='', expect_str='Tao>', so_lib='')
 
 
-   Bases: :class:`pytao.tao_interface`
+   Bases: :py:obj:`pytao.tao_interface`
 
    Provides an interface between the GUI and
    the Tao command line

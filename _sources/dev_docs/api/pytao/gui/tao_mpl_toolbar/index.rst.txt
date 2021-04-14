@@ -10,7 +10,7 @@ Module Contents
 .. class:: taotoolbar(canvas_, parent_, width_, GUI_DIR_)
 
 
-   Bases: :class:`matplotlib.backends.backend_tkagg.NavigationToolbar2Tk`
+   Bases: :py:obj:`matplotlib.backends.backend_tkagg.NavigationToolbar2Tk`
 
    .. attribute:: cid
       :annotation: = none

@@ -10,7 +10,7 @@ Module Contents
 .. class:: tao_console(parent, root, pipe)
 
 
-   Bases: :class:`tkinter.Frame`
+   Bases: :py:obj:`tkinter.Frame`
 
    Console for running tao commands and displaying
    text output.    This frame takes the place of the

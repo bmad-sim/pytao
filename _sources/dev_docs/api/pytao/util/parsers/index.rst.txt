@@ -1,0 +1,22 @@
+:mod:`pytao.util.parsers`
+=========================
+
+.. py:module:: pytao.util.parsers
+
+
+Module Contents
+---------------
+
+.. function:: parse_tao_derivative(lines)
+
+   Parses the output of tao python derivative
+
+   :param lines: The output of the 'python derivative' command to parse
+   :type lines: list of str
+
+   :returns: **out** -- Dictionary with keys corresponding to universe indexes (int),
+             with dModel_dVar as the value:
+                 np.ndarray with shape (n_data, n_var)
+   :rtype: dict
+
+

@@ -40,7 +40,7 @@
     
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
-    <link rel="next" title="pytao.interface_commands" href="../../interface_commands/index.html" />
+    <link rel="next" title="pytao.util.parsers" href="../parsers/index.html" />
     <link rel="prev" title="pytao.util.lattice_element" href="../lattice_element/index.html" /> 
 </head>
 
@@ -231,7 +231,7 @@ Also defined are a few functions for parsing data into a single tao_parameter or
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
 <dl class="py data">
 <dt id="pytao.util.parameters.tao_startup_param_list">
-<code class="sig-prename descclassname"><span class="pre">pytao.util.parameters.</span></code><code class="sig-name descname"><span class="pre">tao_startup_param_list</span></code><em class="property"> <span class="pre">=</span> <span class="pre">['beam_file;FILE;T;',</span> <span class="pre">'beam_init_position_file;FILE;T;',</span> <span class="pre">'beam_track_data_file;FILE;T;',</span> <span class="pre">'building_wall_file;FILE;T;',</span> <span class="pre">'data_file;FILE;T;',</span> <span class="pre">'hook_init_file;FILE;T;',</span> <span class="pre">'init_file;FILE;T;',</span> <span class="pre">'noinit;LOGIC;T;F',</span> <span class="pre">'lattice_file;FILE;T;',</span> <span class="pre">'plot_file;FILE;T;',</span> <span class="pre">'startup_file;FILE;T;',</span> <span class="pre">'noplot;LOGIC;T;F',</span> <span class="pre">'var_file;FILE;T;',</span> <span class="pre">'slice_lattice;FILE;T;',</span> <span class="pre">'disable_smooth_line_calc;LOGIC;T;F',</span> <span class="pre">'log_startup;LOGIC;T;F',</span> <span class="pre">'no_stopping;LOGIC;T;F',</span> <span class="pre">'rf_on;LOGIC;T;F']</span></em><a class="headerlink" href="#pytao.util.parameters.tao_startup_param_list" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.util.parameters.</span></code><code class="sig-name descname"><span class="pre">tao_startup_param_list</span></code><em class="property"> <span class="pre">=</span> <span class="pre">['beam_file;FILE;T;',</span> <span class="pre">'beam_init_position_file;FILE;T;',</span> <span class="pre">'beam_track_data_file;FILE;T;',...</span></em><a class="headerlink" href="#pytao.util.parameters.tao_startup_param_list" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
@@ -270,7 +270,7 @@ Returns None if comp_name was not found or if self.type != STRUCT</p>
 <dl class="py exception">
 <dt id="pytao.util.parameters.InvalidParamError">
 <em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.util.parameters.</span></code><code class="sig-name descname"><span class="pre">InvalidParamError</span></code><a class="headerlink" href="#pytao.util.parameters.InvalidParamError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <p>Provides an exception for when a param_string is improperly formatted
 Examples of improper formatting include: not enough semicolons
 (3 minimum), bad sub-parameter formatting (for STRUCTs), etc</p>
@@ -306,7 +306,7 @@ param_str MUST have at least 3 semicolons</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../../interface_commands/index.html" class="btn btn-neutral float-right" title="pytao.interface_commands" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../parsers/index.html" class="btn btn-neutral float-right" title="pytao.util.parsers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="../lattice_element/index.html" class="btn btn-neutral float-left" title="pytao.util.lattice_element" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

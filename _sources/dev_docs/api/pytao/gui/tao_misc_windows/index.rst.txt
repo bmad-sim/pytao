@@ -15,7 +15,7 @@ Module Contents
 .. class:: tao_global_vars_window(root)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.tao_parameter_window`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.tao_parameter_window`
 
    Generic window for displaying and editing a list of parameters
 
@@ -26,7 +26,7 @@ Module Contents
 .. class:: tao_bmad_com_window(root)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.tao_parameter_window`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.tao_parameter_window`
 
    Generic window for displaying and editing a list of parameters
 
@@ -37,7 +37,7 @@ Module Contents
 .. class:: tao_history_window(root, *args, **kwargs)
 
 
-   Bases: :class:`pytao.gui.tao_base_windows.tao_list_window`
+   Bases: :py:obj:`pytao.gui.tao_base_windows.tao_list_window`
 
    Skeleton class with several commonly used features.
    Comes with a scrollable region and supports adding other widgets

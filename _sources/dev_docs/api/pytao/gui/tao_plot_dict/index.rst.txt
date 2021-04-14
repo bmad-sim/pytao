@@ -17,7 +17,7 @@ Module Contents
 .. class:: tao_plot_dict(mode, pipe, *args, **kwargs)
 
 
-   Bases: :class:`dict`
+   Bases: :py:obj:`dict`
 
    Specialized dictionary for keeping track of plots and regions in tao
    mode should be either "matplotlib" or "pgplot"
