@@ -1631,7 +1631,7 @@ Module Contents
       graph:
 
 
-.. function:: globals(tao, *, verbose=False, as_dict=True)
+.. function:: tao_global(tao, *, verbose=False, as_dict=True)
 
    Global parameters
    Command syntax:

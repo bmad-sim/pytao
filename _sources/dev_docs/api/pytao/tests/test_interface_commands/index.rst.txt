@@ -175,7 +175,7 @@ Module Contents
 .. function:: test_floor_orbit_1()
 
 
-.. function:: test_globals_1()
+.. function:: test_tao_global_1()
 
 
 .. function:: test_help_1()

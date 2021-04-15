@@ -7,7 +7,7 @@
 Module Contents
 ---------------
 
-.. function:: parse_tao_derivative(lines)
+.. function:: parse_derivative(lines)
 
    Parses the output of tao python derivative
 
