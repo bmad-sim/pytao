@@ -3,7 +3,6 @@ import ctypes
 import numpy as np
 from pytao import tao_ctypes
 from pytao.util.parameters import tao_parameter_dict
-from pytao import interface_commands
 from .tools import full_path
 import tempfile
 import shutil
@@ -31,6 +30,16 @@ class Tao:
     #---------------------------------------------
 
     def __init__(self, init='', so_lib = ''):
+        # TL/DR; Leave this import out of the global scope.
+        #
+        # Make it lazy import to avoid ciclical dependency.
+        # at __init__.py there is an import for Tao which
+        # would cause interface_commands to be imported always
+        # once we import pytao.
+        # If by any chance the interface_commands.py is broken and
+        # we try to autogenerate it will complain about the broken
+        # interface_commands file.
+        from pytao import interface_commands
 
         # Library needs to be set.
         if so_lib == '':
