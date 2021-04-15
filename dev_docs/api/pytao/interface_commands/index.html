@@ -357,31 +357,14 @@ ix_branch: 0</p>
 <dl class="py function">
 <dt id="pytao.interface_commands.bunch1">
 <code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">bunch1</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ele_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'model'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_bunch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordinate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.bunch1" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bunch parameters at the exit end of a given lattice element.
-Command syntax:</p>
-<blockquote>
-<div><blockquote>
-<div><p>python bunch1 {ele_id}|{which} {ix_bunch} {coordinate}</p>
-</div></blockquote>
-<dl class="simple">
-<dt>where {ele_id} is an element name or index  and {which} is one of:</dt><dd><p>model
-base
-design</p>
-</dd>
-</dl>
-</div></blockquote>
-<dl class="simple">
-<dt>Optional {coordinate} is one of:</dt><dd><p>x, px, y, py, z, pz, ‘s’, ‘t’, ‘charge’, ‘p0c’</p>
-</dd>
-</dl>
-<p>and will return an array.</p>
+<dd><p>Bunch parameters at the exit end of a given lattice element.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ele_id</strong> – </p></li>
-<li><p><strong>which</strong> (<em>default=model</em>) – </p></li>
+<li><p><strong>ele_id</strong> – Element name or index</p></li>
+<li><p><strong>which</strong> (<em>default=model</em>) – One of: “model”, “base” or “design”</p></li>
 <li><p><strong>ix_bunch</strong> (<em>default=1</em>) – </p></li>
-<li><p><strong>coordinate</strong> (<em>optional</em>) – </p></li>
+<li><p><strong>coordinate</strong> (<em>optional</em>) – If one of: x, px, y, py, z, pz, ‘s’, ‘t’, ‘charge’, ‘p0c’</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -392,6 +375,9 @@ design</p>
 </p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>Command syntax:
+python bunch1 {ele_id}|{which} {ix_bunch} {coordinate}</p>
 <p class="rubric">Examples</p>
 <dl>
 <dt>Example: 1</dt><dd><p>init: $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
@@ -1208,10 +1194,15 @@ Command syntax:</p>
 Use the “derivative” command beforehand to recalcuate if needed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
+<dd class="field-odd"><p><p><strong>out</strong> – Dictionary with keys corresponding to universe indexes (int),
+with dModel_dVar as the value:</p>
+<blockquote>
+<div><p>np.ndarray with shape (n_data, n_var)</p>
+</div></blockquote>
+</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>string_list</p>
+<dd class="field-even"><p>dict</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -2626,17 +2617,15 @@ args:</p>
 
 <dl class="py function">
 <dt id="pytao.interface_commands.lat_list">
-<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">lat_list</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">who</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.lat_list" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">lat_list</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">who</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.lat_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of parameters at ends of lattice elements
 Command syntax:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>python lat_list -no_slaves -track_only -index_order -real_out</dt><dd><p><a class="reference external" href="mailto:{ix_uni}&#37;&#52;&#48;{ix_branch">{ix_uni}<span>&#64;</span>{ix_branch</a>}&gt;&gt;{elements}|{which} {who}</p>
-</dd>
-</dl>
+<div><p>python lat_list {flags} <a class="reference external" href="mailto:{ix_uni}&#37;&#52;&#48;{ix_branch">{ix_uni}<span>&#64;</span>{ix_branch</a>}&gt;&gt;{elements}|{which} {who}</p>
 </div></blockquote>
 <dl>
-<dt>where:</dt><dd><p>-no_slaves is optional. If present, multipass_slave and super_slave elements will not be matched to.
+<dt>where:</dt><dd><dl>
+<dt>{flags} is one or more of:</dt><dd><p>-no_slaves is optional. If present, multipass_slave and super_slave elements will not be matched to.
 -track_only is optional. If present, lord elements will not be matched to.
 -index_order is optional. If present, order elements by element index instead of the standard s-position.
 -array_out is optional. If present, the output will be available in the tao_c_interface_com%c_real or</p>
@@ -2669,6 +2658,8 @@ ele.mat6, ele.vec0</p>
 </dl>
 </dd>
 </dl>
+</dd>
+</dl>
 <p>Note: vector layout of mat6(6,6) is: [mat6(1,:), mat6(2,:), …mat6(6,:)]</p>
 <p class="rubric">Examples</p>
 <p>python lat_list -track 3&#64;0&gt;&gt;Q*|base ele.s,orbit.vec.2
@@ -2676,6 +2667,7 @@ python lat_list 3&#64;0&gt;&gt;Q*|base real:ele.s</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>flags</strong> (<em>optional</em>) – </p></li>
 <li><p><strong>ix_uni</strong> – </p></li>
 <li><p><strong>ix_branch</strong> – </p></li>
 <li><p><strong>elements</strong> – </p></li>

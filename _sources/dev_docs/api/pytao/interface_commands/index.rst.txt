@@ -16,7 +16,6 @@ Module Contents
      {ix_universe} is a universe index.
    To set beam_init parameters use the "set beam" command
 
-
    :param ix_universe:
    :type ix_universe: default=1
 
@@ -40,7 +39,6 @@ Module Contents
      {ix_universe} is a universe index.
    To set beam_init parameters use the "set beam_init" command
 
-
    :param ix_universe:
    :type ix_universe: default=1
 
@@ -61,7 +59,6 @@ Module Contents
    Command syntax:
      python bmad_com
 
-
    :returns:
    :rtype: string_list
 
@@ -80,7 +77,6 @@ Module Contents
    where
      {ix_universe} is a universe index
      {ix_branch} is a lattice branch index
-
 
    :param ix_universe:
    :type ix_universe: default=1
@@ -102,28 +98,22 @@ Module Contents
 .. function:: bunch1(tao, *, ele_id, which='model', ix_bunch='1', coordinate='', verbose=False, as_dict=True)
 
    Bunch parameters at the exit end of a given lattice element.
-   Command syntax:
-     python bunch1 {ele_id}|{which} {ix_bunch} {coordinate}
-    where {ele_id} is an element name or index  and {which} is one of:
-     model
-     base
-     design
 
-   Optional {coordinate} is one of:
-     x, px, y, py, z, pz, 's', 't', 'charge', 'p0c'
-   and will return an array.
-
-
-   :param ele_id:
-   :param which:
+   :param ele_id: Element name or index
+   :param which: One of: "model", "base" or "design"
    :type which: default=model
    :param ix_bunch:
    :type ix_bunch: default=1
-   :param coordinate:
+   :param coordinate: If one of: x, px, y, py, z, pz, 's', 't', 'charge', 'p0c'
    :type coordinate: optional
 
    :returns: * *string_list* -- if not coordinate
              * *real_array* -- if coordinate
+
+   .. rubric:: Notes
+
+   Command syntax:
+   python bunch1 {ele_id}|{which} {ix_bunch} {coordinate}
 
    .. rubric:: Examples
 
@@ -152,7 +142,6 @@ Module Contents
    If {ix_section} is not present then a list of building wall sections is given.
    If {ix_section} is present then a list of section points is given
 
-
    :param ix_section:
    :type ix_section: optional
 
@@ -179,7 +168,6 @@ Module Contents
    Command syntax:
      python building_wall_graph {graph}
 
-
    :param graph:
 
    :returns:
@@ -204,7 +192,6 @@ Module Contents
                           if adding a point and down if deleting.
      {z}, etc...     -- See tao_building_wall_point_struct components.
                      -- If {z} is set to "delete" then delete the point.
-
 
    :param ix_section:
    :param ix_point:
@@ -245,7 +232,6 @@ Module Contents
          none
          left_side
          right_side
-
 
    :param ix_section:
    :param sec_name:
@@ -296,7 +282,6 @@ Module Contents
      merit value
      dmerit/dvar
 
-
    :param who:
 
    :returns:
@@ -321,7 +306,6 @@ Module Contents
    Command syntax:
      python da_aperture {ix_uni}
 
-
    :param ix_uni:
    :type ix_uni: default=1
 
@@ -341,7 +325,6 @@ Module Contents
    Dynamic aperture input parameters
    Command syntax:
      python da_params {ix_uni}
-
 
    :param ix_uni:
    :type ix_uni: default=1
@@ -369,7 +352,6 @@ Module Contents
    python data 1@orbit.x[10]
 
    Note : By default dat_index is 1.
-
 
    :param ix_universe:
    :type ix_universe: default=1
@@ -429,7 +411,6 @@ Module Contents
      ("set global lattice_calc_on = F") to prevent Tao trying to
          evaluate the partially created datum and generating unwanted error messages.
 
-
    :param ix_uni:
    :type ix_uni: default=1
    :param d2_name:
@@ -458,7 +439,6 @@ Module Contents
    {d2_datum} should be of the form
      {ix_uni}@{d2_datum_name}
 
-
    :param ix_uni:
    :type ix_uni: default=1
    :param d2_datum:
@@ -482,7 +462,6 @@ Module Contents
      python data_d2 {d2_datum}
    {d2_datum} should be of the form
      {ix_uni}@{d2_datum_name}
-
 
    :param ix_uni:
    :type ix_uni: default=1
@@ -534,7 +513,6 @@ Module Contents
      python data_d1_array {d2_datum}
    {d2_datum} should be of the form
      {ix_uni}@{d2_datum_name}
-
 
    :param ix_uni:
    :type ix_uni: default=1
@@ -610,7 +588,6 @@ Module Contents
 
    Note: Use the "data_d2_create" and "datum_create" first to create datums.
 
-
    :returns:
    :rtype: None
 
@@ -637,7 +614,6 @@ Module Contents
    Note: Use the "data_d2_create" first to create a d2 structure with associated d1 arrays.
    Note: After creating all your datums, use the "data_set_design_value" routine to
          set the design (and model) values.
-
 
    :param datum_name          ! EG:
    :type datum_name          ! EG: orb.x[3]
@@ -706,7 +682,6 @@ Module Contents
    Command syntax:
      python datum_has_ele {datum_type}
 
-
    :param datum_type:
 
    :returns:
@@ -728,9 +703,10 @@ Module Contents
    Note: To save time, this command will not recalculate derivatives.
    Use the "derivative" command beforehand to recalcuate if needed.
 
-
-   :returns:
-   :rtype: string_list
+   :returns: **out** -- Dictionary with keys corresponding to universe indexes (int),
+             with dModel_dVar as the value:
+                 np.ndarray with shape (n_data, n_var)
+   :rtype: dict
 
    .. rubric:: Examples
 
@@ -753,7 +729,6 @@ Module Contents
    python ele:head 3@1>>7|model
 
    This gives element number 7 in branch 1 of universe 3.
-
 
    :param ele_id:
    :param which:
@@ -786,7 +761,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-
    :param ele_id:
    :param which:
    :type which: default=model
@@ -817,7 +791,6 @@ Module Contents
    python ele:gen_attribs 3@1>>7|model
 
    This gives element number 7 in branch 1 of universe 3.
-
 
    :param ele_id:
    :param which:
@@ -850,7 +823,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-
    :param ele_id:
    :param which:
    :type which: default=model
@@ -881,7 +853,6 @@ Module Contents
    python ele:ac_kicker 3@1>>7|model
 
    This gives element number 7 in branch 1 of universe 3.
-
 
    :param ele_id:
    :param which:
@@ -918,7 +889,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-
    :param ele_id:
    :param which:
    :type which: default=model
@@ -952,7 +922,6 @@ Module Contents
    {who} is one of:
      x       ! Return min/max in horizontal plane
      y       ! Return min/max in vertical plane
-
 
    :param ele_id:
    :param which:
@@ -993,7 +962,6 @@ Module Contents
 
    This gives map #2 of element number 7 in branch 1 of universe 3.
 
-
    :param ele_id:
    :param which:
    :param index:
@@ -1028,7 +996,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-
    :param ele_id:
    :param which:
 
@@ -1058,7 +1025,6 @@ Module Contents
    python ele:spin_taylor 3@1>>7|model
 
    This gives element number 7 in branch 1 of universe 3.
-
 
    :param ele_id:
    :param which:
@@ -1094,7 +1060,6 @@ Module Contents
    python ele:wake 3@1>>7|model
 
    This gives element number 7 in branch 1 of universe 3.
-
 
    :param ele_id:
    :param which:
@@ -1132,7 +1097,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-
    :param ele_id:
    :param which:
    :param index:
@@ -1167,7 +1131,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-
    :param ele_id:
    :param which:
 
@@ -1198,7 +1161,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-
    :param ele_id:
    :param which:
 
@@ -1228,7 +1190,6 @@ Module Contents
    python ele:orbit 3@1>>7|model
 
    This gives element number 7 in branch 1 of universe 3.
-
 
    :param ele_id:
    :param which:
@@ -1263,7 +1224,6 @@ Module Contents
    python ele:mat6 3@1>>7|model mat6
 
    This gives element number 7 in branch 1 of universe 3.
-
 
    :param ele_id:
    :param which:
@@ -1301,7 +1261,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-
    :param ele_id:
    :param which:
    :param index:
@@ -1336,7 +1295,6 @@ Module Contents
    python ele:grid_field 3@1>>7|model 2 base
 
    This gives grid #2 of element number 7 in branch 1 of universe 3.
-
 
    :param ele_id:
    :param which:
@@ -1377,7 +1335,6 @@ Module Contents
    python ele:floor 3@1>>7|model
 
    This gives element number 7 in branch 1 of universe 3.
-
 
    :param ele_id:
    :param which:
@@ -1423,7 +1380,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-
    :param ele_id:
    :param which:
    :param who:
@@ -1462,7 +1418,6 @@ Module Contents
    After each "Element" line, there are a number of lines (possibly zero) that begin with the word "Slave or "Lord".
    These "Slave" and "Lord" lines are the slaves and lords of the "Element" element.
 
-
    :param ele_id:
    :param which:
 
@@ -1492,7 +1447,6 @@ Module Contents
    python ele:elec_multipoles 3@1>>7|model
 
    This gives element number 7 in branch 1 of universe 3.
-
 
    :param ele_id:
    :param which:
@@ -1545,7 +1499,6 @@ Module Contents
      {z}       -- Longitudainal coord with respect to entrance end of element.
      {t_or_z}  -- time or phase space z depending if lattice is setup for absolute time tracking.
 
-
    :param ele_id:
    :param which:
    :param x:
@@ -1597,7 +1550,6 @@ Module Contents
    Command syntax:
      python floor_plan {graph}
 
-
    :param graph:
 
    :returns:
@@ -1616,7 +1568,6 @@ Module Contents
    (x, y) coordinates for drawing the particle orbit on a floor plan.
    Command syntax:
      python floor_orbit {graph}
-
 
    :param graph:
 
@@ -1645,8 +1596,6 @@ Module Contents
      prompt_color
      prompt_string
 
-
-
    :returns:
    :rtype: string_list
 
@@ -1663,8 +1612,6 @@ Module Contents
    Command syntax:
      python help
 
-
-
    :returns:
    :rtype: string_list
 
@@ -1680,7 +1627,6 @@ Module Contents
    INUM
    Command syntax:
      python inum {who}
-
 
    :param who:
 
@@ -1702,7 +1648,6 @@ Module Contents
    Command syntax:
      python lat_calc_done
 
-
    :param branch_name:
 
    :returns:
@@ -1723,7 +1668,6 @@ Module Contents
      python lat_ele {branch_name}
    {branch_name} should have the form:
      {ix_uni}@{ix_branch}
-
 
    :param branch_name:
 
@@ -1747,7 +1691,6 @@ Module Contents
    Output syntax:
      branch_index;branch_name;n_ele_track;n_ele_max
 
-
    :param ix_universe:
    :type ix_universe: default=1
 
@@ -1762,13 +1705,13 @@ Module Contents
       ix_universe: 1
 
 
-.. function:: lat_list(tao, *, ix_uni, ix_branch, elements, which, who, verbose=False, as_dict=True)
+.. function:: lat_list(tao, *, flags='', ix_uni, ix_branch, elements, which, who, verbose=False, as_dict=True)
 
    List of parameters at ends of lattice elements
    Command syntax:
-     python lat_list -no_slaves -track_only -index_order -real_out
-                     {ix_uni}@{ix_branch}>>{elements}|{which} {who}
+     python lat_list {flags} {ix_uni}@{ix_branch}>>{elements}|{which} {who}
    where:
+    {flags} is one or more of:
      -no_slaves is optional. If present, multipass_slave and super_slave elements will not be matched to.
      -track_only is optional. If present, lord elements will not be matched to.
      -index_order is optional. If present, order elements by element index instead of the standard s-position.
@@ -1807,6 +1750,8 @@ Module Contents
    python lat_list -track 3@0>>Q*|base ele.s,orbit.vec.2
    python lat_list 3@0>>Q*|base real:ele.s
 
+   :param flags:
+   :type flags: optional
    :param ix_uni:
    :param ix_branch:
    :param elements:
@@ -1833,7 +1778,6 @@ Module Contents
    Units of a parameter associated with a lattice or lattice element.
    Command syntax:
      python lat_param_units {param_name}
-
 
    :param param_name:
 
@@ -1884,8 +1828,6 @@ Module Contents
    Command syntax:
      python merit
 
-
-
    :returns:
    :rtype: string_list
 
@@ -1907,7 +1849,6 @@ Module Contents
        base
        design
      {s} is the longitudinal s-position.
-
 
    :param ix_uni:
    :param ix_branch:
@@ -1935,8 +1876,6 @@ Module Contents
    Command syntax:
      python place_buffer
 
-
-
    :returns:
    :rtype: None
 
@@ -1952,7 +1891,6 @@ Module Contents
    Curve information for a plot
    Command syntax:
      pyton plot_curve {curve_name}
-
 
    :param curve_name:
 
@@ -1974,7 +1912,6 @@ Module Contents
      python plot_lat_layout {ix_universe}@{ix_branch}
    Note: The returned list of element positions is not ordered in increasing
          longitudinal position.
-
 
    :param ix_universe:
    :type ix_universe: 1
@@ -2002,7 +1939,6 @@ Module Contents
      "r"      ! list regions
      "t"      ! list template plots
 
-
    :param r_or_g:
 
    :returns:
@@ -2028,7 +1964,6 @@ Module Contents
      This name is obtained from the python plot_list command.
      {g_name} is the graph name obtained from the python plot1 command.
 
-
    :param graph_name:
 
    :returns:
@@ -2047,7 +1982,6 @@ Module Contents
    Plot Histogram
    Command syntax:
      python plot_histograph {curve_name}
-
 
    :param curve_name:
 
@@ -2071,7 +2005,6 @@ Module Contents
    Use "@Tnnn" sytax for {plot_location} to place a plot. A plot may be placed in a
    spot where there is already a template.
    If {n_graph} is set to -1 then just delete the plot.
-
 
    :param plot_location:
    :param plot_name:
@@ -2106,7 +2039,6 @@ Module Contents
    If {curve_index} does not not correspond to an existing curve, {curve_index}
    must be one greater than the number of curves.
 
-
    :param graph_name:
    :param curve_index:
    :param curve_name:
@@ -2133,7 +2065,6 @@ Module Contents
    In this case the {graph_name} is ignored and does not have to be present.
    If {graph_index} does not not correspond to an existing graph, {graph_index}
    must be one greater than the number of graphs.
-
 
    :param plot_name:
    :param graph_index:
@@ -2232,7 +2163,6 @@ Module Contents
     are the equivalent region plots with the same name. And vice versa
     if {from_plot} is a region plot.
 
-
    :param from_plot:
    :param to_plot:
 
@@ -2256,7 +2186,6 @@ Module Contents
    {name} should be the region name if the plot is associated with a region.
    Output syntax is parameter list form. See documentation at the beginning of this file.
 
-
    :param name:
 
    :returns:
@@ -2278,7 +2207,6 @@ Module Contents
    {who} is one of:
      lat_layout
      floor_plan
-
 
    :param who:
 
@@ -2315,7 +2243,6 @@ Module Contents
    Note: After adding a shape use "python shape_set" to set shape parameters.
    This is important since an added shape is in a ill-defined state.
 
-
    :param who:
    :param index:
    :param add_or_delete:
@@ -2339,7 +2266,6 @@ Module Contents
    Command syntax:
      python shape_pattern_list {ix_pattern}
    If optional {ix_pattern} index is omitted then list all the patterns
-
 
    :param ix_pattern:
    :type ix_pattern: optional
@@ -2372,7 +2298,6 @@ Module Contents
      {pat_line_width}  -- Line width. Integer. If set to "delete" then section
                                                will be deleted.
 
-
    :param ix_pattern:
    :param pat_name:
    :param pat_line_width:
@@ -2400,7 +2325,6 @@ Module Contents
      {ix_point}        -- Point index. Points of higher indexes will be moved up
                                        if adding a point and down if deleting.
      {s}, {x}          -- Point location. If {s} is "delete" then delete the point.
-
 
    :param ix_pattern:
    :param ix_point:
@@ -2431,7 +2355,6 @@ Module Contents
    {who} is one of:
      lat_layout
      floor_plan
-
 
    :param who:
    :param shape_index:
@@ -2546,7 +2469,6 @@ Module Contents
 
    Note: This command is under development. If you want to use please contact David Sagan.
 
-
    :param ix_uni:
    :type ix_uni: default=1
    :param ix_branch:
@@ -2572,8 +2494,6 @@ Module Contents
    Command syntax:
      python super_universe
 
-
-
    :returns:
    :rtype: string_list
 
@@ -2593,7 +2513,6 @@ Module Contents
      model
      base
      design
-
 
    :param ix_uni:
    :param ix_branch:
@@ -2621,7 +2540,6 @@ Module Contents
      python universe {ix_universe}
    Use "python global" to get the number of universes.
 
-
    :param ix_universe:
 
    :returns:
@@ -2641,7 +2559,6 @@ Module Contents
    Command syntax:
      python var {var}        or
      python var {var} slaves
-
 
    :param var:
 
@@ -2666,7 +2583,6 @@ Module Contents
    {var_name} is something like "kick[5]".
    Before using var_create, setup the appropriate v1_var array using
    the "python var_v1_create" command.
-
 
    :param var_name:
    :param ele_name:
@@ -2711,8 +2627,6 @@ Module Contents
    Output syntax:
      {v1_var name};{v1_var%v lower bound};{v1_var%v upper bound}
 
-
-
    :returns:
    :rtype: string_list
 
@@ -2750,7 +2664,6 @@ Module Contents
    List of variables in a given variable v1 array
    Command syntax:
      python var_v1_array {v1_var}
-
 
    :param v1_var:
 
@@ -2792,7 +2705,6 @@ Module Contents
      ("set global lattice_calc_on = F") to prevent Tao trying to evaluate the
    partially created variable and generating unwanted error messages.
 
-
    :param v1_name:
    :param n_var_min:
    :param n_var_max:
@@ -2815,7 +2727,6 @@ Module Contents
    Destroy a v1 var structure along with associated var sub-array.
    Command syntax:
      python var_v1_destroy {v1_datum}
-
 
    :param v1_datum:
 
@@ -2840,7 +2751,6 @@ Module Contents
      loc_header
      locations
      plot1, plot2, plot3
-
 
    :param what:
 
