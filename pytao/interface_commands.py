@@ -4,42 +4,33 @@ from pytao.util.parameters import tao_parameter_dict
 from pytao.util import parsers as __parsers
 
 
-def __exec_no_return(tao, cmd, as_dict=True, method_name=None):
-    tao.cmd(cmd)
-    return None
-
-
-def __exec_string(tao, cmd, as_dict=True, method_name=None):
-    ret = tao.cmd(cmd)
-    try:
-        # find parser for method
-        # run parser
-        # else do as usual...
-        p = getattr(__parsers, f'parse_{method_name}')
-        if p is not None:
-           data = p(ret)
-           return data
-        if as_dict:
-            data = parse_tao_python_data(ret)
-        else:
-            data = tao_parameter_dict(ret)
-    except:
-        data = ret
-    return data
-
-
-def __exec_integer(tao, cmd, as_dict=True, method_name=None):
-    ret = tao.cmd_integer(cmd)
-    return ret
-
-
-def __exec_real(tao, cmd, as_dict=True, method_name=None):
-    ret = tao.cmd_real(cmd)
+def __execute(tao, cmd, as_dict=True, method_name=None, cmd_type="string_list"):
+    func_for_type = {
+        "string_list": tao.cmd,
+        "real_array": tao.cmd_real,
+        "integer_array": tao.cmd_integer
+    }
+    func = func_for_type.get(cmd_type, tao.cmd)
+    ret = func(cmd)
+    special_parser = getattr(__parsers, f'parse_{method_name}', "")
+    if special_parser:
+        data = special_parser(ret)
+        return data
+    if "string" in cmd_type:
+        try:
+            if as_dict:
+                data = parse_tao_python_data(ret)
+            else:
+                data = tao_parameter_dict(ret)
+        except Exception as ex:
+            print('Failed to parse string data. Returning raw value. Exception was: ', ex)
+            return ret
     return ret
 
 
 def beam(tao, ix_universe="1", *, verbose=False, as_dict=True):
     """
+    
     Output beam parameters that are not in the beam_init structure.
     Command syntax:
       python beam {ix_universe}
@@ -47,20 +38,16 @@ def beam(tao, ix_universe="1", *, verbose=False, as_dict=True):
       {ix_universe} is a universe index.
     To set beam_init parameters use the "set beam" command
     
-    
     Parameters
     ----------
     ix_universe : default=1
     
-       
     Returns
     -------
-    string_list 
-    
+    string_list
     
     Examples
-    -------- 
-    
+    --------
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
      args:
@@ -69,11 +56,12 @@ def beam(tao, ix_universe="1", *, verbose=False, as_dict=True):
     """
     cmd = f'python beam {ix_universe}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='beam')
+    return __execute(tao, cmd, as_dict, method_name='beam', cmd_type='string_list')
 
 
 def beam_init(tao, ix_universe="1", *, verbose=False, as_dict=True):
     """
+    
     Output beam_init parameters.
     Command syntax:
       python beam_init {ix_universe}
@@ -81,20 +69,16 @@ def beam_init(tao, ix_universe="1", *, verbose=False, as_dict=True):
       {ix_universe} is a universe index.
     To set beam_init parameters use the "set beam_init" command
     
-    
     Parameters
     ----------
     ix_universe : default=1
     
-       
     Returns
     -------
-    string_list 
-    
+    string_list
     
     Examples
-    -------- 
-    
+    --------
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
      args:
@@ -103,27 +87,22 @@ def beam_init(tao, ix_universe="1", *, verbose=False, as_dict=True):
     """
     cmd = f'python beam_init {ix_universe}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='beam_init')
+    return __execute(tao, cmd, as_dict, method_name='beam_init', cmd_type='string_list')
 
 
 def bmad_com(tao, *, verbose=False, as_dict=True):
     """
+    
     Bmad_com structure components
     Command syntax:
       python bmad_com
     
-    Parameters
-    ----------
-    
-       
     Returns
     -------
-    string_list 
-    
+    string_list
     
     Examples
-    -------- 
-    
+    --------
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -131,11 +110,12 @@ def bmad_com(tao, *, verbose=False, as_dict=True):
     """
     cmd = f'python bmad_com'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='bmad_com')
+    return __execute(tao, cmd, as_dict, method_name='bmad_com', cmd_type='string_list')
 
 
 def branch1(tao, *, ix_universe="1", ix_branch="0", verbose=False, as_dict=True):
     """
+    
     Lattice element list.
     Command syntax:
       python branch1 {ix_universe}@{ix_branch}
@@ -143,21 +123,17 @@ def branch1(tao, *, ix_universe="1", ix_branch="0", verbose=False, as_dict=True)
       {ix_universe} is a universe index
       {ix_branch} is a lattice branch index
     
-    
     Parameters
     ----------
     ix_universe : default=1
     ix_branch : default=0
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -167,43 +143,38 @@ def branch1(tao, *, ix_universe="1", ix_branch="0", verbose=False, as_dict=True)
     """
     cmd = f'python branch1 {ix_universe}_{ix_branch}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='branch1')
+    return __execute(tao, cmd, as_dict, method_name='branch1', cmd_type='string_list')
 
 
 def bunch1(tao, *, ele_id, which="model", ix_bunch="1", coordinate="", verbose=False, as_dict=True):
     """
+    
     Bunch parameters at the exit end of a given lattice element.
-    Command syntax:
-      python bunch1 {ele_id}|{which} {ix_bunch} {coordinate}
-     where {ele_id} is an element name or index  and {which} is one of:
-      model
-      base
-      design
-    
-    Optional {coordinate} is one of:
-      x, px, y, py, z, pz, 's', 't', 'charge', 'p0c'
-    and will return an array.
-    
     
     Parameters
     ----------
     ele_id
+        Element name or index
     which : default=model
+        One of: "model", "base" or "design"
     ix_bunch : default=1
     coordinate : optional
+        If one of: x, px, y, py, z, pz, 's', 't', 'charge', 'p0c'
     
-     
     Returns
     -------
     string_list
-      if not coordinate
+        if not coordinate
     real_array
-      if coordinate
+        if coordinate
     
+    Notes
+    -----
+    Command syntax:
+    python bunch1 {ele_id}|{which} {ix_bunch} {coordinate}
     
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
      args:
@@ -224,33 +195,30 @@ def bunch1(tao, *, ele_id, which="model", ix_bunch="1", coordinate="", verbose=F
     cmd = f'python bunch1 {ele_id}|{which} {ix_bunch} {coordinate}'
     if verbose: print(cmd)
     if not coordinate:
-        return __exec_string(tao, cmd, as_dict, method_name=bunch1)
+        return __execute(tao, cmd, as_dict, method_name='bunch1', cmd_type='string_list')
     if coordinate:
-        return __exec_real(tao, cmd, as_dict, method_name=bunch1)
+        return __execute(tao, cmd, as_dict, method_name='bunch1', cmd_type='real_array')
 
 
 def building_wall_list(tao, ix_section="", *, verbose=False, as_dict=True):
     """
+    
     List of building wall sections or section points
     Command syntax:
       python building_wall_list {ix_section}
     If {ix_section} is not present then a list of building wall sections is given.
     If {ix_section} is present then a list of section points is given
     
-    
     Parameters
     ----------
     ix_section : optional
     
-       
     Returns
     -------
-    string_list 
-    
+    string_list
     
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
      args:
@@ -264,30 +232,27 @@ def building_wall_list(tao, ix_section="", *, verbose=False, as_dict=True):
     """
     cmd = f'python building_wall_list {ix_section}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='building_wall_list')
+    return __execute(tao, cmd, as_dict, method_name='building_wall_list', cmd_type='string_list')
 
 
 def building_wall_graph(tao, graph, *, verbose=False, as_dict=True):
     """
+    
     (x, y) points for drawing the building wall for a particular graph.
     The graph defines the coordinate system for the (x, y) points.
     Command syntax:
       python building_wall_graph {graph}
     
-    
     Parameters
     ----------
     graph
     
-       
     Returns
     -------
-    string_list 
-    
+    string_list
     
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
      args:
@@ -296,11 +261,12 @@ def building_wall_graph(tao, graph, *, verbose=False, as_dict=True):
     """
     cmd = f'python building_wall_graph {graph}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='building_wall_graph')
+    return __execute(tao, cmd, as_dict, method_name='building_wall_graph', cmd_type='string_list')
 
 
 def building_wall_point(tao, *, ix_section, ix_point, z, x, radius, z_center, x_center, verbose=False, as_dict=True):
     """
+    
     add or delete a building wall point
     Command syntax:
       python building_wall_point {ix_section}^^{ix_point}^^{z}^^{x}^^{radius}^^{z_center}^^{x_center}
@@ -310,7 +276,6 @@ def building_wall_point(tao, *, ix_section, ix_point, z, x, radius, z_center, x_
                            if adding a point and down if deleting.
       {z}, etc...     -- See tao_building_wall_point_struct components.
                       -- If {z} is set to "delete" then delete the point.
-    
     
     Parameters
     ----------
@@ -322,15 +287,12 @@ def building_wall_point(tao, *, ix_section, ix_point, z, x, radius, z_center, x_
     z_center
     x_center
     
-       
     Returns
     -------
-    string_list 
-    
+    string_list
     
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
      args:
@@ -345,11 +307,12 @@ def building_wall_point(tao, *, ix_section, ix_point, z, x, radius, z_center, x_
     """
     cmd = f'python building_wall_point {ix_section}^^{ix_point}^^{z}^^{x}^^{radius}^^{z_center}^^{x_center}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='building_wall_point')
+    return __execute(tao, cmd, as_dict, method_name='building_wall_point', cmd_type='string_list')
 
 
 def building_wall_section(tao, *, ix_section, sec_name, sec_constraint, verbose=False, as_dict=True):
     """
+    
     add or delete a building wall section
     Command syntax:
       python building_wall_section {ix_section}^^{sec_name}^^{sec_constraint}
@@ -363,22 +326,18 @@ def building_wall_section(tao, *, ix_section, sec_name, sec_constraint, verbose=
           left_side
           right_side
     
-    
     Parameters
     ----------
     ix_section
     sec_name
     sec_constraint
     
-       
     Returns
     -------
     None
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -389,11 +348,12 @@ def building_wall_section(tao, *, ix_section, sec_name, sec_constraint, verbose=
     """
     cmd = f'python building_wall_section {ix_section}^^{sec_name}^^{sec_constraint}'
     if verbose: print(cmd)
-    return __exec_no_return(tao, cmd, as_dict, method_name='building_wall_section')
+    return __execute(tao, cmd, as_dict, method_name='building_wall_section', cmd_type='None')
 
 
 def constraints(tao, who, *, verbose=False, as_dict=True):
     """
+    
     Optimization data and variables that contribute to the merit function.
     Command syntax:
       python constraints {who}
@@ -424,20 +384,16 @@ def constraints(tao, who, *, verbose=False, as_dict=True):
       merit value
       dmerit/dvar
     
-    
     Parameters
     ----------
     who
     
-       
     Returns
     -------
-    string_list 
-    
+    string_list
     
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
@@ -451,29 +407,26 @@ def constraints(tao, who, *, verbose=False, as_dict=True):
     """
     cmd = f'python constraints {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='constraints')
+    return __execute(tao, cmd, as_dict, method_name='constraints', cmd_type='string_list')
 
 
 def da_aperture(tao, ix_uni="1", *, verbose=False, as_dict=True):
     """
+    
     Dynamic aperture data
     Command syntax:
       python da_aperture {ix_uni}
-    
     
     Parameters
     ----------
     ix_uni : default=1
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -482,29 +435,26 @@ def da_aperture(tao, ix_uni="1", *, verbose=False, as_dict=True):
     """
     cmd = f'python da_aperture {ix_uni}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='da_aperture')
+    return __execute(tao, cmd, as_dict, method_name='da_aperture', cmd_type='string_list')
 
 
 def da_params(tao, ix_uni="1", *, verbose=False, as_dict=True):
     """
+    
     Dynamic aperture input parameters
     Command syntax:
       python da_params {ix_uni}
-    
     
     Parameters
     ----------
     ix_uni : default=1
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -513,11 +463,12 @@ def da_params(tao, ix_uni="1", *, verbose=False, as_dict=True):
     """
     cmd = f'python da_params {ix_uni}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='da_params')
+    return __execute(tao, cmd, as_dict, method_name='da_params', cmd_type='string_list')
 
 
 def data(tao, *, ix_universe="1", d2_name, d1_datum, dat_index="1", verbose=False, as_dict=True):
     """
+    
     Individual datum info.
     Command syntax:
       python data {ix_universe}@{d2_name}.{d1_datum}[{dat_index}]
@@ -527,7 +478,6 @@ def data(tao, *, ix_universe="1", d2_name, d1_datum, dat_index="1", verbose=Fals
       python data 1@orbit.x[10]
     Note : By default dat_index is 1.
     
-    
     Parameters
     ----------
     ix_universe : default=1
@@ -535,15 +485,12 @@ def data(tao, *, ix_universe="1", d2_name, d1_datum, dat_index="1", verbose=Fals
     d1_datum
     dat_index : default=1
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
@@ -563,11 +510,12 @@ def data(tao, *, ix_universe="1", d2_name, d1_datum, dat_index="1", verbose=Fals
     """
     cmd = f'python data {ix_universe}_{d2_name}.{d1_datum}[{dat_index}]'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='data')
+    return __execute(tao, cmd, as_dict, method_name='data', cmd_type='string_list')
 
 
 def data_d2_create(tao, *, ix_uni="1", d2_name, n_d1_data, d_data_arrays_name_min_max, verbose=False, as_dict=True):
     """
+    
     Create a d2 data structure along with associated d1 and data arrays.
     
     Command syntax:
@@ -593,7 +541,6 @@ def data_d2_create(tao, *, ix_uni="1", d2_name, n_d1_data, d_data_arrays_name_mi
       ("set global lattice_calc_on = F") to prevent Tao trying to 
           evaluate the partially created datum and generating unwanted error messages.
     
-    
     Parameters
     ----------
     ix_uni : default=1
@@ -601,15 +548,12 @@ def data_d2_create(tao, *, ix_uni="1", d2_name, n_d1_data, d_data_arrays_name_mi
     n_d1_data
     d_data_arrays_name_min_max
     
-       
     Returns
     -------
     None
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
@@ -621,32 +565,29 @@ def data_d2_create(tao, *, ix_uni="1", d2_name, n_d1_data, d_data_arrays_name_mi
     """
     cmd = f'python data_d2_create {d2_name}^^{n_d1_data}^^{d_data_arrays_name_min_max}'
     if verbose: print(cmd)
-    return __exec_no_return(tao, cmd, as_dict, method_name='data_d2_create')
+    return __execute(tao, cmd, as_dict, method_name='data_d2_create', cmd_type='None')
 
 
 def data_d2_destroy(tao, *, ix_uni="1", d2_datum, verbose=False, as_dict=True):
     """
+    
     Destroy a d2 data structure along with associated d1 and data arrays.
     Command syntax:
       python data_d2_destroy {d2_datum}
     {d2_datum} should be of the form
       {ix_uni}@{d2_datum_name}
     
-    
     Parameters
     ----------
     ix_uni : default=1
     d2_datum
     
-       
     Returns
     -------
     None
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
@@ -656,32 +597,29 @@ def data_d2_destroy(tao, *, ix_uni="1", d2_datum, verbose=False, as_dict=True):
     """
     cmd = f'python data_d2_destroy {d2_datum}'
     if verbose: print(cmd)
-    return __exec_no_return(tao, cmd, as_dict, method_name='data_d2_destroy')
+    return __execute(tao, cmd, as_dict, method_name='data_d2_destroy', cmd_type='None')
 
 
 def data_d2(tao, *, ix_uni="1", d2_datum, verbose=False, as_dict=True):
     """
+    
     Information on a d2_datum.
     Command syntax:
       python data_d2 {d2_datum}
     {d2_datum} should be of the form
       {ix_uni}@{d2_datum_name}
     
-    
     Parameters
     ----------
     ix_uni : default=1
     d2_datum
     
-       
     Returns
     -------
-    string_list 
-    
+    string_list
     
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
@@ -691,11 +629,12 @@ def data_d2(tao, *, ix_uni="1", d2_datum, verbose=False, as_dict=True):
     """
     cmd = f'python data_d2 {d2_datum}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='data_d2')
+    return __execute(tao, cmd, as_dict, method_name='data_d2', cmd_type='string_list')
 
 
 def data_d_array(tao, *, ix_uni="1", d1_datum, verbose=False, as_dict=True):
     """
+    
     List of datums for a given data_d1.
     Command syntax:
       python data_d_array {d1_datum}
@@ -704,21 +643,17 @@ def data_d_array(tao, *, ix_uni="1", d1_datum, verbose=False, as_dict=True):
     Example:
       python data_d_array 1@orbit.x
     
-    
     Parameters
     ----------
     ix_uni : default=1
     d1_datum
     
-       
     Returns
     -------
-    string_list 
-    
+    string_list
     
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
@@ -728,32 +663,29 @@ def data_d_array(tao, *, ix_uni="1", d1_datum, verbose=False, as_dict=True):
     """
     cmd = f'python data_d_array {d1_datum}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='data_d_array')
+    return __execute(tao, cmd, as_dict, method_name='data_d_array', cmd_type='string_list')
 
 
 def data_d1_array(tao, *, ix_uni="1", d2_datum, verbose=False, as_dict=True):
     """
+    
     List of d1 arrays for a given data_d2.
     Command syntax:
       python data_d1_array {d2_datum}
     {d2_datum} should be of the form
       {ix_uni}@{d2_datum_name}
     
-    
     Parameters
     ----------
     ix_uni : default=1
     d2_datum
     
-       
     Returns
     -------
-    string_list 
-    
+    string_list
     
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
@@ -763,11 +695,12 @@ def data_d1_array(tao, *, ix_uni="1", d2_datum, verbose=False, as_dict=True):
     """
     cmd = f'python data_d1_array {d2_datum}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='data_d1_array')
+    return __execute(tao, cmd, as_dict, method_name='data_d1_array', cmd_type='string_list')
 
 
 def data_parameter(tao, data_array, parameter, *, verbose=False, as_dict=True):
     """
+    
     Given an array of datums, generate an array of values for a particular datum parameter.
     Command syntax:
       python data_parameter {data_array} {parameter}
@@ -780,15 +713,12 @@ def data_parameter(tao, data_array, parameter, *, verbose=False, as_dict=True):
     data_array
     parameter
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
@@ -798,31 +728,28 @@ def data_parameter(tao, data_array, parameter, *, verbose=False, as_dict=True):
     """
     cmd = f'python data_parameter {data_array} {parameter}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='data_parameter')
+    return __execute(tao, cmd, as_dict, method_name='data_parameter', cmd_type='string_list')
 
 
 def data_d2_array(tao, ix_universe, *, verbose=False, as_dict=True):
     """
+    
     Data d2 info for a given universe.
     Command syntax:
       python data_d2_array {ix_universe}
     Example:
       python data_d2_array 1
     
-    
     Parameters
     ----------
     ix_universe
     
-       
     Returns
     -------
-    string_list  
-    
+    string_list
     
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -831,11 +758,12 @@ def data_d2_array(tao, ix_universe, *, verbose=False, as_dict=True):
     """
     cmd = f'python data_d2_array {ix_universe}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='data_d2_array')
+    return __execute(tao, cmd, as_dict, method_name='data_d2_array', cmd_type='string_list')
 
 
 def data_set_design_value(tao, *, verbose=False, as_dict=True):
     """
+    
     Set the design (and base & model) values for all datums.
     Command syntax:
       python data_set_design_value
@@ -844,18 +772,12 @@ def data_set_design_value(tao, *, verbose=False, as_dict=True):
     
     Note: Use the "data_d2_create" and "datum_create" first to create datums.
     
-    Parameters
-    ----------
-    
-       
     Returns
     -------
     None
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
@@ -863,11 +785,12 @@ def data_set_design_value(tao, *, verbose=False, as_dict=True):
     """
     cmd = f'python data_set_design_value'
     if verbose: print(cmd)
-    return __exec_no_return(tao, cmd, as_dict, method_name='data_set_design_value')
+    return __execute(tao, cmd, as_dict, method_name='data_set_design_value', cmd_type='None')
 
 
 def datum_create(tao, *, datum_name, data_type, ele_ref_name="", ele_start_name="", ele_name, merit_type, meas, good_meas, ref, good_ref, weight, good_user, data_source, eval_point, s_offset, ix_bunch, invalid_value, spin_axis_n0_1="", spin_axis_n0_2="", spin_axis_n0_3="", spin_axis_l_1="", spin_axis_l_2="", spin_axis_l_3="", verbose=False, as_dict=True):
     """
+    
     Create a datum.
     Command syntax:
       python datum_create {datum_name}^^{data_type}^^{ele_ref_name}^^{ele_start_name}^^
@@ -882,7 +805,6 @@ def datum_create(tao, *, datum_name, data_type, ele_ref_name="", ele_start_name=
     Note: Use the "data_d2_create" first to create a d2 structure with associated d1 arrays.
     Note: After creating all your datums, use the "data_set_design_value" routine to 
           set the design (and model) values.
-    
     
     Parameters
     ----------
@@ -910,15 +832,12 @@ def datum_create(tao, *, datum_name, data_type, ele_ref_name="", ele_start_name=
     spin_axis%l(2) : optional
     spin_axis%l(3) : optional
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
@@ -943,29 +862,26 @@ def datum_create(tao, *, datum_name, data_type, ele_ref_name="", ele_start_name=
     """
     cmd = f'python datum_create {datum_name}^^{data_type}^^{ele_ref_name}^^{ele_start_name}^^{ele_name}^^{merit_type}^^{meas}^^{good_meas}^^{ref}^^{good_ref}^^{weight}^^{good_user}^^{data_source}^^{eval_point}^^{s_offset}^^{ix_bunch}^^{invalid_value}^^{spin_axis_n0_1}^^{spin_axis_n0_2}^^{spin_axis_n0_3}^^{spin_axis_l_1}^^{spin_axis_l_2}^^{spin_axis_l_3}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='datum_create')
+    return __execute(tao, cmd, as_dict, method_name='datum_create', cmd_type='string_list')
 
 
 def datum_has_ele(tao, datum_type, *, verbose=False, as_dict=True):
     """
+    
     Does datum type have an associated lattice element?
     Command syntax:
       python datum_has_ele {datum_type}
-    
     
     Parameters
     ----------
     datum_type
     
-       
     Returns
     -------
-    string_list 
-    
+    string_list
     
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
@@ -974,29 +890,27 @@ def datum_has_ele(tao, datum_type, *, verbose=False, as_dict=True):
     """
     cmd = f'python datum_has_ele {datum_type}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='datum_has_ele')
+    return __execute(tao, cmd, as_dict, method_name='datum_has_ele', cmd_type='string_list')
 
 
 def derivative(tao, *, verbose=False, as_dict=True):
     """
+    
     Optimization derivatives
     Command syntax:
       python derivative
     Note: To save time, this command will not recalculate derivatives. 
     Use the "derivative" command beforehand to recalcuate if needed.
     
-    Parameters
-    ----------
-    
-    
     Returns
     -------
-    string_list
-    
+    out : dict
+        Dictionary with keys corresponding to universe indexes (int),
+        with dModel_dVar as the value:
+            np.ndarray with shape (n_data, n_var)    
     
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
@@ -1004,11 +918,12 @@ def derivative(tao, *, verbose=False, as_dict=True):
     """
     cmd = f'python derivative'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='derivative')
+    return __execute(tao, cmd, as_dict, method_name='derivative', cmd_type='string_list')
 
 
 def ele_head(tao, ele_id, which="model", *, verbose=False, as_dict=True):
     """
+    
     "Head" Element attributes
     Command syntax:
       python ele:head {ele_id}|{which}
@@ -1020,21 +935,17 @@ def ele_head(tao, ele_id, which="model", *, verbose=False, as_dict=True):
       python ele:head 3@1>>7|model
     This gives element number 7 in branch 1 of universe 3.
     
-    
     Parameters
     ----------
-    ele_id 
+    ele_id
     which : default=model
     
-       
     Returns
     -------
-    string_list 
-    
+    string_list
     
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -1044,11 +955,12 @@ def ele_head(tao, ele_id, which="model", *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:head {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='ele_head')
+    return __execute(tao, cmd, as_dict, method_name='ele_head', cmd_type='string_list')
 
 
 def ele_methods(tao, ele_id, which="model", *, verbose=False, as_dict=True):
     """
+    
     Element methods
     Command syntax:
       python ele:methods {ele_id}|{which}
@@ -1060,21 +972,17 @@ def ele_methods(tao, ele_id, which="model", *, verbose=False, as_dict=True):
       python ele:methods 3@1>>7|model
     This gives element number 7 in branch 1 of universe 3.
     
-    
     Parameters
     ----------
     ele_id
     which : default=model
     
-    
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -1084,11 +992,12 @@ def ele_methods(tao, ele_id, which="model", *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:methods {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='ele_methods')
+    return __execute(tao, cmd, as_dict, method_name='ele_methods', cmd_type='string_list')
 
 
 def ele_gen_attribs(tao, ele_id, which="model", *, verbose=False, as_dict=True):
     """
+    
     Element general attributes
     Command syntax:
       python ele:gen_attribs {ele_id}|{which}
@@ -1100,21 +1009,17 @@ def ele_gen_attribs(tao, ele_id, which="model", *, verbose=False, as_dict=True):
       python ele:gen_attribs 3@1>>7|model
     This gives element number 7 in branch 1 of universe 3.
     
-    
     Parameters
     ----------
     ele_id
     which : default=model
     
-    
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -1124,11 +1029,12 @@ def ele_gen_attribs(tao, ele_id, which="model", *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:gen_attribs {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='ele_gen_attribs')
+    return __execute(tao, cmd, as_dict, method_name='ele_gen_attribs', cmd_type='string_list')
 
 
 def ele_multipoles(tao, ele_id, which="model", *, verbose=False, as_dict=True):
     """
+    
     Element multipoles
     Command syntax:
       python ele:multipoles {ele_id}|{which}
@@ -1140,21 +1046,17 @@ def ele_multipoles(tao, ele_id, which="model", *, verbose=False, as_dict=True):
       python ele:multipoles 3@1>>7|model
     This gives element number 7 in branch 1 of universe 3.
     
-    
     Parameters
     ----------
     ele_id
     which : default=model
     
-    
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -1164,11 +1066,12 @@ def ele_multipoles(tao, ele_id, which="model", *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:multipoles {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='ele_multipoles')
+    return __execute(tao, cmd, as_dict, method_name='ele_multipoles', cmd_type='string_list')
 
 
 def ele_ac_kicker(tao, ele_id, which="model", *, verbose=False, as_dict=True):
     """
+    
     Element ac_kicker
     Command syntax:
       python ele:ac_kicker {ele_id}|{which}
@@ -1180,21 +1083,17 @@ def ele_ac_kicker(tao, ele_id, which="model", *, verbose=False, as_dict=True):
       python ele:ac_kicker 3@1>>7|model
     This gives element number 7 in branch 1 of universe 3.
     
-    
     Parameters
     ----------
     ele_id
     which : default=model
     
-    
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -1204,11 +1103,12 @@ def ele_ac_kicker(tao, ele_id, which="model", *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:ac_kicker {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='ele_ac_kicker')
+    return __execute(tao, cmd, as_dict, method_name='ele_ac_kicker', cmd_type='string_list')
 
 
 def ele_cartesian_map(tao, *, ele_id, which="model", index, who, verbose=False, as_dict=True):
     """
+    
     Element cartesian_map
     Command syntax:
       python ele:cartesian_map {ele_id}|{which} {index} {who}
@@ -1224,22 +1124,19 @@ def ele_cartesian_map(tao, *, ele_id, which="model", index, who, verbose=False, 
       python ele:cartesian_map 3@1>>7|model 2 base
     This gives element number 7 in branch 1 of universe 3.
     
-    
     Parameters
     ----------
     ele_id
     which : default=model
-    index 
+    index
     who
     
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -1251,11 +1148,12 @@ def ele_cartesian_map(tao, *, ele_id, which="model", index, who, verbose=False, 
     """
     cmd = f'python ele:cartesian_map {ele_id}|{which} {index} {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='ele_cartesian_map')
+    return __execute(tao, cmd, as_dict, method_name='ele_cartesian_map', cmd_type='string_list')
 
 
 def ele_chamber_wall(tao, *, ele_id, which="model", index, who, verbose=False, as_dict=True):
     """
+    
     Element beam chamber wall
     Command syntax:
       python ele:chamber_wall {ele_id}|{which} {index} {who}
@@ -1268,7 +1166,6 @@ def ele_chamber_wall(tao, *, ele_id, which="model", index, who, verbose=False, a
       x       ! Return min/max in horizontal plane
       y       ! Return min/max in vertical plane
     
-    
     Parameters
     ----------
     ele_id
@@ -1276,15 +1173,12 @@ def ele_chamber_wall(tao, *, ele_id, which="model", index, who, verbose=False, a
     index
     who
     
-       
     Returns
     -------
-    string_list 
-    
+    string_list
     
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
      args:
@@ -1296,11 +1190,12 @@ def ele_chamber_wall(tao, *, ele_id, which="model", index, who, verbose=False, a
     """
     cmd = f'python ele:chamber_wall {ele_id}|{which} {index} {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='ele_chamber_wall')
+    return __execute(tao, cmd, as_dict, method_name='ele_chamber_wall', cmd_type='string_list')
 
 
 def ele_cylindrical_map(tao, *, ele_id, which, index, who, verbose=False, as_dict=True):
     """
+    
     Element cylindrical_map
     Command syntax:
       python ele:cylindrical_map {ele_id}|{which} {index} {who}
@@ -1316,7 +1211,6 @@ def ele_cylindrical_map(tao, *, ele_id, which, index, who, verbose=False, as_dic
       python ele:cylindrical_map 3@1>>7|model 2 base
     This gives map #2 of element number 7 in branch 1 of universe 3.
     
-    
     Parameters
     ----------
     ele_id
@@ -1324,15 +1218,12 @@ def ele_cylindrical_map(tao, *, ele_id, which, index, who, verbose=False, as_dic
     index
     who
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -1344,11 +1235,12 @@ def ele_cylindrical_map(tao, *, ele_id, which, index, who, verbose=False, as_dic
     """
     cmd = f'python ele:cylindrical_map {ele_id}|{which} {index} {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='ele_cylindrical_map')
+    return __execute(tao, cmd, as_dict, method_name='ele_cylindrical_map', cmd_type='string_list')
 
 
 def ele_taylor(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
+    
     Element taylor
     Command syntax:
       python ele:taylor {ele_id}|{which}
@@ -1360,21 +1252,17 @@ def ele_taylor(tao, ele_id, which, *, verbose=False, as_dict=True):
       python ele:taylor 3@1>>7|model
     This gives element number 7 in branch 1 of universe 3.
     
-    
     Parameters
     ----------
     ele_id
     which
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -1384,11 +1272,12 @@ def ele_taylor(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:taylor {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='ele_taylor')
+    return __execute(tao, cmd, as_dict, method_name='ele_taylor', cmd_type='string_list')
 
 
 def ele_spin_taylor(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
+    
     Element spin_taylor
     Command syntax:
       python ele:spin_taylor {ele_id}|{which}
@@ -1400,21 +1289,17 @@ def ele_spin_taylor(tao, ele_id, which, *, verbose=False, as_dict=True):
       python ele:spin_taylor 3@1>>7|model
     This gives element number 7 in branch 1 of universe 3.
     
-    
     Parameters
     ----------
     ele_id
     which
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -1424,11 +1309,12 @@ def ele_spin_taylor(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:spin_taylor {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='ele_spin_taylor')
+    return __execute(tao, cmd, as_dict, method_name='ele_spin_taylor', cmd_type='string_list')
 
 
 def ele_wake(tao, *, ele_id, which, who, verbose=False, as_dict=True):
     """
+    
     Element wake
     Command syntax:
       python ele:wake {ele_id}|{which} {who}
@@ -1445,22 +1331,18 @@ def ele_wake(tao, *, ele_id, which, who, verbose=False, as_dict=True):
       python ele:wake 3@1>>7|model
     This gives element number 7 in branch 1 of universe 3.
     
-    
     Parameters
     ----------
     ele_id
     which
     who
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -1471,11 +1353,12 @@ def ele_wake(tao, *, ele_id, which, who, verbose=False, as_dict=True):
     """
     cmd = f'python ele:wake {ele_id}|{which} {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='ele_wake')
+    return __execute(tao, cmd, as_dict, method_name='ele_wake', cmd_type='string_list')
 
 
 def ele_wall3d(tao, *, ele_id, which, index, who, verbose=False, as_dict=True):
     """
+    
     Element wall3d
     Command syntax:
       python ele:wall3d {ele_id}|{which} {index} {who}
@@ -1491,7 +1374,6 @@ def ele_wall3d(tao, *, ele_id, which, index, who, verbose=False, as_dict=True):
       python ele:wall3d 3@1>>7|model 2 base
     This gives element number 7 in branch 1 of universe 3.
     
-    
     Parameters
     ----------
     ele_id
@@ -1499,15 +1381,12 @@ def ele_wall3d(tao, *, ele_id, which, index, who, verbose=False, as_dict=True):
     index
     who
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -1519,11 +1398,12 @@ def ele_wall3d(tao, *, ele_id, which, index, who, verbose=False, as_dict=True):
     """
     cmd = f'python ele:wall3d {ele_id}|{which} {index} {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='ele_wall3d')
+    return __execute(tao, cmd, as_dict, method_name='ele_wall3d', cmd_type='string_list')
 
 
 def ele_twiss(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
+    
     Element twiss
     Command syntax:
       python ele:twiss {ele_id}|{which}
@@ -1535,21 +1415,17 @@ def ele_twiss(tao, ele_id, which, *, verbose=False, as_dict=True):
       python ele:twiss 3@1>>7|model
     This gives element number 7 in branch 1 of universe 3.
     
-    
     Parameters
     ----------
     ele_id
     which
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -1559,11 +1435,12 @@ def ele_twiss(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:twiss {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='ele_twiss')
+    return __execute(tao, cmd, as_dict, method_name='ele_twiss', cmd_type='string_list')
 
 
 def ele_control(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
+    
     Element control
     Command syntax:
       python ele:control {ele_id}|{which}
@@ -1575,21 +1452,17 @@ def ele_control(tao, ele_id, which, *, verbose=False, as_dict=True):
       python ele:control 3@1>>7|model
     This gives element number 7 in branch 1 of universe 3.
     
-    
     Parameters
     ----------
     ele_id
     which
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -1599,11 +1472,12 @@ def ele_control(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:control {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='ele_control')
+    return __execute(tao, cmd, as_dict, method_name='ele_control', cmd_type='string_list')
 
 
 def ele_orbit(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
+    
     Element orbit
     Command syntax:
       python ele:orbit {ele_id}|{which}
@@ -1615,21 +1489,17 @@ def ele_orbit(tao, ele_id, which, *, verbose=False, as_dict=True):
       python ele:orbit 3@1>>7|model
     This gives element number 7 in branch 1 of universe 3.
     
-    
     Parameters
     ----------
     ele_id
     which
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -1639,11 +1509,12 @@ def ele_orbit(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:orbit {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='ele_orbit')
+    return __execute(tao, cmd, as_dict, method_name='ele_orbit', cmd_type='string_list')
 
 
 def ele_mat6(tao, *, ele_id, which, who, verbose=False, as_dict=True):
     """
+    
     Element mat6
     Command syntax:
       python ele:mat6 {ele_id}|{which} {who}
@@ -1659,22 +1530,18 @@ def ele_mat6(tao, *, ele_id, which, who, verbose=False, as_dict=True):
       python ele:mat6 3@1>>7|model mat6
     This gives element number 7 in branch 1 of universe 3.
     
-    
     Parameters
     ----------
     ele_id
     which
     who
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -1685,11 +1552,12 @@ def ele_mat6(tao, *, ele_id, which, who, verbose=False, as_dict=True):
     """
     cmd = f'python ele:mat6 {ele_id}|{which} {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='ele_mat6')
+    return __execute(tao, cmd, as_dict, method_name='ele_mat6', cmd_type='string_list')
 
 
 def ele_taylor_field(tao, *, ele_id, which, index, who, verbose=False, as_dict=True):
     """
+    
     Element taylor_field
     Command syntax:
       python ele:taylor_field {ele_id}|{which} {index} {who}
@@ -1705,7 +1573,6 @@ def ele_taylor_field(tao, *, ele_id, which, index, who, verbose=False, as_dict=T
       python ele:taylor_field 3@1>>7|model 2 base
     This gives element number 7 in branch 1 of universe 3.
     
-    
     Parameters
     ----------
     ele_id
@@ -1713,15 +1580,12 @@ def ele_taylor_field(tao, *, ele_id, which, index, who, verbose=False, as_dict=T
     index
     who
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -1733,11 +1597,12 @@ def ele_taylor_field(tao, *, ele_id, which, index, who, verbose=False, as_dict=T
     """
     cmd = f'python ele:taylor_field {ele_id}|{which} {index} {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='ele_taylor_field')
+    return __execute(tao, cmd, as_dict, method_name='ele_taylor_field', cmd_type='string_list')
 
 
 def ele_grid_field(tao, *, ele_id, which, index, who, verbose=False, as_dict=True):
     """
+    
     Element grid_field
     Command syntax:
       python ele:grid_field {ele_id}|{which} {index} {who}
@@ -1750,7 +1615,6 @@ def ele_grid_field(tao, *, ele_id, which, index, who, verbose=False, as_dict=Tru
       python ele:grid_field 3@1>>7|model 2 base
     This gives grid #2 of element number 7 in branch 1 of universe 3.
     
-    
     Parameters
     ----------
     ele_id
@@ -1758,15 +1622,12 @@ def ele_grid_field(tao, *, ele_id, which, index, who, verbose=False, as_dict=Tru
     index
     who
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -1778,11 +1639,12 @@ def ele_grid_field(tao, *, ele_id, which, index, who, verbose=False, as_dict=Tru
     """
     cmd = f'python ele:grid_field {ele_id}|{which} {index} {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='ele_grid_field')
+    return __execute(tao, cmd, as_dict, method_name='ele_grid_field', cmd_type='string_list')
 
 
 def ele_floor(tao, *, ele_id, which, where="end", verbose=False, as_dict=True):
     """
+    
     Element floor coordinates. The output gives two lines. "Reference" is
     without element misalignments and "Actual" is with misalignments.
     Command syntax:
@@ -1800,22 +1662,18 @@ def ele_floor(tao, *, ele_id, which, where="end", verbose=False, as_dict=True):
       python ele:floor 3@1>>7|model
     This gives element number 7 in branch 1 of universe 3.
     
-    
     Parameters
     ----------
     ele_id
     which
     where : default=end
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -1833,11 +1691,12 @@ def ele_floor(tao, *, ele_id, which, where="end", verbose=False, as_dict=True):
     """
     cmd = f'python ele:floor {ele_id}|{which} {where}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='ele_floor')
+    return __execute(tao, cmd, as_dict, method_name='ele_floor', cmd_type='string_list')
 
 
 def ele_photon(tao, *, ele_id, which, who, verbose=False, as_dict=True):
     """
+    
     Element photon
     Command syntax:
       python ele:photon {ele_id}|{which} {who}
@@ -1853,22 +1712,18 @@ def ele_photon(tao, *, ele_id, which, who, verbose=False, as_dict=True):
       python ele:photon 3@1>>7|model base
     This gives element number 7 in branch 1 of universe 3.
     
-    
     Parameters
     ----------
     ele_id
     which
     who
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -1879,11 +1734,12 @@ def ele_photon(tao, *, ele_id, which, who, verbose=False, as_dict=True):
     """
     cmd = f'python ele:photon {ele_id}|{which} {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='ele_photon')
+    return __execute(tao, cmd, as_dict, method_name='ele_photon', cmd_type='string_list')
 
 
 def ele_lord_slave(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
+    
     Lists the lord/slave tree of an element.
     Command syntax:
       python ele:lord_slave {ele_id}|{which}
@@ -1901,21 +1757,17 @@ def ele_lord_slave(tao, ele_id, which, *, verbose=False, as_dict=True):
     After each "Element" line, there are a number of lines (possibly zero) that begin with the word "Slave or "Lord".
     These "Slave" and "Lord" lines are the slaves and lords of the "Element" element.
     
-    
     Parameters
     ----------
     ele_id
     which
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -1925,11 +1777,12 @@ def ele_lord_slave(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:lord_slave {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='ele_lord_slave')
+    return __execute(tao, cmd, as_dict, method_name='ele_lord_slave', cmd_type='string_list')
 
 
 def ele_elec_multipoles(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
+    
     Element electric multipoles
     Command syntax:
       python ele:elec_multipoles {ele_id}|{which}
@@ -1941,21 +1794,17 @@ def ele_elec_multipoles(tao, ele_id, which, *, verbose=False, as_dict=True):
       python ele:elec_multipoles 3@1>>7|model
     This gives element number 7 in branch 1 of universe 3.
     
-    
     Parameters
     ----------
     ele_id
     which
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -1965,31 +1814,28 @@ def ele_elec_multipoles(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:elec_multipoles {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='ele_elec_multipoles')
+    return __execute(tao, cmd, as_dict, method_name='ele_elec_multipoles', cmd_type='string_list')
 
 
 def evaluate(tao, expression, *, verbose=False, as_dict=True):
     """
+    
     Evaluate an expression. The result may be a vector.
     Command syntax:
       python evaluate {expression}
     Example:
       python evaluate 2*data::cbar.11[1:10]|model
     
-    
     Parameters
     ----------
     expression
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -1998,11 +1844,12 @@ def evaluate(tao, expression, *, verbose=False, as_dict=True):
     """
     cmd = f'python evaluate {expression}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='evaluate')
+    return __execute(tao, cmd, as_dict, method_name='evaluate', cmd_type='string_list')
 
 
 def em_field(tao, *, ele_id, which, x, y, z, t_or_z, verbose=False, as_dict=True):
     """
+    
     EM field at a given point generated by a given element.
     Command syntax:
       python em_field {ele_id}|{which} {x}, {y}, {z}, {t_or_z}
@@ -2015,7 +1862,6 @@ def em_field(tao, *, ele_id, which, x, y, z, t_or_z, verbose=False, as_dict=True
       {z}       -- Longitudainal coord with respect to entrance end of element.
       {t_or_z}  -- time or phase space z depending if lattice is setup for absolute time tracking.
     
-    
     Parameters
     ----------
     ele_id
@@ -2025,15 +1871,12 @@ def em_field(tao, *, ele_id, which, x, y, z, t_or_z, verbose=False, as_dict=True
     z
     t_or_z
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2047,31 +1890,28 @@ def em_field(tao, *, ele_id, which, x, y, z, t_or_z, verbose=False, as_dict=True
     """
     cmd = f'python em_field {ele_id}|{which} {x}, {y}, {z}, {t_or_z}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='em_field')
+    return __execute(tao, cmd, as_dict, method_name='em_field', cmd_type='string_list')
 
 
 def enum(tao, enum_name, *, verbose=False, as_dict=True):
     """
+    
     List of possible values for enumerated numbers.
     Command syntax:
       python enum {enum_name}
     Example:
       python enum tracking_method
     
-    
     Parameters
     ----------
     enum_name
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2080,29 +1920,26 @@ def enum(tao, enum_name, *, verbose=False, as_dict=True):
     """
     cmd = f'python enum {enum_name}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='enum')
+    return __execute(tao, cmd, as_dict, method_name='enum', cmd_type='string_list')
 
 
 def floor_plan(tao, graph, *, verbose=False, as_dict=True):
     """
+    
     Floor plan elements
     Command syntax:
       python floor_plan {graph}
-    
     
     Parameters
     ----------
     graph
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2111,29 +1948,26 @@ def floor_plan(tao, graph, *, verbose=False, as_dict=True):
     """
     cmd = f'python floor_plan {graph}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='floor_plan')
+    return __execute(tao, cmd, as_dict, method_name='floor_plan', cmd_type='string_list')
 
 
 def floor_orbit(tao, graph, *, verbose=False, as_dict=True):
     """
+    
     (x, y) coordinates for drawing the particle orbit on a floor plan.
     Command syntax:
       python floor_orbit {graph}
-    
     
     Parameters
     ----------
     graph
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2142,11 +1976,12 @@ def floor_orbit(tao, graph, *, verbose=False, as_dict=True):
     """
     cmd = f'python floor_orbit {graph}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='floor_orbit')
+    return __execute(tao, cmd, as_dict, method_name='floor_orbit', cmd_type='string_list')
 
 
 def tao_global(tao, *, verbose=False, as_dict=True):
     """
+    
     Global parameters
     Command syntax:
       python global
@@ -2159,19 +1994,12 @@ def tao_global(tao, *, verbose=False, as_dict=True):
       prompt_color
       prompt_string
     
-    
-    Parameters
-    ----------
-    
-    
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2179,28 +2007,22 @@ def tao_global(tao, *, verbose=False, as_dict=True):
     """
     cmd = f'python global'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='tao_global')
+    return __execute(tao, cmd, as_dict, method_name='tao_global', cmd_type='string_list')
 
 
 def help(tao, *, verbose=False, as_dict=True):
     """
+    
     returns list of "help xxx" topics
     Command syntax:
       python help
-    
-    
-    Parameters
-    ----------
-    
     
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2208,29 +2030,26 @@ def help(tao, *, verbose=False, as_dict=True):
     """
     cmd = f'python help'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='help')
+    return __execute(tao, cmd, as_dict, method_name='help', cmd_type='string_list')
 
 
 def inum(tao, who, *, verbose=False, as_dict=True):
     """
+    
     INUM
     Command syntax:
       python inum {who}
-    
     
     Parameters
     ----------
     who
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2239,30 +2058,27 @@ def inum(tao, who, *, verbose=False, as_dict=True):
     """
     cmd = f'python inum {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='inum')
+    return __execute(tao, cmd, as_dict, method_name='inum', cmd_type='string_list')
 
 
 def lat_calc_done(tao, branch_name, *, verbose=False, as_dict=True):
     """
+    
     Check if a lattice recalculation has been proformed since the last time
       "python lat_calc_done" was called.
     Command syntax:
       python lat_calc_done
     
-    
     Parameters
     ----------
     branch_name
-    
     
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2271,31 +2087,28 @@ def lat_calc_done(tao, branch_name, *, verbose=False, as_dict=True):
     """
     cmd = f'python lat_calc_done'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='lat_calc_done')
+    return __execute(tao, cmd, as_dict, method_name='lat_calc_done', cmd_type='string_list')
 
 
 def lat_ele_list(tao, branch_name, *, verbose=False, as_dict=True):
     """
+    
     Lattice element list.
     Command syntax:
       python lat_ele {branch_name}
     {branch_name} should have the form:
       {ix_uni}@{ix_branch}
     
-    
     Parameters
     ----------
     branch_name
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2304,11 +2117,12 @@ def lat_ele_list(tao, branch_name, *, verbose=False, as_dict=True):
     """
     cmd = f'python lat_ele {branch_name}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='lat_ele_list')
+    return __execute(tao, cmd, as_dict, method_name='lat_ele_list', cmd_type='string_list')
 
 
 def lat_general(tao, ix_universe="1", *, verbose=False, as_dict=True):
     """
+    
     Lattice general
     Command syntax:
       python lat_general {ix_universe}
@@ -2316,20 +2130,16 @@ def lat_general(tao, ix_universe="1", *, verbose=False, as_dict=True):
     Output syntax:
       branch_index;branch_name;n_ele_track;n_ele_max
     
-    
     Parameters
     ----------
     ix_universe : default=1
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2338,16 +2148,17 @@ def lat_general(tao, ix_universe="1", *, verbose=False, as_dict=True):
     """
     cmd = f'python lat_general {ix_universe}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='lat_general')
+    return __execute(tao, cmd, as_dict, method_name='lat_general', cmd_type='string_list')
 
 
-def lat_list(tao, *, ix_uni, ix_branch, elements, which, who, verbose=False, as_dict=True):
+def lat_list(tao, *, flags="", ix_uni, ix_branch, elements, which, who, verbose=False, as_dict=True):
     """
+    
     List of parameters at ends of lattice elements
     Command syntax:
-      python lat_list -no_slaves -track_only -index_order -real_out
-                      {ix_uni}@{ix_branch}>>{elements}|{which} {who}
+      python lat_list {flags} {ix_uni}@{ix_branch}>>{elements}|{which} {who}
     where:
+     {flags} is one or more of:
       -no_slaves is optional. If present, multipass_slave and super_slave elements will not be matched to.
       -track_only is optional. If present, lord elements will not be matched to.
       -index_order is optional. If present, order elements by element index instead of the standard s-position.
@@ -2385,24 +2196,21 @@ def lat_list(tao, *, ix_uni, ix_branch, elements, which, who, verbose=False, as_
       python lat_list -track 3@0>>Q*|base ele.s,orbit.vec.2
       python lat_list 3@0>>Q*|base real:ele.s    
     
-    
     Parameters
     ----------
-    ix_uni 
-    ix_branch 
-    elements 
-    which 
-    who 
-    
+    flags : optional
+    ix_uni
+    ix_branch
+    elements
+    which
+    who
     
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2413,31 +2221,28 @@ def lat_list(tao, *, ix_uni, ix_branch, elements, which, who, verbose=False, as_
        who: orbit.floor.x
     
     """
-    cmd = f'python lat_list -no_slaves -track_only -index_order -real_out'
+    cmd = f'python lat_list {flags} {ix_uni}_{ix_branch}>>{elements}|{which} {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='lat_list')
+    return __execute(tao, cmd, as_dict, method_name='lat_list', cmd_type='string_list')
 
 
 def lat_param_units(tao, param_name, *, verbose=False, as_dict=True):
     """
+    
     Units of a parameter associated with a lattice or lattice element.
     Command syntax:
       python lat_param_units {param_name}
-    
     
     Parameters
     ----------
     param_name
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2446,11 +2251,12 @@ def lat_param_units(tao, param_name, *, verbose=False, as_dict=True):
     """
     cmd = f'python lat_param_units {param_name}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='lat_param_units')
+    return __execute(tao, cmd, as_dict, method_name='lat_param_units', cmd_type='string_list')
 
 
 def matrix(tao, ele1_id, ele2_id, *, verbose=False, as_dict=True):
     """
+    
     Matrix value from the exit end of one element to the exit end of the other.
     Command syntax:
       python matrix {ele1_id} {ele2_id}
@@ -2463,21 +2269,17 @@ def matrix(tao, ele1_id, ele2_id, *, verbose=False, as_dict=True):
     Example:
       python matrix 2@1>>q01w|design q02w
     
-    
     Parameters
     ----------
     ele1_id
     ele2_id
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2487,28 +2289,22 @@ def matrix(tao, ele1_id, ele2_id, *, verbose=False, as_dict=True):
     """
     cmd = f'python matrix {ele1_id} {ele2_id}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='matrix')
+    return __execute(tao, cmd, as_dict, method_name='matrix', cmd_type='string_list')
 
 
 def merit(tao, *, verbose=False, as_dict=True):
     """
+    
     Merit value.
     Command syntax:
       python merit
-    
-    
-    Parameters
-    ----------
-    
     
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2516,11 +2312,12 @@ def merit(tao, *, verbose=False, as_dict=True):
     """
     cmd = f'python merit'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='merit')
+    return __execute(tao, cmd, as_dict, method_name='merit', cmd_type='string_list')
 
 
 def orbit_at_s(tao, *, ix_uni, ix_branch, s, which, verbose=False, as_dict=True):
     """
+    
     Twiss at given s position.
     Command syntax:
       python orbit_at_s {ix_uni}@{ix_branch}>>{s}|{which}
@@ -2531,7 +2328,6 @@ def orbit_at_s(tao, *, ix_uni, ix_branch, s, which, verbose=False, as_dict=True)
         design
       {s} is the longitudinal s-position.
     
-    
     Parameters
     ----------
     ix_uni
@@ -2539,15 +2335,12 @@ def orbit_at_s(tao, *, ix_uni, ix_branch, s, which, verbose=False, as_dict=True)
     s
     which
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2559,29 +2352,23 @@ def orbit_at_s(tao, *, ix_uni, ix_branch, s, which, verbose=False, as_dict=True)
     """
     cmd = f'python orbit_at_s {ix_uni}_{ix_branch}>>{s}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='orbit_at_s')
+    return __execute(tao, cmd, as_dict, method_name='orbit_at_s', cmd_type='string_list')
 
 
 def place_buffer(tao, *, verbose=False, as_dict=True):
     """
+    
     Output place command buffer and reset the buffer.
     The contents of the buffer are the place commands that the user has issued.
     Command syntax:
       python place_buffer
     
-    
-    Parameters
-    ----------
-    
-       
     Returns
     -------
     None
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2589,29 +2376,26 @@ def place_buffer(tao, *, verbose=False, as_dict=True):
     """
     cmd = f'python place_buffer'
     if verbose: print(cmd)
-    return __exec_no_return(tao, cmd, as_dict, method_name='place_buffer')
+    return __execute(tao, cmd, as_dict, method_name='place_buffer', cmd_type='None')
 
 
 def plot_curve(tao, curve_name, *, verbose=False, as_dict=True):
     """
+    
     Curve information for a plot
     Command syntax:
       pyton plot_curve {curve_name}
-    
     
     Parameters
     ----------
     curve_name
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2620,32 +2404,29 @@ def plot_curve(tao, curve_name, *, verbose=False, as_dict=True):
     """
     cmd = f'pyton plot_curve {curve_name}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='plot_curve')
+    return __execute(tao, cmd, as_dict, method_name='plot_curve', cmd_type='string_list')
 
 
 def plot_lat_layout(tao, ix_universe: 1, ix_branch: 0, *, verbose=False, as_dict=True):
     """
+    
     Plot Lat_layout info
     Command syntax:
       python plot_lat_layout {ix_universe}@{ix_branch}
     Note: The returned list of element positions is not ordered in increasing
           longitudinal position.
     
-    
     Parameters
     ----------
     ix_universe: 1
     ix_branch: 0
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2655,11 +2436,12 @@ def plot_lat_layout(tao, ix_universe: 1, ix_branch: 0, *, verbose=False, as_dict
     """
     cmd = f'python plot_lat_layout {ix_universe}_{ix_branch}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='plot_lat_layout')
+    return __execute(tao, cmd, as_dict, method_name='plot_lat_layout', cmd_type='string_list')
 
 
 def plot_list(tao, r_or_g, *, verbose=False, as_dict=True):
     """
+    
     List of plot templates or plot regions.
     Command syntax:
       python plot_list {r_or_g}
@@ -2667,20 +2449,16 @@ def plot_list(tao, r_or_g, *, verbose=False, as_dict=True):
       "r"      ! list regions
       "t"      ! list template plots
     
-    
     Parameters
     ----------
     r_or_g
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2689,11 +2467,12 @@ def plot_list(tao, r_or_g, *, verbose=False, as_dict=True):
     """
     cmd = f'python plot_list {r_or_g}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='plot_list')
+    return __execute(tao, cmd, as_dict, method_name='plot_list', cmd_type='string_list')
 
 
 def plot_graph(tao, graph_name, *, verbose=False, as_dict=True):
     """
+    
     Graph
     Command syntax:
       python plot_graph {graph_name}
@@ -2704,20 +2483,16 @@ def plot_graph(tao, graph_name, *, verbose=False, as_dict=True):
       This name is obtained from the python plot_list command.
       {g_name} is the graph name obtained from the python plot1 command.
     
-    
     Parameters
     ----------
     graph_name
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2726,29 +2501,26 @@ def plot_graph(tao, graph_name, *, verbose=False, as_dict=True):
     """
     cmd = f'python plot_graph {graph_name}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='plot_graph')
+    return __execute(tao, cmd, as_dict, method_name='plot_graph', cmd_type='string_list')
 
 
 def plot_histogram(tao, curve_name, *, verbose=False, as_dict=True):
     """
+    
     Plot Histogram
     Command syntax:
       python plot_histograph {curve_name}
-    
     
     Parameters
     ----------
     curve_name
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2757,11 +2529,12 @@ def plot_histogram(tao, curve_name, *, verbose=False, as_dict=True):
     """
     cmd = f'python plot_histograph {curve_name}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='plot_histogram')
+    return __execute(tao, cmd, as_dict, method_name='plot_histogram', cmd_type='string_list')
 
 
 def plot_plot_manage(tao, *, plot_location, plot_name, n_graph, graph1_name, graph2_name, graphN_name, verbose=False, as_dict=True):
     """
+    
     Template plot creation or destruction.
     Command syntax:
       pyton plot_plot_manage {plot_location}^^{plot_name}^^
@@ -2769,7 +2542,6 @@ def plot_plot_manage(tao, *, plot_location, plot_name, n_graph, graph1_name, gra
     Use "@Tnnn" sytax for {plot_location} to place a plot. A plot may be placed in a 
     spot where there is already a template.
     If {n_graph} is set to -1 then just delete the plot.
-    
     
     Parameters
     ----------
@@ -2780,15 +2552,12 @@ def plot_plot_manage(tao, *, plot_location, plot_name, n_graph, graph1_name, gra
     graph2_name
     graphN_name
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2802,11 +2571,12 @@ def plot_plot_manage(tao, *, plot_location, plot_name, n_graph, graph1_name, gra
     """
     cmd = f'pyton plot_plot_manage {plot_location}^^{plot_name}^^{n_graph}^^{graph1_name}^^{graph2_name}...{graphN_name}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='plot_plot_manage')
+    return __execute(tao, cmd, as_dict, method_name='plot_plot_manage', cmd_type='string_list')
 
 
 def plot_curve_manage(tao, *, graph_name, curve_index, curve_name, verbose=False, as_dict=True):
     """
+    
     Template plot curve creation/destruction
     Command syntax:
       pyton plot_curve_manage {graph_name}^^{curve_index}^^{curve_name}
@@ -2815,22 +2585,18 @@ def plot_curve_manage(tao, *, graph_name, curve_index, curve_name, verbose=False
     If {curve_index} does not not correspond to an existing curve, {curve_index}
     must be one greater than the number of curves.
     
-    
     Parameters
     ----------
     graph_name
     curve_index
     curve_name
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2841,11 +2607,12 @@ def plot_curve_manage(tao, *, graph_name, curve_index, curve_name, verbose=False
     """
     cmd = f'pyton plot_curve_manage {graph_name}^^{curve_index}^^{curve_name}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='plot_curve_manage')
+    return __execute(tao, cmd, as_dict, method_name='plot_curve_manage', cmd_type='string_list')
 
 
 def plot_graph_manage(tao, *, plot_name, graph_index, graph_name, verbose=False, as_dict=True):
     """
+    
     Template plot graph creation/destruction
     Command syntax:
       pyton plot_graph_manage {plot_name}^^{graph_index}^^{graph_name}
@@ -2854,22 +2621,18 @@ def plot_graph_manage(tao, *, plot_name, graph_index, graph_name, verbose=False,
     If {graph_index} does not not correspond to an existing graph, {graph_index}
     must be one greater than the number of graphs.
     
-    
     Parameters
     ----------
     plot_name
     graph_index
     graph_name
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2880,11 +2643,12 @@ def plot_graph_manage(tao, *, plot_name, graph_index, graph_name, verbose=False,
     """
     cmd = f'pyton plot_graph_manage {plot_name}^^{graph_index}^^{graph_name}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='plot_graph_manage')
+    return __execute(tao, cmd, as_dict, method_name='plot_graph_manage', cmd_type='string_list')
 
 
 def plot_line(tao, *, region_name, graph_name, curve_name, x_or_y, verbose=False, as_dict=True):
     """
+    
     Points used to construct a smooth line for a plot curve.
     Command syntax:
       python plot_line {region_name}.{graph_name}.{curve_name} {x_or_y}
@@ -2897,7 +2661,6 @@ def plot_line(tao, *, region_name, graph_name, curve_name, x_or_y, verbose=False
       python plot_line r13.g.a x ! x-component of line points loaded into the real array buffer.
       python plot_line r13.g.a y ! y-component of line points loaded into the real array buffer.
     
-    
     Parameters
     ----------
     region_name
@@ -2905,15 +2668,12 @@ def plot_line(tao, *, region_name, graph_name, curve_name, x_or_y, verbose=False
     curve_name
     x_or_y
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2925,11 +2685,12 @@ def plot_line(tao, *, region_name, graph_name, curve_name, x_or_y, verbose=False
     """
     cmd = f'python plot_line {region_name}.{graph_name}.{curve_name} {x_or_y}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='plot_line')
+    return __execute(tao, cmd, as_dict, method_name='plot_line', cmd_type='string_list')
 
 
 def plot_symbol(tao, *, region_name, graph_name, curve_name, x_or_y, verbose=False, as_dict=True):
     """
+    
     Locations to draw symbols for a plot curve.
     Command syntax:
       python plot_symbol {region_name}.{graph_name}.{curve_name} {x_or_y}
@@ -2944,7 +2705,6 @@ def plot_symbol(tao, *, region_name, graph_name, curve_name, x_or_y, verbose=Fal
       python plot_symbol r13.g.a y     ! y-component of the symbol positions 
                                          loaded into the real array buffer.
     
-    
     Parameters
     ----------
     region_name
@@ -2952,15 +2712,12 @@ def plot_symbol(tao, *, region_name, graph_name, curve_name, x_or_y, verbose=Fal
     curve_name
     x_or_y
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -2972,11 +2729,12 @@ def plot_symbol(tao, *, region_name, graph_name, curve_name, x_or_y, verbose=Fal
     """
     cmd = f'python plot_symbol {region_name}.{graph_name}.{curve_name} {x_or_y}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='plot_symbol')
+    return __execute(tao, cmd, as_dict, method_name='plot_symbol', cmd_type='string_list')
 
 
 def plot_transfer(tao, from_plot, to_plot, *, verbose=False, as_dict=True):
     """
+    
     Transfer plot parameters from the "from plot" to the "to plot" (or plots).
     Command syntax:
       python plot_transfer {from_plot} {to_plot}
@@ -2985,21 +2743,17 @@ def plot_transfer(tao, from_plot, to_plot, *, verbose=False, as_dict=True):
      are the equivalent region plots with the same name. And vice versa 
      if {from_plot} is a region plot.
     
-    
     Parameters
     ----------
     from_plot
     to_plot
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -3009,31 +2763,28 @@ def plot_transfer(tao, from_plot, to_plot, *, verbose=False, as_dict=True):
     """
     cmd = f'python plot_transfer {from_plot} {to_plot}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='plot_transfer')
+    return __execute(tao, cmd, as_dict, method_name='plot_transfer', cmd_type='string_list')
 
 
 def plot1(tao, name, *, verbose=False, as_dict=True):
     """
+    
     Info on a given plot.
     Command syntax:
       python plot1 {name}
     {name} should be the region name if the plot is associated with a region.
     Output syntax is parameter list form. See documentation at the beginning of this file.
     
-    
     Parameters
     ----------
     name
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -3042,11 +2793,12 @@ def plot1(tao, name, *, verbose=False, as_dict=True):
     """
     cmd = f'python plot1 {name}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='plot1')
+    return __execute(tao, cmd, as_dict, method_name='plot1', cmd_type='string_list')
 
 
 def shape_list(tao, who, *, verbose=False, as_dict=True):
     """
+    
     lat_layout and floor_plan shapes list
     Command syntax:
       python shape_list {who}
@@ -3054,20 +2806,16 @@ def shape_list(tao, who, *, verbose=False, as_dict=True):
       lat_layout
       floor_plan
     
-    
     Parameters
     ----------
     who
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -3076,11 +2824,12 @@ def shape_list(tao, who, *, verbose=False, as_dict=True):
     """
     cmd = f'python shape_list {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='shape_list')
+    return __execute(tao, cmd, as_dict, method_name='shape_list', cmd_type='string_list')
 
 
 def shape_manage(tao, *, who, index, add_or_delete, verbose=False, as_dict=True):
     """
+    
     element shape creation or destruction
     Command syntax:
       python shape_manage {who} {index} {add_or_delete}
@@ -3099,22 +2848,18 @@ def shape_manage(tao, *, who, index, add_or_delete, verbose=False, as_dict=True)
     Note: After adding a shape use "python shape_set" to set shape parameters.
     This is important since an added shape is in a ill-defined state.
     
-    
     Parameters
     ----------
     who
     index
     add_or_delete
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -3125,30 +2870,27 @@ def shape_manage(tao, *, who, index, add_or_delete, verbose=False, as_dict=True)
     """
     cmd = f'python shape_manage {who} {index} {add_or_delete}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='shape_manage')
+    return __execute(tao, cmd, as_dict, method_name='shape_manage', cmd_type='string_list')
 
 
 def shape_pattern_list(tao, ix_pattern="", *, verbose=False, as_dict=True):
     """
+    
     List of shape patterns
     Command syntax:
       python shape_pattern_list {ix_pattern}
     If optional {ix_pattern} index is omitted then list all the patterns
     
-    
     Parameters
     ----------
     ix_pattern : optional
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -3162,11 +2904,12 @@ def shape_pattern_list(tao, ix_pattern="", *, verbose=False, as_dict=True):
     """
     cmd = f'python shape_pattern_list {ix_pattern}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='shape_pattern_list')
+    return __execute(tao, cmd, as_dict, method_name='shape_pattern_list', cmd_type='string_list')
 
 
 def shape_pattern_manage(tao, *, ix_pattern, pat_name, pat_line_width, verbose=False, as_dict=True):
     """
+    
     Add or remove shape pattern
     Command syntax:
       python shape_pattern_manage {ix_pattern}^^{pat_name}^^{pat_line_width}
@@ -3177,22 +2920,18 @@ def shape_pattern_manage(tao, *, ix_pattern, pat_name, pat_line_width, verbose=F
       {pat_line_width}  -- Line width. Integer. If set to "delete" then section 
                                                 will be deleted.
     
-    
     Parameters
     ----------
     ix_pattern
     pat_name
     pat_line_width
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -3203,11 +2942,12 @@ def shape_pattern_manage(tao, *, ix_pattern, pat_name, pat_line_width, verbose=F
     """
     cmd = f'python shape_pattern_manage {ix_pattern}^^{pat_name}^^{pat_line_width}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='shape_pattern_manage')
+    return __execute(tao, cmd, as_dict, method_name='shape_pattern_manage', cmd_type='string_list')
 
 
 def shape_pattern_point_manage(tao, *, ix_pattern, ix_point, s, x, verbose=False, as_dict=True):
     """
+    
     Add or remove shape pattern point
     Command syntax:
       python shape_pattern_point_manage {ix_pattern}^^{ix_point}^^{s}^^{x}
@@ -3217,7 +2957,6 @@ def shape_pattern_point_manage(tao, *, ix_pattern, ix_point, s, x, verbose=False
                                         if adding a point and down if deleting.
       {s}, {x}          -- Point location. If {s} is "delete" then delete the point.
     
-    
     Parameters
     ----------
     ix_pattern
@@ -3225,15 +2964,12 @@ def shape_pattern_point_manage(tao, *, ix_pattern, ix_point, s, x, verbose=False
     s
     x
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -3245,11 +2981,12 @@ def shape_pattern_point_manage(tao, *, ix_pattern, ix_point, s, x, verbose=False
     """
     cmd = f'python shape_pattern_point_manage {ix_pattern}^^{ix_point}^^{s}^^{x}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='shape_pattern_point_manage')
+    return __execute(tao, cmd, as_dict, method_name='shape_pattern_point_manage', cmd_type='string_list')
 
 
 def shape_set(tao, *, who, shape_index, ele_name, shape, color, shape_size, type_label, shape_draw, multi_shape, line_width, verbose=False, as_dict=True):
     """
+    
     lat_layout or floor_plan shape set
     Command syntax:
       python shape_set {who}^^{shape_index}^^{ele_name}^^{shape}^^{color}^^
@@ -3258,7 +2995,6 @@ def shape_set(tao, *, who, shape_index, ele_name, shape, color, shape_size, type
     {who} is one of:
       lat_layout
       floor_plan
-    
     
     Parameters
     ----------
@@ -3273,15 +3009,12 @@ def shape_set(tao, *, who, shape_index, ele_name, shape, color, shape_size, type
     multi_shape
     line_width
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -3299,11 +3032,12 @@ def shape_set(tao, *, who, shape_index, ele_name, shape, color, shape_size, type
     """
     cmd = f'python shape_set {who}^^{shape_index}^^{ele_name}^^{shape}^^{color}^^{shape_size}^^{type_label}^^{shape_draw}^^{multi_shape}^^{line_width}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='shape_set')
+    return __execute(tao, cmd, as_dict, method_name='shape_set', cmd_type='string_list')
 
 
 def show(tao, line, *, verbose=False, as_dict=True):
     """
+    
     Show command pass through
     Command syntax:
       python show {line}
@@ -3311,20 +3045,16 @@ def show(tao, line, *, verbose=False, as_dict=True):
     Example:
       python show lattice -python
     
-    
     Parameters
     ----------
     line
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -3333,31 +3063,28 @@ def show(tao, line, *, verbose=False, as_dict=True):
     """
     cmd = f'python show {line}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='show')
+    return __execute(tao, cmd, as_dict, method_name='show', cmd_type='string_list')
 
 
 def species_to_int(tao, species_str, *, verbose=False, as_dict=True):
     """
+    
     Convert species name to corresponding integer
     Command syntax:
       python species_to_int {species_str}
     Example:
       python species_to_int CO2++
     
-    
     Parameters
     ----------
     species_str
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -3366,31 +3093,28 @@ def species_to_int(tao, species_str, *, verbose=False, as_dict=True):
     """
     cmd = f'python species_to_int {species_str}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='species_to_int')
+    return __execute(tao, cmd, as_dict, method_name='species_to_int', cmd_type='string_list')
 
 
 def species_to_str(tao, species_int, *, verbose=False, as_dict=True):
     """
+    
     Convert species integer id to corresponding
     Command syntax:
       python species_to_str {species_int}
     Example:
       python species_to_str -1     ! Returns 'Electron'
     
-    
     Parameters
     ----------
     species_int
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -3399,11 +3123,12 @@ def species_to_str(tao, species_int, *, verbose=False, as_dict=True):
     """
     cmd = f'python species_to_str {species_int}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='species_to_str')
+    return __execute(tao, cmd, as_dict, method_name='species_to_str', cmd_type='string_list')
 
 
 def spin_polarization(tao, *, ix_uni="1", ix_branch="0", which, verbose=False, as_dict=True):
     """
+    
     Spin information
     Command syntax:
       python spin {ix_uni}@{ix_branch}|{which}
@@ -3416,22 +3141,18 @@ def spin_polarization(tao, *, ix_uni="1", ix_branch="0", which, verbose=False, a
     
     Note: This command is under development. If you want to use please contact David Sagan.
     
-    
     Parameters
     ----------
     ix_uni : default=1
     ix_branch : default=0
     which
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args: 
@@ -3442,28 +3163,22 @@ def spin_polarization(tao, *, ix_uni="1", ix_branch="0", which, verbose=False, a
     """
     cmd = f'python spin {ix_uni}_{ix_branch}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='spin_polarization')
+    return __execute(tao, cmd, as_dict, method_name='spin_polarization', cmd_type='string_list')
 
 
 def super_universe(tao, *, verbose=False, as_dict=True):
     """
+    
     Super_Universe information
     Command syntax:
       python super_universe
     
-    
-    Parameters
-    ----------
-    
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args: 
@@ -3471,11 +3186,12 @@ def super_universe(tao, *, verbose=False, as_dict=True):
     """
     cmd = f'python super_universe'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='super_universe')
+    return __execute(tao, cmd, as_dict, method_name='super_universe', cmd_type='string_list')
 
 
 def twiss_at_s(tao, *, ix_uni, ix_branch, s, which, verbose=False, as_dict=True):
     """
+    
     Twiss at given s position
     Command syntax:
       python twiss_at_s {ix_uni}@{ix_branch}>>{s}|{which}
@@ -3484,7 +3200,6 @@ def twiss_at_s(tao, *, ix_uni, ix_branch, s, which, verbose=False, as_dict=True)
       base
       design
     
-    
     Parameters
     ----------
     ix_uni
@@ -3492,15 +3207,12 @@ def twiss_at_s(tao, *, ix_uni, ix_branch, s, which, verbose=False, as_dict=True)
     s
     which
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args: 
@@ -3512,30 +3224,27 @@ def twiss_at_s(tao, *, ix_uni, ix_branch, s, which, verbose=False, as_dict=True)
     """
     cmd = f'python twiss_at_s {ix_uni}_{ix_branch}>>{s}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='twiss_at_s')
+    return __execute(tao, cmd, as_dict, method_name='twiss_at_s', cmd_type='string_list')
 
 
 def universe(tao, ix_universe, *, verbose=False, as_dict=True):
     """
+    
     Universe info
     Command syntax:
       python universe {ix_universe}
     Use "python global" to get the number of universes.
     
-    
     Parameters
     ----------
     ix_universe
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args: 
@@ -3544,30 +3253,27 @@ def universe(tao, ix_universe, *, verbose=False, as_dict=True):
     """
     cmd = f'python universe {ix_universe}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='universe')
+    return __execute(tao, cmd, as_dict, method_name='universe', cmd_type='string_list')
 
 
 def var(tao, var, *, verbose=False, as_dict=True):
     """
+    
     Info on an individual variable
     Command syntax:
       python var {var}        or
       python var {var} slaves
     
-    
     Parameters
     ----------
     var
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args: 
@@ -3576,11 +3282,12 @@ def var(tao, var, *, verbose=False, as_dict=True):
     """
     cmd = f'python var {var}        or'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='var')
+    return __execute(tao, cmd, as_dict, method_name='var', cmd_type='string_list')
 
 
 def var_create(tao, *, var_name, ele_name, attribute, universes, weight, step, low_lim, high_lim, merit_type, good_user, key_bound, key_delta, verbose=False, as_dict=True):
     """
+    
     Create a single variable
     Command syntax:
       python var_create {var_name}^^{ele_name}^^{attribute}^^{universes}^^
@@ -3589,7 +3296,6 @@ def var_create(tao, *, var_name, ele_name, attribute, universes, weight, step, l
     {var_name} is something like "kick[5]".
     Before using var_create, setup the appropriate v1_var array using 
     the "python var_v1_create" command.
-    
     
     Parameters
     ----------
@@ -3606,15 +3312,12 @@ def var_create(tao, *, var_name, ele_name, attribute, universes, weight, step, l
     key_bound
     key_delta
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -3634,30 +3337,24 @@ def var_create(tao, *, var_name, ele_name, attribute, universes, weight, step, l
     """
     cmd = f'python var_create {var_name}^^{ele_name}^^{attribute}^^{universes}^^{weight}^^{step}^^{low_lim}^^{high_lim}^^{merit_type}^^{good_user}^^{key_bound}^^{key_delta}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='var_create')
+    return __execute(tao, cmd, as_dict, method_name='var_create', cmd_type='string_list')
 
 
 def var_general(tao, *, verbose=False, as_dict=True):
     """
+    
     List of all variable v1 arrays
     Command syntax:
       python var_general
     Output syntax:
       {v1_var name};{v1_var%v lower bound};{v1_var%v upper bound}
     
-    
-    Parameters
-    ----------
-    
-    
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -3665,31 +3362,28 @@ def var_general(tao, *, verbose=False, as_dict=True):
     """
     cmd = f'python var_general'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='var_general')
+    return __execute(tao, cmd, as_dict, method_name='var_general', cmd_type='string_list')
 
 
 def var_v_array(tao, v1_var, *, verbose=False, as_dict=True):
     """
+    
     List of variables for a given data_v1.
     Command syntax:
       python var_v_array {v1_var}
     Example:
       python var_v_array quad_k1
     
-    
     Parameters
     ----------
     v1_var
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -3698,29 +3392,26 @@ def var_v_array(tao, v1_var, *, verbose=False, as_dict=True):
     """
     cmd = f'python var_v_array {v1_var}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='var_v_array')
+    return __execute(tao, cmd, as_dict, method_name='var_v_array', cmd_type='string_list')
 
 
 def var_v1_array(tao, v1_var, *, verbose=False, as_dict=True):
     """
+    
     List of variables in a given variable v1 array
     Command syntax:
       python var_v1_array {v1_var}
-    
     
     Parameters
     ----------
     v1_var
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -3729,11 +3420,12 @@ def var_v1_array(tao, v1_var, *, verbose=False, as_dict=True):
     """
     cmd = f'python var_v1_array {v1_var}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='var_v1_array')
+    return __execute(tao, cmd, as_dict, method_name='var_v1_array', cmd_type='string_list')
 
 
 def var_v1_create(tao, *, v1_name, n_var_min, n_var_max, verbose=False, as_dict=True):
     """
+    
     Create a v1 variable structure along with associated var array.
     Command syntax:
       python var_v1_create {v1_name} {n_var_min} {n_var_max}
@@ -3755,22 +3447,18 @@ def var_v1_create(tao, *, v1_name, n_var_min, n_var_max, verbose=False, as_dict=
       ("set global lattice_calc_on = F") to prevent Tao trying to evaluate the 
     partially created variable and generating unwanted error messages.
     
-    
     Parameters
     ----------
     v1_name
     n_var_min
     n_var_max
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -3781,29 +3469,26 @@ def var_v1_create(tao, *, v1_name, n_var_min, n_var_max, verbose=False, as_dict=
     """
     cmd = f'python var_v1_create {v1_name} {n_var_min} {n_var_max}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='var_v1_create')
+    return __execute(tao, cmd, as_dict, method_name='var_v1_create', cmd_type='string_list')
 
 
 def var_v1_destroy(tao, v1_datum, *, verbose=False, as_dict=True):
     """
+    
     Destroy a v1 var structure along with associated var sub-array.
     Command syntax:
       python var_v1_destroy {v1_datum}
-    
     
     Parameters
     ----------
     v1_datum
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -3812,11 +3497,12 @@ def var_v1_destroy(tao, v1_datum, *, verbose=False, as_dict=True):
     """
     cmd = f'python var_v1_destroy {v1_datum}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='var_v1_destroy')
+    return __execute(tao, cmd, as_dict, method_name='var_v1_destroy', cmd_type='string_list')
 
 
 def wave(tao, what, *, verbose=False, as_dict=True):
     """
+    
     Wave analysis info.
     Command syntax:
       python wave {what}
@@ -3826,20 +3512,16 @@ def wave(tao, what, *, verbose=False, as_dict=True):
       locations
       plot1, plot2, plot3
     
-    
     Parameters
     ----------
     what
     
-       
     Returns
     -------
     string_list
     
-    
     Examples
     --------
-    
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
@@ -3848,5 +3530,5 @@ def wave(tao, what, *, verbose=False, as_dict=True):
     """
     cmd = f'python wave {what}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict, method_name='wave')
+    return __execute(tao, cmd, as_dict, method_name='wave', cmd_type='string_list')
 
