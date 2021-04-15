@@ -1,16 +1,24 @@
 
 from pytao.tao_ctypes.util import parse_tao_python_data
 from pytao.util.parameters import tao_parameter_dict
+from pytao.util import parsers as __parsers
 
 
-def __exec_no_return(tao, cmd, as_dict=True):
+def __exec_no_return(tao, cmd, as_dict=True, method_name=None):
     tao.cmd(cmd)
     return None
 
 
-def __exec_string(tao, cmd, as_dict=True):
+def __exec_string(tao, cmd, as_dict=True, method_name=None):
     ret = tao.cmd(cmd)
     try:
+        # find parser for method
+        # run parser
+        # else do as usual...
+        p = getattr(__parsers, f'parse_{method_name}')
+        if p is not None:
+           data = p(ret)
+           return data
         if as_dict:
             data = parse_tao_python_data(ret)
         else:
@@ -18,14 +26,14 @@ def __exec_string(tao, cmd, as_dict=True):
     except:
         data = ret
     return data
-    
 
-def __exec_integer(tao, cmd, as_dict=True):
+
+def __exec_integer(tao, cmd, as_dict=True, method_name=None):
     ret = tao.cmd_integer(cmd)
     return ret
-    
-    
-def __exec_real(tao, cmd, as_dict=True):
+
+
+def __exec_real(tao, cmd, as_dict=True, method_name=None):
     ret = tao.cmd_real(cmd)
     return ret
 
@@ -61,7 +69,7 @@ def beam(tao, ix_universe="1", *, verbose=False, as_dict=True):
     """
     cmd = f'python beam {ix_universe}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='beam')
 
 
 def beam_init(tao, ix_universe="1", *, verbose=False, as_dict=True):
@@ -95,7 +103,7 @@ def beam_init(tao, ix_universe="1", *, verbose=False, as_dict=True):
     """
     cmd = f'python beam_init {ix_universe}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='beam_init')
 
 
 def bmad_com(tao, *, verbose=False, as_dict=True):
@@ -123,7 +131,7 @@ def bmad_com(tao, *, verbose=False, as_dict=True):
     """
     cmd = f'python bmad_com'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='bmad_com')
 
 
 def branch1(tao, *, ix_universe="1", ix_branch="0", verbose=False, as_dict=True):
@@ -159,7 +167,7 @@ def branch1(tao, *, ix_universe="1", ix_branch="0", verbose=False, as_dict=True)
     """
     cmd = f'python branch1 {ix_universe}_{ix_branch}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='branch1')
 
 
 def bunch1(tao, *, ele_id, which="model", ix_bunch="1", coordinate="", verbose=False, as_dict=True):
@@ -216,9 +224,9 @@ def bunch1(tao, *, ele_id, which="model", ix_bunch="1", coordinate="", verbose=F
     cmd = f'python bunch1 {ele_id}|{which} {ix_bunch} {coordinate}'
     if verbose: print(cmd)
     if not coordinate:
-        return __exec_string(tao, cmd, as_dict)
+        return __exec_string(tao, cmd, as_dict, method_name=bunch1)
     if coordinate:
-        return __exec_real(tao, cmd, as_dict)
+        return __exec_real(tao, cmd, as_dict, method_name=bunch1)
 
 
 def building_wall_list(tao, ix_section="", *, verbose=False, as_dict=True):
@@ -256,7 +264,7 @@ def building_wall_list(tao, ix_section="", *, verbose=False, as_dict=True):
     """
     cmd = f'python building_wall_list {ix_section}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='building_wall_list')
 
 
 def building_wall_graph(tao, graph, *, verbose=False, as_dict=True):
@@ -288,7 +296,7 @@ def building_wall_graph(tao, graph, *, verbose=False, as_dict=True):
     """
     cmd = f'python building_wall_graph {graph}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='building_wall_graph')
 
 
 def building_wall_point(tao, *, ix_section, ix_point, z, x, radius, z_center, x_center, verbose=False, as_dict=True):
@@ -337,7 +345,7 @@ def building_wall_point(tao, *, ix_section, ix_point, z, x, radius, z_center, x_
     """
     cmd = f'python building_wall_point {ix_section}^^{ix_point}^^{z}^^{x}^^{radius}^^{z_center}^^{x_center}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='building_wall_point')
 
 
 def building_wall_section(tao, *, ix_section, sec_name, sec_constraint, verbose=False, as_dict=True):
@@ -381,7 +389,7 @@ def building_wall_section(tao, *, ix_section, sec_name, sec_constraint, verbose=
     """
     cmd = f'python building_wall_section {ix_section}^^{sec_name}^^{sec_constraint}'
     if verbose: print(cmd)
-    return __exec_no_return(tao, cmd, as_dict)
+    return __exec_no_return(tao, cmd, as_dict, method_name='building_wall_section')
 
 
 def constraints(tao, who, *, verbose=False, as_dict=True):
@@ -443,7 +451,7 @@ def constraints(tao, who, *, verbose=False, as_dict=True):
     """
     cmd = f'python constraints {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='constraints')
 
 
 def da_aperture(tao, ix_uni="1", *, verbose=False, as_dict=True):
@@ -474,7 +482,7 @@ def da_aperture(tao, ix_uni="1", *, verbose=False, as_dict=True):
     """
     cmd = f'python da_aperture {ix_uni}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='da_aperture')
 
 
 def da_params(tao, ix_uni="1", *, verbose=False, as_dict=True):
@@ -505,7 +513,7 @@ def da_params(tao, ix_uni="1", *, verbose=False, as_dict=True):
     """
     cmd = f'python da_params {ix_uni}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='da_params')
 
 
 def data(tao, *, ix_universe="1", d2_name, d1_datum, dat_index="1", verbose=False, as_dict=True):
@@ -555,7 +563,7 @@ def data(tao, *, ix_universe="1", d2_name, d1_datum, dat_index="1", verbose=Fals
     """
     cmd = f'python data {ix_universe}_{d2_name}.{d1_datum}[{dat_index}]'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='data')
 
 
 def data_d2_create(tao, *, ix_uni="1", d2_name, n_d1_data, d_data_arrays_name_min_max, verbose=False, as_dict=True):
@@ -613,7 +621,7 @@ def data_d2_create(tao, *, ix_uni="1", d2_name, n_d1_data, d_data_arrays_name_mi
     """
     cmd = f'python data_d2_create {d2_name}^^{n_d1_data}^^{d_data_arrays_name_min_max}'
     if verbose: print(cmd)
-    return __exec_no_return(tao, cmd, as_dict)
+    return __exec_no_return(tao, cmd, as_dict, method_name='data_d2_create')
 
 
 def data_d2_destroy(tao, *, ix_uni="1", d2_datum, verbose=False, as_dict=True):
@@ -648,7 +656,7 @@ def data_d2_destroy(tao, *, ix_uni="1", d2_datum, verbose=False, as_dict=True):
     """
     cmd = f'python data_d2_destroy {d2_datum}'
     if verbose: print(cmd)
-    return __exec_no_return(tao, cmd, as_dict)
+    return __exec_no_return(tao, cmd, as_dict, method_name='data_d2_destroy')
 
 
 def data_d2(tao, *, ix_uni="1", d2_datum, verbose=False, as_dict=True):
@@ -683,7 +691,7 @@ def data_d2(tao, *, ix_uni="1", d2_datum, verbose=False, as_dict=True):
     """
     cmd = f'python data_d2 {d2_datum}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='data_d2')
 
 
 def data_d_array(tao, *, ix_uni="1", d1_datum, verbose=False, as_dict=True):
@@ -720,7 +728,7 @@ def data_d_array(tao, *, ix_uni="1", d1_datum, verbose=False, as_dict=True):
     """
     cmd = f'python data_d_array {d1_datum}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='data_d_array')
 
 
 def data_d1_array(tao, *, ix_uni="1", d2_datum, verbose=False, as_dict=True):
@@ -755,7 +763,7 @@ def data_d1_array(tao, *, ix_uni="1", d2_datum, verbose=False, as_dict=True):
     """
     cmd = f'python data_d1_array {d2_datum}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='data_d1_array')
 
 
 def data_parameter(tao, data_array, parameter, *, verbose=False, as_dict=True):
@@ -790,7 +798,7 @@ def data_parameter(tao, data_array, parameter, *, verbose=False, as_dict=True):
     """
     cmd = f'python data_parameter {data_array} {parameter}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='data_parameter')
 
 
 def data_d2_array(tao, ix_universe, *, verbose=False, as_dict=True):
@@ -823,7 +831,7 @@ def data_d2_array(tao, ix_universe, *, verbose=False, as_dict=True):
     """
     cmd = f'python data_d2_array {ix_universe}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='data_d2_array')
 
 
 def data_set_design_value(tao, *, verbose=False, as_dict=True):
@@ -855,7 +863,7 @@ def data_set_design_value(tao, *, verbose=False, as_dict=True):
     """
     cmd = f'python data_set_design_value'
     if verbose: print(cmd)
-    return __exec_no_return(tao, cmd, as_dict)
+    return __exec_no_return(tao, cmd, as_dict, method_name='data_set_design_value')
 
 
 def datum_create(tao, *, datum_name, data_type, ele_ref_name="", ele_start_name="", ele_name, merit_type, meas, good_meas, ref, good_ref, weight, good_user, data_source, eval_point, s_offset, ix_bunch, invalid_value, spin_axis_n0_1="", spin_axis_n0_2="", spin_axis_n0_3="", spin_axis_l_1="", spin_axis_l_2="", spin_axis_l_3="", verbose=False, as_dict=True):
@@ -935,7 +943,7 @@ def datum_create(tao, *, datum_name, data_type, ele_ref_name="", ele_start_name=
     """
     cmd = f'python datum_create {datum_name}^^{data_type}^^{ele_ref_name}^^{ele_start_name}^^{ele_name}^^{merit_type}^^{meas}^^{good_meas}^^{ref}^^{good_ref}^^{weight}^^{good_user}^^{data_source}^^{eval_point}^^{s_offset}^^{ix_bunch}^^{invalid_value}^^{spin_axis_n0_1}^^{spin_axis_n0_2}^^{spin_axis_n0_3}^^{spin_axis_l_1}^^{spin_axis_l_2}^^{spin_axis_l_3}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='datum_create')
 
 
 def datum_has_ele(tao, datum_type, *, verbose=False, as_dict=True):
@@ -966,7 +974,7 @@ def datum_has_ele(tao, datum_type, *, verbose=False, as_dict=True):
     """
     cmd = f'python datum_has_ele {datum_type}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='datum_has_ele')
 
 
 def derivative(tao, *, verbose=False, as_dict=True):
@@ -996,7 +1004,7 @@ def derivative(tao, *, verbose=False, as_dict=True):
     """
     cmd = f'python derivative'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='derivative')
 
 
 def ele_head(tao, ele_id, which="model", *, verbose=False, as_dict=True):
@@ -1036,7 +1044,7 @@ def ele_head(tao, ele_id, which="model", *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:head {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='ele_head')
 
 
 def ele_methods(tao, ele_id, which="model", *, verbose=False, as_dict=True):
@@ -1076,7 +1084,7 @@ def ele_methods(tao, ele_id, which="model", *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:methods {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='ele_methods')
 
 
 def ele_gen_attribs(tao, ele_id, which="model", *, verbose=False, as_dict=True):
@@ -1116,7 +1124,7 @@ def ele_gen_attribs(tao, ele_id, which="model", *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:gen_attribs {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='ele_gen_attribs')
 
 
 def ele_multipoles(tao, ele_id, which="model", *, verbose=False, as_dict=True):
@@ -1156,7 +1164,7 @@ def ele_multipoles(tao, ele_id, which="model", *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:multipoles {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='ele_multipoles')
 
 
 def ele_ac_kicker(tao, ele_id, which="model", *, verbose=False, as_dict=True):
@@ -1196,7 +1204,7 @@ def ele_ac_kicker(tao, ele_id, which="model", *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:ac_kicker {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='ele_ac_kicker')
 
 
 def ele_cartesian_map(tao, *, ele_id, which="model", index, who, verbose=False, as_dict=True):
@@ -1243,7 +1251,7 @@ def ele_cartesian_map(tao, *, ele_id, which="model", index, who, verbose=False, 
     """
     cmd = f'python ele:cartesian_map {ele_id}|{which} {index} {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='ele_cartesian_map')
 
 
 def ele_chamber_wall(tao, *, ele_id, which="model", index, who, verbose=False, as_dict=True):
@@ -1288,7 +1296,7 @@ def ele_chamber_wall(tao, *, ele_id, which="model", index, who, verbose=False, a
     """
     cmd = f'python ele:chamber_wall {ele_id}|{which} {index} {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='ele_chamber_wall')
 
 
 def ele_cylindrical_map(tao, *, ele_id, which, index, who, verbose=False, as_dict=True):
@@ -1336,7 +1344,7 @@ def ele_cylindrical_map(tao, *, ele_id, which, index, who, verbose=False, as_dic
     """
     cmd = f'python ele:cylindrical_map {ele_id}|{which} {index} {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='ele_cylindrical_map')
 
 
 def ele_taylor(tao, ele_id, which, *, verbose=False, as_dict=True):
@@ -1376,7 +1384,7 @@ def ele_taylor(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:taylor {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='ele_taylor')
 
 
 def ele_spin_taylor(tao, ele_id, which, *, verbose=False, as_dict=True):
@@ -1416,7 +1424,7 @@ def ele_spin_taylor(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:spin_taylor {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='ele_spin_taylor')
 
 
 def ele_wake(tao, *, ele_id, which, who, verbose=False, as_dict=True):
@@ -1463,7 +1471,7 @@ def ele_wake(tao, *, ele_id, which, who, verbose=False, as_dict=True):
     """
     cmd = f'python ele:wake {ele_id}|{which} {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='ele_wake')
 
 
 def ele_wall3d(tao, *, ele_id, which, index, who, verbose=False, as_dict=True):
@@ -1511,7 +1519,7 @@ def ele_wall3d(tao, *, ele_id, which, index, who, verbose=False, as_dict=True):
     """
     cmd = f'python ele:wall3d {ele_id}|{which} {index} {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='ele_wall3d')
 
 
 def ele_twiss(tao, ele_id, which, *, verbose=False, as_dict=True):
@@ -1551,7 +1559,7 @@ def ele_twiss(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:twiss {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='ele_twiss')
 
 
 def ele_control(tao, ele_id, which, *, verbose=False, as_dict=True):
@@ -1591,7 +1599,7 @@ def ele_control(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:control {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='ele_control')
 
 
 def ele_orbit(tao, ele_id, which, *, verbose=False, as_dict=True):
@@ -1631,7 +1639,7 @@ def ele_orbit(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:orbit {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='ele_orbit')
 
 
 def ele_mat6(tao, *, ele_id, which, who, verbose=False, as_dict=True):
@@ -1677,7 +1685,7 @@ def ele_mat6(tao, *, ele_id, which, who, verbose=False, as_dict=True):
     """
     cmd = f'python ele:mat6 {ele_id}|{which} {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='ele_mat6')
 
 
 def ele_taylor_field(tao, *, ele_id, which, index, who, verbose=False, as_dict=True):
@@ -1725,7 +1733,7 @@ def ele_taylor_field(tao, *, ele_id, which, index, who, verbose=False, as_dict=T
     """
     cmd = f'python ele:taylor_field {ele_id}|{which} {index} {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='ele_taylor_field')
 
 
 def ele_grid_field(tao, *, ele_id, which, index, who, verbose=False, as_dict=True):
@@ -1770,7 +1778,7 @@ def ele_grid_field(tao, *, ele_id, which, index, who, verbose=False, as_dict=Tru
     """
     cmd = f'python ele:grid_field {ele_id}|{which} {index} {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='ele_grid_field')
 
 
 def ele_floor(tao, *, ele_id, which, where="end", verbose=False, as_dict=True):
@@ -1825,7 +1833,7 @@ def ele_floor(tao, *, ele_id, which, where="end", verbose=False, as_dict=True):
     """
     cmd = f'python ele:floor {ele_id}|{which} {where}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='ele_floor')
 
 
 def ele_photon(tao, *, ele_id, which, who, verbose=False, as_dict=True):
@@ -1871,7 +1879,7 @@ def ele_photon(tao, *, ele_id, which, who, verbose=False, as_dict=True):
     """
     cmd = f'python ele:photon {ele_id}|{which} {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='ele_photon')
 
 
 def ele_lord_slave(tao, ele_id, which, *, verbose=False, as_dict=True):
@@ -1917,7 +1925,7 @@ def ele_lord_slave(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:lord_slave {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='ele_lord_slave')
 
 
 def ele_elec_multipoles(tao, ele_id, which, *, verbose=False, as_dict=True):
@@ -1957,7 +1965,7 @@ def ele_elec_multipoles(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:elec_multipoles {ele_id}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='ele_elec_multipoles')
 
 
 def evaluate(tao, expression, *, verbose=False, as_dict=True):
@@ -1990,7 +1998,7 @@ def evaluate(tao, expression, *, verbose=False, as_dict=True):
     """
     cmd = f'python evaluate {expression}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='evaluate')
 
 
 def em_field(tao, *, ele_id, which, x, y, z, t_or_z, verbose=False, as_dict=True):
@@ -2039,7 +2047,7 @@ def em_field(tao, *, ele_id, which, x, y, z, t_or_z, verbose=False, as_dict=True
     """
     cmd = f'python em_field {ele_id}|{which} {x}, {y}, {z}, {t_or_z}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='em_field')
 
 
 def enum(tao, enum_name, *, verbose=False, as_dict=True):
@@ -2072,7 +2080,7 @@ def enum(tao, enum_name, *, verbose=False, as_dict=True):
     """
     cmd = f'python enum {enum_name}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='enum')
 
 
 def floor_plan(tao, graph, *, verbose=False, as_dict=True):
@@ -2103,7 +2111,7 @@ def floor_plan(tao, graph, *, verbose=False, as_dict=True):
     """
     cmd = f'python floor_plan {graph}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='floor_plan')
 
 
 def floor_orbit(tao, graph, *, verbose=False, as_dict=True):
@@ -2134,10 +2142,10 @@ def floor_orbit(tao, graph, *, verbose=False, as_dict=True):
     """
     cmd = f'python floor_orbit {graph}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='floor_orbit')
 
 
-def globals(tao, *, verbose=False, as_dict=True):
+def tao_global(tao, *, verbose=False, as_dict=True):
     """
     Global parameters
     Command syntax:
@@ -2171,7 +2179,7 @@ def globals(tao, *, verbose=False, as_dict=True):
     """
     cmd = f'python global'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='tao_global')
 
 
 def help(tao, *, verbose=False, as_dict=True):
@@ -2200,7 +2208,7 @@ def help(tao, *, verbose=False, as_dict=True):
     """
     cmd = f'python help'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='help')
 
 
 def inum(tao, who, *, verbose=False, as_dict=True):
@@ -2231,7 +2239,7 @@ def inum(tao, who, *, verbose=False, as_dict=True):
     """
     cmd = f'python inum {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='inum')
 
 
 def lat_calc_done(tao, branch_name, *, verbose=False, as_dict=True):
@@ -2263,7 +2271,7 @@ def lat_calc_done(tao, branch_name, *, verbose=False, as_dict=True):
     """
     cmd = f'python lat_calc_done'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='lat_calc_done')
 
 
 def lat_ele_list(tao, branch_name, *, verbose=False, as_dict=True):
@@ -2296,7 +2304,7 @@ def lat_ele_list(tao, branch_name, *, verbose=False, as_dict=True):
     """
     cmd = f'python lat_ele {branch_name}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='lat_ele_list')
 
 
 def lat_general(tao, ix_universe="1", *, verbose=False, as_dict=True):
@@ -2330,7 +2338,7 @@ def lat_general(tao, ix_universe="1", *, verbose=False, as_dict=True):
     """
     cmd = f'python lat_general {ix_universe}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='lat_general')
 
 
 def lat_list(tao, *, ix_uni, ix_branch, elements, which, who, verbose=False, as_dict=True):
@@ -2407,7 +2415,7 @@ def lat_list(tao, *, ix_uni, ix_branch, elements, which, who, verbose=False, as_
     """
     cmd = f'python lat_list -no_slaves -track_only -index_order -real_out'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='lat_list')
 
 
 def lat_param_units(tao, param_name, *, verbose=False, as_dict=True):
@@ -2438,7 +2446,7 @@ def lat_param_units(tao, param_name, *, verbose=False, as_dict=True):
     """
     cmd = f'python lat_param_units {param_name}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='lat_param_units')
 
 
 def matrix(tao, ele1_id, ele2_id, *, verbose=False, as_dict=True):
@@ -2479,7 +2487,7 @@ def matrix(tao, ele1_id, ele2_id, *, verbose=False, as_dict=True):
     """
     cmd = f'python matrix {ele1_id} {ele2_id}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='matrix')
 
 
 def merit(tao, *, verbose=False, as_dict=True):
@@ -2508,7 +2516,7 @@ def merit(tao, *, verbose=False, as_dict=True):
     """
     cmd = f'python merit'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='merit')
 
 
 def orbit_at_s(tao, *, ix_uni, ix_branch, s, which, verbose=False, as_dict=True):
@@ -2551,7 +2559,7 @@ def orbit_at_s(tao, *, ix_uni, ix_branch, s, which, verbose=False, as_dict=True)
     """
     cmd = f'python orbit_at_s {ix_uni}_{ix_branch}>>{s}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='orbit_at_s')
 
 
 def place_buffer(tao, *, verbose=False, as_dict=True):
@@ -2581,7 +2589,7 @@ def place_buffer(tao, *, verbose=False, as_dict=True):
     """
     cmd = f'python place_buffer'
     if verbose: print(cmd)
-    return __exec_no_return(tao, cmd, as_dict)
+    return __exec_no_return(tao, cmd, as_dict, method_name='place_buffer')
 
 
 def plot_curve(tao, curve_name, *, verbose=False, as_dict=True):
@@ -2612,7 +2620,7 @@ def plot_curve(tao, curve_name, *, verbose=False, as_dict=True):
     """
     cmd = f'pyton plot_curve {curve_name}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='plot_curve')
 
 
 def plot_lat_layout(tao, ix_universe: 1, ix_branch: 0, *, verbose=False, as_dict=True):
@@ -2647,7 +2655,7 @@ def plot_lat_layout(tao, ix_universe: 1, ix_branch: 0, *, verbose=False, as_dict
     """
     cmd = f'python plot_lat_layout {ix_universe}_{ix_branch}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='plot_lat_layout')
 
 
 def plot_list(tao, r_or_g, *, verbose=False, as_dict=True):
@@ -2681,7 +2689,7 @@ def plot_list(tao, r_or_g, *, verbose=False, as_dict=True):
     """
     cmd = f'python plot_list {r_or_g}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='plot_list')
 
 
 def plot_graph(tao, graph_name, *, verbose=False, as_dict=True):
@@ -2718,7 +2726,7 @@ def plot_graph(tao, graph_name, *, verbose=False, as_dict=True):
     """
     cmd = f'python plot_graph {graph_name}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='plot_graph')
 
 
 def plot_histogram(tao, curve_name, *, verbose=False, as_dict=True):
@@ -2749,7 +2757,7 @@ def plot_histogram(tao, curve_name, *, verbose=False, as_dict=True):
     """
     cmd = f'python plot_histograph {curve_name}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='plot_histogram')
 
 
 def plot_plot_manage(tao, *, plot_location, plot_name, n_graph, graph1_name, graph2_name, graphN_name, verbose=False, as_dict=True):
@@ -2794,7 +2802,7 @@ def plot_plot_manage(tao, *, plot_location, plot_name, n_graph, graph1_name, gra
     """
     cmd = f'pyton plot_plot_manage {plot_location}^^{plot_name}^^{n_graph}^^{graph1_name}^^{graph2_name}...{graphN_name}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='plot_plot_manage')
 
 
 def plot_curve_manage(tao, *, graph_name, curve_index, curve_name, verbose=False, as_dict=True):
@@ -2833,7 +2841,7 @@ def plot_curve_manage(tao, *, graph_name, curve_index, curve_name, verbose=False
     """
     cmd = f'pyton plot_curve_manage {graph_name}^^{curve_index}^^{curve_name}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='plot_curve_manage')
 
 
 def plot_graph_manage(tao, *, plot_name, graph_index, graph_name, verbose=False, as_dict=True):
@@ -2872,7 +2880,7 @@ def plot_graph_manage(tao, *, plot_name, graph_index, graph_name, verbose=False,
     """
     cmd = f'pyton plot_graph_manage {plot_name}^^{graph_index}^^{graph_name}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='plot_graph_manage')
 
 
 def plot_line(tao, *, region_name, graph_name, curve_name, x_or_y, verbose=False, as_dict=True):
@@ -2917,7 +2925,7 @@ def plot_line(tao, *, region_name, graph_name, curve_name, x_or_y, verbose=False
     """
     cmd = f'python plot_line {region_name}.{graph_name}.{curve_name} {x_or_y}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='plot_line')
 
 
 def plot_symbol(tao, *, region_name, graph_name, curve_name, x_or_y, verbose=False, as_dict=True):
@@ -2964,7 +2972,7 @@ def plot_symbol(tao, *, region_name, graph_name, curve_name, x_or_y, verbose=Fal
     """
     cmd = f'python plot_symbol {region_name}.{graph_name}.{curve_name} {x_or_y}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='plot_symbol')
 
 
 def plot_transfer(tao, from_plot, to_plot, *, verbose=False, as_dict=True):
@@ -3001,7 +3009,7 @@ def plot_transfer(tao, from_plot, to_plot, *, verbose=False, as_dict=True):
     """
     cmd = f'python plot_transfer {from_plot} {to_plot}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='plot_transfer')
 
 
 def plot1(tao, name, *, verbose=False, as_dict=True):
@@ -3034,7 +3042,7 @@ def plot1(tao, name, *, verbose=False, as_dict=True):
     """
     cmd = f'python plot1 {name}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='plot1')
 
 
 def shape_list(tao, who, *, verbose=False, as_dict=True):
@@ -3068,7 +3076,7 @@ def shape_list(tao, who, *, verbose=False, as_dict=True):
     """
     cmd = f'python shape_list {who}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='shape_list')
 
 
 def shape_manage(tao, *, who, index, add_or_delete, verbose=False, as_dict=True):
@@ -3117,7 +3125,7 @@ def shape_manage(tao, *, who, index, add_or_delete, verbose=False, as_dict=True)
     """
     cmd = f'python shape_manage {who} {index} {add_or_delete}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='shape_manage')
 
 
 def shape_pattern_list(tao, ix_pattern="", *, verbose=False, as_dict=True):
@@ -3154,7 +3162,7 @@ def shape_pattern_list(tao, ix_pattern="", *, verbose=False, as_dict=True):
     """
     cmd = f'python shape_pattern_list {ix_pattern}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='shape_pattern_list')
 
 
 def shape_pattern_manage(tao, *, ix_pattern, pat_name, pat_line_width, verbose=False, as_dict=True):
@@ -3195,7 +3203,7 @@ def shape_pattern_manage(tao, *, ix_pattern, pat_name, pat_line_width, verbose=F
     """
     cmd = f'python shape_pattern_manage {ix_pattern}^^{pat_name}^^{pat_line_width}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='shape_pattern_manage')
 
 
 def shape_pattern_point_manage(tao, *, ix_pattern, ix_point, s, x, verbose=False, as_dict=True):
@@ -3237,7 +3245,7 @@ def shape_pattern_point_manage(tao, *, ix_pattern, ix_point, s, x, verbose=False
     """
     cmd = f'python shape_pattern_point_manage {ix_pattern}^^{ix_point}^^{s}^^{x}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='shape_pattern_point_manage')
 
 
 def shape_set(tao, *, who, shape_index, ele_name, shape, color, shape_size, type_label, shape_draw, multi_shape, line_width, verbose=False, as_dict=True):
@@ -3291,7 +3299,7 @@ def shape_set(tao, *, who, shape_index, ele_name, shape, color, shape_size, type
     """
     cmd = f'python shape_set {who}^^{shape_index}^^{ele_name}^^{shape}^^{color}^^{shape_size}^^{type_label}^^{shape_draw}^^{multi_shape}^^{line_width}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='shape_set')
 
 
 def show(tao, line, *, verbose=False, as_dict=True):
@@ -3325,7 +3333,7 @@ def show(tao, line, *, verbose=False, as_dict=True):
     """
     cmd = f'python show {line}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='show')
 
 
 def species_to_int(tao, species_str, *, verbose=False, as_dict=True):
@@ -3358,7 +3366,7 @@ def species_to_int(tao, species_str, *, verbose=False, as_dict=True):
     """
     cmd = f'python species_to_int {species_str}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='species_to_int')
 
 
 def species_to_str(tao, species_int, *, verbose=False, as_dict=True):
@@ -3391,7 +3399,7 @@ def species_to_str(tao, species_int, *, verbose=False, as_dict=True):
     """
     cmd = f'python species_to_str {species_int}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='species_to_str')
 
 
 def spin_polarization(tao, *, ix_uni="1", ix_branch="0", which, verbose=False, as_dict=True):
@@ -3434,7 +3442,7 @@ def spin_polarization(tao, *, ix_uni="1", ix_branch="0", which, verbose=False, a
     """
     cmd = f'python spin {ix_uni}_{ix_branch}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='spin_polarization')
 
 
 def super_universe(tao, *, verbose=False, as_dict=True):
@@ -3463,7 +3471,7 @@ def super_universe(tao, *, verbose=False, as_dict=True):
     """
     cmd = f'python super_universe'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='super_universe')
 
 
 def twiss_at_s(tao, *, ix_uni, ix_branch, s, which, verbose=False, as_dict=True):
@@ -3504,7 +3512,7 @@ def twiss_at_s(tao, *, ix_uni, ix_branch, s, which, verbose=False, as_dict=True)
     """
     cmd = f'python twiss_at_s {ix_uni}_{ix_branch}>>{s}|{which}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='twiss_at_s')
 
 
 def universe(tao, ix_universe, *, verbose=False, as_dict=True):
@@ -3536,7 +3544,7 @@ def universe(tao, ix_universe, *, verbose=False, as_dict=True):
     """
     cmd = f'python universe {ix_universe}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='universe')
 
 
 def var(tao, var, *, verbose=False, as_dict=True):
@@ -3568,7 +3576,7 @@ def var(tao, var, *, verbose=False, as_dict=True):
     """
     cmd = f'python var {var}        or'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='var')
 
 
 def var_create(tao, *, var_name, ele_name, attribute, universes, weight, step, low_lim, high_lim, merit_type, good_user, key_bound, key_delta, verbose=False, as_dict=True):
@@ -3626,7 +3634,7 @@ def var_create(tao, *, var_name, ele_name, attribute, universes, weight, step, l
     """
     cmd = f'python var_create {var_name}^^{ele_name}^^{attribute}^^{universes}^^{weight}^^{step}^^{low_lim}^^{high_lim}^^{merit_type}^^{good_user}^^{key_bound}^^{key_delta}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='var_create')
 
 
 def var_general(tao, *, verbose=False, as_dict=True):
@@ -3657,7 +3665,7 @@ def var_general(tao, *, verbose=False, as_dict=True):
     """
     cmd = f'python var_general'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='var_general')
 
 
 def var_v_array(tao, v1_var, *, verbose=False, as_dict=True):
@@ -3690,7 +3698,7 @@ def var_v_array(tao, v1_var, *, verbose=False, as_dict=True):
     """
     cmd = f'python var_v_array {v1_var}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='var_v_array')
 
 
 def var_v1_array(tao, v1_var, *, verbose=False, as_dict=True):
@@ -3721,7 +3729,7 @@ def var_v1_array(tao, v1_var, *, verbose=False, as_dict=True):
     """
     cmd = f'python var_v1_array {v1_var}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='var_v1_array')
 
 
 def var_v1_create(tao, *, v1_name, n_var_min, n_var_max, verbose=False, as_dict=True):
@@ -3773,7 +3781,7 @@ def var_v1_create(tao, *, v1_name, n_var_min, n_var_max, verbose=False, as_dict=
     """
     cmd = f'python var_v1_create {v1_name} {n_var_min} {n_var_max}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='var_v1_create')
 
 
 def var_v1_destroy(tao, v1_datum, *, verbose=False, as_dict=True):
@@ -3804,7 +3812,7 @@ def var_v1_destroy(tao, v1_datum, *, verbose=False, as_dict=True):
     """
     cmd = f'python var_v1_destroy {v1_datum}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='var_v1_destroy')
 
 
 def wave(tao, what, *, verbose=False, as_dict=True):
@@ -3840,5 +3848,5 @@ def wave(tao, what, *, verbose=False, as_dict=True):
     """
     cmd = f'python wave {what}'
     if verbose: print(cmd)
-    return __exec_string(tao, cmd, as_dict)
+    return __exec_string(tao, cmd, as_dict, method_name='wave')
 
