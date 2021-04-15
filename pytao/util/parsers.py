@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def parse_tao_derivative(lines):
+def parse_derivative(lines):
     """
     Parses the output of tao python derivative
     
@@ -22,6 +22,8 @@ def parse_tao_derivative(lines):
     # Build up matrices
     for line in lines:
         x = line.split(';')
+        if len(x) <= 1:
+            continue
         iu = int(x[0])
           
         if iu not in universes:
@@ -45,4 +47,3 @@ def parse_tao_derivative(lines):
         out[iu] = np.array(vals).astype(float)
         
     return out
-

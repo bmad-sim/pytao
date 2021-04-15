@@ -340,10 +340,10 @@ def test_floor_orbit_1():
     ret = interface_commands.floor_orbit(tao, graph='')
             
         
-def test_globals_1():
+def test_tao_global_1():
     
     tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.globals(tao)
+    ret = interface_commands.tao_global(tao)
             
         
 def test_help_1():

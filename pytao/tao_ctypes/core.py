@@ -211,6 +211,8 @@ class TaoModel(Tao):
           auto_configure = True # Should be disables if inheriting.
           ):
 
+        # NOTE: SUPER is being called from configure(...)
+
         # Save init
 
         self.original_input_file = input_file

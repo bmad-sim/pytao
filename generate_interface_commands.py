@@ -22,7 +22,7 @@ with open(f_name, 'r') as f:
 def sanitize_method_name(method):
     clean_name = method.replace(':', '_')
     if clean_name == "global":
-        clean_name = "globals"
+        clean_name = "tao_global"
     if clean_name in keyword.kwlist:
         clean_name = clean_name+"_"
     return clean_name.strip()
@@ -83,7 +83,7 @@ def generate_params(params):
     return ', '.join(param_list)
 
 
-def generate_method_code(command, returns):
+def generate_method_code(method, command, returns):
     """
     Generates the Python code to execute the Tao method.
     This function relies on a specific annotation on the Returns block of the docstring
@@ -91,6 +91,9 @@ def generate_method_code(command, returns):
      
     Parameters
     ----------
+    method : str
+      The cleaned method name
+
     command : str
       The `command_str` text from the JSON parser. This is a Python f-string for the Tao command.
       E.g.: "python lat_list {flags} {ix_uni}_{ix_branch}>>{elements}|{which} {who}"
@@ -108,18 +111,18 @@ def generate_method_code(command, returns):
         'None': '__exec_no_return',
         'integer_array': '__exec_integer',
         'real_array': '__exec_real',
-        'string_list': '__exec_string'
+        'string_list': '__exec_string',
     }
     code_list = [f"cmd = f'{command_str}'"]
     code_list.append("if verbose: print(cmd)")
     for r in returns:
         if not len(r.desc):
             tp = 'string_list'
-            if r.type and '??' not in r.type:
+            if r.type and '??' not in r.type and r.type in method_for_type:
                 tp = r.type
-            code_list.append(f"return {method_for_type[tp]}(tao, cmd, as_dict)")
+            code_list.append(f"return {method_for_type[tp]}(tao, cmd, as_dict, method_name='{method}')")
         else:
-            code_list.append(f"{r.desc[0]}:\n    return {method_for_type[r.type]}(tao, cmd, as_dict)")
+            code_list.append(f"{r.desc[0]}:\n    return {method_for_type[r.type]}(tao, cmd, as_dict, method_name={method})")
     return '\n'.join(code_list)
 
 
@@ -128,16 +131,24 @@ def generate_method_code(command, returns):
 cmds_to_module = ["""
 from pytao.tao_ctypes.util import parse_tao_python_data
 from pytao.util.parameters import tao_parameter_dict
+from pytao.util import parsers as __parsers
 
 
-def __exec_no_return(tao, cmd, as_dict=True):
+def __exec_no_return(tao, cmd, as_dict=True, method_name=None):
     tao.cmd(cmd)
     return None
 
 
-def __exec_string(tao, cmd, as_dict=True):
+def __exec_string(tao, cmd, as_dict=True, method_name=None):
     ret = tao.cmd(cmd)
     try:
+        # find parser for method
+        # run parser
+        # else do as usual...
+        p = getattr(__parsers, f'parse_{method_name}')
+        if p is not None:
+           data = p(ret)
+           return data
         if as_dict:
             data = parse_tao_python_data(ret)
         else:
@@ -145,14 +156,14 @@ def __exec_string(tao, cmd, as_dict=True):
     except:
         data = ret
     return data
-    
 
-def __exec_integer(tao, cmd, as_dict=True):
+
+def __exec_integer(tao, cmd, as_dict=True, method_name=None):
     ret = tao.cmd_integer(cmd)
     return ret
-    
-    
-def __exec_real(tao, cmd, as_dict=True):
+
+
+def __exec_real(tao, cmd, as_dict=True, method_name=None):
     ret = tao.cmd_real(cmd)
     return ret
 
@@ -167,7 +178,7 @@ for method, metadata in cmds_from_tao.items():
 
     params = generate_params(np_docs['Parameters'])
     try:
-        code = generate_method_code(command_str, np_docs['Returns'])
+        code = generate_method_code(clean_method, command_str, np_docs['Returns'])
     except Exception as ex:
         print(f'***Error generating code for: {method}. Exception was: {ex}')
 
