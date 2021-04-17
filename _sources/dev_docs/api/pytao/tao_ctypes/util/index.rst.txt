@@ -12,6 +12,11 @@
 Module Contents
 ---------------
 
+.. function:: chunks(lst, n)
+
+   Yield successive n-sized chunks from lst.
+
+
 .. function:: parse_bool(s)
 
 
@@ -25,9 +30,10 @@ Module Contents
    ixlist = parse_tao_lat_ele_list(tao.cmd('python lat_ele_list 1@0'))
 
 
-.. function:: pytype(type)
+.. function:: parse_pytype(type, val)
 
-   Returns python type for type =  REAL, INT, STR, ENUM, LOGIC
+   Parses the various types from tao_python_cmd
+
 
 
 .. function:: parse_tao_python_data1(line, clean_key=True)

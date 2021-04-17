@@ -340,9 +340,22 @@ Module Contents
       ix_uni:1
 
 
-.. function:: data(tao, *, ix_universe='1', d2_name, d1_datum, dat_index='1', verbose=False, as_dict=True)
+.. function:: data(tao, *, d2_name, d1_datum, ix_universe='1', dat_index='1', verbose=False, as_dict=True)
 
    Individual datum info.
+
+   :param d2_name:
+   :param d1_datum:
+   :param ix_universe:
+   :type ix_universe: default=1
+   :param dat_index:
+   :type dat_index: default=1
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python data {ix_universe}@{d2_name}.{d1_datum}[{dat_index}]
    Use the "python data-d1" command to get detailed info on a specific d1 array.
@@ -352,16 +365,6 @@ Module Contents
    python data 1@orbit.x[10]
 
    Note : By default dat_index is 1.
-
-   :param ix_universe:
-   :type ix_universe: default=1
-   :param d2_name:
-   :param d1_datum:
-   :param dat_index:
-   :type dat_index: default=1
-
-   :returns:
-   :rtype: string_list
 
    .. rubric:: Examples
 
@@ -382,7 +385,7 @@ Module Contents
       dat_index: 1
 
 
-.. function:: data_d2_create(tao, *, ix_uni='1', d2_name, n_d1_data, d_data_arrays_name_min_max, verbose=False, as_dict=True)
+.. function:: data_d2_create(tao, *, d2_name, n_d1_data, d_data_arrays_name_min_max, ix_uni='1', verbose=False, as_dict=True)
 
    Create a d2 data structure along with associated d1 and data arrays.
 
@@ -411,11 +414,11 @@ Module Contents
      ("set global lattice_calc_on = F") to prevent Tao trying to
          evaluate the partially created datum and generating unwanted error messages.
 
-   :param ix_uni:
-   :type ix_uni: default=1
    :param d2_name:
    :param n_d1_data:
    :param d_data_arrays_name_min_max:
+   :param ix_uni:
+   :type ix_uni: default=1
 
    :returns:
    :rtype: None
@@ -431,7 +434,7 @@ Module Contents
       d_data_arrays_name_min_max: x^^0^^45^^y^^1^^47
 
 
-.. function:: data_d2_destroy(tao, *, ix_uni='1', d2_datum, verbose=False, as_dict=True)
+.. function:: data_d2_destroy(tao, d2_datum, ix_uni='1', *, verbose=False, as_dict=True)
 
    Destroy a d2 data structure along with associated d1 and data arrays.
    Command syntax:
@@ -439,9 +442,9 @@ Module Contents
    {d2_datum} should be of the form
      {ix_uni}@{d2_datum_name}
 
+   :param d2_datum:
    :param ix_uni:
    :type ix_uni: default=1
-   :param d2_datum:
 
    :returns:
    :rtype: None
@@ -455,7 +458,7 @@ Module Contents
       d2_datum: orbit
 
 
-.. function:: data_d2(tao, *, ix_uni='1', d2_datum, verbose=False, as_dict=True)
+.. function:: data_d2(tao, d2_datum, ix_uni='1', *, verbose=False, as_dict=True)
 
    Information on a d2_datum.
    Command syntax:
@@ -463,9 +466,9 @@ Module Contents
    {d2_datum} should be of the form
      {ix_uni}@{d2_datum_name}
 
+   :param d2_datum:
    :param ix_uni:
    :type ix_uni: default=1
-   :param d2_datum:
 
    :returns:
    :rtype: string_list
@@ -479,7 +482,7 @@ Module Contents
       d2_datum: twiss
 
 
-.. function:: data_d_array(tao, *, ix_uni='1', d1_datum, verbose=False, as_dict=True)
+.. function:: data_d_array(tao, d1_datum, ix_uni='1', *, verbose=False, as_dict=True)
 
    List of datums for a given data_d1.
    Command syntax:
@@ -490,9 +493,9 @@ Module Contents
 
    python data_d_array 1@orbit.x
 
+   :param d1_datum:
    :param ix_uni:
    :type ix_uni: default=1
-   :param d1_datum:
 
    :returns:
    :rtype: string_list
@@ -506,7 +509,7 @@ Module Contents
       d1_datum: twiss.end
 
 
-.. function:: data_d1_array(tao, *, ix_uni='1', d2_datum, verbose=False, as_dict=True)
+.. function:: data_d1_array(tao, d2_datum, ix_uni='1', *, verbose=False, as_dict=True)
 
    List of d1 arrays for a given data_d2.
    Command syntax:
@@ -514,9 +517,9 @@ Module Contents
    {d2_datum} should be of the form
      {ix_uni}@{d2_datum_name}
 
+   :param d2_datum:
    :param ix_uni:
    :type ix_uni: default=1
-   :param d2_datum:
 
    :returns:
    :rtype: string_list
@@ -598,7 +601,7 @@ Module Contents
     args:
 
 
-.. function:: datum_create(tao, *, datum_name, data_type, ele_ref_name='', ele_start_name='', ele_name, merit_type, meas, good_meas, ref, good_ref, weight, good_user, data_source, eval_point, s_offset, ix_bunch, invalid_value, spin_axis_n0_1='', spin_axis_n0_2='', spin_axis_n0_3='', spin_axis_l_1='', spin_axis_l_2='', spin_axis_l_3='', verbose=False, as_dict=True)
+.. function:: datum_create(tao, *, datum_name, data_type, ele_ref_name='', ele_start_name='', ele_name='', merit_type='', meas='0', good_meas='F', ref='0', good_ref='F', weight='0', good_user='T', data_source='lat', eval_point='END', s_offset='0', ix_bunch='0', invalid_value='0', spin_axis_n0_1='', spin_axis_n0_2='', spin_axis_n0_3='', spin_axis_l_1='', spin_axis_l_2='', spin_axis_l_3='', verbose=False, as_dict=True)
 
    Create a datum.
    Command syntax:
@@ -624,18 +627,31 @@ Module Contents
    :param ele_start_name:
    :type ele_start_name: optional
    :param ele_name:
+   :type ele_name: optional
    :param merit_type:
+   :type merit_type: optional
    :param meas:
+   :type meas: default=0
    :param good_meas:
+   :type good_meas: default=F
    :param ref:
+   :type ref: default=0
    :param good_ref:
+   :type good_ref: default=F
    :param weight:
+   :type weight: default=0
    :param good_user:
+   :type good_user: default=T
    :param data_source:
+   :type data_source: default=lat
    :param eval_point:
+   :type eval_point: default=END
    :param s_offset:
+   :type s_offset: default=0
    :param ix_bunch:
+   :type ix_bunch: default=0
    :param invalid_value:
+   :type invalid_value: default=0
    :param spin_axis%n0(1):
    :type spin_axis%n0(1): optional
    :param spin_axis%n0(2):
@@ -870,7 +886,7 @@ Module Contents
      which: model
 
 
-.. function:: ele_cartesian_map(tao, *, ele_id, which='model', index, who, verbose=False, as_dict=True)
+.. function:: ele_cartesian_map(tao, *, ele_id, index, who, which='model', verbose=False, as_dict=True)
 
    Element cartesian_map
    Command syntax:
@@ -890,10 +906,10 @@ Module Contents
    This gives element number 7 in branch 1 of universe 3.
 
    :param ele_id:
-   :param which:
-   :type which: default=model
    :param index:
    :param who:
+   :param which:
+   :type which: default=model
 
    :returns:
    :rtype: string_list
@@ -909,7 +925,7 @@ Module Contents
      who: base
 
 
-.. function:: ele_chamber_wall(tao, *, ele_id, which='model', index, who, verbose=False, as_dict=True)
+.. function:: ele_chamber_wall(tao, *, ele_id, index, who, which='model', verbose=False, as_dict=True)
 
    Element beam chamber wall
    Command syntax:
@@ -924,10 +940,10 @@ Module Contents
      y       ! Return min/max in vertical plane
 
    :param ele_id:
-   :param which:
-   :type which: default=model
    :param index:
    :param who:
+   :param which:
+   :type which: default=model
 
    :returns:
    :rtype: string_list
@@ -1463,26 +1479,29 @@ Module Contents
      which: model
 
 
-.. function:: evaluate(tao, expression, *, verbose=False, as_dict=True)
+.. function:: evaluate(tao, expression, flags='-array_out', *, verbose=False, as_dict=True)
 
    Evaluate an expression. The result may be a vector.
    Command syntax:
-     python evaluate {expression}
+     python evaluate {flags} {expression}
+
    .. rubric:: Example
 
-   python evaluate 2*data::cbar.11[1:10]|model
+   python evaluate data::cbar.11[1:10]|model
 
    :param expression:
+   :param flags: If -array_out, the output will be available in the tao_c_interface_com%c_real.!
+   :type flags: default=-array_out
 
-   :returns:
-   :rtype: string_list
+   :returns: * *string_list* -- if '-array_out' not in flags
+             * *real_array* -- if '-array_out' in flags
 
    .. rubric:: Examples
 
    Example: 1
     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
     args:
-      expression: 2*data::cbar.11[1:10]|model
+      expression: data::cbar.11[1:10]|model
 
 
 .. function:: em_field(tao, *, ele_id, which, x, y, z, t_or_z, verbose=False, as_dict=True)
@@ -1705,17 +1724,34 @@ Module Contents
       ix_universe: 1
 
 
-.. function:: lat_list(tao, *, flags='', ix_uni, ix_branch, elements, which, who, verbose=False, as_dict=True)
+.. function:: lat_list(tao, *, elements, who, ix_uni='1', ix_branch='0', which='model', flags='', verbose=False, as_dict=True)
 
    List of parameters at ends of lattice elements
+
+   :param elements:
+   :param who:
+   :param ix_uni:
+   :type ix_uni: default=1
+   :param ix_branch:
+   :type ix_branch: default=0
+   :param which:
+   :type which: default=model
+   :param flags:
+   :type flags: optional
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python lat_list {flags} {ix_uni}@{ix_branch}>>{elements}|{which} {who}
    where:
-    {flags} is one or more of:
-     -no_slaves is optional. If present, multipass_slave and super_slave elements will not be matched to.
-     -track_only is optional. If present, lord elements will not be matched to.
-     -index_order is optional. If present, order elements by element index instead of the standard s-position.
-     -array_out is optional. If present, the output will be available in the tao_c_interface_com%c_real or
+    Optional {flags} are:
+     -no_slaves : If present, multipass_slave and super_slave elements will not be matched to.
+     -track_only : If present, lord elements will not be matched to.
+     -index_order : If present, order elements by element index instead of the standard s-position.
+     -array_out : If present, the output will be available in the tao_c_interface_com%c_real or
        tao_c_interface_com%c_integer arrays. See the code below for when %c_real vs %c_integer is used.
        Note: Only a single {who} item permitted when -array_out is present.
 
@@ -1749,17 +1785,6 @@ Module Contents
 
    python lat_list -track 3@0>>Q*|base ele.s,orbit.vec.2
    python lat_list 3@0>>Q*|base real:ele.s
-
-   :param flags:
-   :type flags: optional
-   :param ix_uni:
-   :param ix_branch:
-   :param elements:
-   :param which:
-   :param who:
-
-   :returns:
-   :rtype: string_list
 
    .. rubric:: Examples
 
@@ -1838,9 +1863,23 @@ Module Contents
     args:
 
 
-.. function:: orbit_at_s(tao, *, ix_uni, ix_branch, s, which, verbose=False, as_dict=True)
+.. function:: orbit_at_s(tao, *, s, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True)
 
    Twiss at given s position.
+
+   :param s:
+   :param ix_uni:
+   :type ix_uni: default=1
+   :param ix_branch:
+   :type ix_branch: default=0
+   :param which:
+   :type which: default=model
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python orbit_at_s {ix_uni}@{ix_branch}>>{s}|{which}
    where:
@@ -1849,14 +1888,6 @@ Module Contents
        base
        design
      {s} is the longitudinal s-position.
-
-   :param ix_uni:
-   :param ix_branch:
-   :param s:
-   :param which:
-
-   :returns:
-   :rtype: string_list
 
    .. rubric:: Examples
 
@@ -1889,20 +1920,23 @@ Module Contents
 .. function:: plot_curve(tao, curve_name, *, verbose=False, as_dict=True)
 
    Curve information for a plot
-   Command syntax:
-     pyton plot_curve {curve_name}
 
    :param curve_name:
 
    :returns:
    :rtype: string_list
 
+   .. rubric:: Notes
+
+   Command syntax:
+     python plot_curve {curve_name}
+
    .. rubric:: Examples
 
    Example: 1
     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
     args:
-      curve_name: c1
+      curve_name: top.x.c1
 
 
 .. function:: plot_lat_layout(tao, ix_universe: 1, ix_branch: 0, *, verbose=False, as_dict=True)
@@ -2454,7 +2488,7 @@ Module Contents
       species_int: -1
 
 
-.. function:: spin_polarization(tao, *, ix_uni='1', ix_branch='0', which, verbose=False, as_dict=True)
+.. function:: spin_polarization(tao, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True)
 
    Spin information
    Command syntax:
@@ -2474,6 +2508,7 @@ Module Contents
    :param ix_branch:
    :type ix_branch: default=0
    :param which:
+   :type which: default=model
 
    :returns:
    :rtype: string_list

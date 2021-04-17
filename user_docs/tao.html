@@ -742,23 +742,14 @@ args:</p>
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_universe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d1_datum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dat_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>Individual datum info.
-Command syntax:</p>
-<blockquote>
-<div><p>python data <a class="reference external" href="mailto:{ix_universe}&#37;&#52;&#48;{d2_name}&#46;{d1_datum">{ix_universe}<span>&#64;</span>{d2_name}<span>&#46;</span>{d1_datum</a>}[{dat_index}]</p>
-</div></blockquote>
-<p>Use the “python data-d1” command to get detailed info on a specific d1 array.
-Output syntax is parameter list form. See documentation at the beginning of this file.
-.. rubric:: Example</p>
-<p>python data <a class="reference external" href="mailto:1&#37;&#52;&#48;orbit">1<span>&#64;</span>orbit</a>.x[10]</p>
-<p>Note : By default dat_index is 1.</p>
+<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d1_datum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_universe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dat_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Individual datum info.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ix_universe</strong> (<em>default=1</em>) – </p></li>
 <li><p><strong>d2_name</strong> – </p></li>
 <li><p><strong>d1_datum</strong> – </p></li>
+<li><p><strong>ix_universe</strong> (<em>default=1</em>) – </p></li>
 <li><p><strong>dat_index</strong> (<em>default=1</em>) – </p></li>
 </ul>
 </dd>
@@ -769,6 +760,16 @@ Output syntax is parameter list form. See documentation at the beginning of this
 <dd class="field-odd"><p>string_list</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<dl class="simple">
+<dt>Command syntax:</dt><dd><p>python data <a class="reference external" href="mailto:{ix_universe}&#37;&#52;&#48;{d2_name}&#46;{d1_datum">{ix_universe}<span>&#64;</span>{d2_name}<span>&#46;</span>{d1_datum</a>}[{dat_index}]</p>
+</dd>
+</dl>
+<p>Use the “python data-d1” command to get detailed info on a specific d1 array.
+Output syntax is parameter list form. See documentation at the beginning of this file.
+.. rubric:: Example</p>
+<p>python data <a class="reference external" href="mailto:1&#37;&#52;&#48;orbit">1<span>&#64;</span>orbit</a>.x[10]</p>
+<p>Note : By default dat_index is 1.</p>
 <p class="rubric">Examples</p>
 <dl>
 <dt>Example: 1</dt><dd><p>init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
@@ -794,7 +795,7 @@ dat_index: 1</p>
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">data_d1_array</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_datum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">data_d1_array</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_datum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>List of d1 arrays for a given data_d2.
 Command syntax:</p>
 <blockquote>
@@ -807,8 +808,8 @@ Command syntax:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ix_uni</strong> (<em>default=1</em>) – </p></li>
 <li><p><strong>d2_datum</strong> – </p></li>
+<li><p><strong>ix_uni</strong> (<em>default=1</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -832,7 +833,7 @@ d2_datum: twiss</p>
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">data_d2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_datum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">data_d2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_datum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Information on a d2_datum.
 Command syntax:</p>
 <blockquote>
@@ -845,8 +846,8 @@ Command syntax:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ix_uni</strong> (<em>default=1</em>) – </p></li>
 <li><p><strong>d2_datum</strong> – </p></li>
+<li><p><strong>ix_uni</strong> (<em>default=1</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -902,7 +903,7 @@ args:</p>
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">data_d2_create</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_d1_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_data_arrays_name_min_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">data_d2_create</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_d1_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_data_arrays_name_min_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Create a d2 data structure along with associated d1 and data arrays.</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python data_d2_create {d2_name}^^{n_d1_data}^^{d_data_arrays_name_min_max}</p>
@@ -936,10 +937,10 @@ Note: When setting multiple data parameters,</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ix_uni</strong> (<em>default=1</em>) – </p></li>
 <li><p><strong>d2_name</strong> – </p></li>
 <li><p><strong>n_d1_data</strong> – </p></li>
 <li><p><strong>d_data_arrays_name_min_max</strong> – </p></li>
+<li><p><strong>ix_uni</strong> (<em>default=1</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -965,7 +966,7 @@ d_data_arrays_name_min_max: x^^0^^45^^y^^1^^47</p>
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">data_d2_destroy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_datum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">data_d2_destroy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_datum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Destroy a d2 data structure along with associated d1 and data arrays.
 Command syntax:</p>
 <blockquote>
@@ -978,8 +979,8 @@ Command syntax:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ix_uni</strong> (<em>default=1</em>) – </p></li>
 <li><p><strong>d2_datum</strong> – </p></li>
+<li><p><strong>ix_uni</strong> (<em>default=1</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1003,7 +1004,7 @@ d2_datum: orbit</p>
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">data_d_array</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d1_datum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">data_d_array</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d1_datum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>List of datums for a given data_d1.
 Command syntax:</p>
 <blockquote>
@@ -1018,8 +1019,8 @@ Command syntax:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ix_uni</strong> (<em>default=1</em>) – </p></li>
 <li><p><strong>d1_datum</strong> – </p></li>
+<li><p><strong>ix_uni</strong> (<em>default=1</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1107,7 +1108,7 @@ args:</p>
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">datum_create</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datum_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ele_ref_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ele_start_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ele_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merit_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">good_meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">good_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">good_user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_offset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_bunch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">invalid_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spin_axis_n0_1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spin_axis_n0_2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spin_axis_n0_3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spin_axis_l_1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spin_axis_l_2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spin_axis_l_3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">datum_create</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datum_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ele_ref_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ele_start_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ele_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merit_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">good_meas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">good_ref</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">good_user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lat'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_point</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'END'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_bunch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">invalid_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spin_axis_n0_1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spin_axis_n0_2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spin_axis_n0_3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spin_axis_l_1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spin_axis_l_2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spin_axis_l_3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Create a datum.
 Command syntax:</p>
 <blockquote>
@@ -1136,19 +1137,19 @@ Note: After creating all your datums, use the “data_set_design_value” routin
 <li><p><strong>! EG</strong> – </p></li>
 <li><p><strong>ele_ref_name</strong> (<em>optional</em>) – </p></li>
 <li><p><strong>ele_start_name</strong> (<em>optional</em>) – </p></li>
-<li><p><strong>ele_name</strong> – </p></li>
-<li><p><strong>merit_type</strong> – </p></li>
-<li><p><strong>meas</strong> – </p></li>
-<li><p><strong>good_meas</strong> – </p></li>
-<li><p><strong>ref</strong> – </p></li>
-<li><p><strong>good_ref</strong> – </p></li>
-<li><p><strong>weight</strong> – </p></li>
-<li><p><strong>good_user</strong> – </p></li>
-<li><p><strong>data_source</strong> – </p></li>
-<li><p><strong>eval_point</strong> – </p></li>
-<li><p><strong>s_offset</strong> – </p></li>
-<li><p><strong>ix_bunch</strong> – </p></li>
-<li><p><strong>invalid_value</strong> – </p></li>
+<li><p><strong>ele_name</strong> (<em>optional</em>) – </p></li>
+<li><p><strong>merit_type</strong> (<em>optional</em>) – </p></li>
+<li><p><strong>meas</strong> (<em>default=0</em>) – </p></li>
+<li><p><strong>good_meas</strong> (<em>default=F</em>) – </p></li>
+<li><p><strong>ref</strong> (<em>default=0</em>) – </p></li>
+<li><p><strong>good_ref</strong> (<em>default=F</em>) – </p></li>
+<li><p><strong>weight</strong> (<em>default=0</em>) – </p></li>
+<li><p><strong>good_user</strong> (<em>default=T</em>) – </p></li>
+<li><p><strong>data_source</strong> (<em>default=lat</em>) – </p></li>
+<li><p><strong>eval_point</strong> (<em>default=END</em>) – </p></li>
+<li><p><strong>s_offset</strong> (<em>default=0</em>) – </p></li>
+<li><p><strong>ix_bunch</strong> (<em>default=0</em>) – </p></li>
+<li><p><strong>invalid_value</strong> (<em>default=0</em>) – </p></li>
 <li><p><strong>spin_axis%n0</strong><strong>(</strong><strong>1</strong><strong>)</strong> (<em>optional</em>) – </p></li>
 <li><p><strong>spin_axis%n0</strong><strong>(</strong><strong>2</strong><strong>)</strong> (<em>optional</em>) – </p></li>
 <li><p><strong>spin_axis%n0</strong><strong>(</strong><strong>3</strong><strong>)</strong> (<em>optional</em>) – </p></li>
@@ -1297,7 +1298,7 @@ which: model</p>
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">ele_cartesian_map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ele_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'model'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">who</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">ele_cartesian_map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ele_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">who</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'model'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Element cartesian_map
 Command syntax:</p>
 <blockquote>
@@ -1322,9 +1323,9 @@ terms</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ele_id</strong> – </p></li>
-<li><p><strong>which</strong> (<em>default=model</em>) – </p></li>
 <li><p><strong>index</strong> – </p></li>
 <li><p><strong>who</strong> – </p></li>
+<li><p><strong>which</strong> (<em>default=model</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1350,7 +1351,7 @@ who: base</p>
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">ele_chamber_wall</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ele_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'model'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">who</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">ele_chamber_wall</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ele_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">who</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'model'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Element beam chamber wall
 Command syntax:</p>
 <blockquote>
@@ -1372,9 +1373,9 @@ y       ! Return min/max in vertical plane</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ele_id</strong> – </p></li>
-<li><p><strong>which</strong> (<em>default=model</em>) – </p></li>
 <li><p><strong>index</strong> – </p></li>
 <li><p><strong>who</strong> – </p></li>
+<li><p><strong>which</strong> (<em>default=model</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -2378,23 +2379,27 @@ args:</p>
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">evaluate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">evaluate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-array_out'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Evaluate an expression. The result may be a vector.
 Command syntax:</p>
 <blockquote>
-<div><p>python evaluate {expression}</p>
+<div><p>python evaluate {flags} {expression}</p>
 </div></blockquote>
 <p class="rubric">Example</p>
-<p>python evaluate 2*data::cbar.11[1:10]|model</p>
+<p>python evaluate <a class="reference external" href="data::cbar.11[1:10">data::cbar.11[1:10</a>]|model</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>expression</strong> – </p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>expression</strong> – </p></li>
+<li><p><strong>flags</strong> (<em>default=-array_out</em>) – If -array_out, the output will be available in the tao_c_interface_com%c_real.!</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>string_list</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>string_list</em> – if ‘-array_out’ not in flags</p></li>
+<li><p><em>real_array</em> – if ‘-array_out’ in flags</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -2402,7 +2407,7 @@ Command syntax:</p>
 <dt>Example: 1</dt><dd><p>init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
 args:</p>
 <blockquote>
-<div><p>expression: 2*data::cbar.11[1:10]|model</p>
+<div><p>expression: <a class="reference external" href="data::cbar.11[1:10">data::cbar.11[1:10</a>]|model</p>
 </div></blockquote>
 </dd>
 </dl>
@@ -2623,18 +2628,35 @@ args:</p>
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">lat_list</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">who</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>List of parameters at ends of lattice elements
-Command syntax:</p>
-<blockquote>
-<div><p>python lat_list {flags} <a class="reference external" href="mailto:{ix_uni}&#37;&#52;&#48;{ix_branch">{ix_uni}<span>&#64;</span>{ix_branch</a>}&gt;&gt;{elements}|{which} {who}</p>
-</div></blockquote>
+<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">lat_list</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">who</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'model'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>List of parameters at ends of lattice elements</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>elements</strong> – </p></li>
+<li><p><strong>who</strong> – </p></li>
+<li><p><strong>ix_uni</strong> (<em>default=1</em>) – </p></li>
+<li><p><strong>ix_branch</strong> (<em>default=0</em>) – </p></li>
+<li><p><strong>which</strong> (<em>default=model</em>) – </p></li>
+<li><p><strong>flags</strong> (<em>optional</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>string_list</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
 <dl>
+<dt>Command syntax:</dt><dd><p>python lat_list {flags} <a class="reference external" href="mailto:{ix_uni}&#37;&#52;&#48;{ix_branch">{ix_uni}<span>&#64;</span>{ix_branch</a>}&gt;&gt;{elements}|{which} {who}</p>
+</dd>
 <dt>where:</dt><dd><dl>
-<dt>{flags} is one or more of:</dt><dd><p>-no_slaves is optional. If present, multipass_slave and super_slave elements will not be matched to.
--track_only is optional. If present, lord elements will not be matched to.
--index_order is optional. If present, order elements by element index instead of the standard s-position.
--array_out is optional. If present, the output will be available in the tao_c_interface_com%c_real or</p>
+<dt>Optional {flags} are:</dt><dd><p>-no_slaves : If present, multipass_slave and super_slave elements will not be matched to.
+-track_only : If present, lord elements will not be matched to.
+-index_order : If present, order elements by element index instead of the standard s-position.
+-array_out : If present, the output will be available in the tao_c_interface_com%c_real or</p>
 <blockquote>
 <div><p>tao_c_interface_com%c_integer arrays. See the code below for when %c_real vs %c_integer is used.
 Note: Only a single {who} item permitted when -array_out is present.</p>
@@ -2670,24 +2692,6 @@ ele.mat6, ele.vec0</p>
 <p class="rubric">Examples</p>
 <p>python lat_list -track 3&#64;0&gt;&gt;Q*|base ele.s,orbit.vec.2
 python lat_list 3&#64;0&gt;&gt;Q*|base real:ele.s</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>flags</strong> (<em>optional</em>) – </p></li>
-<li><p><strong>ix_uni</strong> – </p></li>
-<li><p><strong>ix_branch</strong> – </p></li>
-<li><p><strong>elements</strong> – </p></li>
-<li><p><strong>which</strong> – </p></li>
-<li><p><strong>who</strong> – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>string_list</p>
-</dd>
-</dl>
 <p class="rubric">Examples</p>
 <dl>
 <dt>Example: 1</dt><dd><p>init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
@@ -2802,29 +2806,15 @@ args:</p>
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">orbit_at_s</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>Twiss at given s position.
-Command syntax:</p>
-<blockquote>
-<div><p>python orbit_at_s <a class="reference external" href="mailto:{ix_uni}&#37;&#52;&#48;{ix_branch">{ix_uni}<span>&#64;</span>{ix_branch</a>}&gt;&gt;{s}|{which}</p>
-</div></blockquote>
-<dl>
-<dt>where:</dt><dd><dl class="simple">
-<dt>{which} is one of:</dt><dd><p>model
-base
-design</p>
-</dd>
-</dl>
-<p>{s} is the longitudinal s-position.</p>
-</dd>
-</dl>
+<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">orbit_at_s</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'model'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Twiss at given s position.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ix_uni</strong> – </p></li>
-<li><p><strong>ix_branch</strong> – </p></li>
 <li><p><strong>s</strong> – </p></li>
-<li><p><strong>which</strong> – </p></li>
+<li><p><strong>ix_uni</strong> (<em>default=1</em>) – </p></li>
+<li><p><strong>ix_branch</strong> (<em>default=0</em>) – </p></li>
+<li><p><strong>which</strong> (<em>default=model</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -2832,6 +2822,19 @@ design</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>string_list</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<dl>
+<dt>Command syntax:</dt><dd><p>python orbit_at_s <a class="reference external" href="mailto:{ix_uni}&#37;&#52;&#48;{ix_branch">{ix_uni}<span>&#64;</span>{ix_branch</a>}&gt;&gt;{s}|{which}</p>
+</dd>
+<dt>where:</dt><dd><dl class="simple">
+<dt>{which} is one of:</dt><dd><p>model
+base
+design</p>
+</dd>
+</dl>
+<p>{s} is the longitudinal s-position.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -2908,11 +2911,7 @@ args:</p>
 <dl class="py function">
 <dt>
 <code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">plot_curve</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curve_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>Curve information for a plot
-Command syntax:</p>
-<blockquote>
-<div><p>pyton plot_curve {curve_name}</p>
-</div></blockquote>
+<dd><p>Curve information for a plot</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>curve_name</strong> – </p>
@@ -2924,12 +2923,17 @@ Command syntax:</p>
 <dd class="field-odd"><p>string_list</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<dl class="simple">
+<dt>Command syntax:</dt><dd><p>python plot_curve {curve_name}</p>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
 <dl>
 <dt>Example: 1</dt><dd><p>init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
 args:</p>
 <blockquote>
-<div><p>curve_name: c1</p>
+<div><p>curve_name: top.x.c1</p>
 </div></blockquote>
 </dd>
 </dl>
@@ -3723,7 +3727,7 @@ args:</p>
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">spin_polarization</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">spin_polarization</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'model'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Spin information
 Command syntax:</p>
 <blockquote>
@@ -3743,7 +3747,7 @@ design</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ix_uni</strong> (<em>default=1</em>) – </p></li>
 <li><p><strong>ix_branch</strong> (<em>default=0</em>) – </p></li>
-<li><p><strong>which</strong> – </p></li>
+<li><p><strong>which</strong> (<em>default=model</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
