@@ -25,6 +25,9 @@ def __execute(tao, cmd, as_dict=True, method_name=None, cmd_type="string_list"):
         except Exception as ex:
             print('Failed to parse string data. Returning raw value. Exception was: ', ex)
             return ret
+            
+        return data
+        
     return ret
 
 
@@ -141,7 +144,7 @@ def branch1(tao, *, ix_universe="1", ix_branch="0", verbose=False, as_dict=True)
        ix_branch: 0
     
     """
-    cmd = f'python branch1 {ix_universe}_{ix_branch}'
+    cmd = f'python branch1 {ix_universe}@{ix_branch}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, method_name='branch1', cmd_type='string_list')
 
@@ -466,10 +469,24 @@ def da_params(tao, ix_uni="1", *, verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='da_params', cmd_type='string_list')
 
 
-def data(tao, *, ix_universe="1", d2_name, d1_datum, dat_index="1", verbose=False, as_dict=True):
+def data(tao, *, d2_name, d1_datum, ix_universe="1", dat_index="1", verbose=False, as_dict=True):
     """
     
     Individual datum info.
+    
+    Parameters
+    ----------
+    d2_name
+    d1_datum
+    ix_universe : default=1
+    dat_index : default=1
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
     Command syntax:
       python data {ix_universe}@{d2_name}.{d1_datum}[{dat_index}]
     Use the "python data-d1" command to get detailed info on a specific d1 array.
@@ -477,17 +494,6 @@ def data(tao, *, ix_universe="1", d2_name, d1_datum, dat_index="1", verbose=Fals
     Example:
       python data 1@orbit.x[10]
     Note : By default dat_index is 1.
-    
-    Parameters
-    ----------
-    ix_universe : default=1
-    d2_name
-    d1_datum
-    dat_index : default=1
-    
-    Returns
-    -------
-    string_list
     
     Examples
     --------
@@ -508,12 +514,12 @@ def data(tao, *, ix_universe="1", d2_name, d1_datum, dat_index="1", verbose=Fals
        dat_index: 1
     
     """
-    cmd = f'python data {ix_universe}_{d2_name}.{d1_datum}[{dat_index}]'
+    cmd = f'python data {ix_universe}@{d2_name}.{d1_datum}[{dat_index}]'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, method_name='data', cmd_type='string_list')
 
 
-def data_d2_create(tao, *, ix_uni="1", d2_name, n_d1_data, d_data_arrays_name_min_max, verbose=False, as_dict=True):
+def data_d2_create(tao, *, d2_name, n_d1_data, d_data_arrays_name_min_max, ix_uni="1", verbose=False, as_dict=True):
     """
     
     Create a d2 data structure along with associated d1 and data arrays.
@@ -543,10 +549,10 @@ def data_d2_create(tao, *, ix_uni="1", d2_name, n_d1_data, d_data_arrays_name_mi
     
     Parameters
     ----------
-    ix_uni : default=1
     d2_name
     n_d1_data
     d_data_arrays_name_min_max
+    ix_uni : default=1
     
     Returns
     -------
@@ -568,7 +574,7 @@ def data_d2_create(tao, *, ix_uni="1", d2_name, n_d1_data, d_data_arrays_name_mi
     return __execute(tao, cmd, as_dict, method_name='data_d2_create', cmd_type='None')
 
 
-def data_d2_destroy(tao, *, ix_uni="1", d2_datum, verbose=False, as_dict=True):
+def data_d2_destroy(tao, d2_datum, ix_uni="1", *, verbose=False, as_dict=True):
     """
     
     Destroy a d2 data structure along with associated d1 and data arrays.
@@ -579,8 +585,8 @@ def data_d2_destroy(tao, *, ix_uni="1", d2_datum, verbose=False, as_dict=True):
     
     Parameters
     ----------
-    ix_uni : default=1
     d2_datum
+    ix_uni : default=1
     
     Returns
     -------
@@ -600,7 +606,7 @@ def data_d2_destroy(tao, *, ix_uni="1", d2_datum, verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='data_d2_destroy', cmd_type='None')
 
 
-def data_d2(tao, *, ix_uni="1", d2_datum, verbose=False, as_dict=True):
+def data_d2(tao, d2_datum, ix_uni="1", *, verbose=False, as_dict=True):
     """
     
     Information on a d2_datum.
@@ -611,8 +617,8 @@ def data_d2(tao, *, ix_uni="1", d2_datum, verbose=False, as_dict=True):
     
     Parameters
     ----------
-    ix_uni : default=1
     d2_datum
+    ix_uni : default=1
     
     Returns
     -------
@@ -632,7 +638,7 @@ def data_d2(tao, *, ix_uni="1", d2_datum, verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='data_d2', cmd_type='string_list')
 
 
-def data_d_array(tao, *, ix_uni="1", d1_datum, verbose=False, as_dict=True):
+def data_d_array(tao, d1_datum, ix_uni="1", *, verbose=False, as_dict=True):
     """
     
     List of datums for a given data_d1.
@@ -645,8 +651,8 @@ def data_d_array(tao, *, ix_uni="1", d1_datum, verbose=False, as_dict=True):
     
     Parameters
     ----------
-    ix_uni : default=1
     d1_datum
+    ix_uni : default=1
     
     Returns
     -------
@@ -666,7 +672,7 @@ def data_d_array(tao, *, ix_uni="1", d1_datum, verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='data_d_array', cmd_type='string_list')
 
 
-def data_d1_array(tao, *, ix_uni="1", d2_datum, verbose=False, as_dict=True):
+def data_d1_array(tao, d2_datum, ix_uni="1", *, verbose=False, as_dict=True):
     """
     
     List of d1 arrays for a given data_d2.
@@ -677,8 +683,8 @@ def data_d1_array(tao, *, ix_uni="1", d2_datum, verbose=False, as_dict=True):
     
     Parameters
     ----------
-    ix_uni : default=1
     d2_datum
+    ix_uni : default=1
     
     Returns
     -------
@@ -788,7 +794,7 @@ def data_set_design_value(tao, *, verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='data_set_design_value', cmd_type='None')
 
 
-def datum_create(tao, *, datum_name, data_type, ele_ref_name="", ele_start_name="", ele_name, merit_type, meas, good_meas, ref, good_ref, weight, good_user, data_source, eval_point, s_offset, ix_bunch, invalid_value, spin_axis_n0_1="", spin_axis_n0_2="", spin_axis_n0_3="", spin_axis_l_1="", spin_axis_l_2="", spin_axis_l_3="", verbose=False, as_dict=True):
+def datum_create(tao, *, datum_name, data_type, ele_ref_name="", ele_start_name="", ele_name="", merit_type="", meas="0", good_meas="F", ref="0", good_ref="F", weight="0", good_user="T", data_source="lat", eval_point="END", s_offset="0", ix_bunch="0", invalid_value="0", spin_axis_n0_1="", spin_axis_n0_2="", spin_axis_n0_3="", spin_axis_l_1="", spin_axis_l_2="", spin_axis_l_3="", verbose=False, as_dict=True):
     """
     
     Create a datum.
@@ -812,19 +818,19 @@ def datum_create(tao, *, datum_name, data_type, ele_ref_name="", ele_start_name=
     data_type           ! EG: orbit.x
     ele_ref_name : optional
     ele_start_name : optional
-    ele_name
-    merit_type
-    meas
-    good_meas
-    ref
-    good_ref
-    weight
-    good_user
-    data_source
-    eval_point
-    s_offset
-    ix_bunch
-    invalid_value
+    ele_name : optional
+    merit_type : optional
+    meas : default=0
+    good_meas : default=F
+    ref : default=0
+    good_ref : default=F
+    weight : default=0
+    good_user : default=T
+    data_source : default=lat
+    eval_point : default=END
+    s_offset : default=0
+    ix_bunch : default=0
+    invalid_value : default=0
     spin_axis%n0(1) : optional
     spin_axis%n0(2) : optional
     spin_axis%n0(3) : optional
@@ -1106,7 +1112,7 @@ def ele_ac_kicker(tao, ele_id, which="model", *, verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='ele_ac_kicker', cmd_type='string_list')
 
 
-def ele_cartesian_map(tao, *, ele_id, which="model", index, who, verbose=False, as_dict=True):
+def ele_cartesian_map(tao, *, ele_id, index, who, which="model", verbose=False, as_dict=True):
     """
     
     Element cartesian_map
@@ -1127,9 +1133,9 @@ def ele_cartesian_map(tao, *, ele_id, which="model", index, who, verbose=False, 
     Parameters
     ----------
     ele_id
-    which : default=model
     index
     who
+    which : default=model
     
     Returns
     -------
@@ -1151,7 +1157,7 @@ def ele_cartesian_map(tao, *, ele_id, which="model", index, who, verbose=False, 
     return __execute(tao, cmd, as_dict, method_name='ele_cartesian_map', cmd_type='string_list')
 
 
-def ele_chamber_wall(tao, *, ele_id, which="model", index, who, verbose=False, as_dict=True):
+def ele_chamber_wall(tao, *, ele_id, index, who, which="model", verbose=False, as_dict=True):
     """
     
     Element beam chamber wall
@@ -1169,9 +1175,9 @@ def ele_chamber_wall(tao, *, ele_id, which="model", index, who, verbose=False, a
     Parameters
     ----------
     ele_id
-    which : default=model
     index
     who
+    which : default=model
     
     Returns
     -------
@@ -1817,34 +1823,43 @@ def ele_elec_multipoles(tao, ele_id, which, *, verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='ele_elec_multipoles', cmd_type='string_list')
 
 
-def evaluate(tao, expression, *, verbose=False, as_dict=True):
+def evaluate(tao, expression, flags="-array_out", *, verbose=False, as_dict=True):
     """
     
     Evaluate an expression. The result may be a vector.
     Command syntax:
-      python evaluate {expression}
+      python evaluate {flags} {expression}
+    
     Example:
-      python evaluate 2*data::cbar.11[1:10]|model
+      python evaluate data::cbar.11[1:10]|model
     
     Parameters
     ----------
     expression
+    flags : default=-array_out
+        If -array_out, the output will be available in the tao_c_interface_com%c_real.!
     
     Returns
     -------
     string_list
+        if '-array_out' not in flags
+    real_array
+        if '-array_out' in flags
     
     Examples
     --------
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
-       expression: 2*data::cbar.11[1:10]|model
+       expression: data::cbar.11[1:10]|model
     
     """
-    cmd = f'python evaluate {expression}'
+    cmd = f'python evaluate {flags} {expression}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='evaluate', cmd_type='string_list')
+    if '-array_out' not in flags:
+        return __execute(tao, cmd, as_dict, method_name='evaluate', cmd_type='string_list')
+    if '-array_out' in flags:
+        return __execute(tao, cmd, as_dict, method_name='evaluate', cmd_type='real_array')
 
 
 def em_field(tao, *, ele_id, which, x, y, z, t_or_z, verbose=False, as_dict=True):
@@ -2151,18 +2166,34 @@ def lat_general(tao, ix_universe="1", *, verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='lat_general', cmd_type='string_list')
 
 
-def lat_list(tao, *, flags="", ix_uni, ix_branch, elements, which, who, verbose=False, as_dict=True):
+def lat_list(tao, *, elements, who, ix_uni="1", ix_branch="0", which="model", flags="", verbose=False, as_dict=True):
     """
     
     List of parameters at ends of lattice elements
+    
+    Parameters
+    ----------
+    elements
+    who
+    ix_uni : default=1
+    ix_branch : default=0
+    which : default=model
+    flags : optional
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
     Command syntax:
       python lat_list {flags} {ix_uni}@{ix_branch}>>{elements}|{which} {who}
     where:
-     {flags} is one or more of:
-      -no_slaves is optional. If present, multipass_slave and super_slave elements will not be matched to.
-      -track_only is optional. If present, lord elements will not be matched to.
-      -index_order is optional. If present, order elements by element index instead of the standard s-position.
-      -array_out is optional. If present, the output will be available in the tao_c_interface_com%c_real or
+     Optional {flags} are:
+      -no_slaves : If present, multipass_slave and super_slave elements will not be matched to.
+      -track_only : If present, lord elements will not be matched to.
+      -index_order : If present, order elements by element index instead of the standard s-position.
+      -array_out : If present, the output will be available in the tao_c_interface_com%c_real or
         tao_c_interface_com%c_integer arrays. See the code below for when %c_real vs %c_integer is used.
         Note: Only a single {who} item permitted when -array_out is present.
     
@@ -2196,19 +2227,6 @@ def lat_list(tao, *, flags="", ix_uni, ix_branch, elements, which, who, verbose=
       python lat_list -track 3@0>>Q*|base ele.s,orbit.vec.2
       python lat_list 3@0>>Q*|base real:ele.s    
     
-    Parameters
-    ----------
-    flags : optional
-    ix_uni
-    ix_branch
-    elements
-    which
-    who
-    
-    Returns
-    -------
-    string_list
-    
     Examples
     --------
     Example: 1
@@ -2221,7 +2239,7 @@ def lat_list(tao, *, flags="", ix_uni, ix_branch, elements, which, who, verbose=
        who: orbit.floor.x
     
     """
-    cmd = f'python lat_list {flags} {ix_uni}_{ix_branch}>>{elements}|{which} {who}'
+    cmd = f'python lat_list {flags} {ix_uni}@{ix_branch}>>{elements}|{which} {who}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, method_name='lat_list', cmd_type='string_list')
 
@@ -2315,10 +2333,24 @@ def merit(tao, *, verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='merit', cmd_type='string_list')
 
 
-def orbit_at_s(tao, *, ix_uni, ix_branch, s, which, verbose=False, as_dict=True):
+def orbit_at_s(tao, *, s, ix_uni="1", ix_branch="0", which="model", verbose=False, as_dict=True):
     """
     
     Twiss at given s position.
+    
+    Parameters
+    ----------
+    s
+    ix_uni : default=1
+    ix_branch : default=0
+    which : default=model
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
     Command syntax:
       python orbit_at_s {ix_uni}@{ix_branch}>>{s}|{which}
     where:
@@ -2327,17 +2359,6 @@ def orbit_at_s(tao, *, ix_uni, ix_branch, s, which, verbose=False, as_dict=True)
         base
         design
       {s} is the longitudinal s-position.
-    
-    Parameters
-    ----------
-    ix_uni
-    ix_branch
-    s
-    which
-    
-    Returns
-    -------
-    string_list
     
     Examples
     --------
@@ -2350,7 +2371,7 @@ def orbit_at_s(tao, *, ix_uni, ix_branch, s, which, verbose=False, as_dict=True)
        which: model
     
     """
-    cmd = f'python orbit_at_s {ix_uni}_{ix_branch}>>{s}|{which}'
+    cmd = f'python orbit_at_s {ix_uni}@{ix_branch}>>{s}|{which}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, method_name='orbit_at_s', cmd_type='string_list')
 
@@ -2383,8 +2404,6 @@ def plot_curve(tao, curve_name, *, verbose=False, as_dict=True):
     """
     
     Curve information for a plot
-    Command syntax:
-      pyton plot_curve {curve_name}
     
     Parameters
     ----------
@@ -2394,15 +2413,20 @@ def plot_curve(tao, curve_name, *, verbose=False, as_dict=True):
     -------
     string_list
     
+    Notes
+    -----
+    Command syntax:
+      python plot_curve {curve_name}
+    
     Examples
     --------
     Example: 1
      init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
-       curve_name: c1 
+       curve_name: top.x.c1
     
     """
-    cmd = f'pyton plot_curve {curve_name}'
+    cmd = f'python plot_curve {curve_name}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, method_name='plot_curve', cmd_type='string_list')
 
@@ -2434,7 +2458,7 @@ def plot_lat_layout(tao, ix_universe: 1, ix_branch: 0, *, verbose=False, as_dict
        ix_branch: 0 
     
     """
-    cmd = f'python plot_lat_layout {ix_universe}_{ix_branch}'
+    cmd = f'python plot_lat_layout {ix_universe}@{ix_branch}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, method_name='plot_lat_layout', cmd_type='string_list')
 
@@ -3126,7 +3150,7 @@ def species_to_str(tao, species_int, *, verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='species_to_str', cmd_type='string_list')
 
 
-def spin_polarization(tao, *, ix_uni="1", ix_branch="0", which, verbose=False, as_dict=True):
+def spin_polarization(tao, *, ix_uni="1", ix_branch="0", which="model", verbose=False, as_dict=True):
     """
     
     Spin information
@@ -3145,7 +3169,7 @@ def spin_polarization(tao, *, ix_uni="1", ix_branch="0", which, verbose=False, a
     ----------
     ix_uni : default=1
     ix_branch : default=0
-    which
+    which : default=model
     
     Returns
     -------
@@ -3161,7 +3185,7 @@ def spin_polarization(tao, *, ix_uni="1", ix_branch="0", which, verbose=False, a
        which: model
     
     """
-    cmd = f'python spin {ix_uni}_{ix_branch}|{which}'
+    cmd = f'python spin {ix_uni}@{ix_branch}|{which}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, method_name='spin_polarization', cmd_type='string_list')
 
@@ -3222,7 +3246,7 @@ def twiss_at_s(tao, *, ix_uni, ix_branch, s, which, verbose=False, as_dict=True)
        which: model 
     
     """
-    cmd = f'python twiss_at_s {ix_uni}_{ix_branch}>>{s}|{which}'
+    cmd = f'python twiss_at_s {ix_uni}@{ix_branch}>>{s}|{which}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, method_name='twiss_at_s', cmd_type='string_list')
 

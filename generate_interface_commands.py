@@ -32,7 +32,7 @@ def sanitize(text):
     if '!' in text:
         ex_pos = text.find('!')
         text = text[:ex_pos]
-    return text.replace('@', '_').replace('%', '_').replace('(', '_').replace(')', '').replace('?', '').strip()
+    return text.replace('%', '_').replace('(', '_').replace(')', '').replace('?', '').strip()
 
 
 def add_tabs(text, tabs):
@@ -157,6 +157,9 @@ def __execute(tao, cmd, as_dict=True, method_name=None, cmd_type="string_list"):
         except Exception as ex:
             print('Failed to parse string data. Returning raw value. Exception was: ', ex)
             return ret
+            
+        return data
+        
     return ret
 
 """]

@@ -3,8 +3,14 @@ pytao specific utilities
 
 """
 
+import numpy as np
 
 
+
+def chunks(lst, n):
+    """Yield successive n-sized chunks from lst."""
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
 
 def parse_bool(s):
     x = s.upper()[0]
@@ -32,27 +38,43 @@ def parse_tao_lat_ele_list(lines):
     return ix
 
 
-def pytype(type):
+def parse_pytype(type, val):
     """
-    Returns python type for type =  REAL, INT, STR, ENUM, LOGIC
+    Parses the various types from tao_python_cmd
+
+    
     """
+    
+    # Handle 
+    if isinstance(val, list):
+        if len(val) == 1:
+            val = val[0]
+    
+    if type  in ['STR', 'ENUM', 'FILE', 'CRYSTAL', 'COMPONENT',
+                 'DAT_TYPE', 'DAT_TYPE_Z', 'SPECIES', 'ELE_PARAM']:
+        return val
+    
+    if type == 'LOGIC':
+        return parse_bool(val)
+
+    if type in ['INT', 'INUM']:
+        return int(val)     
+  
     if type == 'REAL':
-        f = float
-    elif type == 'INT':
-        f = int
-    elif type == 'STR':
-        f = str
-    elif type == 'ENUM':
-        f = str     
-    elif type == 'SPECIES':
-        f = str             
-    elif type == 'INUM':
-        f = int           
-    elif type == 'LOGIC':
-        f = bool              
-    else:
-        raise ValueError ('Unknown type: '+type)
-    return f
+        return float(val)
+
+    if type == 'REAL_ARR':
+        return np.array(val).astype(float)
+
+    if type == 'COMPLEX':
+        return complex(*val)
+      
+    if type == 'STRUCT':
+        return {name:parse_pytype(t1, v1) for name, t1, v1 in chunks(val, 3)}
+        
+    # Not found
+    raise ValueError ('Unknown type: '+type)
+
 
 def parse_tao_python_data1(line, clean_key=True):
     """
@@ -70,21 +92,18 @@ def parse_tao_python_data1(line, clean_key=True):
     See: tao_python_cmd.f90
     """
     dat = {}
+
     sline = line.split(';')
-    name, type, setable, val  = sline[0:4]
+    name, type, setable = sline[0:3]
+    component_value = sline[3:]
     
-    if len(sline)>4:
-        print(f'Warning: more than 4 items in: {line}')
-    
-    f = pytype(type)
-    if f == bool:
-        val = parse_bool(val)
-    else:
-        val = f(val)  
+    # Parse
+    dat = parse_pytype(type, component_value)
+
     if clean_key:
         name = name.replace('.', '_')
         
-    return {name:val}
+    return {name:dat}
 
 def parse_tao_python_data(lines, clean_key=True):
     """
@@ -93,6 +112,7 @@ def parse_tao_python_data(lines, clean_key=True):
     dat = {}
     for l in lines:
         dat.update(parse_tao_python_data1(l, clean_key))
+        
     return dat
     
     
