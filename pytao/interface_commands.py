@@ -2376,6 +2376,10 @@ def lat_list(tao, *, verbose=False, as_dict=True):
       {elements} is a string to match element names to.
         Use "*" to match to all elements.
     
+    Examples:
+      python lat_list -track 3@0>>Q*|base ele.s,orbit.vec.2
+      python lat_list 3@0>>Q*|base real:ele.s    
+    
     Note: vector layout of mat6(6,6) is: [mat6(1,:), mat6(2,:), ...mat6(6,:)]
     Parameters
     ----------
@@ -2396,10 +2400,6 @@ def lat_list(tao, *, verbose=False, as_dict=True):
        elements: Q* 
        which: model
        who: orbit.floor.x
-    
-    Examples:
-      python lat_list -track 3@0>>Q*|base ele.s,orbit.vec.2
-      python lat_list 3@0>>Q*|base real:ele.s    
     
     """
     cmd = f'python lat_list {flags} {ix_uni}@{ix_branch}>>{elements}|{which} {who}'

@@ -379,7 +379,7 @@ def test_lat_general_1():
 def test_lat_list_1():
     
     tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.lat_list(tao, ix_uni='1', ix_branch='0', elements='Q*', which='model', who='orbit.floor.x', Examples='', python lat_list -track 3@0>>Q*|base ele.s,orbit.vec.='python lat_list -track 3@0>>Q*|base ele.s,orbit.vec.2', python lat_list 3@0>>Q*|base real='ele.s')
+    ret = interface_commands.lat_list(tao, ix_uni='1', ix_branch='0', elements='Q*', which='model', who='orbit.floor.x')
             
         
 def test_lat_param_units_1():
