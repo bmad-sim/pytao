@@ -850,7 +850,7 @@ def data_set_design_value(tao, *, verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='data_set_design_value', cmd_type='None')
 
 
-def datum_create(tao, datum_name, data_type, *, ele_ref_name, ele_start_name, ele_name, merit_type, meas="0", good_meas="F", ref="0", good_ref="F", weight="0", good_user="T", data_source="lat", eval_point="END", s_offset="0", ix_bunch="0", invalid_value="0", spin_axis_n0_1, spin_axis_n0_2, spin_axis_n0_3, spin_axis_l_1, spin_axis_l_2, spin_axis_l_3, verbose=False, as_dict=True):
+def datum_create(tao, datum_name, data_type, *, ele_ref_name, ele_start_name, ele_name, merit_type, meas="0", good_meas="F", ref="0", good_ref="F", weight="0", good_user="T", data_source="lat", eval_point="END", s_offset="0", ix_bunch="0", invalid_value="0", spin_axis_n0_1="''", spin_axis_n0_2="''", spin_axis_n0_3="''", spin_axis_l_1="''", spin_axis_l_2="''", spin_axis_l_3="''", verbose=False, as_dict=True):
     """
     
     Create a datum.
@@ -874,12 +874,12 @@ def datum_create(tao, datum_name, data_type, *, ele_ref_name, ele_start_name, el
     s_offset : default=0
     ix_bunch : default=0
     invalid_value : default=0
-    spin_axis%n0(1) : optional
-    spin_axis%n0(2) : optional
-    spin_axis%n0(3) : optional
-    spin_axis%l(1) : optional
-    spin_axis%l(2) : optional
-    spin_axis%l(3) : optional
+    spin_axis%n0(1) : optional, default=''
+    spin_axis%n0(2) : optional, default=''
+    spin_axis%n0(3) : optional, default=''
+    spin_axis%l(1) : optional, default=''
+    spin_axis%l(2) : optional, default=''
+    spin_axis%l(3) : optional, default=''
     
     Returns
     -------
