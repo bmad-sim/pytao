@@ -2347,6 +2347,9 @@ def lat_list(tao, elements, who, *, ix_uni="1", ix_branch="0", which="model", fl
     Returns
     -------
     string_list
+        if '-array_out' not in flags
+    real_array
+        if '-array_out' in flags
     
     Notes
     -----
@@ -2405,7 +2408,10 @@ def lat_list(tao, elements, who, *, ix_uni="1", ix_branch="0", which="model", fl
     """
     cmd = f'python lat_list {flags} {ix_uni}@{ix_branch}>>{elements}|{which} {who}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='lat_list', cmd_type='string_list')
+    if '-array_out' not in flags:
+        return __execute(tao, cmd, as_dict, method_name='lat_list', cmd_type='string_list')
+    if '-array_out' in flags:
+        return __execute(tao, cmd, as_dict, method_name='lat_list', cmd_type='real_array')
 
 
 def lat_param_units(tao, param_name, *, verbose=False, as_dict=True):
