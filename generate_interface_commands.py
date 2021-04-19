@@ -55,7 +55,7 @@ def generate_params(params):
     
     Returns
     -------
-    str
+    strq
        The list of arguments properly formatted.
        E.g.: tao, s, *, ix_uni="1", ix_branch="0", which="model", verbose=False, as_dict=True
     """
@@ -65,10 +65,10 @@ def generate_params(params):
     for idx, p in enumerate(params):
         name = sanitize(p.name)
         dtype = p.type
-        if 'optional' in dtype:
-            kwargs.append(name)
-        elif 'default=' in dtype:
+        if 'default=' in dtype:
             kwargs.append(f'{name}="{dtype[dtype.find("=")+1:].strip()}"')
+        elif 'optional' in dtype:
+            kwargs.append(name)            
         else:
             args.append(name)
 
