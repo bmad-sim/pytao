@@ -2330,10 +2330,19 @@ def lat_general(tao, *, ix_universe="1", verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='lat_general', cmd_type='string_list')
 
 
-def lat_list(tao, *, verbose=False, as_dict=True):
+def lat_list(tao, elements, who, *, ix_uni="1", ix_branch="0", which="model", flags, verbose=False, as_dict=True):
     """
     
     List of parameters at ends of lattice elements
+    
+    Parameters
+    ----------
+    elements
+    who
+    ix_uni : default=1
+    ix_branch : default=0
+    which : default=model
+    flags : optional
     
     Returns
     -------
@@ -2381,14 +2390,6 @@ def lat_list(tao, *, verbose=False, as_dict=True):
       python lat_list 3@0>>Q*|base real:ele.s    
     
     Note: vector layout of mat6(6,6) is: [mat6(1,:), mat6(2,:), ...mat6(6,:)]
-    Parameters
-    ----------
-    elements 
-    who 
-    ix_uni : default=1
-    ix_branch : default=0
-    which : default=model
-    flags : optional
     
     Examples
     --------
