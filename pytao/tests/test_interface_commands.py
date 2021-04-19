@@ -313,7 +313,7 @@ def test_ele_elec_multipoles_1():
 def test_evaluate_1():
     
     tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.evaluate(tao, expression='2*data::cbar.11[1:10]|model')
+    ret = interface_commands.evaluate(tao, expression='data::cbar.11[1:10]|model')
             
         
 def test_em_field_1():
@@ -379,7 +379,7 @@ def test_lat_general_1():
 def test_lat_list_1():
     
     tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.lat_list(tao, ix_uni='1', ix_branch='0', elements='Q*', which='model', who='orbit.floor.x')
+    ret = interface_commands.lat_list(tao, ix_uni='1', ix_branch='0', elements='Q*', which='model', who='orbit.floor.x', Examples='', python lat_list -track 3@0>>Q*|base ele.s,orbit.vec.='python lat_list -track 3@0>>Q*|base ele.s,orbit.vec.2', python lat_list 3@0>>Q*|base real='ele.s')
             
         
 def test_lat_param_units_1():
@@ -415,7 +415,7 @@ def test_place_buffer_1():
 def test_plot_curve_1():
     
     tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.plot_curve(tao, curve_name='c1')
+    ret = interface_commands.plot_curve(tao, curve_name='top.x.c1')
             
         
 def test_plot_lat_layout_1():
