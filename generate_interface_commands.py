@@ -66,9 +66,9 @@ def generate_params(params):
         name = sanitize(p.name)
         dtype = p.type
         if 'default=' in dtype:
-            kwargs.append(f'{name}="{dtype[dtype.find("=")+1:].strip()}"')
+            kwargs.append(f"{name}='{dtype[dtype.find('=')+1:].strip()}'")
         elif 'optional' in dtype:
-            kwargs.append(name)            
+            kwargs.append(f"{name}=''")
         else:
             args.append(name)
 

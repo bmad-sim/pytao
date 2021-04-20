@@ -31,7 +31,7 @@ def __execute(tao, cmd, as_dict=True, method_name=None, cmd_type="string_list"):
     return ret
 
 
-def beam(tao, *, ix_universe="1", verbose=False, as_dict=True):
+def beam(tao, *, ix_universe='1', verbose=False, as_dict=True):
     """
     
     Output beam parameters that are not in the beam_init structure.
@@ -65,7 +65,7 @@ def beam(tao, *, ix_universe="1", verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='beam', cmd_type='string_list')
 
 
-def beam_init(tao, *, ix_universe="1", verbose=False, as_dict=True):
+def beam_init(tao, *, ix_universe='1', verbose=False, as_dict=True):
     """
     
     Output beam_init parameters.
@@ -125,7 +125,7 @@ def bmad_com(tao, *, verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='bmad_com', cmd_type='string_list')
 
 
-def branch1(tao, *, ix_universe="1", ix_branch="0", verbose=False, as_dict=True):
+def branch1(tao, *, ix_universe='1', ix_branch='0', verbose=False, as_dict=True):
     """
     
     Lattice element list.
@@ -161,7 +161,7 @@ def branch1(tao, *, ix_universe="1", ix_branch="0", verbose=False, as_dict=True)
     return __execute(tao, cmd, as_dict, method_name='branch1', cmd_type='string_list')
 
 
-def bunch1(tao, ele_id, *, which="model", ix_bunch="1", coordinate, verbose=False, as_dict=True):
+def bunch1(tao, ele_id, *, which='model', ix_bunch='1', coordinate='', verbose=False, as_dict=True):
     """
     
     Bunch parameters at the exit end of a given lattice element.
@@ -215,7 +215,7 @@ def bunch1(tao, ele_id, *, which="model", ix_bunch="1", coordinate, verbose=Fals
         return __execute(tao, cmd, as_dict, method_name='bunch1', cmd_type='real_array')
 
 
-def building_wall_list(tao, *, ix_section, verbose=False, as_dict=True):
+def building_wall_list(tao, *, ix_section='', verbose=False, as_dict=True):
     """
     
     List of building wall sections or section points
@@ -440,7 +440,7 @@ def constraints(tao, who, *, verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='constraints', cmd_type='string_list')
 
 
-def da_aperture(tao, *, ix_uni="1", verbose=False, as_dict=True):
+def da_aperture(tao, *, ix_uni='1', verbose=False, as_dict=True):
     """
     
     Dynamic aperture data
@@ -471,7 +471,7 @@ def da_aperture(tao, *, ix_uni="1", verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='da_aperture', cmd_type='string_list')
 
 
-def da_params(tao, *, ix_uni="1", verbose=False, as_dict=True):
+def da_params(tao, *, ix_uni='1', verbose=False, as_dict=True):
     """
     
     Dynamic aperture input parameters
@@ -502,7 +502,7 @@ def da_params(tao, *, ix_uni="1", verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='da_params', cmd_type='string_list')
 
 
-def data(tao, d2_name, d1_datum, *, ix_universe="1", dat_index="1", verbose=False, as_dict=True):
+def data(tao, d2_name, d1_datum, *, ix_universe='1', dat_index='1', verbose=False, as_dict=True):
     """
     
     Individual datum info.
@@ -552,7 +552,7 @@ def data(tao, d2_name, d1_datum, *, ix_universe="1", dat_index="1", verbose=Fals
     return __execute(tao, cmd, as_dict, method_name='data', cmd_type='string_list')
 
 
-def data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_uni="1", verbose=False, as_dict=True):
+def data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_uni='1', verbose=False, as_dict=True):
     """
     
     Create a d2 data structure along with associated d1 and data arrays.
@@ -609,7 +609,7 @@ def data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_un
     return __execute(tao, cmd, as_dict, method_name='data_d2_create', cmd_type='None')
 
 
-def data_d2_destroy(tao, d2_datum, *, ix_uni="1", verbose=False, as_dict=True):
+def data_d2_destroy(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True):
     """
     
     Destroy a d2 data structure along with associated d1 and data arrays.
@@ -644,7 +644,7 @@ def data_d2_destroy(tao, d2_datum, *, ix_uni="1", verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='data_d2_destroy', cmd_type='None')
 
 
-def data_d2(tao, d2_datum, *, ix_uni="1", verbose=False, as_dict=True):
+def data_d2(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True):
     """
     
     Information on a d2_datum.
@@ -679,7 +679,7 @@ def data_d2(tao, d2_datum, *, ix_uni="1", verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='data_d2', cmd_type='string_list')
 
 
-def data_d_array(tao, d1_datum, *, ix_uni="1", verbose=False, as_dict=True):
+def data_d_array(tao, d1_datum, *, ix_uni='1', verbose=False, as_dict=True):
     """
     
     List of datums for a given data_d1.
@@ -716,7 +716,7 @@ def data_d_array(tao, d1_datum, *, ix_uni="1", verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='data_d_array', cmd_type='string_list')
 
 
-def data_d1_array(tao, d2_datum, *, ix_uni="1", verbose=False, as_dict=True):
+def data_d1_array(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True):
     """
     
     List of d1 arrays for a given data_d2.
@@ -850,7 +850,7 @@ def data_set_design_value(tao, *, verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='data_set_design_value', cmd_type='None')
 
 
-def datum_create(tao, datum_name, data_type, *, ele_ref_name, ele_start_name, ele_name, merit_type, meas="0", good_meas="F", ref="0", good_ref="F", weight="0", good_user="T", data_source="lat", eval_point="END", s_offset="0", ix_bunch="0", invalid_value="0", spin_axis_n0_1="''", spin_axis_n0_2="''", spin_axis_n0_3="''", spin_axis_l_1="''", spin_axis_l_2="''", spin_axis_l_3="''", verbose=False, as_dict=True):
+def datum_create(tao, datum_name, data_type, *, ele_ref_name='', ele_start_name='', ele_name='', merit_type='', meas='0', good_meas='F', ref='0', good_ref='F', weight='0', good_user='T', data_source='lat', eval_point='END', s_offset='0', ix_bunch='0', invalid_value='0', spin_axis_n0_1='', spin_axis_n0_2='', spin_axis_n0_3='', spin_axis_l_1='', spin_axis_l_2='', spin_axis_l_3='', verbose=False, as_dict=True):
     """
     
     Create a datum.
@@ -874,12 +874,12 @@ def datum_create(tao, datum_name, data_type, *, ele_ref_name, ele_start_name, el
     s_offset : default=0
     ix_bunch : default=0
     invalid_value : default=0
-    spin_axis%n0(1) : optional, default=''
-    spin_axis%n0(2) : optional, default=''
-    spin_axis%n0(3) : optional, default=''
-    spin_axis%l(1) : optional, default=''
-    spin_axis%l(2) : optional, default=''
-    spin_axis%l(3) : optional, default=''
+    spin_axis%n0(1) : optional
+    spin_axis%n0(2) : optional
+    spin_axis%n0(3) : optional
+    spin_axis%l(1) : optional
+    spin_axis%l(2) : optional
+    spin_axis%l(3) : optional
     
     Returns
     -------
@@ -992,7 +992,7 @@ def derivative(tao, *, verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='derivative', cmd_type='string_list')
 
 
-def ele_head(tao, ele_id, *, which="model", verbose=False, as_dict=True):
+def ele_head(tao, ele_id, *, which='model', verbose=False, as_dict=True):
     """
     
     "Head" Element attributes
@@ -1032,7 +1032,7 @@ def ele_head(tao, ele_id, *, which="model", verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='ele_head', cmd_type='string_list')
 
 
-def ele_methods(tao, ele_id, *, which="model", verbose=False, as_dict=True):
+def ele_methods(tao, ele_id, *, which='model', verbose=False, as_dict=True):
     """
     
     Element methods
@@ -1072,7 +1072,7 @@ def ele_methods(tao, ele_id, *, which="model", verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='ele_methods', cmd_type='string_list')
 
 
-def ele_gen_attribs(tao, ele_id, *, which="model", verbose=False, as_dict=True):
+def ele_gen_attribs(tao, ele_id, *, which='model', verbose=False, as_dict=True):
     """
     
     Element general attributes
@@ -1112,7 +1112,7 @@ def ele_gen_attribs(tao, ele_id, *, which="model", verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='ele_gen_attribs', cmd_type='string_list')
 
 
-def ele_multipoles(tao, ele_id, *, which="model", verbose=False, as_dict=True):
+def ele_multipoles(tao, ele_id, *, which='model', verbose=False, as_dict=True):
     """
     
     Element multipoles
@@ -1152,7 +1152,7 @@ def ele_multipoles(tao, ele_id, *, which="model", verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='ele_multipoles', cmd_type='string_list')
 
 
-def ele_ac_kicker(tao, ele_id, *, which="model", verbose=False, as_dict=True):
+def ele_ac_kicker(tao, ele_id, *, which='model', verbose=False, as_dict=True):
     """
     
     Element ac_kicker
@@ -1192,7 +1192,7 @@ def ele_ac_kicker(tao, ele_id, *, which="model", verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='ele_ac_kicker', cmd_type='string_list')
 
 
-def ele_cartesian_map(tao, ele_id, index, who, *, which="model", verbose=False, as_dict=True):
+def ele_cartesian_map(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True):
     """
     
     Element cartesian_map
@@ -1240,7 +1240,7 @@ def ele_cartesian_map(tao, ele_id, index, who, *, which="model", verbose=False, 
     return __execute(tao, cmd, as_dict, method_name='ele_cartesian_map', cmd_type='string_list')
 
 
-def ele_chamber_wall(tao, ele_id, index, who, *, which="model", verbose=False, as_dict=True):
+def ele_chamber_wall(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True):
     """
     
     Element beam chamber wall
@@ -1767,7 +1767,7 @@ def ele_grid_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=Tru
     return __execute(tao, cmd, as_dict, method_name='ele_grid_field', cmd_type='string_list')
 
 
-def ele_floor(tao, ele_id, which, *, where="end", verbose=False, as_dict=True):
+def ele_floor(tao, ele_id, which, *, where='end', verbose=False, as_dict=True):
     """
     
     Element floor coordinates. The output gives two lines. "Reference" is
@@ -1954,7 +1954,7 @@ def ele_elec_multipoles(tao, ele_id, which, *, verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='ele_elec_multipoles', cmd_type='string_list')
 
 
-def evaluate(tao, expression, *, flags="-array_out", verbose=False, as_dict=True):
+def evaluate(tao, expression, *, flags='-array_out', verbose=False, as_dict=True):
     """
     
     Evaluate an expression. The result may be a vector.
@@ -2296,7 +2296,7 @@ def lat_ele_list(tao, branch_name, *, verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='lat_ele_list', cmd_type='string_list')
 
 
-def lat_general(tao, *, ix_universe="1", verbose=False, as_dict=True):
+def lat_general(tao, *, ix_universe='1', verbose=False, as_dict=True):
     """
     
     Lattice general
@@ -2330,7 +2330,7 @@ def lat_general(tao, *, ix_universe="1", verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='lat_general', cmd_type='string_list')
 
 
-def lat_list(tao, elements, who, *, ix_uni="1", ix_branch="0", which="model", flags="-array_out", verbose=False, as_dict=True):
+def lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', flags='-array_out', verbose=False, as_dict=True):
     """
     
     List of parameters at ends of lattice elements
@@ -2512,7 +2512,7 @@ def merit(tao, *, verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='merit', cmd_type='string_list')
 
 
-def orbit_at_s(tao, s, *, ix_uni="1", ix_branch="0", which="model", verbose=False, as_dict=True):
+def orbit_at_s(tao, s, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True):
     """
     
     Twiss at given s position.
@@ -3118,7 +3118,7 @@ def shape_manage(tao, who, index, add_or_delete, *, verbose=False, as_dict=True)
     return __execute(tao, cmd, as_dict, method_name='shape_manage', cmd_type='string_list')
 
 
-def shape_pattern_list(tao, *, ix_pattern, verbose=False, as_dict=True):
+def shape_pattern_list(tao, *, ix_pattern='', verbose=False, as_dict=True):
     """
     
     List of shape patterns
@@ -3392,7 +3392,7 @@ def species_to_str(tao, species_int, *, verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='species_to_str', cmd_type='string_list')
 
 
-def spin_polarization(tao, *, ix_uni="1", ix_branch="0", which="model", verbose=False, as_dict=True):
+def spin_polarization(tao, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True):
     """
     
     Spin information
