@@ -45,10 +45,7 @@ def generate_params(params):
     Generates the list of parameters for the Tao Python method.
     This method uses the NumpyDocString Parameter class to introspect
     for optional flags.
-    
-    If the Tao method has more than 2 parameters this function make so that they must be
-    keyword arguments otherwise they are positional arguments.
-    
+        
     `verbose` and `as_dict` are always keyword arguments defaulting to True`.
     
     Parameters
@@ -58,29 +55,29 @@ def generate_params(params):
     
     Returns
     -------
-    str
+    strq
        The list of arguments properly formatted.
-       E.g.: tao, *, flags="", ix_uni, ix_branch, elements, which, who, verbose=True, as_dict=True
+       E.g.: tao, s, *, ix_uni="1", ix_branch="0", which="model", verbose=False, as_dict=True
     """
-    param_list = ['tao']
-    if len(params) > 2:
-        param_list.append('*')
-    num_params = len(params)
+
+    args = ['tao']
+    kwargs = []
     for idx, p in enumerate(params):
         name = sanitize(p.name)
         dtype = p.type
-        optional = '=""' if 'optional' in dtype else ''
-        default = f'="{dtype[dtype.find("=")+1:].strip()}"' if 'default=' in dtype else ''
-        extra = optional if not default else default
-        if extra and len(params) <= 2 and '*' not in param_list and idx < num_params-1:
-            param_list.insert(1, '*')
-        param_list.append(f'{name}{extra}')
-        
-    if len(params) <= 2 and '*' not in param_list:
-        param_list.append('*')
-    param_list.append('verbose=False')
-    param_list.append('as_dict=True')
-    return ', '.join(param_list)
+        if 'default=' in dtype:
+            kwargs.append(f"{name}='{dtype[dtype.find('=')+1:].strip()}'")
+        elif 'optional' in dtype:
+            kwargs.append(f"{name}=''")
+        else:
+            args.append(name)
+
+    kwargs.append('verbose=False')
+    kwargs.append('as_dict=True')
+    
+    param_str =  ', '.join(args + ['*'] + kwargs)
+
+    return param_str
 
 
 def generate_method_code(docs, method, command, returns):
