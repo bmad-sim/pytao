@@ -2330,7 +2330,7 @@ def lat_general(tao, *, ix_universe='1', verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='lat_general', cmd_type='string_list')
 
 
-def lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', flags='-array_out', verbose=False, as_dict=True):
+def lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', flags='-array_out -index_order', verbose=False, as_dict=True):
     """
     
     List of parameters at ends of lattice elements
@@ -2342,14 +2342,16 @@ def lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', fl
     ix_uni : default=1
     ix_branch : default=0
     which : default=model
-    flags : optional, default=-array_out
+    flags : optional, default=-array_out -index_order
     
     Returns
     -------
     string_list
-        if '-array_out' not in flags
+        if ('-array_out' not in flags) or (who in ['ele.name'])
     real_array
-        if '-array_out' in flags
+        if ('-array_out' in flags or 'real:' in who) and (who not in ['orbit.state'])
+    integer_array
+        if '-array_out' in flags and who in ['orbit.state']
     
     Notes
     -----
@@ -2408,10 +2410,12 @@ def lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', fl
     """
     cmd = f'python lat_list {flags} {ix_uni}@{ix_branch}>>{elements}|{which} {who}'
     if verbose: print(cmd)
-    if '-array_out' not in flags:
+    if ('-array_out' not in flags) or (who in ['ele.name']):
         return __execute(tao, cmd, as_dict, method_name='lat_list', cmd_type='string_list')
-    if '-array_out' in flags:
+    if ('-array_out' in flags or 'real:' in who) and (who not in ['orbit.state']):
         return __execute(tao, cmd, as_dict, method_name='lat_list', cmd_type='real_array')
+    if '-array_out' in flags and who in ['orbit.state']:
+        return __execute(tao, cmd, as_dict, method_name='lat_list', cmd_type='integer_array')
 
 
 def lat_param_units(tao, param_name, *, verbose=False, as_dict=True):
