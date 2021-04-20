@@ -21,8 +21,13 @@ project = 'PyTao'
 copyright = '2021, David Sagan'
 author = 'David Sagan'
 
+import pytao
+
+# The short X.Y version.
+version = pytao.__version__
+
 # The full version, including alpha/beta/rc tags
-release = '0.1.0'
+release = pytao.__version__
 
 
 # -- General configuration ---------------------------------------------------
