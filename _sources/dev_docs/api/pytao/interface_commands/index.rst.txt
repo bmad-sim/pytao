@@ -7,20 +7,23 @@
 Module Contents
 ---------------
 
-.. function:: beam(tao, ix_universe='1', *, verbose=False, as_dict=True)
+.. function:: beam(tao, *, ix_universe='1', verbose=False, as_dict=True)
 
    Output beam parameters that are not in the beam_init structure.
-   Command syntax:
-     python beam {ix_universe}
-   where
-     {ix_universe} is a universe index.
-   To set beam_init parameters use the "set beam" command
 
    :param ix_universe:
    :type ix_universe: default=1
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python beam {ix_universe}
+   where
+     {ix_universe} is a universe index.
+   To set beam_init parameters use the "set beam" command
 
    .. rubric:: Examples
 
@@ -30,20 +33,23 @@ Module Contents
       ix_universe: 1
 
 
-.. function:: beam_init(tao, ix_universe='1', *, verbose=False, as_dict=True)
+.. function:: beam_init(tao, *, ix_universe='1', verbose=False, as_dict=True)
 
    Output beam_init parameters.
-   Command syntax:
-     python beam_init {ix_universe}
-   where
-     {ix_universe} is a universe index.
-   To set beam_init parameters use the "set beam_init" command
 
    :param ix_universe:
    :type ix_universe: default=1
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python beam_init {ix_universe}
+   where
+     {ix_universe} is a universe index.
+   To set beam_init parameters use the "set beam_init" command
 
    .. rubric:: Examples
 
@@ -56,11 +62,14 @@ Module Contents
 .. function:: bmad_com(tao, *, verbose=False, as_dict=True)
 
    Bmad_com structure components
-   Command syntax:
-     python bmad_com
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python bmad_com
 
    .. rubric:: Examples
 
@@ -72,11 +81,6 @@ Module Contents
 .. function:: branch1(tao, *, ix_universe='1', ix_branch='0', verbose=False, as_dict=True)
 
    Lattice element list.
-   Command syntax:
-     python branch1 {ix_universe}@{ix_branch}
-   where
-     {ix_universe} is a universe index
-     {ix_branch} is a lattice branch index
 
    :param ix_universe:
    :type ix_universe: default=1
@@ -85,6 +89,14 @@ Module Contents
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python branch1 {ix_universe}@{ix_branch}
+   where
+     {ix_universe} is a universe index
+     {ix_branch} is a lattice branch index
 
    .. rubric:: Examples
 
@@ -95,7 +107,7 @@ Module Contents
       ix_branch: 0
 
 
-.. function:: bunch1(tao, *, ele_id, which='model', ix_bunch='1', coordinate='', verbose=False, as_dict=True)
+.. function:: bunch1(tao, ele_id, *, which='model', ix_bunch='1', coordinate='', verbose=False, as_dict=True)
 
    Bunch parameters at the exit end of a given lattice element.
 
@@ -134,19 +146,22 @@ Module Contents
       coordinate: x
 
 
-.. function:: building_wall_list(tao, ix_section='', *, verbose=False, as_dict=True)
+.. function:: building_wall_list(tao, *, ix_section='', verbose=False, as_dict=True)
 
    List of building wall sections or section points
-   Command syntax:
-     python building_wall_list {ix_section}
-   If {ix_section} is not present then a list of building wall sections is given.
-   If {ix_section} is present then a list of section points is given
 
    :param ix_section:
    :type ix_section: optional
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python building_wall_list {ix_section}
+   If {ix_section} is not present then a list of building wall sections is given.
+   If {ix_section} is present then a list of section points is given
 
    .. rubric:: Examples
 
@@ -164,14 +179,17 @@ Module Contents
 .. function:: building_wall_graph(tao, graph, *, verbose=False, as_dict=True)
 
    (x, y) points for drawing the building wall for a particular graph.
-   The graph defines the coordinate system for the (x, y) points.
-   Command syntax:
-     python building_wall_graph {graph}
 
    :param graph:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   The graph defines the coordinate system for the (x, y) points.
+   Command syntax:
+     python building_wall_graph {graph}
 
    .. rubric:: Examples
 
@@ -181,17 +199,9 @@ Module Contents
       graph:
 
 
-.. function:: building_wall_point(tao, *, ix_section, ix_point, z, x, radius, z_center, x_center, verbose=False, as_dict=True)
+.. function:: building_wall_point(tao, ix_section, ix_point, z, x, radius, z_center, x_center, *, verbose=False, as_dict=True)
 
    add or delete a building wall point
-   Command syntax:
-     python building_wall_point {ix_section}^^{ix_point}^^{z}^^{x}^^{radius}^^{z_center}^^{x_center}
-   Where:
-     {ix_section}    -- Section index.
-     {ix_point}      -- Point index. Points of higher indexes will be moved up
-                          if adding a point and down if deleting.
-     {z}, etc...     -- See tao_building_wall_point_struct components.
-                     -- If {z} is set to "delete" then delete the point.
 
    :param ix_section:
    :param ix_point:
@@ -203,6 +213,17 @@ Module Contents
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python building_wall_point {ix_section}^^{ix_point}^^{z}^^{x}^^{radius}^^{z_center}^^{x_center}
+   Where:
+     {ix_section}    -- Section index.
+     {ix_point}      -- Point index. Points of higher indexes will be moved up
+                          if adding a point and down if deleting.
+     {z}, etc...     -- See tao_building_wall_point_struct components.
+                     -- If {z} is set to "delete" then delete the point.
 
    .. rubric:: Examples
 
@@ -218,9 +239,19 @@ Module Contents
       x_center: 0
 
 
-.. function:: building_wall_section(tao, *, ix_section, sec_name, sec_constraint, verbose=False, as_dict=True)
+.. function:: building_wall_section(tao, ix_section, sec_name, sec_constraint, *, verbose=False, as_dict=True)
 
    add or delete a building wall section
+
+   :param ix_section:
+   :param sec_name:
+   :param sec_constraint:
+
+   :returns:
+   :rtype: None
+
+   .. rubric:: Notes
+
    Command syntax:
      python building_wall_section {ix_section}^^{sec_name}^^{sec_constraint}
    Where:
@@ -232,13 +263,6 @@ Module Contents
          none
          left_side
          right_side
-
-   :param ix_section:
-   :param sec_name:
-   :param sec_constraint:
-
-   :returns:
-   :rtype: None
 
    .. rubric:: Examples
 
@@ -253,6 +277,14 @@ Module Contents
 .. function:: constraints(tao, who, *, verbose=False, as_dict=True)
 
    Optimization data and variables that contribute to the merit function.
+
+   :param who:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python constraints {who}
    {who} is one of:
@@ -282,11 +314,6 @@ Module Contents
      merit value
      dmerit/dvar
 
-   :param who:
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -300,18 +327,21 @@ Module Contents
       who:var
 
 
-.. function:: da_aperture(tao, ix_uni='1', *, verbose=False, as_dict=True)
+.. function:: da_aperture(tao, *, ix_uni='1', verbose=False, as_dict=True)
 
    Dynamic aperture data
+
+   :param ix_uni:
+   :type ix_uni: default=1
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python da_aperture {ix_uni}
 
-   :param ix_uni:
-   :type ix_uni: default=1
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -320,18 +350,21 @@ Module Contents
       ix_uni:1
 
 
-.. function:: da_params(tao, ix_uni='1', *, verbose=False, as_dict=True)
+.. function:: da_params(tao, *, ix_uni='1', verbose=False, as_dict=True)
 
    Dynamic aperture input parameters
+
+   :param ix_uni:
+   :type ix_uni: default=1
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python da_params {ix_uni}
 
-   :param ix_uni:
-   :type ix_uni: default=1
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -340,7 +373,7 @@ Module Contents
       ix_uni:1
 
 
-.. function:: data(tao, *, d2_name, d1_datum, ix_universe='1', dat_index='1', verbose=False, as_dict=True)
+.. function:: data(tao, d2_name, d1_datum, *, ix_universe='1', dat_index='1', verbose=False, as_dict=True)
 
    Individual datum info.
 
@@ -385,9 +418,20 @@ Module Contents
       dat_index: 1
 
 
-.. function:: data_d2_create(tao, *, d2_name, n_d1_data, d_data_arrays_name_min_max, ix_uni='1', verbose=False, as_dict=True)
+.. function:: data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_uni='1', verbose=False, as_dict=True)
 
    Create a d2 data structure along with associated d1 and data arrays.
+
+   :param d2_name:
+   :param n_d1_data:
+   :param d_data_arrays_name_min_max:
+   :param ix_uni:
+   :type ix_uni: default=1
+
+   :returns:
+   :rtype: None
+
+   .. rubric:: Notes
 
    Command syntax:
      python data_d2_create {d2_name}^^{n_d1_data}^^{d_data_arrays_name_min_max}
@@ -414,15 +458,6 @@ Module Contents
      ("set global lattice_calc_on = F") to prevent Tao trying to
          evaluate the partially created datum and generating unwanted error messages.
 
-   :param d2_name:
-   :param n_d1_data:
-   :param d_data_arrays_name_min_max:
-   :param ix_uni:
-   :type ix_uni: default=1
-
-   :returns:
-   :rtype: None
-
    .. rubric:: Examples
 
    Example: 1
@@ -434,13 +469,9 @@ Module Contents
       d_data_arrays_name_min_max: x^^0^^45^^y^^1^^47
 
 
-.. function:: data_d2_destroy(tao, d2_datum, ix_uni='1', *, verbose=False, as_dict=True)
+.. function:: data_d2_destroy(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True)
 
    Destroy a d2 data structure along with associated d1 and data arrays.
-   Command syntax:
-     python data_d2_destroy {d2_datum}
-   {d2_datum} should be of the form
-     {ix_uni}@{d2_datum_name}
 
    :param d2_datum:
    :param ix_uni:
@@ -448,6 +479,13 @@ Module Contents
 
    :returns:
    :rtype: None
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python data_d2_destroy {d2_datum}
+   {d2_datum} should be of the form
+     {ix_uni}@{d2_datum_name}
 
    .. rubric:: Examples
 
@@ -458,13 +496,9 @@ Module Contents
       d2_datum: orbit
 
 
-.. function:: data_d2(tao, d2_datum, ix_uni='1', *, verbose=False, as_dict=True)
+.. function:: data_d2(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True)
 
    Information on a d2_datum.
-   Command syntax:
-     python data_d2 {d2_datum}
-   {d2_datum} should be of the form
-     {ix_uni}@{d2_datum_name}
 
    :param d2_datum:
    :param ix_uni:
@@ -472,6 +506,13 @@ Module Contents
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python data_d2 {d2_datum}
+   {d2_datum} should be of the form
+     {ix_uni}@{d2_datum_name}
 
    .. rubric:: Examples
 
@@ -482,16 +523,9 @@ Module Contents
       d2_datum: twiss
 
 
-.. function:: data_d_array(tao, d1_datum, ix_uni='1', *, verbose=False, as_dict=True)
+.. function:: data_d_array(tao, d1_datum, *, ix_uni='1', verbose=False, as_dict=True)
 
    List of datums for a given data_d1.
-   Command syntax:
-     python data_d_array {d1_datum}
-   {d1_datum} should be for the form
-     {ix_uni}@{d2_datum_name}.{d1_datum_name}
-   .. rubric:: Example
-
-   python data_d_array 1@orbit.x
 
    :param d1_datum:
    :param ix_uni:
@@ -499,6 +533,16 @@ Module Contents
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python data_d_array {d1_datum}
+   {d1_datum} should be for the form
+     {ix_uni}@{d2_datum_name}.{d1_datum_name}
+   .. rubric:: Example
+
+   python data_d_array 1@orbit.x
 
    .. rubric:: Examples
 
@@ -509,13 +553,9 @@ Module Contents
       d1_datum: twiss.end
 
 
-.. function:: data_d1_array(tao, d2_datum, ix_uni='1', *, verbose=False, as_dict=True)
+.. function:: data_d1_array(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True)
 
    List of d1 arrays for a given data_d2.
-   Command syntax:
-     python data_d1_array {d2_datum}
-   {d2_datum} should be of the form
-     {ix_uni}@{d2_datum_name}
 
    :param d2_datum:
    :param ix_uni:
@@ -523,6 +563,13 @@ Module Contents
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python data_d1_array {d2_datum}
+   {d2_datum} should be of the form
+     {ix_uni}@{d2_datum_name}
 
    .. rubric:: Examples
 
@@ -536,18 +583,21 @@ Module Contents
 .. function:: data_parameter(tao, data_array, parameter, *, verbose=False, as_dict=True)
 
    Given an array of datums, generate an array of values for a particular datum parameter.
-   Command syntax:
-     python data_parameter {data_array} {parameter}
-   {parameter} may be any tao_data_struct parameter.
-   .. rubric:: Example
-
-   python data_parameter orbit.x model_value
 
    :param data_array:
    :param parameter:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python data_parameter {data_array} {parameter}
+   {parameter} may be any tao_data_struct parameter.
+   .. rubric:: Example
+
+   python data_parameter orbit.x model_value
 
    .. rubric:: Examples
 
@@ -561,16 +611,19 @@ Module Contents
 .. function:: data_d2_array(tao, ix_universe, *, verbose=False, as_dict=True)
 
    Data d2 info for a given universe.
-   Command syntax:
-     python data_d2_array {ix_universe}
-   .. rubric:: Example
-
-   python data_d2_array 1
 
    :param ix_universe:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python data_d2_array {ix_universe}
+   .. rubric:: Example
+
+   python data_d2_array 1
 
    .. rubric:: Examples
 
@@ -583,6 +636,12 @@ Module Contents
 .. function:: data_set_design_value(tao, *, verbose=False, as_dict=True)
 
    Set the design (and base & model) values for all datums.
+
+   :returns:
+   :rtype: None
+
+   .. rubric:: Notes
+
    Command syntax:
      python data_set_design_value
    .. rubric:: Example
@@ -591,9 +650,6 @@ Module Contents
 
    Note: Use the "data_d2_create" and "datum_create" first to create datums.
 
-   :returns:
-   :rtype: None
-
    .. rubric:: Examples
 
    Example: 1
@@ -601,22 +657,9 @@ Module Contents
     args:
 
 
-.. function:: datum_create(tao, *, datum_name, data_type, ele_ref_name='', ele_start_name='', ele_name='', merit_type='', meas='0', good_meas='F', ref='0', good_ref='F', weight='0', good_user='T', data_source='lat', eval_point='END', s_offset='0', ix_bunch='0', invalid_value='0', spin_axis_n0_1='', spin_axis_n0_2='', spin_axis_n0_3='', spin_axis_l_1='', spin_axis_l_2='', spin_axis_l_3='', verbose=False, as_dict=True)
+.. function:: datum_create(tao, datum_name, data_type, *, ele_ref_name='', ele_start_name='', ele_name='', merit_type='', meas='0', good_meas='F', ref='0', good_ref='F', weight='0', good_user='T', data_source='lat', eval_point='END', s_offset='0', ix_bunch='0', invalid_value='0', spin_axis_n0_1='', spin_axis_n0_2='', spin_axis_n0_3='', spin_axis_l_1='', spin_axis_l_2='', spin_axis_l_3='', verbose=False, as_dict=True)
 
    Create a datum.
-   Command syntax:
-     python datum_create {datum_name}^^{data_type}^^{ele_ref_name}^^{ele_start_name}^^
-                         {ele_name}^^{merit_type}^^{meas}^^{good_meas}^^{ref}^^
-                         {good_ref}^^{weight}^^{good_user}^^{data_source}^^
-                         {eval_point}^^{s_offset}^^{ix_bunch}^^{invalid_value}^^
-                         {spin_axis%n0(1)}^^{spin_axis%n0(2)}^^{spin_axis%n0(3)}^^
-                         {spin_axis%l(1)}^^{spin_axis%l(2)}^^{spin_axis%l(3)}
-
-   Note: The 3 values for spin_axis%n0, as a group, are optional.
-         Also the 3 values for spin_axis%l are, as a group, optional.
-   Note: Use the "data_d2_create" first to create a d2 structure with associated d1 arrays.
-   Note: After creating all your datums, use the "data_set_design_value" routine to
-         set the design (and model) values.
 
    :param datum_name          ! EG:
    :type datum_name          ! EG: orb.x[3]
@@ -668,6 +711,22 @@ Module Contents
    :returns:
    :rtype: string_list
 
+   .. rubric:: Notes
+
+   Command syntax:
+     python datum_create {datum_name}^^{data_type}^^{ele_ref_name}^^{ele_start_name}^^
+                         {ele_name}^^{merit_type}^^{meas}^^{good_meas}^^{ref}^^
+                         {good_ref}^^{weight}^^{good_user}^^{data_source}^^
+                         {eval_point}^^{s_offset}^^{ix_bunch}^^{invalid_value}^^
+                         {spin_axis%n0(1)}^^{spin_axis%n0(2)}^^{spin_axis%n0(3)}^^
+                         {spin_axis%l(1)}^^{spin_axis%l(2)}^^{spin_axis%l(3)}
+
+   Note: The 3 values for spin_axis%n0, as a group, are optional.
+         Also the 3 values for spin_axis%l are, as a group, optional.
+   Note: Use the "data_d2_create" first to create a d2 structure with associated d1 arrays.
+   Note: After creating all your datums, use the "data_set_design_value" routine to
+         set the design (and model) values.
+
    .. rubric:: Examples
 
    Example: 1
@@ -695,13 +754,16 @@ Module Contents
 .. function:: datum_has_ele(tao, datum_type, *, verbose=False, as_dict=True)
 
    Does datum type have an associated lattice element?
-   Command syntax:
-     python datum_has_ele {datum_type}
 
    :param datum_type:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python datum_has_ele {datum_type}
 
    .. rubric:: Examples
 
@@ -714,15 +776,18 @@ Module Contents
 .. function:: derivative(tao, *, verbose=False, as_dict=True)
 
    Optimization derivatives
-   Command syntax:
-     python derivative
-   Note: To save time, this command will not recalculate derivatives.
-   Use the "derivative" command beforehand to recalcuate if needed.
 
    :returns: **out** -- Dictionary with keys corresponding to universe indexes (int),
              with dModel_dVar as the value:
                  np.ndarray with shape (n_data, n_var)
    :rtype: dict
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python derivative
+   Note: To save time, this command will not recalculate derivatives.
+   Use the "derivative" command beforehand to recalcuate if needed.
 
    .. rubric:: Examples
 
@@ -731,9 +796,19 @@ Module Contents
     args:
 
 
-.. function:: ele_head(tao, ele_id, which='model', *, verbose=False, as_dict=True)
+.. function:: ele_head(tao, ele_id, *, which='model', verbose=False, as_dict=True)
 
    "Head" Element attributes
+
+   :param ele_id:
+   :param which:
+   :type which: default=model
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python ele:head {ele_id}|{which}
    where {ele_id} is an element name or index and {which} is one of
@@ -746,13 +821,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-   :param ele_id:
-   :param which:
-   :type which: default=model
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -762,9 +830,19 @@ Module Contents
      which: model
 
 
-.. function:: ele_methods(tao, ele_id, which='model', *, verbose=False, as_dict=True)
+.. function:: ele_methods(tao, ele_id, *, which='model', verbose=False, as_dict=True)
 
    Element methods
+
+   :param ele_id:
+   :param which:
+   :type which: default=model
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python ele:methods {ele_id}|{which}
    where {ele_id} is an element name or index and {which} is one of
@@ -777,13 +855,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-   :param ele_id:
-   :param which:
-   :type which: default=model
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -793,9 +864,19 @@ Module Contents
      which: model
 
 
-.. function:: ele_gen_attribs(tao, ele_id, which='model', *, verbose=False, as_dict=True)
+.. function:: ele_gen_attribs(tao, ele_id, *, which='model', verbose=False, as_dict=True)
 
    Element general attributes
+
+   :param ele_id:
+   :param which:
+   :type which: default=model
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python ele:gen_attribs {ele_id}|{which}
    where {ele_id} is an element name or index and {which} is one of
@@ -808,13 +889,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-   :param ele_id:
-   :param which:
-   :type which: default=model
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -824,9 +898,19 @@ Module Contents
      which: model
 
 
-.. function:: ele_multipoles(tao, ele_id, which='model', *, verbose=False, as_dict=True)
+.. function:: ele_multipoles(tao, ele_id, *, which='model', verbose=False, as_dict=True)
 
    Element multipoles
+
+   :param ele_id:
+   :param which:
+   :type which: default=model
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python ele:multipoles {ele_id}|{which}
    where {ele_id} is an element name or index and {which} is one of
@@ -839,13 +923,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-   :param ele_id:
-   :param which:
-   :type which: default=model
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -855,9 +932,19 @@ Module Contents
      which: model
 
 
-.. function:: ele_ac_kicker(tao, ele_id, which='model', *, verbose=False, as_dict=True)
+.. function:: ele_ac_kicker(tao, ele_id, *, which='model', verbose=False, as_dict=True)
 
    Element ac_kicker
+
+   :param ele_id:
+   :param which:
+   :type which: default=model
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python ele:ac_kicker {ele_id}|{which}
    where {ele_id} is an element name or index and {which} is one of
@@ -870,13 +957,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-   :param ele_id:
-   :param which:
-   :type which: default=model
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -886,9 +966,21 @@ Module Contents
      which: model
 
 
-.. function:: ele_cartesian_map(tao, *, ele_id, index, who, which='model', verbose=False, as_dict=True)
+.. function:: ele_cartesian_map(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True)
 
    Element cartesian_map
+
+   :param ele_id:
+   :param index:
+   :param who:
+   :param which:
+   :type which: default=model
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python ele:cartesian_map {ele_id}|{which} {index} {who}
    where {ele_id} is an element name or index and {which} is one of
@@ -905,15 +997,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-   :param ele_id:
-   :param index:
-   :param who:
-   :param which:
-   :type which: default=model
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -925,9 +1008,21 @@ Module Contents
      who: base
 
 
-.. function:: ele_chamber_wall(tao, *, ele_id, index, who, which='model', verbose=False, as_dict=True)
+.. function:: ele_chamber_wall(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True)
 
    Element beam chamber wall
+
+   :param ele_id:
+   :param index:
+   :param who:
+   :param which:
+   :type which: default=model
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python ele:chamber_wall {ele_id}|{which} {index} {who}
    where {ele_id} is an element name or index and {which} is one of
@@ -938,15 +1033,6 @@ Module Contents
    {who} is one of:
      x       ! Return min/max in horizontal plane
      y       ! Return min/max in vertical plane
-
-   :param ele_id:
-   :param index:
-   :param who:
-   :param which:
-   :type which: default=model
-
-   :returns:
-   :rtype: string_list
 
    .. rubric:: Examples
 
@@ -959,9 +1045,20 @@ Module Contents
      who: x
 
 
-.. function:: ele_cylindrical_map(tao, *, ele_id, which, index, who, verbose=False, as_dict=True)
+.. function:: ele_cylindrical_map(tao, ele_id, which, index, who, *, verbose=False, as_dict=True)
 
    Element cylindrical_map
+
+   :param ele_id:
+   :param which:
+   :param index:
+   :param who:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python ele:cylindrical_map {ele_id}|{which} {index} {who}
    where {ele_id} is an element name or index and {which} is one of
@@ -978,14 +1075,6 @@ Module Contents
 
    This gives map #2 of element number 7 in branch 1 of universe 3.
 
-   :param ele_id:
-   :param which:
-   :param index:
-   :param who:
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -1000,6 +1089,15 @@ Module Contents
 .. function:: ele_taylor(tao, ele_id, which, *, verbose=False, as_dict=True)
 
    Element taylor
+
+   :param ele_id:
+   :param which:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python ele:taylor {ele_id}|{which}
    where {ele_id} is an element name or index and {which} is one of
@@ -1011,12 +1109,6 @@ Module Contents
    python ele:taylor 3@1>>7|model
 
    This gives element number 7 in branch 1 of universe 3.
-
-   :param ele_id:
-   :param which:
-
-   :returns:
-   :rtype: string_list
 
    .. rubric:: Examples
 
@@ -1030,6 +1122,15 @@ Module Contents
 .. function:: ele_spin_taylor(tao, ele_id, which, *, verbose=False, as_dict=True)
 
    Element spin_taylor
+
+   :param ele_id:
+   :param which:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python ele:spin_taylor {ele_id}|{which}
    where {ele_id} is an element name or index and {which} is one of
@@ -1042,12 +1143,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-   :param ele_id:
-   :param which:
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -1057,9 +1152,19 @@ Module Contents
      which: model
 
 
-.. function:: ele_wake(tao, *, ele_id, which, who, verbose=False, as_dict=True)
+.. function:: ele_wake(tao, ele_id, which, who, *, verbose=False, as_dict=True)
 
    Element wake
+
+   :param ele_id:
+   :param which:
+   :param who:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python ele:wake {ele_id}|{which} {who}
    where {ele_id} is an element name or index and {which} is one of
@@ -1077,13 +1182,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-   :param ele_id:
-   :param which:
-   :param who:
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -1094,9 +1192,20 @@ Module Contents
      who: base
 
 
-.. function:: ele_wall3d(tao, *, ele_id, which, index, who, verbose=False, as_dict=True)
+.. function:: ele_wall3d(tao, ele_id, which, index, who, *, verbose=False, as_dict=True)
 
    Element wall3d
+
+   :param ele_id:
+   :param which:
+   :param index:
+   :param who:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python ele:wall3d {ele_id}|{which} {index} {who}
    where {ele_id} is an element name or index and {which} is one of
@@ -1113,14 +1222,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-   :param ele_id:
-   :param which:
-   :param index:
-   :param who:
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -1135,6 +1236,15 @@ Module Contents
 .. function:: ele_twiss(tao, ele_id, which, *, verbose=False, as_dict=True)
 
    Element twiss
+
+   :param ele_id:
+   :param which:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python ele:twiss {ele_id}|{which}
    where {ele_id} is an element name or index and {which} is one of
@@ -1146,12 +1256,6 @@ Module Contents
    python ele:twiss 3@1>>7|model
 
    This gives element number 7 in branch 1 of universe 3.
-
-   :param ele_id:
-   :param which:
-
-   :returns:
-   :rtype: string_list
 
    .. rubric:: Examples
 
@@ -1165,6 +1269,15 @@ Module Contents
 .. function:: ele_control(tao, ele_id, which, *, verbose=False, as_dict=True)
 
    Element control
+
+   :param ele_id:
+   :param which:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python ele:control {ele_id}|{which}
    where {ele_id} is an element name or index and {which} is one of
@@ -1176,12 +1289,6 @@ Module Contents
    python ele:control 3@1>>7|model
 
    This gives element number 7 in branch 1 of universe 3.
-
-   :param ele_id:
-   :param which:
-
-   :returns:
-   :rtype: string_list
 
    .. rubric:: Examples
 
@@ -1195,6 +1302,15 @@ Module Contents
 .. function:: ele_orbit(tao, ele_id, which, *, verbose=False, as_dict=True)
 
    Element orbit
+
+   :param ele_id:
+   :param which:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python ele:orbit {ele_id}|{which}
    where {ele_id} is an element name or index and {which} is one of
@@ -1207,12 +1323,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-   :param ele_id:
-   :param which:
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -1222,9 +1332,19 @@ Module Contents
      which: model
 
 
-.. function:: ele_mat6(tao, *, ele_id, which, who, verbose=False, as_dict=True)
+.. function:: ele_mat6(tao, ele_id, which, who, *, verbose=False, as_dict=True)
 
    Element mat6
+
+   :param ele_id:
+   :param which:
+   :param who:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python ele:mat6 {ele_id}|{which} {who}
    where {ele_id} is an element name or index and {which} is one of
@@ -1241,13 +1361,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-   :param ele_id:
-   :param which:
-   :param who:
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -1258,9 +1371,20 @@ Module Contents
      who: mat6
 
 
-.. function:: ele_taylor_field(tao, *, ele_id, which, index, who, verbose=False, as_dict=True)
+.. function:: ele_taylor_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=True)
 
    Element taylor_field
+
+   :param ele_id:
+   :param which:
+   :param index:
+   :param who:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python ele:taylor_field {ele_id}|{which} {index} {who}
    where {ele_id} is an element name or index and {which} is one of
@@ -1277,14 +1401,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-   :param ele_id:
-   :param which:
-   :param index:
-   :param who:
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -1296,9 +1412,20 @@ Module Contents
      who: base
 
 
-.. function:: ele_grid_field(tao, *, ele_id, which, index, who, verbose=False, as_dict=True)
+.. function:: ele_grid_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=True)
 
    Element grid_field
+
+   :param ele_id:
+   :param which:
+   :param index:
+   :param who:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python ele:grid_field {ele_id}|{which} {index} {who}
    where {ele_id} is an element name or index and {which} is one of
@@ -1312,14 +1439,6 @@ Module Contents
 
    This gives grid #2 of element number 7 in branch 1 of universe 3.
 
-   :param ele_id:
-   :param which:
-   :param index:
-   :param who:
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -1331,10 +1450,21 @@ Module Contents
      who: base
 
 
-.. function:: ele_floor(tao, *, ele_id, which, where='end', verbose=False, as_dict=True)
+.. function:: ele_floor(tao, ele_id, which, *, where='end', verbose=False, as_dict=True)
 
    Element floor coordinates. The output gives two lines. "Reference" is
    without element misalignments and "Actual" is with misalignments.
+
+   :param ele_id:
+   :param which:
+   :param where:
+   :type where: default=end
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python ele:floor {ele_id}|{which} {where}
    where {ele_id} is an element name or index and {which} is one of
@@ -1351,14 +1481,6 @@ Module Contents
    python ele:floor 3@1>>7|model
 
    This gives element number 7 in branch 1 of universe 3.
-
-   :param ele_id:
-   :param which:
-   :param where:
-   :type where: default=end
-
-   :returns:
-   :rtype: string_list
 
    .. rubric:: Examples
 
@@ -1377,9 +1499,19 @@ Module Contents
      where: center
 
 
-.. function:: ele_photon(tao, *, ele_id, which, who, verbose=False, as_dict=True)
+.. function:: ele_photon(tao, ele_id, which, who, *, verbose=False, as_dict=True)
 
    Element photon
+
+   :param ele_id:
+   :param which:
+   :param who:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python ele:photon {ele_id}|{which} {who}
    where {ele_id} is an element name or index and {which} is one of
@@ -1396,13 +1528,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-   :param ele_id:
-   :param which:
-   :param who:
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -1416,6 +1541,15 @@ Module Contents
 .. function:: ele_lord_slave(tao, ele_id, which, *, verbose=False, as_dict=True)
 
    Lists the lord/slave tree of an element.
+
+   :param ele_id:
+   :param which:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python ele:lord_slave {ele_id}|{which}
    where {ele_id} is an element name or index and {which} is one of
@@ -1434,12 +1568,6 @@ Module Contents
    After each "Element" line, there are a number of lines (possibly zero) that begin with the word "Slave or "Lord".
    These "Slave" and "Lord" lines are the slaves and lords of the "Element" element.
 
-   :param ele_id:
-   :param which:
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -1452,6 +1580,15 @@ Module Contents
 .. function:: ele_elec_multipoles(tao, ele_id, which, *, verbose=False, as_dict=True)
 
    Element electric multipoles
+
+   :param ele_id:
+   :param which:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python ele:elec_multipoles {ele_id}|{which}
    where {ele_id} is an element name or index and {which} is one of
@@ -1464,12 +1601,6 @@ Module Contents
 
    This gives element number 7 in branch 1 of universe 3.
 
-   :param ele_id:
-   :param which:
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -1479,15 +1610,9 @@ Module Contents
      which: model
 
 
-.. function:: evaluate(tao, expression, flags='-array_out', *, verbose=False, as_dict=True)
+.. function:: evaluate(tao, expression, *, flags='-array_out', verbose=False, as_dict=True)
 
    Evaluate an expression. The result may be a vector.
-   Command syntax:
-     python evaluate {flags} {expression}
-
-   .. rubric:: Example
-
-   python evaluate data::cbar.11[1:10]|model
 
    :param expression:
    :param flags: If -array_out, the output will be available in the tao_c_interface_com%c_real.!
@@ -1495,6 +1620,15 @@ Module Contents
 
    :returns: * *string_list* -- if '-array_out' not in flags
              * *real_array* -- if '-array_out' in flags
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python evaluate {flags} {expression}
+
+   .. rubric:: Example
+
+   python evaluate data::cbar.11[1:10]|model
 
    .. rubric:: Examples
 
@@ -1504,19 +1638,9 @@ Module Contents
       expression: data::cbar.11[1:10]|model
 
 
-.. function:: em_field(tao, *, ele_id, which, x, y, z, t_or_z, verbose=False, as_dict=True)
+.. function:: em_field(tao, ele_id, which, x, y, z, t_or_z, *, verbose=False, as_dict=True)
 
    EM field at a given point generated by a given element.
-   Command syntax:
-     python em_field {ele_id}|{which} {x}, {y}, {z}, {t_or_z}
-   where {which} is one of:
-     model
-     base
-     design
-   Where:
-     {x}, {y}  -- Transverse coords.
-     {z}       -- Longitudainal coord with respect to entrance end of element.
-     {t_or_z}  -- time or phase space z depending if lattice is setup for absolute time tracking.
 
    :param ele_id:
    :param which:
@@ -1527,6 +1651,19 @@ Module Contents
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python em_field {ele_id}|{which} {x}, {y}, {z}, {t_or_z}
+   where {which} is one of:
+     model
+     base
+     design
+   Where:
+     {x}, {y}  -- Transverse coords.
+     {z}       -- Longitudainal coord with respect to entrance end of element.
+     {t_or_z}  -- time or phase space z depending if lattice is setup for absolute time tracking.
 
    .. rubric:: Examples
 
@@ -1544,16 +1681,19 @@ Module Contents
 .. function:: enum(tao, enum_name, *, verbose=False, as_dict=True)
 
    List of possible values for enumerated numbers.
-   Command syntax:
-     python enum {enum_name}
-   .. rubric:: Example
-
-   python enum tracking_method
 
    :param enum_name:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python enum {enum_name}
+   .. rubric:: Example
+
+   python enum tracking_method
 
    .. rubric:: Examples
 
@@ -1566,13 +1706,16 @@ Module Contents
 .. function:: floor_plan(tao, graph, *, verbose=False, as_dict=True)
 
    Floor plan elements
-   Command syntax:
-     python floor_plan {graph}
 
    :param graph:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python floor_plan {graph}
 
    .. rubric:: Examples
 
@@ -1585,13 +1728,16 @@ Module Contents
 .. function:: floor_orbit(tao, graph, *, verbose=False, as_dict=True)
 
    (x, y) coordinates for drawing the particle orbit on a floor plan.
-   Command syntax:
-     python floor_orbit {graph}
 
    :param graph:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python floor_orbit {graph}
 
    .. rubric:: Examples
 
@@ -1604,6 +1750,12 @@ Module Contents
 .. function:: tao_global(tao, *, verbose=False, as_dict=True)
 
    Global parameters
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python global
    Output syntax is parameter list form. See documentation at the beginning of this file.
@@ -1615,9 +1767,6 @@ Module Contents
      prompt_color
      prompt_string
 
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -1628,11 +1777,14 @@ Module Contents
 .. function:: help(tao, *, verbose=False, as_dict=True)
 
    returns list of "help xxx" topics
-   Command syntax:
-     python help
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python help
 
    .. rubric:: Examples
 
@@ -1644,13 +1796,16 @@ Module Contents
 .. function:: inum(tao, who, *, verbose=False, as_dict=True)
 
    INUM
-   Command syntax:
-     python inum {who}
 
    :param who:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python inum {who}
 
    .. rubric:: Examples
 
@@ -1664,13 +1819,16 @@ Module Contents
 
    Check if a lattice recalculation has been proformed since the last time
      "python lat_calc_done" was called.
-   Command syntax:
-     python lat_calc_done
 
    :param branch_name:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python lat_calc_done
 
    .. rubric:: Examples
 
@@ -1683,15 +1841,18 @@ Module Contents
 .. function:: lat_ele_list(tao, branch_name, *, verbose=False, as_dict=True)
 
    Lattice element list.
-   Command syntax:
-     python lat_ele {branch_name}
-   {branch_name} should have the form:
-     {ix_uni}@{ix_branch}
 
    :param branch_name:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python lat_ele {branch_name}
+   {branch_name} should have the form:
+     {ix_uni}@{ix_branch}
 
    .. rubric:: Examples
 
@@ -1701,20 +1862,23 @@ Module Contents
       branch_name: 1@0
 
 
-.. function:: lat_general(tao, ix_universe='1', *, verbose=False, as_dict=True)
+.. function:: lat_general(tao, *, ix_universe='1', verbose=False, as_dict=True)
 
    Lattice general
-   Command syntax:
-     python lat_general {ix_universe}
-
-   Output syntax:
-     branch_index;branch_name;n_ele_track;n_ele_max
 
    :param ix_universe:
    :type ix_universe: default=1
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python lat_general {ix_universe}
+
+   Output syntax:
+     branch_index;branch_name;n_ele_track;n_ele_max
 
    .. rubric:: Examples
 
@@ -1724,7 +1888,7 @@ Module Contents
       ix_universe: 1
 
 
-.. function:: lat_list(tao, *, elements, who, ix_uni='1', ix_branch='0', which='model', flags='', verbose=False, as_dict=True)
+.. function:: lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', flags='-array_out -index_order', verbose=False, as_dict=True)
 
    List of parameters at ends of lattice elements
 
@@ -1737,10 +1901,11 @@ Module Contents
    :param which:
    :type which: default=model
    :param flags:
-   :type flags: optional
+   :type flags: optional, default=-array_out -index_order
 
-   :returns:
-   :rtype: string_list
+   :returns: * *string_list* -- if ('-array_out' not in flags) or (who in ['ele.name'])
+             * *real_array* -- if ('-array_out' in flags or 'real:' in who) and (who not in ['orbit.state'])
+             * *integer_array* -- if '-array_out' in flags and who in ['orbit.state']
 
    .. rubric:: Notes
 
@@ -1779,12 +1944,12 @@ Module Contents
      {elements} is a string to match element names to.
        Use "*" to match to all elements.
 
-   Note: vector layout of mat6(6,6) is: [mat6(1,:), mat6(2,:), ...mat6(6,:)]
-
    .. rubric:: Examples
 
    python lat_list -track 3@0>>Q*|base ele.s,orbit.vec.2
    python lat_list 3@0>>Q*|base real:ele.s
+
+   Note: vector layout of mat6(6,6) is: [mat6(1,:), mat6(2,:), ...mat6(6,:)]
 
    .. rubric:: Examples
 
@@ -1801,13 +1966,16 @@ Module Contents
 .. function:: lat_param_units(tao, param_name, *, verbose=False, as_dict=True)
 
    Units of a parameter associated with a lattice or lattice element.
-   Command syntax:
-     python lat_param_units {param_name}
 
    :param param_name:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python lat_param_units {param_name}
 
    .. rubric:: Examples
 
@@ -1820,6 +1988,15 @@ Module Contents
 .. function:: matrix(tao, ele1_id, ele2_id, *, verbose=False, as_dict=True)
 
    Matrix value from the exit end of one element to the exit end of the other.
+
+   :param ele1_id:
+   :param ele2_id:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python matrix {ele1_id} {ele2_id}
    where:
@@ -1831,12 +2008,6 @@ Module Contents
    .. rubric:: Example
 
    python matrix 2@1>>q01w|design q02w
-
-   :param ele1_id:
-   :param ele2_id:
-
-   :returns:
-   :rtype: string_list
 
    .. rubric:: Examples
 
@@ -1850,11 +2021,14 @@ Module Contents
 .. function:: merit(tao, *, verbose=False, as_dict=True)
 
    Merit value.
-   Command syntax:
-     python merit
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python merit
 
    .. rubric:: Examples
 
@@ -1863,7 +2037,7 @@ Module Contents
     args:
 
 
-.. function:: orbit_at_s(tao, *, s, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True)
+.. function:: orbit_at_s(tao, s, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True)
 
    Twiss at given s position.
 
@@ -1904,11 +2078,14 @@ Module Contents
 
    Output place command buffer and reset the buffer.
    The contents of the buffer are the place commands that the user has issued.
-   Command syntax:
-     python place_buffer
 
    :returns:
    :rtype: None
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python place_buffer
 
    .. rubric:: Examples
 
@@ -1942,10 +2119,6 @@ Module Contents
 .. function:: plot_lat_layout(tao, ix_universe: 1, ix_branch: 0, *, verbose=False, as_dict=True)
 
    Plot Lat_layout info
-   Command syntax:
-     python plot_lat_layout {ix_universe}@{ix_branch}
-   Note: The returned list of element positions is not ordered in increasing
-         longitudinal position.
 
    :param ix_universe:
    :type ix_universe: 1
@@ -1954,6 +2127,13 @@ Module Contents
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python plot_lat_layout {ix_universe}@{ix_branch}
+   Note: The returned list of element positions is not ordered in increasing
+         longitudinal position.
 
    .. rubric:: Examples
 
@@ -1967,16 +2147,19 @@ Module Contents
 .. function:: plot_list(tao, r_or_g, *, verbose=False, as_dict=True)
 
    List of plot templates or plot regions.
-   Command syntax:
-     python plot_list {r_or_g}
-   where "{r/g}" is:
-     "r"      ! list regions
-     "t"      ! list template plots
 
    :param r_or_g:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python plot_list {r_or_g}
+   where "{r/g}" is:
+     "r"      ! list regions
+     "t"      ! list template plots
 
    .. rubric:: Examples
 
@@ -1989,6 +2172,14 @@ Module Contents
 .. function:: plot_graph(tao, graph_name, *, verbose=False, as_dict=True)
 
    Graph
+
+   :param graph_name:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python plot_graph {graph_name}
    {graph_name} is in the form:
@@ -1997,11 +2188,6 @@ Module Contents
      {p_name} is the plot region name if from a region or the plot name if a template plot.
      This name is obtained from the python plot_list command.
      {g_name} is the graph name obtained from the python plot1 command.
-
-   :param graph_name:
-
-   :returns:
-   :rtype: string_list
 
    .. rubric:: Examples
 
@@ -2014,13 +2200,16 @@ Module Contents
 .. function:: plot_histogram(tao, curve_name, *, verbose=False, as_dict=True)
 
    Plot Histogram
-   Command syntax:
-     python plot_histograph {curve_name}
 
    :param curve_name:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python plot_histograph {curve_name}
 
    .. rubric:: Examples
 
@@ -2030,15 +2219,9 @@ Module Contents
       curve_name: c1
 
 
-.. function:: plot_plot_manage(tao, *, plot_location, plot_name, n_graph, graph1_name, graph2_name, graphN_name, verbose=False, as_dict=True)
+.. function:: plot_plot_manage(tao, plot_location, plot_name, n_graph, graph1_name, graph2_name, graphN_name, *, verbose=False, as_dict=True)
 
    Template plot creation or destruction.
-   Command syntax:
-     pyton plot_plot_manage {plot_location}^^{plot_name}^^
-                            {n_graph}^^{graph1_name}^^{graph2_name}...{graphN_name}
-   Use "@Tnnn" sytax for {plot_location} to place a plot. A plot may be placed in a
-   spot where there is already a template.
-   If {n_graph} is set to -1 then just delete the plot.
 
    :param plot_location:
    :param plot_name:
@@ -2049,6 +2232,15 @@ Module Contents
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     pyton plot_plot_manage {plot_location}^^{plot_name}^^
+                            {n_graph}^^{graph1_name}^^{graph2_name}...{graphN_name}
+   Use "@Tnnn" sytax for {plot_location} to place a plot. A plot may be placed in a
+   spot where there is already a template.
+   If {n_graph} is set to -1 then just delete the plot.
 
    .. rubric:: Examples
 
@@ -2063,15 +2255,9 @@ Module Contents
       graphN_name:
 
 
-.. function:: plot_curve_manage(tao, *, graph_name, curve_index, curve_name, verbose=False, as_dict=True)
+.. function:: plot_curve_manage(tao, graph_name, curve_index, curve_name, *, verbose=False, as_dict=True)
 
    Template plot curve creation/destruction
-   Command syntax:
-     pyton plot_curve_manage {graph_name}^^{curve_index}^^{curve_name}
-   If {curve_index} corresponds to an existing curve then this curve is deleted.
-   In this case the {curve_name} is ignored and does not have to be present.
-   If {curve_index} does not not correspond to an existing curve, {curve_index}
-   must be one greater than the number of curves.
 
    :param graph_name:
    :param curve_index:
@@ -2079,6 +2265,15 @@ Module Contents
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     pyton plot_curve_manage {graph_name}^^{curve_index}^^{curve_name}
+   If {curve_index} corresponds to an existing curve then this curve is deleted.
+   In this case the {curve_name} is ignored and does not have to be present.
+   If {curve_index} does not not correspond to an existing curve, {curve_index}
+   must be one greater than the number of curves.
 
    .. rubric:: Examples
 
@@ -2090,15 +2285,9 @@ Module Contents
       curve_name: c1
 
 
-.. function:: plot_graph_manage(tao, *, plot_name, graph_index, graph_name, verbose=False, as_dict=True)
+.. function:: plot_graph_manage(tao, plot_name, graph_index, graph_name, *, verbose=False, as_dict=True)
 
    Template plot graph creation/destruction
-   Command syntax:
-     pyton plot_graph_manage {plot_name}^^{graph_index}^^{graph_name}
-   If {graph_index} corresponds to an existing graph then this graph is deleted.
-   In this case the {graph_name} is ignored and does not have to be present.
-   If {graph_index} does not not correspond to an existing graph, {graph_index}
-   must be one greater than the number of graphs.
 
    :param plot_name:
    :param graph_index:
@@ -2106,6 +2295,15 @@ Module Contents
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     pyton plot_graph_manage {plot_name}^^{graph_index}^^{graph_name}
+   If {graph_index} corresponds to an existing graph then this graph is deleted.
+   In this case the {graph_name} is ignored and does not have to be present.
+   If {graph_index} does not not correspond to an existing graph, {graph_index}
+   must be one greater than the number of graphs.
 
    .. rubric:: Examples
 
@@ -2117,9 +2315,20 @@ Module Contents
       graph_name: g
 
 
-.. function:: plot_line(tao, *, region_name, graph_name, curve_name, x_or_y, verbose=False, as_dict=True)
+.. function:: plot_line(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=False, as_dict=True)
 
    Points used to construct a smooth line for a plot curve.
+
+   :param region_name:
+   :param graph_name:
+   :param curve_name:
+   :param x_or_y:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python plot_line {region_name}.{graph_name}.{curve_name} {x_or_y}
    Optional {x-or-y} may be set to "x" or "y" to get the smooth line points x or y
@@ -2132,14 +2341,6 @@ Module Contents
    python plot_line r13.g.a x ! x-component of line points loaded into the real array buffer.
    python plot_line r13.g.a y ! y-component of line points loaded into the real array buffer.
 
-   :param region_name:
-   :param graph_name:
-   :param curve_name:
-   :param x_or_y:
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -2151,9 +2352,20 @@ Module Contents
       x_or_y: x
 
 
-.. function:: plot_symbol(tao, *, region_name, graph_name, curve_name, x_or_y, verbose=False, as_dict=True)
+.. function:: plot_symbol(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=False, as_dict=True)
 
    Locations to draw symbols for a plot curve.
+
+   :param region_name:
+   :param graph_name:
+   :param curve_name:
+   :param x_or_y:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python plot_symbol {region_name}.{graph_name}.{curve_name} {x_or_y}
    Optional {x_or_y} may be set to "x" or "y" to get the symbol x or y
@@ -2167,14 +2379,6 @@ Module Contents
                                       loaded into the real array buffer.
    python plot_symbol r13.g.a y     ! y-component of the symbol positions
                                       loaded into the real array buffer.
-
-   :param region_name:
-   :param graph_name:
-   :param curve_name:
-   :param x_or_y:
-
-   :returns:
-   :rtype: string_list
 
    .. rubric:: Examples
 
@@ -2190,18 +2394,21 @@ Module Contents
 .. function:: plot_transfer(tao, from_plot, to_plot, *, verbose=False, as_dict=True)
 
    Transfer plot parameters from the "from plot" to the "to plot" (or plots).
-   Command syntax:
-     python plot_transfer {from_plot} {to_plot}
-   To avoid confusion, use "@Tnnn" and "@Rnnn" syntax for {from_plot}.
-   If {to_plot} is not present and {from_plot} is a template plot, the "to plots"
-    are the equivalent region plots with the same name. And vice versa
-    if {from_plot} is a region plot.
 
    :param from_plot:
    :param to_plot:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python plot_transfer {from_plot} {to_plot}
+   To avoid confusion, use "@Tnnn" and "@Rnnn" syntax for {from_plot}.
+   If {to_plot} is not present and {from_plot} is a template plot, the "to plots"
+    are the equivalent region plots with the same name. And vice versa
+    if {from_plot} is a region plot.
 
    .. rubric:: Examples
 
@@ -2215,15 +2422,18 @@ Module Contents
 .. function:: plot1(tao, name, *, verbose=False, as_dict=True)
 
    Info on a given plot.
-   Command syntax:
-     python plot1 {name}
-   {name} should be the region name if the plot is associated with a region.
-   Output syntax is parameter list form. See documentation at the beginning of this file.
 
    :param name:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python plot1 {name}
+   {name} should be the region name if the plot is associated with a region.
+   Output syntax is parameter list form. See documentation at the beginning of this file.
 
    .. rubric:: Examples
 
@@ -2236,16 +2446,19 @@ Module Contents
 .. function:: shape_list(tao, who, *, verbose=False, as_dict=True)
 
    lat_layout and floor_plan shapes list
-   Command syntax:
-     python shape_list {who}
-   {who} is one of:
-     lat_layout
-     floor_plan
 
    :param who:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python shape_list {who}
+   {who} is one of:
+     lat_layout
+     floor_plan
 
    .. rubric:: Examples
 
@@ -2255,9 +2468,19 @@ Module Contents
       who: floor_plan
 
 
-.. function:: shape_manage(tao, *, who, index, add_or_delete, verbose=False, as_dict=True)
+.. function:: shape_manage(tao, who, index, add_or_delete, *, verbose=False, as_dict=True)
 
    element shape creation or destruction
+
+   :param who:
+   :param index:
+   :param add_or_delete:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python shape_manage {who} {index} {add_or_delete}
 
@@ -2277,13 +2500,6 @@ Module Contents
    Note: After adding a shape use "python shape_set" to set shape parameters.
    This is important since an added shape is in a ill-defined state.
 
-   :param who:
-   :param index:
-   :param add_or_delete:
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -2294,18 +2510,21 @@ Module Contents
       add_or_delete: add
 
 
-.. function:: shape_pattern_list(tao, ix_pattern='', *, verbose=False, as_dict=True)
+.. function:: shape_pattern_list(tao, *, ix_pattern='', verbose=False, as_dict=True)
 
    List of shape patterns
-   Command syntax:
-     python shape_pattern_list {ix_pattern}
-   If optional {ix_pattern} index is omitted then list all the patterns
 
    :param ix_pattern:
    :type ix_pattern: optional
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python shape_pattern_list {ix_pattern}
+   If optional {ix_pattern} index is omitted then list all the patterns
 
    .. rubric:: Examples
 
@@ -2320,9 +2539,19 @@ Module Contents
       ix_pattern: 1
 
 
-.. function:: shape_pattern_manage(tao, *, ix_pattern, pat_name, pat_line_width, verbose=False, as_dict=True)
+.. function:: shape_pattern_manage(tao, ix_pattern, pat_name, pat_line_width, *, verbose=False, as_dict=True)
 
    Add or remove shape pattern
+
+   :param ix_pattern:
+   :param pat_name:
+   :param pat_line_width:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python shape_pattern_manage {ix_pattern}^^{pat_name}^^{pat_line_width}
    where:
@@ -2331,13 +2560,6 @@ Module Contents
      {pat_name}        -- Pattern name.
      {pat_line_width}  -- Line width. Integer. If set to "delete" then section
                                                will be deleted.
-
-   :param ix_pattern:
-   :param pat_name:
-   :param pat_line_width:
-
-   :returns:
-   :rtype: string_list
 
    .. rubric:: Examples
 
@@ -2349,16 +2571,9 @@ Module Contents
       pat_line_width : 1
 
 
-.. function:: shape_pattern_point_manage(tao, *, ix_pattern, ix_point, s, x, verbose=False, as_dict=True)
+.. function:: shape_pattern_point_manage(tao, ix_pattern, ix_point, s, x, *, verbose=False, as_dict=True)
 
    Add or remove shape pattern point
-   Command syntax:
-     python shape_pattern_point_manage {ix_pattern}^^{ix_point}^^{s}^^{x}
-   where:
-     {ix_pattern}      -- Pattern index.
-     {ix_point}        -- Point index. Points of higher indexes will be moved up
-                                       if adding a point and down if deleting.
-     {s}, {x}          -- Point location. If {s} is "delete" then delete the point.
 
    :param ix_pattern:
    :param ix_point:
@@ -2367,6 +2582,16 @@ Module Contents
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python shape_pattern_point_manage {ix_pattern}^^{ix_point}^^{s}^^{x}
+   where:
+     {ix_pattern}      -- Pattern index.
+     {ix_point}        -- Point index. Points of higher indexes will be moved up
+                                       if adding a point and down if deleting.
+     {s}, {x}          -- Point location. If {s} is "delete" then delete the point.
 
    .. rubric:: Examples
 
@@ -2379,16 +2604,9 @@ Module Contents
       x: 0
 
 
-.. function:: shape_set(tao, *, who, shape_index, ele_name, shape, color, shape_size, type_label, shape_draw, multi_shape, line_width, verbose=False, as_dict=True)
+.. function:: shape_set(tao, who, shape_index, ele_name, shape, color, shape_size, type_label, shape_draw, multi_shape, line_width, *, verbose=False, as_dict=True)
 
    lat_layout or floor_plan shape set
-   Command syntax:
-     python shape_set {who}^^{shape_index}^^{ele_name}^^{shape}^^{color}^^
-                      {shape_size}^^{type_label}^^{shape_draw}^^
-                      {multi_shape}^^{line_width}
-   {who} is one of:
-     lat_layout
-     floor_plan
 
    :param who:
    :param shape_index:
@@ -2403,6 +2621,16 @@ Module Contents
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python shape_set {who}^^{shape_index}^^{ele_name}^^{shape}^^{color}^^
+                      {shape_size}^^{type_label}^^{shape_draw}^^
+                      {multi_shape}^^{line_width}
+   {who} is one of:
+     lat_layout
+     floor_plan
 
    .. rubric:: Examples
 
@@ -2424,17 +2652,20 @@ Module Contents
 .. function:: show(tao, line, *, verbose=False, as_dict=True)
 
    Show command pass through
+
+   :param line:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python show {line}
    {line} is the string to pass through to the show command.
    .. rubric:: Example
 
    python show lattice -python
-
-   :param line:
-
-   :returns:
-   :rtype: string_list
 
    .. rubric:: Examples
 
@@ -2447,16 +2678,19 @@ Module Contents
 .. function:: species_to_int(tao, species_str, *, verbose=False, as_dict=True)
 
    Convert species name to corresponding integer
-   Command syntax:
-     python species_to_int {species_str}
-   .. rubric:: Example
-
-   python species_to_int CO2++
 
    :param species_str:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python species_to_int {species_str}
+   .. rubric:: Example
+
+   python species_to_int CO2++
 
    .. rubric:: Examples
 
@@ -2469,16 +2703,19 @@ Module Contents
 .. function:: species_to_str(tao, species_int, *, verbose=False, as_dict=True)
 
    Convert species integer id to corresponding
-   Command syntax:
-     python species_to_str {species_int}
-   .. rubric:: Example
-
-   python species_to_str -1     ! Returns 'Electron'
 
    :param species_int:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python species_to_str {species_int}
+   .. rubric:: Example
+
+   python species_to_str -1     ! Returns 'Electron'
 
    .. rubric:: Examples
 
@@ -2491,6 +2728,19 @@ Module Contents
 .. function:: spin_polarization(tao, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True)
 
    Spin information
+
+   :param ix_uni:
+   :type ix_uni: default=1
+   :param ix_branch:
+   :type ix_branch: default=0
+   :param which:
+   :type which: default=model
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python spin {ix_uni}@{ix_branch}|{which}
    where {which} is one of:
@@ -2502,16 +2752,6 @@ Module Contents
    python spin 1@0|model
 
    Note: This command is under development. If you want to use please contact David Sagan.
-
-   :param ix_uni:
-   :type ix_uni: default=1
-   :param ix_branch:
-   :type ix_branch: default=0
-   :param which:
-   :type which: default=model
-
-   :returns:
-   :rtype: string_list
 
    .. rubric:: Examples
 
@@ -2526,11 +2766,14 @@ Module Contents
 .. function:: super_universe(tao, *, verbose=False, as_dict=True)
 
    Super_Universe information
-   Command syntax:
-     python super_universe
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python super_universe
 
    .. rubric:: Examples
 
@@ -2539,15 +2782,9 @@ Module Contents
     args:
 
 
-.. function:: twiss_at_s(tao, *, ix_uni, ix_branch, s, which, verbose=False, as_dict=True)
+.. function:: twiss_at_s(tao, ix_uni, ix_branch, s, which, *, verbose=False, as_dict=True)
 
    Twiss at given s position
-   Command syntax:
-     python twiss_at_s {ix_uni}@{ix_branch}>>{s}|{which}
-   where {which} is one of:
-     model
-     base
-     design
 
    :param ix_uni:
    :param ix_branch:
@@ -2556,6 +2793,15 @@ Module Contents
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python twiss_at_s {ix_uni}@{ix_branch}>>{s}|{which}
+   where {which} is one of:
+     model
+     base
+     design
 
    .. rubric:: Examples
 
@@ -2571,14 +2817,17 @@ Module Contents
 .. function:: universe(tao, ix_universe, *, verbose=False, as_dict=True)
 
    Universe info
-   Command syntax:
-     python universe {ix_universe}
-   Use "python global" to get the number of universes.
 
    :param ix_universe:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python universe {ix_universe}
+   Use "python global" to get the number of universes.
 
    .. rubric:: Examples
 
@@ -2591,14 +2840,17 @@ Module Contents
 .. function:: var(tao, var, *, verbose=False, as_dict=True)
 
    Info on an individual variable
-   Command syntax:
-     python var {var}        or
-     python var {var} slaves
 
    :param var:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python var {var}        or
+     python var {var} slaves
 
    .. rubric:: Examples
 
@@ -2608,16 +2860,9 @@ Module Contents
       var: quad_k1[1]
 
 
-.. function:: var_create(tao, *, var_name, ele_name, attribute, universes, weight, step, low_lim, high_lim, merit_type, good_user, key_bound, key_delta, verbose=False, as_dict=True)
+.. function:: var_create(tao, var_name, ele_name, attribute, universes, weight, step, low_lim, high_lim, merit_type, good_user, key_bound, key_delta, *, verbose=False, as_dict=True)
 
    Create a single variable
-   Command syntax:
-     python var_create {var_name}^^{ele_name}^^{attribute}^^{universes}^^
-                       {weight}^^{step}^^{low_lim}^^{high_lim}^^{merit_type}^^
-                       {good_user}^^{key_bound}^^{key_delta}
-   {var_name} is something like "kick[5]".
-   Before using var_create, setup the appropriate v1_var array using
-   the "python var_v1_create" command.
 
    :param var_name:
    :param ele_name:
@@ -2634,6 +2879,16 @@ Module Contents
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python var_create {var_name}^^{ele_name}^^{attribute}^^{universes}^^
+                       {weight}^^{step}^^{low_lim}^^{high_lim}^^{merit_type}^^
+                       {good_user}^^{key_bound}^^{key_delta}
+   {var_name} is something like "kick[5]".
+   Before using var_create, setup the appropriate v1_var array using
+   the "python var_v1_create" command.
 
    .. rubric:: Examples
 
@@ -2657,13 +2912,16 @@ Module Contents
 .. function:: var_general(tao, *, verbose=False, as_dict=True)
 
    List of all variable v1 arrays
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python var_general
    Output syntax:
      {v1_var name};{v1_var%v lower bound};{v1_var%v upper bound}
-
-   :returns:
-   :rtype: string_list
 
    .. rubric:: Examples
 
@@ -2675,16 +2933,19 @@ Module Contents
 .. function:: var_v_array(tao, v1_var, *, verbose=False, as_dict=True)
 
    List of variables for a given data_v1.
-   Command syntax:
-     python var_v_array {v1_var}
-   .. rubric:: Example
-
-   python var_v_array quad_k1
 
    :param v1_var:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python var_v_array {v1_var}
+   .. rubric:: Example
+
+   python var_v_array quad_k1
 
    .. rubric:: Examples
 
@@ -2697,13 +2958,16 @@ Module Contents
 .. function:: var_v1_array(tao, v1_var, *, verbose=False, as_dict=True)
 
    List of variables in a given variable v1 array
-   Command syntax:
-     python var_v1_array {v1_var}
 
    :param v1_var:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python var_v1_array {v1_var}
 
    .. rubric:: Examples
 
@@ -2713,9 +2977,19 @@ Module Contents
       v1_var: quad_k1
 
 
-.. function:: var_v1_create(tao, *, v1_name, n_var_min, n_var_max, verbose=False, as_dict=True)
+.. function:: var_v1_create(tao, v1_name, n_var_min, n_var_max, *, verbose=False, as_dict=True)
 
    Create a v1 variable structure along with associated var array.
+
+   :param v1_name:
+   :param n_var_min:
+   :param n_var_max:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python var_v1_create {v1_name} {n_var_min} {n_var_max}
    {n_var_min} and {n_var_max} are the lower and upper bounds of the var
@@ -2740,13 +3014,6 @@ Module Contents
      ("set global lattice_calc_on = F") to prevent Tao trying to evaluate the
    partially created variable and generating unwanted error messages.
 
-   :param v1_name:
-   :param n_var_min:
-   :param n_var_max:
-
-   :returns:
-   :rtype: string_list
-
    .. rubric:: Examples
 
    Example: 1
@@ -2760,13 +3027,16 @@ Module Contents
 .. function:: var_v1_destroy(tao, v1_datum, *, verbose=False, as_dict=True)
 
    Destroy a v1 var structure along with associated var sub-array.
-   Command syntax:
-     python var_v1_destroy {v1_datum}
 
    :param v1_datum:
 
    :returns:
    :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python var_v1_destroy {v1_datum}
 
    .. rubric:: Examples
 
@@ -2779,6 +3049,14 @@ Module Contents
 .. function:: wave(tao, what, *, verbose=False, as_dict=True)
 
    Wave analysis info.
+
+   :param what:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
    Command syntax:
      python wave {what}
    Where {what} is one of:
@@ -2786,11 +3064,6 @@ Module Contents
      loc_header
      locations
      plot1, plot2, plot3
-
-   :param what:
-
-   :returns:
-   :rtype: string_list
 
    .. rubric:: Examples
 

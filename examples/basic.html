@@ -98,9 +98,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#Inititialize-Tao">Inititialize Tao</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Send-a-command">Send a command</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Jupyter-magic-%%tao">Jupyter magic %%tao</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Tao-python-commands">Tao python commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Interface-commands">Interface commands</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="#Tao-method-commands">Tao method commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advanced.html">PyTao advanced usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lattice.html">Tao python lattice functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bunch.html">Bunch commands for pyTao</a></li>
@@ -479,31 +480,14 @@ import os
 </div>
 <div class="section" id="Inititialize-Tao">
 <h2>Inititialize Tao<a class="headerlink" href="#Inititialize-Tao" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Point to local installation
-BASE_DIR=os.environ[&#39;ACC_ROOT_DIR&#39;]
-print(&#39;Bmad installation: &#39;, BASE_DIR)
-
-
-# Pick an example init
-root = os.path.join(BASE_DIR,&#39;tao/examples/cesr/&#39;)
-init = &#39;-init &#39;+root+&#39;tao.init&#39;
-# Make tao instance
-tao=Tao(init)
+<span></span>tao=Tao(&#39;-init $ACC_ROOT_DIR/tao/examples/cesr/tao.init -noplot&#39;)
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Bmad installation:  /Users/slepicka/sandbox/git-lume/bmad/bmad_dist_2020_1110
-</pre></div></div>
 </div>
 </div>
 <div class="section" id="Send-a-command">
@@ -582,13 +566,13 @@ Tao&gt; sho lat 1:10
 # Values shown are for the Exit End of each Element:
 -------------------------
 Tao&gt; sho ele 4
- Element #                4
- Element Name: CLEO_SOL#4
- Key: Solenoid
- S_start, S:      0.622301,      0.637956
- Ref_time:  2.127992E-09
+Element # 4
+Element Name: CLEO_SOL#4
+Key: Solenoid
+S_start, S:      0.622301,      0.637956
+Ref_time:  2.127992E-09
 
- Attribute values [Only non-zero values shown]:
+Attribute values [Only non-zero values shown]:
     1  L                           =  1.5655000E-02 m        31  L_SOFT_EDGE                 =  0.0000000E+00 m
     3  R_SOLENOID                  =  0.0000000E+00 m
     5  KS                          = -8.5023386E-02 1/m      49  BS_FIELD                    =  1.5000000E+00 T
@@ -625,7 +609,6 @@ Twiss at end of element:
   Phi (rad)        0.59345801     1.53313012            X              Y              Z
   Eta (m)         -0.02445852     0.00058099    -0.02454806     0.00008318     0.00005366
   Etap            -0.03499518    -0.00132514    -0.03507931    -0.00204142     1.00000000
-  Sigma            0.00052593     0.00009469     0.00052620     0.00009469
 
 Orbit:  Electron   State: Alive
          Position[mm] Momentum[mrad]        Spin   |
@@ -637,48 +620,84 @@ Tao&gt;
 </pre></div></div>
 </div>
 </div>
-<div class="section" id="Tao-python-commands">
-<h2>Tao python commands<a class="headerlink" href="#Tao-python-commands" title="Permalink to this headline">¶</a></h2>
-<p>Tao has a special set of commands to send formtted data back for parsing in python.</p>
+<div class="section" id="Interface-commands">
+<h2>Interface commands<a class="headerlink" href="#Interface-commands" title="Permalink to this headline">¶</a></h2>
+<p>Tao has a special set of commands to send back data suitable for parsing in Python.</p>
+<p>Below are the raw commands.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>python_dat = tao.cmd(&#39;python lat_ele_list 1@0&#39;)
-python_dat[0:10]
+<span></span>%%tao
+help python
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&#39;0;BEGINNING&#39;,
- &#39;1;IP_L0&#39;,
- &#39;2;CLEO_SOL#3&#39;,
- &#39;3;DET_00W&#39;,
- &#39;4;CLEO_SOL#4&#39;,
- &#39;5;Q00W\\CLEO_SOL&#39;,
- &#39;6;Q00W#1&#39;,
- &#39;7;D003&#39;,
- &#39;8;DET_01W&#39;,
- &#39;9;D004&#39;]
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>from pytao.tao_ctypes import util
+-------------------------
+Tao&gt; help python
+The &#34;python&#34; command is like the &#34;show&#34; command in that the &#34;python&#34; command prints
+information to the terminal. The difference is that the output from the &#34;show&#34; command is meant
+for viewing by the user while the output of the &#34;python&#34; command is meant for easy
+parsing. Format:
+  python {-append &lt;file_name&gt;} {-noprint} &lt;what_to_print&gt;
+  python {-write &lt;file_name&gt;} {-noprint} &lt;what_to_print&gt;
 
-# Get index of end element, using a utility function to parse that data
-ixlist = util.parse_tao_lat_ele_list(python_dat)
-endix = ixlist[&#39;END&#39;]
-endix
+The &#34;python&#34; command has &#34;-append&#34; and &#34;-write&#34; optional arguments which can be used to
+write the results to a file. The &#34;python -append&#34; command will appended to the output file. The
+&#34;python -write&#34; command will first erase the contents of the output file. Example:
+  python -write d2.dat data_d2    ! Write to file &#34;d2.dat&#34;
+
+The &#34;-noprint&#34; option suppresses printing and is useful when writing large amounts of data to a
+file.  The &#34;python&#34; command can be used to pass information to a parent process when Tao is run
+as a subprocess.  The parent process may be any scripting program like Python, Perl, Tcl, etc.  In
+particular, see the &#34;Python/GUI Interface&#34; chapter  for details on how to run
+Tao as a Python subprocess.
+
+In terms of long term maintainability, the advantage of using the &#34;python&#34; command in the scripts
+over the &#34;show&#34; command comes from the fact that the output syntax of &#34;show&#34; commands can (and
+does) change.
+
+For further documentation on the python command and interfacing to python is in Chapter~.
+
+Documentation on interfacing Python scripts to Tao&#39;s python command is given in
+section~.
+
+List of possible &#34;&lt;what_to_print&gt;&#34; choices:
+  beam, beam_init, branch1, bunch1, bmad_com, building_wall_list, building_wall_graph,
+  building_wall_point, building_wall_section, constraints, da_params, da_aperture,
+  data, data_d2_create, data_d2_destroy, data_d_array, data_d1_array, data_d2,
+  data_d2_array, data_set_design_value, datum_create, datum_has_ele, derivative,
+  ele:head, ele:gen_attribs, ele:multipoles, ele:elec_multipoles, ele:ac_kicker,
+  ele:cartesian_map, ele:chamber_wall, ele:cylindrical_map, ele:orbit, ele:taylor,
+  ele:spin_taylor, ele:wake, ele:wall3d, ele:twiss, ele:methods, ele:control,
+  ele:mat6, ele:taylor_field, ele:grid_field, ele:floor, ele:photon, ele:lord_slave,
+  em_field, enum, evaluate, floor_plan, floor_orbit, global, help, inum,
+  lat_calc_done, lat_ele_list, lat_general, lat_list, lat_param_units,
+  merit, orbit_at_s, place_buffer, plot_curve, plot_graph, plot_histogram,
+  plot_lat_layout, plot_line, plot_plot_manage, plot_graph_manage, plot_curve_manage,
+  plot_list, plot_symbol, plot_transfer, plot1, shape_list, shape_manage,
+  shape_pattern_list, shape_pattern_manage, shape_pattern_point_manage, shape_set,
+  show, species_to_int, species_to_str, spin_polarization, super_universe, twiss_at_s,
+  universe, var_v1_create, var_v1_destroy, var_create, var_general, var_v1_array,
+  var_v_array, var, wave
+
+-------------------------
+Tao&gt;
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># This data is returned as specially formatted lists
+tao.cmd(&#39;python orbit_at_s 1@0&gt;&gt;1.2|model&#39;)
 </pre></div>
 </div>
 </div>
@@ -688,18 +707,487 @@ endix
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-869
+[&#39;x;REAL;F;  3.10850440781991E-03&#39;,
+ &#39;px;REAL;F;  3.44527312067471E-03&#39;,
+ &#39;y;REAL;F;  1.82012763910055E-04&#39;,
+ &#39;py;REAL;F;  2.48182856267115E-04&#39;,
+ &#39;z;REAL;F; -4.14752375352584E-06&#39;,
+ &#39;pz;REAL;F;  0.00000000000000E+00&#39;,
+ &#39;spin;REAL_ARR;F;  0.00000000000000E+00;  0.00000000000000E+00;  0.00000000000000E+00&#39;,
+ &#39;field;REAL_ARR;F;  0.00000000000000E+00;  0.00000000000000E+00&#39;,
+ &#39;phase;REAL_ARR;F;  0.00000000000000E+00;  0.00000000000000E+00&#39;,
+ &#39;s;REAL;F;  1.20000000000000E+00&#39;,
+ &#39;t;REAL;F;  4.00278299570997E-09&#39;,
+ &#39;charge;REAL;F;  0.00000000000000E+00&#39;,
+ &#39;path_len;REAL;F; -3.05694190664077E-18&#39;,
+ &#39;p0c;REAL;F;  5.28899997531481E+09&#39;,
+ &#39;beta;REAL;F;  9.99999995332730E-01&#39;,
+ &#39;ix_ele;INT;F;5&#39;,
+ &#39;state;STR;F;Alive&#39;,
+ &#39;direction;INT;F;1&#39;,
+ &#39;species;SPECIES;F;Electron&#39;,
+ &#39;location;STR;F;Inside&#39;]
 </pre></div></div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>
+<span></span># Some commands have &#39;array_out&#39; options. For example, this seems to return nothing:
+tao.cmd(&#39;python lat_list -array_out 1@0&gt;&gt;Q*|model orbit.floor.x&#39;)
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># But calling `.cmd_real` on the same command will get the data from an internal pointer:
+tao.cmd_real(&#39;python lat_list -array_out 1@0&gt;&gt;Q*|model orbit.floor.x&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([ 0.00000000e+00,  5.45237551e-03,  8.07258498e-03,  1.66182326e-02,
+        1.27387380e-02, -1.28472105e-01, -6.17359843e-01, -1.63572345e+00,
+       -3.15359937e+00, -4.96007282e+00, -8.44393546e+00, -1.25353179e+01,
+       -1.53643067e+01, -1.93160734e+01, -2.35334264e+01, -2.86595986e+01,
+       -3.40012176e+01, -4.11157621e+01, -4.73379294e+01, -5.39309752e+01,
+       -6.08761196e+01, -6.66395241e+01, -7.38887317e+01, -8.14004743e+01,
+       -8.91380363e+01, -9.70602472e+01, -1.07067449e+02, -1.15219117e+02,
+       -1.23415239e+02, -1.31835984e+02, -1.39984609e+02, -1.48267476e+02,
+       -1.57243537e+02, -1.65204343e+02, -1.72728171e+02, -1.80184454e+02,
+       -1.85357667e+02, -1.92035953e+02, -2.00803308e+02, -2.06870816e+02,
+       -2.12665472e+02, -2.18176446e+02, -2.23048903e+02, -2.27424223e+02,
+       -2.31268371e+02, -2.34552365e+02, -2.35722795e+02, -2.38140782e+02,
+       -2.39786197e+02, -2.41460799e+02, -2.42244503e+02, -2.42601929e+02,
+       -2.42642700e+02, -2.42650644e+02, -2.42653710e+02, -2.42654862e+02,
+       -2.42659288e+02, -2.42665724e+02, -2.42598208e+02, -2.42184677e+02,
+       -2.41366884e+02, -2.39606411e+02, -2.37970189e+02, -2.35481975e+02,
+       -2.34317767e+02, -2.30993059e+02, -2.27125243e+02, -2.22727572e+02,
+       -2.17816014e+02, -2.12280155e+02, -2.06437560e+02, -2.00332922e+02,
+       -1.91531579e+02, -1.84820360e+02, -1.79653415e+02, -1.72176815e+02,
+       -1.64644379e+02, -1.56674258e+02, -1.47685976e+02, -1.39396228e+02,
+       -1.31238484e+02, -1.22815238e+02, -1.14621366e+02, -1.06478604e+02,
+       -9.64783765e+01, -8.85696775e+01, -8.08418039e+01, -7.33402313e+01,
+       -6.61118631e+01, -6.03400179e+01, -5.34245420e+01, -4.68515824e+01,
+       -4.06754290e+01, -3.36162811e+01, -2.82979311e+01, -2.32077226e+01,
+       -1.88775779e+01, -1.50782459e+01, -1.22578003e+01, -8.16224594e+00,
+       -4.68316592e+00, -2.92444850e+00, -1.48688761e+00, -5.48016680e-01,
+       -1.20823085e-01, -1.35569881e-02, -1.39261143e-02,  1.91718062e-06,
+       -5.50234769e-03, -1.53076310e-03])
+</pre></div></div>
+</div>
+</div>
+</div>
+<div class="section" id="Tao-method-commands">
+<h1>Tao method commands<a class="headerlink" href="#Tao-method-commands" title="Permalink to this headline">¶</a></h1>
+<p>For convenience, all of these commands are available as methods of the Tao class, and automatically parse the output.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>?tao.orbit_at_s
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">Signature:</span>
+tao<span class="ansi-blue-fg">.</span>orbit_at_s<span class="ansi-blue-fg">(</span>
+    s<span class="ansi-blue-fg">,</span>
+    <span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">,</span>
+    ix_uni<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;1&#39;</span><span class="ansi-blue-fg">,</span>
+    ix_branch<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;0&#39;</span><span class="ansi-blue-fg">,</span>
+    which<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;model&#39;</span><span class="ansi-blue-fg">,</span>
+    verbose<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span>
+    as_dict<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">True</span><span class="ansi-blue-fg">,</span>
+<span class="ansi-blue-fg">)</span>
+<span class="ansi-red-fg">Docstring:</span>
+Twiss at given s position.
+
+Parameters
+----------
+s
+ix_uni : default=1
+ix_branch : default=0
+which : default=model
+
+Returns
+-------
+string_list
+
+Notes
+-----
+Command syntax:
+  python orbit_at_s {ix_uni}@{ix_branch}&gt;&gt;{s}|{which}
+where:
+  {which} is one of:
+    model
+    base
+    design
+  {s} is the longitudinal s-position.
+
+Examples
+--------
+Example: 1
+ init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+ args:
+   ix_uni: 1
+   ix_branch: 0
+   s: 0.001
+   which: model
+<span class="ansi-red-fg">File:</span>      ~/Code/GitHub/pytao/pytao/interface_commands.py
+<span class="ansi-red-fg">Type:</span>      method
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>tao.orbit_at_s(1.2)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;x&#39;: 0.00310850440781991,
+ &#39;px&#39;: 0.00344527312067471,
+ &#39;y&#39;: 0.000182012763910055,
+ &#39;py&#39;: 0.000248182856267115,
+ &#39;z&#39;: -4.14752375352584e-06,
+ &#39;pz&#39;: 0.0,
+ &#39;spin&#39;: array([0., 0., 0.]),
+ &#39;field&#39;: array([0., 0.]),
+ &#39;phase&#39;: array([0., 0.]),
+ &#39;s&#39;: 1.2,
+ &#39;t&#39;: 4.00278299570997e-09,
+ &#39;charge&#39;: 0.0,
+ &#39;path_len&#39;: -3.05694190664077e-18,
+ &#39;p0c&#39;: 5288999975.31481,
+ &#39;beta&#39;: 0.99999999533273,
+ &#39;ix_ele&#39;: 5,
+ &#39;state&#39;: &#39;Alive&#39;,
+ &#39;direction&#39;: 1,
+ &#39;species&#39;: &#39;Electron&#39;,
+ &#39;location&#39;: &#39;Inside&#39;}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Some commands can return arrays
+?tao.evaluate
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">Signature:</span>
+tao<span class="ansi-blue-fg">.</span>evaluate<span class="ansi-blue-fg">(</span>
+    expression<span class="ansi-blue-fg">,</span>
+    <span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">,</span>
+    flags<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;-array_out&#39;</span><span class="ansi-blue-fg">,</span>
+    verbose<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span>
+    as_dict<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">True</span><span class="ansi-blue-fg">,</span>
+<span class="ansi-blue-fg">)</span>
+<span class="ansi-red-fg">Docstring:</span>
+Evaluate an expression. The result may be a vector.
+
+Parameters
+----------
+expression
+flags : default=-array_out
+    If -array_out, the output will be available in the tao_c_interface_com%c_real.!
+
+Returns
+-------
+string_list
+    if &#39;-array_out&#39; not in flags
+real_array
+    if &#39;-array_out&#39; in flags
+
+Notes
+-----
+Command syntax:
+  python evaluate {flags} {expression}
+
+Example:
+  python evaluate data::cbar.11[1:10]|model
+
+Examples
+--------
+Example: 1
+ init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+ args:
+   expression: data::cbar.11[1:10]|model
+<span class="ansi-red-fg">File:</span>      ~/Code/GitHub/pytao/pytao/interface_commands.py
+<span class="ansi-red-fg">Type:</span>      method
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>tao.evaluate(&#39;data::cbar.11[1:10]|model&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([ 2.81317783e-03, -1.06788243e-03,  1.24836279e-04,  2.78779776e-04,
+       -3.53083324e-04, -3.27169567e-04,  2.98082509e-06,  1.28860214e-03,
+        2.66493906e-03,  2.68642691e-03])
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>tao.lat_list(&#39;*&#39;, &#39;orbit.floor.x&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([-1.66222458e-05, -1.66222458e-05,  1.46952858e-03, ...,
+       -1.50094563e-03, -1.47081405e-05, -1.47081405e-05])
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>?tao.lat_list
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">Signature:</span>
+tao<span class="ansi-blue-fg">.</span>lat_list<span class="ansi-blue-fg">(</span>
+    elements<span class="ansi-blue-fg">,</span>
+    who<span class="ansi-blue-fg">,</span>
+    <span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">,</span>
+    ix_uni<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;1&#39;</span><span class="ansi-blue-fg">,</span>
+    ix_branch<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;0&#39;</span><span class="ansi-blue-fg">,</span>
+    which<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;model&#39;</span><span class="ansi-blue-fg">,</span>
+    flags<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;-array_out&#39;</span><span class="ansi-blue-fg">,</span>
+    verbose<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span>
+    as_dict<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">True</span><span class="ansi-blue-fg">,</span>
+<span class="ansi-blue-fg">)</span>
+<span class="ansi-red-fg">Docstring:</span>
+List of parameters at ends of lattice elements
+
+Parameters
+----------
+elements
+who
+ix_uni : default=1
+ix_branch : default=0
+which : default=model
+flags : optional, default=-array_out
+
+Returns
+-------
+string_list
+    if &#39;-array_out&#39; not in flags
+real_array
+    if &#39;-array_out&#39; in flags
+
+Notes
+-----
+Command syntax:
+  python lat_list {flags} {ix_uni}@{ix_branch}&gt;&gt;{elements}|{which} {who}
+where:
+ Optional {flags} are:
+  -no_slaves : If present, multipass_slave and super_slave elements will not be matched to.
+  -track_only : If present, lord elements will not be matched to.
+  -index_order : If present, order elements by element index instead of the standard s-position.
+  -array_out : If present, the output will be available in the tao_c_interface_com%c_real or
+    tao_c_interface_com%c_integer arrays. See the code below for when %c_real vs %c_integer is used.
+    Note: Only a single {who} item permitted when -array_out is present.
+
+  {which} is one of:
+    model
+    base
+    design
+
+  {who} is a comma deliminated list of:
+    orbit.floor.x, orbit.floor.y, orbit.floor.z    ! Floor coords at particle orbit.
+    orbit.spin.1, orbit.spin.2, orbit.spin.3,
+    orbit.vec.1, orbit.vec.2, orbit.vec.3, orbit.vec.4, orbit.vec.5, orbit.vec.6,
+    orbit.t, orbit.beta,
+    orbit.state,     ! Note: state is an integer. alive$ = 1, anything else is lost.
+    orbit.energy, orbit.pc,
+    ele.name, ele.ix_ele, ele.ix_branch
+    ele.a.beta, ele.a.alpha, ele.a.eta, ele.a.etap, ele.a.gamma, ele.a.phi,
+    ele.b.beta, ele.b.alpha, ele.b.eta, ele.b.etap, ele.b.gamma, ele.b.phi,
+    ele.x.eta, ele.x.etap,
+    ele.y.eta, ele.y.etap,
+    ele.s, ele.l
+    ele.e_tot, ele.p0c
+    ele.mat6, ele.vec0
+
+  {elements} is a string to match element names to.
+    Use &#34;*&#34; to match to all elements.
+
+Examples:
+  python lat_list -track 3@0&gt;&gt;Q*|base ele.s,orbit.vec.2
+  python lat_list 3@0&gt;&gt;Q*|base real:ele.s
+
+Note: vector layout of mat6(6,6) is: [mat6(1,:), mat6(2,:), ...mat6(6,:)]
+
+Examples
+--------
+Example: 1
+ init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+ args:
+   ix_uni: 1
+   ix_branch: 0
+   elements: Q*
+   which: model
+   who: orbit.floor.x
+<span class="ansi-red-fg">File:</span>      ~/Code/GitHub/pytao/pytao/interface_commands.py
+<span class="ansi-red-fg">Type:</span>      method
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>tao.lat_list(ix_uni=&#39;1&#39;, ix_branch=&#39;0&#39;, elements=&#39;Q*&#39;, which=&#39;model&#39;, who=&#39;orbit.floor.x&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([ 0.00000000e+00,  5.45237551e-03,  8.07258498e-03,  1.66182326e-02,
+        1.27387380e-02, -1.28472105e-01, -6.17359843e-01, -1.63572345e+00,
+       -3.15359937e+00, -4.96007282e+00, -8.44393546e+00, -1.25353179e+01,
+       -1.53643067e+01, -1.93160734e+01, -2.35334264e+01, -2.86595986e+01,
+       -3.40012176e+01, -4.11157621e+01, -4.73379294e+01, -5.39309752e+01,
+       -6.08761196e+01, -6.66395241e+01, -7.38887317e+01, -8.14004743e+01,
+       -8.91380363e+01, -9.70602472e+01, -1.07067449e+02, -1.15219117e+02,
+       -1.23415239e+02, -1.31835984e+02, -1.39984609e+02, -1.48267476e+02,
+       -1.57243537e+02, -1.65204343e+02, -1.72728171e+02, -1.80184454e+02,
+       -1.85357667e+02, -1.92035953e+02, -2.00803308e+02, -2.06870816e+02,
+       -2.12665472e+02, -2.18176446e+02, -2.23048903e+02, -2.27424223e+02,
+       -2.31268371e+02, -2.34552365e+02, -2.35722795e+02, -2.38140782e+02,
+       -2.39786197e+02, -2.41460799e+02, -2.42244503e+02, -2.42601929e+02,
+       -2.42642700e+02, -2.42650644e+02, -2.42653710e+02, -2.42654862e+02,
+       -2.42659288e+02, -2.42665724e+02, -2.42598208e+02, -2.42184677e+02,
+       -2.41366884e+02, -2.39606411e+02, -2.37970189e+02, -2.35481975e+02,
+       -2.34317767e+02, -2.30993059e+02, -2.27125243e+02, -2.22727572e+02,
+       -2.17816014e+02, -2.12280155e+02, -2.06437560e+02, -2.00332922e+02,
+       -1.91531579e+02, -1.84820360e+02, -1.79653415e+02, -1.72176815e+02,
+       -1.64644379e+02, -1.56674258e+02, -1.47685976e+02, -1.39396228e+02,
+       -1.31238484e+02, -1.22815238e+02, -1.14621366e+02, -1.06478604e+02,
+       -9.64783765e+01, -8.85696775e+01, -8.08418039e+01, -7.33402313e+01,
+       -6.61118631e+01, -6.03400179e+01, -5.34245420e+01, -4.68515824e+01,
+       -4.06754290e+01, -3.36162811e+01, -2.82979311e+01, -2.32077226e+01,
+       -1.88775779e+01, -1.50782459e+01, -1.22578003e+01, -8.16224594e+00,
+       -4.68316592e+00, -2.92444850e+00, -1.48688761e+00, -5.48016680e-01,
+       -1.20823085e-01, -1.35569881e-02, -1.39261143e-02,  1.91718062e-06,
+       -5.50234769e-03, -1.53076310e-03])
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>tao.lat_list(ix_uni=1, ix_branch=0, elements=&#39;Q*&#39;, which=&#39;model&#39;, who=&#39;orbit.floor.x&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([ 0.00000000e+00,  5.45237551e-03,  8.07258498e-03,  1.66182326e-02,
+        1.27387380e-02, -1.28472105e-01, -6.17359843e-01, -1.63572345e+00,
+       -3.15359937e+00, -4.96007282e+00, -8.44393546e+00, -1.25353179e+01,
+       -1.53643067e+01, -1.93160734e+01, -2.35334264e+01, -2.86595986e+01,
+       -3.40012176e+01, -4.11157621e+01, -4.73379294e+01, -5.39309752e+01,
+       -6.08761196e+01, -6.66395241e+01, -7.38887317e+01, -8.14004743e+01,
+       -8.91380363e+01, -9.70602472e+01, -1.07067449e+02, -1.15219117e+02,
+       -1.23415239e+02, -1.31835984e+02, -1.39984609e+02, -1.48267476e+02,
+       -1.57243537e+02, -1.65204343e+02, -1.72728171e+02, -1.80184454e+02,
+       -1.85357667e+02, -1.92035953e+02, -2.00803308e+02, -2.06870816e+02,
+       -2.12665472e+02, -2.18176446e+02, -2.23048903e+02, -2.27424223e+02,
+       -2.31268371e+02, -2.34552365e+02, -2.35722795e+02, -2.38140782e+02,
+       -2.39786197e+02, -2.41460799e+02, -2.42244503e+02, -2.42601929e+02,
+       -2.42642700e+02, -2.42650644e+02, -2.42653710e+02, -2.42654862e+02,
+       -2.42659288e+02, -2.42665724e+02, -2.42598208e+02, -2.42184677e+02,
+       -2.41366884e+02, -2.39606411e+02, -2.37970189e+02, -2.35481975e+02,
+       -2.34317767e+02, -2.30993059e+02, -2.27125243e+02, -2.22727572e+02,
+       -2.17816014e+02, -2.12280155e+02, -2.06437560e+02, -2.00332922e+02,
+       -1.91531579e+02, -1.84820360e+02, -1.79653415e+02, -1.72176815e+02,
+       -1.64644379e+02, -1.56674258e+02, -1.47685976e+02, -1.39396228e+02,
+       -1.31238484e+02, -1.22815238e+02, -1.14621366e+02, -1.06478604e+02,
+       -9.64783765e+01, -8.85696775e+01, -8.08418039e+01, -7.33402313e+01,
+       -6.61118631e+01, -6.03400179e+01, -5.34245420e+01, -4.68515824e+01,
+       -4.06754290e+01, -3.36162811e+01, -2.82979311e+01, -2.32077226e+01,
+       -1.88775779e+01, -1.50782459e+01, -1.22578003e+01, -8.16224594e+00,
+       -4.68316592e+00, -2.92444850e+00, -1.48688761e+00, -5.48016680e-01,
+       -1.20823085e-01, -1.35569881e-02, -1.39261143e-02,  1.91718062e-06,
+       -5.50234769e-03, -1.53076310e-03])
+</pre></div></div>
 </div>
 </div>
 
