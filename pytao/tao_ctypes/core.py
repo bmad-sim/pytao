@@ -2,6 +2,7 @@ import os
 import ctypes
 import numpy as np
 from pytao import tao_ctypes
+from pytao.tao_ctypes import extra_commands
 from pytao.util.parameters import tao_parameter_dict
 from .tools import full_path
 import tempfile
@@ -66,11 +67,9 @@ class Tao:
         # Attributes
         ##self.initialized = False
 
-        # Add in methods from `interface_commands`
-        methods = [m for m in dir(interface_commands) if not m.startswith('__')]
-        for m in methods:
-            func = interface_commands.__dict__[m]
-            setattr(self, m, types.MethodType(func, self))
+        # Extra methods
+        self._import_commands(interface_commands)
+        self._import_commands(extra_commands)
 
         try:
             self.register_cell_magic()
@@ -81,6 +80,15 @@ class Tao:
         if init:
             # Call init
             self.init(init)
+            
+            
+    def _import_commands(self, module):
+        deny_list = getattr(module, '__deny_list', [])
+        # Add in methods from `interface_commands`
+        methods = [m for m in dir(module) if not m.startswith('__') and m not in deny_list]
+        for m in methods:
+            func = module.__dict__[m]
+            setattr(self, m, types.MethodType(func, self))            
 
     #---------------------------------------------
     # Used by init and cmd routines

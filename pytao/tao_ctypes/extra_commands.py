@@ -1,5 +1,11 @@
 import numpy as np
 
+# These methods will be added to the Tao class
+# Skip these:
+__deny_list = ['np']
+
+
+
 def bunch_data(tao, ele_id, *, which='model', ix_bunch=1,  verbose=False):
     """    
     Returns bunch data in openPMD-beamphysics format/notation.
