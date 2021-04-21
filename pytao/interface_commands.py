@@ -174,14 +174,16 @@ def bunch1(tao, ele_id, *, which='model', ix_bunch='1', coordinate='', verbose=F
         One of: "model", "base" or "design"
     ix_bunch : default=1
     coordinate : optional
-        If one of: x, px, y, py, z, pz, 's', 't', 'charge', 'p0c'
+        If one of: x, px, y, py, z, pz, 's', 't', 'charge', 'p0c', 'state'
     
     Returns
     -------
     string_list
         if not coordinate
     real_array
-        if coordinate
+        if coordinate and coordinate != 'state'
+    integer_array
+        if coordinate == 'state'
     
     Notes
     -----
@@ -211,8 +213,10 @@ def bunch1(tao, ele_id, *, which='model', ix_bunch='1', coordinate='', verbose=F
     if verbose: print(cmd)
     if not coordinate:
         return __execute(tao, cmd, as_dict, method_name='bunch1', cmd_type='string_list')
-    if coordinate:
+    if coordinate and coordinate != 'state':
         return __execute(tao, cmd, as_dict, method_name='bunch1', cmd_type='real_array')
+    if coordinate == 'state':
+        return __execute(tao, cmd, as_dict, method_name='bunch1', cmd_type='integer_array')
 
 
 def building_wall_list(tao, *, ix_section='', verbose=False, as_dict=True):

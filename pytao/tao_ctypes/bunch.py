@@ -27,6 +27,8 @@ def get_bunch_stats(tao, ele=0, ix_universe=1, ix_branch=0, ix_bunch=1, verbose=
 
 def get_bunch_data(tao, ele=0, ix_universe=1, ix_branch=0, ix_bunch=1, verbose=False):
     """
+    Old routine
+    
     Returns bunch data in openPMD-beamphysics format/notation.
     
     Note that Tao's 'write beam' will also write a proper h5 file in this format.
@@ -78,3 +80,5 @@ def get_bunch_data(tao, ele=0, ix_universe=1, ix_branch=0, ix_bunch=1, verbose=F
     dat['species'] = species.lower()
     
     return dat
+
+
