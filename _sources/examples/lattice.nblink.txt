@@ -1,5 +1,0 @@
-{
-  "path": "../../../examples/lattice.ipynb",
-  "extra-media": [
-  ]
-}
