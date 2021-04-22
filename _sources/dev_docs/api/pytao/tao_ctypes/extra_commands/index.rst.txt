@@ -1,0 +1,35 @@
+:mod:`pytao.tao_ctypes.extra_commands`
+======================================
+
+.. py:module:: pytao.tao_ctypes.extra_commands
+
+
+Module Contents
+---------------
+
+.. function:: bunch_data(tao, ele_id, *, which='model', ix_bunch=1, verbose=False)
+
+   Returns bunch data in openPMD-beamphysics format/notation.
+
+   .. rubric:: Notes
+
+   Note that Tao's 'write beam' will also write a proper h5 file in this format.
+
+   Expected usage:
+       data = bunch_data(tao, 'end')
+       from pmd_beamphysics import ParticleGroup
+       P = ParicleGroup(data=data)
+
+   :returns: **data** -- 'x', 'px', 'y', 'py', 't', 'pz', 'status', 'weight', 'z', 'species'
+   :rtype: dict of arrays, with keys:
+
+   .. rubric:: Examples
+
+   Example: 1
+    init: $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
+    args:
+      ele_id: end
+      which: model
+      ix_bunch: 1
+
+

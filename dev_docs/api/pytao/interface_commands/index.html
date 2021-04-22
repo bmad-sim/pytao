@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>pytao.interface_commands &mdash; PyTao 0.1.0+9.g875804d documentation</title>
+  <title>pytao.interface_commands &mdash; PyTao 0.1.0+14.gf0f8b6a documentation</title>
   
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.0+9.g875804d
+                0.1.0+14.gf0f8b6a
               </div>
             
           
@@ -100,6 +100,9 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples/basic.html">PyTao basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples/basic.html#Tao-method-commands">Tao method commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/basic.html#All-method-commands">All method commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/basic.html#Other-Tao-instances">Other Tao instances</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/basic.html#ParticleGroup-from-openPMD-beamphysics">ParticleGroup from openPMD-beamphysics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples/advanced.html">PyTao advanced usage</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
@@ -364,13 +367,14 @@ ix_branch: 0</p>
 <li><p><strong>ele_id</strong> – Element name or index</p></li>
 <li><p><strong>which</strong> (<em>default=model</em>) – One of: “model”, “base” or “design”</p></li>
 <li><p><strong>ix_bunch</strong> (<em>default=1</em>) – </p></li>
-<li><p><strong>coordinate</strong> (<em>optional</em>) – If one of: x, px, y, py, z, pz, ‘s’, ‘t’, ‘charge’, ‘p0c’</p></li>
+<li><p><strong>coordinate</strong> (<em>optional</em>) – If one of: x, px, y, py, z, pz, ‘s’, ‘t’, ‘charge’, ‘p0c’, ‘state’</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><em>string_list</em> – if not coordinate</p></li>
-<li><p><em>real_array</em> – if coordinate</p></li>
+<li><p><em>real_array</em> – if coordinate and coordinate != ‘state’</p></li>
+<li><p><em>integer_array</em> – if coordinate == ‘state’</p></li>
 </ul>
 </p>
 </dd>
@@ -2609,7 +2613,7 @@ args:</p>
 
 <dl class="py function">
 <dt id="pytao.interface_commands.lat_list">
-<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">lat_list</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">who</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'model'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-array_out</span> <span class="pre">-index_order'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.lat_list" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">lat_list</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">who</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'model'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-array_out</span> <span class="pre">-track_only'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.lat_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of parameters at ends of lattice elements</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2619,7 +2623,7 @@ args:</p>
 <li><p><strong>ix_uni</strong> (<em>default=1</em>) – </p></li>
 <li><p><strong>ix_branch</strong> (<em>default=0</em>) – </p></li>
 <li><p><strong>which</strong> (<em>default=model</em>) – </p></li>
-<li><p><strong>flags</strong> (<em>optional</em><em>, </em><em>default=-array_out -index_order</em>) – </p></li>
+<li><p><strong>flags</strong> (<em>optional</em><em>, </em><em>default=-array_out -track_only</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

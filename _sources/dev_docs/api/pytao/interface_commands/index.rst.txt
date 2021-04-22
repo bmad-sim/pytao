@@ -116,11 +116,12 @@ Module Contents
    :type which: default=model
    :param ix_bunch:
    :type ix_bunch: default=1
-   :param coordinate: If one of: x, px, y, py, z, pz, 's', 't', 'charge', 'p0c'
+   :param coordinate: If one of: x, px, y, py, z, pz, 's', 't', 'charge', 'p0c', 'state'
    :type coordinate: optional
 
    :returns: * *string_list* -- if not coordinate
-             * *real_array* -- if coordinate
+             * *real_array* -- if coordinate and coordinate != 'state'
+             * *integer_array* -- if coordinate == 'state'
 
    .. rubric:: Notes
 
@@ -1888,7 +1889,7 @@ Module Contents
       ix_universe: 1
 
 
-.. function:: lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', flags='-array_out -index_order', verbose=False, as_dict=True)
+.. function:: lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', flags='-array_out -track_only', verbose=False, as_dict=True)
 
    List of parameters at ends of lattice elements
 
@@ -1901,7 +1902,7 @@ Module Contents
    :param which:
    :type which: default=model
    :param flags:
-   :type flags: optional, default=-array_out -index_order
+   :type flags: optional, default=-array_out -track_only
 
    :returns: * *string_list* -- if ('-array_out' not in flags) or (who in ['ele.name'])
              * *real_array* -- if ('-array_out' in flags or 'real:' in who) and (who not in ['orbit.state'])

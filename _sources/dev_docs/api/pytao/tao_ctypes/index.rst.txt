@@ -10,9 +10,9 @@ Submodules
    :titlesonly:
    :maxdepth: 1
 
-   bunch/index.rst
    core/index.rst
    evaluate/index.rst
+   extra_commands/index.rst
    tools/index.rst
    util/index.rst
 

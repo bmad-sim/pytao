@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>PyTao basic usage &mdash; PyTao 0.1.0+9.g875804d documentation</title>
+  <title>PyTao basic usage &mdash; PyTao 0.1.0+14.gf0f8b6a documentation</title>
   
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.0+9.g875804d
+                0.1.0+14.gf0f8b6a
               </div>
             
           
@@ -105,7 +105,16 @@
 <li class="toctree-l2"><a class="reference internal" href="#Interface-commands">Interface commands</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#Tao-method-commands">Tao method commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#Tao-method-commands">Tao method commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lat_list">lat_list</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#All-method-commands">All method commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#Other-Tao-instances">Other Tao instances</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Bunch-data">Bunch data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#ParticleGroup-from-openPMD-beamphysics">ParticleGroup from openPMD-beamphysics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advanced.html">PyTao advanced usage</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
@@ -469,20 +478,37 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>from pytao import Tao
-import os
+<span></span>%pylab --no-import-all inline
+%config InlineBackend.figure_format = &#39;retina&#39;
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Populating the interactive namespace from numpy and matplotlib
+</pre></div></div>
 </div>
 <div class="section" id="Inititialize-Tao">
 <h2>Inititialize Tao<a class="headerlink" href="#Inititialize-Tao" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from pytao import Tao
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -493,18 +519,19 @@ import os
 </div>
 <div class="section" id="Send-a-command">
 <h2>Send a command<a class="headerlink" href="#Send-a-command" title="Permalink to this headline">¶</a></h2>
+<p>Anything that you would normally type at a Tao&gt; prompt can be sent as a string. The return is a list of output strings.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span># Tao command
-tao.cmd(&#39;sho lat 1:10&#39;)
+tao.cmd(&#39;show lat 1:10&#39;)
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -532,7 +559,7 @@ tao.cmd(&#39;sho lat 1:10&#39;)
 <h2>Jupyter magic %%tao<a class="headerlink" href="#Jupyter-magic-%%tao" title="Permalink to this headline">¶</a></h2>
 <p>This is an alternative way to send commands to Tao directly in the jupyter notebook, using the %%tao magic. Multiple lines can be executed.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -623,10 +650,10 @@ Tao&gt;
 </div>
 <div class="section" id="Interface-commands">
 <h2>Interface commands<a class="headerlink" href="#Interface-commands" title="Permalink to this headline">¶</a></h2>
-<p>Tao has a special set of commands to send back data suitable for parsing in Python.</p>
+<p>Output above from the <code class="docutils literal notranslate"><span class="pre">show</span></code> command is designed to be human-readable. In general you should <strong>not</strong> try to parse these strings for data. For data, Tao has a special set of commands to send back data suitable for parsing in Python (or other software).</p>
 <p>Below are the raw commands.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -693,7 +720,7 @@ Tao&gt;
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -703,7 +730,7 @@ tao.cmd(&#39;python orbit_at_s 1@0&gt;&gt;1.2|model&#39;)
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -731,7 +758,7 @@ tao.cmd(&#39;python orbit_at_s 1@0&gt;&gt;1.2|model&#39;)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -741,7 +768,7 @@ tao.cmd(&#39;python lat_list -array_out 1@0&gt;&gt;Q*|model orbit.floor.x&#39;)
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -750,7 +777,7 @@ tao.cmd(&#39;python lat_list -array_out 1@0&gt;&gt;Q*|model orbit.floor.x&#39;)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -760,7 +787,7 @@ tao.cmd_real(&#39;python lat_list -array_out 1@0&gt;&gt;Q*|model orbit.floor.x&#
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -801,7 +828,7 @@ array([ 0.00000000e+00,  5.45237551e-03,  8.07258498e-03,  1.66182326e-02,
 <h1>Tao method commands<a class="headerlink" href="#Tao-method-commands" title="Permalink to this headline">¶</a></h1>
 <p>For convenience, all of these commands are available as methods of the Tao class, and automatically parse the output.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -864,7 +891,7 @@ Example: 1
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -873,7 +900,7 @@ Example: 1
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -901,7 +928,7 @@ Example: 1
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -959,7 +986,7 @@ Example: 1
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -968,7 +995,7 @@ Example: 1
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -978,25 +1005,9 @@ array([ 2.81317783e-03, -1.06788243e-03,  1.24836279e-04,  2.78779776e-04,
         2.66493906e-03,  2.68642691e-03])
 </pre></div></div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>tao.lat_list(&#39;*&#39;, &#39;orbit.floor.x&#39;)
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-array([-1.66222458e-05, -1.66222458e-05,  1.46952858e-03, ...,
-       -1.50094563e-03, -1.47081405e-05, -1.47081405e-05])
-</pre></div></div>
-</div>
+<div class="section" id="lat_list">
+<h2>lat_list<a class="headerlink" href="#lat_list" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">lat_list</span></code> can be used to efficiently extract array data</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
@@ -1019,7 +1030,7 @@ tao<span class="ansi-blue-fg">.</span>lat_list<span class="ansi-blue-fg">(</span
     ix_uni<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;1&#39;</span><span class="ansi-blue-fg">,</span>
     ix_branch<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;0&#39;</span><span class="ansi-blue-fg">,</span>
     which<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;model&#39;</span><span class="ansi-blue-fg">,</span>
-    flags<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;-array_out&#39;</span><span class="ansi-blue-fg">,</span>
+    flags<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;-array_out -track_only&#39;</span><span class="ansi-blue-fg">,</span>
     verbose<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span>
     as_dict<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">True</span><span class="ansi-blue-fg">,</span>
 <span class="ansi-blue-fg">)</span>
@@ -1033,14 +1044,16 @@ who
 ix_uni : default=1
 ix_branch : default=0
 which : default=model
-flags : optional, default=-array_out
+flags : optional, default=-array_out -track_only
 
 Returns
 -------
 string_list
-    if &#39;-array_out&#39; not in flags
+    if (&#39;-array_out&#39; not in flags) or (who in [&#39;ele.name&#39;])
 real_array
-    if &#39;-array_out&#39; in flags
+    if (&#39;-array_out&#39; in flags or &#39;real:&#39; in who) and (who not in [&#39;orbit.state&#39;])
+integer_array
+    if &#39;-array_out&#39; in flags and who in [&#39;orbit.state&#39;]
 
 Notes
 -----
@@ -1105,9 +1118,19 @@ Example: 1
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>tao.lat_list(ix_uni=&#39;1&#39;, ix_branch=&#39;0&#39;, elements=&#39;Q*&#39;, which=&#39;model&#39;, who=&#39;orbit.floor.x&#39;)
+<span></span># By detault this returns an array of floats
+s = tao.lat_list(&#39;*&#39;, &#39;ele.s&#39;, verbose=True)
+s[0:5]
 </pre></div>
 </div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+python lat_list -array_out -track_only 1@0&gt;&gt;*|model ele.s
+</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
@@ -1115,34 +1138,7 @@ Example: 1
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-array([ 0.00000000e+00,  5.45237551e-03,  8.07258498e-03,  1.66182326e-02,
-        1.27387380e-02, -1.28472105e-01, -6.17359843e-01, -1.63572345e+00,
-       -3.15359937e+00, -4.96007282e+00, -8.44393546e+00, -1.25353179e+01,
-       -1.53643067e+01, -1.93160734e+01, -2.35334264e+01, -2.86595986e+01,
-       -3.40012176e+01, -4.11157621e+01, -4.73379294e+01, -5.39309752e+01,
-       -6.08761196e+01, -6.66395241e+01, -7.38887317e+01, -8.14004743e+01,
-       -8.91380363e+01, -9.70602472e+01, -1.07067449e+02, -1.15219117e+02,
-       -1.23415239e+02, -1.31835984e+02, -1.39984609e+02, -1.48267476e+02,
-       -1.57243537e+02, -1.65204343e+02, -1.72728171e+02, -1.80184454e+02,
-       -1.85357667e+02, -1.92035953e+02, -2.00803308e+02, -2.06870816e+02,
-       -2.12665472e+02, -2.18176446e+02, -2.23048903e+02, -2.27424223e+02,
-       -2.31268371e+02, -2.34552365e+02, -2.35722795e+02, -2.38140782e+02,
-       -2.39786197e+02, -2.41460799e+02, -2.42244503e+02, -2.42601929e+02,
-       -2.42642700e+02, -2.42650644e+02, -2.42653710e+02, -2.42654862e+02,
-       -2.42659288e+02, -2.42665724e+02, -2.42598208e+02, -2.42184677e+02,
-       -2.41366884e+02, -2.39606411e+02, -2.37970189e+02, -2.35481975e+02,
-       -2.34317767e+02, -2.30993059e+02, -2.27125243e+02, -2.22727572e+02,
-       -2.17816014e+02, -2.12280155e+02, -2.06437560e+02, -2.00332922e+02,
-       -1.91531579e+02, -1.84820360e+02, -1.79653415e+02, -1.72176815e+02,
-       -1.64644379e+02, -1.56674258e+02, -1.47685976e+02, -1.39396228e+02,
-       -1.31238484e+02, -1.22815238e+02, -1.14621366e+02, -1.06478604e+02,
-       -9.64783765e+01, -8.85696775e+01, -8.08418039e+01, -7.33402313e+01,
-       -6.61118631e+01, -6.03400179e+01, -5.34245420e+01, -4.68515824e+01,
-       -4.06754290e+01, -3.36162811e+01, -2.82979311e+01, -2.32077226e+01,
-       -1.88775779e+01, -1.50782459e+01, -1.22578003e+01, -8.16224594e+00,
-       -4.68316592e+00, -2.92444850e+00, -1.48688761e+00, -5.48016680e-01,
-       -1.20823085e-01, -1.35569881e-02, -1.39261143e-02,  1.91718062e-06,
-       -5.50234769e-03, -1.53076310e-03])
+array([0.      , 0.      , 0.622301, 0.622301, 0.637956])
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -1150,7 +1146,9 @@ array([ 0.00000000e+00,  5.45237551e-03,  8.07258498e-03,  1.66182326e-02,
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>tao.lat_list(ix_uni=1, ix_branch=0, elements=&#39;Q*&#39;, which=&#39;model&#39;, who=&#39;orbit.floor.x&#39;)
+<span></span># One particular key will return integers
+state = tao.lat_list(&#39;*&#39;, &#39;orbit.state&#39;)
+state.dtype
 </pre></div>
 </div>
 </div>
@@ -1160,35 +1158,455 @@ array([ 0.00000000e+00,  5.45237551e-03,  8.07258498e-03,  1.66182326e-02,
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-array([ 0.00000000e+00,  5.45237551e-03,  8.07258498e-03,  1.66182326e-02,
-        1.27387380e-02, -1.28472105e-01, -6.17359843e-01, -1.63572345e+00,
-       -3.15359937e+00, -4.96007282e+00, -8.44393546e+00, -1.25353179e+01,
-       -1.53643067e+01, -1.93160734e+01, -2.35334264e+01, -2.86595986e+01,
-       -3.40012176e+01, -4.11157621e+01, -4.73379294e+01, -5.39309752e+01,
-       -6.08761196e+01, -6.66395241e+01, -7.38887317e+01, -8.14004743e+01,
-       -8.91380363e+01, -9.70602472e+01, -1.07067449e+02, -1.15219117e+02,
-       -1.23415239e+02, -1.31835984e+02, -1.39984609e+02, -1.48267476e+02,
-       -1.57243537e+02, -1.65204343e+02, -1.72728171e+02, -1.80184454e+02,
-       -1.85357667e+02, -1.92035953e+02, -2.00803308e+02, -2.06870816e+02,
-       -2.12665472e+02, -2.18176446e+02, -2.23048903e+02, -2.27424223e+02,
-       -2.31268371e+02, -2.34552365e+02, -2.35722795e+02, -2.38140782e+02,
-       -2.39786197e+02, -2.41460799e+02, -2.42244503e+02, -2.42601929e+02,
-       -2.42642700e+02, -2.42650644e+02, -2.42653710e+02, -2.42654862e+02,
-       -2.42659288e+02, -2.42665724e+02, -2.42598208e+02, -2.42184677e+02,
-       -2.41366884e+02, -2.39606411e+02, -2.37970189e+02, -2.35481975e+02,
-       -2.34317767e+02, -2.30993059e+02, -2.27125243e+02, -2.22727572e+02,
-       -2.17816014e+02, -2.12280155e+02, -2.06437560e+02, -2.00332922e+02,
-       -1.91531579e+02, -1.84820360e+02, -1.79653415e+02, -1.72176815e+02,
-       -1.64644379e+02, -1.56674258e+02, -1.47685976e+02, -1.39396228e+02,
-       -1.31238484e+02, -1.22815238e+02, -1.14621366e+02, -1.06478604e+02,
-       -9.64783765e+01, -8.85696775e+01, -8.08418039e+01, -7.33402313e+01,
-       -6.61118631e+01, -6.03400179e+01, -5.34245420e+01, -4.68515824e+01,
-       -4.06754290e+01, -3.36162811e+01, -2.82979311e+01, -2.32077226e+01,
-       -1.88775779e+01, -1.50782459e+01, -1.22578003e+01, -8.16224594e+00,
-       -4.68316592e+00, -2.92444850e+00, -1.48688761e+00, -5.48016680e-01,
-       -1.20823085e-01, -1.35569881e-02, -1.39261143e-02,  1.91718062e-06,
-       -5.50234769e-03, -1.53076310e-03])
+dtype(&#39;&lt;i4&#39;)
 </pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># And this one will return a list of strings
+names = tao.lat_list(&#39;*&#39;, &#39;ele.name&#39;)
+names[0:5]
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Failed to parse string data. Returning raw value. Exception was:  not enough values to unpack (expected 3, got 1)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;BEGINNING&#39;, &#39;IP_L0&#39;, &#39;CLEO_SOL#3&#39;, &#39;DET_00W&#39;, &#39;CLEO_SOL#4&#39;]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Simple plot of this data
+plt.plot(
+    tao.lat_list(&#39;*&#39;, &#39;ele.s&#39;),
+    tao.lat_list(&#39;*&#39;, &#39;orbit.vec.1&#39;),
+    marker=&#39;.&#39;
+)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&lt;matplotlib.lines.Line2D at 0x15d511280&gt;]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_basic_26_1.png" class="no-scaled-link" src="../_images/examples_basic_26_1.png" style="width: 400px; height: 248px;" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Be careful with the flags. The defaults are:
+plt.plot(tao.lat_list(&#39;*&#39;, &#39;ele.s&#39;, flags=&#39;-array_out -track_only&#39;))
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&lt;matplotlib.lines.Line2D at 0x15d5cff40&gt;]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_basic_27_1.png" class="no-scaled-link" src="../_images/examples_basic_27_1.png" style="width: 375px; height: 250px;" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># -index_order will return
+plt.plot(tao.lat_list(&#39;*&#39;, &#39;ele.s&#39;, flags=&#39;-array_out -index_order&#39;))
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&lt;matplotlib.lines.Line2D at 0x15d6480a0&gt;]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_basic_28_1.png" class="no-scaled-link" src="../_images/examples_basic_28_1.png" style="width: 375px; height: 250px;" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="All-method-commands">
+<h1>All method commands<a class="headerlink" href="#All-method-commands" title="Permalink to this headline">¶</a></h1>
+<p>There are many method commands. Please explore the documentation to find the ones that will best suit your needs.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from pytao import interface_commands
+all_cmds = [name for name in dir(interface_commands) if not name.startswith(&#39;__&#39;)]
+print(all_cmds)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;beam&#39;, &#39;beam_init&#39;, &#39;bmad_com&#39;, &#39;branch1&#39;, &#39;building_wall_graph&#39;, &#39;building_wall_list&#39;, &#39;building_wall_point&#39;, &#39;building_wall_section&#39;, &#39;bunch1&#39;, &#39;constraints&#39;, &#39;da_aperture&#39;, &#39;da_params&#39;, &#39;data&#39;, &#39;data_d1_array&#39;, &#39;data_d2&#39;, &#39;data_d2_array&#39;, &#39;data_d2_create&#39;, &#39;data_d2_destroy&#39;, &#39;data_d_array&#39;, &#39;data_parameter&#39;, &#39;data_set_design_value&#39;, &#39;datum_create&#39;, &#39;datum_has_ele&#39;, &#39;derivative&#39;, &#39;ele_ac_kicker&#39;, &#39;ele_cartesian_map&#39;, &#39;ele_chamber_wall&#39;, &#39;ele_control&#39;, &#39;ele_cylindrical_map&#39;, &#39;ele_elec_multipoles&#39;, &#39;ele_floor&#39;, &#39;ele_gen_attribs&#39;, &#39;ele_grid_field&#39;, &#39;ele_head&#39;, &#39;ele_lord_slave&#39;, &#39;ele_mat6&#39;, &#39;ele_methods&#39;, &#39;ele_multipoles&#39;, &#39;ele_orbit&#39;, &#39;ele_photon&#39;, &#39;ele_spin_taylor&#39;, &#39;ele_taylor&#39;, &#39;ele_taylor_field&#39;, &#39;ele_twiss&#39;, &#39;ele_wake&#39;, &#39;ele_wall3d&#39;, &#39;em_field&#39;, &#39;enum&#39;, &#39;evaluate&#39;, &#39;floor_orbit&#39;, &#39;floor_plan&#39;, &#39;help&#39;, &#39;inum&#39;, &#39;lat_calc_done&#39;, &#39;lat_ele_list&#39;, &#39;lat_general&#39;, &#39;lat_list&#39;, &#39;lat_param_units&#39;, &#39;matrix&#39;, &#39;merit&#39;, &#39;orbit_at_s&#39;, &#39;parse_tao_python_data&#39;, &#39;place_buffer&#39;, &#39;plot1&#39;, &#39;plot_curve&#39;, &#39;plot_curve_manage&#39;, &#39;plot_graph&#39;, &#39;plot_graph_manage&#39;, &#39;plot_histogram&#39;, &#39;plot_lat_layout&#39;, &#39;plot_line&#39;, &#39;plot_list&#39;, &#39;plot_plot_manage&#39;, &#39;plot_symbol&#39;, &#39;plot_transfer&#39;, &#39;shape_list&#39;, &#39;shape_manage&#39;, &#39;shape_pattern_list&#39;, &#39;shape_pattern_manage&#39;, &#39;shape_pattern_point_manage&#39;, &#39;shape_set&#39;, &#39;show&#39;, &#39;species_to_int&#39;, &#39;species_to_str&#39;, &#39;spin_polarization&#39;, &#39;super_universe&#39;, &#39;tao_global&#39;, &#39;tao_parameter_dict&#39;, &#39;twiss_at_s&#39;, &#39;universe&#39;, &#39;var&#39;, &#39;var_create&#39;, &#39;var_general&#39;, &#39;var_v1_array&#39;, &#39;var_v1_create&#39;, &#39;var_v1_destroy&#39;, &#39;var_v_array&#39;, &#39;wave&#39;]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># There are this many commands:
+len(all_cmds)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+98
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Other-Tao-instances">
+<h1>Other Tao instances<a class="headerlink" href="#Other-Tao-instances" title="Permalink to this headline">¶</a></h1>
+<p>Unfortunately there can only be one Tao instance per process, because the internal structures are held in memory and accessed via ctypes. So this will replace the</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># This looks like a new object...
+tao2=Tao(&#39;-init $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init -noplot&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># ...but internally connects to
+tao.lat_list(&#39;*&#39;, &#39;ele.name&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Failed to parse string data. Returning raw value. Exception was:  not enough values to unpack (expected 3, got 1)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;BEGINNING&#39;,
+ &#39;MAR.CSR&#39;,
+ &#39;FF.PIP00B&#39;,
+ &#39;FF.BEN01&#39;,
+ &#39;FF.PIP01&#39;,
+ &#39;FF.BEN02&#39;,
+ &#39;FF.PIP02A&#39;,
+ &#39;MAR.END&#39;,
+ &#39;END&#39;]
+</pre></div></div>
+</div>
+<div class="section" id="Bunch-data">
+<h2>Bunch data<a class="headerlink" href="#Bunch-data" title="Permalink to this headline">¶</a></h2>
+<p>This example has bunch data. The main routine to extract information is:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>?tao.bunch1
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">Signature:</span>
+tao<span class="ansi-blue-fg">.</span>bunch1<span class="ansi-blue-fg">(</span>
+    ele_id<span class="ansi-blue-fg">,</span>
+    <span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">,</span>
+    which<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;model&#39;</span><span class="ansi-blue-fg">,</span>
+    ix_bunch<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;1&#39;</span><span class="ansi-blue-fg">,</span>
+    coordinate<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;&#39;</span><span class="ansi-blue-fg">,</span>
+    verbose<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span>
+    as_dict<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">True</span><span class="ansi-blue-fg">,</span>
+<span class="ansi-blue-fg">)</span>
+<span class="ansi-red-fg">Docstring:</span>
+Bunch parameters at the exit end of a given lattice element.
+
+Parameters
+----------
+ele_id
+    Element name or index
+which : default=model
+    One of: &#34;model&#34;, &#34;base&#34; or &#34;design&#34;
+ix_bunch : default=1
+coordinate : optional
+    If one of: x, px, y, py, z, pz, &#39;s&#39;, &#39;t&#39;, &#39;charge&#39;, &#39;p0c&#39;, &#39;state&#39;
+
+Returns
+-------
+string_list
+    if not coordinate
+real_array
+    if coordinate and coordinate != &#39;state&#39;
+integer_array
+    if coordinate == &#39;state&#39;
+
+Notes
+-----
+Command syntax:
+python bunch1 {ele_id}|{which} {ix_bunch} {coordinate}
+
+Examples
+--------
+Example: 1
+ init: $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
+ args:
+   ele_id: end
+   which: model
+   ix_bunch: 1
+   coordinate:
+
+Example: 2
+ init: $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
+ args:
+   ele_id: end
+   which: model
+   ix_bunch: 1
+   coordinate: x
+<span class="ansi-red-fg">File:</span>      ~/Code/GitHub/pytao/pytao/interface_commands.py
+<span class="ansi-red-fg">Type:</span>      method
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Statistical data
+stats = tao.bunch1(&#39;end&#39;)
+stats.keys()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+dict_keys([&#39;beta_x&#39;, &#39;alpha_x&#39;, &#39;gamma_x&#39;, &#39;phi_x&#39;, &#39;eta_x&#39;, &#39;etap_x&#39;, &#39;sigma_x&#39;, &#39;sigma_p_x&#39;, &#39;emit_x&#39;, &#39;norm_emit_x&#39;, &#39;beta_y&#39;, &#39;alpha_y&#39;, &#39;gamma_y&#39;, &#39;phi_y&#39;, &#39;eta_y&#39;, &#39;etap_y&#39;, &#39;sigma_y&#39;, &#39;sigma_p_y&#39;, &#39;emit_y&#39;, &#39;norm_emit_y&#39;, &#39;beta_z&#39;, &#39;alpha_z&#39;, &#39;gamma_z&#39;, &#39;phi_z&#39;, &#39;eta_z&#39;, &#39;etap_z&#39;, &#39;sigma_z&#39;, &#39;sigma_p_z&#39;, &#39;emit_z&#39;, &#39;norm_emit_z&#39;, &#39;beta_a&#39;, &#39;alpha_a&#39;, &#39;gamma_a&#39;, &#39;phi_a&#39;, &#39;eta_a&#39;, &#39;etap_a&#39;, &#39;sigma_a&#39;, &#39;sigma_p_a&#39;, &#39;emit_a&#39;, &#39;norm_emit_a&#39;, &#39;beta_b&#39;, &#39;alpha_b&#39;, &#39;gamma_b&#39;, &#39;phi_b&#39;, &#39;eta_b&#39;, &#39;etap_b&#39;, &#39;sigma_b&#39;, &#39;sigma_p_b&#39;, &#39;emit_b&#39;, &#39;norm_emit_b&#39;, &#39;beta_c&#39;, &#39;alpha_c&#39;, &#39;gamma_c&#39;, &#39;phi_c&#39;, &#39;eta_c&#39;, &#39;etap_c&#39;, &#39;sigma_c&#39;, &#39;sigma_p_c&#39;, &#39;emit_c&#39;, &#39;norm_emit_c&#39;, &#39;sigma_11&#39;, &#39;sigma_12&#39;, &#39;sigma_13&#39;, &#39;sigma_14&#39;, &#39;sigma_15&#39;, &#39;sigma_16&#39;, &#39;sigma_21&#39;, &#39;sigma_22&#39;, &#39;sigma_23&#39;, &#39;sigma_24&#39;, &#39;sigma_25&#39;, &#39;sigma_26&#39;, &#39;sigma_31&#39;, &#39;sigma_32&#39;, &#39;sigma_33&#39;, &#39;sigma_34&#39;, &#39;sigma_35&#39;, &#39;sigma_36&#39;, &#39;sigma_41&#39;, &#39;sigma_42&#39;, &#39;sigma_43&#39;, &#39;sigma_44&#39;, &#39;sigma_45&#39;, &#39;sigma_46&#39;, &#39;sigma_51&#39;, &#39;sigma_52&#39;, &#39;sigma_53&#39;, &#39;sigma_54&#39;, &#39;sigma_55&#39;, &#39;sigma_56&#39;, &#39;sigma_61&#39;, &#39;sigma_62&#39;, &#39;sigma_63&#39;, &#39;sigma_64&#39;, &#39;sigma_65&#39;, &#39;sigma_66&#39;, &#39;rel_min_1&#39;, &#39;rel_max_1&#39;, &#39;centroid_vec_1&#39;, &#39;rel_min_2&#39;, &#39;rel_max_2&#39;, &#39;centroid_vec_2&#39;, &#39;rel_min_3&#39;, &#39;rel_max_3&#39;, &#39;centroid_vec_3&#39;, &#39;rel_min_4&#39;, &#39;rel_max_4&#39;, &#39;centroid_vec_4&#39;, &#39;rel_min_5&#39;, &#39;rel_max_5&#39;, &#39;centroid_vec_5&#39;, &#39;rel_min_6&#39;, &#39;rel_max_6&#39;, &#39;centroid_vec_6&#39;, &#39;centroid_t&#39;, &#39;centroid_p0c&#39;, &#39;centroid_beta&#39;, &#39;ix_ele&#39;, &#39;direction&#39;, &#39;species&#39;, &#39;location&#39;, &#39;s&#39;, &#39;charge_live&#39;, &#39;n_particle_tot&#39;, &#39;n_particle_live&#39;, &#39;n_particle_lost_in_ele&#39;, &#39;beam_saved&#39;])
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Array data
+x = tao.bunch1(&#39;end&#39;, coordinate=&#39;x&#39;)
+px = tao.bunch1(&#39;end&#39;, coordinate=&#39;px&#39;)
+plt.scatter(x, px)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.collections.PathCollection at 0x15d6eb940&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_basic_38_1.png" class="no-scaled-link" src="../_images/examples_basic_38_1.png" style="width: 399px; height: 248px;" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># The state will be returned as an integer array.
+state = tao.bunch1(&#39;end&#39;, coordinate=&#39;state&#39;)
+state.dtype
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+dtype(&#39;&lt;i4&#39;)
+</pre></div></div>
+</div>
+</div>
+</div>
+<div class="section" id="ParticleGroup-from-openPMD-beamphysics">
+<h1>ParticleGroup from openPMD-beamphysics<a class="headerlink" href="#ParticleGroup-from-openPMD-beamphysics" title="Permalink to this headline">¶</a></h1>
+<p>openPMD-beamphysics is an external package that can be useful for further bunch analysis, plotting, and conversion.</p>
+<p><a class="reference external" href="https://github.com/ChristopherMayes/openPMD-beamphysics">https://github.com/ChristopherMayes/openPMD-beamphysics</a></p>
+<p>Here is example usage to extract bunch data and instantiate as a ParticleGroup object.</p>
+<p><em>Note that the momentum units in openPMD-beamphysics are in eV/c, whereas Bmad’s momenta are normalized by a refrence momentum.</em></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from pmd_beamphysics import ParticleGroup
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># This data is suitable for the ParticleGroup class
+data = tao.bunch_data(&#39;end&#39;)
+data.keys()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+dict_keys([&#39;x&#39;, &#39;px&#39;, &#39;y&#39;, &#39;py&#39;, &#39;t&#39;, &#39;pz&#39;, &#39;status&#39;, &#39;weight&#39;, &#39;z&#39;, &#39;species&#39;])
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>P = ParticleGroup(data=data)
+
+P.plot(&#39;x&#39;, &#39;px&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_basic_43_0.png" class="no-scaled-link" src="../_images/examples_basic_43_0.png" style="width: 390px; height: 264px;" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Tao&#39;s write format is already in the openPMD-beamphysics, so particles can be written and read in this way as well.
+tao.cmd(&#39;write beam -at end test.h5&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;[INFO] tao_write_cmd:&#39;, &#39;    Written: test.h5&#39;]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>P2 = ParticleGroup(&#39;test.h5&#39;)
+P2.plot(&#39;x&#39;, &#39;px&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_basic_45_0.png" class="no-scaled-link" src="../_images/examples_basic_45_0.png" style="width: 390px; height: 264px;" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Cleanup
+!rm test.h5
+</pre></div>
+</div>
 </div>
 </div>
 

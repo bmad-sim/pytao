@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>pytao.tao_ctypes.bunch &mdash; PyTao 0.1.0+9.g875804d documentation</title>
+  <title>pytao.tao_ctypes.extra_commands &mdash; PyTao 0.1.0+14.gf0f8b6a documentation</title>
   
 
   
@@ -40,8 +40,8 @@
     
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
-    <link rel="next" title="pytao.tao_ctypes.core" href="../core/index.html" />
-    <link rel="prev" title="pytao.tao_ctypes" href="../index.html" /> 
+    <link rel="next" title="pytao.tao_ctypes.tools" href="../tools/index.html" />
+    <link rel="prev" title="pytao.tao_ctypes.evaluate" href="../evaluate/index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.0+9.g875804d
+                0.1.0+14.gf0f8b6a
               </div>
             
           
@@ -100,6 +100,9 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/basic.html">PyTao basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/basic.html#Tao-method-commands">Tao method commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/basic.html#All-method-commands">All method commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/basic.html#Other-Tao-instances">Other Tao instances</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/basic.html#ParticleGroup-from-openPMD-beamphysics">ParticleGroup from openPMD-beamphysics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/advanced.html">PyTao advanced usage</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
@@ -182,13 +185,13 @@
         
           <li><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes</span></code></a> &raquo;</li>
         
-      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes.bunch</span></code></li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes.extra_commands</span></code></li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../../../../_sources/dev_docs/api/pytao/tao_ctypes/bunch/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../../../_sources/dev_docs/api/pytao/tao_ctypes/extra_commands/index.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -225,27 +228,39 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="module-pytao.tao_ctypes.bunch">
-<span id="pytao-tao-ctypes-bunch"></span><h1><a class="reference internal" href="#module-pytao.tao_ctypes.bunch" title="pytao.tao_ctypes.bunch"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes.bunch</span></code></a><a class="headerlink" href="#module-pytao.tao_ctypes.bunch" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-pytao.tao_ctypes.extra_commands">
+<span id="pytao-tao-ctypes-extra-commands"></span><h1><a class="reference internal" href="#module-pytao.tao_ctypes.extra_commands" title="pytao.tao_ctypes.extra_commands"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes.extra_commands</span></code></a><a class="headerlink" href="#module-pytao.tao_ctypes.extra_commands" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt id="pytao.tao_ctypes.bunch.get_bunch_stats">
-<code class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.bunch.</span></code><code class="sig-name descname"><span class="pre">get_bunch_stats</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ele</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_universe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_bunch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.bunch.get_bunch_stats" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets bunch statistics by calling:</p>
-<p>python bunch1 <a class="reference external" href="mailto:{ix_universe}&#37;&#52;&#48;{ix_branch">{ix_universe}<span>&#64;</span>{ix_branch</a>}&gt;&gt;{ix_ele}|{which} {ix_bunch}</p>
-<p>Returns a dict</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pytao.tao_ctypes.bunch.get_bunch_data">
-<code class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.bunch.</span></code><code class="sig-name descname"><span class="pre">get_bunch_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ele</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_universe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_bunch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.bunch.get_bunch_data" title="Permalink to this definition">¶</a></dt>
+<dt id="pytao.tao_ctypes.extra_commands.bunch_data">
+<code class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.extra_commands.</span></code><code class="sig-name descname"><span class="pre">bunch_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ele_id</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'model'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_bunch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.extra_commands.bunch_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns bunch data in openPMD-beamphysics format/notation.</p>
+<p class="rubric">Notes</p>
 <p>Note that Tao’s ‘write beam’ will also write a proper h5 file in this format.</p>
 <dl class="simple">
-<dt>Expected usage:</dt><dd><p>data = get_bunch_data(ta0, ele=’end’)
+<dt>Expected usage:</dt><dd><p>data = bunch_data(tao, ‘end’)
 from pmd_beamphysics import ParticleGroup
 P = ParicleGroup(data=data)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>data</strong> – ‘x’, ‘px’, ‘y’, ‘py’, ‘t’, ‘pz’, ‘status’, ‘weight’, ‘z’, ‘species’</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict of arrays, with keys:</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<dl>
+<dt>Example: 1</dt><dd><p>init: $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
+args:</p>
+<blockquote>
+<div><p>ele_id: end
+which: model
+ix_bunch: 1</p>
+</div></blockquote>
 </dd>
 </dl>
 </dd></dl>
@@ -259,8 +274,8 @@ P = ParicleGroup(data=data)</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../core/index.html" class="btn btn-neutral float-right" title="pytao.tao_ctypes.core" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="../index.html" class="btn btn-neutral float-left" title="pytao.tao_ctypes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../tools/index.html" class="btn btn-neutral float-right" title="pytao.tao_ctypes.tools" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../evaluate/index.html" class="btn btn-neutral float-left" title="pytao.tao_ctypes.evaluate" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
