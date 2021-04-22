@@ -11,6 +11,7 @@ Documentation for Bmad and Tao, as well as information for downloading the code 
 **`Documentation`** |
 ------------------- |
 [![Documentation](https://img.shields.io/badge/api-reference-blue.svg)](https://bmad-sim.github.io/pytao/dev_docs/api/index.html)  |
+[![Documentation](https://img.shields.io/badge/pytao-examples-green.svg)](https://bmad-sim.github.io/pytao/examples/basic.html#)  |
 
 
 
