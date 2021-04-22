@@ -1,7 +1,9 @@
 
 
 
-# PyTao
+PyTao
+=====
+
 
 [PyTao]((https://bmad-sim.github.io/pytao/index.html)) is Python interface for [Tao](https://www.classe.cornell.edu/bmad/tao.html), which is based on the Bmad subroutine library for relativistic charged–particle and X-ray simulations in accelerators and storage rings.
 
@@ -16,7 +18,8 @@ Documentation for Bmad and Tao, as well as information for downloading the code 
 
 
 
-## Installation
+Installation
+============
 
 See the [PyTao installation instructions](https://bmad-sim.github.io/pytao/user_docs/index.html) for details. The preferred installation method is using conda:
 
@@ -25,6 +28,14 @@ $ conda install -c conda-forge pytao
 ```
 
 Currently PyTao requires an installed Bmad distribution compiled with the `ACC_ENABLE_SHARED="Y"` flag. This can be set in the `bmad_dist/util/dist_prefs` file. 
+
+
+Current release info
+====================
+
+| Name | Downloads | Version | Platforms |
+| --- | --- | --- | --- |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-pytao-green.svg)](https://anaconda.org/conda-forge/pytao) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/pytao.svg)](https://anaconda.org/conda-forge/pytao) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pytao.svg)](https://anaconda.org/conda-forge/pytao) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/pytao.svg)](https://anaconda.org/conda-forge/pytao) |
 
 ## Resources
 
