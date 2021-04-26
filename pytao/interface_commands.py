@@ -23,7 +23,7 @@ def __execute(tao, cmd, as_dict=True, method_name=None, cmd_type="string_list"):
             else:
                 data = tao_parameter_dict(ret)
         except Exception as ex:
-            print('Failed to parse string data. Returning raw value. Exception was: ', ex)
+            # TODO: use logger instead of: print('Failed to parse string data. Returning raw value. Exception was: ', ex)
             return ret
             
         return data
