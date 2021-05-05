@@ -3,6 +3,7 @@ import ctypes
 import numpy as np
 from pytao import tao_ctypes
 from pytao.tao_ctypes import extra_commands
+from pytao.tao_ctypes.util import error_in_lines
 from pytao.util.parameters import tao_parameter_dict
 from .tools import full_path
 import tempfile
@@ -93,11 +94,22 @@ class Tao:
     #---------------------------------------------
     # Used by init and cmd routines
 
-    def get_output(self):
+    def get_output(self, reset=True):
+        """
+        Returns a list of output strings.
+        If reset, the internal Tao buffers will be reset.
+        """
         n_lines = self.so_lib.tao_c_out_io_buffer_num_lines()
         lines = [self.so_lib.tao_c_out_io_buffer_get_line(i).decode('utf-8') for i in range(1, n_lines+1)]
-        self.so_lib.tao_c_out_io_buffer_reset()
+        if reset:
+            self.so_lib.tao_c_out_io_buffer_reset()
         return lines
+    
+    def reset_output(self):
+        """
+        Resets all output buffers
+        """
+        self.so_lib.tao_c_out_io_buffer_reset()
 
     #---------------------------------------------
     # Init Tao
@@ -116,73 +128,88 @@ class Tao:
     #---------------------------------------------
     # Send a command to Tao and return the output
 
-    def cmd(self, cmd, exception_on_error=False):
+    def cmd(self, cmd, raises=True):
         """
         Runs a command, and returns the text output
         
         cmd: command string
-        exception_on_error: will raise an exception of [ERROR or [FATAL is detected in the output
+        raises: will raise an exception of [ERROR or [FATAL is detected in the output
         
         Returns a list of strings
         """
 
         self.so_lib.tao_c_command(cmd.encode('utf-8'))
         lines = self.get_output()  
-        if not exception_on_error:
+        
+        # Error checking
+        if not raises:
             return lines
-            
-        error = False
-        for line in lines:
-            # Look for first instance of a problem
-            if '[ERROR' in line or '[FATAL' in line: 
-                error = True
-                badlines = [line]
-                continue
-            if error:
-                # Collect subsequent lines
-                badlines.append(line)
-        if error:
-            printout = cmd+'\n' + '\n'.join(badlines)
-            raise ValueError(f'{printout}')    
-
+        
+        err = error_in_lines(lines)
+        if err:
+            raise RuntimeError(err)
+        
+        return lines
+    
     #---------------------------------------------
     # Get real array output.
     # Only python commands that load the real array buffer can be used with this method.
 
-    def cmd_real (self, cmd):
+    def cmd_real (self, cmd, raises=True):
         self.so_lib.tao_c_command(cmd.encode('utf-8'))
         n = self.so_lib.tao_c_real_array_size()
         self.so_lib.tao_c_get_real_array.restype = ctypes.POINTER(ctypes.c_double * n)
 
-        # Old way:
-        #array = []
-        #for re in self.so_lib.tao_c_get_real_array().contents: array.append(re)
-        #return array
-
-        #NumPy way:
+        # Check the output for errors
+        lines = self.get_output(reset=False)
+        err = error_in_lines(lines)
+        if err:
+            self.reset_output()
+            if raises:
+                raise RuntimeError(err)
+            else:
+                return None
+    
+        # Extract array data
         # This is a pointer to the scratch space.
         array = np.ctypeslib.as_array(
             (ctypes.c_double * n).from_address(ctypes.addressof(self.so_lib.tao_c_get_real_array().contents)))
-        # Return a copy
-        return np.copy(array)
+        
+        array = array.copy()
+        self.reset_output()
+        
+        return array  
 
     #----------
     # Get integer array output.
     # Only python commands that load the integer array buffer can be used with this method.
 
-    def cmd_integer (self, cmd):
+    def cmd_integer (self, cmd, raises=True):
         self.so_lib.tao_c_command(cmd.encode('utf-8'))
         n = self.so_lib.tao_c_integer_array_size()
         self.so_lib.tao_c_get_integer_array.restype = ctypes.POINTER(ctypes.c_int * n)
-        #array = []
-        #for inte in self.so_lib.tao_c_get_integer_array().contents: array.append(inte)
-        #return array
-        #NumPy way:
+
+        # Check the output for errors
+        lines = self.get_output(reset=False)
+        err = error_in_lines(lines)
+        if err:
+            self.reset_output()
+            if raises:
+                raise RuntimeError(err)
+            else:
+                return None  
+        
+        # Extract array data
         # This is a pointer to the scratch space.
         array = np.ctypeslib.as_array(
             (ctypes.c_int * n).from_address(ctypes.addressof(self.so_lib.tao_c_get_integer_array().contents)))
-        # Return a copy
-        return np.copy(array)
+
+        array = array.copy()
+        self.reset_output()
+        
+        return array  
+    
+ 
 
     #---------------------------------------------
 
@@ -428,7 +455,7 @@ def apply_settings(tao_object, settings):
         
     for cmd in cmds:
         tao_object.vprint(cmd)
-        tao_object.cmd(cmd, exception_on_error=True)
+        tao_object.cmd(cmd, raises=True)
         
     return cmds    
 
@@ -468,7 +495,7 @@ def run_tao(settings=None,
         for command in run_commands:
             if verbose:
                 print('run command:', command)
-            M.cmd(command, exception_on_error=True)
+            M.cmd(command, raises=True)
     
     finally:
         # Return to init_dir
