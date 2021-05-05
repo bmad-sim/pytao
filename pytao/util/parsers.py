@@ -47,3 +47,23 @@ def parse_derivative(lines):
         out[iu] = np.array(vals).astype(float)
         
     return out
+
+
+
+def parse_lat_ele_list(lines):
+    """
+    Parses the output of tao lat_ele_list
+    
+    Parameters
+    ----------
+    lines : list of str
+        The output of the 'python lat_ele_list' command to parse
+    
+    Returns
+    -------
+    list of str of element names
+    
+    """
+    
+    return [s.split(';')[1] for s in lines]
+

@@ -2267,23 +2267,23 @@ def lat_calc_done(tao, branch_name, *, verbose=False, as_dict=True):
     return __execute(tao, cmd, as_dict, method_name='lat_calc_done', cmd_type='string_list')
 
 
-def lat_ele_list(tao, branch_name, *, verbose=False, as_dict=True):
+def lat_ele_list(tao, *, branch_name='0', verbose=False, as_dict=True):
     """
     
     Lattice element list.
     
     Parameters
     ----------
-    branch_name
+    branch_name : default=0
     
     Returns
     -------
-    string_list
+    list of str of element names
     
     Notes
     -----
     Command syntax:
-      python lat_ele {branch_name}
+      python lat_ele_list {branch_name}
     {branch_name} should have the form:
       {ix_uni}@{ix_branch}
     
@@ -2295,7 +2295,7 @@ def lat_ele_list(tao, branch_name, *, verbose=False, as_dict=True):
        branch_name: 1@0
     
     """
-    cmd = f'python lat_ele {branch_name}'
+    cmd = f'python lat_ele_list {branch_name}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, method_name='lat_ele_list', cmd_type='string_list')
 
@@ -2390,6 +2390,7 @@ def lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', fl
         ele.s, ele.l
         ele.e_tot, ele.p0c
         ele.mat6, ele.vec0
+        ele.{attribute} Where {attribute} is a Bmad syntax element attribute. (ele.beta_a, etc.)
     
       {elements} is a string to match element names to.
         Use "*" to match to all elements.
