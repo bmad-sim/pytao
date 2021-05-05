@@ -121,7 +121,7 @@ class Tao:
             return self.get_output()
         else:
             # Reinit
-            self.cmd('reinit tao '+cmd)
+            self.cmd('reinit tao '+cmd, raises=False)
             tao_ctypes.initialized = True
             return self.get_output()
 
