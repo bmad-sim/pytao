@@ -20,3 +20,14 @@ Module Contents
    :rtype: dict
 
 
+.. function:: parse_lat_ele_list(lines)
+
+   Parses the output of tao lat_ele_list
+
+   :param lines: The output of the 'python lat_ele_list' command to parse
+   :type lines: list of str
+
+   :returns:
+   :rtype: list of str of element names
+
+

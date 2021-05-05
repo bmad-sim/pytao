@@ -1839,19 +1839,20 @@ Module Contents
       branch_name: 1@0
 
 
-.. function:: lat_ele_list(tao, branch_name, *, verbose=False, as_dict=True)
+.. function:: lat_ele_list(tao, *, branch_name='0', verbose=False, as_dict=True)
 
    Lattice element list.
 
    :param branch_name:
+   :type branch_name: default=0
 
    :returns:
-   :rtype: string_list
+   :rtype: list of str of element names
 
    .. rubric:: Notes
 
    Command syntax:
-     python lat_ele {branch_name}
+     python lat_ele_list {branch_name}
    {branch_name} should have the form:
      {ix_uni}@{ix_branch}
 
@@ -1941,6 +1942,7 @@ Module Contents
        ele.s, ele.l
        ele.e_tot, ele.p0c
        ele.mat6, ele.vec0
+       ele.{attribute} Where {attribute} is a Bmad syntax element attribute. (ele.beta_a, etc.)
 
      {elements} is a string to match element names to.
        Use "*" to match to all elements.

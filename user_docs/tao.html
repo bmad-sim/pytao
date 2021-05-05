@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Tao Interface &mdash; PyTao 0.1.2 documentation</title>
+  <title>Tao Interface &mdash; PyTao 0.1.2+2.gf51034c documentation</title>
   
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.2
+                0.1.2+2.gf51034c
               </div>
             
           
@@ -2552,22 +2552,22 @@ args:</p>
 
 <dl class="py function">
 <dt>
-<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">lat_ele_list</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">branch_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
+<code class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></code><code class="sig-name descname"><span class="pre">lat_ele_list</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Lattice element list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>branch_name</strong> – </p>
+<dd class="field-odd"><p><strong>branch_name</strong> (<em>default=0</em>) – </p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p></p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>string_list</p>
+<dd class="field-odd"><p>list of str of element names</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
 <dl class="simple">
-<dt>Command syntax:</dt><dd><p>python lat_ele {branch_name}</p>
+<dt>Command syntax:</dt><dd><p>python lat_ele_list {branch_name}</p>
 </dd>
 <dt>{branch_name} should have the form:</dt><dd><p><a class="reference external" href="mailto:{ix_uni}&#37;&#52;&#48;{ix_branch">{ix_uni}<span>&#64;</span>{ix_branch</a>}</p>
 </dd>
@@ -2671,7 +2671,8 @@ ele.x.eta, ele.x.etap,
 ele.y.eta, ele.y.etap,
 ele.s, ele.l
 ele.e_tot, ele.p0c
-ele.mat6, ele.vec0</p>
+ele.mat6, ele.vec0
+ele.{attribute} Where {attribute} is a Bmad syntax element attribute. (ele.beta_a, etc.)</p>
 </dd>
 <dt>{elements} is a string to match element names to.</dt><dd><p>Use “*” to match to all elements.</p>
 </dd>
