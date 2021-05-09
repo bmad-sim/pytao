@@ -34,7 +34,7 @@ class Tao:
     def __init__(self, init='', so_lib = ''):
         # TL/DR; Leave this import out of the global scope.
         #
-        # Make it lazy import to avoid ciclical dependency.
+        # Make it lazy import to avoid cyclical dependency.
         # at __init__.py there is an import for Tao which
         # would cause interface_commands to be imported always
         # once we import pytao.
@@ -45,28 +45,20 @@ class Tao:
 
         # Library needs to be set.
         if so_lib == '':
+            # Search
             BASE_DIR=os.environ['ACC_ROOT_DIR'] + '/production/lib/'
-            if os.path.isfile(BASE_DIR + 'libtao.so'):
-                self.so_lib_file = BASE_DIR + 'libtao.so'
-            elif os.path.isfile(BASE_DIR + 'libtao.dylib'):
-                self.so_lib_file = BASE_DIR + 'libtao.dylib'
-            elif os.path.isfile(BASE_DIR + 'libtao.dll'):
-                self.so_lib_file = BASE_DIR + 'libtao.dll'
-            else:
-                raise ValueError ('Shared object libtao library not found in: ' + BASE_DIR)
+            self.so_lib_file = find_libtao(BASE_DIR)
         elif not tao_ctypes.initialized:
             self.so_lib_file = so_lib
         else:
+            #Tao already initialized
             pass
-            #print('Tao already initialized.')
+            
         
         self.so_lib = ctypes.CDLL(self.so_lib_file)
 
         self.so_lib.tao_c_out_io_buffer_get_line.restype = ctypes.c_char_p
         self.so_lib.tao_c_out_io_buffer_reset.restype = None
-
-        # Attributes
-        ##self.initialized = False
 
         # Extra methods
         self._import_commands(interface_commands)
@@ -76,10 +68,8 @@ class Tao:
             self.register_cell_magic()
         except:
             pass
-            #print('unable to register cell magic')
 
         if init:
-            # Call init
             self.init(init)
             
             
@@ -116,14 +106,14 @@ class Tao:
 
     def init(self, cmd):
         if not tao_ctypes.initialized:
-            self.so_lib.tao_c_init_tao(cmd.encode('utf-8'))
+            err = self.so_lib.tao_c_init_tao(cmd.encode('utf-8'))
+            if err != 0:
+                raise ValueError(f'Unable to init Tao with: {cmd}')
             tao_ctypes.initialized = True
             return self.get_output()
         else:
             # Reinit
-            self.cmd('reinit tao '+cmd, raises=False)
-            tao_ctypes.initialized = True
-            return self.get_output()
+            return self.cmd(f'reinit tao {cmd}')
 
     #---------------------------------------------
     # Send a command to Tao and return the output
@@ -235,6 +225,21 @@ class Tao:
                    print(l)
       del tao
 
+    
+    
+def find_libtao(base_dir):  
+    """
+    Searches base_for for an appropriate libtao shared library. 
+    """
+    for lib in ['libtao.so', 'libtao.dylib', 'libtao.dll']:
+        so_lib_file = os.path.join(base_dir, lib)
+        if os.path.exists(so_lib_file):
+            return so_lib_file
+        
+    raise ValueError (f'Shared object libtao library not found in: {base_dir}')    
+    
+    
+    
 #----------------------------------------------------------------------
 
 class TaoModel(Tao):
