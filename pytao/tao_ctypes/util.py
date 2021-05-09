@@ -7,6 +7,32 @@ import numpy as np
 
 
 
+
+def error_in_lines(lines):
+    """
+    Checks '[ERROR', '[CRITICAL', '[FATAL' found in 
+    lines, and returns a string of info if something is found.
+    Otherwise, '' is returned.
+    
+    """
+    for i, line in enumerate(lines):
+        err = error_in_line(line)
+        if err:
+            info = '\n'.join(lines[i:])
+            return f'{err} detected: {info}'
+
+    return ''
+
+def error_in_line(line):
+    """
+    Returns True if the line contains: '[ERROR', '[CRITICAL', '[FATAL' 
+    """
+    for chars in ['[ERROR', '[CRITICAL', '[FATAL']:
+        if chars in line:
+            return chars[1:]
+    return ''
+
+
 def chunks(lst, n):
     """Yield successive n-sized chunks from lst."""
     for i in range(0, len(lst), n):
