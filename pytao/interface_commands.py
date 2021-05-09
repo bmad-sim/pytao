@@ -55,7 +55,7 @@ def beam(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
      args:
        ix_universe: 1
     
@@ -89,7 +89,7 @@ def beam_init(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=True)
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
      args:
        ix_universe: 1
     
@@ -116,7 +116,7 @@ def bmad_com(tao, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
     
     """
@@ -150,7 +150,7 @@ def branch1(tao, *, ix_universe='1', ix_branch='0', verbose=False, as_dict=True,
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        ix_universe: 1
        ix_branch: 0
@@ -193,7 +193,7 @@ def bunch1(tao, ele_id, *, which='model', ix_bunch='1', coordinate='', verbose=F
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
      args:
        ele_id: end
        which: model
@@ -201,7 +201,7 @@ def bunch1(tao, ele_id, *, which='model', ix_bunch='1', coordinate='', verbose=F
        coordinate:
     
     Example: 2
-     init: $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
      args:
        ele_id: end
        which: model
@@ -242,12 +242,12 @@ def building_wall_list(tao, *, ix_section='', verbose=False, as_dict=True, raise
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
+     init: -init $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
      args:
        ix_section:
     
     Example: 2
-     init: $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
+     init: -init $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
      args:
        ix_section: 1
     
@@ -279,9 +279,9 @@ def building_wall_graph(tao, graph, *, verbose=False, as_dict=True, raises=True)
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
+     init: -init $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
      args:
-       graph:
+       graph: floor_plan.g
     
     """
     cmd = f'python building_wall_graph {graph}'
@@ -322,7 +322,7 @@ def building_wall_point(tao, ix_section, ix_point, z, x, radius, z_center, x_cen
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
+     init: -init $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
      args:
        ix_section: 1
        ix_point: 1
@@ -370,7 +370,7 @@ def building_wall_section(tao, ix_section, sec_name, sec_constraint, *, verbose=
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        ix_section: 1
        sec_name: test
@@ -429,12 +429,12 @@ def constraints(tao, who, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
        who: data
     
     Example: 2
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        who:var
     
@@ -462,13 +462,6 @@ def da_aperture(tao, *, ix_uni='1', verbose=False, as_dict=True, raises=True):
     Command syntax:
       python da_aperture {ix_uni}
     
-    Examples
-    --------
-    Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
-     args:
-       ix_uni:1
-    
     """
     cmd = f'python da_aperture {ix_uni}'
     if verbose: print(cmd)
@@ -492,13 +485,6 @@ def da_params(tao, *, ix_uni='1', verbose=False, as_dict=True, raises=True):
     -----
     Command syntax:
       python da_params {ix_uni}
-    
-    Examples
-    --------
-    Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
-     args:
-       ix_uni:1
     
     """
     cmd = f'python da_params {ix_uni}'
@@ -535,15 +521,15 @@ def data(tao, d2_name, d1_datum, *, ix_universe='1', dat_index='1', verbose=Fals
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
        ix_universe:
        d2_name: twiss
        d1_datum: end 
-       dat_index: 
+       dat_index: 1  
     
     Example: 2
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
        ix_universe: 1
        d2_name: twiss
@@ -600,7 +586,7 @@ def data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_un
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
        ix_uni: 1
        d2_name: orbit
@@ -637,10 +623,9 @@ def data_d2_destroy(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, r
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
-       ix_uni: 1
-       d2_datum: orbit
+       d2_datum: 1@eta.x
     
     """
     cmd = f'python data_d2_destroy {d2_datum}'
@@ -672,7 +657,7 @@ def data_d2(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=Tr
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
        ix_uni: 1
        d2_datum: twiss
@@ -709,7 +694,7 @@ def data_d_array(tao, d1_datum, *, ix_uni='1', verbose=False, as_dict=True, rais
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
        ix_uni: 1 
        d1_datum: twiss.end
@@ -744,7 +729,7 @@ def data_d1_array(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, rai
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
        ix_uni: 1 
        d2_datum: twiss
@@ -780,7 +765,7 @@ def data_parameter(tao, data_array, parameter, *, verbose=False, as_dict=True, r
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
        data_array: twiss.end 
        parameter: model_value
@@ -814,7 +799,7 @@ def data_d2_array(tao, ix_universe, *, verbose=False, as_dict=True, raises=True)
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        ix_universe : 1 
     
@@ -845,7 +830,7 @@ def data_set_design_value(tao, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
     
     """
@@ -908,7 +893,7 @@ def datum_create(tao, datum_name, data_type, *, ele_ref_name='', ele_start_name=
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
        datum_name: twiss.end[6]
        data_type: beta.y
@@ -955,7 +940,7 @@ def datum_has_ele(tao, datum_type, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
        datum_type: twiss.end 
     
@@ -987,7 +972,7 @@ def derivative(tao, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
     
     """
@@ -1025,7 +1010,7 @@ def ele_head(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1065,7 +1050,7 @@ def ele_methods(tao, ele_id, *, which='model', verbose=False, as_dict=True, rais
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1105,7 +1090,7 @@ def ele_gen_attribs(tao, ele_id, *, which='model', verbose=False, as_dict=True, 
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1145,7 +1130,7 @@ def ele_multipoles(tao, ele_id, *, which='model', verbose=False, as_dict=True, r
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1185,7 +1170,7 @@ def ele_ac_kicker(tao, ele_id, *, which='model', verbose=False, as_dict=True, ra
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1231,7 +1216,7 @@ def ele_cartesian_map(tao, ele_id, index, who, *, which='model', verbose=False, 
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1276,7 +1261,7 @@ def ele_chamber_wall(tao, ele_id, index, who, *, which='model', verbose=False, a
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
+     init: -init $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1324,7 +1309,7 @@ def ele_cylindrical_map(tao, ele_id, which, index, who, *, verbose=False, as_dic
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1366,7 +1351,7 @@ def ele_taylor(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1406,9 +1391,9 @@ def ele_spin_taylor(tao, ele_id, which, *, verbose=False, as_dict=True, raises=T
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
-      ele_id: 1@0>>1
+      ele_id: 1@0>>2
       which: model
     
     """
@@ -1452,7 +1437,7 @@ def ele_wake(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=Tru
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1499,7 +1484,7 @@ def ele_wall3d(tao, ele_id, which, index, who, *, verbose=False, as_dict=True, r
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1541,7 +1526,7 @@ def ele_twiss(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1552,10 +1537,11 @@ def ele_twiss(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
     return __execute(tao, cmd, as_dict, raises, method_name='ele_twiss', cmd_type='string_list')
 
 
-def ele_control(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
+def ele_control_var(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Element control
+    List element control variables.
+    Used for group, overlay and ramper type elements
     
     Parameters
     ----------
@@ -1569,27 +1555,27 @@ def ele_control(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True)
     Notes
     -----
     Command syntax:
-      python ele:control {ele_id}|{which}
+      python ele:control_var {ele_id}|{which}
     where {ele_id} is an element name or index and {which} is one of
       model
       base
       design
     Example:
-      python ele:control 3@1>>7|model
+      python ele:control_var 3@1>>7|model
     This gives element number 7 in branch 1 of universe 3.
     
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
-      ele_id: 1@0>>1
+      ele_id: 1@0>>873
       which: model
     
     """
-    cmd = f'python ele:control {ele_id}|{which}'
+    cmd = f'python ele:control_var {ele_id}|{which}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='ele_control', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_control_var', cmd_type='string_list')
 
 
 def ele_orbit(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
@@ -1621,7 +1607,7 @@ def ele_orbit(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1666,7 +1652,7 @@ def ele_mat6(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=Tru
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1713,7 +1699,7 @@ def ele_taylor_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=T
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1758,7 +1744,7 @@ def ele_grid_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=Tru
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1807,14 +1793,14 @@ def ele_floor(tao, ele_id, which, *, where='end', verbose=False, as_dict=True, r
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
-      where 
+      where: 
     
     Example: 2
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1860,7 +1846,7 @@ def ele_photon(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=T
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1907,7 +1893,7 @@ def ele_lord_slave(tao, ele_id, which, *, verbose=False, as_dict=True, raises=Tr
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1947,7 +1933,7 @@ def ele_elec_multipoles(tao, ele_id, which, *, verbose=False, as_dict=True, rais
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1987,7 +1973,7 @@ def evaluate(tao, expression, *, flags='-array_out', verbose=False, as_dict=True
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        expression: data::cbar.11[1:10]|model
     
@@ -2021,7 +2007,7 @@ def em_field(tao, ele_id, which, x, y, z, t_or_z, *, verbose=False, as_dict=True
     Notes
     -----
     Command syntax:
-      python em_field {ele_id}|{which} {x}, {y}, {z}, {t_or_z}
+      python em_field {ele_id}|{which} {x} {y} {z} {t_or_z}
     where {which} is one of:
       model
       base
@@ -2034,17 +2020,17 @@ def em_field(tao, ele_id, which, x, y, z, t_or_z, *, verbose=False, as_dict=True
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
-       ele_id: 1@0>>1
+       ele_id: 1@0>>22
        which: model
        x: 0
        y: 0
        z: 0
-       t_or_z: z
+       t_or_z: 0
     
     """
-    cmd = f'python em_field {ele_id}|{which} {x}, {y}, {z}, {t_or_z}'
+    cmd = f'python em_field {ele_id}|{which} {x} {y} {z} {t_or_z}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, raises, method_name='em_field', cmd_type='string_list')
 
@@ -2072,7 +2058,7 @@ def enum(tao, enum_name, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        enum_name: tracking_method
     
@@ -2103,9 +2089,9 @@ def floor_plan(tao, graph, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
-       graph:
+       graph: r13.g
     
     """
     cmd = f'python floor_plan {graph}'
@@ -2134,9 +2120,9 @@ def floor_orbit(tao, graph, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
-       graph: 
+       graph: r33.g 
     
     """
     cmd = f'python floor_orbit {graph}'
@@ -2169,7 +2155,7 @@ def tao_global(tao, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
     
     """
@@ -2195,7 +2181,7 @@ def help(tao, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
     
     """
@@ -2225,7 +2211,7 @@ def inum(tao, who, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        who: ix_universe
     
@@ -2257,7 +2243,7 @@ def lat_calc_done(tao, branch_name, *, verbose=False, as_dict=True, raises=True)
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        branch_name: 1@0
     
@@ -2290,7 +2276,7 @@ def lat_ele_list(tao, *, branch_name='0', verbose=False, as_dict=True, raises=Tr
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        branch_name: 1@0
     
@@ -2324,7 +2310,7 @@ def lat_general(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=Tru
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        ix_universe: 1
     
@@ -2404,7 +2390,7 @@ def lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', fl
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        ix_uni: 1  
        ix_branch: 0 
@@ -2444,7 +2430,7 @@ def lat_param_units(tao, param_name, *, verbose=False, as_dict=True, raises=True
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        param_name: L   
     
@@ -2484,9 +2470,9 @@ def matrix(tao, ele1_id, ele2_id, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
-       ele1_id: 2@1>>q01w|design
+       ele1_id: 1@0>>q01w|design
        ele2_id: q02w
     
     """
@@ -2512,7 +2498,7 @@ def merit(tao, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
     
     """
@@ -2551,7 +2537,7 @@ def orbit_at_s(tao, s, *, ix_uni='1', ix_branch='0', which='model', verbose=Fals
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        ix_uni: 1
        ix_branch: 0
@@ -2582,7 +2568,7 @@ def place_buffer(tao, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
     
     """
@@ -2612,9 +2598,9 @@ def plot_curve(tao, curve_name, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
-       curve_name: top.x.c1
+       curve_name: r13.g.a
     
     """
     cmd = f'python plot_curve {curve_name}'
@@ -2646,7 +2632,7 @@ def plot_lat_layout(tao, ix_universe: 1, ix_branch: 0, *, verbose=False, as_dict
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        ix_universe: 1
        ix_branch: 0 
@@ -2681,7 +2667,7 @@ def plot_list(tao, r_or_g, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        r_or_g: r
     
@@ -2718,9 +2704,9 @@ def plot_graph(tao, graph_name, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
-       graph_name: r13.g
+       graph_name: beta.g
     
     """
     cmd = f'python plot_graph {graph_name}'
@@ -2744,17 +2730,17 @@ def plot_histogram(tao, curve_name, *, verbose=False, as_dict=True, raises=True)
     Notes
     -----
     Command syntax:
-      python plot_histograph {curve_name}
+      python plot_histogram {curve_name}
     
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
-       curve_name: c1
+       curve_name: r33.g.x
     
     """
-    cmd = f'python plot_histograph {curve_name}'
+    cmd = f'python plot_histogram {curve_name}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, raises, method_name='plot_histogram', cmd_type='string_list')
 
@@ -2789,7 +2775,7 @@ def plot_plot_manage(tao, plot_location, plot_name, n_graph, graph1_name, graph2
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        plot_location: r11
        plot_name: beta
@@ -2817,12 +2803,12 @@ def plot_curve_manage(tao, graph_name, curve_index, curve_name, *, verbose=False
     
     Returns
     -------
-    string_list
+    None
     
     Notes
     -----
     Command syntax:
-      pyton plot_curve_manage {graph_name}^^{curve_index}^^{curve_name}
+      python plot_curve_manage {graph_name}^^{curve_index}^^{curve_name}
     If {curve_index} corresponds to an existing curve then this curve is deleted.
     In this case the {curve_name} is ignored and does not have to be present.
     If {curve_index} does not not correspond to an existing curve, {curve_index}
@@ -2831,16 +2817,16 @@ def plot_curve_manage(tao, graph_name, curve_index, curve_name, *, verbose=False
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
-       graph_name: g
+       graph_name: beta.g
        curve_index: 1
-       curve_name: c1
+       curve_name: r13.g.a
     
     """
-    cmd = f'pyton plot_curve_manage {graph_name}^^{curve_index}^^{curve_name}'
+    cmd = f'python plot_curve_manage {graph_name}^^{curve_index}^^{curve_name}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='plot_curve_manage', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='plot_curve_manage', cmd_type='None')
 
 
 def plot_graph_manage(tao, plot_name, graph_index, graph_name, *, verbose=False, as_dict=True, raises=True):
@@ -2856,12 +2842,12 @@ def plot_graph_manage(tao, plot_name, graph_index, graph_name, *, verbose=False,
     
     Returns
     -------
-    string_list
+    None
     
     Notes
     -----
     Command syntax:
-      pyton plot_graph_manage {plot_name}^^{graph_index}^^{graph_name}
+      python plot_graph_manage {plot_name}^^{graph_index}^^{graph_name}
     If {graph_index} corresponds to an existing graph then this graph is deleted.
     In this case the {graph_name} is ignored and does not have to be present.
     If {graph_index} does not not correspond to an existing graph, {graph_index}
@@ -2870,22 +2856,22 @@ def plot_graph_manage(tao, plot_name, graph_index, graph_name, *, verbose=False,
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
        plot_name: beta
        graph_index: 1
-       graph_name: g
+       graph_name: beta.g
     
     """
-    cmd = f'pyton plot_graph_manage {plot_name}^^{graph_index}^^{graph_name}'
+    cmd = f'python plot_graph_manage {plot_name}^^{graph_index}^^{graph_name}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='plot_graph_manage', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='plot_graph_manage', cmd_type='None')
 
 
 def plot_line(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Points used to construct a smooth line for a plot curve.
+    Output points used to construct the "line" associated with a plot curve.
     
     Parameters
     ----------
@@ -2914,7 +2900,7 @@ def plot_line(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=False
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        region_name: r11
        graph_name: g
@@ -2961,7 +2947,7 @@ def plot_symbol(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=Fal
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        region_name: r11
        graph_name: g
@@ -2986,7 +2972,7 @@ def plot_transfer(tao, from_plot, to_plot, *, verbose=False, as_dict=True, raise
     
     Returns
     -------
-    string_list
+    None
     
     Notes
     -----
@@ -3000,15 +2986,15 @@ def plot_transfer(tao, from_plot, to_plot, *, verbose=False, as_dict=True, raise
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
        from_plot: r13
-       to_plot: 
+       to_plot: r23 
     
     """
     cmd = f'python plot_transfer {from_plot} {to_plot}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='plot_transfer', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='plot_transfer', cmd_type='None')
 
 
 def plot1(tao, name, *, verbose=False, as_dict=True, raises=True):
@@ -3034,9 +3020,9 @@ def plot1(tao, name, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
-       name: r11
+       name: beta
     
     """
     cmd = f'python plot1 {name}'
@@ -3068,7 +3054,7 @@ def shape_list(tao, who, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        who: floor_plan  
     
@@ -3115,7 +3101,7 @@ def shape_manage(tao, who, index, add_or_delete, *, verbose=False, as_dict=True,
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        who: floor_plan
        index: 1
@@ -3149,12 +3135,12 @@ def shape_pattern_list(tao, *, ix_pattern='', verbose=False, as_dict=True, raise
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        ix_pattern: 
     
     Example: 2
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        ix_pattern: 1 
     
@@ -3193,7 +3179,7 @@ def shape_pattern_manage(tao, ix_pattern, pat_name, pat_line_width, *, verbose=F
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        ix_pattern : 5
        pat_name : new_pat
@@ -3234,7 +3220,7 @@ def shape_pattern_point_manage(tao, ix_pattern, ix_point, s, x, *, verbose=False
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        ix_pattern: 1
        ix_point: 1
@@ -3282,7 +3268,7 @@ def shape_set(tao, who, shape_index, ele_name, shape, color, shape_size, type_la
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        who: floor_plan
        shape_index: 1
@@ -3325,7 +3311,7 @@ def show(tao, line, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        line: -python
     
@@ -3358,9 +3344,9 @@ def species_to_int(tao, species_str, *, verbose=False, as_dict=True, raises=True
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
-       species_str: CO2++
+       species_str: electron
     
     """
     cmd = f'python species_to_int {species_str}'
@@ -3391,7 +3377,7 @@ def species_to_str(tao, species_int, *, verbose=False, as_dict=True, raises=True
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        species_int: -1
     
@@ -3432,7 +3418,7 @@ def spin_polarization(tao, *, ix_uni='1', ix_branch='0', which='model', verbose=
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args: 
        ix_uni: 1
        ix_branch: 0
@@ -3461,7 +3447,7 @@ def super_universe(tao, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args: 
     
     """
@@ -3498,7 +3484,7 @@ def twiss_at_s(tao, ix_uni, ix_branch, s, which, *, verbose=False, as_dict=True,
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args: 
        ix_uni: 1
        ix_branch: 0
@@ -3533,7 +3519,7 @@ def universe(tao, ix_universe, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args: 
        ix_universe: 1
     
@@ -3565,7 +3551,7 @@ def var(tao, var, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args: 
        var: quad_k1[1]
     
@@ -3612,10 +3598,10 @@ def var_create(tao, var_name, ele_name, attribute, universes, weight, step, low_
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
      args:
-       var_name: kick[5]
-       ele_name: Q01W
+       var_name: quad[1]
+       ele_name: Q1
        attribute: L
        universes: 1
        weight: 0.001
@@ -3623,7 +3609,7 @@ def var_create(tao, var_name, ele_name, attribute, universes, weight, step, low_
        low_lim: -10
        high_lim: 10
        merit_type: 
-       good_user: 1
+       good_user: T
        key_bound: T
        key_delta: 0.01 
     
@@ -3652,7 +3638,7 @@ def var_general(tao, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
     
     """
@@ -3684,7 +3670,7 @@ def var_v_array(tao, v1_var, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        v1_var: quad_k1
     
@@ -3715,7 +3701,7 @@ def var_v1_array(tao, v1_var, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        v1_var: quad_k1 
     
@@ -3765,7 +3751,7 @@ def var_v1_create(tao, v1_name, n_var_min, n_var_max, *, verbose=False, as_dict=
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        v1_name: quad_k1 
        n_var_min: 0 
@@ -3798,7 +3784,7 @@ def var_v1_destroy(tao, v1_datum, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        v1_datum: quad_k1
     
@@ -3834,7 +3820,7 @@ def wave(tao, what, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
      args:
        what: params
     

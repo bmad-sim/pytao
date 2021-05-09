@@ -55,7 +55,7 @@ def test_building_wall_list_2():
 def test_building_wall_graph_1():
     
     tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init'))
-    ret = interface_commands.building_wall_graph(tao, graph='')
+    ret = interface_commands.building_wall_graph(tao, graph='floor_plan.g')
             
         
 def test_building_wall_point_1():
@@ -82,22 +82,10 @@ def test_constraints_2():
     ret = interface_commands.constraints(tao, who='var')
             
         
-def test_da_aperture_1():
-    
-    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.da_aperture(tao, ix_uni='1')
-            
-        
-def test_da_params_1():
-    
-    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.da_params(tao, ix_uni='1')
-            
-        
 def test_data_1():
     
     tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init'))
-    ret = interface_commands.data(tao, ix_universe='', d2_name='twiss', d1_datum='end', dat_index='')
+    ret = interface_commands.data(tao, ix_universe='', d2_name='twiss', d1_datum='end', dat_index='1')
             
         
 def test_data_2():
@@ -114,8 +102,8 @@ def test_data_d2_create_1():
         
 def test_data_d2_destroy_1():
     
-    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init'))
-    ret = interface_commands.data_d2_destroy(tao, ix_uni='1', d2_datum='orbit')
+    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
+    ret = interface_commands.data_d2_destroy(tao, d2_datum='1@eta.x')
             
         
 def test_data_d2_1():
@@ -229,7 +217,7 @@ def test_ele_taylor_1():
 def test_ele_spin_taylor_1():
     
     tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.ele_spin_taylor(tao, ele_id='1@0>>1', which='model')
+    ret = interface_commands.ele_spin_taylor(tao, ele_id='1@0>>2', which='model')
             
         
 def test_ele_wake_1():
@@ -250,10 +238,10 @@ def test_ele_twiss_1():
     ret = interface_commands.ele_twiss(tao, ele_id='1@0>>1', which='model')
             
         
-def test_ele_control_1():
+def test_ele_control_var_1():
     
     tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.ele_control(tao, ele_id='1@0>>1', which='model')
+    ret = interface_commands.ele_control_var(tao, ele_id='1@0>>873', which='model')
             
         
 def test_ele_orbit_1():
@@ -283,7 +271,7 @@ def test_ele_grid_field_1():
 def test_ele_floor_1():
     
     tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.ele_floor(tao, ele_id='1@0>>1', which='model', where='where')
+    ret = interface_commands.ele_floor(tao, ele_id='1@0>>1', which='model', where='')
             
         
 def test_ele_floor_2():
@@ -319,7 +307,7 @@ def test_evaluate_1():
 def test_em_field_1():
     
     tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.em_field(tao, ele_id='1@0>>1', which='model', x='0', y='0', z='0', t_or_z='z')
+    ret = interface_commands.em_field(tao, ele_id='1@0>>22', which='model', x='0', y='0', z='0', t_or_z='0')
             
         
 def test_enum_1():
@@ -330,14 +318,14 @@ def test_enum_1():
         
 def test_floor_plan_1():
     
-    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.floor_plan(tao, graph='')
+    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init'))
+    ret = interface_commands.floor_plan(tao, graph='r13.g')
             
         
 def test_floor_orbit_1():
     
-    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.floor_orbit(tao, graph='')
+    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init'))
+    ret = interface_commands.floor_orbit(tao, graph='r33.g')
             
         
 def test_tao_global_1():
@@ -391,7 +379,7 @@ def test_lat_param_units_1():
 def test_matrix_1():
     
     tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.matrix(tao, ele1_id='2@1>>q01w|design', ele2_id='q02w')
+    ret = interface_commands.matrix(tao, ele1_id='1@0>>q01w|design', ele2_id='q02w')
             
         
 def test_merit_1():
@@ -414,8 +402,8 @@ def test_place_buffer_1():
         
 def test_plot_curve_1():
     
-    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.plot_curve(tao, curve_name='top.x.c1')
+    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init'))
+    ret = interface_commands.plot_curve(tao, curve_name='r13.g.a')
             
         
 def test_plot_lat_layout_1():
@@ -432,14 +420,14 @@ def test_plot_list_1():
         
 def test_plot_graph_1():
     
-    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.plot_graph(tao, graph_name='r13.g')
+    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init'))
+    ret = interface_commands.plot_graph(tao, graph_name='beta.g')
             
         
 def test_plot_histogram_1():
     
-    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.plot_histogram(tao, curve_name='c1')
+    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init'))
+    ret = interface_commands.plot_histogram(tao, curve_name='r33.g.x')
             
         
 def test_plot_plot_manage_1():
@@ -450,14 +438,14 @@ def test_plot_plot_manage_1():
         
 def test_plot_curve_manage_1():
     
-    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.plot_curve_manage(tao, graph_name='g', curve_index='1', curve_name='c1')
+    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init'))
+    ret = interface_commands.plot_curve_manage(tao, graph_name='beta.g', curve_index='1', curve_name='r13.g.a')
             
         
 def test_plot_graph_manage_1():
     
-    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.plot_graph_manage(tao, plot_name='beta', graph_index='1', graph_name='g')
+    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init'))
+    ret = interface_commands.plot_graph_manage(tao, plot_name='beta', graph_index='1', graph_name='beta.g')
             
         
 def test_plot_line_1():
@@ -474,14 +462,14 @@ def test_plot_symbol_1():
         
 def test_plot_transfer_1():
     
-    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.plot_transfer(tao, from_plot='r13', to_plot='')
+    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init'))
+    ret = interface_commands.plot_transfer(tao, from_plot='r13', to_plot='r23')
             
         
 def test_plot1_1():
     
-    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.plot1(tao, name='r11')
+    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init'))
+    ret = interface_commands.plot1(tao, name='beta')
             
         
 def test_shape_list_1():
@@ -535,7 +523,7 @@ def test_show_1():
 def test_species_to_int_1():
     
     tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.species_to_int(tao, species_str='CO2++')
+    ret = interface_commands.species_to_int(tao, species_str='electron')
             
         
 def test_species_to_str_1():
@@ -576,8 +564,8 @@ def test_var_1():
         
 def test_var_create_1():
     
-    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init'))
-    ret = interface_commands.var_create(tao, var_name='kick[5]', ele_name='Q01W', attribute='L', universes='1', weight='0.001', step='0.001', low_lim='-10', high_lim='10', merit_type='', good_user='1', key_bound='T', key_delta='0.01')
+    tao = Tao(os.path.expandvars('-noplot -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init'))
+    ret = interface_commands.var_create(tao, var_name='quad[1]', ele_name='Q1', attribute='L', universes='1', weight='0.001', step='0.001', low_lim='-10', high_lim='10', merit_type='', good_user='T', key_bound='T', key_delta='0.01')
             
         
 def test_var_general_1():
