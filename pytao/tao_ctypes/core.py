@@ -113,7 +113,9 @@ class Tao:
             return self.get_output()
         else:
             # Reinit
-            return self.cmd(f'reinit tao {cmd}')
+            output = self.cmd(f'reinit tao -clear {cmd}', raises=True)
+            assert self.so_lib.tao_c_out_io_buffer_num_lines() == 0
+            return output
 
     #---------------------------------------------
     # Send a command to Tao and return the output
