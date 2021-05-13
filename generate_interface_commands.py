@@ -239,7 +239,7 @@ for method, metadata in cmds_from_tao.items():
     for test_name, test_meta in tests.items():
         args = ['tao'] + [f"{k}='{v}'" for k, v in test_meta['args'].items()]
         test_code = f'''
-tao = Tao(os.path.expandvars('{test_meta['init']} -noplot '))
+tao = Tao(os.path.expandvars('{test_meta['init']} -external_plotting -noplot'))
 ret = interface_commands.{clean_method}({', '.join(args)})
         '''
         method_template = f'''

@@ -113,9 +113,7 @@ class Tao:
             return self.get_output()
         else:
             # Reinit
-            output = self.cmd(f'reinit tao -clear {cmd}', raises=True)
-            assert self.so_lib.tao_c_out_io_buffer_num_lines() == 0
-            return output
+            return self.cmd(f'reinit tao -clear {cmd}', raises=True)
 
     #---------------------------------------------
     # Send a command to Tao and return the output
@@ -131,7 +129,7 @@ class Tao:
         """
 
         self.so_lib.tao_c_command(cmd.encode('utf-8'))
-        lines = self.get_output()  
+        lines = self.get_output()
         
         # Error checking
         if not raises:
@@ -139,7 +137,7 @@ class Tao:
         
         err = error_in_lines(lines)
         if err:
-            raise RuntimeError(err)
+            raise RuntimeError(f'Command: {cmd} causes error: {err}')
         
         return lines
     
