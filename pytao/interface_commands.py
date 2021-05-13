@@ -55,7 +55,7 @@ def beam(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
      args:
        ix_universe: 1
     
@@ -89,7 +89,7 @@ def beam_init(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=True)
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
+     init: -init /$ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
      args:
        ix_universe: 1
     
@@ -116,7 +116,7 @@ def bmad_com(tao, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
     
     """
@@ -150,7 +150,7 @@ def branch1(tao, *, ix_universe='1', ix_branch='0', verbose=False, as_dict=True,
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        ix_universe: 1
        ix_branch: 0
@@ -193,7 +193,7 @@ def bunch1(tao, ele_id, *, which='model', ix_bunch='1', coordinate='', verbose=F
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
      args:
        ele_id: end
        which: model
@@ -201,7 +201,7 @@ def bunch1(tao, ele_id, *, which='model', ix_bunch='1', coordinate='', verbose=F
        coordinate:
     
     Example: 2
-     init: -init $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
      args:
        ele_id: end
        which: model
@@ -242,12 +242,12 @@ def building_wall_list(tao, *, ix_section='', verbose=False, as_dict=True, raise
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall
      args:
        ix_section:
     
     Example: 2
-     init: -init $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall
      args:
        ix_section: 1
     
@@ -279,7 +279,7 @@ def building_wall_graph(tao, graph, *, verbose=False, as_dict=True, raises=True)
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall
      args:
        graph: floor_plan.g
     
@@ -306,7 +306,7 @@ def building_wall_point(tao, ix_section, ix_point, z, x, radius, z_center, x_cen
     
     Returns
     -------
-    string_list
+    None
     
     Notes
     -----
@@ -322,7 +322,7 @@ def building_wall_point(tao, ix_section, ix_point, z, x, radius, z_center, x_cen
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall
      args:
        ix_section: 1
        ix_point: 1
@@ -335,7 +335,7 @@ def building_wall_point(tao, ix_section, ix_point, z, x, radius, z_center, x_cen
     """
     cmd = f'python building_wall_point {ix_section}^^{ix_point}^^{z}^^{x}^^{radius}^^{z_center}^^{x_center}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='building_wall_point', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='building_wall_point', cmd_type='None')
 
 
 def building_wall_section(tao, ix_section, sec_name, sec_constraint, *, verbose=False, as_dict=True, raises=True):
@@ -370,7 +370,7 @@ def building_wall_section(tao, ix_section, sec_name, sec_constraint, *, verbose=
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        ix_section: 1
        sec_name: test
@@ -429,12 +429,12 @@ def constraints(tao, who, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        who: data
     
     Example: 2
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        who:var
     
@@ -521,7 +521,7 @@ def data(tao, d2_name, d1_datum, *, ix_universe='1', dat_index='1', verbose=Fals
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        ix_universe:
        d2_name: twiss
@@ -529,7 +529,7 @@ def data(tao, d2_name, d1_datum, *, ix_universe='1', dat_index='1', verbose=Fals
        dat_index: 1  
     
     Example: 2
-     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        ix_universe: 1
        d2_name: twiss
@@ -586,7 +586,7 @@ def data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_un
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        ix_uni: 1
        d2_name: orbit
@@ -623,7 +623,7 @@ def data_d2_destroy(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, r
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        d2_datum: 1@eta.x
     
@@ -657,7 +657,7 @@ def data_d2(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=Tr
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        ix_uni: 1
        d2_datum: twiss
@@ -694,7 +694,7 @@ def data_d_array(tao, d1_datum, *, ix_uni='1', verbose=False, as_dict=True, rais
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        ix_uni: 1 
        d1_datum: twiss.end
@@ -729,7 +729,7 @@ def data_d1_array(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, rai
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        ix_uni: 1 
        d2_datum: twiss
@@ -765,7 +765,7 @@ def data_parameter(tao, data_array, parameter, *, verbose=False, as_dict=True, r
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        data_array: twiss.end 
        parameter: model_value
@@ -799,7 +799,7 @@ def data_d2_array(tao, ix_universe, *, verbose=False, as_dict=True, raises=True)
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        ix_universe : 1 
     
@@ -830,7 +830,7 @@ def data_set_design_value(tao, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
     
     """
@@ -893,7 +893,7 @@ def datum_create(tao, datum_name, data_type, *, ele_ref_name='', ele_start_name=
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        datum_name: twiss.end[6]
        data_type: beta.y
@@ -940,7 +940,7 @@ def datum_has_ele(tao, datum_type, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        datum_type: twiss.end 
     
@@ -972,7 +972,7 @@ def derivative(tao, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
     
     """
@@ -1010,7 +1010,7 @@ def ele_head(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1050,7 +1050,7 @@ def ele_methods(tao, ele_id, *, which='model', verbose=False, as_dict=True, rais
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1090,7 +1090,7 @@ def ele_gen_attribs(tao, ele_id, *, which='model', verbose=False, as_dict=True, 
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1130,7 +1130,7 @@ def ele_multipoles(tao, ele_id, *, which='model', verbose=False, as_dict=True, r
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1170,7 +1170,7 @@ def ele_ac_kicker(tao, ele_id, *, which='model', verbose=False, as_dict=True, ra
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1216,7 +1216,7 @@ def ele_cartesian_map(tao, ele_id, index, who, *, which='model', verbose=False, 
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field
      args:
       ele_id: 1@0>>1
       which: model
@@ -1261,7 +1261,7 @@ def ele_chamber_wall(tao, ele_id, index, who, *, which='model', verbose=False, a
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall3d
      args:
       ele_id: 1@0>>1
       which: model
@@ -1309,9 +1309,9 @@ def ele_cylindrical_map(tao, ele_id, which, index, who, *, verbose=False, as_dic
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field
      args:
-      ele_id: 1@0>>1
+      ele_id: 1@0>>5
       which: model
       index: 1
       who: base
@@ -1351,9 +1351,9 @@ def ele_taylor(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_taylor
      args:
-      ele_id: 1@0>>1
+      ele_id: 1@0>>34
       which: model
     
     """
@@ -1391,7 +1391,7 @@ def ele_spin_taylor(tao, ele_id, which, *, verbose=False, as_dict=True, raises=T
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_spin
      args:
       ele_id: 1@0>>2
       which: model
@@ -1437,11 +1437,11 @@ def ele_wake(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=Tru
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wake
      args:
       ele_id: 1@0>>1
       which: model
-      who: base
+      who: sr_long
     
     """
     cmd = f'python ele:wake {ele_id}|{which} {who}'
@@ -1484,12 +1484,12 @@ def ele_wall3d(tao, ele_id, which, index, who, *, verbose=False, as_dict=True, r
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall3d
      args:
       ele_id: 1@0>>1
       which: model
       index: 1
-      who: base
+      who: table
     
     """
     cmd = f'python ele:wall3d {ele_id}|{which} {index} {who}'
@@ -1526,7 +1526,7 @@ def ele_twiss(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1567,7 +1567,7 @@ def ele_control_var(tao, ele_id, which, *, verbose=False, as_dict=True, raises=T
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>873
       which: model
@@ -1607,7 +1607,7 @@ def ele_orbit(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1652,7 +1652,7 @@ def ele_mat6(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=Tru
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1699,12 +1699,12 @@ def ele_taylor_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=T
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field
      args:
-      ele_id: 1@0>>1
+      ele_id: 1@0>>9
       which: model
       index: 1
-      who: base
+      who: terms
     
     """
     cmd = f'python ele:taylor_field {ele_id}|{which} {index} {who}'
@@ -1744,7 +1744,7 @@ def ele_grid_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=Tru
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_grid
      args:
       ele_id: 1@0>>1
       which: model
@@ -1793,14 +1793,14 @@ def ele_floor(tao, ele_id, which, *, where='end', verbose=False, as_dict=True, r
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
       where: 
     
     Example: 2
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1846,7 +1846,7 @@ def ele_photon(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=T
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_photon
      args:
       ele_id: 1@0>>1
       which: model
@@ -1893,7 +1893,7 @@ def ele_lord_slave(tao, ele_id, which, *, verbose=False, as_dict=True, raises=Tr
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1933,7 +1933,7 @@ def ele_elec_multipoles(tao, ele_id, which, *, verbose=False, as_dict=True, rais
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1973,7 +1973,7 @@ def evaluate(tao, expression, *, flags='-array_out', verbose=False, as_dict=True
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        expression: data::cbar.11[1:10]|model
     
@@ -2020,7 +2020,7 @@ def em_field(tao, ele_id, which, x, y, z, t_or_z, *, verbose=False, as_dict=True
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        ele_id: 1@0>>22
        which: model
@@ -2058,7 +2058,7 @@ def enum(tao, enum_name, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        enum_name: tracking_method
     
@@ -2089,7 +2089,7 @@ def floor_plan(tao, graph, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        graph: r13.g
     
@@ -2120,7 +2120,7 @@ def floor_orbit(tao, graph, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_floor_orbit
      args:
        graph: r33.g 
     
@@ -2155,7 +2155,7 @@ def tao_global(tao, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
     
     """
@@ -2181,7 +2181,7 @@ def help(tao, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
     
     """
@@ -2211,7 +2211,7 @@ def inum(tao, who, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        who: ix_universe
     
@@ -2243,7 +2243,7 @@ def lat_calc_done(tao, branch_name, *, verbose=False, as_dict=True, raises=True)
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        branch_name: 1@0
     
@@ -2276,7 +2276,7 @@ def lat_ele_list(tao, *, branch_name='0', verbose=False, as_dict=True, raises=Tr
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        branch_name: 1@0
     
@@ -2310,7 +2310,7 @@ def lat_general(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=Tru
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        ix_universe: 1
     
@@ -2390,7 +2390,7 @@ def lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', fl
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        ix_uni: 1  
        ix_branch: 0 
@@ -2430,7 +2430,7 @@ def lat_param_units(tao, param_name, *, verbose=False, as_dict=True, raises=True
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        param_name: L   
     
@@ -2470,7 +2470,7 @@ def matrix(tao, ele1_id, ele2_id, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        ele1_id: 1@0>>q01w|design
        ele2_id: q02w
@@ -2498,7 +2498,7 @@ def merit(tao, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
     
     """
@@ -2537,7 +2537,7 @@ def orbit_at_s(tao, s, *, ix_uni='1', ix_branch='0', which='model', verbose=Fals
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        ix_uni: 1
        ix_branch: 0
@@ -2568,7 +2568,7 @@ def place_buffer(tao, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
     
     """
@@ -2598,7 +2598,7 @@ def plot_curve(tao, curve_name, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        curve_name: r13.g.a
     
@@ -2632,7 +2632,7 @@ def plot_lat_layout(tao, ix_universe: 1, ix_branch: 0, *, verbose=False, as_dict
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        ix_universe: 1
        ix_branch: 0 
@@ -2667,7 +2667,7 @@ def plot_list(tao, r_or_g, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        r_or_g: r
     
@@ -2704,7 +2704,7 @@ def plot_graph(tao, graph_name, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        graph_name: beta.g
     
@@ -2735,7 +2735,7 @@ def plot_histogram(tao, curve_name, *, verbose=False, as_dict=True, raises=True)
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        curve_name: r33.g.x
     
@@ -2761,33 +2761,34 @@ def plot_plot_manage(tao, plot_location, plot_name, n_graph, graph1_name, graph2
     
     Returns
     -------
-    string_list
+    None
     
     Notes
     -----
     Command syntax:
-      pyton plot_plot_manage {plot_location}^^{plot_name}^^
-                             {n_graph}^^{graph1_name}^^{graph2_name}...{graphN_name}
+      python plot_plot_manage {plot_location}^^{plot_name}^^
+                             {n_graph}^^{graph1_name}^^{graph2_name}^^{graphN_name}
     Use "@Tnnn" sytax for {plot_location} to place a plot. A plot may be placed in a 
     spot where there is already a template.
+    Extra graph names can be included with ^^ connection. 
     If {n_graph} is set to -1 then just delete the plot.
     
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
-       plot_location: r11
+       plot_location: @T1
        plot_name: beta
        n_graph: 1
-       graph1_name: g
-       graph2_name:
-       graphN_name:
+       graph1_name: g1
+       graph2_name: g2
+       graphN_name: gN
     
     """
-    cmd = f'pyton plot_plot_manage {plot_location}^^{plot_name}^^{n_graph}^^{graph1_name}^^{graph2_name}...{graphN_name}'
+    cmd = f'python plot_plot_manage {plot_location}^^{plot_name}^^{n_graph}^^{graph1_name}^^{graph2_name}^^{graphN_name}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='plot_plot_manage', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='plot_plot_manage', cmd_type='None')
 
 
 def plot_curve_manage(tao, graph_name, curve_index, curve_name, *, verbose=False, as_dict=True, raises=True):
@@ -2817,7 +2818,7 @@ def plot_curve_manage(tao, graph_name, curve_index, curve_name, *, verbose=False
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        graph_name: beta.g
        curve_index: 1
@@ -2856,7 +2857,7 @@ def plot_graph_manage(tao, plot_name, graph_index, graph_name, *, verbose=False,
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        plot_name: beta
        graph_index: 1
@@ -2868,7 +2869,7 @@ def plot_graph_manage(tao, plot_name, graph_index, graph_name, *, verbose=False,
     return __execute(tao, cmd, as_dict, raises, method_name='plot_graph_manage', cmd_type='None')
 
 
-def plot_line(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=False, as_dict=True, raises=True):
+def plot_line(tao, region_name, graph_name, curve_name, *, x_or_y='', verbose=False, as_dict=True, raises=True):
     """
     
     Output points used to construct the "line" associated with a plot curve.
@@ -2878,7 +2879,7 @@ def plot_line(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=False
     region_name
     graph_name
     curve_name
-    x_or_y
+    x_or_y : optional
     
     Returns
     -------
@@ -2900,12 +2901,12 @@ def plot_line(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=False
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting
      args:
-       region_name: r11
+       region_name: beta
        graph_name: g
        curve_name: a
-       x_or_y: x
+       x_or_y:
     
     """
     cmd = f'python plot_line {region_name}.{graph_name}.{curve_name} {x_or_y}'
@@ -2947,12 +2948,12 @@ def plot_symbol(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=Fal
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting
      args:
        region_name: r11
        graph_name: g
        curve_name: a
-       x_or_y: x 
+       x_or_y: 
     
     """
     cmd = f'python plot_symbol {region_name}.{graph_name}.{curve_name} {x_or_y}'
@@ -2986,7 +2987,7 @@ def plot_transfer(tao, from_plot, to_plot, *, verbose=False, as_dict=True, raise
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        from_plot: r13
        to_plot: r23 
@@ -3020,7 +3021,7 @@ def plot1(tao, name, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        name: beta
     
@@ -3054,7 +3055,7 @@ def shape_list(tao, who, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        who: floor_plan  
     
@@ -3101,7 +3102,7 @@ def shape_manage(tao, who, index, add_or_delete, *, verbose=False, as_dict=True,
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        who: floor_plan
        index: 1
@@ -3116,7 +3117,7 @@ def shape_manage(tao, who, index, add_or_delete, *, verbose=False, as_dict=True,
 def shape_pattern_list(tao, *, ix_pattern='', verbose=False, as_dict=True, raises=True):
     """
     
-    List of shape patterns
+    List of shape patterns or shape pattern points
     
     Parameters
     ----------
@@ -3130,19 +3131,16 @@ def shape_pattern_list(tao, *, ix_pattern='', verbose=False, as_dict=True, raise
     -----
     Command syntax:
       python shape_pattern_list {ix_pattern}
-    If optional {ix_pattern} index is omitted then list all the patterns
+    
+    If optional {ix_pattern} index is omitted then list all the patterns.
+    If {ix_pattern} is present, list points of given pattern.
     
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_shape
      args:
        ix_pattern: 
-    
-    Example: 2
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
-     args:
-       ix_pattern: 1 
     
     """
     cmd = f'python shape_pattern_list {ix_pattern}'
@@ -3163,7 +3161,7 @@ def shape_pattern_manage(tao, ix_pattern, pat_name, pat_line_width, *, verbose=F
     
     Returns
     -------
-    string_list
+    None
     
     Notes
     -----
@@ -3179,16 +3177,16 @@ def shape_pattern_manage(tao, ix_pattern, pat_name, pat_line_width, *, verbose=F
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_shape
      args:
-       ix_pattern : 5
+       ix_pattern : 1
        pat_name : new_pat
        pat_line_width : 1
     
     """
     cmd = f'python shape_pattern_manage {ix_pattern}^^{pat_name}^^{pat_line_width}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='shape_pattern_manage', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='shape_pattern_manage', cmd_type='None')
 
 
 def shape_pattern_point_manage(tao, ix_pattern, ix_point, s, x, *, verbose=False, as_dict=True, raises=True):
@@ -3205,7 +3203,7 @@ def shape_pattern_point_manage(tao, ix_pattern, ix_point, s, x, *, verbose=False
     
     Returns
     -------
-    string_list
+    None
     
     Notes
     -----
@@ -3220,7 +3218,7 @@ def shape_pattern_point_manage(tao, ix_pattern, ix_point, s, x, *, verbose=False
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_shape
      args:
        ix_pattern: 1
        ix_point: 1
@@ -3230,7 +3228,7 @@ def shape_pattern_point_manage(tao, ix_pattern, ix_point, s, x, *, verbose=False
     """
     cmd = f'python shape_pattern_point_manage {ix_pattern}^^{ix_point}^^{s}^^{x}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='shape_pattern_point_manage', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='shape_pattern_point_manage', cmd_type='None')
 
 
 def shape_set(tao, who, shape_index, ele_name, shape, color, shape_size, type_label, shape_draw, multi_shape, line_width, *, verbose=False, as_dict=True, raises=True):
@@ -3253,7 +3251,7 @@ def shape_set(tao, who, shape_index, ele_name, shape, color, shape_size, type_la
     
     Returns
     -------
-    string_list
+    None
     
     Notes
     -----
@@ -3268,12 +3266,12 @@ def shape_set(tao, who, shape_index, ele_name, shape, color, shape_size, type_la
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        who: floor_plan
        shape_index: 1
        ele_name: Q1
-       shape:
+       shape: circle
        color:
        shape_size:
        type_label:
@@ -3284,7 +3282,7 @@ def shape_set(tao, who, shape_index, ele_name, shape, color, shape_size, type_la
     """
     cmd = f'python shape_set {who}^^{shape_index}^^{ele_name}^^{shape}^^{color}^^{shape_size}^^{type_label}^^{shape_draw}^^{multi_shape}^^{line_width}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='shape_set', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='shape_set', cmd_type='None')
 
 
 def show(tao, line, *, verbose=False, as_dict=True, raises=True):
@@ -3311,7 +3309,7 @@ def show(tao, line, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        line: -python
     
@@ -3344,7 +3342,7 @@ def species_to_int(tao, species_str, *, verbose=False, as_dict=True, raises=True
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        species_str: electron
     
@@ -3377,7 +3375,7 @@ def species_to_str(tao, species_int, *, verbose=False, as_dict=True, raises=True
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        species_int: -1
     
@@ -3418,7 +3416,7 @@ def spin_polarization(tao, *, ix_uni='1', ix_branch='0', which='model', verbose=
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args: 
        ix_uni: 1
        ix_branch: 0
@@ -3447,7 +3445,7 @@ def super_universe(tao, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args: 
     
     """
@@ -3484,7 +3482,7 @@ def twiss_at_s(tao, ix_uni, ix_branch, s, which, *, verbose=False, as_dict=True,
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args: 
        ix_uni: 1
        ix_branch: 0
@@ -3519,7 +3517,7 @@ def universe(tao, ix_universe, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args: 
        ix_universe: 1
     
@@ -3529,7 +3527,7 @@ def universe(tao, ix_universe, *, verbose=False, as_dict=True, raises=True):
     return __execute(tao, cmd, as_dict, raises, method_name='universe', cmd_type='string_list')
 
 
-def var(tao, var, *, verbose=False, as_dict=True, raises=True):
+def var(tao, var, *, slaves='', verbose=False, as_dict=True, raises=True):
     """
     
     Info on an individual variable
@@ -3537,6 +3535,7 @@ def var(tao, var, *, verbose=False, as_dict=True, raises=True):
     Parameters
     ----------
     var
+    slaves : optional
     
     Returns
     -------
@@ -3545,18 +3544,24 @@ def var(tao, var, *, verbose=False, as_dict=True, raises=True):
     Notes
     -----
     Command syntax:
-      python var {var}        or
       python var {var} slaves
     
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args: 
-       var: quad_k1[1]
+       var: quad[1]
+       slaves:
+    
+    Example: 2
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
+     args: 
+       var: quad[1]
+       slaves: slaves
     
     """
-    cmd = f'python var {var}        or'
+    cmd = f'python var {var} slaves'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, raises, method_name='var', cmd_type='string_list')
 
@@ -3598,7 +3603,7 @@ def var_create(tao, var_name, ele_name, attribute, universes, weight, step, low_
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        var_name: quad[1]
        ele_name: Q1
@@ -3638,7 +3643,7 @@ def var_general(tao, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
     
     """
@@ -3670,7 +3675,7 @@ def var_v_array(tao, v1_var, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        v1_var: quad_k1
     
@@ -3701,7 +3706,7 @@ def var_v1_array(tao, v1_var, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        v1_var: quad_k1 
     
@@ -3751,7 +3756,7 @@ def var_v1_create(tao, v1_name, n_var_min, n_var_max, *, verbose=False, as_dict=
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        v1_name: quad_k1 
        n_var_min: 0 
@@ -3784,7 +3789,7 @@ def var_v1_destroy(tao, v1_datum, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        v1_datum: quad_k1
     
@@ -3820,7 +3825,7 @@ def wave(tao, what, *, verbose=False, as_dict=True, raises=True):
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        what: params
     
