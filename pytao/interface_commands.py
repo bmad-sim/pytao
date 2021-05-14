@@ -89,7 +89,7 @@ def beam_init(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=True)
     Examples
     --------
     Example: 1
-     init: -init /$ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
      args:
        ix_universe: 1
     
@@ -2950,7 +2950,7 @@ def plot_symbol(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=Fal
     Example: 1
      init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting
      args:
-       region_name: r11
+       region_name: r13
        graph_name: g
        curve_name: a
        x_or_y: 
