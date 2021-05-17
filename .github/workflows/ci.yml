@@ -46,6 +46,7 @@ jobs:
         run: |
           echo "ACC_ROOT_DIR=/home/runner/bmad/bmad_dist" >> $GITHUB_ENV
           echo "ACC_EXE=/home/runner/bmad/bmad_dist/production/bin" >> $GITHUB_ENV
+          echo "TAO_DIR=/home/runner/bmad/bmad_dist/tao" >> $GITHUB_ENV
           echo "/home/runner/bmad/bmad_dist/production/bin/" >> $GITHUB_PATH
 
       - name: Install Python Dependencies
