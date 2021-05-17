@@ -23,26 +23,34 @@ Module Contents
    tao = tao_ctypes.Tao()
    tao.init("command line args here...")
 
-   .. method:: get_output(self)
+   .. method:: get_output(self, reset=True)
+
+      Returns a list of output strings.
+      If reset, the internal Tao buffers will be reset.
+
+
+   .. method:: reset_output(self)
+
+      Resets all output buffers
 
 
    .. method:: init(self, cmd)
 
 
-   .. method:: cmd(self, cmd, exception_on_error=False)
+   .. method:: cmd(self, cmd, raises=True)
 
       Runs a command, and returns the text output
 
       cmd: command string
-      exception_on_error: will raise an exception of [ERROR or [FATAL is detected in the output
+      raises: will raise an exception of [ERROR or [FATAL is detected in the output
 
       Returns a list of strings
 
 
-   .. method:: cmd_real(self, cmd)
+   .. method:: cmd_real(self, cmd, raises=True)
 
 
-   .. method:: cmd_integer(self, cmd)
+   .. method:: cmd_integer(self, cmd, raises=True)
 
 
    .. method:: register_cell_magic(self)
@@ -52,6 +60,11 @@ Module Contents
       %%tao
       sho lat
 
+
+
+.. function:: find_libtao(base_dir)
+
+   Searches base_for for an appropriate libtao shared library.
 
 
 .. class:: TaoModel(input_file='tao.init', ploton=True, use_tempdir=True, workdir=None, verbose=True, so_lib='', auto_configure=True)

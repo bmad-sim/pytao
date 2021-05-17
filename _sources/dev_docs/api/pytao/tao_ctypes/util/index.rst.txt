@@ -12,6 +12,18 @@
 Module Contents
 ---------------
 
+.. function:: error_in_lines(lines)
+
+   Checks '[ERROR', '[CRITICAL', '[FATAL' found in
+   lines, and returns a string of info if something is found.
+   Otherwise, '' is returned.
+
+
+.. function:: error_in_line(line)
+
+   Returns True if the line contains: '[ERROR', '[CRITICAL', '[FATAL'
+
+
 .. function:: chunks(lst, n)
 
    Yield successive n-sized chunks from lst.

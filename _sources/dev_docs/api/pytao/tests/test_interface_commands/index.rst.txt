@@ -46,12 +46,6 @@ Module Contents
 .. function:: test_constraints_2()
 
 
-.. function:: test_da_aperture_1()
-
-
-.. function:: test_da_params_1()
-
-
 .. function:: test_data_1()
 
 
@@ -130,7 +124,7 @@ Module Contents
 .. function:: test_ele_twiss_1()
 
 
-.. function:: test_ele_control_1()
+.. function:: test_ele_control_var_1()
 
 
 .. function:: test_ele_orbit_1()
@@ -256,9 +250,6 @@ Module Contents
 .. function:: test_shape_pattern_list_1()
 
 
-.. function:: test_shape_pattern_list_2()
-
-
 .. function:: test_shape_pattern_manage_1()
 
 
@@ -290,6 +281,9 @@ Module Contents
 
 
 .. function:: test_var_1()
+
+
+.. function:: test_var_2()
 
 
 .. function:: test_var_create_1()

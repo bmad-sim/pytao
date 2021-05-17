@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>pytao.util.lattice_element &mdash; PyTao 0.1.2+2.gf51034c documentation</title>
+  <title>pytao.util.lattice_element &mdash; PyTao 0.1.2+12.g4f56ee5 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
 
   
@@ -30,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
@@ -65,7 +68,7 @@
             
             
               <div class="version">
-                0.1.2+2.gf51034c
+                0.1.2+12.g4f56ee5
               </div>
             
           
@@ -103,6 +106,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/basic.html#All-method-commands">All method commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/basic.html#Other-Tao-instances">Other Tao instances</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/basic.html#ParticleGroup-from-openPMD-beamphysics">ParticleGroup from openPMD-beamphysics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/basic.html#Error-handling-and-Debugging">Error handling and Debugging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/advanced.html">PyTao advanced usage</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
@@ -235,8 +239,8 @@ element in tao</p>
 <div class="section" id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="pytao.util.lattice_element.lat_element">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.util.lattice_element.</span></code><code class="sig-name descname"><span class="pre">lat_element</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_ix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_ele</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.lattice_element.lat_element" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pytao.util.lattice_element.lat_element">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pytao.util.lattice_element.</span></span><span class="sig-name descname"><span class="pre">lat_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_ix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_ele</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.lattice_element.lat_element" title="Permalink to this definition">¶</a></dt>
 <dd><p>Holds the essential information for a given lattice element.
 A lat_element has the following properties:
 self.id: the ele identifier in the form <a class="reference external" href="mailto:uni&#37;&#52;&#48;branch">uni<span>&#64;</span>branch</a>&gt;&gt;ele_ix|which

@@ -7,7 +7,7 @@
 Module Contents
 ---------------
 
-.. function:: beam(tao, *, ix_universe='1', verbose=False, as_dict=True)
+.. function:: beam(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=True)
 
    Output beam parameters that are not in the beam_init structure.
 
@@ -28,12 +28,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
     args:
       ix_universe: 1
 
 
-.. function:: beam_init(tao, *, ix_universe='1', verbose=False, as_dict=True)
+.. function:: beam_init(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=True)
 
    Output beam_init parameters.
 
@@ -54,12 +54,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
     args:
       ix_universe: 1
 
 
-.. function:: bmad_com(tao, *, verbose=False, as_dict=True)
+.. function:: bmad_com(tao, *, verbose=False, as_dict=True, raises=True)
 
    Bmad_com structure components
 
@@ -74,11 +74,11 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
 
 
-.. function:: branch1(tao, *, ix_universe='1', ix_branch='0', verbose=False, as_dict=True)
+.. function:: branch1(tao, *, ix_universe='1', ix_branch='0', verbose=False, as_dict=True, raises=True)
 
    Lattice element list.
 
@@ -101,13 +101,13 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       ix_universe: 1
       ix_branch: 0
 
 
-.. function:: bunch1(tao, ele_id, *, which='model', ix_bunch='1', coordinate='', verbose=False, as_dict=True)
+.. function:: bunch1(tao, ele_id, *, which='model', ix_bunch='1', coordinate='', verbose=False, as_dict=True, raises=True)
 
    Bunch parameters at the exit end of a given lattice element.
 
@@ -131,7 +131,7 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
     args:
       ele_id: end
       which: model
@@ -139,7 +139,7 @@ Module Contents
       coordinate:
 
    Example: 2
-    init: $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
     args:
       ele_id: end
       which: model
@@ -147,7 +147,7 @@ Module Contents
       coordinate: x
 
 
-.. function:: building_wall_list(tao, *, ix_section='', verbose=False, as_dict=True)
+.. function:: building_wall_list(tao, *, ix_section='', verbose=False, as_dict=True, raises=True)
 
    List of building wall sections or section points
 
@@ -167,17 +167,17 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall
     args:
       ix_section:
 
    Example: 2
-    init: $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall
     args:
       ix_section: 1
 
 
-.. function:: building_wall_graph(tao, graph, *, verbose=False, as_dict=True)
+.. function:: building_wall_graph(tao, graph, *, verbose=False, as_dict=True, raises=True)
 
    (x, y) points for drawing the building wall for a particular graph.
 
@@ -195,12 +195,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall
     args:
-      graph:
+      graph: floor_plan.g
 
 
-.. function:: building_wall_point(tao, ix_section, ix_point, z, x, radius, z_center, x_center, *, verbose=False, as_dict=True)
+.. function:: building_wall_point(tao, ix_section, ix_point, z, x, radius, z_center, x_center, *, verbose=False, as_dict=True, raises=True)
 
    add or delete a building wall point
 
@@ -213,7 +213,7 @@ Module Contents
    :param x_center:
 
    :returns:
-   :rtype: string_list
+   :rtype: None
 
    .. rubric:: Notes
 
@@ -229,7 +229,7 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall
     args:
       ix_section: 1
       ix_point: 1
@@ -240,7 +240,7 @@ Module Contents
       x_center: 0
 
 
-.. function:: building_wall_section(tao, ix_section, sec_name, sec_constraint, *, verbose=False, as_dict=True)
+.. function:: building_wall_section(tao, ix_section, sec_name, sec_constraint, *, verbose=False, as_dict=True, raises=True)
 
    add or delete a building wall section
 
@@ -268,14 +268,14 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       ix_section: 1
       sec_name: test
       sec_constraint: none
 
 
-.. function:: constraints(tao, who, *, verbose=False, as_dict=True)
+.. function:: constraints(tao, who, *, verbose=False, as_dict=True, raises=True)
 
    Optimization data and variables that contribute to the merit function.
 
@@ -318,17 +318,17 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
       who: data
 
    Example: 2
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       who:var
 
 
-.. function:: da_aperture(tao, *, ix_uni='1', verbose=False, as_dict=True)
+.. function:: da_aperture(tao, *, ix_uni='1', verbose=False, as_dict=True, raises=True)
 
    Dynamic aperture data
 
@@ -343,15 +343,8 @@ Module Contents
    Command syntax:
      python da_aperture {ix_uni}
 
-   .. rubric:: Examples
 
-   Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
-    args:
-      ix_uni:1
-
-
-.. function:: da_params(tao, *, ix_uni='1', verbose=False, as_dict=True)
+.. function:: da_params(tao, *, ix_uni='1', verbose=False, as_dict=True, raises=True)
 
    Dynamic aperture input parameters
 
@@ -366,15 +359,8 @@ Module Contents
    Command syntax:
      python da_params {ix_uni}
 
-   .. rubric:: Examples
 
-   Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
-    args:
-      ix_uni:1
-
-
-.. function:: data(tao, d2_name, d1_datum, *, ix_universe='1', dat_index='1', verbose=False, as_dict=True)
+.. function:: data(tao, d2_name, d1_datum, *, ix_universe='1', dat_index='1', verbose=False, as_dict=True, raises=True)
 
    Individual datum info.
 
@@ -403,15 +389,15 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
       ix_universe:
       d2_name: twiss
       d1_datum: end
-      dat_index:
+      dat_index: 1
 
    Example: 2
-    init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
       ix_universe: 1
       d2_name: twiss
@@ -419,7 +405,7 @@ Module Contents
       dat_index: 1
 
 
-.. function:: data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_uni='1', verbose=False, as_dict=True)
+.. function:: data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_uni='1', verbose=False, as_dict=True, raises=True)
 
    Create a d2 data structure along with associated d1 and data arrays.
 
@@ -462,7 +448,7 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
       ix_uni: 1
       d2_name: orbit
@@ -470,7 +456,7 @@ Module Contents
       d_data_arrays_name_min_max: x^^0^^45^^y^^1^^47
 
 
-.. function:: data_d2_destroy(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True)
+.. function:: data_d2_destroy(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=True)
 
    Destroy a d2 data structure along with associated d1 and data arrays.
 
@@ -491,13 +477,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
-      ix_uni: 1
-      d2_datum: orbit
+      d2_datum: 1@eta.x
 
 
-.. function:: data_d2(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True)
+.. function:: data_d2(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=True)
 
    Information on a d2_datum.
 
@@ -518,13 +503,13 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
       ix_uni: 1
       d2_datum: twiss
 
 
-.. function:: data_d_array(tao, d1_datum, *, ix_uni='1', verbose=False, as_dict=True)
+.. function:: data_d_array(tao, d1_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=True)
 
    List of datums for a given data_d1.
 
@@ -548,13 +533,13 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
       ix_uni: 1
       d1_datum: twiss.end
 
 
-.. function:: data_d1_array(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True)
+.. function:: data_d1_array(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=True)
 
    List of d1 arrays for a given data_d2.
 
@@ -575,13 +560,13 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
       ix_uni: 1
       d2_datum: twiss
 
 
-.. function:: data_parameter(tao, data_array, parameter, *, verbose=False, as_dict=True)
+.. function:: data_parameter(tao, data_array, parameter, *, verbose=False, as_dict=True, raises=True)
 
    Given an array of datums, generate an array of values for a particular datum parameter.
 
@@ -603,13 +588,13 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
       data_array: twiss.end
       parameter: model_value
 
 
-.. function:: data_d2_array(tao, ix_universe, *, verbose=False, as_dict=True)
+.. function:: data_d2_array(tao, ix_universe, *, verbose=False, as_dict=True, raises=True)
 
    Data d2 info for a given universe.
 
@@ -629,12 +614,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       ix_universe : 1
 
 
-.. function:: data_set_design_value(tao, *, verbose=False, as_dict=True)
+.. function:: data_set_design_value(tao, *, verbose=False, as_dict=True, raises=True)
 
    Set the design (and base & model) values for all datums.
 
@@ -654,11 +639,11 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
 
 
-.. function:: datum_create(tao, datum_name, data_type, *, ele_ref_name='', ele_start_name='', ele_name='', merit_type='', meas='0', good_meas='F', ref='0', good_ref='F', weight='0', good_user='T', data_source='lat', eval_point='END', s_offset='0', ix_bunch='0', invalid_value='0', spin_axis_n0_1='', spin_axis_n0_2='', spin_axis_n0_3='', spin_axis_l_1='', spin_axis_l_2='', spin_axis_l_3='', verbose=False, as_dict=True)
+.. function:: datum_create(tao, datum_name, data_type, *, ele_ref_name='', ele_start_name='', ele_name='', merit_type='', meas='0', good_meas='F', ref='0', good_ref='F', weight='0', good_user='T', data_source='lat', eval_point='END', s_offset='0', ix_bunch='0', invalid_value='0', spin_axis_n0_1='', spin_axis_n0_2='', spin_axis_n0_3='', spin_axis_l_1='', spin_axis_l_2='', spin_axis_l_3='', verbose=False, as_dict=True, raises=True)
 
    Create a datum.
 
@@ -731,7 +716,7 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
       datum_name: twiss.end[6]
       data_type: beta.y
@@ -752,7 +737,7 @@ Module Contents
       invalid_value: 0
 
 
-.. function:: datum_has_ele(tao, datum_type, *, verbose=False, as_dict=True)
+.. function:: datum_has_ele(tao, datum_type, *, verbose=False, as_dict=True, raises=True)
 
    Does datum type have an associated lattice element?
 
@@ -769,12 +754,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
       datum_type: twiss.end
 
 
-.. function:: derivative(tao, *, verbose=False, as_dict=True)
+.. function:: derivative(tao, *, verbose=False, as_dict=True, raises=True)
 
    Optimization derivatives
 
@@ -793,11 +778,11 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
 
 
-.. function:: ele_head(tao, ele_id, *, which='model', verbose=False, as_dict=True)
+.. function:: ele_head(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    "Head" Element attributes
 
@@ -825,13 +810,13 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
      ele_id: 1@0>>1
      which: model
 
 
-.. function:: ele_methods(tao, ele_id, *, which='model', verbose=False, as_dict=True)
+.. function:: ele_methods(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element methods
 
@@ -859,13 +844,13 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
      ele_id: 1@0>>1
      which: model
 
 
-.. function:: ele_gen_attribs(tao, ele_id, *, which='model', verbose=False, as_dict=True)
+.. function:: ele_gen_attribs(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element general attributes
 
@@ -893,13 +878,13 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
      ele_id: 1@0>>1
      which: model
 
 
-.. function:: ele_multipoles(tao, ele_id, *, which='model', verbose=False, as_dict=True)
+.. function:: ele_multipoles(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element multipoles
 
@@ -927,13 +912,13 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
      ele_id: 1@0>>1
      which: model
 
 
-.. function:: ele_ac_kicker(tao, ele_id, *, which='model', verbose=False, as_dict=True)
+.. function:: ele_ac_kicker(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element ac_kicker
 
@@ -961,13 +946,13 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
      ele_id: 1@0>>1
      which: model
 
 
-.. function:: ele_cartesian_map(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True)
+.. function:: ele_cartesian_map(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element cartesian_map
 
@@ -1001,7 +986,7 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field
     args:
      ele_id: 1@0>>1
      which: model
@@ -1009,7 +994,7 @@ Module Contents
      who: base
 
 
-.. function:: ele_chamber_wall(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True)
+.. function:: ele_chamber_wall(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element beam chamber wall
 
@@ -1038,7 +1023,7 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall3d
     args:
      ele_id: 1@0>>1
      which: model
@@ -1046,7 +1031,7 @@ Module Contents
      who: x
 
 
-.. function:: ele_cylindrical_map(tao, ele_id, which, index, who, *, verbose=False, as_dict=True)
+.. function:: ele_cylindrical_map(tao, ele_id, which, index, who, *, verbose=False, as_dict=True, raises=True)
 
    Element cylindrical_map
 
@@ -1079,15 +1064,15 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field
     args:
-     ele_id: 1@0>>1
+     ele_id: 1@0>>5
      which: model
      index: 1
      who: base
 
 
-.. function:: ele_taylor(tao, ele_id, which, *, verbose=False, as_dict=True)
+.. function:: ele_taylor(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True)
 
    Element taylor
 
@@ -1114,13 +1099,13 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_taylor
     args:
-     ele_id: 1@0>>1
+     ele_id: 1@0>>34
      which: model
 
 
-.. function:: ele_spin_taylor(tao, ele_id, which, *, verbose=False, as_dict=True)
+.. function:: ele_spin_taylor(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True)
 
    Element spin_taylor
 
@@ -1147,13 +1132,13 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_spin
     args:
-     ele_id: 1@0>>1
+     ele_id: 1@0>>2
      which: model
 
 
-.. function:: ele_wake(tao, ele_id, which, who, *, verbose=False, as_dict=True)
+.. function:: ele_wake(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=True)
 
    Element wake
 
@@ -1186,14 +1171,14 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wake
     args:
      ele_id: 1@0>>1
      which: model
-     who: base
+     who: sr_long
 
 
-.. function:: ele_wall3d(tao, ele_id, which, index, who, *, verbose=False, as_dict=True)
+.. function:: ele_wall3d(tao, ele_id, which, index, who, *, verbose=False, as_dict=True, raises=True)
 
    Element wall3d
 
@@ -1226,15 +1211,15 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall3d
     args:
      ele_id: 1@0>>1
      which: model
      index: 1
-     who: base
+     who: table
 
 
-.. function:: ele_twiss(tao, ele_id, which, *, verbose=False, as_dict=True)
+.. function:: ele_twiss(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True)
 
    Element twiss
 
@@ -1261,15 +1246,16 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
      ele_id: 1@0>>1
      which: model
 
 
-.. function:: ele_control(tao, ele_id, which, *, verbose=False, as_dict=True)
+.. function:: ele_control_var(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True)
 
-   Element control
+   List element control variables.
+   Used for group, overlay and ramper type elements
 
    :param ele_id:
    :param which:
@@ -1280,27 +1266,27 @@ Module Contents
    .. rubric:: Notes
 
    Command syntax:
-     python ele:control {ele_id}|{which}
+     python ele:control_var {ele_id}|{which}
    where {ele_id} is an element name or index and {which} is one of
      model
      base
      design
    .. rubric:: Example
 
-   python ele:control 3@1>>7|model
+   python ele:control_var 3@1>>7|model
 
    This gives element number 7 in branch 1 of universe 3.
 
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
-     ele_id: 1@0>>1
+     ele_id: 1@0>>873
      which: model
 
 
-.. function:: ele_orbit(tao, ele_id, which, *, verbose=False, as_dict=True)
+.. function:: ele_orbit(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True)
 
    Element orbit
 
@@ -1327,13 +1313,13 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
      ele_id: 1@0>>1
      which: model
 
 
-.. function:: ele_mat6(tao, ele_id, which, who, *, verbose=False, as_dict=True)
+.. function:: ele_mat6(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=True)
 
    Element mat6
 
@@ -1365,14 +1351,14 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
      ele_id: 1@0>>1
      which: model
      who: mat6
 
 
-.. function:: ele_taylor_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=True)
+.. function:: ele_taylor_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=True, raises=True)
 
    Element taylor_field
 
@@ -1405,15 +1391,15 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field
     args:
-     ele_id: 1@0>>1
+     ele_id: 1@0>>9
      which: model
      index: 1
-     who: base
+     who: terms
 
 
-.. function:: ele_grid_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=True)
+.. function:: ele_grid_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=True, raises=True)
 
    Element grid_field
 
@@ -1443,7 +1429,7 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_grid
     args:
      ele_id: 1@0>>1
      which: model
@@ -1451,7 +1437,7 @@ Module Contents
      who: base
 
 
-.. function:: ele_floor(tao, ele_id, which, *, where='end', verbose=False, as_dict=True)
+.. function:: ele_floor(tao, ele_id, which, *, where='end', verbose=False, as_dict=True, raises=True)
 
    Element floor coordinates. The output gives two lines. "Reference" is
    without element misalignments and "Actual" is with misalignments.
@@ -1486,21 +1472,21 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
      ele_id: 1@0>>1
      which: model
-     where
+     where:
 
    Example: 2
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
      ele_id: 1@0>>1
      which: model
      where: center
 
 
-.. function:: ele_photon(tao, ele_id, which, who, *, verbose=False, as_dict=True)
+.. function:: ele_photon(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=True)
 
    Element photon
 
@@ -1532,14 +1518,14 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_photon
     args:
      ele_id: 1@0>>1
      which: model
      who: base
 
 
-.. function:: ele_lord_slave(tao, ele_id, which, *, verbose=False, as_dict=True)
+.. function:: ele_lord_slave(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True)
 
    Lists the lord/slave tree of an element.
 
@@ -1572,13 +1558,13 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
      ele_id: 1@0>>1
      which: model
 
 
-.. function:: ele_elec_multipoles(tao, ele_id, which, *, verbose=False, as_dict=True)
+.. function:: ele_elec_multipoles(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True)
 
    Element electric multipoles
 
@@ -1605,13 +1591,13 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
      ele_id: 1@0>>1
      which: model
 
 
-.. function:: evaluate(tao, expression, *, flags='-array_out', verbose=False, as_dict=True)
+.. function:: evaluate(tao, expression, *, flags='-array_out', verbose=False, as_dict=True, raises=True)
 
    Evaluate an expression. The result may be a vector.
 
@@ -1634,12 +1620,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       expression: data::cbar.11[1:10]|model
 
 
-.. function:: em_field(tao, ele_id, which, x, y, z, t_or_z, *, verbose=False, as_dict=True)
+.. function:: em_field(tao, ele_id, which, x, y, z, t_or_z, *, verbose=False, as_dict=True, raises=True)
 
    EM field at a given point generated by a given element.
 
@@ -1656,7 +1642,7 @@ Module Contents
    .. rubric:: Notes
 
    Command syntax:
-     python em_field {ele_id}|{which} {x}, {y}, {z}, {t_or_z}
+     python em_field {ele_id}|{which} {x} {y} {z} {t_or_z}
    where {which} is one of:
      model
      base
@@ -1669,17 +1655,17 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
-      ele_id: 1@0>>1
+      ele_id: 1@0>>22
       which: model
       x: 0
       y: 0
       z: 0
-      t_or_z: z
+      t_or_z: 0
 
 
-.. function:: enum(tao, enum_name, *, verbose=False, as_dict=True)
+.. function:: enum(tao, enum_name, *, verbose=False, as_dict=True, raises=True)
 
    List of possible values for enumerated numbers.
 
@@ -1699,12 +1685,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       enum_name: tracking_method
 
 
-.. function:: floor_plan(tao, graph, *, verbose=False, as_dict=True)
+.. function:: floor_plan(tao, graph, *, verbose=False, as_dict=True, raises=True)
 
    Floor plan elements
 
@@ -1721,12 +1707,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
-      graph:
+      graph: r13.g
 
 
-.. function:: floor_orbit(tao, graph, *, verbose=False, as_dict=True)
+.. function:: floor_orbit(tao, graph, *, verbose=False, as_dict=True, raises=True)
 
    (x, y) coordinates for drawing the particle orbit on a floor plan.
 
@@ -1743,12 +1729,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_floor_orbit
     args:
-      graph:
+      graph: r33.g
 
 
-.. function:: tao_global(tao, *, verbose=False, as_dict=True)
+.. function:: tao_global(tao, *, verbose=False, as_dict=True, raises=True)
 
    Global parameters
 
@@ -1771,11 +1757,11 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
 
 
-.. function:: help(tao, *, verbose=False, as_dict=True)
+.. function:: help(tao, *, verbose=False, as_dict=True, raises=True)
 
    returns list of "help xxx" topics
 
@@ -1790,11 +1776,11 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
 
 
-.. function:: inum(tao, who, *, verbose=False, as_dict=True)
+.. function:: inum(tao, who, *, verbose=False, as_dict=True, raises=True)
 
    INUM
 
@@ -1811,12 +1797,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       who: ix_universe
 
 
-.. function:: lat_calc_done(tao, branch_name, *, verbose=False, as_dict=True)
+.. function:: lat_calc_done(tao, branch_name, *, verbose=False, as_dict=True, raises=True)
 
    Check if a lattice recalculation has been proformed since the last time
      "python lat_calc_done" was called.
@@ -1834,12 +1820,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       branch_name: 1@0
 
 
-.. function:: lat_ele_list(tao, *, branch_name='0', verbose=False, as_dict=True)
+.. function:: lat_ele_list(tao, *, branch_name='0', verbose=False, as_dict=True, raises=True)
 
    Lattice element list.
 
@@ -1859,12 +1845,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       branch_name: 1@0
 
 
-.. function:: lat_general(tao, *, ix_universe='1', verbose=False, as_dict=True)
+.. function:: lat_general(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=True)
 
    Lattice general
 
@@ -1885,12 +1871,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       ix_universe: 1
 
 
-.. function:: lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', flags='-array_out -track_only', verbose=False, as_dict=True)
+.. function:: lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', flags='-array_out -track_only', verbose=False, as_dict=True, raises=True)
 
    List of parameters at ends of lattice elements
 
@@ -1957,7 +1943,7 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       ix_uni: 1
       ix_branch: 0
@@ -1966,7 +1952,7 @@ Module Contents
       who: orbit.floor.x
 
 
-.. function:: lat_param_units(tao, param_name, *, verbose=False, as_dict=True)
+.. function:: lat_param_units(tao, param_name, *, verbose=False, as_dict=True, raises=True)
 
    Units of a parameter associated with a lattice or lattice element.
 
@@ -1983,12 +1969,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       param_name: L
 
 
-.. function:: matrix(tao, ele1_id, ele2_id, *, verbose=False, as_dict=True)
+.. function:: matrix(tao, ele1_id, ele2_id, *, verbose=False, as_dict=True, raises=True)
 
    Matrix value from the exit end of one element to the exit end of the other.
 
@@ -2015,13 +2001,13 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
-      ele1_id: 2@1>>q01w|design
+      ele1_id: 1@0>>q01w|design
       ele2_id: q02w
 
 
-.. function:: merit(tao, *, verbose=False, as_dict=True)
+.. function:: merit(tao, *, verbose=False, as_dict=True, raises=True)
 
    Merit value.
 
@@ -2036,11 +2022,11 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
 
 
-.. function:: orbit_at_s(tao, s, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True)
+.. function:: orbit_at_s(tao, s, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True, raises=True)
 
    Twiss at given s position.
 
@@ -2069,7 +2055,7 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       ix_uni: 1
       ix_branch: 0
@@ -2077,7 +2063,7 @@ Module Contents
       which: model
 
 
-.. function:: place_buffer(tao, *, verbose=False, as_dict=True)
+.. function:: place_buffer(tao, *, verbose=False, as_dict=True, raises=True)
 
    Output place command buffer and reset the buffer.
    The contents of the buffer are the place commands that the user has issued.
@@ -2093,11 +2079,11 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
 
 
-.. function:: plot_curve(tao, curve_name, *, verbose=False, as_dict=True)
+.. function:: plot_curve(tao, curve_name, *, verbose=False, as_dict=True, raises=True)
 
    Curve information for a plot
 
@@ -2114,12 +2100,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
-      curve_name: top.x.c1
+      curve_name: r13.g.a
 
 
-.. function:: plot_lat_layout(tao, ix_universe: 1, ix_branch: 0, *, verbose=False, as_dict=True)
+.. function:: plot_lat_layout(tao, ix_universe: 1, ix_branch: 0, *, verbose=False, as_dict=True, raises=True)
 
    Plot Lat_layout info
 
@@ -2141,13 +2127,13 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       ix_universe: 1
       ix_branch: 0
 
 
-.. function:: plot_list(tao, r_or_g, *, verbose=False, as_dict=True)
+.. function:: plot_list(tao, r_or_g, *, verbose=False, as_dict=True, raises=True)
 
    List of plot templates or plot regions.
 
@@ -2167,12 +2153,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       r_or_g: r
 
 
-.. function:: plot_graph(tao, graph_name, *, verbose=False, as_dict=True)
+.. function:: plot_graph(tao, graph_name, *, verbose=False, as_dict=True, raises=True)
 
    Graph
 
@@ -2195,12 +2181,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
-      graph_name: r13.g
+      graph_name: beta.g
 
 
-.. function:: plot_histogram(tao, curve_name, *, verbose=False, as_dict=True)
+.. function:: plot_histogram(tao, curve_name, *, verbose=False, as_dict=True, raises=True)
 
    Plot Histogram
 
@@ -2212,17 +2198,17 @@ Module Contents
    .. rubric:: Notes
 
    Command syntax:
-     python plot_histograph {curve_name}
+     python plot_histogram {curve_name}
 
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
-      curve_name: c1
+      curve_name: r33.g.x
 
 
-.. function:: plot_plot_manage(tao, plot_location, plot_name, n_graph, graph1_name, graph2_name, graphN_name, *, verbose=False, as_dict=True)
+.. function:: plot_plot_manage(tao, plot_location, plot_name, n_graph, graph1_name, graph2_name, graphN_name, *, verbose=False, as_dict=True, raises=True)
 
    Template plot creation or destruction.
 
@@ -2234,31 +2220,32 @@ Module Contents
    :param graphN_name:
 
    :returns:
-   :rtype: string_list
+   :rtype: None
 
    .. rubric:: Notes
 
    Command syntax:
-     pyton plot_plot_manage {plot_location}^^{plot_name}^^
-                            {n_graph}^^{graph1_name}^^{graph2_name}...{graphN_name}
+     python plot_plot_manage {plot_location}^^{plot_name}^^
+                            {n_graph}^^{graph1_name}^^{graph2_name}^^{graphN_name}
    Use "@Tnnn" sytax for {plot_location} to place a plot. A plot may be placed in a
    spot where there is already a template.
+   Extra graph names can be included with ^^ connection.
    If {n_graph} is set to -1 then just delete the plot.
 
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
-      plot_location: r11
+      plot_location: @T1
       plot_name: beta
       n_graph: 1
-      graph1_name: g
-      graph2_name:
-      graphN_name:
+      graph1_name: g1
+      graph2_name: g2
+      graphN_name: gN
 
 
-.. function:: plot_curve_manage(tao, graph_name, curve_index, curve_name, *, verbose=False, as_dict=True)
+.. function:: plot_curve_manage(tao, graph_name, curve_index, curve_name, *, verbose=False, as_dict=True, raises=True)
 
    Template plot curve creation/destruction
 
@@ -2267,12 +2254,12 @@ Module Contents
    :param curve_name:
 
    :returns:
-   :rtype: string_list
+   :rtype: None
 
    .. rubric:: Notes
 
    Command syntax:
-     pyton plot_curve_manage {graph_name}^^{curve_index}^^{curve_name}
+     python plot_curve_manage {graph_name}^^{curve_index}^^{curve_name}
    If {curve_index} corresponds to an existing curve then this curve is deleted.
    In this case the {curve_name} is ignored and does not have to be present.
    If {curve_index} does not not correspond to an existing curve, {curve_index}
@@ -2281,14 +2268,14 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
-      graph_name: g
+      graph_name: beta.g
       curve_index: 1
-      curve_name: c1
+      curve_name: r13.g.a
 
 
-.. function:: plot_graph_manage(tao, plot_name, graph_index, graph_name, *, verbose=False, as_dict=True)
+.. function:: plot_graph_manage(tao, plot_name, graph_index, graph_name, *, verbose=False, as_dict=True, raises=True)
 
    Template plot graph creation/destruction
 
@@ -2297,12 +2284,12 @@ Module Contents
    :param graph_name:
 
    :returns:
-   :rtype: string_list
+   :rtype: None
 
    .. rubric:: Notes
 
    Command syntax:
-     pyton plot_graph_manage {plot_name}^^{graph_index}^^{graph_name}
+     python plot_graph_manage {plot_name}^^{graph_index}^^{graph_name}
    If {graph_index} corresponds to an existing graph then this graph is deleted.
    In this case the {graph_name} is ignored and does not have to be present.
    If {graph_index} does not not correspond to an existing graph, {graph_index}
@@ -2311,21 +2298,22 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
       plot_name: beta
       graph_index: 1
-      graph_name: g
+      graph_name: beta.g
 
 
-.. function:: plot_line(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=False, as_dict=True)
+.. function:: plot_line(tao, region_name, graph_name, curve_name, *, x_or_y='', verbose=False, as_dict=True, raises=True)
 
-   Points used to construct a smooth line for a plot curve.
+   Output points used to construct the "line" associated with a plot curve.
 
    :param region_name:
    :param graph_name:
    :param curve_name:
    :param x_or_y:
+   :type x_or_y: optional
 
    :returns:
    :rtype: string_list
@@ -2347,15 +2335,15 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting
     args:
-      region_name: r11
+      region_name: beta
       graph_name: g
       curve_name: a
-      x_or_y: x
+      x_or_y:
 
 
-.. function:: plot_symbol(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=False, as_dict=True)
+.. function:: plot_symbol(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=False, as_dict=True, raises=True)
 
    Locations to draw symbols for a plot curve.
 
@@ -2386,15 +2374,15 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting
     args:
-      region_name: r11
+      region_name: r13
       graph_name: g
       curve_name: a
-      x_or_y: x
+      x_or_y:
 
 
-.. function:: plot_transfer(tao, from_plot, to_plot, *, verbose=False, as_dict=True)
+.. function:: plot_transfer(tao, from_plot, to_plot, *, verbose=False, as_dict=True, raises=True)
 
    Transfer plot parameters from the "from plot" to the "to plot" (or plots).
 
@@ -2402,7 +2390,7 @@ Module Contents
    :param to_plot:
 
    :returns:
-   :rtype: string_list
+   :rtype: None
 
    .. rubric:: Notes
 
@@ -2416,13 +2404,13 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
       from_plot: r13
-      to_plot:
+      to_plot: r23
 
 
-.. function:: plot1(tao, name, *, verbose=False, as_dict=True)
+.. function:: plot1(tao, name, *, verbose=False, as_dict=True, raises=True)
 
    Info on a given plot.
 
@@ -2441,12 +2429,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
-      name: r11
+      name: beta
 
 
-.. function:: shape_list(tao, who, *, verbose=False, as_dict=True)
+.. function:: shape_list(tao, who, *, verbose=False, as_dict=True, raises=True)
 
    lat_layout and floor_plan shapes list
 
@@ -2466,12 +2454,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       who: floor_plan
 
 
-.. function:: shape_manage(tao, who, index, add_or_delete, *, verbose=False, as_dict=True)
+.. function:: shape_manage(tao, who, index, add_or_delete, *, verbose=False, as_dict=True, raises=True)
 
    element shape creation or destruction
 
@@ -2506,16 +2494,16 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       who: floor_plan
       index: 1
       add_or_delete: add
 
 
-.. function:: shape_pattern_list(tao, *, ix_pattern='', verbose=False, as_dict=True)
+.. function:: shape_pattern_list(tao, *, ix_pattern='', verbose=False, as_dict=True, raises=True)
 
-   List of shape patterns
+   List of shape patterns or shape pattern points
 
    :param ix_pattern:
    :type ix_pattern: optional
@@ -2527,22 +2515,19 @@ Module Contents
 
    Command syntax:
      python shape_pattern_list {ix_pattern}
-   If optional {ix_pattern} index is omitted then list all the patterns
+
+   If optional {ix_pattern} index is omitted then list all the patterns.
+   If {ix_pattern} is present, list points of given pattern.
 
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_shape
     args:
       ix_pattern:
 
-   Example: 2
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
-    args:
-      ix_pattern: 1
 
-
-.. function:: shape_pattern_manage(tao, ix_pattern, pat_name, pat_line_width, *, verbose=False, as_dict=True)
+.. function:: shape_pattern_manage(tao, ix_pattern, pat_name, pat_line_width, *, verbose=False, as_dict=True, raises=True)
 
    Add or remove shape pattern
 
@@ -2551,7 +2536,7 @@ Module Contents
    :param pat_line_width:
 
    :returns:
-   :rtype: string_list
+   :rtype: None
 
    .. rubric:: Notes
 
@@ -2567,14 +2552,14 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_shape
     args:
-      ix_pattern : 5
+      ix_pattern : 1
       pat_name : new_pat
       pat_line_width : 1
 
 
-.. function:: shape_pattern_point_manage(tao, ix_pattern, ix_point, s, x, *, verbose=False, as_dict=True)
+.. function:: shape_pattern_point_manage(tao, ix_pattern, ix_point, s, x, *, verbose=False, as_dict=True, raises=True)
 
    Add or remove shape pattern point
 
@@ -2584,7 +2569,7 @@ Module Contents
    :param x:
 
    :returns:
-   :rtype: string_list
+   :rtype: None
 
    .. rubric:: Notes
 
@@ -2599,7 +2584,7 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_shape
     args:
       ix_pattern: 1
       ix_point: 1
@@ -2607,7 +2592,7 @@ Module Contents
       x: 0
 
 
-.. function:: shape_set(tao, who, shape_index, ele_name, shape, color, shape_size, type_label, shape_draw, multi_shape, line_width, *, verbose=False, as_dict=True)
+.. function:: shape_set(tao, who, shape_index, ele_name, shape, color, shape_size, type_label, shape_draw, multi_shape, line_width, *, verbose=False, as_dict=True, raises=True)
 
    lat_layout or floor_plan shape set
 
@@ -2623,7 +2608,7 @@ Module Contents
    :param line_width:
 
    :returns:
-   :rtype: string_list
+   :rtype: None
 
    .. rubric:: Notes
 
@@ -2638,12 +2623,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       who: floor_plan
       shape_index: 1
       ele_name: Q1
-      shape:
+      shape: circle
       color:
       shape_size:
       type_label:
@@ -2652,7 +2637,7 @@ Module Contents
       line_width:
 
 
-.. function:: show(tao, line, *, verbose=False, as_dict=True)
+.. function:: show(tao, line, *, verbose=False, as_dict=True, raises=True)
 
    Show command pass through
 
@@ -2673,12 +2658,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       line: -python
 
 
-.. function:: species_to_int(tao, species_str, *, verbose=False, as_dict=True)
+.. function:: species_to_int(tao, species_str, *, verbose=False, as_dict=True, raises=True)
 
    Convert species name to corresponding integer
 
@@ -2698,12 +2683,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
-      species_str: CO2++
+      species_str: electron
 
 
-.. function:: species_to_str(tao, species_int, *, verbose=False, as_dict=True)
+.. function:: species_to_str(tao, species_int, *, verbose=False, as_dict=True, raises=True)
 
    Convert species integer id to corresponding
 
@@ -2723,12 +2708,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       species_int: -1
 
 
-.. function:: spin_polarization(tao, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True)
+.. function:: spin_polarization(tao, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True, raises=True)
 
    Spin information
 
@@ -2759,14 +2744,14 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       ix_uni: 1
       ix_branch: 0
       which: model
 
 
-.. function:: super_universe(tao, *, verbose=False, as_dict=True)
+.. function:: super_universe(tao, *, verbose=False, as_dict=True, raises=True)
 
    Super_Universe information
 
@@ -2781,11 +2766,11 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
 
 
-.. function:: twiss_at_s(tao, ix_uni, ix_branch, s, which, *, verbose=False, as_dict=True)
+.. function:: twiss_at_s(tao, ix_uni, ix_branch, s, which, *, verbose=False, as_dict=True, raises=True)
 
    Twiss at given s position
 
@@ -2809,7 +2794,7 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       ix_uni: 1
       ix_branch: 0
@@ -2817,7 +2802,7 @@ Module Contents
       which: model
 
 
-.. function:: universe(tao, ix_universe, *, verbose=False, as_dict=True)
+.. function:: universe(tao, ix_universe, *, verbose=False, as_dict=True, raises=True)
 
    Universe info
 
@@ -2835,16 +2820,18 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       ix_universe: 1
 
 
-.. function:: var(tao, var, *, verbose=False, as_dict=True)
+.. function:: var(tao, var, *, slaves='', verbose=False, as_dict=True, raises=True)
 
    Info on an individual variable
 
    :param var:
+   :param slaves:
+   :type slaves: optional
 
    :returns:
    :rtype: string_list
@@ -2852,18 +2839,24 @@ Module Contents
    .. rubric:: Notes
 
    Command syntax:
-     python var {var}        or
      python var {var} slaves
 
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
-      var: quad_k1[1]
+      var: quad[1]
+      slaves:
+
+   Example: 2
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
+    args:
+      var: quad[1]
+      slaves: slaves
 
 
-.. function:: var_create(tao, var_name, ele_name, attribute, universes, weight, step, low_lim, high_lim, merit_type, good_user, key_bound, key_delta, *, verbose=False, as_dict=True)
+.. function:: var_create(tao, var_name, ele_name, attribute, universes, weight, step, low_lim, high_lim, merit_type, good_user, key_bound, key_delta, *, verbose=False, as_dict=True, raises=True)
 
    Create a single variable
 
@@ -2896,10 +2889,10 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
-      var_name: kick[5]
-      ele_name: Q01W
+      var_name: quad[1]
+      ele_name: Q1
       attribute: L
       universes: 1
       weight: 0.001
@@ -2907,12 +2900,12 @@ Module Contents
       low_lim: -10
       high_lim: 10
       merit_type:
-      good_user: 1
+      good_user: T
       key_bound: T
       key_delta: 0.01
 
 
-.. function:: var_general(tao, *, verbose=False, as_dict=True)
+.. function:: var_general(tao, *, verbose=False, as_dict=True, raises=True)
 
    List of all variable v1 arrays
 
@@ -2929,11 +2922,11 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
 
 
-.. function:: var_v_array(tao, v1_var, *, verbose=False, as_dict=True)
+.. function:: var_v_array(tao, v1_var, *, verbose=False, as_dict=True, raises=True)
 
    List of variables for a given data_v1.
 
@@ -2953,12 +2946,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       v1_var: quad_k1
 
 
-.. function:: var_v1_array(tao, v1_var, *, verbose=False, as_dict=True)
+.. function:: var_v1_array(tao, v1_var, *, verbose=False, as_dict=True, raises=True)
 
    List of variables in a given variable v1 array
 
@@ -2975,12 +2968,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       v1_var: quad_k1
 
 
-.. function:: var_v1_create(tao, v1_name, n_var_min, n_var_max, *, verbose=False, as_dict=True)
+.. function:: var_v1_create(tao, v1_name, n_var_min, n_var_max, *, verbose=False, as_dict=True, raises=True)
 
    Create a v1 variable structure along with associated var array.
 
@@ -3020,14 +3013,14 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       v1_name: quad_k1
       n_var_min: 0
       n_var_max: 45
 
 
-.. function:: var_v1_destroy(tao, v1_datum, *, verbose=False, as_dict=True)
+.. function:: var_v1_destroy(tao, v1_datum, *, verbose=False, as_dict=True, raises=True)
 
    Destroy a v1 var structure along with associated var sub-array.
 
@@ -3044,12 +3037,12 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       v1_datum: quad_k1
 
 
-.. function:: wave(tao, what, *, verbose=False, as_dict=True)
+.. function:: wave(tao, what, *, verbose=False, as_dict=True, raises=True)
 
    Wave analysis info.
 
@@ -3071,7 +3064,7 @@ Module Contents
    .. rubric:: Examples
 
    Example: 1
-    init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       what: params
 

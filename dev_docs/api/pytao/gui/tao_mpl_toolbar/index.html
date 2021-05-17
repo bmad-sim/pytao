@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>pytao.gui.tao_mpl_toolbar &mdash; PyTao 0.1.2+2.gf51034c documentation</title>
+  <title>pytao.gui.tao_mpl_toolbar &mdash; PyTao 0.1.2+12.g4f56ee5 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
 
   
@@ -30,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
@@ -65,7 +68,7 @@
             
             
               <div class="version">
-                0.1.2+2.gf51034c
+                0.1.2+12.g4f56ee5
               </div>
             
           
@@ -103,6 +106,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/basic.html#All-method-commands">All method commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/basic.html#Other-Tao-instances">Other Tao instances</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/basic.html#ParticleGroup-from-openPMD-beamphysics">ParticleGroup from openPMD-beamphysics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/basic.html#Error-handling-and-Debugging">Error handling and Debugging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/advanced.html">PyTao advanced usage</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer Documentation</span></p>
@@ -233,96 +237,96 @@
 <div class="section" id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="pytao.gui.tao_mpl_toolbar.taotoolbar">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pytao.gui.tao_mpl_toolbar.</span></code><code class="sig-name descname"><span class="pre">taotoolbar</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GUI_DIR_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pytao.gui.tao_mpl_toolbar.taotoolbar">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pytao.gui.tao_mpl_toolbar.</span></span><span class="sig-name descname"><span class="pre">taotoolbar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GUI_DIR_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlib.backends.backend_tkagg.NavigationToolbar2Tk</span></code></p>
 <dl class="py attribute">
-<dt id="pytao.gui.tao_mpl_toolbar.taotoolbar.cid">
-<code class="sig-name descname"><span class="pre">cid</span></code><em class="property"> <span class="pre">=</span> <span class="pre">none</span></em><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.cid" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pytao.gui.tao_mpl_toolbar.taotoolbar.cid">
+<span class="sig-name descname"><span class="pre">cid</span></span><em class="property"> <span class="pre">=</span> <span class="pre">none</span></em><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.cid" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="pytao.gui.tao_mpl_toolbar.taotoolbar.cidKeyP">
-<code class="sig-name descname"><span class="pre">cidKeyP</span></code><em class="property"> <span class="pre">=</span> <span class="pre">none</span></em><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.cidKeyP" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pytao.gui.tao_mpl_toolbar.taotoolbar.cidKeyP">
+<span class="sig-name descname"><span class="pre">cidKeyP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">none</span></em><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.cidKeyP" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="pytao.gui.tao_mpl_toolbar.taotoolbar.cidKeyR">
-<code class="sig-name descname"><span class="pre">cidKeyR</span></code><em class="property"> <span class="pre">=</span> <span class="pre">none</span></em><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.cidKeyR" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pytao.gui.tao_mpl_toolbar.taotoolbar.cidKeyR">
+<span class="sig-name descname"><span class="pre">cidKeyR</span></span><em class="property"> <span class="pre">=</span> <span class="pre">none</span></em><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.cidKeyR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="pytao.gui.tao_mpl_toolbar.taotoolbar.cur_ax">
-<code class="sig-name descname"><span class="pre">cur_ax</span></code><em class="property"> <span class="pre">=</span> <span class="pre">none</span></em><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.cur_ax" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pytao.gui.tao_mpl_toolbar.taotoolbar.cur_ax">
+<span class="sig-name descname"><span class="pre">cur_ax</span></span><em class="property"> <span class="pre">=</span> <span class="pre">none</span></em><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.cur_ax" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="pytao.gui.tao_mpl_toolbar.taotoolbar.xzoom">
-<code class="sig-name descname"><span class="pre">xzoom</span></code><em class="property"> <span class="pre">=</span> <span class="pre">True</span></em><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.xzoom" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pytao.gui.tao_mpl_toolbar.taotoolbar.xzoom">
+<span class="sig-name descname"><span class="pre">xzoom</span></span><em class="property"> <span class="pre">=</span> <span class="pre">True</span></em><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.xzoom" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="pytao.gui.tao_mpl_toolbar.taotoolbar.yzoom">
-<code class="sig-name descname"><span class="pre">yzoom</span></code><em class="property"> <span class="pre">=</span> <span class="pre">True</span></em><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.yzoom" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pytao.gui.tao_mpl_toolbar.taotoolbar.yzoom">
+<span class="sig-name descname"><span class="pre">yzoom</span></span><em class="property"> <span class="pre">=</span> <span class="pre">True</span></em><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.yzoom" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="pytao.gui.tao_mpl_toolbar.taotoolbar.enter_axes">
-<code class="sig-name descname"><span class="pre">enter_axes</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.enter_axes" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pytao.gui.tao_mpl_toolbar.taotoolbar.enter_axes">
+<span class="sig-name descname"><span class="pre">enter_axes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.enter_axes" title="Permalink to this definition">¶</a></dt>
 <dd><p>handles the mouse entering axes</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pytao.gui.tao_mpl_toolbar.taotoolbar.leave_axes">
-<code class="sig-name descname"><span class="pre">leave_axes</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.leave_axes" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pytao.gui.tao_mpl_toolbar.taotoolbar.leave_axes">
+<span class="sig-name descname"><span class="pre">leave_axes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.leave_axes" title="Permalink to this definition">¶</a></dt>
 <dd><p>handles the mouse leaving axes</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pytao.gui.tao_mpl_toolbar.taotoolbar.onKeyPress">
-<code class="sig-name descname"><span class="pre">onKeyPress</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.onKeyPress" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pytao.gui.tao_mpl_toolbar.taotoolbar.onKeyPress">
+<span class="sig-name descname"><span class="pre">onKeyPress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.onKeyPress" title="Permalink to this definition">¶</a></dt>
 <dd><p>handles key presses</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pytao.gui.tao_mpl_toolbar.taotoolbar.onKeyRelease">
-<code class="sig-name descname"><span class="pre">onKeyRelease</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.onKeyRelease" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pytao.gui.tao_mpl_toolbar.taotoolbar.onKeyRelease">
+<span class="sig-name descname"><span class="pre">onKeyRelease</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.onKeyRelease" title="Permalink to this definition">¶</a></dt>
 <dd><p>handles releasing key presses</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pytao.gui.tao_mpl_toolbar.taotoolbar.zoom_factory">
-<code class="sig-name descname"><span class="pre">zoom_factory</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">canv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'none'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.zoom_factory" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pytao.gui.tao_mpl_toolbar.taotoolbar.zoom_factory">
+<span class="sig-name descname"><span class="pre">zoom_factory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">canv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'none'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.zoom_factory" title="Permalink to this definition">¶</a></dt>
 <dd><p>controls connections for scroll wheel zooming</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pytao.gui.tao_mpl_toolbar.taotoolbar.home">
-<code class="sig-name descname"><span class="pre">home</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.home" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pytao.gui.tao_mpl_toolbar.taotoolbar.home">
+<span class="sig-name descname"><span class="pre">home</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.home" title="Permalink to this definition">¶</a></dt>
 <dd><p>Restore the original view.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pytao.gui.tao_mpl_toolbar.taotoolbar.pan">
-<code class="sig-name descname"><span class="pre">pan</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.pan" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pytao.gui.tao_mpl_toolbar.taotoolbar.pan">
+<span class="sig-name descname"><span class="pre">pan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.pan" title="Permalink to this definition">¶</a></dt>
 <dd><p>Activate the pan/zoom tool. pan with left button, zoom with right or with with scroll wheel</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pytao.gui.tao_mpl_toolbar.taotoolbar.help">
-<code class="sig-name descname"><span class="pre">help</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.help" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pytao.gui.tao_mpl_toolbar.taotoolbar.help">
+<span class="sig-name descname"><span class="pre">help</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.help" title="Permalink to this definition">¶</a></dt>
 <dd><p>help tool which opens a tk window with instructions on graph interaction</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pytao.gui.tao_mpl_toolbar.taotoolbar.redraw">
-<code class="sig-name descname"><span class="pre">redraw</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.redraw" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pytao.gui.tao_mpl_toolbar.taotoolbar.redraw">
+<span class="sig-name descname"><span class="pre">redraw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.redraw" title="Permalink to this definition">¶</a></dt>
 <dd><p>forces recalculation of points in window</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pytao.gui.tao_mpl_toolbar.taotoolbar.slider">
-<code class="sig-name descname"><span class="pre">slider</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.slider" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pytao.gui.tao_mpl_toolbar.taotoolbar.slider">
+<span class="sig-name descname"><span class="pre">slider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_mpl_toolbar.taotoolbar.slider" title="Permalink to this definition">¶</a></dt>
 <dd><p>opens a new matplotlib figure with a slider that adjusts the size of a lat layout if one is present or adjusts the width of floor plan elements if a floor plan is present</p>
 </dd></dl>
 
