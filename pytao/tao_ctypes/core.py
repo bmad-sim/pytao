@@ -3,6 +3,7 @@ import ctypes
 import numpy as np
 from pytao import tao_ctypes
 from pytao.tao_ctypes import extra_commands
+from pytao.tao_ctypes.util import error_in_lines
 from pytao.util.parameters import tao_parameter_dict
 from .tools import full_path
 import tempfile
@@ -33,7 +34,7 @@ class Tao:
     def __init__(self, init='', so_lib = ''):
         # TL/DR; Leave this import out of the global scope.
         #
-        # Make it lazy import to avoid ciclical dependency.
+        # Make it lazy import to avoid cyclical dependency.
         # at __init__.py there is an import for Tao which
         # would cause interface_commands to be imported always
         # once we import pytao.
@@ -44,28 +45,20 @@ class Tao:
 
         # Library needs to be set.
         if so_lib == '':
+            # Search
             BASE_DIR=os.environ['ACC_ROOT_DIR'] + '/production/lib/'
-            if os.path.isfile(BASE_DIR + 'libtao.so'):
-                self.so_lib_file = BASE_DIR + 'libtao.so'
-            elif os.path.isfile(BASE_DIR + 'libtao.dylib'):
-                self.so_lib_file = BASE_DIR + 'libtao.dylib'
-            elif os.path.isfile(BASE_DIR + 'libtao.dll'):
-                self.so_lib_file = BASE_DIR + 'libtao.dll'
-            else:
-                raise ValueError ('Shared object libtao library not found in: ' + BASE_DIR)
+            self.so_lib_file = find_libtao(BASE_DIR)
         elif not tao_ctypes.initialized:
             self.so_lib_file = so_lib
         else:
+            #Tao already initialized
             pass
-            #print('Tao already initialized.')
+            
         
         self.so_lib = ctypes.CDLL(self.so_lib_file)
 
         self.so_lib.tao_c_out_io_buffer_get_line.restype = ctypes.c_char_p
         self.so_lib.tao_c_out_io_buffer_reset.restype = None
-
-        # Attributes
-        ##self.initialized = False
 
         # Extra methods
         self._import_commands(interface_commands)
@@ -75,10 +68,8 @@ class Tao:
             self.register_cell_magic()
         except:
             pass
-            #print('unable to register cell magic')
 
         if init:
-            # Call init
             self.init(init)
             
             
@@ -93,96 +84,122 @@ class Tao:
     #---------------------------------------------
     # Used by init and cmd routines
 
-    def get_output(self):
+    def get_output(self, reset=True):
+        """
+        Returns a list of output strings.
+        If reset, the internal Tao buffers will be reset.
+        """
         n_lines = self.so_lib.tao_c_out_io_buffer_num_lines()
         lines = [self.so_lib.tao_c_out_io_buffer_get_line(i).decode('utf-8') for i in range(1, n_lines+1)]
-        self.so_lib.tao_c_out_io_buffer_reset()
+        if reset:
+            self.so_lib.tao_c_out_io_buffer_reset()
         return lines
+    
+    def reset_output(self):
+        """
+        Resets all output buffers
+        """
+        self.so_lib.tao_c_out_io_buffer_reset()
 
     #---------------------------------------------
     # Init Tao
 
     def init(self, cmd):
         if not tao_ctypes.initialized:
-            self.so_lib.tao_c_init_tao(cmd.encode('utf-8'))
+            err = self.so_lib.tao_c_init_tao(cmd.encode('utf-8'))
+            if err != 0:
+                raise ValueError(f'Unable to init Tao with: {cmd}')
             tao_ctypes.initialized = True
             return self.get_output()
         else:
             # Reinit
-            self.cmd('reinit tao '+cmd)
-            tao_ctypes.initialized = True
-            return self.get_output()
+            return self.cmd(f'reinit tao -clear {cmd}', raises=True)
 
     #---------------------------------------------
     # Send a command to Tao and return the output
 
-    def cmd(self, cmd, exception_on_error=False):
+    def cmd(self, cmd, raises=True):
         """
         Runs a command, and returns the text output
         
         cmd: command string
-        exception_on_error: will raise an exception of [ERROR or [FATAL is detected in the output
+        raises: will raise an exception of [ERROR or [FATAL is detected in the output
         
         Returns a list of strings
         """
 
         self.so_lib.tao_c_command(cmd.encode('utf-8'))
-        lines = self.get_output()  
-        if not exception_on_error:
+        lines = self.get_output()
+        
+        # Error checking
+        if not raises:
             return lines
-            
-        error = False
-        for line in lines:
-            # Look for first instance of a problem
-            if '[ERROR' in line or '[FATAL' in line: 
-                error = True
-                badlines = [line]
-                continue
-            if error:
-                # Collect subsequent lines
-                badlines.append(line)
-        if error:
-            printout = cmd+'\n' + '\n'.join(badlines)
-            raise ValueError(f'{printout}')    
-
+        
+        err = error_in_lines(lines)
+        if err:
+            raise RuntimeError(f'Command: {cmd} causes error: {err}')
+        
+        return lines
+    
     #---------------------------------------------
     # Get real array output.
     # Only python commands that load the real array buffer can be used with this method.
 
-    def cmd_real (self, cmd):
+    def cmd_real (self, cmd, raises=True):
         self.so_lib.tao_c_command(cmd.encode('utf-8'))
         n = self.so_lib.tao_c_real_array_size()
         self.so_lib.tao_c_get_real_array.restype = ctypes.POINTER(ctypes.c_double * n)
 
-        # Old way:
-        #array = []
-        #for re in self.so_lib.tao_c_get_real_array().contents: array.append(re)
-        #return array
-
-        #NumPy way:
+        # Check the output for errors
+        lines = self.get_output(reset=False)
+        err = error_in_lines(lines)
+        if err:
+            self.reset_output()
+            if raises:
+                raise RuntimeError(err)
+            else:
+                return None
+    
+        # Extract array data
         # This is a pointer to the scratch space.
         array = np.ctypeslib.as_array(
             (ctypes.c_double * n).from_address(ctypes.addressof(self.so_lib.tao_c_get_real_array().contents)))
-        # Return a copy
-        return np.copy(array)
+        
+        array = array.copy()
+        self.reset_output()
+        
+        return array  
 
     #----------
     # Get integer array output.
     # Only python commands that load the integer array buffer can be used with this method.
 
-    def cmd_integer (self, cmd):
+    def cmd_integer (self, cmd, raises=True):
         self.so_lib.tao_c_command(cmd.encode('utf-8'))
         n = self.so_lib.tao_c_integer_array_size()
         self.so_lib.tao_c_get_integer_array.restype = ctypes.POINTER(ctypes.c_int * n)
-        #array = []
-        #for inte in self.so_lib.tao_c_get_integer_array().contents: array.append(inte)
-        #return array
-        #NumPy way:
+
+        # Check the output for errors
+        lines = self.get_output(reset=False)
+        err = error_in_lines(lines)
+        if err:
+            self.reset_output()
+            if raises:
+                raise RuntimeError(err)
+            else:
+                return None  
+        
+        # Extract array data
         # This is a pointer to the scratch space.
         array = np.ctypeslib.as_array(
             (ctypes.c_int * n).from_address(ctypes.addressof(self.so_lib.tao_c_get_integer_array().contents)))
-        # Return a copy
-        return np.copy(array)
+
+        array = array.copy()
+        self.reset_output()
+        
+        return array  
+    
+ 
 
     #---------------------------------------------
 
@@ -208,6 +225,21 @@ class Tao:
                    print(l)
       del tao
 
+    
+    
+def find_libtao(base_dir):  
+    """
+    Searches base_for for an appropriate libtao shared library. 
+    """
+    for lib in ['libtao.so', 'libtao.dylib', 'libtao.dll']:
+        so_lib_file = os.path.join(base_dir, lib)
+        if os.path.exists(so_lib_file):
+            return so_lib_file
+        
+    raise ValueError (f'Shared object libtao library not found in: {base_dir}')    
+    
+    
+    
 #----------------------------------------------------------------------
 
 class TaoModel(Tao):
@@ -428,7 +460,7 @@ def apply_settings(tao_object, settings):
         
     for cmd in cmds:
         tao_object.vprint(cmd)
-        tao_object.cmd(cmd, exception_on_error=True)
+        tao_object.cmd(cmd, raises=True)
         
     return cmds    
 
@@ -468,7 +500,7 @@ def run_tao(settings=None,
         for command in run_commands:
             if verbose:
                 print('run command:', command)
-            M.cmd(command, exception_on_error=True)
+            M.cmd(command, raises=True)
     
     finally:
         # Return to init_dir

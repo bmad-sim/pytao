@@ -4,14 +4,14 @@ from pytao.util.parameters import tao_parameter_dict
 from pytao.util import parsers as __parsers
 
 
-def __execute(tao, cmd, as_dict=True, method_name=None, cmd_type="string_list"):
+def __execute(tao, cmd, as_dict=True, raises=True, method_name=None, cmd_type="string_list"):
     func_for_type = {
         "string_list": tao.cmd,
         "real_array": tao.cmd_real,
         "integer_array": tao.cmd_integer
     }
     func = func_for_type.get(cmd_type, tao.cmd)
-    ret = func(cmd)
+    ret = func(cmd, raises=raises)
     special_parser = getattr(__parsers, f'parse_{method_name}', "")
     if special_parser:
         data = special_parser(ret)
@@ -31,7 +31,7 @@ def __execute(tao, cmd, as_dict=True, method_name=None, cmd_type="string_list"):
     return ret
 
 
-def beam(tao, *, ix_universe='1', verbose=False, as_dict=True):
+def beam(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=True):
     """
     
     Output beam parameters that are not in the beam_init structure.
@@ -55,17 +55,17 @@ def beam(tao, *, ix_universe='1', verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
      args:
        ix_universe: 1
     
     """
     cmd = f'python beam {ix_universe}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='beam', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='beam', cmd_type='string_list')
 
 
-def beam_init(tao, *, ix_universe='1', verbose=False, as_dict=True):
+def beam_init(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=True):
     """
     
     Output beam_init parameters.
@@ -89,17 +89,17 @@ def beam_init(tao, *, ix_universe='1', verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
      args:
        ix_universe: 1
     
     """
     cmd = f'python beam_init {ix_universe}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='beam_init', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='beam_init', cmd_type='string_list')
 
 
-def bmad_com(tao, *, verbose=False, as_dict=True):
+def bmad_com(tao, *, verbose=False, as_dict=True, raises=True):
     """
     
     Bmad_com structure components
@@ -116,16 +116,16 @@ def bmad_com(tao, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
     
     """
     cmd = f'python bmad_com'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='bmad_com', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='bmad_com', cmd_type='string_list')
 
 
-def branch1(tao, *, ix_universe='1', ix_branch='0', verbose=False, as_dict=True):
+def branch1(tao, *, ix_universe='1', ix_branch='0', verbose=False, as_dict=True, raises=True):
     """
     
     Lattice element list.
@@ -150,7 +150,7 @@ def branch1(tao, *, ix_universe='1', ix_branch='0', verbose=False, as_dict=True)
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        ix_universe: 1
        ix_branch: 0
@@ -158,10 +158,10 @@ def branch1(tao, *, ix_universe='1', ix_branch='0', verbose=False, as_dict=True)
     """
     cmd = f'python branch1 {ix_universe}@{ix_branch}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='branch1', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='branch1', cmd_type='string_list')
 
 
-def bunch1(tao, ele_id, *, which='model', ix_bunch='1', coordinate='', verbose=False, as_dict=True):
+def bunch1(tao, ele_id, *, which='model', ix_bunch='1', coordinate='', verbose=False, as_dict=True, raises=True):
     """
     
     Bunch parameters at the exit end of a given lattice element.
@@ -193,7 +193,7 @@ def bunch1(tao, ele_id, *, which='model', ix_bunch='1', coordinate='', verbose=F
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
      args:
        ele_id: end
        which: model
@@ -201,7 +201,7 @@ def bunch1(tao, ele_id, *, which='model', ix_bunch='1', coordinate='', verbose=F
        coordinate:
     
     Example: 2
-     init: $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
      args:
        ele_id: end
        which: model
@@ -212,14 +212,14 @@ def bunch1(tao, ele_id, *, which='model', ix_bunch='1', coordinate='', verbose=F
     cmd = f'python bunch1 {ele_id}|{which} {ix_bunch} {coordinate}'
     if verbose: print(cmd)
     if not coordinate:
-        return __execute(tao, cmd, as_dict, method_name='bunch1', cmd_type='string_list')
+        return __execute(tao, cmd, as_dict, raises, method_name='bunch1', cmd_type='string_list')
     if coordinate and coordinate != 'state':
-        return __execute(tao, cmd, as_dict, method_name='bunch1', cmd_type='real_array')
+        return __execute(tao, cmd, as_dict, raises, method_name='bunch1', cmd_type='real_array')
     if coordinate == 'state':
-        return __execute(tao, cmd, as_dict, method_name='bunch1', cmd_type='integer_array')
+        return __execute(tao, cmd, as_dict, raises, method_name='bunch1', cmd_type='integer_array')
 
 
-def building_wall_list(tao, *, ix_section='', verbose=False, as_dict=True):
+def building_wall_list(tao, *, ix_section='', verbose=False, as_dict=True, raises=True):
     """
     
     List of building wall sections or section points
@@ -242,22 +242,22 @@ def building_wall_list(tao, *, ix_section='', verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall
      args:
        ix_section:
     
     Example: 2
-     init: $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall
      args:
        ix_section: 1
     
     """
     cmd = f'python building_wall_list {ix_section}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='building_wall_list', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='building_wall_list', cmd_type='string_list')
 
 
-def building_wall_graph(tao, graph, *, verbose=False, as_dict=True):
+def building_wall_graph(tao, graph, *, verbose=False, as_dict=True, raises=True):
     """
     
     (x, y) points for drawing the building wall for a particular graph.
@@ -279,17 +279,17 @@ def building_wall_graph(tao, graph, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall
      args:
-       graph:
+       graph: floor_plan.g
     
     """
     cmd = f'python building_wall_graph {graph}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='building_wall_graph', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='building_wall_graph', cmd_type='string_list')
 
 
-def building_wall_point(tao, ix_section, ix_point, z, x, radius, z_center, x_center, *, verbose=False, as_dict=True):
+def building_wall_point(tao, ix_section, ix_point, z, x, radius, z_center, x_center, *, verbose=False, as_dict=True, raises=True):
     """
     
     add or delete a building wall point
@@ -306,7 +306,7 @@ def building_wall_point(tao, ix_section, ix_point, z, x, radius, z_center, x_cen
     
     Returns
     -------
-    string_list
+    None
     
     Notes
     -----
@@ -322,7 +322,7 @@ def building_wall_point(tao, ix_section, ix_point, z, x, radius, z_center, x_cen
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall
      args:
        ix_section: 1
        ix_point: 1
@@ -335,10 +335,10 @@ def building_wall_point(tao, ix_section, ix_point, z, x, radius, z_center, x_cen
     """
     cmd = f'python building_wall_point {ix_section}^^{ix_point}^^{z}^^{x}^^{radius}^^{z_center}^^{x_center}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='building_wall_point', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='building_wall_point', cmd_type='None')
 
 
-def building_wall_section(tao, ix_section, sec_name, sec_constraint, *, verbose=False, as_dict=True):
+def building_wall_section(tao, ix_section, sec_name, sec_constraint, *, verbose=False, as_dict=True, raises=True):
     """
     
     add or delete a building wall section
@@ -370,7 +370,7 @@ def building_wall_section(tao, ix_section, sec_name, sec_constraint, *, verbose=
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        ix_section: 1
        sec_name: test
@@ -379,10 +379,10 @@ def building_wall_section(tao, ix_section, sec_name, sec_constraint, *, verbose=
     """
     cmd = f'python building_wall_section {ix_section}^^{sec_name}^^{sec_constraint}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='building_wall_section', cmd_type='None')
+    return __execute(tao, cmd, as_dict, raises, method_name='building_wall_section', cmd_type='None')
 
 
-def constraints(tao, who, *, verbose=False, as_dict=True):
+def constraints(tao, who, *, verbose=False, as_dict=True, raises=True):
     """
     
     Optimization data and variables that contribute to the merit function.
@@ -429,22 +429,22 @@ def constraints(tao, who, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        who: data
     
     Example: 2
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        who:var
     
     """
     cmd = f'python constraints {who}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='constraints', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='constraints', cmd_type='string_list')
 
 
-def da_aperture(tao, *, ix_uni='1', verbose=False, as_dict=True):
+def da_aperture(tao, *, ix_uni='1', verbose=False, as_dict=True, raises=True):
     """
     
     Dynamic aperture data
@@ -462,20 +462,13 @@ def da_aperture(tao, *, ix_uni='1', verbose=False, as_dict=True):
     Command syntax:
       python da_aperture {ix_uni}
     
-    Examples
-    --------
-    Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
-     args:
-       ix_uni:1
-    
     """
     cmd = f'python da_aperture {ix_uni}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='da_aperture', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='da_aperture', cmd_type='string_list')
 
 
-def da_params(tao, *, ix_uni='1', verbose=False, as_dict=True):
+def da_params(tao, *, ix_uni='1', verbose=False, as_dict=True, raises=True):
     """
     
     Dynamic aperture input parameters
@@ -493,20 +486,13 @@ def da_params(tao, *, ix_uni='1', verbose=False, as_dict=True):
     Command syntax:
       python da_params {ix_uni}
     
-    Examples
-    --------
-    Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
-     args:
-       ix_uni:1
-    
     """
     cmd = f'python da_params {ix_uni}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='da_params', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='da_params', cmd_type='string_list')
 
 
-def data(tao, d2_name, d1_datum, *, ix_universe='1', dat_index='1', verbose=False, as_dict=True):
+def data(tao, d2_name, d1_datum, *, ix_universe='1', dat_index='1', verbose=False, as_dict=True, raises=True):
     """
     
     Individual datum info.
@@ -535,15 +521,15 @@ def data(tao, d2_name, d1_datum, *, ix_universe='1', dat_index='1', verbose=Fals
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        ix_universe:
        d2_name: twiss
        d1_datum: end 
-       dat_index: 
+       dat_index: 1  
     
     Example: 2
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        ix_universe: 1
        d2_name: twiss
@@ -553,10 +539,10 @@ def data(tao, d2_name, d1_datum, *, ix_universe='1', dat_index='1', verbose=Fals
     """
     cmd = f'python data {ix_universe}@{d2_name}.{d1_datum}[{dat_index}]'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='data', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='data', cmd_type='string_list')
 
 
-def data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_uni='1', verbose=False, as_dict=True):
+def data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_uni='1', verbose=False, as_dict=True, raises=True):
     """
     
     Create a d2 data structure along with associated d1 and data arrays.
@@ -600,7 +586,7 @@ def data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_un
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        ix_uni: 1
        d2_name: orbit
@@ -610,10 +596,10 @@ def data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_un
     """
     cmd = f'python data_d2_create {d2_name}^^{n_d1_data}^^{d_data_arrays_name_min_max}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='data_d2_create', cmd_type='None')
+    return __execute(tao, cmd, as_dict, raises, method_name='data_d2_create', cmd_type='None')
 
 
-def data_d2_destroy(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True):
+def data_d2_destroy(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=True):
     """
     
     Destroy a d2 data structure along with associated d1 and data arrays.
@@ -637,18 +623,17 @@ def data_d2_destroy(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
-       ix_uni: 1
-       d2_datum: orbit
+       d2_datum: 1@eta.x
     
     """
     cmd = f'python data_d2_destroy {d2_datum}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='data_d2_destroy', cmd_type='None')
+    return __execute(tao, cmd, as_dict, raises, method_name='data_d2_destroy', cmd_type='None')
 
 
-def data_d2(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True):
+def data_d2(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=True):
     """
     
     Information on a d2_datum.
@@ -672,7 +657,7 @@ def data_d2(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        ix_uni: 1
        d2_datum: twiss
@@ -680,10 +665,10 @@ def data_d2(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True):
     """
     cmd = f'python data_d2 {d2_datum}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='data_d2', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='data_d2', cmd_type='string_list')
 
 
-def data_d_array(tao, d1_datum, *, ix_uni='1', verbose=False, as_dict=True):
+def data_d_array(tao, d1_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=True):
     """
     
     List of datums for a given data_d1.
@@ -709,7 +694,7 @@ def data_d_array(tao, d1_datum, *, ix_uni='1', verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        ix_uni: 1 
        d1_datum: twiss.end
@@ -717,10 +702,10 @@ def data_d_array(tao, d1_datum, *, ix_uni='1', verbose=False, as_dict=True):
     """
     cmd = f'python data_d_array {d1_datum}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='data_d_array', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='data_d_array', cmd_type='string_list')
 
 
-def data_d1_array(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True):
+def data_d1_array(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=True):
     """
     
     List of d1 arrays for a given data_d2.
@@ -744,7 +729,7 @@ def data_d1_array(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        ix_uni: 1 
        d2_datum: twiss
@@ -752,10 +737,10 @@ def data_d1_array(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True):
     """
     cmd = f'python data_d1_array {d2_datum}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='data_d1_array', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='data_d1_array', cmd_type='string_list')
 
 
-def data_parameter(tao, data_array, parameter, *, verbose=False, as_dict=True):
+def data_parameter(tao, data_array, parameter, *, verbose=False, as_dict=True, raises=True):
     """
     
     Given an array of datums, generate an array of values for a particular datum parameter.
@@ -780,7 +765,7 @@ def data_parameter(tao, data_array, parameter, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        data_array: twiss.end 
        parameter: model_value
@@ -788,10 +773,10 @@ def data_parameter(tao, data_array, parameter, *, verbose=False, as_dict=True):
     """
     cmd = f'python data_parameter {data_array} {parameter}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='data_parameter', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='data_parameter', cmd_type='string_list')
 
 
-def data_d2_array(tao, ix_universe, *, verbose=False, as_dict=True):
+def data_d2_array(tao, ix_universe, *, verbose=False, as_dict=True, raises=True):
     """
     
     Data d2 info for a given universe.
@@ -814,17 +799,17 @@ def data_d2_array(tao, ix_universe, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        ix_universe : 1 
     
     """
     cmd = f'python data_d2_array {ix_universe}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='data_d2_array', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='data_d2_array', cmd_type='string_list')
 
 
-def data_set_design_value(tao, *, verbose=False, as_dict=True):
+def data_set_design_value(tao, *, verbose=False, as_dict=True, raises=True):
     """
     
     Set the design (and base & model) values for all datums.
@@ -845,16 +830,16 @@ def data_set_design_value(tao, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
     
     """
     cmd = f'python data_set_design_value'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='data_set_design_value', cmd_type='None')
+    return __execute(tao, cmd, as_dict, raises, method_name='data_set_design_value', cmd_type='None')
 
 
-def datum_create(tao, datum_name, data_type, *, ele_ref_name='', ele_start_name='', ele_name='', merit_type='', meas='0', good_meas='F', ref='0', good_ref='F', weight='0', good_user='T', data_source='lat', eval_point='END', s_offset='0', ix_bunch='0', invalid_value='0', spin_axis_n0_1='', spin_axis_n0_2='', spin_axis_n0_3='', spin_axis_l_1='', spin_axis_l_2='', spin_axis_l_3='', verbose=False, as_dict=True):
+def datum_create(tao, datum_name, data_type, *, ele_ref_name='', ele_start_name='', ele_name='', merit_type='', meas='0', good_meas='F', ref='0', good_ref='F', weight='0', good_user='T', data_source='lat', eval_point='END', s_offset='0', ix_bunch='0', invalid_value='0', spin_axis_n0_1='', spin_axis_n0_2='', spin_axis_n0_3='', spin_axis_l_1='', spin_axis_l_2='', spin_axis_l_3='', verbose=False, as_dict=True, raises=True):
     """
     
     Create a datum.
@@ -908,7 +893,7 @@ def datum_create(tao, datum_name, data_type, *, ele_ref_name='', ele_start_name=
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        datum_name: twiss.end[6]
        data_type: beta.y
@@ -931,10 +916,10 @@ def datum_create(tao, datum_name, data_type, *, ele_ref_name='', ele_start_name=
     """
     cmd = f'python datum_create {datum_name}^^{data_type}^^{ele_ref_name}^^{ele_start_name}^^{ele_name}^^{merit_type}^^{meas}^^{good_meas}^^{ref}^^{good_ref}^^{weight}^^{good_user}^^{data_source}^^{eval_point}^^{s_offset}^^{ix_bunch}^^{invalid_value}^^{spin_axis_n0_1}^^{spin_axis_n0_2}^^{spin_axis_n0_3}^^{spin_axis_l_1}^^{spin_axis_l_2}^^{spin_axis_l_3}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='datum_create', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='datum_create', cmd_type='string_list')
 
 
-def datum_has_ele(tao, datum_type, *, verbose=False, as_dict=True):
+def datum_has_ele(tao, datum_type, *, verbose=False, as_dict=True, raises=True):
     """
     
     Does datum type have an associated lattice element?
@@ -955,17 +940,17 @@ def datum_has_ele(tao, datum_type, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        datum_type: twiss.end 
     
     """
     cmd = f'python datum_has_ele {datum_type}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='datum_has_ele', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='datum_has_ele', cmd_type='string_list')
 
 
-def derivative(tao, *, verbose=False, as_dict=True):
+def derivative(tao, *, verbose=False, as_dict=True, raises=True):
     """
     
     Optimization derivatives
@@ -987,16 +972,16 @@ def derivative(tao, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/optics_matching/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
     
     """
     cmd = f'python derivative'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='derivative', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='derivative', cmd_type='string_list')
 
 
-def ele_head(tao, ele_id, *, which='model', verbose=False, as_dict=True):
+def ele_head(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
     "Head" Element attributes
@@ -1025,7 +1010,7 @@ def ele_head(tao, ele_id, *, which='model', verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1033,10 +1018,10 @@ def ele_head(tao, ele_id, *, which='model', verbose=False, as_dict=True):
     """
     cmd = f'python ele:head {ele_id}|{which}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='ele_head', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_head', cmd_type='string_list')
 
 
-def ele_methods(tao, ele_id, *, which='model', verbose=False, as_dict=True):
+def ele_methods(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Element methods
@@ -1065,7 +1050,7 @@ def ele_methods(tao, ele_id, *, which='model', verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1073,10 +1058,10 @@ def ele_methods(tao, ele_id, *, which='model', verbose=False, as_dict=True):
     """
     cmd = f'python ele:methods {ele_id}|{which}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='ele_methods', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_methods', cmd_type='string_list')
 
 
-def ele_gen_attribs(tao, ele_id, *, which='model', verbose=False, as_dict=True):
+def ele_gen_attribs(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Element general attributes
@@ -1105,7 +1090,7 @@ def ele_gen_attribs(tao, ele_id, *, which='model', verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1113,10 +1098,10 @@ def ele_gen_attribs(tao, ele_id, *, which='model', verbose=False, as_dict=True):
     """
     cmd = f'python ele:gen_attribs {ele_id}|{which}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='ele_gen_attribs', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_gen_attribs', cmd_type='string_list')
 
 
-def ele_multipoles(tao, ele_id, *, which='model', verbose=False, as_dict=True):
+def ele_multipoles(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Element multipoles
@@ -1145,7 +1130,7 @@ def ele_multipoles(tao, ele_id, *, which='model', verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1153,10 +1138,10 @@ def ele_multipoles(tao, ele_id, *, which='model', verbose=False, as_dict=True):
     """
     cmd = f'python ele:multipoles {ele_id}|{which}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='ele_multipoles', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_multipoles', cmd_type='string_list')
 
 
-def ele_ac_kicker(tao, ele_id, *, which='model', verbose=False, as_dict=True):
+def ele_ac_kicker(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Element ac_kicker
@@ -1185,7 +1170,7 @@ def ele_ac_kicker(tao, ele_id, *, which='model', verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1193,10 +1178,10 @@ def ele_ac_kicker(tao, ele_id, *, which='model', verbose=False, as_dict=True):
     """
     cmd = f'python ele:ac_kicker {ele_id}|{which}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='ele_ac_kicker', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_ac_kicker', cmd_type='string_list')
 
 
-def ele_cartesian_map(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True):
+def ele_cartesian_map(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Element cartesian_map
@@ -1231,7 +1216,7 @@ def ele_cartesian_map(tao, ele_id, index, who, *, which='model', verbose=False, 
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field
      args:
       ele_id: 1@0>>1
       which: model
@@ -1241,10 +1226,10 @@ def ele_cartesian_map(tao, ele_id, index, who, *, which='model', verbose=False, 
     """
     cmd = f'python ele:cartesian_map {ele_id}|{which} {index} {who}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='ele_cartesian_map', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_cartesian_map', cmd_type='string_list')
 
 
-def ele_chamber_wall(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True):
+def ele_chamber_wall(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Element beam chamber wall
@@ -1276,7 +1261,7 @@ def ele_chamber_wall(tao, ele_id, index, who, *, which='model', verbose=False, a
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/examples/tutorial_bmad_tao/lattice_files/building_wall_optimization/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall3d
      args:
       ele_id: 1@0>>1
       which: model
@@ -1286,10 +1271,10 @@ def ele_chamber_wall(tao, ele_id, index, who, *, which='model', verbose=False, a
     """
     cmd = f'python ele:chamber_wall {ele_id}|{which} {index} {who}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='ele_chamber_wall', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_chamber_wall', cmd_type='string_list')
 
 
-def ele_cylindrical_map(tao, ele_id, which, index, who, *, verbose=False, as_dict=True):
+def ele_cylindrical_map(tao, ele_id, which, index, who, *, verbose=False, as_dict=True, raises=True):
     """
     
     Element cylindrical_map
@@ -1324,9 +1309,9 @@ def ele_cylindrical_map(tao, ele_id, which, index, who, *, verbose=False, as_dic
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field
      args:
-      ele_id: 1@0>>1
+      ele_id: 1@0>>5
       which: model
       index: 1
       who: base
@@ -1334,10 +1319,10 @@ def ele_cylindrical_map(tao, ele_id, which, index, who, *, verbose=False, as_dic
     """
     cmd = f'python ele:cylindrical_map {ele_id}|{which} {index} {who}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='ele_cylindrical_map', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_cylindrical_map', cmd_type='string_list')
 
 
-def ele_taylor(tao, ele_id, which, *, verbose=False, as_dict=True):
+def ele_taylor(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
     """
     
     Element taylor
@@ -1366,18 +1351,18 @@ def ele_taylor(tao, ele_id, which, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_taylor
      args:
-      ele_id: 1@0>>1
+      ele_id: 1@0>>34
       which: model
     
     """
     cmd = f'python ele:taylor {ele_id}|{which}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='ele_taylor', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_taylor', cmd_type='string_list')
 
 
-def ele_spin_taylor(tao, ele_id, which, *, verbose=False, as_dict=True):
+def ele_spin_taylor(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
     """
     
     Element spin_taylor
@@ -1406,18 +1391,18 @@ def ele_spin_taylor(tao, ele_id, which, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_spin
      args:
-      ele_id: 1@0>>1
+      ele_id: 1@0>>2
       which: model
     
     """
     cmd = f'python ele:spin_taylor {ele_id}|{which}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='ele_spin_taylor', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_spin_taylor', cmd_type='string_list')
 
 
-def ele_wake(tao, ele_id, which, who, *, verbose=False, as_dict=True):
+def ele_wake(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=True):
     """
     
     Element wake
@@ -1452,19 +1437,19 @@ def ele_wake(tao, ele_id, which, who, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wake
      args:
       ele_id: 1@0>>1
       which: model
-      who: base
+      who: sr_long
     
     """
     cmd = f'python ele:wake {ele_id}|{which} {who}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='ele_wake', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_wake', cmd_type='string_list')
 
 
-def ele_wall3d(tao, ele_id, which, index, who, *, verbose=False, as_dict=True):
+def ele_wall3d(tao, ele_id, which, index, who, *, verbose=False, as_dict=True, raises=True):
     """
     
     Element wall3d
@@ -1499,20 +1484,20 @@ def ele_wall3d(tao, ele_id, which, index, who, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall3d
      args:
       ele_id: 1@0>>1
       which: model
       index: 1
-      who: base
+      who: table
     
     """
     cmd = f'python ele:wall3d {ele_id}|{which} {index} {who}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='ele_wall3d', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_wall3d', cmd_type='string_list')
 
 
-def ele_twiss(tao, ele_id, which, *, verbose=False, as_dict=True):
+def ele_twiss(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
     """
     
     Element twiss
@@ -1541,7 +1526,7 @@ def ele_twiss(tao, ele_id, which, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1549,13 +1534,14 @@ def ele_twiss(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:twiss {ele_id}|{which}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='ele_twiss', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_twiss', cmd_type='string_list')
 
 
-def ele_control(tao, ele_id, which, *, verbose=False, as_dict=True):
+def ele_control_var(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Element control
+    List element control variables.
+    Used for group, overlay and ramper type elements
     
     Parameters
     ----------
@@ -1569,30 +1555,30 @@ def ele_control(tao, ele_id, which, *, verbose=False, as_dict=True):
     Notes
     -----
     Command syntax:
-      python ele:control {ele_id}|{which}
+      python ele:control_var {ele_id}|{which}
     where {ele_id} is an element name or index and {which} is one of
       model
       base
       design
     Example:
-      python ele:control 3@1>>7|model
+      python ele:control_var 3@1>>7|model
     This gives element number 7 in branch 1 of universe 3.
     
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
-      ele_id: 1@0>>1
+      ele_id: 1@0>>873
       which: model
     
     """
-    cmd = f'python ele:control {ele_id}|{which}'
+    cmd = f'python ele:control_var {ele_id}|{which}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='ele_control', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_control_var', cmd_type='string_list')
 
 
-def ele_orbit(tao, ele_id, which, *, verbose=False, as_dict=True):
+def ele_orbit(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
     """
     
     Element orbit
@@ -1621,7 +1607,7 @@ def ele_orbit(tao, ele_id, which, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1629,10 +1615,10 @@ def ele_orbit(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:orbit {ele_id}|{which}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='ele_orbit', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_orbit', cmd_type='string_list')
 
 
-def ele_mat6(tao, ele_id, which, who, *, verbose=False, as_dict=True):
+def ele_mat6(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=True):
     """
     
     Element mat6
@@ -1666,7 +1652,7 @@ def ele_mat6(tao, ele_id, which, who, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1675,10 +1661,10 @@ def ele_mat6(tao, ele_id, which, who, *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:mat6 {ele_id}|{which} {who}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='ele_mat6', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_mat6', cmd_type='string_list')
 
 
-def ele_taylor_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=True):
+def ele_taylor_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=True, raises=True):
     """
     
     Element taylor_field
@@ -1713,20 +1699,20 @@ def ele_taylor_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=T
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field
      args:
-      ele_id: 1@0>>1
+      ele_id: 1@0>>9
       which: model
       index: 1
-      who: base
+      who: terms
     
     """
     cmd = f'python ele:taylor_field {ele_id}|{which} {index} {who}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='ele_taylor_field', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_taylor_field', cmd_type='string_list')
 
 
-def ele_grid_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=True):
+def ele_grid_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=True, raises=True):
     """
     
     Element grid_field
@@ -1758,7 +1744,7 @@ def ele_grid_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=Tru
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_grid
      args:
       ele_id: 1@0>>1
       which: model
@@ -1768,10 +1754,10 @@ def ele_grid_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=Tru
     """
     cmd = f'python ele:grid_field {ele_id}|{which} {index} {who}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='ele_grid_field', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_grid_field', cmd_type='string_list')
 
 
-def ele_floor(tao, ele_id, which, *, where='end', verbose=False, as_dict=True):
+def ele_floor(tao, ele_id, which, *, where='end', verbose=False, as_dict=True, raises=True):
     """
     
     Element floor coordinates. The output gives two lines. "Reference" is
@@ -1807,14 +1793,14 @@ def ele_floor(tao, ele_id, which, *, where='end', verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
-      where 
+      where: 
     
     Example: 2
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1823,10 +1809,10 @@ def ele_floor(tao, ele_id, which, *, where='end', verbose=False, as_dict=True):
     """
     cmd = f'python ele:floor {ele_id}|{which} {where}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='ele_floor', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_floor', cmd_type='string_list')
 
 
-def ele_photon(tao, ele_id, which, who, *, verbose=False, as_dict=True):
+def ele_photon(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=True):
     """
     
     Element photon
@@ -1860,7 +1846,7 @@ def ele_photon(tao, ele_id, which, who, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_photon
      args:
       ele_id: 1@0>>1
       which: model
@@ -1869,10 +1855,10 @@ def ele_photon(tao, ele_id, which, who, *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:photon {ele_id}|{which} {who}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='ele_photon', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_photon', cmd_type='string_list')
 
 
-def ele_lord_slave(tao, ele_id, which, *, verbose=False, as_dict=True):
+def ele_lord_slave(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
     """
     
     Lists the lord/slave tree of an element.
@@ -1907,7 +1893,7 @@ def ele_lord_slave(tao, ele_id, which, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1915,10 +1901,10 @@ def ele_lord_slave(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:lord_slave {ele_id}|{which}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='ele_lord_slave', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_lord_slave', cmd_type='string_list')
 
 
-def ele_elec_multipoles(tao, ele_id, which, *, verbose=False, as_dict=True):
+def ele_elec_multipoles(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
     """
     
     Element electric multipoles
@@ -1947,7 +1933,7 @@ def ele_elec_multipoles(tao, ele_id, which, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
@@ -1955,10 +1941,10 @@ def ele_elec_multipoles(tao, ele_id, which, *, verbose=False, as_dict=True):
     """
     cmd = f'python ele:elec_multipoles {ele_id}|{which}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='ele_elec_multipoles', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_elec_multipoles', cmd_type='string_list')
 
 
-def evaluate(tao, expression, *, flags='-array_out', verbose=False, as_dict=True):
+def evaluate(tao, expression, *, flags='-array_out', verbose=False, as_dict=True, raises=True):
     """
     
     Evaluate an expression. The result may be a vector.
@@ -1987,7 +1973,7 @@ def evaluate(tao, expression, *, flags='-array_out', verbose=False, as_dict=True
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        expression: data::cbar.11[1:10]|model
     
@@ -1995,12 +1981,12 @@ def evaluate(tao, expression, *, flags='-array_out', verbose=False, as_dict=True
     cmd = f'python evaluate {flags} {expression}'
     if verbose: print(cmd)
     if '-array_out' not in flags:
-        return __execute(tao, cmd, as_dict, method_name='evaluate', cmd_type='string_list')
+        return __execute(tao, cmd, as_dict, raises, method_name='evaluate', cmd_type='string_list')
     if '-array_out' in flags:
-        return __execute(tao, cmd, as_dict, method_name='evaluate', cmd_type='real_array')
+        return __execute(tao, cmd, as_dict, raises, method_name='evaluate', cmd_type='real_array')
 
 
-def em_field(tao, ele_id, which, x, y, z, t_or_z, *, verbose=False, as_dict=True):
+def em_field(tao, ele_id, which, x, y, z, t_or_z, *, verbose=False, as_dict=True, raises=True):
     """
     
     EM field at a given point generated by a given element.
@@ -2021,7 +2007,7 @@ def em_field(tao, ele_id, which, x, y, z, t_or_z, *, verbose=False, as_dict=True
     Notes
     -----
     Command syntax:
-      python em_field {ele_id}|{which} {x}, {y}, {z}, {t_or_z}
+      python em_field {ele_id}|{which} {x} {y} {z} {t_or_z}
     where {which} is one of:
       model
       base
@@ -2034,22 +2020,22 @@ def em_field(tao, ele_id, which, x, y, z, t_or_z, *, verbose=False, as_dict=True
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
-       ele_id: 1@0>>1
+       ele_id: 1@0>>22
        which: model
        x: 0
        y: 0
        z: 0
-       t_or_z: z
+       t_or_z: 0
     
     """
-    cmd = f'python em_field {ele_id}|{which} {x}, {y}, {z}, {t_or_z}'
+    cmd = f'python em_field {ele_id}|{which} {x} {y} {z} {t_or_z}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='em_field', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='em_field', cmd_type='string_list')
 
 
-def enum(tao, enum_name, *, verbose=False, as_dict=True):
+def enum(tao, enum_name, *, verbose=False, as_dict=True, raises=True):
     """
     
     List of possible values for enumerated numbers.
@@ -2072,17 +2058,17 @@ def enum(tao, enum_name, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        enum_name: tracking_method
     
     """
     cmd = f'python enum {enum_name}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='enum', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='enum', cmd_type='string_list')
 
 
-def floor_plan(tao, graph, *, verbose=False, as_dict=True):
+def floor_plan(tao, graph, *, verbose=False, as_dict=True, raises=True):
     """
     
     Floor plan elements
@@ -2103,17 +2089,17 @@ def floor_plan(tao, graph, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
-       graph:
+       graph: r13.g
     
     """
     cmd = f'python floor_plan {graph}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='floor_plan', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='floor_plan', cmd_type='string_list')
 
 
-def floor_orbit(tao, graph, *, verbose=False, as_dict=True):
+def floor_orbit(tao, graph, *, verbose=False, as_dict=True, raises=True):
     """
     
     (x, y) coordinates for drawing the particle orbit on a floor plan.
@@ -2134,17 +2120,17 @@ def floor_orbit(tao, graph, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_floor_orbit
      args:
-       graph: 
+       graph: r33.g 
     
     """
     cmd = f'python floor_orbit {graph}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='floor_orbit', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='floor_orbit', cmd_type='string_list')
 
 
-def tao_global(tao, *, verbose=False, as_dict=True):
+def tao_global(tao, *, verbose=False, as_dict=True, raises=True):
     """
     
     Global parameters
@@ -2169,16 +2155,16 @@ def tao_global(tao, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
     
     """
     cmd = f'python global'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='tao_global', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='tao_global', cmd_type='string_list')
 
 
-def help(tao, *, verbose=False, as_dict=True):
+def help(tao, *, verbose=False, as_dict=True, raises=True):
     """
     
     returns list of "help xxx" topics
@@ -2195,16 +2181,16 @@ def help(tao, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
     
     """
     cmd = f'python help'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='help', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='help', cmd_type='string_list')
 
 
-def inum(tao, who, *, verbose=False, as_dict=True):
+def inum(tao, who, *, verbose=False, as_dict=True, raises=True):
     """
     
     INUM
@@ -2225,17 +2211,17 @@ def inum(tao, who, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        who: ix_universe
     
     """
     cmd = f'python inum {who}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='inum', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='inum', cmd_type='string_list')
 
 
-def lat_calc_done(tao, branch_name, *, verbose=False, as_dict=True):
+def lat_calc_done(tao, branch_name, *, verbose=False, as_dict=True, raises=True):
     """
     
     Check if a lattice recalculation has been proformed since the last time
@@ -2257,17 +2243,17 @@ def lat_calc_done(tao, branch_name, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        branch_name: 1@0
     
     """
     cmd = f'python lat_calc_done'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='lat_calc_done', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='lat_calc_done', cmd_type='string_list')
 
 
-def lat_ele_list(tao, *, branch_name='0', verbose=False, as_dict=True):
+def lat_ele_list(tao, *, branch_name='0', verbose=False, as_dict=True, raises=True):
     """
     
     Lattice element list.
@@ -2290,17 +2276,17 @@ def lat_ele_list(tao, *, branch_name='0', verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        branch_name: 1@0
     
     """
     cmd = f'python lat_ele_list {branch_name}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='lat_ele_list', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='lat_ele_list', cmd_type='string_list')
 
 
-def lat_general(tao, *, ix_universe='1', verbose=False, as_dict=True):
+def lat_general(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=True):
     """
     
     Lattice general
@@ -2324,17 +2310,17 @@ def lat_general(tao, *, ix_universe='1', verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        ix_universe: 1
     
     """
     cmd = f'python lat_general {ix_universe}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='lat_general', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='lat_general', cmd_type='string_list')
 
 
-def lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', flags='-array_out -track_only', verbose=False, as_dict=True):
+def lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', flags='-array_out -track_only', verbose=False, as_dict=True, raises=True):
     """
     
     List of parameters at ends of lattice elements
@@ -2404,7 +2390,7 @@ def lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', fl
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        ix_uni: 1  
        ix_branch: 0 
@@ -2416,14 +2402,14 @@ def lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', fl
     cmd = f'python lat_list {flags} {ix_uni}@{ix_branch}>>{elements}|{which} {who}'
     if verbose: print(cmd)
     if ('-array_out' not in flags) or (who in ['ele.name']):
-        return __execute(tao, cmd, as_dict, method_name='lat_list', cmd_type='string_list')
+        return __execute(tao, cmd, as_dict, raises, method_name='lat_list', cmd_type='string_list')
     if ('-array_out' in flags or 'real:' in who) and (who not in ['orbit.state']):
-        return __execute(tao, cmd, as_dict, method_name='lat_list', cmd_type='real_array')
+        return __execute(tao, cmd, as_dict, raises, method_name='lat_list', cmd_type='real_array')
     if '-array_out' in flags and who in ['orbit.state']:
-        return __execute(tao, cmd, as_dict, method_name='lat_list', cmd_type='integer_array')
+        return __execute(tao, cmd, as_dict, raises, method_name='lat_list', cmd_type='integer_array')
 
 
-def lat_param_units(tao, param_name, *, verbose=False, as_dict=True):
+def lat_param_units(tao, param_name, *, verbose=False, as_dict=True, raises=True):
     """
     
     Units of a parameter associated with a lattice or lattice element.
@@ -2444,17 +2430,17 @@ def lat_param_units(tao, param_name, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        param_name: L   
     
     """
     cmd = f'python lat_param_units {param_name}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='lat_param_units', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='lat_param_units', cmd_type='string_list')
 
 
-def matrix(tao, ele1_id, ele2_id, *, verbose=False, as_dict=True):
+def matrix(tao, ele1_id, ele2_id, *, verbose=False, as_dict=True, raises=True):
     """
     
     Matrix value from the exit end of one element to the exit end of the other.
@@ -2484,18 +2470,18 @@ def matrix(tao, ele1_id, ele2_id, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
-       ele1_id: 2@1>>q01w|design
+       ele1_id: 1@0>>q01w|design
        ele2_id: q02w
     
     """
     cmd = f'python matrix {ele1_id} {ele2_id}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='matrix', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='matrix', cmd_type='string_list')
 
 
-def merit(tao, *, verbose=False, as_dict=True):
+def merit(tao, *, verbose=False, as_dict=True, raises=True):
     """
     
     Merit value.
@@ -2512,16 +2498,16 @@ def merit(tao, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
     
     """
     cmd = f'python merit'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='merit', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='merit', cmd_type='string_list')
 
 
-def orbit_at_s(tao, s, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True):
+def orbit_at_s(tao, s, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Twiss at given s position.
@@ -2551,7 +2537,7 @@ def orbit_at_s(tao, s, *, ix_uni='1', ix_branch='0', which='model', verbose=Fals
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        ix_uni: 1
        ix_branch: 0
@@ -2561,10 +2547,10 @@ def orbit_at_s(tao, s, *, ix_uni='1', ix_branch='0', which='model', verbose=Fals
     """
     cmd = f'python orbit_at_s {ix_uni}@{ix_branch}>>{s}|{which}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='orbit_at_s', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='orbit_at_s', cmd_type='string_list')
 
 
-def place_buffer(tao, *, verbose=False, as_dict=True):
+def place_buffer(tao, *, verbose=False, as_dict=True, raises=True):
     """
     
     Output place command buffer and reset the buffer.
@@ -2582,16 +2568,16 @@ def place_buffer(tao, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
     
     """
     cmd = f'python place_buffer'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='place_buffer', cmd_type='None')
+    return __execute(tao, cmd, as_dict, raises, method_name='place_buffer', cmd_type='None')
 
 
-def plot_curve(tao, curve_name, *, verbose=False, as_dict=True):
+def plot_curve(tao, curve_name, *, verbose=False, as_dict=True, raises=True):
     """
     
     Curve information for a plot
@@ -2612,17 +2598,17 @@ def plot_curve(tao, curve_name, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
-       curve_name: top.x.c1
+       curve_name: r13.g.a
     
     """
     cmd = f'python plot_curve {curve_name}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='plot_curve', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='plot_curve', cmd_type='string_list')
 
 
-def plot_lat_layout(tao, ix_universe: 1, ix_branch: 0, *, verbose=False, as_dict=True):
+def plot_lat_layout(tao, ix_universe: 1, ix_branch: 0, *, verbose=False, as_dict=True, raises=True):
     """
     
     Plot Lat_layout info
@@ -2646,7 +2632,7 @@ def plot_lat_layout(tao, ix_universe: 1, ix_branch: 0, *, verbose=False, as_dict
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        ix_universe: 1
        ix_branch: 0 
@@ -2654,10 +2640,10 @@ def plot_lat_layout(tao, ix_universe: 1, ix_branch: 0, *, verbose=False, as_dict
     """
     cmd = f'python plot_lat_layout {ix_universe}@{ix_branch}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='plot_lat_layout', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='plot_lat_layout', cmd_type='string_list')
 
 
-def plot_list(tao, r_or_g, *, verbose=False, as_dict=True):
+def plot_list(tao, r_or_g, *, verbose=False, as_dict=True, raises=True):
     """
     
     List of plot templates or plot regions.
@@ -2681,17 +2667,17 @@ def plot_list(tao, r_or_g, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        r_or_g: r
     
     """
     cmd = f'python plot_list {r_or_g}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='plot_list', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='plot_list', cmd_type='string_list')
 
 
-def plot_graph(tao, graph_name, *, verbose=False, as_dict=True):
+def plot_graph(tao, graph_name, *, verbose=False, as_dict=True, raises=True):
     """
     
     Graph
@@ -2718,17 +2704,17 @@ def plot_graph(tao, graph_name, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
-       graph_name: r13.g
+       graph_name: beta.g
     
     """
     cmd = f'python plot_graph {graph_name}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='plot_graph', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='plot_graph', cmd_type='string_list')
 
 
-def plot_histogram(tao, curve_name, *, verbose=False, as_dict=True):
+def plot_histogram(tao, curve_name, *, verbose=False, as_dict=True, raises=True):
     """
     
     Plot Histogram
@@ -2744,22 +2730,22 @@ def plot_histogram(tao, curve_name, *, verbose=False, as_dict=True):
     Notes
     -----
     Command syntax:
-      python plot_histograph {curve_name}
+      python plot_histogram {curve_name}
     
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
-       curve_name: c1
+       curve_name: r33.g.x
     
     """
-    cmd = f'python plot_histograph {curve_name}'
+    cmd = f'python plot_histogram {curve_name}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='plot_histogram', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='plot_histogram', cmd_type='string_list')
 
 
-def plot_plot_manage(tao, plot_location, plot_name, n_graph, graph1_name, graph2_name, graphN_name, *, verbose=False, as_dict=True):
+def plot_plot_manage(tao, plot_location, plot_name, n_graph, graph1_name, graph2_name, graphN_name, *, verbose=False, as_dict=True, raises=True):
     """
     
     Template plot creation or destruction.
@@ -2775,36 +2761,37 @@ def plot_plot_manage(tao, plot_location, plot_name, n_graph, graph1_name, graph2
     
     Returns
     -------
-    string_list
+    None
     
     Notes
     -----
     Command syntax:
-      pyton plot_plot_manage {plot_location}^^{plot_name}^^
-                             {n_graph}^^{graph1_name}^^{graph2_name}...{graphN_name}
+      python plot_plot_manage {plot_location}^^{plot_name}^^
+                             {n_graph}^^{graph1_name}^^{graph2_name}^^{graphN_name}
     Use "@Tnnn" sytax for {plot_location} to place a plot. A plot may be placed in a 
     spot where there is already a template.
+    Extra graph names can be included with ^^ connection. 
     If {n_graph} is set to -1 then just delete the plot.
     
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
-       plot_location: r11
+       plot_location: @T1
        plot_name: beta
        n_graph: 1
-       graph1_name: g
-       graph2_name:
-       graphN_name:
+       graph1_name: g1
+       graph2_name: g2
+       graphN_name: gN
     
     """
-    cmd = f'pyton plot_plot_manage {plot_location}^^{plot_name}^^{n_graph}^^{graph1_name}^^{graph2_name}...{graphN_name}'
+    cmd = f'python plot_plot_manage {plot_location}^^{plot_name}^^{n_graph}^^{graph1_name}^^{graph2_name}^^{graphN_name}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='plot_plot_manage', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='plot_plot_manage', cmd_type='None')
 
 
-def plot_curve_manage(tao, graph_name, curve_index, curve_name, *, verbose=False, as_dict=True):
+def plot_curve_manage(tao, graph_name, curve_index, curve_name, *, verbose=False, as_dict=True, raises=True):
     """
     
     Template plot curve creation/destruction
@@ -2817,12 +2804,12 @@ def plot_curve_manage(tao, graph_name, curve_index, curve_name, *, verbose=False
     
     Returns
     -------
-    string_list
+    None
     
     Notes
     -----
     Command syntax:
-      pyton plot_curve_manage {graph_name}^^{curve_index}^^{curve_name}
+      python plot_curve_manage {graph_name}^^{curve_index}^^{curve_name}
     If {curve_index} corresponds to an existing curve then this curve is deleted.
     In this case the {curve_name} is ignored and does not have to be present.
     If {curve_index} does not not correspond to an existing curve, {curve_index}
@@ -2831,19 +2818,19 @@ def plot_curve_manage(tao, graph_name, curve_index, curve_name, *, verbose=False
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
-       graph_name: g
+       graph_name: beta.g
        curve_index: 1
-       curve_name: c1
+       curve_name: r13.g.a
     
     """
-    cmd = f'pyton plot_curve_manage {graph_name}^^{curve_index}^^{curve_name}'
+    cmd = f'python plot_curve_manage {graph_name}^^{curve_index}^^{curve_name}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='plot_curve_manage', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='plot_curve_manage', cmd_type='None')
 
 
-def plot_graph_manage(tao, plot_name, graph_index, graph_name, *, verbose=False, as_dict=True):
+def plot_graph_manage(tao, plot_name, graph_index, graph_name, *, verbose=False, as_dict=True, raises=True):
     """
     
     Template plot graph creation/destruction
@@ -2856,12 +2843,12 @@ def plot_graph_manage(tao, plot_name, graph_index, graph_name, *, verbose=False,
     
     Returns
     -------
-    string_list
+    None
     
     Notes
     -----
     Command syntax:
-      pyton plot_graph_manage {plot_name}^^{graph_index}^^{graph_name}
+      python plot_graph_manage {plot_name}^^{graph_index}^^{graph_name}
     If {graph_index} corresponds to an existing graph then this graph is deleted.
     In this case the {graph_name} is ignored and does not have to be present.
     If {graph_index} does not not correspond to an existing graph, {graph_index}
@@ -2870,29 +2857,29 @@ def plot_graph_manage(tao, plot_name, graph_index, graph_name, *, verbose=False,
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        plot_name: beta
        graph_index: 1
-       graph_name: g
+       graph_name: beta.g
     
     """
-    cmd = f'pyton plot_graph_manage {plot_name}^^{graph_index}^^{graph_name}'
+    cmd = f'python plot_graph_manage {plot_name}^^{graph_index}^^{graph_name}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='plot_graph_manage', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='plot_graph_manage', cmd_type='None')
 
 
-def plot_line(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=False, as_dict=True):
+def plot_line(tao, region_name, graph_name, curve_name, *, x_or_y='', verbose=False, as_dict=True, raises=True):
     """
     
-    Points used to construct a smooth line for a plot curve.
+    Output points used to construct the "line" associated with a plot curve.
     
     Parameters
     ----------
     region_name
     graph_name
     curve_name
-    x_or_y
+    x_or_y : optional
     
     Returns
     -------
@@ -2914,20 +2901,20 @@ def plot_line(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=False
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting
      args:
-       region_name: r11
+       region_name: beta
        graph_name: g
        curve_name: a
-       x_or_y: x
+       x_or_y:
     
     """
     cmd = f'python plot_line {region_name}.{graph_name}.{curve_name} {x_or_y}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='plot_line', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='plot_line', cmd_type='string_list')
 
 
-def plot_symbol(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=False, as_dict=True):
+def plot_symbol(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=False, as_dict=True, raises=True):
     """
     
     Locations to draw symbols for a plot curve.
@@ -2961,20 +2948,20 @@ def plot_symbol(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=Fal
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting
      args:
-       region_name: r11
+       region_name: r13
        graph_name: g
        curve_name: a
-       x_or_y: x 
+       x_or_y: 
     
     """
     cmd = f'python plot_symbol {region_name}.{graph_name}.{curve_name} {x_or_y}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='plot_symbol', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='plot_symbol', cmd_type='string_list')
 
 
-def plot_transfer(tao, from_plot, to_plot, *, verbose=False, as_dict=True):
+def plot_transfer(tao, from_plot, to_plot, *, verbose=False, as_dict=True, raises=True):
     """
     
     Transfer plot parameters from the "from plot" to the "to plot" (or plots).
@@ -2986,7 +2973,7 @@ def plot_transfer(tao, from_plot, to_plot, *, verbose=False, as_dict=True):
     
     Returns
     -------
-    string_list
+    None
     
     Notes
     -----
@@ -3000,18 +2987,18 @@ def plot_transfer(tao, from_plot, to_plot, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
        from_plot: r13
-       to_plot: 
+       to_plot: r23 
     
     """
     cmd = f'python plot_transfer {from_plot} {to_plot}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='plot_transfer', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='plot_transfer', cmd_type='None')
 
 
-def plot1(tao, name, *, verbose=False, as_dict=True):
+def plot1(tao, name, *, verbose=False, as_dict=True, raises=True):
     """
     
     Info on a given plot.
@@ -3034,17 +3021,17 @@ def plot1(tao, name, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
-       name: r11
+       name: beta
     
     """
     cmd = f'python plot1 {name}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='plot1', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='plot1', cmd_type='string_list')
 
 
-def shape_list(tao, who, *, verbose=False, as_dict=True):
+def shape_list(tao, who, *, verbose=False, as_dict=True, raises=True):
     """
     
     lat_layout and floor_plan shapes list
@@ -3068,17 +3055,17 @@ def shape_list(tao, who, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        who: floor_plan  
     
     """
     cmd = f'python shape_list {who}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='shape_list', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='shape_list', cmd_type='string_list')
 
 
-def shape_manage(tao, who, index, add_or_delete, *, verbose=False, as_dict=True):
+def shape_manage(tao, who, index, add_or_delete, *, verbose=False, as_dict=True, raises=True):
     """
     
     element shape creation or destruction
@@ -3115,7 +3102,7 @@ def shape_manage(tao, who, index, add_or_delete, *, verbose=False, as_dict=True)
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        who: floor_plan
        index: 1
@@ -3124,13 +3111,13 @@ def shape_manage(tao, who, index, add_or_delete, *, verbose=False, as_dict=True)
     """
     cmd = f'python shape_manage {who} {index} {add_or_delete}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='shape_manage', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='shape_manage', cmd_type='string_list')
 
 
-def shape_pattern_list(tao, *, ix_pattern='', verbose=False, as_dict=True):
+def shape_pattern_list(tao, *, ix_pattern='', verbose=False, as_dict=True, raises=True):
     """
     
-    List of shape patterns
+    List of shape patterns or shape pattern points
     
     Parameters
     ----------
@@ -3144,27 +3131,24 @@ def shape_pattern_list(tao, *, ix_pattern='', verbose=False, as_dict=True):
     -----
     Command syntax:
       python shape_pattern_list {ix_pattern}
-    If optional {ix_pattern} index is omitted then list all the patterns
+    
+    If optional {ix_pattern} index is omitted then list all the patterns.
+    If {ix_pattern} is present, list points of given pattern.
     
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_shape
      args:
        ix_pattern: 
-    
-    Example: 2
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
-     args:
-       ix_pattern: 1 
     
     """
     cmd = f'python shape_pattern_list {ix_pattern}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='shape_pattern_list', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='shape_pattern_list', cmd_type='string_list')
 
 
-def shape_pattern_manage(tao, ix_pattern, pat_name, pat_line_width, *, verbose=False, as_dict=True):
+def shape_pattern_manage(tao, ix_pattern, pat_name, pat_line_width, *, verbose=False, as_dict=True, raises=True):
     """
     
     Add or remove shape pattern
@@ -3177,7 +3161,7 @@ def shape_pattern_manage(tao, ix_pattern, pat_name, pat_line_width, *, verbose=F
     
     Returns
     -------
-    string_list
+    None
     
     Notes
     -----
@@ -3193,19 +3177,19 @@ def shape_pattern_manage(tao, ix_pattern, pat_name, pat_line_width, *, verbose=F
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_shape
      args:
-       ix_pattern : 5
+       ix_pattern : 1
        pat_name : new_pat
        pat_line_width : 1
     
     """
     cmd = f'python shape_pattern_manage {ix_pattern}^^{pat_name}^^{pat_line_width}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='shape_pattern_manage', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='shape_pattern_manage', cmd_type='None')
 
 
-def shape_pattern_point_manage(tao, ix_pattern, ix_point, s, x, *, verbose=False, as_dict=True):
+def shape_pattern_point_manage(tao, ix_pattern, ix_point, s, x, *, verbose=False, as_dict=True, raises=True):
     """
     
     Add or remove shape pattern point
@@ -3219,7 +3203,7 @@ def shape_pattern_point_manage(tao, ix_pattern, ix_point, s, x, *, verbose=False
     
     Returns
     -------
-    string_list
+    None
     
     Notes
     -----
@@ -3234,7 +3218,7 @@ def shape_pattern_point_manage(tao, ix_pattern, ix_point, s, x, *, verbose=False
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_shape
      args:
        ix_pattern: 1
        ix_point: 1
@@ -3244,10 +3228,10 @@ def shape_pattern_point_manage(tao, ix_pattern, ix_point, s, x, *, verbose=False
     """
     cmd = f'python shape_pattern_point_manage {ix_pattern}^^{ix_point}^^{s}^^{x}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='shape_pattern_point_manage', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='shape_pattern_point_manage', cmd_type='None')
 
 
-def shape_set(tao, who, shape_index, ele_name, shape, color, shape_size, type_label, shape_draw, multi_shape, line_width, *, verbose=False, as_dict=True):
+def shape_set(tao, who, shape_index, ele_name, shape, color, shape_size, type_label, shape_draw, multi_shape, line_width, *, verbose=False, as_dict=True, raises=True):
     """
     
     lat_layout or floor_plan shape set
@@ -3267,7 +3251,7 @@ def shape_set(tao, who, shape_index, ele_name, shape, color, shape_size, type_la
     
     Returns
     -------
-    string_list
+    None
     
     Notes
     -----
@@ -3282,12 +3266,12 @@ def shape_set(tao, who, shape_index, ele_name, shape, color, shape_size, type_la
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        who: floor_plan
        shape_index: 1
        ele_name: Q1
-       shape:
+       shape: circle
        color:
        shape_size:
        type_label:
@@ -3298,10 +3282,10 @@ def shape_set(tao, who, shape_index, ele_name, shape, color, shape_size, type_la
     """
     cmd = f'python shape_set {who}^^{shape_index}^^{ele_name}^^{shape}^^{color}^^{shape_size}^^{type_label}^^{shape_draw}^^{multi_shape}^^{line_width}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='shape_set', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='shape_set', cmd_type='None')
 
 
-def show(tao, line, *, verbose=False, as_dict=True):
+def show(tao, line, *, verbose=False, as_dict=True, raises=True):
     """
     
     Show command pass through
@@ -3325,17 +3309,17 @@ def show(tao, line, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        line: -python
     
     """
     cmd = f'python show {line}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='show', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='show', cmd_type='string_list')
 
 
-def species_to_int(tao, species_str, *, verbose=False, as_dict=True):
+def species_to_int(tao, species_str, *, verbose=False, as_dict=True, raises=True):
     """
     
     Convert species name to corresponding integer
@@ -3358,17 +3342,17 @@ def species_to_int(tao, species_str, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
-       species_str: CO2++
+       species_str: electron
     
     """
     cmd = f'python species_to_int {species_str}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='species_to_int', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='species_to_int', cmd_type='string_list')
 
 
-def species_to_str(tao, species_int, *, verbose=False, as_dict=True):
+def species_to_str(tao, species_int, *, verbose=False, as_dict=True, raises=True):
     """
     
     Convert species integer id to corresponding
@@ -3391,17 +3375,17 @@ def species_to_str(tao, species_int, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        species_int: -1
     
     """
     cmd = f'python species_to_str {species_int}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='species_to_str', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='species_to_str', cmd_type='string_list')
 
 
-def spin_polarization(tao, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True):
+def spin_polarization(tao, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Spin information
@@ -3432,7 +3416,7 @@ def spin_polarization(tao, *, ix_uni='1', ix_branch='0', which='model', verbose=
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args: 
        ix_uni: 1
        ix_branch: 0
@@ -3441,10 +3425,10 @@ def spin_polarization(tao, *, ix_uni='1', ix_branch='0', which='model', verbose=
     """
     cmd = f'python spin {ix_uni}@{ix_branch}|{which}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='spin_polarization', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='spin_polarization', cmd_type='string_list')
 
 
-def super_universe(tao, *, verbose=False, as_dict=True):
+def super_universe(tao, *, verbose=False, as_dict=True, raises=True):
     """
     
     Super_Universe information
@@ -3461,16 +3445,16 @@ def super_universe(tao, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args: 
     
     """
     cmd = f'python super_universe'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='super_universe', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='super_universe', cmd_type='string_list')
 
 
-def twiss_at_s(tao, ix_uni, ix_branch, s, which, *, verbose=False, as_dict=True):
+def twiss_at_s(tao, ix_uni, ix_branch, s, which, *, verbose=False, as_dict=True, raises=True):
     """
     
     Twiss at given s position
@@ -3498,7 +3482,7 @@ def twiss_at_s(tao, ix_uni, ix_branch, s, which, *, verbose=False, as_dict=True)
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args: 
        ix_uni: 1
        ix_branch: 0
@@ -3508,10 +3492,10 @@ def twiss_at_s(tao, ix_uni, ix_branch, s, which, *, verbose=False, as_dict=True)
     """
     cmd = f'python twiss_at_s {ix_uni}@{ix_branch}>>{s}|{which}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='twiss_at_s', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='twiss_at_s', cmd_type='string_list')
 
 
-def universe(tao, ix_universe, *, verbose=False, as_dict=True):
+def universe(tao, ix_universe, *, verbose=False, as_dict=True, raises=True):
     """
     
     Universe info
@@ -3533,17 +3517,17 @@ def universe(tao, ix_universe, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args: 
        ix_universe: 1
     
     """
     cmd = f'python universe {ix_universe}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='universe', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='universe', cmd_type='string_list')
 
 
-def var(tao, var, *, verbose=False, as_dict=True):
+def var(tao, var, *, slaves='', verbose=False, as_dict=True, raises=True):
     """
     
     Info on an individual variable
@@ -3551,6 +3535,7 @@ def var(tao, var, *, verbose=False, as_dict=True):
     Parameters
     ----------
     var
+    slaves : optional
     
     Returns
     -------
@@ -3559,23 +3544,29 @@ def var(tao, var, *, verbose=False, as_dict=True):
     Notes
     -----
     Command syntax:
-      python var {var}        or
       python var {var} slaves
     
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args: 
-       var: quad_k1[1]
+       var: quad[1]
+       slaves:
+    
+    Example: 2
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
+     args: 
+       var: quad[1]
+       slaves: slaves
     
     """
-    cmd = f'python var {var}        or'
+    cmd = f'python var {var} slaves'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='var', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='var', cmd_type='string_list')
 
 
-def var_create(tao, var_name, ele_name, attribute, universes, weight, step, low_lim, high_lim, merit_type, good_user, key_bound, key_delta, *, verbose=False, as_dict=True):
+def var_create(tao, var_name, ele_name, attribute, universes, weight, step, low_lim, high_lim, merit_type, good_user, key_bound, key_delta, *, verbose=False, as_dict=True, raises=True):
     """
     
     Create a single variable
@@ -3612,10 +3603,10 @@ def var_create(tao, var_name, ele_name, attribute, universes, weight, step, low_
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
-       var_name: kick[5]
-       ele_name: Q01W
+       var_name: quad[1]
+       ele_name: Q1
        attribute: L
        universes: 1
        weight: 0.001
@@ -3623,17 +3614,17 @@ def var_create(tao, var_name, ele_name, attribute, universes, weight, step, low_
        low_lim: -10
        high_lim: 10
        merit_type: 
-       good_user: 1
+       good_user: T
        key_bound: T
        key_delta: 0.01 
     
     """
     cmd = f'python var_create {var_name}^^{ele_name}^^{attribute}^^{universes}^^{weight}^^{step}^^{low_lim}^^{high_lim}^^{merit_type}^^{good_user}^^{key_bound}^^{key_delta}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='var_create', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='var_create', cmd_type='string_list')
 
 
-def var_general(tao, *, verbose=False, as_dict=True):
+def var_general(tao, *, verbose=False, as_dict=True, raises=True):
     """
     
     List of all variable v1 arrays
@@ -3652,16 +3643,16 @@ def var_general(tao, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
     
     """
     cmd = f'python var_general'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='var_general', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='var_general', cmd_type='string_list')
 
 
-def var_v_array(tao, v1_var, *, verbose=False, as_dict=True):
+def var_v_array(tao, v1_var, *, verbose=False, as_dict=True, raises=True):
     """
     
     List of variables for a given data_v1.
@@ -3684,17 +3675,17 @@ def var_v_array(tao, v1_var, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        v1_var: quad_k1
     
     """
     cmd = f'python var_v_array {v1_var}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='var_v_array', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='var_v_array', cmd_type='string_list')
 
 
-def var_v1_array(tao, v1_var, *, verbose=False, as_dict=True):
+def var_v1_array(tao, v1_var, *, verbose=False, as_dict=True, raises=True):
     """
     
     List of variables in a given variable v1 array
@@ -3715,17 +3706,17 @@ def var_v1_array(tao, v1_var, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        v1_var: quad_k1 
     
     """
     cmd = f'python var_v1_array {v1_var}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='var_v1_array', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='var_v1_array', cmd_type='string_list')
 
 
-def var_v1_create(tao, v1_name, n_var_min, n_var_max, *, verbose=False, as_dict=True):
+def var_v1_create(tao, v1_name, n_var_min, n_var_max, *, verbose=False, as_dict=True, raises=True):
     """
     
     Create a v1 variable structure along with associated var array.
@@ -3765,7 +3756,7 @@ def var_v1_create(tao, v1_name, n_var_min, n_var_max, *, verbose=False, as_dict=
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        v1_name: quad_k1 
        n_var_min: 0 
@@ -3774,10 +3765,10 @@ def var_v1_create(tao, v1_name, n_var_min, n_var_max, *, verbose=False, as_dict=
     """
     cmd = f'python var_v1_create {v1_name} {n_var_min} {n_var_max}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='var_v1_create', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='var_v1_create', cmd_type='string_list')
 
 
-def var_v1_destroy(tao, v1_datum, *, verbose=False, as_dict=True):
+def var_v1_destroy(tao, v1_datum, *, verbose=False, as_dict=True, raises=True):
     """
     
     Destroy a v1 var structure along with associated var sub-array.
@@ -3798,17 +3789,17 @@ def var_v1_destroy(tao, v1_datum, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        v1_datum: quad_k1
     
     """
     cmd = f'python var_v1_destroy {v1_datum}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='var_v1_destroy', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='var_v1_destroy', cmd_type='string_list')
 
 
-def wave(tao, what, *, verbose=False, as_dict=True):
+def wave(tao, what, *, verbose=False, as_dict=True, raises=True):
     """
     
     Wave analysis info.
@@ -3834,12 +3825,12 @@ def wave(tao, what, *, verbose=False, as_dict=True):
     Examples
     --------
     Example: 1
-     init: $ACC_ROOT_DIR/tao/examples/cesr/tao.init
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
        what: params
     
     """
     cmd = f'python wave {what}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, method_name='wave', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='wave', cmd_type='string_list')
 

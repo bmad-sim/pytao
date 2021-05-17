@@ -46,7 +46,7 @@ def generate_params(params):
     This method uses the NumpyDocString Parameter class to introspect
     for optional flags.
         
-    `verbose` and `as_dict` are always keyword arguments defaulting to True`.
+    `verbose` and `as_dict`, `raises` are always keyword arguments defaulting to True`.
     
     Parameters
     ----------
@@ -74,6 +74,7 @@ def generate_params(params):
 
     kwargs.append('verbose=False')
     kwargs.append('as_dict=True')
+    kwargs.append('raises=True')
     
     param_str =  ', '.join(args + ['*'] + kwargs)
 
@@ -105,7 +106,7 @@ def generate_method_code(docs, method, command, returns):
     -------
     str
        The list of arguments properly formatted.
-       E.g.: tao, *, flags="", ix_uni, ix_branch, elements, which, who, verbose=True, as_dict=True
+       E.g.: tao, *, flags="", ix_uni, ix_branch, elements, which, who, verbose=True, as_dict=True, raises=True
     """
     code_list = [f"cmd = f'{command_str}'"]
     code_list.append("if verbose: print(cmd)")
@@ -119,9 +120,9 @@ def generate_method_code(docs, method, command, returns):
             if special_parser:
                 parser_docs = NumpyDocString(special_parser.__doc__)
                 docs['Returns'] = parser_docs['Returns']
-            code_list.append(f"return __execute(tao, cmd, as_dict, method_name='{method}', cmd_type='{tp}')")
+            code_list.append(f"return __execute(tao, cmd, as_dict, raises, method_name='{method}', cmd_type='{tp}')")
         else:
-            code_list.append(f"{r.desc[0]}:\n    return __execute(tao, cmd, as_dict, method_name='{method}', cmd_type='{tp}')")
+            code_list.append(f"{r.desc[0]}:\n    return __execute(tao, cmd, as_dict, raises, method_name='{method}', cmd_type='{tp}')")
     return '\n'.join(code_list)
 
 
@@ -133,14 +134,14 @@ from pytao.util.parameters import tao_parameter_dict
 from pytao.util import parsers as __parsers
 
 
-def __execute(tao, cmd, as_dict=True, method_name=None, cmd_type="string_list"):
+def __execute(tao, cmd, as_dict=True, raises=True, method_name=None, cmd_type="string_list"):
     func_for_type = {
         "string_list": tao.cmd,
         "real_array": tao.cmd_real,
         "integer_array": tao.cmd_integer
     }
     func = func_for_type.get(cmd_type, tao.cmd)
-    ret = func(cmd)
+    ret = func(cmd, raises=raises)
     special_parser = getattr(__parsers, f'parse_{method_name}', "")
     if special_parser:
         data = special_parser(ret)
@@ -238,7 +239,7 @@ for method, metadata in cmds_from_tao.items():
     for test_name, test_meta in tests.items():
         args = ['tao'] + [f"{k}='{v}'" for k, v in test_meta['args'].items()]
         test_code = f'''
-tao = Tao(os.path.expandvars('-noplot -init {test_meta['init']}'))
+tao = Tao(os.path.expandvars('{test_meta['init']} -noplot'))
 ret = interface_commands.{clean_method}({', '.join(args)})
         '''
         method_template = f'''
