@@ -51,12 +51,9 @@ class Tao:
             if ACC_ROOT_DIR:
                 BASE_DIR = os.path.join(ACC_ROOT_DIR, 'production', 'lib')
                 self.so_lib_file = find_libtao(BASE_DIR)
-        elif not tao_ctypes.initialized:
-            self.so_lib_file = so_lib
         else:
-            #Tao already initialized
-            pass
-            
+            self.so_lib_file = so_lib
+
         if self.so_lib_file:
             self.so_lib = ctypes.CDLL(self.so_lib_file)
         else:
