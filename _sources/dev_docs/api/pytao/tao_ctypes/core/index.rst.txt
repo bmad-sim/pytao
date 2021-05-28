@@ -67,6 +67,11 @@ Module Contents
    Searches base_for for an appropriate libtao shared library.
 
 
+.. function:: auto_discovery_libtao()
+
+   Use system loader to try and find libtao.
+
+
 .. class:: TaoModel(input_file='tao.init', ploton=True, use_tempdir=True, workdir=None, verbose=True, so_lib='', auto_configure=True)
 
 
