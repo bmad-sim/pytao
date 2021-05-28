@@ -31,7 +31,7 @@ class Tao:
 
     #---------------------------------------------
 
-    def __init__(self, init='', so_lib = ''):
+    def __init__(self, init='', so_lib=''):
         # TL/DR; Leave this import out of the global scope.
         #
         # Make it lazy import to avoid cyclical dependency.
@@ -44,18 +44,29 @@ class Tao:
         from pytao import interface_commands
 
         # Library needs to be set.
+        self.so_lib_file = None
         if so_lib == '':
             # Search
-            BASE_DIR=os.environ['ACC_ROOT_DIR'] + '/production/lib/'
-            self.so_lib_file = find_libtao(BASE_DIR)
+            ACC_ROOT_DIR = os.getenv('ACC_ROOT_DIR', '')
+            if ACC_ROOT_DIR:
+                BASE_DIR = os.path.join(ACC_ROOT_DIR, 'production', 'lib')
+                self.so_lib_file = find_libtao(BASE_DIR)
         elif not tao_ctypes.initialized:
             self.so_lib_file = so_lib
         else:
             #Tao already initialized
             pass
             
-        
-        self.so_lib = ctypes.CDLL(self.so_lib_file)
+        if self.so_lib_file:
+            self.so_lib = ctypes.CDLL(self.so_lib_file)
+        else:
+            lib, lib_file = auto_discovery_libtao()
+
+            if lib:
+                self.so_lib = lib
+                self.so_lib_file = lib_file
+            else:
+                raise ValueError(f'Shared object libtao library not found.')
 
         self.so_lib.tao_c_out_io_buffer_get_line.restype = ctypes.c_char_p
         self.so_lib.tao_c_out_io_buffer_reset.restype = None
@@ -225,8 +236,7 @@ class Tao:
                    print(l)
       del tao
 
-    
-    
+
 def find_libtao(base_dir):  
     """
     Searches base_for for an appropriate libtao shared library. 
@@ -235,11 +245,22 @@ def find_libtao(base_dir):
         so_lib_file = os.path.join(base_dir, lib)
         if os.path.exists(so_lib_file):
             return so_lib_file
-        
-    raise ValueError (f'Shared object libtao library not found in: {base_dir}')    
+    return None
     
-    
-    
+
+def auto_discovery_libtao():
+    """
+    Use system loader to try and find libtao.
+    """
+    for lib in ['libtao.so', 'libtao.dylib', 'libtao.dll']:
+        try:
+            lib_handler = ctypes.CDLL(lib)
+            return lib_handler, lib
+        except OSError:
+            continue
+    return None, None
+
+
 #----------------------------------------------------------------------
 
 class TaoModel(Tao):
