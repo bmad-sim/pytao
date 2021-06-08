@@ -1,4 +1,10 @@
 #!/bin/bash
+
+dpkg -l pkg-config
+ls -l /usr/share/aclocal/pkg.m4
+aclocal --print-ac-dir
+export ACLOCAL_PATH=/usr/share/aclocal
+
 mkdir -p ~/bmad
 pushd ~/bmad
 

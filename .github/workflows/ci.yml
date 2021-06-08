@@ -21,8 +21,8 @@ jobs:
 
       - name: Install System Dependencies
         run: |
-          sudo apt-get install build-essential curl cmake gfortran automake \
-          autoconf libtool m4 libgomp1 libreadline-dev libncurses-dev \
+          sudo apt-get install build-essential curl wget cmake gfortran automake \
+          autoconf libtool m4 libgomp1 libreadline-dev libncurses-dev pkg-config \
           libcairo2-dev libpango1.0-dev libxt-dev libx11-dev -y
 
       - name: Check Latest Bmad Release
