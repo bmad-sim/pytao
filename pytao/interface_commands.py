@@ -1274,7 +1274,7 @@ def ele_chamber_wall(tao, ele_id, index, who, *, which='model', verbose=False, a
     return __execute(tao, cmd, as_dict, raises, method_name='ele_chamber_wall', cmd_type='string_list')
 
 
-def ele_cylindrical_map(tao, ele_id, which, index, who, *, verbose=False, as_dict=True, raises=True):
+def ele_cylindrical_map(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Element cylindrical_map
@@ -1282,9 +1282,9 @@ def ele_cylindrical_map(tao, ele_id, which, index, who, *, verbose=False, as_dic
     Parameters
     ----------
     ele_id
-    which
     index
     who
+    which : default=model
     
     Returns
     -------
@@ -1322,7 +1322,7 @@ def ele_cylindrical_map(tao, ele_id, which, index, who, *, verbose=False, as_dic
     return __execute(tao, cmd, as_dict, raises, method_name='ele_cylindrical_map', cmd_type='string_list')
 
 
-def ele_taylor(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
+def ele_taylor(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Element taylor
@@ -1330,7 +1330,7 @@ def ele_taylor(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
     Parameters
     ----------
     ele_id
-    which
+    which : default=model
     
     Returns
     -------
@@ -1362,7 +1362,7 @@ def ele_taylor(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
     return __execute(tao, cmd, as_dict, raises, method_name='ele_taylor', cmd_type='string_list')
 
 
-def ele_spin_taylor(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
+def ele_spin_taylor(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Element spin_taylor
@@ -1370,7 +1370,7 @@ def ele_spin_taylor(tao, ele_id, which, *, verbose=False, as_dict=True, raises=T
     Parameters
     ----------
     ele_id
-    which
+    which : default=model
     
     Returns
     -------
@@ -1402,7 +1402,7 @@ def ele_spin_taylor(tao, ele_id, which, *, verbose=False, as_dict=True, raises=T
     return __execute(tao, cmd, as_dict, raises, method_name='ele_spin_taylor', cmd_type='string_list')
 
 
-def ele_wake(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=True):
+def ele_wake(tao, ele_id, *, which='model', who='base', verbose=False, as_dict=True, raises=True):
     """
     
     Element wake
@@ -1410,8 +1410,8 @@ def ele_wake(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=Tru
     Parameters
     ----------
     ele_id
-    which
-    who
+    which : default=model
+    who : default=base
     
     Returns
     -------
@@ -1449,7 +1449,7 @@ def ele_wake(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=Tru
     return __execute(tao, cmd, as_dict, raises, method_name='ele_wake', cmd_type='string_list')
 
 
-def ele_wall3d(tao, ele_id, which, index, who, *, verbose=False, as_dict=True, raises=True):
+def ele_wall3d(tao, ele_id, *, which='model', index='1', who='base', verbose=False, as_dict=True, raises=True):
     """
     
     Element wall3d
@@ -1457,9 +1457,9 @@ def ele_wall3d(tao, ele_id, which, index, who, *, verbose=False, as_dict=True, r
     Parameters
     ----------
     ele_id
-    which
-    index
-    who
+    which : default=model
+    index : default=1
+    who : default=base
     
     Returns
     -------
@@ -1497,7 +1497,7 @@ def ele_wall3d(tao, ele_id, which, index, who, *, verbose=False, as_dict=True, r
     return __execute(tao, cmd, as_dict, raises, method_name='ele_wall3d', cmd_type='string_list')
 
 
-def ele_twiss(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
+def ele_twiss(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Element twiss
@@ -1505,7 +1505,7 @@ def ele_twiss(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
     Parameters
     ----------
     ele_id
-    which
+    which : default=model
     
     Returns
     -------
@@ -1537,7 +1537,7 @@ def ele_twiss(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
     return __execute(tao, cmd, as_dict, raises, method_name='ele_twiss', cmd_type='string_list')
 
 
-def ele_control_var(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
+def ele_control_var(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
     List element control variables.
@@ -1546,7 +1546,7 @@ def ele_control_var(tao, ele_id, which, *, verbose=False, as_dict=True, raises=T
     Parameters
     ----------
     ele_id
-    which
+    which : default=model
     
     Returns
     -------
@@ -1578,7 +1578,7 @@ def ele_control_var(tao, ele_id, which, *, verbose=False, as_dict=True, raises=T
     return __execute(tao, cmd, as_dict, raises, method_name='ele_control_var', cmd_type='string_list')
 
 
-def ele_orbit(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
+def ele_orbit(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Element orbit
@@ -1586,7 +1586,7 @@ def ele_orbit(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
     Parameters
     ----------
     ele_id
-    which
+    which : default=model
     
     Returns
     -------
@@ -1618,7 +1618,7 @@ def ele_orbit(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
     return __execute(tao, cmd, as_dict, raises, method_name='ele_orbit', cmd_type='string_list')
 
 
-def ele_mat6(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=True):
+def ele_mat6(tao, ele_id, *, which='model', who='mat6', verbose=False, as_dict=True, raises=True):
     """
     
     Element mat6
@@ -1626,8 +1626,8 @@ def ele_mat6(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=Tru
     Parameters
     ----------
     ele_id
-    which
-    who
+    which : default=model
+    who : default=mat6
     
     Returns
     -------
@@ -1664,7 +1664,7 @@ def ele_mat6(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=Tru
     return __execute(tao, cmd, as_dict, raises, method_name='ele_mat6', cmd_type='string_list')
 
 
-def ele_taylor_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=True, raises=True):
+def ele_taylor_field(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Element taylor_field
@@ -1672,9 +1672,9 @@ def ele_taylor_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=T
     Parameters
     ----------
     ele_id
-    which
     index
     who
+    which : default=model
     
     Returns
     -------
@@ -1712,7 +1712,7 @@ def ele_taylor_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=T
     return __execute(tao, cmd, as_dict, raises, method_name='ele_taylor_field', cmd_type='string_list')
 
 
-def ele_grid_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=True, raises=True):
+def ele_grid_field(tao, ele_id, *, which='model', index='1', who='base', verbose=False, as_dict=True, raises=True):
     """
     
     Element grid_field
@@ -1720,9 +1720,9 @@ def ele_grid_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=Tru
     Parameters
     ----------
     ele_id
-    which
-    index
-    who
+    which : default=model
+    index : default=1
+    who : default=base
     
     Returns
     -------
@@ -1757,7 +1757,7 @@ def ele_grid_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=Tru
     return __execute(tao, cmd, as_dict, raises, method_name='ele_grid_field', cmd_type='string_list')
 
 
-def ele_floor(tao, ele_id, which, *, where='end', verbose=False, as_dict=True, raises=True):
+def ele_floor(tao, ele_id, *, which='model', where='end', verbose=False, as_dict=True, raises=True):
     """
     
     Element floor coordinates. The output gives two lines. "Reference" is
@@ -1766,7 +1766,7 @@ def ele_floor(tao, ele_id, which, *, where='end', verbose=False, as_dict=True, r
     Parameters
     ----------
     ele_id
-    which
+    which : default=model
     where : default=end
     
     Returns
@@ -1812,7 +1812,7 @@ def ele_floor(tao, ele_id, which, *, where='end', verbose=False, as_dict=True, r
     return __execute(tao, cmd, as_dict, raises, method_name='ele_floor', cmd_type='string_list')
 
 
-def ele_photon(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=True):
+def ele_photon(tao, ele_id, *, which='model', who='base', verbose=False, as_dict=True, raises=True):
     """
     
     Element photon
@@ -1820,8 +1820,8 @@ def ele_photon(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=T
     Parameters
     ----------
     ele_id
-    which
-    who
+    which : default=model
+    who : default=base
     
     Returns
     -------
@@ -1858,7 +1858,7 @@ def ele_photon(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=T
     return __execute(tao, cmd, as_dict, raises, method_name='ele_photon', cmd_type='string_list')
 
 
-def ele_lord_slave(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
+def ele_lord_slave(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Lists the lord/slave tree of an element.
@@ -1866,7 +1866,7 @@ def ele_lord_slave(tao, ele_id, which, *, verbose=False, as_dict=True, raises=Tr
     Parameters
     ----------
     ele_id
-    which
+    which : default=model
     
     Returns
     -------
@@ -1904,7 +1904,7 @@ def ele_lord_slave(tao, ele_id, which, *, verbose=False, as_dict=True, raises=Tr
     return __execute(tao, cmd, as_dict, raises, method_name='ele_lord_slave', cmd_type='string_list')
 
 
-def ele_elec_multipoles(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True):
+def ele_elec_multipoles(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Element electric multipoles
@@ -1912,7 +1912,7 @@ def ele_elec_multipoles(tao, ele_id, which, *, verbose=False, as_dict=True, rais
     Parameters
     ----------
     ele_id
-    which
+    which : default=model
     
     Returns
     -------
@@ -1986,7 +1986,7 @@ def evaluate(tao, expression, *, flags='-array_out', verbose=False, as_dict=True
         return __execute(tao, cmd, as_dict, raises, method_name='evaluate', cmd_type='real_array')
 
 
-def em_field(tao, ele_id, which, x, y, z, t_or_z, *, verbose=False, as_dict=True, raises=True):
+def em_field(tao, ele_id, x, y, z, t_or_z, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
     EM field at a given point generated by a given element.
@@ -1994,11 +1994,11 @@ def em_field(tao, ele_id, which, x, y, z, t_or_z, *, verbose=False, as_dict=True
     Parameters
     ----------
     ele_id
-    which
     x
     y
     z
     t_or_z
+    which : default=model
     
     Returns
     -------
@@ -2014,7 +2014,7 @@ def em_field(tao, ele_id, which, x, y, z, t_or_z, *, verbose=False, as_dict=True
       design
     Where:
       {x}, {y}  -- Transverse coords.
-      {z}       -- Longitudainal coord with respect to entrance end of element.
+      {z}       -- Longitudinal coord with respect to entrance end of element.
       {t_or_z}  -- time or phase space z depending if lattice is setup for absolute time tracking.
     
     Examples
@@ -3454,17 +3454,17 @@ def super_universe(tao, *, verbose=False, as_dict=True, raises=True):
     return __execute(tao, cmd, as_dict, raises, method_name='super_universe', cmd_type='string_list')
 
 
-def twiss_at_s(tao, ix_uni, ix_branch, s, which, *, verbose=False, as_dict=True, raises=True):
+def twiss_at_s(tao, s, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Twiss at given s position
     
     Parameters
     ----------
-    ix_uni
-    ix_branch
     s
-    which
+    ix_uni : default=1
+    ix_branch : default=0
+    which : default=model
     
     Returns
     -------
