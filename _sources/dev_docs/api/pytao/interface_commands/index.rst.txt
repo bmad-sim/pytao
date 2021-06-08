@@ -1031,14 +1031,15 @@ Module Contents
      who: x
 
 
-.. function:: ele_cylindrical_map(tao, ele_id, which, index, who, *, verbose=False, as_dict=True, raises=True)
+.. function:: ele_cylindrical_map(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element cylindrical_map
 
    :param ele_id:
-   :param which:
    :param index:
    :param who:
+   :param which:
+   :type which: default=model
 
    :returns:
    :rtype: string_list
@@ -1072,12 +1073,13 @@ Module Contents
      who: base
 
 
-.. function:: ele_taylor(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True)
+.. function:: ele_taylor(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element taylor
 
    :param ele_id:
    :param which:
+   :type which: default=model
 
    :returns:
    :rtype: string_list
@@ -1105,12 +1107,13 @@ Module Contents
      which: model
 
 
-.. function:: ele_spin_taylor(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True)
+.. function:: ele_spin_taylor(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element spin_taylor
 
    :param ele_id:
    :param which:
+   :type which: default=model
 
    :returns:
    :rtype: string_list
@@ -1138,13 +1141,15 @@ Module Contents
      which: model
 
 
-.. function:: ele_wake(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=True)
+.. function:: ele_wake(tao, ele_id, *, which='model', who='base', verbose=False, as_dict=True, raises=True)
 
    Element wake
 
    :param ele_id:
    :param which:
+   :type which: default=model
    :param who:
+   :type who: default=base
 
    :returns:
    :rtype: string_list
@@ -1178,14 +1183,17 @@ Module Contents
      who: sr_long
 
 
-.. function:: ele_wall3d(tao, ele_id, which, index, who, *, verbose=False, as_dict=True, raises=True)
+.. function:: ele_wall3d(tao, ele_id, *, which='model', index='1', who='base', verbose=False, as_dict=True, raises=True)
 
    Element wall3d
 
    :param ele_id:
    :param which:
+   :type which: default=model
    :param index:
+   :type index: default=1
    :param who:
+   :type who: default=base
 
    :returns:
    :rtype: string_list
@@ -1219,12 +1227,13 @@ Module Contents
      who: table
 
 
-.. function:: ele_twiss(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True)
+.. function:: ele_twiss(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element twiss
 
    :param ele_id:
    :param which:
+   :type which: default=model
 
    :returns:
    :rtype: string_list
@@ -1252,13 +1261,14 @@ Module Contents
      which: model
 
 
-.. function:: ele_control_var(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True)
+.. function:: ele_control_var(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    List element control variables.
    Used for group, overlay and ramper type elements
 
    :param ele_id:
    :param which:
+   :type which: default=model
 
    :returns:
    :rtype: string_list
@@ -1286,12 +1296,13 @@ Module Contents
      which: model
 
 
-.. function:: ele_orbit(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True)
+.. function:: ele_orbit(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element orbit
 
    :param ele_id:
    :param which:
+   :type which: default=model
 
    :returns:
    :rtype: string_list
@@ -1319,13 +1330,15 @@ Module Contents
      which: model
 
 
-.. function:: ele_mat6(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=True)
+.. function:: ele_mat6(tao, ele_id, *, which='model', who='mat6', verbose=False, as_dict=True, raises=True)
 
    Element mat6
 
    :param ele_id:
    :param which:
+   :type which: default=model
    :param who:
+   :type who: default=mat6
 
    :returns:
    :rtype: string_list
@@ -1358,14 +1371,15 @@ Module Contents
      who: mat6
 
 
-.. function:: ele_taylor_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=True, raises=True)
+.. function:: ele_taylor_field(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element taylor_field
 
    :param ele_id:
-   :param which:
    :param index:
    :param who:
+   :param which:
+   :type which: default=model
 
    :returns:
    :rtype: string_list
@@ -1399,14 +1413,17 @@ Module Contents
      who: terms
 
 
-.. function:: ele_grid_field(tao, ele_id, which, index, who, *, verbose=False, as_dict=True, raises=True)
+.. function:: ele_grid_field(tao, ele_id, *, which='model', index='1', who='base', verbose=False, as_dict=True, raises=True)
 
    Element grid_field
 
    :param ele_id:
    :param which:
+   :type which: default=model
    :param index:
+   :type index: default=1
    :param who:
+   :type who: default=base
 
    :returns:
    :rtype: string_list
@@ -1437,13 +1454,14 @@ Module Contents
      who: base
 
 
-.. function:: ele_floor(tao, ele_id, which, *, where='end', verbose=False, as_dict=True, raises=True)
+.. function:: ele_floor(tao, ele_id, *, which='model', where='end', verbose=False, as_dict=True, raises=True)
 
    Element floor coordinates. The output gives two lines. "Reference" is
    without element misalignments and "Actual" is with misalignments.
 
    :param ele_id:
    :param which:
+   :type which: default=model
    :param where:
    :type where: default=end
 
@@ -1486,13 +1504,15 @@ Module Contents
      where: center
 
 
-.. function:: ele_photon(tao, ele_id, which, who, *, verbose=False, as_dict=True, raises=True)
+.. function:: ele_photon(tao, ele_id, *, which='model', who='base', verbose=False, as_dict=True, raises=True)
 
    Element photon
 
    :param ele_id:
    :param which:
+   :type which: default=model
    :param who:
+   :type who: default=base
 
    :returns:
    :rtype: string_list
@@ -1525,12 +1545,13 @@ Module Contents
      who: base
 
 
-.. function:: ele_lord_slave(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True)
+.. function:: ele_lord_slave(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Lists the lord/slave tree of an element.
 
    :param ele_id:
    :param which:
+   :type which: default=model
 
    :returns:
    :rtype: string_list
@@ -1564,12 +1585,13 @@ Module Contents
      which: model
 
 
-.. function:: ele_elec_multipoles(tao, ele_id, which, *, verbose=False, as_dict=True, raises=True)
+.. function:: ele_elec_multipoles(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element electric multipoles
 
    :param ele_id:
    :param which:
+   :type which: default=model
 
    :returns:
    :rtype: string_list
@@ -1625,16 +1647,17 @@ Module Contents
       expression: data::cbar.11[1:10]|model
 
 
-.. function:: em_field(tao, ele_id, which, x, y, z, t_or_z, *, verbose=False, as_dict=True, raises=True)
+.. function:: em_field(tao, ele_id, x, y, z, t_or_z, *, which='model', verbose=False, as_dict=True, raises=True)
 
    EM field at a given point generated by a given element.
 
    :param ele_id:
-   :param which:
    :param x:
    :param y:
    :param z:
    :param t_or_z:
+   :param which:
+   :type which: default=model
 
    :returns:
    :rtype: string_list
@@ -1649,7 +1672,7 @@ Module Contents
      design
    Where:
      {x}, {y}  -- Transverse coords.
-     {z}       -- Longitudainal coord with respect to entrance end of element.
+     {z}       -- Longitudinal coord with respect to entrance end of element.
      {t_or_z}  -- time or phase space z depending if lattice is setup for absolute time tracking.
 
    .. rubric:: Examples
@@ -2770,14 +2793,17 @@ Module Contents
     args:
 
 
-.. function:: twiss_at_s(tao, ix_uni, ix_branch, s, which, *, verbose=False, as_dict=True, raises=True)
+.. function:: twiss_at_s(tao, s, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True, raises=True)
 
    Twiss at given s position
 
-   :param ix_uni:
-   :param ix_branch:
    :param s:
+   :param ix_uni:
+   :type ix_uni: default=1
+   :param ix_branch:
+   :type ix_branch: default=0
    :param which:
+   :type which: default=model
 
    :returns:
    :rtype: string_list
