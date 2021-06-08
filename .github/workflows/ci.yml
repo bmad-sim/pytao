@@ -8,8 +8,6 @@ on:
 
 jobs:
   build:
-    env:
-      BMADDIST: "bmad_dist_2021_0514"
     runs-on: ${{ matrix.os }}
     defaults:
         run:
@@ -26,6 +24,12 @@ jobs:
           sudo apt-get install build-essential curl cmake gfortran automake \
           autoconf libtool m4 libgomp1 libreadline-dev libncurses-dev \
           libcairo2-dev libpango1.0-dev libxt-dev libx11-dev -y
+
+      - name: Check Latest Bmad Release
+        run: |
+          echo "Latest release is: $(curl https://www.classe.cornell.edu/~cesrulib/downloads/latest_distribution_file_prefix)"
+          # Set Environment variable for further steps
+          echo "BMADDIST=$(curl https://www.classe.cornell.edu/~cesrulib/downloads/latest_distribution_file_prefix)" >> $GITHUB_ENV
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
