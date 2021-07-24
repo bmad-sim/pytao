@@ -28,16 +28,16 @@ def test_branch1_1():
     ret = interface_commands.branch1(tao, ix_universe='1', ix_branch='0')
             
         
+def test_bunch_params_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init -noplot'))
+    ret = interface_commands.bunch_params(tao, ele_id='end', which='model')
+            
+        
 def test_bunch1_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init -noplot'))
-    ret = interface_commands.bunch1(tao, ele_id='end', which='model', ix_bunch='1', coordinate='')
-            
-        
-def test_bunch1_2():
-    
-    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init -noplot'))
-    ret = interface_commands.bunch1(tao, ele_id='end', which='model', ix_bunch='1', coordinate='x')
+    ret = interface_commands.bunch1(tao, ele_id='end', coordinate='x', which='model', ix_bunch='1')
             
         
 def test_building_wall_list_1():

@@ -161,7 +161,7 @@ def branch1(tao, *, ix_universe='1', ix_branch='0', verbose=False, as_dict=True,
     return __execute(tao, cmd, as_dict, raises, method_name='branch1', cmd_type='string_list')
 
 
-def bunch1(tao, ele_id, *, which='model', ix_bunch='1', coordinate='', verbose=False, as_dict=True, raises=True):
+def bunch_params(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Bunch parameters at the exit end of a given lattice element.
@@ -172,16 +172,44 @@ def bunch1(tao, ele_id, *, which='model', ix_bunch='1', coordinate='', verbose=F
         Element name or index
     which : default=model
         One of: "model", "base" or "design"
-    ix_bunch : default=1
-    coordinate : optional
+    
+    Notes
+    -----
+    Command syntax:
+    python bunch_params {ele_id}|{which}
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
+     args:
+       ele_id: end
+       which: model
+    
+    """
+    cmd = f'python bunch_params {ele_id}|{which}'
+    if verbose: print(cmd)
+
+
+def bunch1(tao, ele_id, coordinate, *, which='model', ix_bunch='1', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Bunch parameters at the exit end of a given lattice element.
+    
+    Parameters
+    ----------
+    ele_id
+        Element name or index
+    coordinate
         If one of: x, px, y, py, z, pz, 's', 't', 'charge', 'p0c', 'state'
+    which : default=model
+        One of: "model", "base" or "design"
+    ix_bunch : default=1
     
     Returns
     -------
-    string_list
-        if not coordinate
     real_array
-        if coordinate and coordinate != 'state'
+        if coordinate != 'state'
     integer_array
         if coordinate == 'state'
     
@@ -196,24 +224,14 @@ def bunch1(tao, ele_id, *, which='model', ix_bunch='1', coordinate='', verbose=F
      init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
      args:
        ele_id: end
-       which: model
-       ix_bunch: 1
-       coordinate:
-    
-    Example: 2
-     init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
-     args:
-       ele_id: end
-       which: model
-       ix_bunch: 1
        coordinate: x
+       which: model
+       ix_bunch: 1
     
     """
     cmd = f'python bunch1 {ele_id}|{which} {ix_bunch} {coordinate}'
     if verbose: print(cmd)
-    if not coordinate:
-        return __execute(tao, cmd, as_dict, raises, method_name='bunch1', cmd_type='string_list')
-    if coordinate and coordinate != 'state':
+    if coordinate != 'state':
         return __execute(tao, cmd, as_dict, raises, method_name='bunch1', cmd_type='real_array')
     if coordinate == 'state':
         return __execute(tao, cmd, as_dict, raises, method_name='bunch1', cmd_type='integer_array')
@@ -3388,7 +3406,7 @@ def species_to_str(tao, species_int, *, verbose=False, as_dict=True, raises=True
 def spin_polarization(tao, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True, raises=True):
     """
     
-    Spin information
+    Spin polarization information
     
     Parameters
     ----------
@@ -3403,7 +3421,7 @@ def spin_polarization(tao, *, ix_uni='1', ix_branch='0', which='model', verbose=
     Notes
     -----
     Command syntax:
-      python spin {ix_uni}@{ix_branch}|{which}
+      python spin_polarization {ix_uni}@{ix_branch}|{which}
     where {which} is one of:
       model
       base
@@ -3423,9 +3441,30 @@ def spin_polarization(tao, *, ix_uni='1', ix_branch='0', which='model', verbose=
        which: model
     
     """
-    cmd = f'python spin {ix_uni}@{ix_branch}|{which}'
+    cmd = f'python spin_polarization {ix_uni}@{ix_branch}|{which}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, raises, method_name='spin_polarization', cmd_type='string_list')
+
+
+def spin_resonance(tao, ref_ele, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Spin resonance information
+    
+    ----
+    Command syntax:
+      python spin_resonance {ix_uni}@{ix_branch}|{which} {ref_ele}
+    
+    Parameters
+    ----------
+    ix_uni : default=1
+    ix_branch : default=0
+    which : default=model
+    ref_ele : Reference element to calculate at. default = 0
+    
+    """
+    cmd = f'python spin_resonance {ix_uni}@{ix_branch}|{which} {ref_ele}'
+    if verbose: print(cmd)
 
 
 def super_universe(tao, *, verbose=False, as_dict=True, raises=True):
