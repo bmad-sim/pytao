@@ -3446,21 +3446,23 @@ def spin_polarization(tao, *, ix_uni='1', ix_branch='0', which='model', verbose=
     return __execute(tao, cmd, as_dict, raises, method_name='spin_polarization', cmd_type='string_list')
 
 
-def spin_resonance(tao, ref_ele, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True, raises=True):
+def spin_resonance(tao, *, ix_uni='1', ix_branch='0', which='model', ref_ele='0', verbose=False, as_dict=True, raises=True):
     """
     
     Spin resonance information
-    
-    ----
-    Command syntax:
-      python spin_resonance {ix_uni}@{ix_branch}|{which} {ref_ele}
     
     Parameters
     ----------
     ix_uni : default=1
     ix_branch : default=0
     which : default=model
-    ref_ele : Reference element to calculate at. default = 0
+    ref_ele : default=0
+        Reference element to calculate at.
+    
+    Notes
+    -----
+    Command syntax:
+      python spin_resonance {ix_uni}@{ix_branch}|{which} {ref_ele}
     
     """
     cmd = f'python spin_resonance {ix_uni}@{ix_branch}|{which} {ref_ele}'
