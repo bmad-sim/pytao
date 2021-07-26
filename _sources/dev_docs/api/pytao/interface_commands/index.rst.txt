@@ -107,20 +107,40 @@ Module Contents
       ix_branch: 0
 
 
-.. function:: bunch1(tao, ele_id, *, which='model', ix_bunch='1', coordinate='', verbose=False, as_dict=True, raises=True)
+.. function:: bunch_params(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Bunch parameters at the exit end of a given lattice element.
 
    :param ele_id: Element name or index
    :param which: One of: "model", "base" or "design"
    :type which: default=model
+
+   .. rubric:: Notes
+
+   Command syntax:
+   python bunch_params {ele_id}|{which}
+
+   .. rubric:: Examples
+
+   Example: 1
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
+    args:
+      ele_id: end
+      which: model
+
+
+.. function:: bunch1(tao, ele_id, coordinate, *, which='model', ix_bunch='1', verbose=False, as_dict=True, raises=True)
+
+   Bunch parameters at the exit end of a given lattice element.
+
+   :param ele_id: Element name or index
+   :param coordinate: If one of: x, px, y, py, z, pz, 's', 't', 'charge', 'p0c', 'state'
+   :param which: One of: "model", "base" or "design"
+   :type which: default=model
    :param ix_bunch:
    :type ix_bunch: default=1
-   :param coordinate: If one of: x, px, y, py, z, pz, 's', 't', 'charge', 'p0c', 'state'
-   :type coordinate: optional
 
-   :returns: * *string_list* -- if not coordinate
-             * *real_array* -- if coordinate and coordinate != 'state'
+   :returns: * *real_array* -- if coordinate != 'state'
              * *integer_array* -- if coordinate == 'state'
 
    .. rubric:: Notes
@@ -134,17 +154,9 @@ Module Contents
     init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
     args:
       ele_id: end
-      which: model
-      ix_bunch: 1
-      coordinate:
-
-   Example: 2
-    init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
-    args:
-      ele_id: end
-      which: model
-      ix_bunch: 1
       coordinate: x
+      which: model
+      ix_bunch: 1
 
 
 .. function:: building_wall_list(tao, *, ix_section='', verbose=False, as_dict=True, raises=True)
@@ -2738,7 +2750,7 @@ Module Contents
 
 .. function:: spin_polarization(tao, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True, raises=True)
 
-   Spin information
+   Spin polarization information
 
    :param ix_uni:
    :type ix_uni: default=1
@@ -2753,7 +2765,7 @@ Module Contents
    .. rubric:: Notes
 
    Command syntax:
-     python spin {ix_uni}@{ix_branch}|{which}
+     python spin_polarization {ix_uni}@{ix_branch}|{which}
    where {which} is one of:
      model
      base
@@ -2772,6 +2784,25 @@ Module Contents
       ix_uni: 1
       ix_branch: 0
       which: model
+
+
+.. function:: spin_resonance(tao, *, ix_uni='1', ix_branch='0', which='model', ref_ele='0', verbose=False, as_dict=True, raises=True)
+
+   Spin resonance information
+
+   :param ix_uni:
+   :type ix_uni: default=1
+   :param ix_branch:
+   :type ix_branch: default=0
+   :param which:
+   :type which: default=model
+   :param ref_ele: Reference element to calculate at.
+   :type ref_ele: default=0
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python spin_resonance {ix_uni}@{ix_branch}|{which} {ref_ele}
 
 
 .. function:: super_universe(tao, *, verbose=False, as_dict=True, raises=True)

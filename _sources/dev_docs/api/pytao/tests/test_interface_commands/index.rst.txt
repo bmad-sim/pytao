@@ -19,10 +19,10 @@ Module Contents
 .. function:: test_branch1_1()
 
 
+.. function:: test_bunch_params_1()
+
+
 .. function:: test_bunch1_1()
-
-
-.. function:: test_bunch1_2()
 
 
 .. function:: test_building_wall_list_1()
