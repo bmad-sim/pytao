@@ -173,6 +173,10 @@ def bunch_params(tao, ele_id, *, which='model', verbose=False, as_dict=True, rai
     which : default=model
         One of: "model", "base" or "design"
     
+    Returns
+    -------
+    string_list
+    
     Notes
     -----
     Command syntax:
@@ -189,6 +193,7 @@ def bunch_params(tao, ele_id, *, which='model', verbose=False, as_dict=True, rai
     """
     cmd = f'python bunch_params {ele_id}|{which}'
     if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='bunch_params', cmd_type='string_list')
 
 
 def bunch1(tao, ele_id, coordinate, *, which='model', ix_bunch='1', verbose=False, as_dict=True, raises=True):

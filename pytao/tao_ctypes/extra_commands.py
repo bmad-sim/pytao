@@ -37,7 +37,7 @@ def bunch_data(tao, ele_id, *, which='model', ix_bunch=1,  verbose=False):
     """
     
     # Get species
-    stats = tao.bunch1(ele_id, which=which, ix_bunch=ix_bunch, verbose=verbose)
+    stats = tao.bunch_params(ele_id, which=which, verbose=verbose)
     species = stats['species']
     
     dat = {}
