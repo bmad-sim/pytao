@@ -2361,10 +2361,10 @@ def lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', fl
     -------
     string_list
         if ('-array_out' not in flags) or (who in ['ele.name'])
-    real_array
-        if ('-array_out' in flags or 'real:' in who) and (who not in ['orbit.state'])
     integer_array
-        if '-array_out' in flags and who in ['orbit.state']
+        if '-array_out' in flags and who in ['orbit.state', 'ele.ix_ele']
+    real_array
+        if ('-array_out' in flags) or ('real:' in who) 
     
     Notes
     -----
@@ -2426,10 +2426,10 @@ def lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', fl
     if verbose: print(cmd)
     if ('-array_out' not in flags) or (who in ['ele.name']):
         return __execute(tao, cmd, as_dict, raises, method_name='lat_list', cmd_type='string_list')
-    if ('-array_out' in flags or 'real:' in who) and (who not in ['orbit.state']):
-        return __execute(tao, cmd, as_dict, raises, method_name='lat_list', cmd_type='real_array')
-    if '-array_out' in flags and who in ['orbit.state']:
+    if '-array_out' in flags and who in ['orbit.state', 'ele.ix_ele']:
         return __execute(tao, cmd, as_dict, raises, method_name='lat_list', cmd_type='integer_array')
+    if ('-array_out' in flags) or ('real:' in who) :
+        return __execute(tao, cmd, as_dict, raises, method_name='lat_list', cmd_type='real_array')
 
 
 def lat_param_units(tao, param_name, *, verbose=False, as_dict=True, raises=True):
