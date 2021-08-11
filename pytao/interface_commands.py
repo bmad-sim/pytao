@@ -2421,6 +2421,15 @@ def lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', fl
        which: model
        who: orbit.floor.x
     
+    Example: 2
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
+     args:
+       ix_uni: 1  
+       ix_branch: 0 
+       elements: Q* 
+       which: design
+       who: ele.ix_ele
+    
     """
     cmd = f'python lat_list {flags} {ix_uni}@{ix_branch}>>{elements}|{which} {who}'
     if verbose: print(cmd)
