@@ -149,6 +149,57 @@ class Tao:
         
         return lines
     
+    def cmds(self, cmds, 
+             suppress_lattice_calc=True, 
+             suppress_plotting=True, 
+             raises=True):
+        """
+        Runs a list of commands
+    
+        Args:
+            cmds: list of commands
+            
+            suppress_lattice_calc: bool, optional
+                If True, will suppress lattice calc when applying the commands
+                Default: True
+                
+            suppress_plotting: bool, optional
+                If True, will suppress plotting when applying commands
+                Default: True
+                
+            raises: bool, optional
+                If True will raise an exception of [ERROR or [FATAL is detected in the 
+                output
+                Default: True
+            
+        Returns:
+            list of results corresponding to the commands
+        
+        """
+        # Get globals to detect plotting
+        g = self.tao_global()
+        ploton, laton = g['plot_on'], g['lattice_calc_on']
+        
+        if suppress_plotting and ploton:
+            self.cmd('set global plot_on = F')
+        if suppress_lattice_calc and laton:
+            self.cmd('set global lattice_calc_on = F')            
+    
+        # Actually apply commands
+        results = []
+        for cmd in cmds:
+            res = self.cmd(cmd, raises=raises)
+            results.append(res)
+            
+        if suppress_plotting and ploton:
+            self.cmd('set global plot_on = T')
+        if suppress_lattice_calc and laton:
+            self.cmd('set global lattice_calc_on = T')               
+            
+        return results
+            
+        
+    
     #---------------------------------------------
     # Get real array output.
     # Only python commands that load the real array buffer can be used with this method.
