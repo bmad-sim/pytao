@@ -1,5 +1,5 @@
-:mod:`pytao.misc.csr`
-=====================
+:py:mod:`pytao.misc.csr`
+========================
 
 .. py:module:: pytao.misc.csr
 
@@ -7,7 +7,7 @@
 Module Contents
 ---------------
 
-.. function:: parse_csr_wake(file, prepend_index=True)
+.. py:function:: parse_csr_wake(file, prepend_index=True)
 
    Parses CSR wake file and returns a dict of elements with
 
@@ -26,7 +26,7 @@ Module Contents
        column 4: S_Source
 
 
-.. function:: process_csr_wake_data(data)
+.. py:function:: process_csr_wake_data(data)
 
    Process csr_wake data by concatenating the data.
 
@@ -46,7 +46,8 @@ Module Contents
 
 
 
-.. function:: csr_wake_stats_at_step(data, step=0)
+
+.. py:function:: csr_wake_stats_at_step(data, step=0)
 
    Calculates stats from a single step of processed csr_wake data.
 
@@ -57,12 +58,13 @@ Module Contents
        avkick, stdkick, avz, stdz
 
 
-.. function:: write_csr_wake_data_h5(h5, data, name=None)
+
+.. py:function:: write_csr_wake_data_h5(h5, data, name=None)
 
    Write parsed csr_wake data to an open h5 handle
 
 
-.. function:: read_csr_wake_data_h5(h5, name=None)
+.. py:function:: read_csr_wake_data_h5(h5, name=None)
 
    Read csr_wake data from h5 file.
 

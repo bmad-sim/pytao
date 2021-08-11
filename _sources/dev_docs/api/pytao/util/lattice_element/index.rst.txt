@@ -1,5 +1,5 @@
-:mod:`pytao.util.lattice_element`
-=================================
+:py:mod:`pytao.util.lattice_element`
+====================================
 
 .. py:module:: pytao.util.lattice_element
 
@@ -13,8 +13,7 @@
 Module Contents
 ---------------
 
-.. class:: lat_element(u_ix, ix_branch, ix_ele, which, pipe)
-
+.. py:class:: lat_element(u_ix, ix_branch, ix_ele, which, pipe)
 
    Holds the essential information for a given lattice element.
    A lat_element has the following properties:

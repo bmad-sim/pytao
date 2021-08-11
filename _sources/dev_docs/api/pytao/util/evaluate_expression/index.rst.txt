@@ -1,5 +1,5 @@
-:mod:`pytao.util.evaluate_expression`
-=====================================
+:py:mod:`pytao.util.evaluate_expression`
+========================================
 
 .. py:module:: pytao.util.evaluate_expression
 
@@ -7,11 +7,11 @@
 Module Contents
 ---------------
 
-.. data:: local_funcs
+.. py:data:: local_funcs
    
 
    
 
-.. function:: eval_expr(expr)
+.. py:function:: eval_expr(expr)
 
 

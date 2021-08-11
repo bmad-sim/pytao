@@ -1,5 +1,5 @@
-:mod:`pytao.tao_ctypes.tools`
-=============================
+:py:mod:`pytao.tao_ctypes.tools`
+================================
 
 .. py:module:: pytao.tao_ctypes.tools
 
@@ -7,19 +7,18 @@
 Module Contents
 ---------------
 
-.. function:: full_path(path)
+.. py:function:: full_path(path)
 
    Helper function to expand enviromental variables and return the absolute path
 
 
-.. class:: NpEncoder(*, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, sort_keys=False, indent=None, separators=None, default=None)
-
+.. py:class:: NpEncoder(*, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, sort_keys=False, indent=None, separators=None, default=None)
 
    Bases: :py:obj:`json.JSONEncoder`
 
    See: https://stackoverflow.com/questions/50916422/python-typeerror-object-of-type-int64-is-not-json-serializable/50916741
 
-   .. method:: default(self, obj)
+   .. py:method:: default(self, obj)
 
       Implement this method in a subclass such that it returns
       a serializable object for ``o``, or calls the base implementation
@@ -40,13 +39,15 @@ Module Contents
 
 
 
-.. function:: fingerprint(keyed_data, digest_size=16)
+
+.. py:function:: fingerprint(keyed_data, digest_size=16)
 
    Creates a cryptographic fingerprint from keyed data.
    Used JSON dumps to form strings, and the blake2b algorithm to hash.
 
 
-.. function:: execute(cmd, cwd=None)
+
+.. py:function:: execute(cmd, cwd=None)
 
    Constantly print Subprocess output while process is running
    from: https://stackoverflow.com/questions/4417546/constantly-print-subprocess-output-while-process-is-running
@@ -58,7 +59,8 @@ Module Contents
    Useful in Jupyter notebook
 
 
-.. function:: execute2(cmd, timeout=None, cwd=None)
+
+.. py:function:: execute2(cmd, timeout=None, cwd=None)
 
    Execute with time limit (timeout) in seconds, catching run errors.
 

@@ -1,5 +1,5 @@
-:mod:`pytao.util.parsers`
-=========================
+:py:mod:`pytao.util.parsers`
+============================
 
 .. py:module:: pytao.util.parsers
 
@@ -7,7 +7,7 @@
 Module Contents
 ---------------
 
-.. function:: parse_derivative(lines)
+.. py:function:: parse_derivative(lines)
 
    Parses the output of tao python derivative
 
@@ -20,7 +20,7 @@ Module Contents
    :rtype: dict
 
 
-.. function:: parse_lat_ele_list(lines)
+.. py:function:: parse_lat_ele_list(lines)
 
    Parses the output of tao lat_ele_list
 

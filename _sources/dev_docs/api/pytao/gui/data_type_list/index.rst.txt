@@ -1,5 +1,5 @@
-:mod:`pytao.gui.data_type_list`
-===============================
+:py:mod:`pytao.gui.data_type_list`
+==================================
 
 .. py:module:: pytao.gui.data_type_list
 
@@ -7,7 +7,7 @@
 Module Contents
 ---------------
 
-.. data:: data_type_list
+.. py:data:: data_type_list
    :annotation: = []
 
    

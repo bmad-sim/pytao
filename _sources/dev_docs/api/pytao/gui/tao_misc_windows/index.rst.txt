@@ -1,5 +1,5 @@
-:mod:`pytao.gui.tao_misc_windows`
-=================================
+:py:mod:`pytao.gui.tao_misc_windows`
+====================================
 
 .. py:module:: pytao.gui.tao_misc_windows
 
@@ -12,30 +12,27 @@
 Module Contents
 ---------------
 
-.. class:: tao_global_vars_window(root)
-
-
-   Bases: :py:obj:`pytao.gui.tao_base_windows.tao_parameter_window`
-
-   Generic window for displaying and editing a list of parameters
-
-   .. method:: set_callback(self)
-
-
-
-.. class:: tao_bmad_com_window(root)
-
+.. py:class:: tao_global_vars_window(root)
 
    Bases: :py:obj:`pytao.gui.tao_base_windows.tao_parameter_window`
 
    Generic window for displaying and editing a list of parameters
 
-   .. method:: set_callback(self)
+   .. py:method:: set_callback(self)
 
 
 
-.. class:: tao_history_window(root, *args, **kwargs)
+.. py:class:: tao_bmad_com_window(root)
 
+   Bases: :py:obj:`pytao.gui.tao_base_windows.tao_parameter_window`
+
+   Generic window for displaying and editing a list of parameters
+
+   .. py:method:: set_callback(self)
+
+
+
+.. py:class:: tao_history_window(root, *args, **kwargs)
 
    Bases: :py:obj:`pytao.gui.tao_base_windows.tao_list_window`
 
@@ -44,10 +41,10 @@ Module Contents
    Subclasses set tao_id before running this __init__ to handle
    adding/removing themselves from root window lists
 
-   .. method:: refresh(self)
+   .. py:method:: refresh(self)
 
 
-   .. method:: re_run(self, cmd_string, mode, event=None)
+   .. py:method:: re_run(self, cmd_string, mode, event=None)
 
       Re-runs the given command or command file (cmd_string),
       using the specified mode.
@@ -58,7 +55,7 @@ Module Contents
       the command line or call_file box, and does not run it
 
 
-   .. method:: re_run_callback(self, cmd_string, mode, event=None)
+   .. py:method:: re_run_callback(self, cmd_string, mode, event=None)
 
       Formats a callback to self.re_run
 

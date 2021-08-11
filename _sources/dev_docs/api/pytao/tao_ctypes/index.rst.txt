@@ -1,5 +1,5 @@
-:mod:`pytao.tao_ctypes`
-=======================
+:py:mod:`pytao.tao_ctypes`
+==========================
 
 .. py:module:: pytao.tao_ctypes
 
@@ -20,7 +20,7 @@ Submodules
 Package Contents
 ----------------
 
-.. data:: initialized
+.. py:data:: initialized
    :annotation: = False
 
    

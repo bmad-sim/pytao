@@ -1,7 +1,7 @@
 :orphan:
 
-:mod:`pytao.gui.__main__`
-=========================
+:py:mod:`pytao.gui.__main__`
+============================
 
 .. py:module:: pytao.gui.__main__
 
@@ -9,7 +9,7 @@
 Module Contents
 ---------------
 
-.. data:: root
+.. py:data:: root
    
 
    

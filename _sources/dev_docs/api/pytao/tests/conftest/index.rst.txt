@@ -1,5 +1,5 @@
-:mod:`pytao.tests.conftest`
-===========================
+:py:mod:`pytao.tests.conftest`
+==============================
 
 .. py:module:: pytao.tests.conftest
 
@@ -7,9 +7,9 @@
 Module Contents
 ---------------
 
-.. function:: rootdir()
+.. py:function:: rootdir()
 
 
-.. function:: config_file(rootdir)
+.. py:function:: config_file(rootdir)
 
 

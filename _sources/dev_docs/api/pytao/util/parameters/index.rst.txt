@@ -1,5 +1,5 @@
-:mod:`pytao.util.parameters`
-============================
+:py:mod:`pytao.util.parameters`
+===============================
 
 .. py:module:: pytao.util.parameters
 
@@ -13,13 +13,12 @@
 Module Contents
 ---------------
 
-.. data:: tao_startup_param_list
+.. py:data:: tao_startup_param_list
    :annotation: = ['beam_file;FILE;T;', 'beam_init_position_file;FILE;T;', 'beam_track_data_file;FILE;T;',...
 
    
 
-.. class:: tao_parameter(param_name, param_type, can_vary, param_value, sub_param=None)
-
+.. py:class:: tao_parameter(param_name, param_type, can_vary, param_value, sub_param=None)
 
    Basic class for holding the properties of a parameter in Tao.
 
@@ -37,7 +36,7 @@ Module Contents
    sub_param:      The name of the sub_parameter associated with this parameter,
                    For example: ele_name has the sub parameter ix_ele.
 
-   .. method:: get_component(self, comp_name)
+   .. py:method:: get_component(self, comp_name)
 
       Looks for a component called comp_name in self, and returns the component
       with the matching name
@@ -45,8 +44,7 @@ Module Contents
 
 
 
-.. exception:: InvalidParamError
-
+.. py:exception:: InvalidParamError
 
    Bases: :py:obj:`Exception`
 
@@ -55,21 +53,21 @@ Module Contents
    (3 minimum), bad sub-parameter formatting (for STRUCTs), etc
 
 
-.. function:: tao_parameter_dict(param_list)
+.. py:function:: tao_parameter_dict(param_list)
 
    Takes a list of strings, each string looks something like: 'param_name;STR;T;abcd'
    and returns a dictionary with keys being the param_name.
    Blank strings will be ignored.
 
 
-.. function:: str_to_tao_param(param_str)
+.. py:function:: str_to_tao_param(param_str)
 
    Takes a parameter string (EG: 'param_name;STR;T;abcd')
    and returns a tao_parameter instance
    param_str MUST have at least 3 semicolons
 
 
-.. data:: tao_startup_param_dict
+.. py:data:: tao_startup_param_dict
    
 
    

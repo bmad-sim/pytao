@@ -1,5 +1,5 @@
-:mod:`pytao.interface_commands`
-===============================
+:py:mod:`pytao.interface_commands`
+==================================
 
 .. py:module:: pytao.interface_commands
 
@@ -7,7 +7,7 @@
 Module Contents
 ---------------
 
-.. function:: beam(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=True)
+.. py:function:: beam(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=True)
 
    Output beam parameters that are not in the beam_init structure.
 
@@ -33,7 +33,7 @@ Module Contents
       ix_universe: 1
 
 
-.. function:: beam_init(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=True)
+.. py:function:: beam_init(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=True)
 
    Output beam_init parameters.
 
@@ -59,7 +59,7 @@ Module Contents
       ix_universe: 1
 
 
-.. function:: bmad_com(tao, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: bmad_com(tao, *, verbose=False, as_dict=True, raises=True)
 
    Bmad_com structure components
 
@@ -78,7 +78,7 @@ Module Contents
     args:
 
 
-.. function:: branch1(tao, *, ix_universe='1', ix_branch='0', verbose=False, as_dict=True, raises=True)
+.. py:function:: branch1(tao, *, ix_universe='1', ix_branch='0', verbose=False, as_dict=True, raises=True)
 
    Lattice element list.
 
@@ -107,13 +107,16 @@ Module Contents
       ix_branch: 0
 
 
-.. function:: bunch_params(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: bunch_params(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Bunch parameters at the exit end of a given lattice element.
 
    :param ele_id: Element name or index
    :param which: One of: "model", "base" or "design"
    :type which: default=model
+
+   :returns:
+   :rtype: string_list
 
    .. rubric:: Notes
 
@@ -129,7 +132,7 @@ Module Contents
       which: model
 
 
-.. function:: bunch1(tao, ele_id, coordinate, *, which='model', ix_bunch='1', verbose=False, as_dict=True, raises=True)
+.. py:function:: bunch1(tao, ele_id, coordinate, *, which='model', ix_bunch='1', verbose=False, as_dict=True, raises=True)
 
    Bunch parameters at the exit end of a given lattice element.
 
@@ -159,7 +162,7 @@ Module Contents
       ix_bunch: 1
 
 
-.. function:: building_wall_list(tao, *, ix_section='', verbose=False, as_dict=True, raises=True)
+.. py:function:: building_wall_list(tao, *, ix_section='', verbose=False, as_dict=True, raises=True)
 
    List of building wall sections or section points
 
@@ -189,7 +192,7 @@ Module Contents
       ix_section: 1
 
 
-.. function:: building_wall_graph(tao, graph, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: building_wall_graph(tao, graph, *, verbose=False, as_dict=True, raises=True)
 
    (x, y) points for drawing the building wall for a particular graph.
 
@@ -212,7 +215,7 @@ Module Contents
       graph: floor_plan.g
 
 
-.. function:: building_wall_point(tao, ix_section, ix_point, z, x, radius, z_center, x_center, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: building_wall_point(tao, ix_section, ix_point, z, x, radius, z_center, x_center, *, verbose=False, as_dict=True, raises=True)
 
    add or delete a building wall point
 
@@ -252,7 +255,7 @@ Module Contents
       x_center: 0
 
 
-.. function:: building_wall_section(tao, ix_section, sec_name, sec_constraint, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: building_wall_section(tao, ix_section, sec_name, sec_constraint, *, verbose=False, as_dict=True, raises=True)
 
    add or delete a building wall section
 
@@ -287,7 +290,7 @@ Module Contents
       sec_constraint: none
 
 
-.. function:: constraints(tao, who, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: constraints(tao, who, *, verbose=False, as_dict=True, raises=True)
 
    Optimization data and variables that contribute to the merit function.
 
@@ -340,7 +343,7 @@ Module Contents
       who:var
 
 
-.. function:: da_aperture(tao, *, ix_uni='1', verbose=False, as_dict=True, raises=True)
+.. py:function:: da_aperture(tao, *, ix_uni='1', verbose=False, as_dict=True, raises=True)
 
    Dynamic aperture data
 
@@ -356,7 +359,7 @@ Module Contents
      python da_aperture {ix_uni}
 
 
-.. function:: da_params(tao, *, ix_uni='1', verbose=False, as_dict=True, raises=True)
+.. py:function:: da_params(tao, *, ix_uni='1', verbose=False, as_dict=True, raises=True)
 
    Dynamic aperture input parameters
 
@@ -372,7 +375,7 @@ Module Contents
      python da_params {ix_uni}
 
 
-.. function:: data(tao, d2_name, d1_datum, *, ix_universe='1', dat_index='1', verbose=False, as_dict=True, raises=True)
+.. py:function:: data(tao, d2_name, d1_datum, *, ix_universe='1', dat_index='1', verbose=False, as_dict=True, raises=True)
 
    Individual datum info.
 
@@ -417,7 +420,7 @@ Module Contents
       dat_index: 1
 
 
-.. function:: data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_uni='1', verbose=False, as_dict=True, raises=True)
+.. py:function:: data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_uni='1', verbose=False, as_dict=True, raises=True)
 
    Create a d2 data structure along with associated d1 and data arrays.
 
@@ -468,7 +471,7 @@ Module Contents
       d_data_arrays_name_min_max: x^^0^^45^^y^^1^^47
 
 
-.. function:: data_d2_destroy(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=True)
+.. py:function:: data_d2_destroy(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=True)
 
    Destroy a d2 data structure along with associated d1 and data arrays.
 
@@ -494,7 +497,7 @@ Module Contents
       d2_datum: 1@eta.x
 
 
-.. function:: data_d2(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=True)
+.. py:function:: data_d2(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=True)
 
    Information on a d2_datum.
 
@@ -521,7 +524,7 @@ Module Contents
       d2_datum: twiss
 
 
-.. function:: data_d_array(tao, d1_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=True)
+.. py:function:: data_d_array(tao, d1_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=True)
 
    List of datums for a given data_d1.
 
@@ -551,7 +554,7 @@ Module Contents
       d1_datum: twiss.end
 
 
-.. function:: data_d1_array(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=True)
+.. py:function:: data_d1_array(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=True)
 
    List of d1 arrays for a given data_d2.
 
@@ -578,7 +581,7 @@ Module Contents
       d2_datum: twiss
 
 
-.. function:: data_parameter(tao, data_array, parameter, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: data_parameter(tao, data_array, parameter, *, verbose=False, as_dict=True, raises=True)
 
    Given an array of datums, generate an array of values for a particular datum parameter.
 
@@ -606,7 +609,7 @@ Module Contents
       parameter: model_value
 
 
-.. function:: data_d2_array(tao, ix_universe, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: data_d2_array(tao, ix_universe, *, verbose=False, as_dict=True, raises=True)
 
    Data d2 info for a given universe.
 
@@ -631,7 +634,7 @@ Module Contents
       ix_universe : 1
 
 
-.. function:: data_set_design_value(tao, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: data_set_design_value(tao, *, verbose=False, as_dict=True, raises=True)
 
    Set the design (and base & model) values for all datums.
 
@@ -655,7 +658,7 @@ Module Contents
     args:
 
 
-.. function:: datum_create(tao, datum_name, data_type, *, ele_ref_name='', ele_start_name='', ele_name='', merit_type='', meas='0', good_meas='F', ref='0', good_ref='F', weight='0', good_user='T', data_source='lat', eval_point='END', s_offset='0', ix_bunch='0', invalid_value='0', spin_axis_n0_1='', spin_axis_n0_2='', spin_axis_n0_3='', spin_axis_l_1='', spin_axis_l_2='', spin_axis_l_3='', verbose=False, as_dict=True, raises=True)
+.. py:function:: datum_create(tao, datum_name, data_type, *, ele_ref_name='', ele_start_name='', ele_name='', merit_type='', meas='0', good_meas='F', ref='0', good_ref='F', weight='0', good_user='T', data_source='lat', eval_point='END', s_offset='0', ix_bunch='0', invalid_value='0', spin_axis_n0_1='', spin_axis_n0_2='', spin_axis_n0_3='', spin_axis_l_1='', spin_axis_l_2='', spin_axis_l_3='', verbose=False, as_dict=True, raises=True)
 
    Create a datum.
 
@@ -749,7 +752,7 @@ Module Contents
       invalid_value: 0
 
 
-.. function:: datum_has_ele(tao, datum_type, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: datum_has_ele(tao, datum_type, *, verbose=False, as_dict=True, raises=True)
 
    Does datum type have an associated lattice element?
 
@@ -771,7 +774,7 @@ Module Contents
       datum_type: twiss.end
 
 
-.. function:: derivative(tao, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: derivative(tao, *, verbose=False, as_dict=True, raises=True)
 
    Optimization derivatives
 
@@ -794,7 +797,7 @@ Module Contents
     args:
 
 
-.. function:: ele_head(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: ele_head(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    "Head" Element attributes
 
@@ -828,7 +831,7 @@ Module Contents
      which: model
 
 
-.. function:: ele_methods(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: ele_methods(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element methods
 
@@ -862,7 +865,7 @@ Module Contents
      which: model
 
 
-.. function:: ele_gen_attribs(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: ele_gen_attribs(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element general attributes
 
@@ -896,7 +899,7 @@ Module Contents
      which: model
 
 
-.. function:: ele_multipoles(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: ele_multipoles(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element multipoles
 
@@ -930,7 +933,7 @@ Module Contents
      which: model
 
 
-.. function:: ele_ac_kicker(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: ele_ac_kicker(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element ac_kicker
 
@@ -964,7 +967,7 @@ Module Contents
      which: model
 
 
-.. function:: ele_cartesian_map(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: ele_cartesian_map(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element cartesian_map
 
@@ -1006,7 +1009,7 @@ Module Contents
      who: base
 
 
-.. function:: ele_chamber_wall(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: ele_chamber_wall(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element beam chamber wall
 
@@ -1043,7 +1046,7 @@ Module Contents
      who: x
 
 
-.. function:: ele_cylindrical_map(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: ele_cylindrical_map(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element cylindrical_map
 
@@ -1085,7 +1088,7 @@ Module Contents
      who: base
 
 
-.. function:: ele_taylor(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: ele_taylor(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element taylor
 
@@ -1119,7 +1122,7 @@ Module Contents
      which: model
 
 
-.. function:: ele_spin_taylor(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: ele_spin_taylor(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element spin_taylor
 
@@ -1153,7 +1156,7 @@ Module Contents
      which: model
 
 
-.. function:: ele_wake(tao, ele_id, *, which='model', who='base', verbose=False, as_dict=True, raises=True)
+.. py:function:: ele_wake(tao, ele_id, *, which='model', who='base', verbose=False, as_dict=True, raises=True)
 
    Element wake
 
@@ -1195,7 +1198,7 @@ Module Contents
      who: sr_long
 
 
-.. function:: ele_wall3d(tao, ele_id, *, which='model', index='1', who='base', verbose=False, as_dict=True, raises=True)
+.. py:function:: ele_wall3d(tao, ele_id, *, which='model', index='1', who='base', verbose=False, as_dict=True, raises=True)
 
    Element wall3d
 
@@ -1239,7 +1242,7 @@ Module Contents
      who: table
 
 
-.. function:: ele_twiss(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: ele_twiss(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element twiss
 
@@ -1273,7 +1276,7 @@ Module Contents
      which: model
 
 
-.. function:: ele_control_var(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: ele_control_var(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    List element control variables.
    Used for group, overlay and ramper type elements
@@ -1308,7 +1311,7 @@ Module Contents
      which: model
 
 
-.. function:: ele_orbit(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: ele_orbit(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element orbit
 
@@ -1342,7 +1345,7 @@ Module Contents
      which: model
 
 
-.. function:: ele_mat6(tao, ele_id, *, which='model', who='mat6', verbose=False, as_dict=True, raises=True)
+.. py:function:: ele_mat6(tao, ele_id, *, which='model', who='mat6', verbose=False, as_dict=True, raises=True)
 
    Element mat6
 
@@ -1383,7 +1386,7 @@ Module Contents
      who: mat6
 
 
-.. function:: ele_taylor_field(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: ele_taylor_field(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element taylor_field
 
@@ -1425,7 +1428,7 @@ Module Contents
      who: terms
 
 
-.. function:: ele_grid_field(tao, ele_id, *, which='model', index='1', who='base', verbose=False, as_dict=True, raises=True)
+.. py:function:: ele_grid_field(tao, ele_id, *, which='model', index='1', who='base', verbose=False, as_dict=True, raises=True)
 
    Element grid_field
 
@@ -1466,7 +1469,7 @@ Module Contents
      who: base
 
 
-.. function:: ele_floor(tao, ele_id, *, which='model', where='end', verbose=False, as_dict=True, raises=True)
+.. py:function:: ele_floor(tao, ele_id, *, which='model', where='end', verbose=False, as_dict=True, raises=True)
 
    Element floor coordinates. The output gives two lines. "Reference" is
    without element misalignments and "Actual" is with misalignments.
@@ -1516,7 +1519,7 @@ Module Contents
      where: center
 
 
-.. function:: ele_photon(tao, ele_id, *, which='model', who='base', verbose=False, as_dict=True, raises=True)
+.. py:function:: ele_photon(tao, ele_id, *, which='model', who='base', verbose=False, as_dict=True, raises=True)
 
    Element photon
 
@@ -1557,7 +1560,7 @@ Module Contents
      who: base
 
 
-.. function:: ele_lord_slave(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: ele_lord_slave(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Lists the lord/slave tree of an element.
 
@@ -1597,7 +1600,7 @@ Module Contents
      which: model
 
 
-.. function:: ele_elec_multipoles(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: ele_elec_multipoles(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True)
 
    Element electric multipoles
 
@@ -1631,7 +1634,7 @@ Module Contents
      which: model
 
 
-.. function:: evaluate(tao, expression, *, flags='-array_out', verbose=False, as_dict=True, raises=True)
+.. py:function:: evaluate(tao, expression, *, flags='-array_out', verbose=False, as_dict=True, raises=True)
 
    Evaluate an expression. The result may be a vector.
 
@@ -1659,7 +1662,7 @@ Module Contents
       expression: data::cbar.11[1:10]|model
 
 
-.. function:: em_field(tao, ele_id, x, y, z, t_or_z, *, which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: em_field(tao, ele_id, x, y, z, t_or_z, *, which='model', verbose=False, as_dict=True, raises=True)
 
    EM field at a given point generated by a given element.
 
@@ -1700,7 +1703,7 @@ Module Contents
       t_or_z: 0
 
 
-.. function:: enum(tao, enum_name, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: enum(tao, enum_name, *, verbose=False, as_dict=True, raises=True)
 
    List of possible values for enumerated numbers.
 
@@ -1725,7 +1728,7 @@ Module Contents
       enum_name: tracking_method
 
 
-.. function:: floor_plan(tao, graph, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: floor_plan(tao, graph, *, verbose=False, as_dict=True, raises=True)
 
    Floor plan elements
 
@@ -1747,7 +1750,7 @@ Module Contents
       graph: r13.g
 
 
-.. function:: floor_orbit(tao, graph, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: floor_orbit(tao, graph, *, verbose=False, as_dict=True, raises=True)
 
    (x, y) coordinates for drawing the particle orbit on a floor plan.
 
@@ -1769,7 +1772,7 @@ Module Contents
       graph: r33.g
 
 
-.. function:: tao_global(tao, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: tao_global(tao, *, verbose=False, as_dict=True, raises=True)
 
    Global parameters
 
@@ -1796,7 +1799,7 @@ Module Contents
     args:
 
 
-.. function:: help(tao, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: help(tao, *, verbose=False, as_dict=True, raises=True)
 
    returns list of "help xxx" topics
 
@@ -1815,7 +1818,7 @@ Module Contents
     args:
 
 
-.. function:: inum(tao, who, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: inum(tao, who, *, verbose=False, as_dict=True, raises=True)
 
    INUM
 
@@ -1837,7 +1840,7 @@ Module Contents
       who: ix_universe
 
 
-.. function:: lat_calc_done(tao, branch_name, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: lat_calc_done(tao, branch_name, *, verbose=False, as_dict=True, raises=True)
 
    Check if a lattice recalculation has been proformed since the last time
      "python lat_calc_done" was called.
@@ -1860,7 +1863,7 @@ Module Contents
       branch_name: 1@0
 
 
-.. function:: lat_ele_list(tao, *, branch_name='0', verbose=False, as_dict=True, raises=True)
+.. py:function:: lat_ele_list(tao, *, branch_name='0', verbose=False, as_dict=True, raises=True)
 
    Lattice element list.
 
@@ -1885,7 +1888,7 @@ Module Contents
       branch_name: 1@0
 
 
-.. function:: lat_general(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=True)
+.. py:function:: lat_general(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=True)
 
    Lattice general
 
@@ -1911,7 +1914,7 @@ Module Contents
       ix_universe: 1
 
 
-.. function:: lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', flags='-array_out -track_only', verbose=False, as_dict=True, raises=True)
+.. py:function:: lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', flags='-array_out -track_only', verbose=False, as_dict=True, raises=True)
 
    List of parameters at ends of lattice elements
 
@@ -1927,8 +1930,8 @@ Module Contents
    :type flags: optional, default=-array_out -track_only
 
    :returns: * *string_list* -- if ('-array_out' not in flags) or (who in ['ele.name'])
-             * *real_array* -- if ('-array_out' in flags or 'real:' in who) and (who not in ['orbit.state'])
-             * *integer_array* -- if '-array_out' in flags and who in ['orbit.state']
+             * *integer_array* -- if '-array_out' in flags and who in ['orbit.state', 'ele.ix_ele']
+             * *real_array* -- if ('-array_out' in flags) or ('real:' in who)
 
    .. rubric:: Notes
 
@@ -1987,7 +1990,7 @@ Module Contents
       who: orbit.floor.x
 
 
-.. function:: lat_param_units(tao, param_name, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: lat_param_units(tao, param_name, *, verbose=False, as_dict=True, raises=True)
 
    Units of a parameter associated with a lattice or lattice element.
 
@@ -2009,7 +2012,7 @@ Module Contents
       param_name: L
 
 
-.. function:: matrix(tao, ele1_id, ele2_id, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: matrix(tao, ele1_id, ele2_id, *, verbose=False, as_dict=True, raises=True)
 
    Matrix value from the exit end of one element to the exit end of the other.
 
@@ -2042,7 +2045,7 @@ Module Contents
       ele2_id: q02w
 
 
-.. function:: merit(tao, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: merit(tao, *, verbose=False, as_dict=True, raises=True)
 
    Merit value.
 
@@ -2061,7 +2064,7 @@ Module Contents
     args:
 
 
-.. function:: orbit_at_s(tao, s, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: orbit_at_s(tao, s, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True, raises=True)
 
    Twiss at given s position.
 
@@ -2098,7 +2101,7 @@ Module Contents
       which: model
 
 
-.. function:: place_buffer(tao, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: place_buffer(tao, *, verbose=False, as_dict=True, raises=True)
 
    Output place command buffer and reset the buffer.
    The contents of the buffer are the place commands that the user has issued.
@@ -2118,7 +2121,7 @@ Module Contents
     args:
 
 
-.. function:: plot_curve(tao, curve_name, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: plot_curve(tao, curve_name, *, verbose=False, as_dict=True, raises=True)
 
    Curve information for a plot
 
@@ -2140,7 +2143,7 @@ Module Contents
       curve_name: r13.g.a
 
 
-.. function:: plot_lat_layout(tao, ix_universe: 1, ix_branch: 0, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: plot_lat_layout(tao, ix_universe: 1, ix_branch: 0, *, verbose=False, as_dict=True, raises=True)
 
    Plot Lat_layout info
 
@@ -2168,7 +2171,7 @@ Module Contents
       ix_branch: 0
 
 
-.. function:: plot_list(tao, r_or_g, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: plot_list(tao, r_or_g, *, verbose=False, as_dict=True, raises=True)
 
    List of plot templates or plot regions.
 
@@ -2193,7 +2196,7 @@ Module Contents
       r_or_g: r
 
 
-.. function:: plot_graph(tao, graph_name, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: plot_graph(tao, graph_name, *, verbose=False, as_dict=True, raises=True)
 
    Graph
 
@@ -2221,7 +2224,7 @@ Module Contents
       graph_name: beta.g
 
 
-.. function:: plot_histogram(tao, curve_name, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: plot_histogram(tao, curve_name, *, verbose=False, as_dict=True, raises=True)
 
    Plot Histogram
 
@@ -2243,7 +2246,7 @@ Module Contents
       curve_name: r33.g.x
 
 
-.. function:: plot_plot_manage(tao, plot_location, plot_name, n_graph, graph1_name, graph2_name, graphN_name, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: plot_plot_manage(tao, plot_location, plot_name, n_graph, graph1_name, graph2_name, graphN_name, *, verbose=False, as_dict=True, raises=True)
 
    Template plot creation or destruction.
 
@@ -2280,7 +2283,7 @@ Module Contents
       graphN_name: gN
 
 
-.. function:: plot_curve_manage(tao, graph_name, curve_index, curve_name, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: plot_curve_manage(tao, graph_name, curve_index, curve_name, *, verbose=False, as_dict=True, raises=True)
 
    Template plot curve creation/destruction
 
@@ -2310,7 +2313,7 @@ Module Contents
       curve_name: r13.g.a
 
 
-.. function:: plot_graph_manage(tao, plot_name, graph_index, graph_name, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: plot_graph_manage(tao, plot_name, graph_index, graph_name, *, verbose=False, as_dict=True, raises=True)
 
    Template plot graph creation/destruction
 
@@ -2340,7 +2343,7 @@ Module Contents
       graph_name: beta.g
 
 
-.. function:: plot_line(tao, region_name, graph_name, curve_name, *, x_or_y='', verbose=False, as_dict=True, raises=True)
+.. py:function:: plot_line(tao, region_name, graph_name, curve_name, *, x_or_y='', verbose=False, as_dict=True, raises=True)
 
    Output points used to construct the "line" associated with a plot curve.
 
@@ -2378,7 +2381,7 @@ Module Contents
       x_or_y:
 
 
-.. function:: plot_symbol(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: plot_symbol(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=False, as_dict=True, raises=True)
 
    Locations to draw symbols for a plot curve.
 
@@ -2417,7 +2420,7 @@ Module Contents
       x_or_y:
 
 
-.. function:: plot_transfer(tao, from_plot, to_plot, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: plot_transfer(tao, from_plot, to_plot, *, verbose=False, as_dict=True, raises=True)
 
    Transfer plot parameters from the "from plot" to the "to plot" (or plots).
 
@@ -2445,7 +2448,7 @@ Module Contents
       to_plot: r23
 
 
-.. function:: plot1(tao, name, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: plot1(tao, name, *, verbose=False, as_dict=True, raises=True)
 
    Info on a given plot.
 
@@ -2469,7 +2472,7 @@ Module Contents
       name: beta
 
 
-.. function:: shape_list(tao, who, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: shape_list(tao, who, *, verbose=False, as_dict=True, raises=True)
 
    lat_layout and floor_plan shapes list
 
@@ -2494,7 +2497,7 @@ Module Contents
       who: floor_plan
 
 
-.. function:: shape_manage(tao, who, index, add_or_delete, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: shape_manage(tao, who, index, add_or_delete, *, verbose=False, as_dict=True, raises=True)
 
    element shape creation or destruction
 
@@ -2536,7 +2539,7 @@ Module Contents
       add_or_delete: add
 
 
-.. function:: shape_pattern_list(tao, *, ix_pattern='', verbose=False, as_dict=True, raises=True)
+.. py:function:: shape_pattern_list(tao, *, ix_pattern='', verbose=False, as_dict=True, raises=True)
 
    List of shape patterns or shape pattern points
 
@@ -2562,7 +2565,7 @@ Module Contents
       ix_pattern:
 
 
-.. function:: shape_pattern_manage(tao, ix_pattern, pat_name, pat_line_width, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: shape_pattern_manage(tao, ix_pattern, pat_name, pat_line_width, *, verbose=False, as_dict=True, raises=True)
 
    Add or remove shape pattern
 
@@ -2594,7 +2597,7 @@ Module Contents
       pat_line_width : 1
 
 
-.. function:: shape_pattern_point_manage(tao, ix_pattern, ix_point, s, x, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: shape_pattern_point_manage(tao, ix_pattern, ix_point, s, x, *, verbose=False, as_dict=True, raises=True)
 
    Add or remove shape pattern point
 
@@ -2627,7 +2630,7 @@ Module Contents
       x: 0
 
 
-.. function:: shape_set(tao, who, shape_index, ele_name, shape, color, shape_size, type_label, shape_draw, multi_shape, line_width, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: shape_set(tao, who, shape_index, ele_name, shape, color, shape_size, type_label, shape_draw, multi_shape, line_width, *, verbose=False, as_dict=True, raises=True)
 
    lat_layout or floor_plan shape set
 
@@ -2672,7 +2675,7 @@ Module Contents
       line_width:
 
 
-.. function:: show(tao, line, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: show(tao, line, *, verbose=False, as_dict=True, raises=True)
 
    Show command pass through
 
@@ -2698,7 +2701,7 @@ Module Contents
       line: -python
 
 
-.. function:: species_to_int(tao, species_str, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: species_to_int(tao, species_str, *, verbose=False, as_dict=True, raises=True)
 
    Convert species name to corresponding integer
 
@@ -2723,7 +2726,7 @@ Module Contents
       species_str: electron
 
 
-.. function:: species_to_str(tao, species_int, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: species_to_str(tao, species_int, *, verbose=False, as_dict=True, raises=True)
 
    Convert species integer id to corresponding
 
@@ -2748,7 +2751,7 @@ Module Contents
       species_int: -1
 
 
-.. function:: spin_polarization(tao, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: spin_polarization(tao, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True, raises=True)
 
    Spin polarization information
 
@@ -2786,7 +2789,7 @@ Module Contents
       which: model
 
 
-.. function:: spin_resonance(tao, *, ix_uni='1', ix_branch='0', which='model', ref_ele='0', verbose=False, as_dict=True, raises=True)
+.. py:function:: spin_resonance(tao, *, ix_uni='1', ix_branch='0', which='model', ref_ele='0', verbose=False, as_dict=True, raises=True)
 
    Spin resonance information
 
@@ -2805,7 +2808,7 @@ Module Contents
      python spin_resonance {ix_uni}@{ix_branch}|{which} {ref_ele}
 
 
-.. function:: super_universe(tao, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: super_universe(tao, *, verbose=False, as_dict=True, raises=True)
 
    Super_Universe information
 
@@ -2824,7 +2827,7 @@ Module Contents
     args:
 
 
-.. function:: twiss_at_s(tao, s, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: twiss_at_s(tao, s, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True, raises=True)
 
    Twiss at given s position
 
@@ -2859,7 +2862,7 @@ Module Contents
       which: model
 
 
-.. function:: universe(tao, ix_universe, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: universe(tao, ix_universe, *, verbose=False, as_dict=True, raises=True)
 
    Universe info
 
@@ -2882,7 +2885,7 @@ Module Contents
       ix_universe: 1
 
 
-.. function:: var(tao, var, *, slaves='', verbose=False, as_dict=True, raises=True)
+.. py:function:: var(tao, var, *, slaves='', verbose=False, as_dict=True, raises=True)
 
    Info on an individual variable
 
@@ -2913,7 +2916,7 @@ Module Contents
       slaves: slaves
 
 
-.. function:: var_create(tao, var_name, ele_name, attribute, universes, weight, step, low_lim, high_lim, merit_type, good_user, key_bound, key_delta, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: var_create(tao, var_name, ele_name, attribute, universes, weight, step, low_lim, high_lim, merit_type, good_user, key_bound, key_delta, *, verbose=False, as_dict=True, raises=True)
 
    Create a single variable
 
@@ -2962,7 +2965,7 @@ Module Contents
       key_delta: 0.01
 
 
-.. function:: var_general(tao, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: var_general(tao, *, verbose=False, as_dict=True, raises=True)
 
    List of all variable v1 arrays
 
@@ -2983,7 +2986,7 @@ Module Contents
     args:
 
 
-.. function:: var_v_array(tao, v1_var, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: var_v_array(tao, v1_var, *, verbose=False, as_dict=True, raises=True)
 
    List of variables for a given data_v1.
 
@@ -3008,7 +3011,7 @@ Module Contents
       v1_var: quad_k1
 
 
-.. function:: var_v1_array(tao, v1_var, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: var_v1_array(tao, v1_var, *, verbose=False, as_dict=True, raises=True)
 
    List of variables in a given variable v1 array
 
@@ -3030,7 +3033,7 @@ Module Contents
       v1_var: quad_k1
 
 
-.. function:: var_v1_create(tao, v1_name, n_var_min, n_var_max, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: var_v1_create(tao, v1_name, n_var_min, n_var_max, *, verbose=False, as_dict=True, raises=True)
 
    Create a v1 variable structure along with associated var array.
 
@@ -3077,7 +3080,7 @@ Module Contents
       n_var_max: 45
 
 
-.. function:: var_v1_destroy(tao, v1_datum, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: var_v1_destroy(tao, v1_datum, *, verbose=False, as_dict=True, raises=True)
 
    Destroy a v1 var structure along with associated var sub-array.
 
@@ -3099,7 +3102,7 @@ Module Contents
       v1_datum: quad_k1
 
 
-.. function:: wave(tao, what, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: wave(tao, what, *, verbose=False, as_dict=True, raises=True)
 
    Wave analysis info.
 

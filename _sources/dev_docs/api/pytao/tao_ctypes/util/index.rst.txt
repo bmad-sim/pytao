@@ -1,5 +1,5 @@
-:mod:`pytao.tao_ctypes.util`
-============================
+:py:mod:`pytao.tao_ctypes.util`
+===============================
 
 .. py:module:: pytao.tao_ctypes.util
 
@@ -12,27 +12,28 @@
 Module Contents
 ---------------
 
-.. function:: error_in_lines(lines)
+.. py:function:: error_in_lines(lines)
 
    Checks '[ERROR', '[CRITICAL', '[FATAL' found in
    lines, and returns a string of info if something is found.
    Otherwise, '' is returned.
 
 
-.. function:: error_in_line(line)
+
+.. py:function:: error_in_line(line)
 
    Returns True if the line contains: '[ERROR', '[CRITICAL', '[FATAL'
 
 
-.. function:: chunks(lst, n)
+.. py:function:: chunks(lst, n)
 
    Yield successive n-sized chunks from lst.
 
 
-.. function:: parse_bool(s)
+.. py:function:: parse_bool(s)
 
 
-.. function:: parse_tao_lat_ele_list(lines)
+.. py:function:: parse_tao_lat_ele_list(lines)
 
    returns mapping of names to index
 
@@ -42,13 +43,14 @@ Module Contents
    ixlist = parse_tao_lat_ele_list(tao.cmd('python lat_ele_list 1@0'))
 
 
-.. function:: parse_pytype(type, val)
+.. py:function:: parse_pytype(type, val)
 
    Parses the various types from tao_python_cmd
 
 
 
-.. function:: parse_tao_python_data1(line, clean_key=True)
+
+.. py:function:: parse_tao_python_data1(line, clean_key=True)
 
    Parses most common data output from a Tao>python command
    <component_name>;<type>;<is_variable>;<component_value>
@@ -66,26 +68,27 @@ Module Contents
    See: tao_python_cmd.f90
 
 
-.. function:: parse_tao_python_data(lines, clean_key=True)
+.. py:function:: parse_tao_python_data(lines, clean_key=True)
 
    returns dict with data
 
 
-.. function:: simple_lat_table(tao, ix_universe=1, ix_branch=0, which='model', who='twiss')
+.. py:function:: simple_lat_table(tao, ix_universe=1, ix_branch=0, which='model', who='twiss')
 
    Takes the tao object, and returns columns of parameters associated with lattice elements
-   "which" is one of:
-     model
-     base
-     design
-   and "who" is one of:
-     general         ! ele%xxx compnents where xxx is "simple" component (not a structure nor an array, nor allocatable, nor pointer).
-     parameters      ! parameters in ele%value array
-     multipole       ! nonzero multipole components.
-     floor           ! floor coordinates.
-     twiss           ! twiss parameters at exit end.
-     orbit           ! orbit at exit end.
-   Example:
+    "which" is one of:
+      model
+      base
+      design
+    and "who" is one of:
+      general         ! ele%xxx compnents where xxx is "simple" component (not a structure nor an array, nor allocatable, nor pointer).
+      parameters      ! parameters in ele%value array
+      multipole       ! nonzero multipole components.
+      floor           ! floor coordinates.
+      twiss           ! twiss parameters at exit end.
+      orbit           ! orbit at exit end.
+    Example:
+
 
 
 

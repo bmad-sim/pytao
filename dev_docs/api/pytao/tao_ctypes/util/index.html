@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>pytao.tao_ctypes.util &mdash; PyTao 0.1.3+8.g96fa1b9 documentation</title>
+  <title>pytao.tao_ctypes.util &mdash; PyTao 0.1.3+12.g7dfd70b documentation</title>
   
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.1.3+8.g96fa1b9
+                0.1.3+12.g7dfd70b
               </div>
             
           
@@ -302,14 +302,12 @@ ixlist = parse_tao_lat_ele_list(tao.cmd(‘python lat_ele_list 1&#64;0’))</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.util.simple_lat_table">
 <span class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.util.</span></span><span class="sig-name descname"><span class="pre">simple_lat_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_universe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'model'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">who</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'twiss'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.util.simple_lat_table" title="Permalink to this definition">¶</a></dt>
-<dd><p>Takes the tao object, and returns columns of parameters associated with lattice elements
-“which” is one of:</p>
-<blockquote>
-<div><p>model
+<dd><dl>
+<dt>Takes the tao object, and returns columns of parameters associated with lattice elements</dt><dd><dl class="simple">
+<dt>“which” is one of:</dt><dd><p>model
 base
 design</p>
-</div></blockquote>
-<dl class="simple">
+</dd>
 <dt>and “who” is one of:</dt><dd><p>general         ! ele%xxx compnents where xxx is “simple” component (not a structure nor an array, nor allocatable, nor pointer).
 parameters      ! parameters in ele%value array
 multipole       ! nonzero multipole components.
@@ -319,6 +317,8 @@ orbit           ! orbit at exit end.</p>
 </dd>
 </dl>
 <p>Example:</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

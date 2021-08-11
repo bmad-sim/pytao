@@ -1,5 +1,5 @@
-:mod:`pytao.gui.tao_console`
-============================
+:py:mod:`pytao.gui.tao_console`
+===============================
 
 .. py:module:: pytao.gui.tao_console
 
@@ -7,8 +7,7 @@
 Module Contents
 ---------------
 
-.. class:: tao_console(parent, root, pipe)
-
+.. py:class:: tao_console(parent, root, pipe)
 
    Bases: :py:obj:`tkinter.Frame`
 
@@ -24,13 +23,13 @@ Module Contents
            the gui's global variablese, etc)
    pipe: tao_interface object (needed to run commands)
 
-   .. method:: set_command(self, new_command)
+   .. py:method:: set_command(self, new_command)
 
       Deletes the current command and sets self.command
       to new_command (also updates console display)
 
 
-   .. method:: show_output(self, output, mode='normal', noprompt=False)
+   .. py:method:: show_output(self, output, mode='normal', noprompt=False)
 
       Prints output to the console and starts a new
       line for the command prompt.    Also clears
@@ -39,10 +38,10 @@ Module Contents
       With noprompt set True, a new Tao> prompt will not be drawn
 
 
-   .. method:: warning_callback(self, *args)
+   .. py:method:: warning_callback(self, *args)
 
 
-   .. method:: run_command(self)
+   .. py:method:: run_command(self)
 
       Runs self.command at the Tao command line and
       displays the output.    Appends self.command to

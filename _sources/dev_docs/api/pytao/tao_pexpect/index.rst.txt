@@ -1,5 +1,5 @@
-:mod:`pytao.tao_pexpect`
-========================
+:py:mod:`pytao.tao_pexpect`
+===========================
 
 .. py:module:: pytao.tao_pexpect
 

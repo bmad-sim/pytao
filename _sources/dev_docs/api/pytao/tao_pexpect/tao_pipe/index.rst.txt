@@ -1,5 +1,5 @@
-:mod:`pytao.tao_pexpect.tao_pipe`
-=================================
+:py:mod:`pytao.tao_pexpect.tao_pipe`
+====================================
 
 .. py:module:: pytao.tao_pexpect.tao_pipe
 
@@ -22,13 +22,12 @@
 Module Contents
 ---------------
 
-.. class:: tao_io(init_args='', tao_exe='', timeout=600, expect_str='Tao>')
+.. py:class:: tao_io(init_args='', tao_exe='', timeout=600, expect_str='Tao>')
+
+   .. py:method:: cmd_in(self, cmd_str)
 
 
-   .. method:: cmd_in(self, cmd_str)
-
-
-   .. method:: cmd(self, cmd_str)
+   .. py:method:: cmd(self, cmd_str)
 
 
 

@@ -1,5 +1,5 @@
-:mod:`pytao`
-============
+:py:mod:`pytao`
+===============
 
 .. py:module:: pytao
 

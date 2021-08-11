@@ -1,5 +1,5 @@
-:mod:`pytao.gui.tao_set`
-========================
+:py:mod:`pytao.gui.tao_set`
+===========================
 
 .. py:module:: pytao.gui.tao_set
 
@@ -16,7 +16,7 @@
 Module Contents
 ---------------
 
-.. function:: check_for_changes(tao_list)
+.. py:function:: check_for_changes(tao_list)
 
    Takes a list of tk_tao_parameters and returns True
    if any of the items have self.tk_var.get() !=
@@ -24,7 +24,7 @@ Module Contents
    result in at least one set command for the list
 
 
-.. function:: tao_dict_set(tao_dict, set_format, pipe)
+.. py:function:: tao_dict_set(tao_dict, set_format, pipe)
 
    Runs set commands through the given pipe using the information in tao_dict and set_format
    tao_dict should be a dictionary whose values are themselves dictionaries
@@ -38,7 +38,7 @@ Module Contents
    Note: Absolutely no input validation is performed
 
 
-.. function:: tao_set(tao_list, set_str, pipe, overide=False)
+.. py:function:: tao_set(tao_list, set_str, pipe, overide=False)
 
    Takes a list of tk_tao_parameters and makes a call to tao
    to set the parameters to the values input by the user

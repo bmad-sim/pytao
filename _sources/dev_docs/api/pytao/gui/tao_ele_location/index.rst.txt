@@ -1,5 +1,5 @@
-:mod:`pytao.gui.tao_ele_location`
-=================================
+:py:mod:`pytao.gui.tao_ele_location`
+====================================
 
 .. py:module:: pytao.gui.tao_ele_location
 
@@ -7,12 +7,12 @@
 Module Contents
 ---------------
 
-.. function:: in_rectangle(a, b, c, d, x, y)
+.. py:function:: in_rectangle(a, b, c, d, x, y)
 
    returns True if the point (x,y) is in a rectangle with corners a, b, c, and d, False otherwise
 
 
-.. function:: in_element(x, y, fig_info)
+.. py:function:: in_element(x, y, fig_info)
 
    takes coordinates and taoplot.plot() output, returns list of element indices of elements that contain the specified coordinates
 

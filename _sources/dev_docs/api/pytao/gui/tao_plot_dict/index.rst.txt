@@ -1,5 +1,5 @@
-:mod:`pytao.gui.tao_plot_dict`
-==============================
+:py:mod:`pytao.gui.tao_plot_dict`
+=================================
 
 .. py:module:: pytao.gui.tao_plot_dict
 
@@ -14,15 +14,14 @@
 Module Contents
 ---------------
 
-.. class:: tao_plot_dict(mode, pipe, *args, **kwargs)
-
+.. py:class:: tao_plot_dict(mode, pipe, *args, **kwargs)
 
    Bases: :py:obj:`dict`
 
    Specialized dictionary for keeping track of plots and regions in tao
    mode should be either "matplotlib" or "pgplot"
 
-   .. method:: place_template(self, template, region=None)
+   .. py:method:: place_template(self, template, region=None)
 
       Places the given template plot in the specified region
       If no region is specified, automatically chooses the next available region
@@ -31,25 +30,25 @@ Module Contents
       that a valid region name is provided, otherwise the plot will not be placed
 
 
-   .. method:: unplace_template(self, template)
+   .. py:method:: unplace_template(self, template)
 
       Remove the given template from self and unplace it in tao
 
 
-   .. method:: unplace_region(self, region)
+   .. py:method:: unplace_region(self, region)
 
       Unplace whatever template is in the specified region, and remove the
       corresponding entry(ies) from self
 
 
-   .. method:: pgplot_update(self)
+   .. py:method:: pgplot_update(self)
 
       Reads the current state of plot regions in Tao, and
       sets self.pgplot_settings appropriately
 
 
 
-.. function:: region_to_max_rcl(region_name)
+.. py:function:: region_to_max_rcl(region_name)
 
    Converts the region name (e.g. r2312) to a
    (row number, column number, lat_layout) tuple

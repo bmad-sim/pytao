@@ -1,5 +1,5 @@
-:mod:`pytao.gui.tao_var_windows`
-================================
+:py:mod:`pytao.gui.tao_var_windows`
+===================================
 
 .. py:module:: pytao.gui.tao_var_windows
 
@@ -12,8 +12,7 @@
 Module Contents
 ---------------
 
-.. class:: tao_var_general_window(root, pipe, *args, **kwargs)
-
+.. py:class:: tao_var_general_window(root, pipe, *args, **kwargs)
 
    Bases: :py:obj:`pytao.gui.tao_base_windows.tao_list_window`
 
@@ -22,30 +21,29 @@ Module Contents
    Subclasses set tao_id before running this __init__ to handle
    adding/removing themselves from root window lists
 
-   .. method:: refresh(self)
+   .. py:method:: refresh(self)
 
 
-   .. method:: open_v1_callback(self, v1_var_name)
+   .. py:method:: open_v1_callback(self, v1_var_name)
 
 
-   .. method:: open_v1(self, v1_var_name)
+   .. py:method:: open_v1(self, v1_var_name)
 
 
-   .. method:: edit_v1_callback(self, v1_var_name)
+   .. py:method:: edit_v1_callback(self, v1_var_name)
 
 
-   .. method:: edit_v1(self, v1_var_name)
+   .. py:method:: edit_v1(self, v1_var_name)
 
 
-   .. method:: delete_v1_callback(self, v1_var_name)
+   .. py:method:: delete_v1_callback(self, v1_var_name)
 
 
-   .. method:: delete_v1(self, v1_var_name)
+   .. py:method:: delete_v1(self, v1_var_name)
 
 
 
-.. class:: tao_v1_var_window(root, pipe, v1_var_name, *args, **kwargs)
-
+.. py:class:: tao_v1_var_window(root, pipe, v1_var_name, *args, **kwargs)
 
    Bases: :py:obj:`pytao.gui.tao_base_windows.lw_table_window`
 
@@ -54,101 +52,99 @@ Module Contents
    machines, for example).  Table is read only but individual
    entries can still be opened for editing with double click.
 
-   .. method:: refresh(self)
+   .. py:method:: refresh(self)
 
       Creates a treeview to display the table information,
       and binds double click to open one item
 
 
-   .. method:: list_row_fetch(self, index)
+   .. py:method:: list_row_fetch(self, index)
 
       Returns row number index to be appended to self.list_rows
 
 
-   .. method:: lw_list_row_fetch(self, index)
+   .. py:method:: lw_list_row_fetch(self, index)
 
       For use with lw_table_window.  Returns a list of the values
       to be displayed in each column of row #index.
 
 
-   .. method:: lw_detail_callback(self, event=None)
+   .. py:method:: lw_detail_callback(self, event=None)
 
       Callback for the light-weight table to open a detail window
 
 
-   .. method:: bulk_set(self, fill_choices, parent)
+   .. py:method:: bulk_set(self, fill_choices, parent)
 
       Overload of lw_table_window.bulk_set that calls refresh data and plot windows
 
 
-   .. method:: open_detail_window(self, index)
+   .. py:method:: open_detail_window(self, index)
 
       Opens up a detail window for the given index.
 
 
-   .. method:: detail_set_callback(self, tao_list, set_str)
+   .. py:method:: detail_set_callback(self, tao_list, set_str)
 
       Overload of lw_table_window.detail_set_callback that refreshes
       data-related windows
 
 
 
-.. class:: tao_new_var_window(root, pipe, default=None, *args, **kwargs)
-
+.. py:class:: tao_new_var_window(root, pipe, default=None, *args, **kwargs)
 
    Bases: :py:obj:`pytao.gui.tao_base_windows.Tao_Toplevel`
 
    Provides a window for creating new v1_variable arrays
 
-   .. method:: create_variables(self, event=None)
+   .. py:method:: create_variables(self, event=None)
 
       Takes the information from the variable frames and runs
       the necessary commands to create the variables in tao, then closes
       the create variable window
 
 
-   .. method:: tab_handler(self, event=None)
+   .. py:method:: tab_handler(self, event=None)
 
       Handles new tab creation and updates self.v1_index as necessary
 
 
-   .. method:: refresh(self)
+   .. py:method:: refresh(self)
 
       Only here in case something tries to refresh this window
 
 
 
-.. class:: new_v1_frame(parent)
-
+.. py:class:: new_v1_frame(parent)
 
    Bases: :py:obj:`pytao.gui.tao_base_windows.tk.Frame`
 
    Provides a frame for inputting properties of a v1_variable array.
 
-   .. method:: delete(self, ask=True, event=None)
+   .. py:method:: delete(self, ask=True, event=None)
 
       Deletes this v1_array frame
 
 
-   .. method:: duplicate(self, event=None)
+   .. py:method:: duplicate(self, event=None)
 
       Adds a new v1_frame to self.parent.v1_frame_list that is a copy of
       this frame, and changes focus to that frame
 
 
-   .. method:: make_var_frame(self, event=None)
+   .. py:method:: make_var_frame(self, event=None)
 
       Adds an entry to self.var_dict if necessary, and updates
       self.var_frame to show the values for the current variable
 
 
-   .. method:: var_fill(self, ix)
+   .. py:method:: var_fill(self, ix)
 
       "Fills" the value in self.v1_array_wids[ix] to all vars in self.var_dict
       Actually just erases the values in self.var_dict, which produces the same effect
 
 
-   .. method:: lat_browser(self)
+   .. py:method:: lat_browser(self)
 
       Opens a modified lattice table window to select elements en masse
       which should be either 'name', 'start_name', or 'ref_name'
@@ -156,7 +152,7 @@ Module Contents
       v1_array's variables sequentially
 
 
-   .. method:: name_handler(self, event=None, strict=False)
+   .. py:method:: name_handler(self, event=None, strict=False)
 
       Checks whether the input name is valid, and
       sets the tab name to it if it is
@@ -167,7 +163,7 @@ Module Contents
       for an empty name
 
 
-   .. method:: ix_min_handler(self, event=None, strict=False)
+   .. py:method:: ix_min_handler(self, event=None, strict=False)
 
       Checks if the starting index is valid,
       and updates self.ix_min if it is.
@@ -179,7 +175,7 @@ Module Contents
       for an empty ix_min
 
 
-   .. method:: length_handler(self, event=None, strict=False)
+   .. py:method:: length_handler(self, event=None, strict=False)
 
       Checks that the v1 array length has been set
       to a valid value, and updates self.length if it has.
@@ -188,7 +184,7 @@ Module Contents
       value, and None if left blank.
 
 
-   .. method:: low_high_handler(self, event=None, strict=False)
+   .. py:method:: low_high_handler(self, event=None, strict=False)
 
       Verifies that the min and max values are set to good values
       Returns True if they are,
@@ -198,7 +194,7 @@ Module Contents
       if strict is set True
 
 
-   .. method:: clone(self, v1_array)
+   .. py:method:: clone(self, v1_array)
 
       Clones the existing v1_array into this v1_frame
 

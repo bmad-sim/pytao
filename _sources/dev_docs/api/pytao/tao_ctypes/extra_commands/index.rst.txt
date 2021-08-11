@@ -1,5 +1,5 @@
-:mod:`pytao.tao_ctypes.extra_commands`
-======================================
+:py:mod:`pytao.tao_ctypes.extra_commands`
+=========================================
 
 .. py:module:: pytao.tao_ctypes.extra_commands
 
@@ -7,7 +7,7 @@
 Module Contents
 ---------------
 
-.. function:: bunch_data(tao, ele_id, *, which='model', ix_bunch=1, verbose=False)
+.. py:function:: bunch_data(tao, ele_id, *, which='model', ix_bunch=1, verbose=False)
 
    Returns bunch data in openPMD-beamphysics format/notation.
 

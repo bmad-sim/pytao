@@ -1,5 +1,5 @@
-:mod:`pytao.gui.module_check`
-=============================
+:py:mod:`pytao.gui.module_check`
+================================
 
 .. py:module:: pytao.gui.module_check
 
@@ -7,7 +7,7 @@
 Module Contents
 ---------------
 
-.. function:: module_check()
+.. py:function:: module_check()
 
    Checks for the required modules (listed in the required list).
    If any modules are missing, information on how to install the missing modules

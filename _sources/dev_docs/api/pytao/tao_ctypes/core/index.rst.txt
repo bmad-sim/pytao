@@ -1,5 +1,5 @@
-:mod:`pytao.tao_ctypes.core`
-============================
+:py:mod:`pytao.tao_ctypes.core`
+===============================
 
 .. py:module:: pytao.tao_ctypes.core
 
@@ -7,8 +7,7 @@
 Module Contents
 ---------------
 
-.. class:: Tao(init='', so_lib='')
-
+.. py:class:: Tao(init='', so_lib='')
 
    Class to run and interact with Tao. Requires libtao shared object.
 
@@ -23,21 +22,21 @@ Module Contents
    tao = tao_ctypes.Tao()
    tao.init("command line args here...")
 
-   .. method:: get_output(self, reset=True)
+   .. py:method:: get_output(self, reset=True)
 
       Returns a list of output strings.
       If reset, the internal Tao buffers will be reset.
 
 
-   .. method:: reset_output(self)
+   .. py:method:: reset_output(self)
 
       Resets all output buffers
 
 
-   .. method:: init(self, cmd)
+   .. py:method:: init(self, cmd)
 
 
-   .. method:: cmd(self, cmd, raises=True)
+   .. py:method:: cmd(self, cmd, raises=True)
 
       Runs a command, and returns the text output
 
@@ -47,13 +46,32 @@ Module Contents
       Returns a list of strings
 
 
-   .. method:: cmd_real(self, cmd, raises=True)
+   .. py:method:: cmds(self, cmds, suppress_lattice_calc=True, suppress_plotting=True, raises=True)
+
+      Runs a list of commands
+
+      :param cmds: list of commands
+      :param suppress_lattice_calc: bool, optional
+                                    If True, will suppress lattice calc when applying the commands
+                                    Default: True
+      :param suppress_plotting: bool, optional
+                                If True, will suppress plotting when applying commands
+                                Default: True
+      :param raises: bool, optional
+                     If True will raise an exception of [ERROR or [FATAL is detected in the
+                     output
+                     Default: True
+
+      :returns: list of results corresponding to the commands
 
 
-   .. method:: cmd_integer(self, cmd, raises=True)
+   .. py:method:: cmd_real(self, cmd, raises=True)
 
 
-   .. method:: register_cell_magic(self)
+   .. py:method:: cmd_integer(self, cmd, raises=True)
+
+
+   .. py:method:: register_cell_magic(self)
 
       Registers a cell magic in Jupyter notebooks
       Invoke by
@@ -62,18 +80,17 @@ Module Contents
 
 
 
-.. function:: find_libtao(base_dir)
+.. py:function:: find_libtao(base_dir)
 
    Searches base_for for an appropriate libtao shared library.
 
 
-.. function:: auto_discovery_libtao()
+.. py:function:: auto_discovery_libtao()
 
    Use system loader to try and find libtao.
 
 
-.. class:: TaoModel(input_file='tao.init', ploton=True, use_tempdir=True, workdir=None, verbose=True, so_lib='', auto_configure=True)
-
+.. py:class:: TaoModel(input_file='tao.init', ploton=True, use_tempdir=True, workdir=None, verbose=True, so_lib='', auto_configure=True)
 
    Bases: :py:obj:`Tao`
 
@@ -82,26 +99,26 @@ Module Contents
    If use_tempdir==True, then the input_file and its directory will be copied to a temporary directory.
    If workdir is given, then this temporary directory will be placed in workdir.
 
-   .. method:: configure(self)
+   .. py:method:: configure(self)
 
 
-   .. method:: init_line(self)
+   .. py:method:: init_line(self)
 
 
-   .. method:: reinit(self)
+   .. py:method:: reinit(self)
 
 
-   .. method:: vprint(self, *args, **kwargs)
+   .. py:method:: vprint(self, *args, **kwargs)
 
 
-   .. method:: globals(self)
+   .. py:method:: globals(self)
       :property:
 
       Returns dict of tao parameters.
       Note that the name of this function cannot be named 'global'
 
 
-   .. method:: evaluate(self, expression)
+   .. py:method:: evaluate(self, expression)
 
       .. rubric:: Example
 
@@ -111,7 +128,7 @@ Module Contents
 
 
 
-.. function:: tao_object_evaluate(tao_object, expression)
+.. py:function:: tao_object_evaluate(tao_object, expression)
 
    Evaluates an expression and returns
 
@@ -120,7 +137,7 @@ Module Contents
        lat::orbit.x[beginning:end]   # returns an np array of floats
 
 
-.. function:: form_set_command(s, value, delim=':')
+.. py:function:: form_set_command(s, value, delim=':')
 
    Forms a set command string that is separated by delim.
 
@@ -134,13 +151,14 @@ Module Contents
    'set ele BEG:END a = 1.23'
 
 
-.. function:: apply_settings(tao_object, settings)
+
+.. py:function:: apply_settings(tao_object, settings)
 
    Applies multiple settings to a tao object.
    Checks for lattice_calc_on and plot_on, and temporarily disables these for speed.
 
 
-.. function:: run_tao(settings=None, run_commands=['set global track_type=single'], input_file='tao.init', ploton=False, workdir=None, so_lib='', verbose=False)
+.. py:function:: run_tao(settings=None, run_commands=['set global track_type=single'], input_file='tao.init', ploton=False, workdir=None, so_lib='', verbose=False)
 
    Creates an LCLSTaoModel object, applies settings, and runs the beam.
 

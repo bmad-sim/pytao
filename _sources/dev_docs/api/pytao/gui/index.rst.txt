@@ -1,5 +1,5 @@
-:mod:`pytao.gui`
-================
+:py:mod:`pytao.gui`
+===================
 
 .. py:module:: pytao.gui
 

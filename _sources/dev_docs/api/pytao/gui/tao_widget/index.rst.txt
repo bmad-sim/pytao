@@ -1,5 +1,5 @@
-:mod:`pytao.gui.tao_widget`
-===========================
+:py:mod:`pytao.gui.tao_widget`
+==============================
 
 .. py:module:: pytao.gui.tao_widget
 
@@ -14,8 +14,7 @@
 Module Contents
 ---------------
 
-.. class:: tk_tao_parameter(tao_parameter, frame, pipe=0, data_source='', plot='', struct_name='')
-
+.. py:class:: tk_tao_parameter(tao_parameter, frame, pipe=0, data_source='', plot='', struct_name='')
 
    Takes a tao_parameter (defined in parameters.py) and a tk frame,
    and creates an object containing the parameter and appropriate tk widget(s)
@@ -25,62 +24,60 @@ Module Contents
    plot: for DAT_TYPE_Z, the plot where x_axis_type should be checked
    struct_name: for the components of a STRUCT, pass the struct name here
 
-   .. method:: print_info(self, *args)
+   .. py:method:: print_info(self, *args)
 
       Prints diagnostic info about this widget for testing purposes
 
 
-   .. method:: value(self)
+   .. py:method:: value(self)
 
       Returns the value in the input field(s) of self, appropriately typed
       If an invalid value is input, returns None
 
 
-   .. method:: copy(self, ttp)
+   .. py:method:: copy(self, ttp)
 
       Copy the the value(s) of the tk_var(s) of ttp into self
       Does nothing if ttp.param.type != self.param.type
 
 
-   .. method:: param_copy(self, tao_param)
+   .. py:method:: param_copy(self, tao_param)
 
       Copies tao_param.value into self.tk_var (and slaves if appropriate)
 
 
-   .. method:: open_file(self)
+   .. py:method:: open_file(self)
 
       Provides a dialog window for selecting a file
 
 
 
-.. class:: d1_data_list_entry(master, d_list)
-
+.. py:class:: d1_data_list_entry(master, d_list)
 
    Creates various tk widgets to display attributes of a single datum.
    Takes one line of output from python data_d_array as input.
 
 
-.. class:: v1_var_list_entry(master, v_list)
-
+.. py:class:: v1_var_list_entry(master, v_list)
 
    Creates the widgets needed to display a single variable held in a v1_var array
    v_list should be one row of output from
    python var_v_array [variable name]
 
 
-.. function:: enum_fetch(enum, pipe)
+.. py:function:: enum_fetch(enum, pipe)
 
    Takes the name of an enum variable and returns a list of its allowed values
    using the given pipe
 
 
-.. function:: inum_fetch(inum, pipe)
+.. py:function:: inum_fetch(inum, pipe)
 
    Takes the name of an inum variable and returns a list of its allowed values
    using the given pipe
 
 
-.. function:: tk_tao_linker(tk_tao_list)
+.. py:function:: tk_tao_linker(tk_tao_list)
 
    Takes a list of tk_tao_parameters as input and returns a list of tk_tao_parameters
    The output list will have parameters marked with I either removed or

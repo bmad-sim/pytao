@@ -1,5 +1,5 @@
-:mod:`pytao.tests`
-==================
+:py:mod:`pytao.tests`
+=====================
 
 .. py:module:: pytao.tests
 

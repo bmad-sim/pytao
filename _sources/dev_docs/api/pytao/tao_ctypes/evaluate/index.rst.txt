@@ -1,5 +1,5 @@
-:mod:`pytao.tao_ctypes.evaluate`
-================================
+:py:mod:`pytao.tao_ctypes.evaluate`
+===================================
 
 .. py:module:: pytao.tao_ctypes.evaluate
 
@@ -7,7 +7,7 @@
 Module Contents
 ---------------
 
-.. function:: evaluate_tao(settings, run_commands=['set global track_type=beam'], expressions=['lat::orbit.x[end]'], input_file=None, ploton=False, beam_archive_path=None, archive_csr_wake=False, workdir=None, so_lib='', verbose=False)
+.. py:function:: evaluate_tao(settings, run_commands=['set global track_type=beam'], expressions=['lat::orbit.x[end]'], input_file=None, ploton=False, beam_archive_path=None, archive_csr_wake=False, workdir=None, so_lib='', verbose=False)
 
    settings: dict of set_command:value where set_command is a string.
        Example:
@@ -49,5 +49,6 @@ Module Contents
    :rtype: {'lat::orbit.x[FF.PIP02A]'
 
    See: run_tao
+
 
 

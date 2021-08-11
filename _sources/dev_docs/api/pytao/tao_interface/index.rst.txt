@@ -1,5 +1,5 @@
-:mod:`pytao.tao_interface`
-==========================
+:py:mod:`pytao.tao_interface`
+=============================
 
 .. py:module:: pytao.tao_interface
 
@@ -15,8 +15,7 @@
 Module Contents
 ---------------
 
-.. class:: new_stdout
-
+.. py:class:: new_stdout
 
    Bases: :py:obj:`object`
 
@@ -24,13 +23,12 @@ Module Contents
    so that they can be shown by tao_console.
 
 
-.. function:: filter_output(x)
+.. py:function:: filter_output(x)
 
    Filters out certain ANSI escape sequences from the string x
 
 
-.. class:: tao_interface(mode='ctypes', init_args='', tao_exe='', expect_str='Tao>', so_lib='')
-
+.. py:class:: tao_interface(mode='ctypes', init_args='', tao_exe='', expect_str='Tao>', so_lib='')
 
    Serves as a general purpose interface between tao and python
    Supports both the ctypes and pexpect interface implementations, allowing
@@ -50,12 +48,12 @@ Module Contents
    respectively, e.g. in ctypes mode, the cmd_real method can be accessed by
    self.ctypes_pipe.cmd_real()
 
-   .. method:: cmd_in(self, cmd_str)
+   .. py:method:: cmd_in(self, cmd_str)
 
       Runs cmd_str at the Tao command line and returns the output as a string
 
 
-   .. method:: cmd(self, cmd_str)
+   .. py:method:: cmd(self, cmd_str)
 
       Runs cmd_str at the Tao command line and prints the output
       to standard out

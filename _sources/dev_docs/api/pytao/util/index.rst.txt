@@ -1,5 +1,5 @@
-:mod:`pytao.util`
-=================
+:py:mod:`pytao.util`
+====================
 
 .. py:module:: pytao.util
 
