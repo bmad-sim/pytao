@@ -190,6 +190,9 @@ Module Contents
 .. py:function:: test_lat_list_1()
 
 
+.. py:function:: test_lat_list_2()
+
+
 .. py:function:: test_lat_param_units_1()
 
 

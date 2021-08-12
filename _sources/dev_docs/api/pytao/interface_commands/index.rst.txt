@@ -1989,6 +1989,15 @@ Module Contents
       which: model
       who: orbit.floor.x
 
+   Example: 2
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
+    args:
+      ix_uni: 1
+      ix_branch: 0
+      elements: Q*
+      which: design
+      who: ele.ix_ele
+
 
 .. py:function:: lat_param_units(tao, param_name, *, verbose=False, as_dict=True, raises=True)
 
