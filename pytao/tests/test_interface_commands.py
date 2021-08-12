@@ -370,6 +370,12 @@ def test_lat_list_1():
     ret = interface_commands.lat_list(tao, ix_uni='1', ix_branch='0', elements='Q*', which='model', who='orbit.floor.x')
             
         
+def test_lat_list_2():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
+    ret = interface_commands.lat_list(tao, ix_uni='1', ix_branch='0', elements='Q*', which='design', who='ele.ix_ele')
+            
+        
 def test_lat_param_units_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
