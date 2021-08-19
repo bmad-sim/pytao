@@ -2481,6 +2481,25 @@ Module Contents
       name: beta
 
 
+.. py:function:: ptc_com(tao, *, verbose=False, as_dict=True, raises=True)
+
+   Ptc_com structure components
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python ptc_com
+
+   .. rubric:: Examples
+
+   Example: 1
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
+    args:
+
+
 .. py:function:: shape_list(tao, who, *, verbose=False, as_dict=True, raises=True)
 
    lat_layout and floor_plan shapes list

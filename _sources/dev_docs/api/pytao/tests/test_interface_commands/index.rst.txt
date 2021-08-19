@@ -244,6 +244,9 @@ Module Contents
 .. py:function:: test_plot1_1()
 
 
+.. py:function:: test_ptc_com_1()
+
+
 .. py:function:: test_shape_list_1()
 
 
