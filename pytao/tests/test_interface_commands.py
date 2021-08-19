@@ -478,6 +478,12 @@ def test_plot1_1():
     ret = interface_commands.plot1(tao, name='beta')
             
         
+def test_ptc_com_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
+    ret = interface_commands.ptc_com(tao)
+            
+        
 def test_shape_list_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))

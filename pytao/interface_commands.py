@@ -3063,6 +3063,32 @@ def plot1(tao, name, *, verbose=False, as_dict=True, raises=True):
     return __execute(tao, cmd, as_dict, raises, method_name='plot1', cmd_type='string_list')
 
 
+def ptc_com(tao, *, verbose=False, as_dict=True, raises=True):
+    """
+    
+    Ptc_com structure components
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python ptc_com
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init 
+     args:
+    
+    """
+    cmd = f'python ptc_com'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='ptc_com', cmd_type='string_list')
+
+
 def shape_list(tao, who, *, verbose=False, as_dict=True, raises=True):
     """
     
