@@ -31,14 +31,14 @@ def __execute(tao, cmd, as_dict=True, raises=True, method_name=None, cmd_type="s
     return ret
 
 
-def beam(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=True):
+def beam(tao, *, ix_universe='s%global%default_universe', verbose=False, as_dict=True, raises=True):
     """
     
     Output beam parameters that are not in the beam_init structure.
     
     Parameters
     ----------
-    ix_universe : default=1
+    ix_universe : default=s%global%default_universe
     
     Returns
     -------
@@ -65,14 +65,14 @@ def beam(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=True):
     return __execute(tao, cmd, as_dict, raises, method_name='beam', cmd_type='string_list')
 
 
-def beam_init(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=True):
+def beam_init(tao, *, ix_universe='s%global%default_universe', verbose=False, as_dict=True, raises=True):
     """
     
     Output beam_init parameters.
     
     Parameters
     ----------
-    ix_universe : default=1
+    ix_universe : default=s%global%default_universe
     
     Returns
     -------
@@ -125,15 +125,15 @@ def bmad_com(tao, *, verbose=False, as_dict=True, raises=True):
     return __execute(tao, cmd, as_dict, raises, method_name='bmad_com', cmd_type='string_list')
 
 
-def branch1(tao, *, ix_universe='1', ix_branch='0', verbose=False, as_dict=True, raises=True):
+def branch1(tao, *, ix_universe='s%global%default_universe', ix_branch='s%global%default_branch', verbose=False, as_dict=True, raises=True):
     """
     
     Lattice element list.
     
     Parameters
     ----------
-    ix_universe : default=1
-    ix_branch : default=0
+    ix_universe : default=s%global%default_universe
+    ix_branch : default=s%global%default_branch
     
     Returns
     -------
@@ -161,13 +161,14 @@ def branch1(tao, *, ix_universe='1', ix_branch='0', verbose=False, as_dict=True,
     return __execute(tao, cmd, as_dict, raises, method_name='branch1', cmd_type='string_list')
 
 
-def bunch_params(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
+def bunch_params(tao, ele_id, *, ix_universe='s%global%default_universe', which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Bunch parameters at the exit end of a given lattice element.
     
     Parameters
     ----------
+    ix_universe : default=s%global%default_universe
     ele_id
         Element name or index
     which : default=model
@@ -180,7 +181,7 @@ def bunch_params(tao, ele_id, *, which='model', verbose=False, as_dict=True, rai
     Notes
     -----
     Command syntax:
-    python bunch_params {ele_id}|{which}
+    python bunch_params {ix_universe}@{ele_id}|{which}
     
     Examples
     --------
@@ -191,7 +192,7 @@ def bunch_params(tao, ele_id, *, which='model', verbose=False, as_dict=True, rai
        which: model
     
     """
-    cmd = f'python bunch_params {ele_id}|{which}'
+    cmd = f'python bunch_params {ix_universe}@{ele_id}|{which}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, raises, method_name='bunch_params', cmd_type='string_list')
 
@@ -467,14 +468,14 @@ def constraints(tao, who, *, verbose=False, as_dict=True, raises=True):
     return __execute(tao, cmd, as_dict, raises, method_name='constraints', cmd_type='string_list')
 
 
-def da_aperture(tao, *, ix_uni='1', verbose=False, as_dict=True, raises=True):
+def da_aperture(tao, *, ix_uni='s%global%default_universe', verbose=False, as_dict=True, raises=True):
     """
     
     Dynamic aperture data
     
     Parameters
     ----------
-    ix_uni : default=1
+    ix_uni : default=s%global%default_universe
     
     Returns
     -------
@@ -491,14 +492,14 @@ def da_aperture(tao, *, ix_uni='1', verbose=False, as_dict=True, raises=True):
     return __execute(tao, cmd, as_dict, raises, method_name='da_aperture', cmd_type='string_list')
 
 
-def da_params(tao, *, ix_uni='1', verbose=False, as_dict=True, raises=True):
+def da_params(tao, *, ix_uni='s%global%default_universe', verbose=False, as_dict=True, raises=True):
     """
     
     Dynamic aperture input parameters
     
     Parameters
     ----------
-    ix_uni : default=1
+    ix_uni : default=s%global%default_universe
     
     Returns
     -------
@@ -515,7 +516,7 @@ def da_params(tao, *, ix_uni='1', verbose=False, as_dict=True, raises=True):
     return __execute(tao, cmd, as_dict, raises, method_name='da_params', cmd_type='string_list')
 
 
-def data(tao, d2_name, d1_datum, *, ix_universe='1', dat_index='1', verbose=False, as_dict=True, raises=True):
+def data(tao, d2_name, d1_datum, *, ix_universe='s%global%default_universe', dat_index='1', verbose=False, as_dict=True, raises=True):
     """
     
     Individual datum info.
@@ -524,7 +525,7 @@ def data(tao, d2_name, d1_datum, *, ix_universe='1', dat_index='1', verbose=Fals
     ----------
     d2_name
     d1_datum
-    ix_universe : default=1
+    ix_universe : default=s%global%default_universe
     dat_index : default=1
     
     Returns
@@ -565,7 +566,7 @@ def data(tao, d2_name, d1_datum, *, ix_universe='1', dat_index='1', verbose=Fals
     return __execute(tao, cmd, as_dict, raises, method_name='data', cmd_type='string_list')
 
 
-def data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_uni='1', verbose=False, as_dict=True, raises=True):
+def data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_uni='s%global%default_universe', verbose=False, as_dict=True, raises=True):
     """
     
     Create a d2 data structure along with associated d1 and data arrays.
@@ -575,7 +576,7 @@ def data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_un
     d2_name
     n_d1_data
     d_data_arrays_name_min_max
-    ix_uni : default=1
+    ix_uni : default=s%global%default_universe
     
     Returns
     -------
@@ -622,7 +623,7 @@ def data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_un
     return __execute(tao, cmd, as_dict, raises, method_name='data_d2_create', cmd_type='None')
 
 
-def data_d2_destroy(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=True):
+def data_d2_destroy(tao, d2_datum, *, ix_uni='s%global%default_universe', verbose=False, as_dict=True, raises=True):
     """
     
     Destroy a d2 data structure along with associated d1 and data arrays.
@@ -630,7 +631,7 @@ def data_d2_destroy(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, r
     Parameters
     ----------
     d2_datum
-    ix_uni : default=1
+    ix_uni : default=s%global%default_universe
     
     Returns
     -------
@@ -656,7 +657,7 @@ def data_d2_destroy(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, r
     return __execute(tao, cmd, as_dict, raises, method_name='data_d2_destroy', cmd_type='None')
 
 
-def data_d2(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=True):
+def data_d2(tao, d2_datum, *, ix_uni='s%global%default_universe', verbose=False, as_dict=True, raises=True):
     """
     
     Information on a d2_datum.
@@ -664,7 +665,7 @@ def data_d2(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=Tr
     Parameters
     ----------
     d2_datum
-    ix_uni : default=1
+    ix_uni : default=s%global%default_universe
     
     Returns
     -------
@@ -691,7 +692,7 @@ def data_d2(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=Tr
     return __execute(tao, cmd, as_dict, raises, method_name='data_d2', cmd_type='string_list')
 
 
-def data_d_array(tao, d1_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=True):
+def data_d_array(tao, d1_datum, *, ix_uni='s%global%default_universe', verbose=False, as_dict=True, raises=True):
     """
     
     List of datums for a given data_d1.
@@ -699,7 +700,7 @@ def data_d_array(tao, d1_datum, *, ix_uni='1', verbose=False, as_dict=True, rais
     Parameters
     ----------
     d1_datum
-    ix_uni : default=1
+    ix_uni : default=s%global%default_universe
     
     Returns
     -------
@@ -728,7 +729,7 @@ def data_d_array(tao, d1_datum, *, ix_uni='1', verbose=False, as_dict=True, rais
     return __execute(tao, cmd, as_dict, raises, method_name='data_d_array', cmd_type='string_list')
 
 
-def data_d1_array(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, raises=True):
+def data_d1_array(tao, d2_datum, *, ix_uni='s%global%default_universe', verbose=False, as_dict=True, raises=True):
     """
     
     List of d1 arrays for a given data_d2.
@@ -736,7 +737,7 @@ def data_d1_array(tao, d2_datum, *, ix_uni='1', verbose=False, as_dict=True, rai
     Parameters
     ----------
     d2_datum
-    ix_uni : default=1
+    ix_uni : default=s%global%default_universe
     
     Returns
     -------
@@ -2276,14 +2277,14 @@ def lat_calc_done(tao, branch_name, *, verbose=False, as_dict=True, raises=True)
     return __execute(tao, cmd, as_dict, raises, method_name='lat_calc_done', cmd_type='string_list')
 
 
-def lat_ele_list(tao, *, branch_name='0', verbose=False, as_dict=True, raises=True):
+def lat_ele_list(tao, *, branch_name='s%global%default_branch', verbose=False, as_dict=True, raises=True):
     """
     
     Lattice element list.
     
     Parameters
     ----------
-    branch_name : default=0
+    branch_name : default=s%global%default_branch
     
     Returns
     -------
@@ -2309,14 +2310,14 @@ def lat_ele_list(tao, *, branch_name='0', verbose=False, as_dict=True, raises=Tr
     return __execute(tao, cmd, as_dict, raises, method_name='lat_ele_list', cmd_type='string_list')
 
 
-def lat_general(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=True):
+def lat_branch_list(tao, *, ix_universe='s%global%default_universe', verbose=False, as_dict=True, raises=True):
     """
     
-    Lattice general
+    Lattice branch list
     
     Parameters
     ----------
-    ix_universe : default=1
+    ix_universe : default=s%global%default_universe
     
     Returns
     -------
@@ -2325,7 +2326,7 @@ def lat_general(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=Tru
     Notes
     -----
     Command syntax:
-      python lat_general {ix_universe}
+      python lat_branch_list {ix_universe}
     
     Output syntax:
       branch_index;branch_name;n_ele_track;n_ele_max
@@ -2338,12 +2339,12 @@ def lat_general(tao, *, ix_universe='1', verbose=False, as_dict=True, raises=Tru
        ix_universe: 1
     
     """
-    cmd = f'python lat_general {ix_universe}'
+    cmd = f'python lat_branch_list {ix_universe}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='lat_general', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='lat_branch_list', cmd_type='string_list')
 
 
-def lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', flags='-array_out -track_only', verbose=False, as_dict=True, raises=True):
+def lat_list(tao, elements, who, *, ix_uni='s%global%default_universe', ix_branch='s%global%default_branch', which='model', flags='-array_out -track_only', verbose=False, as_dict=True, raises=True):
     """
     
     List of parameters at ends of lattice elements
@@ -2352,8 +2353,8 @@ def lat_list(tao, elements, who, *, ix_uni='1', ix_branch='0', which='model', fl
     ----------
     elements
     who
-    ix_uni : default=1
-    ix_branch : default=0
+    ix_uni : default=s%global%default_universe
+    ix_branch : default=s%global%default_branch
     which : default=model
     flags : optional, default=-array_out -track_only
     
@@ -2539,7 +2540,7 @@ def merit(tao, *, verbose=False, as_dict=True, raises=True):
     return __execute(tao, cmd, as_dict, raises, method_name='merit', cmd_type='string_list')
 
 
-def orbit_at_s(tao, s, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True, raises=True):
+def orbit_at_s(tao, s, *, ix_uni='s%global%default_universe', ix_branch='s%global%default_branch', which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Twiss at given s position.
@@ -2547,8 +2548,8 @@ def orbit_at_s(tao, s, *, ix_uni='1', ix_branch='0', which='model', verbose=Fals
     Parameters
     ----------
     s
-    ix_uni : default=1
-    ix_branch : default=0
+    ix_uni : default=s%global%default_universe
+    ix_branch : default=s%global%default_branch
     which : default=model
     
     Returns
@@ -3089,6 +3090,38 @@ def ptc_com(tao, *, verbose=False, as_dict=True, raises=True):
     return __execute(tao, cmd, as_dict, raises, method_name='ptc_com', cmd_type='string_list')
 
 
+def ring_general(tao, *, ix_uni='s%global%default_universe', ix_branch='s%global%default_branch', which='model', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Lattice branch with closed geometry info (emittances, etc.)
+    
+    Parameters
+    ----------
+    ix_uni : default=s%global%default_universe
+    ix_branch : default=s%global%default_branch
+    which : default=model
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python ring_general {ix_uni}@{ix_branch}|{which}
+    where {which} is one of:
+      model
+      base
+      design
+    Example:
+      python ring_general 1@0|model
+    
+    """
+    cmd = f'python ring_general {ix_uni}@{ix_branch}|{which}'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='ring_general', cmd_type='string_list')
+
+
 def shape_list(tao, who, *, verbose=False, as_dict=True, raises=True):
     """
     
@@ -3443,15 +3476,15 @@ def species_to_str(tao, species_int, *, verbose=False, as_dict=True, raises=True
     return __execute(tao, cmd, as_dict, raises, method_name='species_to_str', cmd_type='string_list')
 
 
-def spin_polarization(tao, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True, raises=True):
+def spin_polarization(tao, *, ix_uni='s%global%default_universe', ix_branch='s%global%default_branch', which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Spin polarization information
     
     Parameters
     ----------
-    ix_uni : default=1
-    ix_branch : default=0
+    ix_uni : default=s%global%default_universe
+    ix_branch : default=s%global%default_branch
     which : default=model
     
     Returns
@@ -3467,7 +3500,7 @@ def spin_polarization(tao, *, ix_uni='1', ix_branch='0', which='model', verbose=
       base
       design
     Example:
-      python spin 1@0|model
+      python spin_polarization 1@0|model
     
     Note: This command is under development. If you want to use please contact David Sagan.
     
@@ -3486,15 +3519,15 @@ def spin_polarization(tao, *, ix_uni='1', ix_branch='0', which='model', verbose=
     return __execute(tao, cmd, as_dict, raises, method_name='spin_polarization', cmd_type='string_list')
 
 
-def spin_resonance(tao, *, ix_uni='1', ix_branch='0', which='model', ref_ele='0', verbose=False, as_dict=True, raises=True):
+def spin_resonance(tao, *, ix_uni='s%global%default_universe', ix_branch='s%global%default_branch', which='model', ref_ele='0', verbose=False, as_dict=True, raises=True):
     """
     
     Spin resonance information
     
     Parameters
     ----------
-    ix_uni : default=1
-    ix_branch : default=0
+    ix_uni : default=s%global%default_universe
+    ix_branch : default=s%global%default_branch
     which : default=model
     ref_ele : default=0
         Reference element to calculate at.
@@ -3535,7 +3568,7 @@ def super_universe(tao, *, verbose=False, as_dict=True, raises=True):
     return __execute(tao, cmd, as_dict, raises, method_name='super_universe', cmd_type='string_list')
 
 
-def twiss_at_s(tao, s, *, ix_uni='1', ix_branch='0', which='model', verbose=False, as_dict=True, raises=True):
+def twiss_at_s(tao, s, *, ix_uni='s%global%default_universe', ix_branch='s%global%default_branch', which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Twiss at given s position
@@ -3543,8 +3576,8 @@ def twiss_at_s(tao, s, *, ix_uni='1', ix_branch='0', which='model', verbose=Fals
     Parameters
     ----------
     s
-    ix_uni : default=1
-    ix_branch : default=0
+    ix_uni : default=s%global%default_universe
+    ix_branch : default=s%global%default_branch
     which : default=model
     
     Returns

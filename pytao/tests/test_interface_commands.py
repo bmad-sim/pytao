@@ -358,10 +358,10 @@ def test_lat_ele_list_1():
     ret = interface_commands.lat_ele_list(tao, branch_name='1@0')
             
         
-def test_lat_general_1():
+def test_lat_branch_list_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
-    ret = interface_commands.lat_general(tao, ix_universe='1')
+    ret = interface_commands.lat_branch_list(tao, ix_universe='1')
             
         
 def test_lat_list_1():
