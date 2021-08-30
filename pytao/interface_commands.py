@@ -161,15 +161,13 @@ def branch1(tao, ix_universe, ix_branch, *, verbose=False, as_dict=True, raises=
     return __execute(tao, cmd, as_dict, raises, method_name='branch1', cmd_type='string_list')
 
 
-def bunch_params(tao, ele_id, *, ix_universe='', which='model', verbose=False, as_dict=True, raises=True):
+def bunch_params(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
     Bunch parameters at the exit end of a given lattice element.
     
     Parameters
     ----------
-    ix_universe : optional
-        Universe index. Defaults to s%global%default_universe.
     ele_id
         Element name or index
     which : default=model
@@ -182,7 +180,7 @@ def bunch_params(tao, ele_id, *, ix_universe='', which='model', verbose=False, a
     Notes
     -----
     Command syntax:
-    python bunch_params {ix_universe}@{ele_id}|{which}
+    python bunch_params {ele_id}|{which}
     
     Examples
     --------
@@ -193,7 +191,7 @@ def bunch_params(tao, ele_id, *, ix_universe='', which='model', verbose=False, a
        which: model
     
     """
-    cmd = f'python bunch_params {ix_universe}@{ele_id}|{which}'
+    cmd = f'python bunch_params {ele_id}|{which}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, raises, method_name='bunch_params', cmd_type='string_list')
 
