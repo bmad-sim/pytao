@@ -34,6 +34,7 @@ code if needed is given on the `Bmad web site <https://www.classe.cornell.edu/bm
    examples/lattice
    examples/bunch
    examples/data
+   examples/fodo
 
 .. toctree::
    :maxdepth: 1
