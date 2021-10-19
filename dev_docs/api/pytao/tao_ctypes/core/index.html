@@ -1,79 +1,38 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>pytao.tao_ctypes.core &mdash; PyTao 0.1.5 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>pytao.tao_ctypes.core &mdash; PyTao 0.1.5+3.gfff2a78 documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    
-    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
-
-    
+    <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
     <link rel="next" title="pytao.tao_ctypes.evaluate" href="../evaluate/index.html" />
     <link rel="prev" title="pytao.tao_ctypes" href="../index.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../../../../index.html" class="icon icon-home"> PyTao
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                0.1.5
+                0.1.5+3.gfff2a78
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -81,18 +40,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">User Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../user_docs/index.html">Installation</a></li>
@@ -108,6 +56,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/basic.html#ParticleGroup-from-openPMD-beamphysics">ParticleGroup from openPMD-beamphysics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/basic.html#Error-handling-and-Debugging">Error handling and Debugging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/advanced.html">PyTao advanced usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/fodo.html">FODO optics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/fodo.html#Asymmetric-FODO">Asymmetric FODO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/fodo.html#Plots">Plots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/fodo.html#Optimize-for-some-special-beta-functions">Optimize for some special beta functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/fodo.html#Alternative-method:-alias">Alternative method: alias</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/fodo.html#Beam-tracking">Beam tracking</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Documentation</span></p>
 <ul class="current">
@@ -137,77 +91,33 @@
 <li class="toctree-l1"><a class="reference external" href="https://www.classe.cornell.edu/bmad/tao.html">Tao website</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../../../index.html">PyTao</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../../../index.html">API Reference</a> &raquo;</li>
-        
           <li><a href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao</span></code></a> &raquo;</li>
-        
           <li><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes</span></code></a> &raquo;</li>
-        
       <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes.core</span></code></li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../../../../_sources/dev_docs/api/pytao/tao_ctypes/core/index.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   
 <style>
 /* CSS overrides for sphinx_rtd_theme */
@@ -233,12 +143,12 @@
 }
 </style>
 <div class="section" id="module-pytao.tao_ctypes.core">
-<span id="pytao-tao-ctypes-core"></span><h1><a class="reference internal" href="#module-pytao.tao_ctypes.core" title="pytao.tao_ctypes.core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes.core</span></code></a><a class="headerlink" href="#module-pytao.tao_ctypes.core" title="Permalink to this headline">¶</a></h1>
+<span id="pytao-tao-ctypes-core"></span><h1><a class="reference internal" href="#module-pytao.tao_ctypes.core" title="pytao.tao_ctypes.core"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_ctypes.core</span></code></a><a class="headerlink" href="#module-pytao.tao_ctypes.core" title="Permalink to this headline"></a></h1>
 <div class="section" id="module-contents">
-<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.core.Tao">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.core.</span></span><span class="sig-name descname"><span class="pre">Tao</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">so_lib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.Tao" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.core.</span></span><span class="sig-name descname"><span class="pre">Tao</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">so_lib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.Tao" title="Permalink to this definition"></a></dt>
 <dd><p>Class to run and interact with Tao. Requires libtao shared object.</p>
 <p>Setup:</p>
 <p>import os
@@ -250,25 +160,25 @@ tao = tao_ctypes.Tao()
 tao.init(“command line args here…”)</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.core.Tao.get_output">
-<span class="sig-name descname"><span class="pre">get_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.Tao.get_output" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.Tao.get_output" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a list of output strings.
 If reset, the internal Tao buffers will be reset.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.core.Tao.reset_output">
-<span class="sig-name descname"><span class="pre">reset_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.Tao.reset_output" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">reset_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.Tao.reset_output" title="Permalink to this definition"></a></dt>
 <dd><p>Resets all output buffers</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.core.Tao.init">
-<span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.Tao.init" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.Tao.init" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.core.Tao.cmd">
-<span class="sig-name descname"><span class="pre">cmd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.Tao.cmd" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">cmd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.Tao.cmd" title="Permalink to this definition"></a></dt>
 <dd><p>Runs a command, and returns the text output</p>
 <p>cmd: command string
 raises: will raise an exception of [ERROR or [FATAL is detected in the output</p>
@@ -277,7 +187,7 @@ raises: will raise an exception of [ERROR or [FATAL is detected in the output</p
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.core.Tao.cmds">
-<span class="sig-name descname"><span class="pre">cmds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppress_lattice_calc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppress_plotting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.Tao.cmds" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">cmds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppress_lattice_calc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppress_plotting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.Tao.cmds" title="Permalink to this definition"></a></dt>
 <dd><p>Runs a list of commands</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -303,17 +213,17 @@ Default: True</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.core.Tao.cmd_real">
-<span class="sig-name descname"><span class="pre">cmd_real</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.Tao.cmd_real" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">cmd_real</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.Tao.cmd_real" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.core.Tao.cmd_integer">
-<span class="sig-name descname"><span class="pre">cmd_integer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.Tao.cmd_integer" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">cmd_integer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.Tao.cmd_integer" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.core.Tao.register_cell_magic">
-<span class="sig-name descname"><span class="pre">register_cell_magic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.Tao.register_cell_magic" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">register_cell_magic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.Tao.register_cell_magic" title="Permalink to this definition"></a></dt>
 <dd><p>Registers a cell magic in Jupyter notebooks
 Invoke by
 %%tao
@@ -324,53 +234,53 @@ sho lat</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.core.find_libtao">
-<span class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.core.</span></span><span class="sig-name descname"><span class="pre">find_libtao</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.find_libtao" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.core.</span></span><span class="sig-name descname"><span class="pre">find_libtao</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.find_libtao" title="Permalink to this definition"></a></dt>
 <dd><p>Searches base_for for an appropriate libtao shared library.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.core.auto_discovery_libtao">
-<span class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.core.</span></span><span class="sig-name descname"><span class="pre">auto_discovery_libtao</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.auto_discovery_libtao" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.core.</span></span><span class="sig-name descname"><span class="pre">auto_discovery_libtao</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.auto_discovery_libtao" title="Permalink to this definition"></a></dt>
 <dd><p>Use system loader to try and find libtao.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.core.TaoModel">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.core.</span></span><span class="sig-name descname"><span class="pre">TaoModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tao.init'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ploton</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_tempdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">so_lib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_configure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.TaoModel" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.core.</span></span><span class="sig-name descname"><span class="pre">TaoModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tao.init'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ploton</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_tempdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">so_lib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_configure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.TaoModel" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pytao.tao_ctypes.core.Tao" title="pytao.tao_ctypes.core.Tao"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Tao</span></code></a></p>
 <p>Base class for setting up a Tao model in a directory. Builds upon the Tao class.</p>
 <p>If use_tempdir==True, then the input_file and its directory will be copied to a temporary directory.
 If workdir is given, then this temporary directory will be placed in workdir.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.core.TaoModel.configure">
-<span class="sig-name descname"><span class="pre">configure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.TaoModel.configure" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">configure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.TaoModel.configure" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.core.TaoModel.init_line">
-<span class="sig-name descname"><span class="pre">init_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.TaoModel.init_line" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">init_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.TaoModel.init_line" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.core.TaoModel.reinit">
-<span class="sig-name descname"><span class="pre">reinit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.TaoModel.reinit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">reinit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.TaoModel.reinit" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.core.TaoModel.vprint">
-<span class="sig-name descname"><span class="pre">vprint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.TaoModel.vprint" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">vprint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.TaoModel.vprint" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.core.TaoModel.globals">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">globals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.TaoModel.globals" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">globals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.TaoModel.globals" title="Permalink to this definition"></a></dt>
 <dd><p>Returns dict of tao parameters.
 Note that the name of this function cannot be named ‘global’</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.core.TaoModel.evaluate">
-<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.TaoModel.evaluate" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.TaoModel.evaluate" title="Permalink to this definition"></a></dt>
 <dd><p class="rubric">Example</p>
 <p>.evaluate(‘lat::orbit.x[beginning:end]’)</p>
 <p>Returns an np.array of floats</p>
@@ -380,7 +290,7 @@ Note that the name of this function cannot be named ‘global’</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.core.tao_object_evaluate">
-<span class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.core.</span></span><span class="sig-name descname"><span class="pre">tao_object_evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao_object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.tao_object_evaluate" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.core.</span></span><span class="sig-name descname"><span class="pre">tao_object_evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao_object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.tao_object_evaluate" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluates an expression and returns</p>
 <dl class="simple">
 <dt>Example expressions:</dt><dd><p>beam::norm_emit.x[end]        # returns a single float
@@ -391,7 +301,7 @@ lat::orbit.x[beginning:end]   # returns an np array of floats</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.core.form_set_command">
-<span class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.core.</span></span><span class="sig-name descname"><span class="pre">form_set_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">':'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.form_set_command" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.core.</span></span><span class="sig-name descname"><span class="pre">form_set_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">':'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.form_set_command" title="Permalink to this definition"></a></dt>
 <dd><p>Forms a set command string that is separated by delim.</p>
 <p>Splits into three parts:
 command:what:attribute</p>
@@ -403,14 +313,14 @@ command:what:attribute</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.core.apply_settings">
-<span class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.core.</span></span><span class="sig-name descname"><span class="pre">apply_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao_object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.apply_settings" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.core.</span></span><span class="sig-name descname"><span class="pre">apply_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao_object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.apply_settings" title="Permalink to this definition"></a></dt>
 <dd><p>Applies multiple settings to a tao object.
 Checks for lattice_calc_on and plot_on, and temporarily disables these for speed.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tao_ctypes.core.run_tao">
-<span class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.core.</span></span><span class="sig-name descname"><span class="pre">run_tao</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_commands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['set</span> <span class="pre">global</span> <span class="pre">track_type=single']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tao.init'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ploton</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">so_lib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.run_tao" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tao_ctypes.core.</span></span><span class="sig-name descname"><span class="pre">run_tao</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_commands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['set</span> <span class="pre">global</span> <span class="pre">track_type=single']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tao.init'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ploton</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">so_lib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_ctypes.core.run_tao" title="Permalink to this definition"></a></dt>
 <dd><p>Creates an LCLSTaoModel object, applies settings, and runs the beam.</p>
 </dd></dl>
 
@@ -419,50 +329,33 @@ Checks for lattice_calc_on and plot_on, and temporarily disables these for speed
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../evaluate/index.html" class="btn btn-neutral float-right" title="pytao.tao_ctypes.evaluate" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../index.html" class="btn btn-neutral float-left" title="pytao.tao_ctypes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../evaluate/index.html" class="btn btn-neutral float-right" title="pytao.tao_ctypes.evaluate" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, David Sagan.
-
-    </p>
+    <p>&#169; Copyright 2021, David Sagan.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

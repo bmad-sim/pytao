@@ -1,37 +1,16 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>PyTao basic usage &mdash; PyTao 0.1.5 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>PyTao basic usage &mdash; PyTao 0.1.5+3.gfff2a78 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
@@ -39,43 +18,23 @@
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="PyTao advanced usage" href="advanced.html" />
     <link rel="prev" title="GUI Development" href="../user_docs/gui/gui-development.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> PyTao
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                0.1.5
+                0.1.5+3.gfff2a78
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -83,18 +42,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">User Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../user_docs/index.html">Installation</a></li>
@@ -122,6 +70,12 @@
 <li class="toctree-l1"><a class="reference internal" href="#ParticleGroup-from-openPMD-beamphysics">ParticleGroup from openPMD-beamphysics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#Error-handling-and-Debugging">Error handling and Debugging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advanced.html">PyTao advanced usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fodo.html">FODO optics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fodo.html#Asymmetric-FODO">Asymmetric FODO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fodo.html#Plots">Plots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fodo.html#Optimize-for-some-special-beta-functions">Optimize for some special beta functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fodo.html#Alternative-method:-alias">Alternative method: alias</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fodo.html#Beam-tracking">Beam tracking</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Documentation</span></p>
 <ul>
@@ -136,71 +90,30 @@
 <li class="toctree-l1"><a class="reference external" href="https://www.classe.cornell.edu/bmad/tao.html">Tao website</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">PyTao</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>PyTao basic usage</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/examples/basic.nblink.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   
 <style>
 /* CSS for nbsphinx extension */
@@ -472,7 +385,7 @@ div.rendered_html tbody tr:hover {
 }
 </style>
 <div class="section" id="PyTao-basic-usage">
-<h1>PyTao basic usage<a class="headerlink" href="#PyTao-basic-usage" title="Permalink to this headline">¶</a></h1>
+<h1>PyTao basic usage<a class="headerlink" href="#PyTao-basic-usage" title="Permalink to this headline"></a></h1>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
@@ -503,7 +416,7 @@ Populating the interactive namespace from numpy and matplotlib
 </pre></div></div>
 </div>
 <div class="section" id="Inititialize-Tao">
-<h2>Inititialize Tao<a class="headerlink" href="#Inititialize-Tao" title="Permalink to this headline">¶</a></h2>
+<h2>Inititialize Tao<a class="headerlink" href="#Inititialize-Tao" title="Permalink to this headline"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">Tao</span></code> is the basic object. Anything used to initialize Tao on the command line can be used to initialize a Tao object</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
@@ -525,7 +438,7 @@ Populating the interactive namespace from numpy and matplotlib
 </div>
 </div>
 <div class="section" id="Send-a-command">
-<h2>Send a command<a class="headerlink" href="#Send-a-command" title="Permalink to this headline">¶</a></h2>
+<h2>Send a command<a class="headerlink" href="#Send-a-command" title="Permalink to this headline"></a></h2>
 <p>Anything that you would normally type at a Tao&gt; prompt can be sent as a string. The return is a list of output strings.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
@@ -585,7 +498,7 @@ tao.cmds(
 </div>
 </div>
 <div class="section" id="Jupyter-magic-%%tao">
-<h2>Jupyter magic %%tao<a class="headerlink" href="#Jupyter-magic-%%tao" title="Permalink to this headline">¶</a></h2>
+<h2>Jupyter magic %%tao<a class="headerlink" href="#Jupyter-magic-%%tao" title="Permalink to this headline"></a></h2>
 <p>This is an alternative way to send commands to Tao directly in the jupyter notebook, using the %%tao magic. Multiple lines can be executed.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
@@ -679,7 +592,7 @@ Tao&gt;
 </div>
 </div>
 <div class="section" id="Interface-commands">
-<h2>Interface commands<a class="headerlink" href="#Interface-commands" title="Permalink to this headline">¶</a></h2>
+<h2>Interface commands<a class="headerlink" href="#Interface-commands" title="Permalink to this headline"></a></h2>
 <p>Output above from the <code class="docutils literal notranslate"><span class="pre">show</span></code> command is designed to be human-readable. In general you should <strong>not</strong> try to parse these strings for data. For data, Tao has a special set of commands to send back data suitable for parsing in Python (or other software).</p>
 <p>Below are the raw commands.</p>
 <div class="nbinput docutils container">
@@ -856,7 +769,7 @@ array([ 1.00000000e-06,  5.45328427e-03,  8.07343315e-03,  1.66177053e-02,
 </div>
 </div>
 <div class="section" id="Tao-method-commands">
-<h1>Tao method commands<a class="headerlink" href="#Tao-method-commands" title="Permalink to this headline">¶</a></h1>
+<h1>Tao method commands<a class="headerlink" href="#Tao-method-commands" title="Permalink to this headline"></a></h1>
 <p>For convenience, all of these commands are available as methods of the Tao class, and automatically parse the output.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
@@ -1039,7 +952,7 @@ array([ 2.81638383e-03, -1.06486491e-03,  1.27317734e-04,  2.78171648e-04,
 </pre></div></div>
 </div>
 <div class="section" id="lat_list">
-<h2>lat_list<a class="headerlink" href="#lat_list" title="Permalink to this headline">¶</a></h2>
+<h2>lat_list<a class="headerlink" href="#lat_list" title="Permalink to this headline"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">lat_list</span></code> can be used to efficiently extract array data</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
@@ -1291,7 +1204,7 @@ plt.plot(tao.lat_list(&#39;*&#39;, &#39;ele.s&#39;, flags=&#39;-array_out -index
 </div>
 </div>
 <div class="section" id="All-method-commands">
-<h1>All method commands<a class="headerlink" href="#All-method-commands" title="Permalink to this headline">¶</a></h1>
+<h1>All method commands<a class="headerlink" href="#All-method-commands" title="Permalink to this headline"></a></h1>
 <p>There are many method commands. Please explore the documentation to find the ones that will best suit your needs.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
@@ -1333,7 +1246,7 @@ len(all_cmds)
 </div>
 </div>
 <div class="section" id="Other-Tao-instances">
-<h1>Other Tao instances<a class="headerlink" href="#Other-Tao-instances" title="Permalink to this headline">¶</a></h1>
+<h1>Other Tao instances<a class="headerlink" href="#Other-Tao-instances" title="Permalink to this headline"></a></h1>
 <p>Unfortunately there can only be one Tao instance per process, because the internal structures are held in memory and accessed via ctypes. So this will replace the</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
@@ -1373,7 +1286,7 @@ tao.lat_list(&#39;*&#39;, &#39;ele.name&#39;)
 </pre></div></div>
 </div>
 <div class="section" id="Bunch-data">
-<h2>Bunch data<a class="headerlink" href="#Bunch-data" title="Permalink to this headline">¶</a></h2>
+<h2>Bunch data<a class="headerlink" href="#Bunch-data" title="Permalink to this headline"></a></h2>
 <p>This example has bunch data. There are three methods:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">tao.bunch_params</span></code> to get a dict of statistical data</p></li>
@@ -1569,7 +1482,7 @@ dtype(&#39;&lt;i4&#39;)
 </div>
 </div>
 <div class="section" id="ParticleGroup-from-openPMD-beamphysics">
-<h1>ParticleGroup from openPMD-beamphysics<a class="headerlink" href="#ParticleGroup-from-openPMD-beamphysics" title="Permalink to this headline">¶</a></h1>
+<h1>ParticleGroup from openPMD-beamphysics<a class="headerlink" href="#ParticleGroup-from-openPMD-beamphysics" title="Permalink to this headline"></a></h1>
 <p>openPMD-beamphysics is an external package that can be useful for further bunch analysis, plotting, and conversion.</p>
 <p><a class="reference external" href="https://github.com/ChristopherMayes/openPMD-beamphysics">https://github.com/ChristopherMayes/openPMD-beamphysics</a></p>
 <p>Here is example usage to extract bunch data and instantiate as a ParticleGroup object.</p>
@@ -1669,7 +1582,7 @@ P2.plot(&#39;x&#39;, &#39;px&#39;)
 </div>
 </div>
 <div class="section" id="Error-handling-and-Debugging">
-<h1>Error handling and Debugging<a class="headerlink" href="#Error-handling-and-Debugging" title="Permalink to this headline">¶</a></h1>
+<h1>Error handling and Debugging<a class="headerlink" href="#Error-handling-and-Debugging" title="Permalink to this headline"></a></h1>
 <p>All methods have a <code class="docutils literal notranslate"><span class="pre">raises=True</span></code> option. This will raise a RuntimeError if any errors are seen from Tao.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
@@ -1766,50 +1679,33 @@ tao.cmd(&#39;safaf&#39;, raises=False)
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="advanced.html" class="btn btn-neutral float-right" title="PyTao advanced usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../user_docs/gui/gui-development.html" class="btn btn-neutral float-left" title="GUI Development" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="advanced.html" class="btn btn-neutral float-right" title="PyTao advanced usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, David Sagan.
-
-    </p>
+    <p>&#169; Copyright 2021, David Sagan.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

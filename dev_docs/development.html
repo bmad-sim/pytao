@@ -1,78 +1,37 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Development Guidelines &mdash; PyTao 0.1.5 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Development Guidelines &mdash; PyTao 0.1.5+3.gfff2a78 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="prev" title="Documentation" href="documentation.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> PyTao
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                0.1.5
+                0.1.5+3.gfff2a78
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -80,18 +39,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">User Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../user_docs/index.html">Installation</a></li>
@@ -107,6 +55,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../examples/basic.html#ParticleGroup-from-openPMD-beamphysics">ParticleGroup from openPMD-beamphysics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/basic.html#Error-handling-and-Debugging">Error handling and Debugging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/advanced.html">PyTao advanced usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/fodo.html">FODO optics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/fodo.html#Asymmetric-FODO">Asymmetric FODO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/fodo.html#Plots">Plots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/fodo.html#Optimize-for-some-special-beta-functions">Optimize for some special beta functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/fodo.html#Alternative-method:-alias">Alternative method: alias</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/fodo.html#Beam-tracking">Beam tracking</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Documentation</span></p>
 <ul class="current">
@@ -127,71 +81,30 @@
 <li class="toctree-l1"><a class="reference external" href="https://www.classe.cornell.edu/bmad/tao.html">Tao website</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">PyTao</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Development Guidelines</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/dev_docs/development.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   
 <style>
 /* CSS overrides for sphinx_rtd_theme */
@@ -217,12 +130,12 @@
 }
 </style>
 <div class="section" id="development-guidelines">
-<h1>Development Guidelines<a class="headerlink" href="#development-guidelines" title="Permalink to this headline">¶</a></h1>
+<h1>Development Guidelines<a class="headerlink" href="#development-guidelines" title="Permalink to this headline"></a></h1>
 <p>It is recommended that PyTao is updated and maintained in the
 following way. This workflow was not invented by this project,
 there are many helpful tutorials online like <a class="reference external" href="https://guides.github.com/introduction/flow">this</a> if you want more information.</p>
 <div class="section" id="creating-a-local-checkout">
-<h2>Creating a Local Checkout<a class="headerlink" href="#creating-a-local-checkout" title="Permalink to this headline">¶</a></h2>
+<h2>Creating a Local Checkout<a class="headerlink" href="#creating-a-local-checkout" title="Permalink to this headline"></a></h2>
 <p>If you want to make changes to a repository the first step is to create your
 own fork. This allows you to create feature branches without cluttering the
 main repository. It also assures that the main repository is only added to by
@@ -243,7 +156,7 @@ nothing to commit, working tree clean
 </div>
 </div>
 <div class="section" id="commit-guidelines">
-<h2>Commit Guidelines<a class="headerlink" href="#commit-guidelines" title="Permalink to this headline">¶</a></h2>
+<h2>Commit Guidelines<a class="headerlink" href="#commit-guidelines" title="Permalink to this headline"></a></h2>
 <p>Now you are ready to start working! Make changes to files and commit them to
 your new branch. We like to preface our commit messages with a descriptor code.
 This makes it easier for someone reviewing your commit history to see what you
@@ -307,7 +220,7 @@ tool for exploration of a codebase within an IPython terminal. Docstrings
 should follow the form described in the <a class="reference external" href="http://www.sphinx-doc.org/en/stable/ext/example_numpy.html">NumPy documentation</a></p>
 </div>
 <div class="section" id="merging-changes">
-<h2>Merging Changes<a class="headerlink" href="#merging-changes" title="Permalink to this headline">¶</a></h2>
+<h2>Merging Changes<a class="headerlink" href="#merging-changes" title="Permalink to this headline"></a></h2>
 <p>Once you are happy with your code, <code class="docutils literal notranslate"><span class="pre">push</span></code> it back to your fork on GitHub.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ git push origin my-feature
 </pre></div>
@@ -326,7 +239,7 @@ they:</p>
 Pull Request can be merged.</p>
 </div>
 <div class="section" id="syncing-your-local-checkout">
-<h2>Syncing your Local Checkout<a class="headerlink" href="#syncing-your-local-checkout" title="Permalink to this headline">¶</a></h2>
+<h2>Syncing your Local Checkout<a class="headerlink" href="#syncing-your-local-checkout" title="Permalink to this headline"></a></h2>
 <p>Inevitably, changes to the upstream repository will occur and you will need to
 update your local checkout to reflect those. The first step is to make your
 local checkout aware of the upstream repository. If this is done correctly, you
@@ -376,49 +289,32 @@ create duplicates of all the commits.</p>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="documentation.html" class="btn btn-neutral float-left" title="Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, David Sagan.
-
-    </p>
+    <p>&#169; Copyright 2021, David Sagan.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

@@ -1,79 +1,38 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>pytao.gui.tao_misc_windows &mdash; PyTao 0.1.5 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>pytao.gui.tao_misc_windows &mdash; PyTao 0.1.5+3.gfff2a78 documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    
-    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
-
-    
+    <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
     <link rel="next" title="pytao.gui.tao_mpl_toolbar" href="../tao_mpl_toolbar/index.html" />
     <link rel="prev" title="pytao.gui.tao_lat_windows" href="../tao_lat_windows/index.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../../../../index.html" class="icon icon-home"> PyTao
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                0.1.5
+                0.1.5+3.gfff2a78
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -81,18 +40,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">User Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../user_docs/index.html">Installation</a></li>
@@ -108,6 +56,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/basic.html#ParticleGroup-from-openPMD-beamphysics">ParticleGroup from openPMD-beamphysics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/basic.html#Error-handling-and-Debugging">Error handling and Debugging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/advanced.html">PyTao advanced usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/fodo.html">FODO optics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/fodo.html#Asymmetric-FODO">Asymmetric FODO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/fodo.html#Plots">Plots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/fodo.html#Optimize-for-some-special-beta-functions">Optimize for some special beta functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/fodo.html#Alternative-method:-alias">Alternative method: alias</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/fodo.html#Beam-tracking">Beam tracking</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Documentation</span></p>
 <ul class="current">
@@ -137,77 +91,33 @@
 <li class="toctree-l1"><a class="reference external" href="https://www.classe.cornell.edu/bmad/tao.html">Tao website</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../../../index.html">PyTao</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../../../index.html">API Reference</a> &raquo;</li>
-        
           <li><a href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao</span></code></a> &raquo;</li>
-        
           <li><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.gui</span></code></a> &raquo;</li>
-        
       <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.gui.tao_misc_windows</span></code></li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../../../../_sources/dev_docs/api/pytao/gui/tao_misc_windows/index.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   
 <style>
 /* CSS overrides for sphinx_rtd_theme */
@@ -233,37 +143,37 @@
 }
 </style>
 <div class="section" id="module-pytao.gui.tao_misc_windows">
-<span id="pytao-gui-tao-misc-windows"></span><h1><a class="reference internal" href="#module-pytao.gui.tao_misc_windows" title="pytao.gui.tao_misc_windows"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.gui.tao_misc_windows</span></code></a><a class="headerlink" href="#module-pytao.gui.tao_misc_windows" title="Permalink to this headline">¶</a></h1>
+<span id="pytao-gui-tao-misc-windows"></span><h1><a class="reference internal" href="#module-pytao.gui.tao_misc_windows" title="pytao.gui.tao_misc_windows"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.gui.tao_misc_windows</span></code></a><a class="headerlink" href="#module-pytao.gui.tao_misc_windows" title="Permalink to this headline"></a></h1>
 <p>Provides miscellaneous windows needed in the GUI for tao</p>
 <div class="section" id="module-contents">
-<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="pytao.gui.tao_misc_windows.tao_global_vars_window">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pytao.gui.tao_misc_windows.</span></span><span class="sig-name descname"><span class="pre">tao_global_vars_window</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_misc_windows.tao_global_vars_window" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pytao.gui.tao_misc_windows.</span></span><span class="sig-name descname"><span class="pre">tao_global_vars_window</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_misc_windows.tao_global_vars_window" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="../tao_base_windows/index.html#pytao.gui.tao_base_windows.tao_parameter_window" title="pytao.gui.tao_base_windows.tao_parameter_window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pytao.gui.tao_base_windows.tao_parameter_window</span></code></a></p>
 <p>Generic window for displaying and editing a list of parameters</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_misc_windows.tao_global_vars_window.set_callback">
-<span class="sig-name descname"><span class="pre">set_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_misc_windows.tao_global_vars_window.set_callback" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_misc_windows.tao_global_vars_window.set_callback" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pytao.gui.tao_misc_windows.tao_bmad_com_window">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pytao.gui.tao_misc_windows.</span></span><span class="sig-name descname"><span class="pre">tao_bmad_com_window</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_misc_windows.tao_bmad_com_window" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pytao.gui.tao_misc_windows.</span></span><span class="sig-name descname"><span class="pre">tao_bmad_com_window</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_misc_windows.tao_bmad_com_window" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="../tao_base_windows/index.html#pytao.gui.tao_base_windows.tao_parameter_window" title="pytao.gui.tao_base_windows.tao_parameter_window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pytao.gui.tao_base_windows.tao_parameter_window</span></code></a></p>
 <p>Generic window for displaying and editing a list of parameters</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_misc_windows.tao_bmad_com_window.set_callback">
-<span class="sig-name descname"><span class="pre">set_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_misc_windows.tao_bmad_com_window.set_callback" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_misc_windows.tao_bmad_com_window.set_callback" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pytao.gui.tao_misc_windows.tao_history_window">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pytao.gui.tao_misc_windows.</span></span><span class="sig-name descname"><span class="pre">tao_history_window</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_misc_windows.tao_history_window" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pytao.gui.tao_misc_windows.</span></span><span class="sig-name descname"><span class="pre">tao_history_window</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_misc_windows.tao_history_window" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="../tao_base_windows/index.html#pytao.gui.tao_base_windows.tao_list_window" title="pytao.gui.tao_base_windows.tao_list_window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pytao.gui.tao_base_windows.tao_list_window</span></code></a></p>
 <p>Skeleton class with several commonly used features.
 Comes with a scrollable region and supports adding other widgets
@@ -271,12 +181,12 @@ Subclasses set tao_id before running this __init__ to handle
 adding/removing themselves from root window lists</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_misc_windows.tao_history_window.refresh">
-<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_misc_windows.tao_history_window.refresh" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_misc_windows.tao_history_window.refresh" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_misc_windows.tao_history_window.re_run">
-<span class="sig-name descname"><span class="pre">re_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_misc_windows.tao_history_window.re_run" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">re_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_misc_windows.tao_history_window.re_run" title="Permalink to this definition"></a></dt>
 <dd><p>Re-runs the given command or command file (cmd_string),
 using the specified mode.
 mode == 0 -&gt; Run in Tao/system shell
@@ -288,7 +198,7 @@ the command line or call_file box, and does not run it</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_misc_windows.tao_history_window.re_run_callback">
-<span class="sig-name descname"><span class="pre">re_run_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_misc_windows.tao_history_window.re_run_callback" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">re_run_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_misc_windows.tao_history_window.re_run_callback" title="Permalink to this definition"></a></dt>
 <dd><p>Formats a callback to self.re_run</p>
 </dd></dl>
 
@@ -299,50 +209,33 @@ the command line or call_file box, and does not run it</p>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../tao_mpl_toolbar/index.html" class="btn btn-neutral float-right" title="pytao.gui.tao_mpl_toolbar" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../tao_lat_windows/index.html" class="btn btn-neutral float-left" title="pytao.gui.tao_lat_windows" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../tao_mpl_toolbar/index.html" class="btn btn-neutral float-right" title="pytao.gui.tao_mpl_toolbar" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, David Sagan.
-
-    </p>
+    <p>&#169; Copyright 2021, David Sagan.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

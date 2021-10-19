@@ -1,79 +1,38 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Data &mdash; PyTao 0.1.5 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Data &mdash; PyTao 0.1.5+3.gfff2a78 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Variables" href="variables.html" />
     <link rel="prev" title="Plotting" href="plotting.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> PyTao
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                0.1.5
+                0.1.5+3.gfff2a78
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -81,18 +40,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">User Documentation</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Installation</a></li>
@@ -124,6 +72,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../examples/basic.html#ParticleGroup-from-openPMD-beamphysics">ParticleGroup from openPMD-beamphysics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/basic.html#Error-handling-and-Debugging">Error handling and Debugging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/advanced.html">PyTao advanced usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/fodo.html">FODO optics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/fodo.html#Asymmetric-FODO">Asymmetric FODO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/fodo.html#Plots">Plots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/fodo.html#Optimize-for-some-special-beta-functions">Optimize for some special beta functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/fodo.html#Alternative-method:-alias">Alternative method: alias</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/fodo.html#Beam-tracking">Beam tracking</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Documentation</span></p>
 <ul>
@@ -138,73 +92,31 @@
 <li class="toctree-l1"><a class="reference external" href="https://www.classe.cornell.edu/bmad/tao.html">Tao website</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">PyTao</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="index.html">Graphical Interface</a> &raquo;</li>
-        
       <li>Data</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/user_docs/gui/data.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   
 <style>
 /* CSS overrides for sphinx_rtd_theme */
@@ -230,23 +142,23 @@
 }
 </style>
 <div class="section" id="data">
-<h1>Data<a class="headerlink" href="#data" title="Permalink to this headline">¶</a></h1>
+<h1>Data<a class="headerlink" href="#data" title="Permalink to this headline"></a></h1>
 <p>The GUI provides several windows for viewing and editing data arrays. This
 chapter assumes you are familiar with <em>Tao</em> data nomenclature as discussed in
 the Data chapter of the <em>Tao</em> manual.</p>
 <div class="section" id="viewing-data">
-<h2>Viewing Data<a class="headerlink" href="#viewing-data" title="Permalink to this headline">¶</a></h2>
+<h2>Viewing Data<a class="headerlink" href="#viewing-data" title="Permalink to this headline"></a></h2>
 <p>The figures below shows the various windows that the GUI provides for viewing
 data and making minor changes to data arrays.</p>
 <div class="figure align-center" id="id1">
 <img alt="The GUI's data viewing windows." src="../../_images/view_data_1.png" />
-<p class="caption"><span class="caption-text">The Tao root window and the menu shortcut for viewing data.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">The Tao root window and the menu shortcut for viewing data.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
 </div>
 <div class="figure align-center" id="id2">
 <img alt="The GUI's data viewing windows." src="../../_images/view_data_2.png" />
 <p class="caption"><span class="caption-text">The d2_data_array window, which list the currently defined d2_data_arrays for
 each universe.
-This window also includes links to view and edit existing d1_data_arrays.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+This window also includes links to view and edit existing d1_data_arrays.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
 </div>
 <p>The d2_data_array window displays all data arrays for a given universe.
 To view any existing d1_data_array, click on its “View” button.
@@ -255,12 +167,12 @@ as well as functionality for writing existing data to a namelist.</p>
 <div class="figure align-center" id="id3">
 <img alt="The GUI's data viewing windows." src="../../_images/view_data_4.png" />
 <p class="caption"><span class="caption-text">The d2_data_array window, which list the currently defined d2_data_arrays for
-each universe.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+each universe.</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
 </div>
 <div class="figure align-center" id="id4">
 <img alt="The GUI's data viewing windows." src="../../_images/view_data_4.png" />
 <p class="caption"><span class="caption-text">The d1_data_array window (in this case for orbit.x), showing all of the
-datums in the array orbit.x.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+datums in the array orbit.x.</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
 </div>
 <p>The d1_data_array window allows the user to view an existing d1_data_array.
 This window displays important properties of each datum in the array, such as
@@ -270,11 +182,11 @@ This will open the individual datum window for that datum, displaying all of its
 properties and allowing some of them to be editted.</p>
 <div class="figure align-center" id="id5">
 <img alt="The GUI's data viewing windows." src="../../_images/view_data_5.png" />
-<p class="caption"><span class="caption-text">The individual datum window (in this case for orbit.x[34]) displaying detailed datum properties and allowing the user to edit some of these properties.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">The individual datum window (in this case for orbit.x[34]) displaying detailed datum properties and allowing the user to edit some of these properties.</span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
 </div>
 <div class="figure align-center" id="id6">
 <img alt="The GUI's data viewing windows." src="../../_images/view_data_3.png" />
-<p class="caption"><span class="caption-text">The bulk edit window (in this case for orbit.x) providing controls to quickly edit a few key properties for multiple datums in a d1_data_array.</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">The bulk edit window (in this case for orbit.x) providing controls to quickly edit a few key properties for multiple datums in a d1_data_array.</span><a class="headerlink" href="#id6" title="Permalink to this image"></a></p>
 </div>
 <p>The d1_data_array window also allows the user to edit a few key properties of
 the datums in the array all at once using the bulk settings window.</p>
@@ -289,7 +201,7 @@ button will edit the d1_data_array as necessary, and changes will be reflected
 in the d1_data_array window.</p>
 </div>
 <div class="section" id="creating-and-editing-data">
-<h2>Creating and Editing Data<a class="headerlink" href="#creating-and-editing-data" title="Permalink to this headline">¶</a></h2>
+<h2>Creating and Editing Data<a class="headerlink" href="#creating-and-editing-data" title="Permalink to this headline"></a></h2>
 <p><em>Tao</em> data structures can be defined via an initialization file or on-the-fly
 via the GUI. For setting up a data initialization file, see the
 <em>Tao Initialization</em> chapter in the <em>Tao</em> manual. To initialize data via the GUI,
@@ -299,11 +211,11 @@ dat window.</p>
 <p>This window can be accessed as shown in figure below.</p>
 <div class="figure align-center" id="id7">
 <img alt="Data creation window." src="../../_images/create_d2_1.png" />
-<p class="caption"><span class="caption-text">The data creation window can be accessed from the root window’s menubar.</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">The data creation window can be accessed from the root window’s menubar.</span><a class="headerlink" href="#id7" title="Permalink to this image"></a></p>
 </div>
 <div class="figure align-center" id="id8">
 <img alt="Data creation window." src="../../_images/create_d2_2.png" />
-<p class="caption"><span class="caption-text">The first pane of the data creation window.</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">The first pane of the data creation window.</span><a class="headerlink" href="#id8" title="Permalink to this image"></a></p>
 </div>
 <p>In the first pane of the data creation window, the user can input the desired
 settings for the new d2_data_array. The user can also select and existing
@@ -318,7 +230,7 @@ properties are set.</p>
 <img alt="The d1_array pane of the data creation window." src="../../_images/create_d1_1.png" />
 <p class="caption"><span class="caption-text">Here, only one d1_array has been created (called my_d1), its default data
 type has been set to alpha.a, and the start and end indices have been set to
-1 and 12 respectively.</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+1 and 12 respectively.</span><a class="headerlink" href="#id9" title="Permalink to this image"></a></p>
 </div>
 <p>This pane is shown in the figure above.
 The d1_array pane of the data creation window displays each d1_array in its own
@@ -337,7 +249,7 @@ ele_ref_name for the d1_array en-masse.</p>
 <p>Clicking on these buttons will bring up the lattice browser window.</p>
 <div class="figure align-center" id="id10">
 <img alt="The d1_array pane of the data creation window." src="../../_images/create_d1_2.png" />
-<p class="caption"><span class="caption-text">The lattice browser for the ele_names that will be used with my_d1.</span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">The lattice browser for the ele_names that will be used with my_d1.</span><a class="headerlink" href="#id10" title="Permalink to this image"></a></p>
 </div>
 <p>This window is essentially identical to the main lattice window for the GUI,
 with a few additions.</p>
@@ -364,7 +276,7 @@ the figure below.</p>
 The data type for new_data_array.x has been set to velocity.x, and the start
 and end indices have been set to 1 and 12.
 Here, the user is currently editing new_data_array.x[3], where the meas value
-has been set to 0.2 and the ref value has been set to 0.4.</span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
+has been set to 0.2 and the ref value has been set to 0.4.</span><a class="headerlink" href="#id11" title="Permalink to this image"></a></p>
 </div>
 <p>Note that any settings that have a d1-level default value are automatically
 filled in.
@@ -386,7 +298,7 @@ creation window, just as if the user had cloned that array from the d2 pane of
 the data creation window.</p>
 <div class="figure align-center" id="id12">
 <img alt="Editting an existing d2_data_array." src="../../_images/edit_data_2.png" />
-<p class="caption"><span class="caption-text">Editing an existing d2_data_array.</span><a class="headerlink" href="#id12" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Editing an existing d2_data_array.</span><a class="headerlink" href="#id12" title="Permalink to this image"></a></p>
 </div>
 <p>Note that any changes made in the data creation window will not take effect in
 <em>Tao</em> until the user clicks the “Create” button.
@@ -397,50 +309,33 @@ delete the array in Tao until the user clicks “Create”.</p>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="variables.html" class="btn btn-neutral float-right" title="Variables" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="plotting.html" class="btn btn-neutral float-left" title="Plotting" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="variables.html" class="btn btn-neutral float-right" title="Variables" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, David Sagan.
-
-    </p>
+    <p>&#169; Copyright 2021, David Sagan.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

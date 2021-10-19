@@ -1,79 +1,38 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Plotting &mdash; PyTao 0.1.5 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Plotting &mdash; PyTao 0.1.5+3.gfff2a78 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Data" href="data.html" />
     <link rel="prev" title="Main Window" href="main-window.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> PyTao
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                0.1.5
+                0.1.5+3.gfff2a78
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -81,18 +40,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">User Documentation</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Installation</a></li>
@@ -125,6 +73,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../examples/basic.html#ParticleGroup-from-openPMD-beamphysics">ParticleGroup from openPMD-beamphysics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/basic.html#Error-handling-and-Debugging">Error handling and Debugging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/advanced.html">PyTao advanced usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/fodo.html">FODO optics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/fodo.html#Asymmetric-FODO">Asymmetric FODO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/fodo.html#Plots">Plots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/fodo.html#Optimize-for-some-special-beta-functions">Optimize for some special beta functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/fodo.html#Alternative-method:-alias">Alternative method: alias</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/fodo.html#Beam-tracking">Beam tracking</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Documentation</span></p>
 <ul>
@@ -139,73 +93,31 @@
 <li class="toctree-l1"><a class="reference external" href="https://www.classe.cornell.edu/bmad/tao.html">Tao website</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">PyTao</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="index.html">Graphical Interface</a> &raquo;</li>
-        
       <li>Plotting</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/user_docs/gui/plotting.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   
 <style>
 /* CSS overrides for sphinx_rtd_theme */
@@ -231,7 +143,7 @@
 }
 </style>
 <div class="section" id="plotting">
-<h1>Plotting<a class="headerlink" href="#plotting" title="Permalink to this headline">¶</a></h1>
+<h1>Plotting<a class="headerlink" href="#plotting" title="Permalink to this headline"></a></h1>
 <p>One of the GUI’s strong suits is the ability to view an manipulate plots using
 matplotlib.</p>
 <p>Existing plots can be viewed and edited, and new templates can be defined on the
@@ -239,35 +151,35 @@ fly.</p>
 <p>Note: the GUI does support classic PG/PLplots, but it is recommended to use
 matplotlib as the plotting engine due to the extra features it offers.</p>
 <div class="section" id="viewing-plots">
-<h2>Viewing Plots<a class="headerlink" href="#viewing-plots" title="Permalink to this headline">¶</a></h2>
+<h2>Viewing Plots<a class="headerlink" href="#viewing-plots" title="Permalink to this headline"></a></h2>
 <p>The figures below show how to plot existing templates in the GUI.</p>
 <p>The plot template window lists all of the currently defined plot templates as
 well as their descriptions.</p>
 <div class="figure align-center" id="id1">
 <img alt="Viewing plots with the GUI." src="../../_images/view_plot_1.png" />
-<p class="caption"><span class="caption-text">Accessing the plot template list from the root window.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Accessing the plot template list from the root window.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
 </div>
 <p>A template can be plotted either by double clicking on it, or by selecting it
 and then clicking the “Plot” button.</p>
 <div class="figure align-center" id="id2">
 <img alt="Viewing plots with the GUI." src="../../_images/view_plot_2.png" />
-<p class="caption"><span class="caption-text">The plot template window.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">The plot template window.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
 </div>
 <p>This will open a window displaying the selected plot (see Section
 <cite>Interacting with Plots</cite> for more information).</p>
 <div class="figure align-center" id="id3">
 <img alt="Viewing plots with the GUI." src="../../_images/view_plot_3.png" />
-<p class="caption"><span class="caption-text">A plot of the alpha function with the lat_layout shown below.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">A plot of the alpha function with the lat_layout shown below.</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
 </div>
 <div class="figure align-center" id="id4">
 <img alt="Viewing plots with the GUI." src="../../_images/view_plot_4.png" />
-<p class="caption"><span class="caption-text">The floor_plan plot.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">The floor_plan plot.</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
 </div>
 <p>The user can also edit an existing template by selecting it in the template
 window and clicking “Edit Template”.</p>
 </div>
 <div class="section" id="interacting-with-plots">
-<h2>Interacting with Plots<a class="headerlink" href="#interacting-with-plots" title="Permalink to this headline">¶</a></h2>
+<h2>Interacting with Plots<a class="headerlink" href="#interacting-with-plots" title="Permalink to this headline"></a></h2>
 <p>Interacting with plots in the GUI is primarily done using the toolbar along the
 bottom of the plotting window.</p>
 <p>Starting from the left, the home button returns the graph to the starting view.
@@ -295,7 +207,7 @@ centerline. Clicking on the slider will adjust the width of the displayed
 elements.</p>
 </div>
 <div class="section" id="plotting-initialization">
-<h2>Plotting Initialization<a class="headerlink" href="#plotting-initialization" title="Permalink to this headline">¶</a></h2>
+<h2>Plotting Initialization<a class="headerlink" href="#plotting-initialization" title="Permalink to this headline"></a></h2>
 <p>When operating the GUI in matplotlib mode, you can specify a list of template
 plots to plot in matplotlib as soon as tao starts.  These templates should be
 listed in a file called plot.gui.init, which should be in the same directory
@@ -309,50 +221,33 @@ simply ignored.</p>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="data.html" class="btn btn-neutral float-right" title="Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="main-window.html" class="btn btn-neutral float-left" title="Main Window" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="data.html" class="btn btn-neutral float-right" title="Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, David Sagan.
-
-    </p>
+    <p>&#169; Copyright 2021, David Sagan.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

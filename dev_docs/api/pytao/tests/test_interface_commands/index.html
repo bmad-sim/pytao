@@ -1,79 +1,38 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>pytao.tests.test_interface_commands &mdash; PyTao 0.1.5 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>pytao.tests.test_interface_commands &mdash; PyTao 0.1.5+3.gfff2a78 documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    
-    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
-
-    
+    <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
     <link rel="next" title="pytao.util" href="../../util/index.html" />
     <link rel="prev" title="pytao.tests.conftest" href="../conftest/index.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../../../../index.html" class="icon icon-home"> PyTao
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                0.1.5
+                0.1.5+3.gfff2a78
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -81,18 +40,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">User Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../user_docs/index.html">Installation</a></li>
@@ -108,6 +56,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/basic.html#ParticleGroup-from-openPMD-beamphysics">ParticleGroup from openPMD-beamphysics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/basic.html#Error-handling-and-Debugging">Error handling and Debugging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../examples/advanced.html">PyTao advanced usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/fodo.html">FODO optics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/fodo.html#Asymmetric-FODO">Asymmetric FODO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/fodo.html#Plots">Plots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/fodo.html#Optimize-for-some-special-beta-functions">Optimize for some special beta functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/fodo.html#Alternative-method:-alias">Alternative method: alias</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples/fodo.html#Beam-tracking">Beam tracking</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Documentation</span></p>
 <ul class="current">
@@ -137,77 +91,33 @@
 <li class="toctree-l1"><a class="reference external" href="https://www.classe.cornell.edu/bmad/tao.html">Tao website</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../../../index.html">PyTao</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../../../index.html">API Reference</a> &raquo;</li>
-        
           <li><a href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao</span></code></a> &raquo;</li>
-        
           <li><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tests</span></code></a> &raquo;</li>
-        
       <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tests.test_interface_commands</span></code></li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../../../../_sources/dev_docs/api/pytao/tests/test_interface_commands/index.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   
 <style>
 /* CSS overrides for sphinx_rtd_theme */
@@ -233,517 +143,517 @@
 }
 </style>
 <div class="section" id="module-pytao.tests.test_interface_commands">
-<span id="pytao-tests-test-interface-commands"></span><h1><a class="reference internal" href="#module-pytao.tests.test_interface_commands" title="pytao.tests.test_interface_commands"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tests.test_interface_commands</span></code></a><a class="headerlink" href="#module-pytao.tests.test_interface_commands" title="Permalink to this headline">¶</a></h1>
+<span id="pytao-tests-test-interface-commands"></span><h1><a class="reference internal" href="#module-pytao.tests.test_interface_commands" title="pytao.tests.test_interface_commands"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tests.test_interface_commands</span></code></a><a class="headerlink" href="#module-pytao.tests.test_interface_commands" title="Permalink to this headline"></a></h1>
 <div class="section" id="module-contents">
-<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_beam_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_beam_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_beam_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_beam_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_beam_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_beam_init_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_beam_init_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_beam_init_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_beam_init_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_beam_init_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_bmad_com_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_bmad_com_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_bmad_com_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_bmad_com_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_bmad_com_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_branch1_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_branch1_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_branch1_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_branch1_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_branch1_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_bunch_params_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_bunch_params_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_bunch_params_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_bunch_params_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_bunch_params_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_bunch1_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_bunch1_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_bunch1_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_bunch1_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_bunch1_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_building_wall_list_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_building_wall_list_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_building_wall_list_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_building_wall_list_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_building_wall_list_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_building_wall_list_2">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_building_wall_list_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_building_wall_list_2" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_building_wall_list_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_building_wall_list_2" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_building_wall_graph_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_building_wall_graph_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_building_wall_graph_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_building_wall_graph_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_building_wall_graph_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_building_wall_point_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_building_wall_point_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_building_wall_point_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_building_wall_point_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_building_wall_point_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_building_wall_section_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_building_wall_section_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_building_wall_section_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_building_wall_section_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_building_wall_section_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_constraints_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_constraints_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_constraints_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_constraints_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_constraints_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_constraints_2">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_constraints_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_constraints_2" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_constraints_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_constraints_2" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_data_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_data_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_data_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_data_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_data_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_data_2">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_data_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_data_2" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_data_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_data_2" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_data_d2_create_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_data_d2_create_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_data_d2_create_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_data_d2_create_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_data_d2_create_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_data_d2_destroy_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_data_d2_destroy_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_data_d2_destroy_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_data_d2_destroy_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_data_d2_destroy_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_data_d2_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_data_d2_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_data_d2_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_data_d2_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_data_d2_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_data_d_array_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_data_d_array_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_data_d_array_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_data_d_array_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_data_d_array_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_data_d1_array_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_data_d1_array_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_data_d1_array_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_data_d1_array_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_data_d1_array_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_data_parameter_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_data_parameter_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_data_parameter_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_data_parameter_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_data_parameter_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_data_d2_array_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_data_d2_array_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_data_d2_array_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_data_d2_array_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_data_d2_array_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_data_set_design_value_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_data_set_design_value_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_data_set_design_value_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_data_set_design_value_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_data_set_design_value_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_datum_create_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_datum_create_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_datum_create_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_datum_create_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_datum_create_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_datum_has_ele_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_datum_has_ele_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_datum_has_ele_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_datum_has_ele_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_datum_has_ele_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_derivative_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_derivative_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_derivative_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_derivative_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_derivative_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_head_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_head_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_head_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_head_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_head_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_methods_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_methods_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_methods_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_methods_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_methods_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_gen_attribs_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_gen_attribs_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_gen_attribs_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_gen_attribs_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_gen_attribs_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_multipoles_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_multipoles_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_multipoles_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_multipoles_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_multipoles_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_ac_kicker_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_ac_kicker_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_ac_kicker_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_ac_kicker_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_ac_kicker_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_cartesian_map_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_cartesian_map_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_cartesian_map_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_cartesian_map_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_cartesian_map_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_chamber_wall_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_chamber_wall_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_chamber_wall_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_chamber_wall_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_chamber_wall_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_cylindrical_map_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_cylindrical_map_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_cylindrical_map_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_cylindrical_map_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_cylindrical_map_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_taylor_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_taylor_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_taylor_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_taylor_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_taylor_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_spin_taylor_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_spin_taylor_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_spin_taylor_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_spin_taylor_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_spin_taylor_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_wake_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_wake_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_wake_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_wake_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_wake_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_wall3d_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_wall3d_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_wall3d_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_wall3d_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_wall3d_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_twiss_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_twiss_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_twiss_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_twiss_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_twiss_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_control_var_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_control_var_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_control_var_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_control_var_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_control_var_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_orbit_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_orbit_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_orbit_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_orbit_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_orbit_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_mat6_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_mat6_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_mat6_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_mat6_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_mat6_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_taylor_field_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_taylor_field_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_taylor_field_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_taylor_field_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_taylor_field_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_grid_field_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_grid_field_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_grid_field_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_grid_field_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_grid_field_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_floor_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_floor_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_floor_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_floor_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_floor_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_floor_2">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_floor_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_floor_2" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_floor_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_floor_2" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_photon_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_photon_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_photon_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_photon_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_photon_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_lord_slave_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_lord_slave_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_lord_slave_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_lord_slave_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_lord_slave_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ele_elec_multipoles_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_elec_multipoles_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_elec_multipoles_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ele_elec_multipoles_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ele_elec_multipoles_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_evaluate_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_evaluate_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_evaluate_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_evaluate_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_evaluate_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_em_field_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_em_field_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_em_field_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_em_field_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_em_field_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_enum_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_enum_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_enum_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_enum_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_enum_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_floor_plan_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_floor_plan_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_floor_plan_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_floor_plan_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_floor_plan_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_floor_orbit_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_floor_orbit_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_floor_orbit_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_floor_orbit_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_floor_orbit_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_tao_global_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_tao_global_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_tao_global_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_tao_global_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_tao_global_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_help_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_help_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_help_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_help_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_help_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_inum_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_inum_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_inum_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_inum_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_inum_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_lat_calc_done_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_lat_calc_done_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_lat_calc_done_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_lat_calc_done_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_lat_calc_done_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_lat_ele_list_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_lat_ele_list_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_lat_ele_list_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_lat_ele_list_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_lat_ele_list_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_lat_general_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_lat_general_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_lat_general_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_lat_general_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_lat_general_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_lat_list_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_lat_list_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_lat_list_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_lat_list_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_lat_list_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_lat_list_2">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_lat_list_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_lat_list_2" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_lat_list_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_lat_list_2" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_lat_param_units_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_lat_param_units_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_lat_param_units_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_lat_param_units_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_lat_param_units_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_matrix_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_matrix_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_matrix_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_matrix_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_matrix_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_merit_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_merit_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_merit_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_merit_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_merit_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_orbit_at_s_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_orbit_at_s_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_orbit_at_s_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_orbit_at_s_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_orbit_at_s_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_place_buffer_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_place_buffer_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_place_buffer_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_place_buffer_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_place_buffer_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_plot_curve_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot_curve_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot_curve_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot_curve_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot_curve_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_plot_lat_layout_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot_lat_layout_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot_lat_layout_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot_lat_layout_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot_lat_layout_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_plot_list_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot_list_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot_list_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot_list_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot_list_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_plot_graph_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot_graph_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot_graph_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot_graph_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot_graph_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_plot_histogram_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot_histogram_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot_histogram_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot_histogram_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot_histogram_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_plot_plot_manage_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot_plot_manage_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot_plot_manage_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot_plot_manage_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot_plot_manage_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_plot_curve_manage_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot_curve_manage_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot_curve_manage_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot_curve_manage_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot_curve_manage_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_plot_graph_manage_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot_graph_manage_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot_graph_manage_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot_graph_manage_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot_graph_manage_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_plot_line_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot_line_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot_line_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot_line_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot_line_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_plot_symbol_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot_symbol_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot_symbol_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot_symbol_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot_symbol_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_plot_transfer_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot_transfer_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot_transfer_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot_transfer_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot_transfer_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_plot1_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot1_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot1_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_plot1_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_plot1_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_ptc_com_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ptc_com_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ptc_com_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_ptc_com_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_ptc_com_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_shape_list_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_shape_list_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_shape_list_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_shape_list_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_shape_list_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_shape_manage_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_shape_manage_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_shape_manage_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_shape_manage_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_shape_manage_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_shape_pattern_list_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_shape_pattern_list_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_shape_pattern_list_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_shape_pattern_list_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_shape_pattern_list_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_shape_pattern_manage_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_shape_pattern_manage_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_shape_pattern_manage_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_shape_pattern_manage_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_shape_pattern_manage_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_shape_pattern_point_manage_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_shape_pattern_point_manage_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_shape_pattern_point_manage_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_shape_pattern_point_manage_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_shape_pattern_point_manage_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_shape_set_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_shape_set_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_shape_set_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_shape_set_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_shape_set_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_show_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_show_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_show_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_show_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_show_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_species_to_int_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_species_to_int_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_species_to_int_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_species_to_int_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_species_to_int_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_species_to_str_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_species_to_str_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_species_to_str_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_species_to_str_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_species_to_str_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_spin_polarization_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_spin_polarization_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_spin_polarization_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_spin_polarization_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_spin_polarization_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_super_universe_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_super_universe_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_super_universe_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_super_universe_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_super_universe_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_twiss_at_s_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_twiss_at_s_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_twiss_at_s_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_twiss_at_s_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_twiss_at_s_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_universe_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_universe_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_universe_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_universe_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_universe_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_var_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_var_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_var_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_var_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_var_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_var_2">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_var_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_var_2" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_var_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_var_2" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_var_create_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_var_create_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_var_create_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_var_create_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_var_create_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_var_general_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_var_general_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_var_general_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_var_general_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_var_general_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_var_v_array_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_var_v_array_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_var_v_array_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_var_v_array_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_var_v_array_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_var_v1_array_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_var_v1_array_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_var_v1_array_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_var_v1_array_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_var_v1_array_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_var_v1_create_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_var_v1_create_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_var_v1_create_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_var_v1_create_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_var_v1_create_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_var_v1_destroy_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_var_v1_destroy_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_var_v1_destroy_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_var_v1_destroy_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_var_v1_destroy_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.tests.test_interface_commands.test_wave_1">
-<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_wave_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_wave_1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.tests.test_interface_commands.</span></span><span class="sig-name descname"><span class="pre">test_wave_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tests.test_interface_commands.test_wave_1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </div>
@@ -751,50 +661,33 @@
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../../util/index.html" class="btn btn-neutral float-right" title="pytao.util" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../conftest/index.html" class="btn btn-neutral float-left" title="pytao.tests.conftest" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../util/index.html" class="btn btn-neutral float-right" title="pytao.util" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, David Sagan.
-
-    </p>
+    <p>&#169; Copyright 2021, David Sagan.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
