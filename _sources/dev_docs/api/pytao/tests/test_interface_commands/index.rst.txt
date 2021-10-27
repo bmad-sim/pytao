@@ -85,18 +85,6 @@ Module Contents
 .. py:function:: test_derivative_1()
 
 
-.. py:function:: test_ele_head_1()
-
-
-.. py:function:: test_ele_methods_1()
-
-
-.. py:function:: test_ele_gen_attribs_1()
-
-
-.. py:function:: test_ele_multipoles_1()
-
-
 .. py:function:: test_ele_ac_kicker_1()
 
 
@@ -106,37 +94,13 @@ Module Contents
 .. py:function:: test_ele_chamber_wall_1()
 
 
-.. py:function:: test_ele_cylindrical_map_1()
-
-
-.. py:function:: test_ele_taylor_1()
-
-
-.. py:function:: test_ele_spin_taylor_1()
-
-
-.. py:function:: test_ele_wake_1()
-
-
-.. py:function:: test_ele_wall3d_1()
-
-
-.. py:function:: test_ele_twiss_1()
-
-
 .. py:function:: test_ele_control_var_1()
 
 
-.. py:function:: test_ele_orbit_1()
+.. py:function:: test_ele_cylindrical_map_1()
 
 
-.. py:function:: test_ele_mat6_1()
-
-
-.. py:function:: test_ele_taylor_field_1()
-
-
-.. py:function:: test_ele_grid_field_1()
+.. py:function:: test_ele_elec_multipoles_1()
 
 
 .. py:function:: test_ele_floor_1()
@@ -145,13 +109,52 @@ Module Contents
 .. py:function:: test_ele_floor_2()
 
 
-.. py:function:: test_ele_photon_1()
+.. py:function:: test_ele_grid_field_1()
+
+
+.. py:function:: test_ele_gen_attribs_1()
+
+
+.. py:function:: test_ele_head_1()
 
 
 .. py:function:: test_ele_lord_slave_1()
 
 
-.. py:function:: test_ele_elec_multipoles_1()
+.. py:function:: test_ele_mat6_1()
+
+
+.. py:function:: test_ele_methods_1()
+
+
+.. py:function:: test_ele_multipoles_1()
+
+
+.. py:function:: test_ele_orbit_1()
+
+
+.. py:function:: test_ele_param_1()
+
+
+.. py:function:: test_ele_photon_1()
+
+
+.. py:function:: test_ele_spin_taylor_1()
+
+
+.. py:function:: test_ele_taylor_1()
+
+
+.. py:function:: test_ele_taylor_field_1()
+
+
+.. py:function:: test_ele_twiss_1()
+
+
+.. py:function:: test_ele_wake_1()
+
+
+.. py:function:: test_ele_wall3d_1()
 
 
 .. py:function:: test_evaluate_1()
@@ -184,7 +187,7 @@ Module Contents
 .. py:function:: test_lat_ele_list_1()
 
 
-.. py:function:: test_lat_general_1()
+.. py:function:: test_lat_branch_list_1()
 
 
 .. py:function:: test_lat_list_1()
@@ -247,6 +250,9 @@ Module Contents
 .. py:function:: test_ptc_com_1()
 
 
+.. py:function:: test_ring_general_1()
+
+
 .. py:function:: test_shape_list_1()
 
 
@@ -275,6 +281,9 @@ Module Contents
 
 
 .. py:function:: test_spin_polarization_1()
+
+
+.. py:function:: test_spin_resonance_1()
 
 
 .. py:function:: test_super_universe_1()
