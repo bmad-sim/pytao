@@ -85,37 +85,37 @@ def test_constraints_2():
 def test_data_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
-    ret = interface_commands.data(tao, ix_universe='', d2_name='twiss', d1_datum='end', dat_index='1')
+    ret = interface_commands.data(tao, ix_universe='', d2_name='twiss', d1_name='end', dat_index='1')
             
         
 def test_data_2():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
-    ret = interface_commands.data(tao, ix_universe='1', d2_name='twiss', d1_datum='end', dat_index='1')
+    ret = interface_commands.data(tao, ix_universe='1', d2_name='twiss', d1_name='end', dat_index='1')
             
         
 def test_data_d2_create_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
-    ret = interface_commands.data_d2_create(tao, ix_uni='1', d2_name='orbit', n_d1_data='2', d_data_arrays_name_min_max='x^^0^^45^^y^^1^^47')
+    ret = interface_commands.data_d2_create(tao, ix_universe='1', d2_name='orbit', n_d1_data='2', d_data_arrays_name_min_max='x^^0^^45^^y^^1^^47')
             
         
 def test_data_d2_destroy_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
-    ret = interface_commands.data_d2_destroy(tao, d2_datum='1@eta.x')
+    ret = interface_commands.data_d2_destroy(tao, d2_name='orbit')
             
         
 def test_data_d2_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
-    ret = interface_commands.data_d2(tao, ix_uni='1', d2_datum='twiss')
+    ret = interface_commands.data_d2(tao, ix_universe='1', d2_name='twiss')
             
         
 def test_data_d_array_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
-    ret = interface_commands.data_d_array(tao, ix_uni='1', d1_datum='twiss.end')
+    ret = interface_commands.data_d_array(tao, ix_universe='1', d2_name='twiss', d1_name='end')
             
         
 def test_data_d1_array_1():
@@ -160,30 +160,6 @@ def test_derivative_1():
     ret = interface_commands.derivative(tao)
             
         
-def test_ele_head_1():
-    
-    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
-    ret = interface_commands.ele_head(tao, ele_id='1@0>>1', which='model')
-            
-        
-def test_ele_methods_1():
-    
-    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
-    ret = interface_commands.ele_methods(tao, ele_id='1@0>>1', which='model')
-            
-        
-def test_ele_gen_attribs_1():
-    
-    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
-    ret = interface_commands.ele_gen_attribs(tao, ele_id='1@0>>1', which='model')
-            
-        
-def test_ele_multipoles_1():
-    
-    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
-    ret = interface_commands.ele_multipoles(tao, ele_id='1@0>>1', which='model')
-            
-        
 def test_ele_ac_kicker_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
@@ -202,70 +178,22 @@ def test_ele_chamber_wall_1():
     ret = interface_commands.ele_chamber_wall(tao, ele_id='1@0>>1', which='model', index='1', who='x')
             
         
-def test_ele_cylindrical_map_1():
-    
-    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field -noplot'))
-    ret = interface_commands.ele_cylindrical_map(tao, ele_id='1@0>>5', which='model', index='1', who='base')
-            
-        
-def test_ele_taylor_1():
-    
-    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_taylor -noplot'))
-    ret = interface_commands.ele_taylor(tao, ele_id='1@0>>34', which='model')
-            
-        
-def test_ele_spin_taylor_1():
-    
-    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_spin -noplot'))
-    ret = interface_commands.ele_spin_taylor(tao, ele_id='1@0>>2', which='model')
-            
-        
-def test_ele_wake_1():
-    
-    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wake -noplot'))
-    ret = interface_commands.ele_wake(tao, ele_id='1@0>>1', which='model', who='sr_long')
-            
-        
-def test_ele_wall3d_1():
-    
-    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall3d -noplot'))
-    ret = interface_commands.ele_wall3d(tao, ele_id='1@0>>1', which='model', index='1', who='table')
-            
-        
-def test_ele_twiss_1():
-    
-    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
-    ret = interface_commands.ele_twiss(tao, ele_id='1@0>>1', which='model')
-            
-        
 def test_ele_control_var_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
     ret = interface_commands.ele_control_var(tao, ele_id='1@0>>873', which='model')
             
         
-def test_ele_orbit_1():
-    
-    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
-    ret = interface_commands.ele_orbit(tao, ele_id='1@0>>1', which='model')
-            
-        
-def test_ele_mat6_1():
-    
-    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
-    ret = interface_commands.ele_mat6(tao, ele_id='1@0>>1', which='model', who='mat6')
-            
-        
-def test_ele_taylor_field_1():
+def test_ele_cylindrical_map_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field -noplot'))
-    ret = interface_commands.ele_taylor_field(tao, ele_id='1@0>>9', which='model', index='1', who='terms')
+    ret = interface_commands.ele_cylindrical_map(tao, ele_id='1@0>>5', which='model', index='1', who='base')
             
         
-def test_ele_grid_field_1():
+def test_ele_elec_multipoles_1():
     
-    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_grid -noplot'))
-    ret = interface_commands.ele_grid_field(tao, ele_id='1@0>>1', which='model', index='1', who='base')
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
+    ret = interface_commands.ele_elec_multipoles(tao, ele_id='1@0>>1', which='model')
             
         
 def test_ele_floor_1():
@@ -280,10 +208,22 @@ def test_ele_floor_2():
     ret = interface_commands.ele_floor(tao, ele_id='1@0>>1', which='model', where='center')
             
         
-def test_ele_photon_1():
+def test_ele_grid_field_1():
     
-    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_photon -noplot'))
-    ret = interface_commands.ele_photon(tao, ele_id='1@0>>1', which='model', who='base')
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_grid -noplot'))
+    ret = interface_commands.ele_grid_field(tao, ele_id='1@0>>1', which='model', index='1', who='base')
+            
+        
+def test_ele_gen_attribs_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
+    ret = interface_commands.ele_gen_attribs(tao, ele_id='1@0>>1', which='model')
+            
+        
+def test_ele_head_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
+    ret = interface_commands.ele_head(tao, ele_id='1@0>>1', which='model')
             
         
 def test_ele_lord_slave_1():
@@ -292,10 +232,76 @@ def test_ele_lord_slave_1():
     ret = interface_commands.ele_lord_slave(tao, ele_id='1@0>>1', which='model')
             
         
-def test_ele_elec_multipoles_1():
+def test_ele_mat6_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
-    ret = interface_commands.ele_elec_multipoles(tao, ele_id='1@0>>1', which='model')
+    ret = interface_commands.ele_mat6(tao, ele_id='1@0>>1', which='model', who='mat6')
+            
+        
+def test_ele_methods_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
+    ret = interface_commands.ele_methods(tao, ele_id='1@0>>1', which='model')
+            
+        
+def test_ele_multipoles_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
+    ret = interface_commands.ele_multipoles(tao, ele_id='1@0>>1', which='model')
+            
+        
+def test_ele_orbit_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
+    ret = interface_commands.ele_orbit(tao, ele_id='1@0>>1', which='model')
+            
+        
+def test_ele_param_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_photon -noplot'))
+    ret = interface_commands.ele_param(tao, ele_id='1@0>>1', which='model', who='orbit.vec.1')
+            
+        
+def test_ele_photon_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_photon -noplot'))
+    ret = interface_commands.ele_photon(tao, ele_id='1@0>>1', which='model', who='base')
+            
+        
+def test_ele_spin_taylor_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_spin -noplot'))
+    ret = interface_commands.ele_spin_taylor(tao, ele_id='1@0>>2', which='model')
+            
+        
+def test_ele_taylor_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_taylor -noplot'))
+    ret = interface_commands.ele_taylor(tao, ele_id='1@0>>34', which='model')
+            
+        
+def test_ele_taylor_field_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field -noplot'))
+    ret = interface_commands.ele_taylor_field(tao, ele_id='1@0>>9', which='model', index='1', who='terms')
+            
+        
+def test_ele_twiss_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
+    ret = interface_commands.ele_twiss(tao, ele_id='1@0>>1', which='model')
+            
+        
+def test_ele_wake_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wake -noplot'))
+    ret = interface_commands.ele_wake(tao, ele_id='1@0>>1', which='model', who='sr_long')
+            
+        
+def test_ele_wall3d_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall3d -noplot'))
+    ret = interface_commands.ele_wall3d(tao, ele_id='1@0>>1', which='model', index='1', who='table')
             
         
 def test_evaluate_1():
@@ -358,10 +364,10 @@ def test_lat_ele_list_1():
     ret = interface_commands.lat_ele_list(tao, branch_name='1@0')
             
         
-def test_lat_general_1():
+def test_lat_branch_list_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
-    ret = interface_commands.lat_general(tao, ix_universe='1')
+    ret = interface_commands.lat_branch_list(tao, ix_universe='1')
             
         
 def test_lat_list_1():
@@ -484,6 +490,12 @@ def test_ptc_com_1():
     ret = interface_commands.ptc_com(tao)
             
         
+def test_ring_general_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
+    ret = interface_commands.ring_general(tao, ix_uni='1', ix_branch='0', which='model')
+            
+        
 def test_shape_list_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
@@ -542,6 +554,12 @@ def test_spin_polarization_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
     ret = interface_commands.spin_polarization(tao, ix_uni='1', ix_branch='0', which='model')
+            
+        
+def test_spin_resonance_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
+    ret = interface_commands.spin_resonance(tao, ix_uni='1', ix_branch='0', which='model')
             
         
 def test_super_universe_1():
