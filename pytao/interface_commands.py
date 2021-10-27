@@ -549,7 +549,7 @@ def da_params(tao, *, ix_uni='', verbose=False, as_dict=True, raises=True):
     return __execute(tao, cmd, as_dict, raises, method_name='da_params', cmd_type='string_list')
 
 
-def data(tao, d2_name, d1_datum, *, ix_universe='', dat_index='1', verbose=False, as_dict=True, raises=True):
+def data(tao, d2_name, d1_name, *, ix_universe='', dat_index='1', verbose=False, as_dict=True, raises=True):
     """
     
     Output Individual datum parameters.
@@ -557,7 +557,7 @@ def data(tao, d2_name, d1_datum, *, ix_universe='', dat_index='1', verbose=False
     Parameters
     ----------
     d2_name
-    d1_datum
+    d1_name
     ix_universe : optional
     dat_index : default=1
     
@@ -588,7 +588,7 @@ def data(tao, d2_name, d1_datum, *, ix_universe='', dat_index='1', verbose=False
      args:
        ix_universe:
        d2_name: twiss
-       d1_datum: end 
+       d1_name: end 
        dat_index: 1  
     
     Example: 2
@@ -596,7 +596,7 @@ def data(tao, d2_name, d1_datum, *, ix_universe='', dat_index='1', verbose=False
      args:
        ix_universe: 1
        d2_name: twiss
-       d1_datum: end
+       d1_name: end
        dat_index: 1
     
     """
@@ -605,7 +605,7 @@ def data(tao, d2_name, d1_datum, *, ix_universe='', dat_index='1', verbose=False
     return __execute(tao, cmd, as_dict, raises, method_name='data', cmd_type='string_list')
 
 
-def data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_uni='', verbose=False, as_dict=True, raises=True):
+def data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_universe='', verbose=False, as_dict=True, raises=True):
     """
     
     Create a d2 data structure along with associated d1 and data arrays.
@@ -615,7 +615,7 @@ def data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_un
     d2_name
     n_d1_data
     d_data_arrays_name_min_max
-    ix_uni : optional
+    ix_universe : optional
     
     Returns
     -------
@@ -654,7 +654,7 @@ def data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_un
     Example: 1
      init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
-       ix_uni: 1
+       ix_universe: 1
        d2_name: orbit
        n_d1_data: 2 
        d_data_arrays_name_min_max: x^^0^^45^^y^^1^^47
@@ -665,15 +665,15 @@ def data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_un
     return __execute(tao, cmd, as_dict, raises, method_name='data_d2_create', cmd_type='None')
 
 
-def data_d2_destroy(tao, d2_datum, *, ix_uni='', verbose=False, as_dict=True, raises=True):
+def data_d2_destroy(tao, d2_name, *, ix_universe='', verbose=False, as_dict=True, raises=True):
     """
     
     Destroy a d2 data structure along with associated d1 and data arrays.
     
     Parameters
     ----------
-    d2_datum
-    ix_uni : optional
+    d2_name
+    ix_universe : optional
     
     Returns
     -------
@@ -697,7 +697,7 @@ def data_d2_destroy(tao, d2_datum, *, ix_uni='', verbose=False, as_dict=True, ra
     Example: 1
      init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
-       d2_datum: 1@eta.x
+       d2_name: orbit
     
     """
     cmd = f'python data_d2_destroy {ix_universe}@{d2_name}'
@@ -705,15 +705,15 @@ def data_d2_destroy(tao, d2_datum, *, ix_uni='', verbose=False, as_dict=True, ra
     return __execute(tao, cmd, as_dict, raises, method_name='data_d2_destroy', cmd_type='None')
 
 
-def data_d2(tao, d2_datum, *, ix_uni='', verbose=False, as_dict=True, raises=True):
+def data_d2(tao, d2_name, *, ix_universe='', verbose=False, as_dict=True, raises=True):
     """
     
     Output information on a d2_datum.
     
     Parameters
     ----------
-    d2_datum
-    ix_uni : optional
+    d2_name
+    ix_universe : optional
     
     Returns
     -------
@@ -733,8 +733,8 @@ def data_d2(tao, d2_datum, *, ix_uni='', verbose=False, as_dict=True, raises=Tru
     Example: 1
      init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
-       ix_uni: 1
-       d2_datum: twiss
+       ix_universe: 1
+       d2_name: twiss
     
     """
     cmd = f'python data_d2 {ix_universe}@{d2_name}'
@@ -742,15 +742,16 @@ def data_d2(tao, d2_datum, *, ix_uni='', verbose=False, as_dict=True, raises=Tru
     return __execute(tao, cmd, as_dict, raises, method_name='data_d2', cmd_type='string_list')
 
 
-def data_d_array(tao, d1_datum, *, ix_uni='', verbose=False, as_dict=True, raises=True):
+def data_d_array(tao, d2_name, d1_name, *, ix_universe='', verbose=False, as_dict=True, raises=True):
     """
     
     Output list of datums for a given d1_data structure.
     
     Parameters
     ----------
-    d1_datum
-    ix_uni : optional
+    d2_name
+    d1_name
+    ix_universe : optional
     
     Returns
     -------
@@ -774,8 +775,9 @@ def data_d_array(tao, d1_datum, *, ix_uni='', verbose=False, as_dict=True, raise
     Example: 1
      init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
-       ix_uni: 1 
-       d1_datum: twiss.end
+       ix_universe: 1 
+       d2_name: twiss
+       d1_name: end
     
     """
     cmd = f'python data_d_array {ix_universe}@{d2_name}.{d1_name}'

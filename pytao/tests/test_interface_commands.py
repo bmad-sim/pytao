@@ -85,37 +85,37 @@ def test_constraints_2():
 def test_data_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
-    ret = interface_commands.data(tao, ix_universe='', d2_name='twiss', d1_datum='end', dat_index='1')
+    ret = interface_commands.data(tao, ix_universe='', d2_name='twiss', d1_name='end', dat_index='1')
             
         
 def test_data_2():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
-    ret = interface_commands.data(tao, ix_universe='1', d2_name='twiss', d1_datum='end', dat_index='1')
+    ret = interface_commands.data(tao, ix_universe='1', d2_name='twiss', d1_name='end', dat_index='1')
             
         
 def test_data_d2_create_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
-    ret = interface_commands.data_d2_create(tao, ix_uni='1', d2_name='orbit', n_d1_data='2', d_data_arrays_name_min_max='x^^0^^45^^y^^1^^47')
+    ret = interface_commands.data_d2_create(tao, ix_universe='1', d2_name='orbit', n_d1_data='2', d_data_arrays_name_min_max='x^^0^^45^^y^^1^^47')
             
         
 def test_data_d2_destroy_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
-    ret = interface_commands.data_d2_destroy(tao, d2_datum='1@eta.x')
+    ret = interface_commands.data_d2_destroy(tao, d2_name='orbit')
             
         
 def test_data_d2_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
-    ret = interface_commands.data_d2(tao, ix_uni='1', d2_datum='twiss')
+    ret = interface_commands.data_d2(tao, ix_universe='1', d2_name='twiss')
             
         
 def test_data_d_array_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
-    ret = interface_commands.data_d_array(tao, ix_uni='1', d1_datum='twiss.end')
+    ret = interface_commands.data_d_array(tao, ix_universe='1', d2_name='twiss', d1_name='end')
             
         
 def test_data_d1_array_1():
