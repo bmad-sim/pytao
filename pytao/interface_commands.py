@@ -48,9 +48,11 @@ def beam(tao, *, ix_universe='', verbose=False, as_dict=True, raises=True):
     -----
     Command syntax:
       python beam {ix_universe}
-    where
+    
+    Where:
       {ix_universe} is a universe index. Defaults to s%global%default_universe.
-    To set beam_init parameters use the "set beam" command
+    
+    Note: To set beam_init parameters use the "set beam" command.
     
     Examples
     --------
@@ -82,9 +84,11 @@ def beam_init(tao, *, ix_universe='', verbose=False, as_dict=True, raises=True):
     -----
     Command syntax:
       python beam_init {ix_universe}
-    where
+    
+    Where:
       {ix_universe} is a universe index. Defaults to s%global%default_universe.
-    To set beam_init parameters use the "set beam_init" command
+    
+    Note: To set beam_init parameters use the "set beam_init" command
     
     Examples
     --------
@@ -102,7 +106,7 @@ def beam_init(tao, *, ix_universe='', verbose=False, as_dict=True, raises=True):
 def bmad_com(tao, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Bmad_com structure components
+    Output bmad_com structure components.
     
     Returns
     -------
@@ -128,7 +132,7 @@ def bmad_com(tao, *, verbose=False, as_dict=True, raises=True):
 def branch1(tao, ix_universe, ix_branch, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Lattice element list.
+    Output lattice branch information for a particular lattice branch.
     
     Parameters
     ----------
@@ -143,7 +147,8 @@ def branch1(tao, ix_universe, ix_branch, *, verbose=False, as_dict=True, raises=
     -----
     Command syntax:
       python branch1 {ix_universe}@{ix_branch}
-    where
+    
+    Where:
       {ix_universe} is a universe index. Defaults to s%global%default_universe.
       {ix_branch} is a lattice branch index. Defaults to s%global%default_branch.
     
@@ -164,14 +169,12 @@ def branch1(tao, ix_universe, ix_branch, *, verbose=False, as_dict=True, raises=
 def bunch_params(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
-    Bunch parameters at the exit end of a given lattice element.
+    Outputs bunch parameters at the exit end of a given lattice element.
     
     Parameters
     ----------
     ele_id
-        Element name or index
     which : default=model
-        One of: "model", "base" or "design"
     
     Returns
     -------
@@ -180,7 +183,14 @@ def bunch_params(tao, ele_id, *, which='model', verbose=False, as_dict=True, rai
     Notes
     -----
     Command syntax:
-    python bunch_params {ele_id}|{which}
+      python bunch_params {ele_id}|{which}
+    
+    Where:
+      {ele_id} is an element name or index.
+      {which} is one of: "model", "base" or "design"
+    
+    Example:
+      python bunch_params end|model  ! parameters at model lattice element named "end".
     
     Examples
     --------
@@ -199,16 +209,13 @@ def bunch_params(tao, ele_id, *, which='model', verbose=False, as_dict=True, rai
 def bunch1(tao, ele_id, coordinate, *, which='model', ix_bunch='1', verbose=False, as_dict=True, raises=True):
     """
     
-    Bunch parameters at the exit end of a given lattice element.
+    Outputs Bunch parameters at the exit end of a given lattice element.
     
     Parameters
     ----------
     ele_id
-        Element name or index
     coordinate
-        If one of: x, px, y, py, z, pz, 's', 't', 'charge', 'p0c', 'state'
     which : default=model
-        One of: "model", "base" or "design"
     ix_bunch : default=1
     
     Returns
@@ -221,7 +228,17 @@ def bunch1(tao, ele_id, coordinate, *, which='model', ix_bunch='1', verbose=Fals
     Notes
     -----
     Command syntax:
-    python bunch1 {ele_id}|{which} {ix_bunch} {coordinate}
+      python bunch1 {ele_id}|{which} {ix_bunch} {coordinate}
+    
+    Where:
+      {ele_id} is an element name or index.
+      {which} is one of: "model", "base" or "design"
+      {ix_bunch} is the bunch index.
+      {coordinate} is one of: x, px, y, py, z, pz, "s", "t", "charge", "p0c", "state"
+    
+    For example, if {coordinate} = "px", the phase space px coordinate of each particle
+    of the bunch is displayed. The "state" of a particle is an integer. A value of 1 means
+    alive and any other value means the particle has been lost.
     
     Examples
     --------
@@ -245,7 +262,7 @@ def bunch1(tao, ele_id, coordinate, *, which='model', ix_bunch='1', verbose=Fals
 def building_wall_list(tao, *, ix_section='', verbose=False, as_dict=True, raises=True):
     """
     
-    List of building wall sections or section points
+    Output List of building wall sections or section points
     
     Parameters
     ----------
@@ -259,8 +276,12 @@ def building_wall_list(tao, *, ix_section='', verbose=False, as_dict=True, raise
     -----
     Command syntax:
       python building_wall_list {ix_section}
-    If {ix_section} is not present then a list of building wall sections is given.
-    If {ix_section} is present then a list of section points is given
+    
+    Where:
+      {ix_section} is a building wall section index.
+    
+    If {ix_section} is not present, a list of building wall sections is given.
+    If {ix_section} is present, a list of section points is given.
     
     Examples
     --------
@@ -283,7 +304,7 @@ def building_wall_list(tao, *, ix_section='', verbose=False, as_dict=True, raise
 def building_wall_graph(tao, graph, *, verbose=False, as_dict=True, raises=True):
     """
     
-    (x, y) points for drawing the building wall for a particular graph.
+    Output (x, y) points for drawing the building wall for a particular graph.
     
     Parameters
     ----------
@@ -298,6 +319,9 @@ def building_wall_graph(tao, graph, *, verbose=False, as_dict=True, raises=True)
     The graph defines the coordinate system for the (x, y) points.
     Command syntax:
       python building_wall_graph {graph}
+    
+    Where:
+      {graph} is a plot region graph name.
     
     Examples
     --------
@@ -335,6 +359,7 @@ def building_wall_point(tao, ix_section, ix_point, z, x, radius, z_center, x_cen
     -----
     Command syntax:
       python building_wall_point {ix_section}^^{ix_point}^^{z}^^{x}^^{radius}^^{z_center}^^{x_center}
+    
     Where:
       {ix_section}    -- Section index.
       {ix_point}      -- Point index. Points of higher indexes will be moved up 
@@ -364,7 +389,7 @@ def building_wall_point(tao, ix_section, ix_point, z, x, radius, z_center, x_cen
 def building_wall_section(tao, ix_section, sec_name, sec_constraint, *, verbose=False, as_dict=True, raises=True):
     """
     
-    add or delete a building wall section
+    Add or delete a building wall section
     
     Parameters
     ----------
@@ -380,12 +405,13 @@ def building_wall_section(tao, ix_section, sec_name, sec_constraint, *, verbose=
     -----
     Command syntax:
       python building_wall_section {ix_section}^^{sec_name}^^{sec_constraint}
+    
     Where:
       {ix_section}      -- Section index. Sections with higher indexes will be
                              moved up if adding a section and down if deleting.
       {sec_name}        -- Section name.
-      {sec_constraint}  -- Must be one of:
-          delete     -- Delete section. Anything else will add the section.
+      {sec_constraint}  -- A section constraint name or "delete". Must be one of:
+          delete          -- Delete section. Anything else will add the section.
           none
           left_side
           right_side
@@ -408,7 +434,7 @@ def building_wall_section(tao, ix_section, sec_name, sec_constraint, *, verbose=
 def constraints(tao, who, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Optimization data and variables that contribute to the merit function.
+    Output optimization data and variable parameters that contribute to the merit function.
     
     Parameters
     ----------
@@ -422,9 +448,11 @@ def constraints(tao, who, *, verbose=False, as_dict=True, raises=True):
     -----
     Command syntax:
       python constraints {who}
-    {who} is one of:
-      data
-      var
+    
+    Where:
+      {who} is one of:
+        data
+        var
     Data constraints output is:
       data name
       constraint type
@@ -470,7 +498,7 @@ def constraints(tao, who, *, verbose=False, as_dict=True, raises=True):
 def da_aperture(tao, *, ix_uni='', verbose=False, as_dict=True, raises=True):
     """
     
-    Dynamic aperture data
+    Output dynamic aperture data
     
     Parameters
     ----------
@@ -483,10 +511,13 @@ def da_aperture(tao, *, ix_uni='', verbose=False, as_dict=True, raises=True):
     Notes
     -----
     Command syntax:
-      python da_aperture {ix_uni}
+      python da_aperture {ix_universe}
+    
+    Where:
+      {ix_universe} is a universe index. Defaults to s%global%default_universe.
     
     """
-    cmd = f'python da_aperture {ix_uni}'
+    cmd = f'python da_aperture {ix_universe}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, raises, method_name='da_aperture', cmd_type='string_list')
 
@@ -494,7 +525,7 @@ def da_aperture(tao, *, ix_uni='', verbose=False, as_dict=True, raises=True):
 def da_params(tao, *, ix_uni='', verbose=False, as_dict=True, raises=True):
     """
     
-    Dynamic aperture input parameters
+    Output dynamic aperture input parameters
     
     Parameters
     ----------
@@ -507,10 +538,13 @@ def da_params(tao, *, ix_uni='', verbose=False, as_dict=True, raises=True):
     Notes
     -----
     Command syntax:
-      python da_params {ix_uni}
+      python da_params {ix_universe}
+    
+    Where:
+      {ix_universe} is a universe index. Defaults to s%global%default_universe.
     
     """
-    cmd = f'python da_params {ix_uni}'
+    cmd = f'python da_params {ix_universe}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, raises, method_name='da_params', cmd_type='string_list')
 
@@ -518,7 +552,7 @@ def da_params(tao, *, ix_uni='', verbose=False, as_dict=True, raises=True):
 def data(tao, d2_name, d1_datum, *, ix_universe='', dat_index='1', verbose=False, as_dict=True, raises=True):
     """
     
-    Individual datum info.
+    Output Individual datum parameters.
     
     Parameters
     ----------
@@ -534,12 +568,18 @@ def data(tao, d2_name, d1_datum, *, ix_universe='', dat_index='1', verbose=False
     Notes
     -----
     Command syntax:
-      python data {ix_universe}@{d2_name}.{d1_datum}[{dat_index}]
+      python data {ix_universe}@{d2_name}.{d1_name}[{dat_index}]
+    
+    Where:
+      {ix_universe} is a universe index. Defaults to s%global%default_universe.
+      {d2_name} is the name of the d2_data structure the datum is in.
+      {d1_datum} is the name of the d1_data structure the datum is in.
+      {dat_index} is the index of the datum.
+    
     Use the "python data-d1" command to get detailed info on a specific d1 array.
-    Output syntax is parameter list form. See documentation at the beginning of this file.
+    
     Example:
       python data 1@orbit.x[10]
-    Note : By default dat_index is 1.
     
     Examples
     --------
@@ -560,7 +600,7 @@ def data(tao, d2_name, d1_datum, *, ix_universe='', dat_index='1', verbose=False
        dat_index: 1
     
     """
-    cmd = f'python data {ix_universe}@{d2_name}.{d1_datum}[{dat_index}]'
+    cmd = f'python data {ix_universe}@{d2_name}.{d1_name}[{dat_index}]'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, raises, method_name='data', cmd_type='string_list')
 
@@ -584,13 +624,15 @@ def data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_un
     Notes
     -----
     Command syntax:
-      python data_d2_create {d2_name}^^{n_d1_data}^^{d_data_arrays_name_min_max}
-    {d2_name} should be of the form {ix_uni}@{d2_datum_name}
-    {n_d1_data} is the number of associated d1 data structures.
-    {d_data_arrays_name_min_max} has the form
-      {name1}^^{lower_bound1}^^{upper_bound1}^^....^^{nameN}^^{lower_boundN}^^{upper_boundN}
-    where {name} is the data array name and {lower_bound} and {upper_bound} are the bounds 
-    of the array.
+      python data_d2_create {ix_universe}@{d2_name}^^{n_d1_data}^^{d_data_arrays_name_min_max}
+    
+    Where:
+      {ix_universe} is a universe index. Defaults to s%global%default_universe.
+      {d2_name} is the name of the d2_data structure to create.
+      {n_d1_data} is the number of associated d1 data structures.
+      {d_data_arrays_name_min_max} has the form
+        {name1}^^{lower_bound1}^^{upper_bound1}^^....^^{nameN}^^{lower_boundN}^^{upper_boundN}
+      where {name} is the data array name and {lower_bound} and {upper_bound} are the bounds of the array.
     
     Example:
       python data_d2_create 2@orbit^^2^^x^^0^^45^^y^^1^^47
@@ -600,7 +642,8 @@ def data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_un
     The "x" d1 structure has an associated data array with indexes in the range [0, 45].
     The "y" d1 structure has an associated data arrray with indexes in the range [1, 47].
     
-    Use the "set data" command to set a created datum parameters.
+    Use the "set data" command to set created datum parameters.
+    
     Note: When setting multiple data parameters, 
           temporarily toggle s%global%lattice_calc_on to False
       ("set global lattice_calc_on = F") to prevent Tao trying to 
@@ -617,7 +660,7 @@ def data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_un
        d_data_arrays_name_min_max: x^^0^^45^^y^^1^^47
     
     """
-    cmd = f'python data_d2_create {d2_name}^^{n_d1_data}^^{d_data_arrays_name_min_max}'
+    cmd = f'python data_d2_create {ix_universe}@{d2_name}^^{n_d1_data}^^{d_data_arrays_name_min_max}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, raises, method_name='data_d2_create', cmd_type='None')
 
@@ -639,9 +682,15 @@ def data_d2_destroy(tao, d2_datum, *, ix_uni='', verbose=False, as_dict=True, ra
     Notes
     -----
     Command syntax:
-      python data_d2_destroy {d2_datum}
-    {d2_datum} should be of the form
-      {ix_uni}@{d2_datum_name}
+      python data_d2_destroy {ix_universe}@{d2_name}
+    
+    Where:
+      {ix_universe} is a universe index. Defaults to s%global%default_universe.
+      {d2_name} is the name of the d2_data structure to destroy.
+    
+    Example:
+      python data_d2_destroy 2@orbit
+    This destroys the orbit d2_data structure in universe 2.
     
     Examples
     --------
@@ -651,7 +700,7 @@ def data_d2_destroy(tao, d2_datum, *, ix_uni='', verbose=False, as_dict=True, ra
        d2_datum: 1@eta.x
     
     """
-    cmd = f'python data_d2_destroy {d2_datum}'
+    cmd = f'python data_d2_destroy {ix_universe}@{d2_name}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, raises, method_name='data_d2_destroy', cmd_type='None')
 
@@ -659,7 +708,7 @@ def data_d2_destroy(tao, d2_datum, *, ix_uni='', verbose=False, as_dict=True, ra
 def data_d2(tao, d2_datum, *, ix_uni='', verbose=False, as_dict=True, raises=True):
     """
     
-    Information on a d2_datum.
+    Output information on a d2_datum.
     
     Parameters
     ----------
@@ -673,9 +722,11 @@ def data_d2(tao, d2_datum, *, ix_uni='', verbose=False, as_dict=True, raises=Tru
     Notes
     -----
     Command syntax:
-      python data_d2 {d2_datum}
-    {d2_datum} should be of the form
-      {ix_uni}@{d2_datum_name}
+      python data_d2 {ix_universe}@{d2_name}
+    
+    Where:
+      {ix_universe} is a universe index. Defaults to s%global%default_universe.
+      {d2_name} is the name of the d2_data structure.
     
     Examples
     --------
@@ -686,7 +737,7 @@ def data_d2(tao, d2_datum, *, ix_uni='', verbose=False, as_dict=True, raises=Tru
        d2_datum: twiss
     
     """
-    cmd = f'python data_d2 {d2_datum}'
+    cmd = f'python data_d2 {ix_universe}@{d2_name}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, raises, method_name='data_d2', cmd_type='string_list')
 
@@ -694,7 +745,7 @@ def data_d2(tao, d2_datum, *, ix_uni='', verbose=False, as_dict=True, raises=Tru
 def data_d_array(tao, d1_datum, *, ix_uni='', verbose=False, as_dict=True, raises=True):
     """
     
-    List of datums for a given data_d1.
+    Output list of datums for a given d1_data structure.
     
     Parameters
     ----------
@@ -708,9 +759,13 @@ def data_d_array(tao, d1_datum, *, ix_uni='', verbose=False, as_dict=True, raise
     Notes
     -----
     Command syntax:
-      python data_d_array {d1_datum}
-    {d1_datum} should be for the form
-      {ix_uni}@{d2_datum_name}.{d1_datum_name}
+      python data_d_array {ix_universe}@{d2_name}.{d1_name}
+    
+    Where:
+      {ix_universe} is a universe index. Defaults to s%global%default_universe.
+      {d2_name} is the name of the containing d2_data structure.
+      {d1_name} is the name of the d1_data structure containing the array of datums.
+    
     Example:
       python data_d_array 1@orbit.x
     
@@ -723,7 +778,7 @@ def data_d_array(tao, d1_datum, *, ix_uni='', verbose=False, as_dict=True, raise
        d1_datum: twiss.end
     
     """
-    cmd = f'python data_d_array {d1_datum}'
+    cmd = f'python data_d_array {ix_universe}@{d2_name}.{d1_name}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, raises, method_name='data_d_array', cmd_type='string_list')
 
@@ -731,7 +786,7 @@ def data_d_array(tao, d1_datum, *, ix_uni='', verbose=False, as_dict=True, raise
 def data_d1_array(tao, d2_datum, *, ix_uni='', verbose=False, as_dict=True, raises=True):
     """
     
-    List of d1 arrays for a given data_d2.
+    Output list of d1 arrays for a given data_d2.
     
     Parameters
     ----------
@@ -746,6 +801,7 @@ def data_d1_array(tao, d2_datum, *, ix_uni='', verbose=False, as_dict=True, rais
     -----
     Command syntax:
       python data_d1_array {d2_datum}
+    
     {d2_datum} should be of the form
       {ix_uni}@{d2_datum_name}
     
@@ -766,7 +822,7 @@ def data_d1_array(tao, d2_datum, *, ix_uni='', verbose=False, as_dict=True, rais
 def data_parameter(tao, data_array, parameter, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Given an array of datums, generate an array of values for a particular datum parameter.
+    Output an array of values for a particular datum parameter for a given array of datums, 
     
     Parameters
     ----------
@@ -781,6 +837,7 @@ def data_parameter(tao, data_array, parameter, *, verbose=False, as_dict=True, r
     -----
     Command syntax:
       python data_parameter {data_array} {parameter}
+    
     {parameter} may be any tao_data_struct parameter.
     Example:
       python data_parameter orbit.x model_value
@@ -802,7 +859,7 @@ def data_parameter(tao, data_array, parameter, *, verbose=False, as_dict=True, r
 def data_d2_array(tao, ix_universe, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Data d2 info for a given universe.
+    Output data d2 info for a given universe.
     
     Parameters
     ----------
@@ -816,6 +873,7 @@ def data_d2_array(tao, ix_universe, *, verbose=False, as_dict=True, raises=True)
     -----
     Command syntax:
       python data_d2_array {ix_universe}
+    
     Example:
       python data_d2_array 1
     
@@ -845,6 +903,7 @@ def data_set_design_value(tao, *, verbose=False, as_dict=True, raises=True):
     -----
     Command syntax:
       python data_set_design_value
+    
     Example:
       python data_set_design_value
     
@@ -945,7 +1004,7 @@ def datum_create(tao, datum_name, data_type, *, ele_ref_name='', ele_start_name=
 def datum_has_ele(tao, datum_type, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Does datum type have an associated lattice element?
+    Output whether a datum type has an associated lattice element
     
     Parameters
     ----------
@@ -976,7 +1035,7 @@ def datum_has_ele(tao, datum_type, *, verbose=False, as_dict=True, raises=True):
 def derivative(tao, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Optimization derivatives
+    Output optimization derivatives
     
     Returns
     -------
@@ -989,6 +1048,7 @@ def derivative(tao, *, verbose=False, as_dict=True, raises=True):
     -----
     Command syntax:
       python derivative
+    
     Note: To save time, this command will not recalculate derivatives. 
     Use the "derivative" command beforehand to recalcuate if needed.
     
@@ -1004,170 +1064,10 @@ def derivative(tao, *, verbose=False, as_dict=True, raises=True):
     return __execute(tao, cmd, as_dict, raises, method_name='derivative', cmd_type='string_list')
 
 
-def ele_head(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
-    """
-    
-    "Head" Element attributes
-    
-    Parameters
-    ----------
-    ele_id
-    which : default=model
-    
-    Returns
-    -------
-    string_list
-    
-    Notes
-    -----
-    Command syntax:
-      python ele:head {ele_id}|{which}
-    where {ele_id} is an element name or index and {which} is one of
-      model
-      base
-      design
-    Example:
-      python ele:head 3@1>>7|model
-    This gives element number 7 in branch 1 of universe 3.
-    
-    Examples
-    --------
-    Example: 1
-     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
-     args:
-      ele_id: 1@0>>1
-      which: model
-    
-    """
-    cmd = f'python ele:head {ele_id}|{which}'
-    if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='ele_head', cmd_type='string_list')
-
-
-def ele_methods(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
-    """
-    
-    Element methods
-    
-    Parameters
-    ----------
-    ele_id
-    which : default=model
-    
-    Returns
-    -------
-    string_list
-    
-    Notes
-    -----
-    Command syntax:
-      python ele:methods {ele_id}|{which}
-    where {ele_id} is an element name or index and {which} is one of
-      model
-      base
-      design
-    Example:
-      python ele:methods 3@1>>7|model
-    This gives element number 7 in branch 1 of universe 3.
-    
-    Examples
-    --------
-    Example: 1
-     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
-     args:
-      ele_id: 1@0>>1
-      which: model
-    
-    """
-    cmd = f'python ele:methods {ele_id}|{which}'
-    if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='ele_methods', cmd_type='string_list')
-
-
-def ele_gen_attribs(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
-    """
-    
-    Element general attributes
-    
-    Parameters
-    ----------
-    ele_id
-    which : default=model
-    
-    Returns
-    -------
-    string_list
-    
-    Notes
-    -----
-    Command syntax:
-      python ele:gen_attribs {ele_id}|{which}
-    where {ele_id} is an element name or index and {which} is one of
-      model
-      base
-      design
-    Example:
-      python ele:gen_attribs 3@1>>7|model
-    This gives element number 7 in branch 1 of universe 3.
-    
-    Examples
-    --------
-    Example: 1
-     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
-     args:
-      ele_id: 1@0>>1
-      which: model
-    
-    """
-    cmd = f'python ele:gen_attribs {ele_id}|{which}'
-    if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='ele_gen_attribs', cmd_type='string_list')
-
-
-def ele_multipoles(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
-    """
-    
-    Element multipoles
-    
-    Parameters
-    ----------
-    ele_id
-    which : default=model
-    
-    Returns
-    -------
-    string_list
-    
-    Notes
-    -----
-    Command syntax:
-      python ele:multipoles {ele_id}|{which}
-    where {ele_id} is an element name or index and {which} is one of
-      model
-      base
-      design
-    Example:
-      python ele:multipoles 3@1>>7|model
-    This gives element number 7 in branch 1 of universe 3.
-    
-    Examples
-    --------
-    Example: 1
-     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
-     args:
-      ele_id: 1@0>>1
-      which: model
-    
-    """
-    cmd = f'python ele:multipoles {ele_id}|{which}'
-    if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='ele_multipoles', cmd_type='string_list')
-
-
 def ele_ac_kicker(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
-    Element ac_kicker
+    Output element ac_kicker parameters
     
     Parameters
     ----------
@@ -1182,10 +1082,13 @@ def ele_ac_kicker(tao, ele_id, *, which='model', verbose=False, as_dict=True, ra
     -----
     Command syntax:
       python ele:ac_kicker {ele_id}|{which}
-    where {ele_id} is an element name or index and {which} is one of
-      model
-      base
-      design
+    
+    Where: 
+      {ele_id} is an element name or index.
+      {which} is one of
+        model
+        base
+        design
     Example:
       python ele:ac_kicker 3@1>>7|model
     This gives element number 7 in branch 1 of universe 3.
@@ -1207,7 +1110,7 @@ def ele_ac_kicker(tao, ele_id, *, which='model', verbose=False, as_dict=True, ra
 def ele_cartesian_map(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
-    Element cartesian_map
+    Output element cartesian_map parameters
     
     Parameters
     ----------
@@ -1224,6 +1127,7 @@ def ele_cartesian_map(tao, ele_id, index, who, *, which='model', verbose=False, 
     -----
     Command syntax:
       python ele:cartesian_map {ele_id}|{which} {index} {who}
+    
     where {ele_id} is an element name or index and {which} is one of
       model
       base
@@ -1255,7 +1159,7 @@ def ele_cartesian_map(tao, ele_id, index, who, *, which='model', verbose=False, 
 def ele_chamber_wall(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
-    Element beam chamber wall
+    Output element beam chamber wall parameters
     
     Parameters
     ----------
@@ -1272,6 +1176,7 @@ def ele_chamber_wall(tao, ele_id, index, who, *, which='model', verbose=False, a
     -----
     Command syntax:
       python ele:chamber_wall {ele_id}|{which} {index} {who}
+    
     where {ele_id} is an element name or index and {which} is one of
       model
       base
@@ -1297,10 +1202,52 @@ def ele_chamber_wall(tao, ele_id, index, who, *, which='model', verbose=False, a
     return __execute(tao, cmd, as_dict, raises, method_name='ele_chamber_wall', cmd_type='string_list')
 
 
+def ele_control_var(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output list of element control variables.
+    Used for group, overlay and ramper type elements.
+    
+    Parameters
+    ----------
+    ele_id
+    which : default=model
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python ele:control_var {ele_id}|{which}
+    
+    where {ele_id} is an element name or index and {which} is one of
+      model
+      base
+      design
+    Example:
+      python ele:control_var 3@1>>7|model
+    This gives element number 7 in branch 1 of universe 3.
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
+     args:
+      ele_id: 1@0>>873
+      which: model
+    
+    """
+    cmd = f'python ele:control_var {ele_id}|{which}'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_control_var', cmd_type='string_list')
+
+
 def ele_cylindrical_map(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
-    Element cylindrical_map
+    Output element cylindrical_map
     
     Parameters
     ----------
@@ -1317,6 +1264,7 @@ def ele_cylindrical_map(tao, ele_id, index, who, *, which='model', verbose=False
     -----
     Command syntax:
       python ele:cylindrical_map {ele_id}|{which} {index} {who}
+    
     where {ele_id} is an element name or index and {which} is one of
       model
       base
@@ -1345,10 +1293,10 @@ def ele_cylindrical_map(tao, ele_id, index, who, *, which='model', verbose=False
     return __execute(tao, cmd, as_dict, raises, method_name='ele_cylindrical_map', cmd_type='string_list')
 
 
-def ele_taylor(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
+def ele_elec_multipoles(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
-    Element taylor
+    Output element electric multipoles
     
     Parameters
     ----------
@@ -1362,188 +1310,14 @@ def ele_taylor(tao, ele_id, *, which='model', verbose=False, as_dict=True, raise
     Notes
     -----
     Command syntax:
-      python ele:taylor {ele_id}|{which}
+      python ele:elec_multipoles {ele_id}|{which}
+    
     where {ele_id} is an element name or index and {which} is one of
       model
       base
       design
     Example:
-      python ele:taylor 3@1>>7|model
-    This gives element number 7 in branch 1 of universe 3.
-    
-    Examples
-    --------
-    Example: 1
-     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_taylor
-     args:
-      ele_id: 1@0>>34
-      which: model
-    
-    """
-    cmd = f'python ele:taylor {ele_id}|{which}'
-    if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='ele_taylor', cmd_type='string_list')
-
-
-def ele_spin_taylor(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
-    """
-    
-    Element spin_taylor
-    
-    Parameters
-    ----------
-    ele_id
-    which : default=model
-    
-    Returns
-    -------
-    string_list
-    
-    Notes
-    -----
-    Command syntax:
-      python ele:spin_taylor {ele_id}|{which}
-    where {ele_id} is an element name or index and {which} is one of
-      model
-      base
-      design
-    Example:
-      python ele:spin_taylor 3@1>>7|model
-    This gives element number 7 in branch 1 of universe 3.
-    
-    Examples
-    --------
-    Example: 1
-     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_spin
-     args:
-      ele_id: 1@0>>2
-      which: model
-    
-    """
-    cmd = f'python ele:spin_taylor {ele_id}|{which}'
-    if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='ele_spin_taylor', cmd_type='string_list')
-
-
-def ele_wake(tao, ele_id, *, which='model', who='base', verbose=False, as_dict=True, raises=True):
-    """
-    
-    Element wake
-    
-    Parameters
-    ----------
-    ele_id
-    which : default=model
-    who : default=base
-    
-    Returns
-    -------
-    string_list
-    
-    Notes
-    -----
-    Command syntax:
-      python ele:wake {ele_id}|{which} {who}
-    where {ele_id} is an element name or index and {which} is one of
-      model
-      base
-      design
-    {Who} is one of
-      base
-      sr_long     sr_long_table
-      sr_trans    sr_trans_table
-      lr_mode_table
-    Example:
-      python ele:wake 3@1>>7|model
-    This gives element number 7 in branch 1 of universe 3.
-    
-    Examples
-    --------
-    Example: 1
-     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wake
-     args:
-      ele_id: 1@0>>1
-      which: model
-      who: sr_long
-    
-    """
-    cmd = f'python ele:wake {ele_id}|{which} {who}'
-    if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='ele_wake', cmd_type='string_list')
-
-
-def ele_wall3d(tao, ele_id, *, which='model', index='1', who='base', verbose=False, as_dict=True, raises=True):
-    """
-    
-    Element wall3d
-    
-    Parameters
-    ----------
-    ele_id
-    which : default=model
-    index : default=1
-    who : default=base
-    
-    Returns
-    -------
-    string_list
-    
-    Notes
-    -----
-    Command syntax:
-      python ele:wall3d {ele_id}|{which} {index} {who}
-    where {ele_id} is an element name or index and {which} is one of
-      model
-      base
-      design
-    {index} is the index number in the ele%wall3d(:) array (size obtained from "ele:head").
-    {who} is one of:
-      base
-      table
-    Example:
-      python ele:wall3d 3@1>>7|model 2 base
-    This gives element number 7 in branch 1 of universe 3.
-    
-    Examples
-    --------
-    Example: 1
-     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall3d
-     args:
-      ele_id: 1@0>>1
-      which: model
-      index: 1
-      who: table
-    
-    """
-    cmd = f'python ele:wall3d {ele_id}|{which} {index} {who}'
-    if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='ele_wall3d', cmd_type='string_list')
-
-
-def ele_twiss(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
-    """
-    
-    Element twiss
-    
-    Parameters
-    ----------
-    ele_id
-    which : default=model
-    
-    Returns
-    -------
-    string_list
-    
-    Notes
-    -----
-    Command syntax:
-      python ele:twiss {ele_id}|{which}
-    where {ele_id} is an element name or index and {which} is one of
-      model
-      base
-      design
-    Example:
-      python ele:twiss 3@1>>7|model
+      python ele:elec_multipoles 3@1>>7|model
     This gives element number 7 in branch 1 of universe 3.
     
     Examples
@@ -1555,235 +1329,15 @@ def ele_twiss(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises
       which: model
     
     """
-    cmd = f'python ele:twiss {ele_id}|{which}'
+    cmd = f'python ele:elec_multipoles {ele_id}|{which}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='ele_twiss', cmd_type='string_list')
-
-
-def ele_control_var(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
-    """
-    
-    List element control variables.
-    Used for group, overlay and ramper type elements
-    
-    Parameters
-    ----------
-    ele_id
-    which : default=model
-    
-    Returns
-    -------
-    string_list
-    
-    Notes
-    -----
-    Command syntax:
-      python ele:control_var {ele_id}|{which}
-    where {ele_id} is an element name or index and {which} is one of
-      model
-      base
-      design
-    Example:
-      python ele:control_var 3@1>>7|model
-    This gives element number 7 in branch 1 of universe 3.
-    
-    Examples
-    --------
-    Example: 1
-     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
-     args:
-      ele_id: 1@0>>873
-      which: model
-    
-    """
-    cmd = f'python ele:control_var {ele_id}|{which}'
-    if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='ele_control_var', cmd_type='string_list')
-
-
-def ele_orbit(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
-    """
-    
-    Element orbit
-    
-    Parameters
-    ----------
-    ele_id
-    which : default=model
-    
-    Returns
-    -------
-    string_list
-    
-    Notes
-    -----
-    Command syntax:
-      python ele:orbit {ele_id}|{which}
-    where {ele_id} is an element name or index and {which} is one of
-      model
-      base
-      design
-    Example:
-      python ele:orbit 3@1>>7|model
-    This gives element number 7 in branch 1 of universe 3.
-    
-    Examples
-    --------
-    Example: 1
-     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
-     args:
-      ele_id: 1@0>>1
-      which: model
-    
-    """
-    cmd = f'python ele:orbit {ele_id}|{which}'
-    if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='ele_orbit', cmd_type='string_list')
-
-
-def ele_mat6(tao, ele_id, *, which='model', who='mat6', verbose=False, as_dict=True, raises=True):
-    """
-    
-    Element mat6
-    
-    Parameters
-    ----------
-    ele_id
-    which : default=model
-    who : default=mat6
-    
-    Returns
-    -------
-    string_list
-    
-    Notes
-    -----
-    Command syntax:
-      python ele:mat6 {ele_id}|{which} {who}
-    where {ele_id} is an element name or index and {which} is one of
-      model
-      base
-      design
-    {who} is one of:
-      mat6
-      vec0
-      err
-    Example:
-      python ele:mat6 3@1>>7|model mat6
-    This gives element number 7 in branch 1 of universe 3.
-    
-    Examples
-    --------
-    Example: 1
-     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
-     args:
-      ele_id: 1@0>>1
-      which: model
-      who: mat6
-    
-    """
-    cmd = f'python ele:mat6 {ele_id}|{which} {who}'
-    if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='ele_mat6', cmd_type='string_list')
-
-
-def ele_taylor_field(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True):
-    """
-    
-    Element taylor_field
-    
-    Parameters
-    ----------
-    ele_id
-    index
-    who
-    which : default=model
-    
-    Returns
-    -------
-    string_list
-    
-    Notes
-    -----
-    Command syntax:
-      python ele:taylor_field {ele_id}|{which} {index} {who}
-    where {ele_id} is an element name or index and {which} is one of
-      model
-      base
-      design
-    {index} is the index number in the ele%taylor_field(:) array
-    {who} is one of:
-      base
-      terms
-    Example:
-      python ele:taylor_field 3@1>>7|model 2 base
-    This gives element number 7 in branch 1 of universe 3.
-    
-    Examples
-    --------
-    Example: 1
-     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field
-     args:
-      ele_id: 1@0>>9
-      which: model
-      index: 1
-      who: terms
-    
-    """
-    cmd = f'python ele:taylor_field {ele_id}|{which} {index} {who}'
-    if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='ele_taylor_field', cmd_type='string_list')
-
-
-def ele_grid_field(tao, ele_id, *, which='model', index='1', who='base', verbose=False, as_dict=True, raises=True):
-    """
-    
-    Element grid_field
-    
-    Parameters
-    ----------
-    ele_id
-    which : default=model
-    index : default=1
-    who : default=base
-    
-    Returns
-    -------
-    string_list
-    
-    Notes
-    -----
-    Command syntax:
-      python ele:grid_field {ele_id}|{which} {index} {who}
-    where {ele_id} is an element name or index and {which} is one of
-      model, base, design
-    {index} is the index number in the ele%grid_field(:) array.
-    {who} is one of:
-      base, points
-    Example:
-      python ele:grid_field 3@1>>7|model 2 base
-    This gives grid #2 of element number 7 in branch 1 of universe 3.
-    
-    Examples
-    --------
-    Example: 1
-     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_grid
-     args:
-      ele_id: 1@0>>1
-      which: model
-      index: 1
-      who: base 
-    
-    """
-    cmd = f'python ele:grid_field {ele_id}|{which} {index} {who}'
-    if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='ele_grid_field', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_elec_multipoles', cmd_type='string_list')
 
 
 def ele_floor(tao, ele_id, *, which='model', where='end', verbose=False, as_dict=True, raises=True):
     """
     
-    Element floor coordinates. The output gives two lines. "Reference" is
+    Output element floor coordinates. The output gives two lines. "Reference" is
     without element misalignments and "Actual" is with misalignments.
     
     Parameters
@@ -1800,6 +1354,7 @@ def ele_floor(tao, ele_id, *, which='model', where='end', verbose=False, as_dict
     -----
     Command syntax:
       python ele:floor {ele_id}|{which} {where}
+    
     where {ele_id} is an element name or index and {which} is one of
       model
       base
@@ -1835,16 +1390,17 @@ def ele_floor(tao, ele_id, *, which='model', where='end', verbose=False, as_dict
     return __execute(tao, cmd, as_dict, raises, method_name='ele_floor', cmd_type='string_list')
 
 
-def ele_photon(tao, ele_id, *, which='model', who='base', verbose=False, as_dict=True, raises=True):
+def ele_grid_field(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
-    Element photon
+    Output element grid_field
     
     Parameters
     ----------
     ele_id
+    index
+    who
     which : default=model
-    who : default=base
     
     Returns
     -------
@@ -1853,38 +1409,119 @@ def ele_photon(tao, ele_id, *, which='model', who='base', verbose=False, as_dict
     Notes
     -----
     Command syntax:
-      python ele:photon {ele_id}|{which} {who}
+      python ele:grid_field {ele_id}|{which} {index} {who}
+    
+    where {ele_id} is an element name or index and {which} is one of
+      model, base, design
+    {index} is the index number in the ele%grid_field(:) array.
+    {who} is one of:
+      base, points
+    Example:
+      python ele:grid_field 3@1>>7|model 2 base
+    This gives grid #2 of element number 7 in branch 1 of universe 3.
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_grid
+     args:
+      ele_id: 1@0>>1
+      which: model
+      index: 1
+      who: base 
+    
+    """
+    cmd = f'python ele:grid_field {ele_id}|{which} {index} {who}'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_grid_field', cmd_type='string_list')
+
+
+def ele_gen_attribs(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output element general attributes
+    
+    Parameters
+    ----------
+    ele_id
+    which : default=model
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python ele:gen_attribs {ele_id}|{which}
+    
     where {ele_id} is an element name or index and {which} is one of
       model
       base
       design
-    {who} is one of:
-      base
-      material
-      surface
     Example:
-      python ele:photon 3@1>>7|model base
+      python ele:gen_attribs 3@1>>7|model
     This gives element number 7 in branch 1 of universe 3.
     
     Examples
     --------
     Example: 1
-     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_photon
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
       ele_id: 1@0>>1
       which: model
-      who: base
     
     """
-    cmd = f'python ele:photon {ele_id}|{which} {who}'
+    cmd = f'python ele:gen_attribs {ele_id}|{which}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='ele_photon', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_gen_attribs', cmd_type='string_list')
+
+
+def ele_head(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output "head" Element attributes
+    
+    Parameters
+    ----------
+    ele_id
+    which : default=model
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python ele:head {ele_id}|{which}
+    
+    where {ele_id} is an element name or index and {which} is one of
+      model
+      base
+      design
+    Example:
+      python ele:head 3@1>>7|model
+    This gives element number 7 in branch 1 of universe 3.
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
+     args:
+      ele_id: 1@0>>1
+      which: model
+    
+    """
+    cmd = f'python ele:head {ele_id}|{which}'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_head', cmd_type='string_list')
 
 
 def ele_lord_slave(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
-    Lists the lord/slave tree of an element.
+    Output the lord/slave tree of an element.
     
     Parameters
     ----------
@@ -1899,6 +1536,7 @@ def ele_lord_slave(tao, ele_id, *, which='model', verbose=False, as_dict=True, r
     -----
     Command syntax:
       python ele:lord_slave {ele_id}|{which}
+    
     where {ele_id} is an element name or index and {which} is one of
       model
       base
@@ -1927,10 +1565,57 @@ def ele_lord_slave(tao, ele_id, *, which='model', verbose=False, as_dict=True, r
     return __execute(tao, cmd, as_dict, raises, method_name='ele_lord_slave', cmd_type='string_list')
 
 
-def ele_elec_multipoles(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
+def ele_mat6(tao, ele_id, *, which='model', who='mat6', verbose=False, as_dict=True, raises=True):
     """
     
-    Element electric multipoles
+    Output element mat6
+    
+    Parameters
+    ----------
+    ele_id
+    which : default=model
+    who : default=mat6
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python ele:mat6 {ele_id}|{which} {who}
+    
+    where {ele_id} is an element name or index and {which} is one of
+      model
+      base
+      design
+    {who} is one of:
+      mat6
+      vec0
+      err
+    Example:
+      python ele:mat6 3@1>>7|model mat6
+    This gives element number 7 in branch 1 of universe 3.
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
+     args:
+      ele_id: 1@0>>1
+      which: model
+      who: mat6
+    
+    """
+    cmd = f'python ele:mat6 {ele_id}|{which} {who}'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_mat6', cmd_type='string_list')
+
+
+def ele_methods(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output element methods
     
     Parameters
     ----------
@@ -1944,13 +1629,14 @@ def ele_elec_multipoles(tao, ele_id, *, which='model', verbose=False, as_dict=Tr
     Notes
     -----
     Command syntax:
-      python ele:elec_multipoles {ele_id}|{which}
+      python ele:methods {ele_id}|{which}
+    
     where {ele_id} is an element name or index and {which} is one of
       model
       base
       design
     Example:
-      python ele:elec_multipoles 3@1>>7|model
+      python ele:methods 3@1>>7|model
     This gives element number 7 in branch 1 of universe 3.
     
     Examples
@@ -1962,15 +1648,465 @@ def ele_elec_multipoles(tao, ele_id, *, which='model', verbose=False, as_dict=Tr
       which: model
     
     """
-    cmd = f'python ele:elec_multipoles {ele_id}|{which}'
+    cmd = f'python ele:methods {ele_id}|{which}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='ele_elec_multipoles', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_methods', cmd_type='string_list')
+
+
+def ele_multipoles(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output element multipoles
+    
+    Parameters
+    ----------
+    ele_id
+    which : default=model
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python ele:multipoles {ele_id}|{which}
+    
+    where {ele_id} is an element name or index and {which} is one of
+      model
+      base
+      design
+    Example:
+      python ele:multipoles 3@1>>7|model
+    This gives element number 7 in branch 1 of universe 3.
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
+     args:
+      ele_id: 1@0>>1
+      which: model
+    
+    """
+    cmd = f'python ele:multipoles {ele_id}|{which}'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_multipoles', cmd_type='string_list')
+
+
+def ele_orbit(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output element orbit
+    
+    Parameters
+    ----------
+    ele_id
+    which : default=model
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python ele:orbit {ele_id}|{which}
+    
+    where {ele_id} is an element name or index and {which} is one of
+      model
+      base
+      design
+    Example:
+      python ele:orbit 3@1>>7|model
+    This gives element number 7 in branch 1 of universe 3.
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
+     args:
+      ele_id: 1@0>>1
+      which: model
+    
+    """
+    cmd = f'python ele:orbit {ele_id}|{which}'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_orbit', cmd_type='string_list')
+
+
+def ele_param(tao, ele_id, who, *, which='model', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output lattice element parameter
+    
+    Parameters
+    ----------
+    ele_id
+    who
+    which : default=model
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python ele:param {ele_id}|{which} {who}
+    
+    where {ele_id} is an element name or index and {which} is one of
+      model
+      base
+      design
+    Possible {who} values is the same as possible {who} values for "python lat_list"
+    except for "ele:mat6" and "ele:vec0".
+    Note: Here {who} must be a single parameter and not a list.
+    
+    Example:
+      python ele:param 3@1>>7|model e_tot
+    This gives E_tot of element number 7 in branch 1 of universe 3.
+    
+    Note: On output the {variable} component will always be "F" (since this 
+    command cannot tell if a parameter is allowed to vary).
+    
+    Also see: "python lat_list".
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_photon
+     args:
+      ele_id: 1@0>>1
+      which: model
+      who: orbit.vec.1
+    
+    """
+    cmd = f'python ele:param {ele_id}|{which} {who}'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_param', cmd_type='string_list')
+
+
+def ele_photon(tao, ele_id, who, *, which='model', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output element photon parameters
+    
+    Parameters
+    ----------
+    ele_id
+    who
+    which : default=model
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python ele:photon {ele_id}|{which} {who}
+    
+    where {ele_id} is an element name or index and {which} is one of
+      model
+      base
+      design
+    {who} is one of:
+      base
+      material
+      curvature
+    Example:
+      python ele:photon 3@1>>7|model base
+    This gives element number 7 in branch 1 of universe 3.
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_photon
+     args:
+      ele_id: 1@0>>1
+      which: model
+      who: base
+    
+    """
+    cmd = f'python ele:photon {ele_id}|{which} {who}'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_photon', cmd_type='string_list')
+
+
+def ele_spin_taylor(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output element spin_taylor parameters
+    
+    Parameters
+    ----------
+    ele_id
+    which : default=model
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python ele:spin_taylor {ele_id}|{which}
+    
+    where {ele_id} is an element name or index and {which} is one of
+      model
+      base
+      design
+    Example:
+      python ele:spin_taylor 3@1>>7|model
+    This gives element number 7 in branch 1 of universe 3.
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_spin
+     args:
+      ele_id: 1@0>>2
+      which: model
+    
+    """
+    cmd = f'python ele:spin_taylor {ele_id}|{which}'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_spin_taylor', cmd_type='string_list')
+
+
+def ele_taylor(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output element taylor map 
+    
+    Parameters
+    ----------
+    ele_id
+    which : default=model
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python ele:taylor {ele_id}|{which}
+    
+    where {ele_id} is an element name or index and {which} is one of
+      model
+      base
+      design
+    Example:
+      python ele:taylor 3@1>>7|model
+    This gives element number 7 in branch 1 of universe 3.
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_taylor
+     args:
+      ele_id: 1@0>>34
+      which: model
+    
+    """
+    cmd = f'python ele:taylor {ele_id}|{which}'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_taylor', cmd_type='string_list')
+
+
+def ele_taylor_field(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output element taylor_field 
+    
+    Parameters
+    ----------
+    ele_id
+    index
+    who
+    which : default=model
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python ele:taylor_field {ele_id}|{which} {index} {who}
+    
+    where {ele_id} is an element name or index and {which} is one of
+      model
+      base
+      design
+    {index} is the index number in the ele%taylor_field(:) array
+    {who} is one of:
+      base
+      terms
+    Example:
+      python ele:taylor_field 3@1>>7|model 2 base
+    This gives element number 7 in branch 1 of universe 3.
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field
+     args:
+      ele_id: 1@0>>9
+      which: model
+      index: 1
+      who: terms
+    
+    """
+    cmd = f'python ele:taylor_field {ele_id}|{which} {index} {who}'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_taylor_field', cmd_type='string_list')
+
+
+def ele_twiss(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output element Twiss parameters
+    
+    Parameters
+    ----------
+    ele_id
+    which : default=model
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python ele:twiss {ele_id}|{which}
+    
+    where {ele_id} is an element name or index and {which} is one of
+      model
+      base
+      design
+    Example:
+      python ele:twiss 3@1>>7|model
+    This gives element number 7 in branch 1 of universe 3.
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
+     args:
+      ele_id: 1@0>>1
+      which: model
+    
+    """
+    cmd = f'python ele:twiss {ele_id}|{which}'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_twiss', cmd_type='string_list')
+
+
+def ele_wake(tao, ele_id, who, *, which='model', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output element wake.
+    
+    Parameters
+    ----------
+    ele_id
+    who
+    which : default=model
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python ele:wake {ele_id}|{which} {who}
+    
+    where {ele_id} is an element name or index and {which} is one of
+      model
+      base
+      design
+    {Who} is one of
+      base
+      sr_long     sr_long_table
+      sr_trans    sr_trans_table
+      lr_mode_table
+    Example:
+      python ele:wake 3@1>>7|model
+    This gives element number 7 in branch 1 of universe 3.
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wake
+     args:
+      ele_id: 1@0>>1
+      which: model
+      who: sr_long
+    
+    """
+    cmd = f'python ele:wake {ele_id}|{which} {who}'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_wake', cmd_type='string_list')
+
+
+def ele_wall3d(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output element wall3d parameters.
+    
+    Parameters
+    ----------
+    ele_id
+    index
+    who
+    which : default=model
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python ele:wall3d {ele_id}|{which} {index} {who}
+    
+    where {ele_id} is an element name or index and {which} is one of
+      model
+      base
+      design
+    {index} is the index number in the ele%wall3d(:) array (size obtained from "ele:head").
+    {who} is one of:
+      base
+      table
+    Example:
+      python ele:wall3d 3@1>>7|model 2 base
+    This gives element number 7 in branch 1 of universe 3.
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall3d
+     args:
+      ele_id: 1@0>>1
+      which: model
+      index: 1
+      who: table
+    
+    """
+    cmd = f'python ele:wall3d {ele_id}|{which} {index} {who}'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_wall3d', cmd_type='string_list')
 
 
 def evaluate(tao, expression, *, flags='-array_out', verbose=False, as_dict=True, raises=True):
     """
     
-    Evaluate an expression. The result may be a vector.
+    Output the value of an expression. The result may be a vector.
     
     Parameters
     ----------
@@ -2012,7 +2148,7 @@ def evaluate(tao, expression, *, flags='-array_out', verbose=False, as_dict=True
 def em_field(tao, ele_id, x, y, z, t_or_z, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
-    EM field at a given point generated by a given element.
+    Output EM field at a given point generated by a given element.
     
     Parameters
     ----------
@@ -2031,6 +2167,7 @@ def em_field(tao, ele_id, x, y, z, t_or_z, *, which='model', verbose=False, as_d
     -----
     Command syntax:
       python em_field {ele_id}|{which} {x} {y} {z} {t_or_z}
+    
     where {which} is one of:
       model
       base
@@ -2061,7 +2198,7 @@ def em_field(tao, ele_id, x, y, z, t_or_z, *, which='model', verbose=False, as_d
 def enum(tao, enum_name, *, verbose=False, as_dict=True, raises=True):
     """
     
-    List of possible values for enumerated numbers.
+    Output list of possible values for enumerated numbers.
     
     Parameters
     ----------
@@ -2075,6 +2212,7 @@ def enum(tao, enum_name, *, verbose=False, as_dict=True, raises=True):
     -----
     Command syntax:
       python enum {enum_name}
+    
     Example:
       python enum tracking_method
     
@@ -2094,7 +2232,7 @@ def enum(tao, enum_name, *, verbose=False, as_dict=True, raises=True):
 def floor_plan(tao, graph, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Floor plan elements
+    Output (x,y) points and other information that can be used for drawing a floor_plan.
     
     Parameters
     ----------
@@ -2125,7 +2263,7 @@ def floor_plan(tao, graph, *, verbose=False, as_dict=True, raises=True):
 def floor_orbit(tao, graph, *, verbose=False, as_dict=True, raises=True):
     """
     
-    (x, y) coordinates for drawing the particle orbit on a floor plan.
+    Output (x, y) coordinates for drawing the particle orbit on a floor plan.
     
     Parameters
     ----------
@@ -2156,7 +2294,7 @@ def floor_orbit(tao, graph, *, verbose=False, as_dict=True, raises=True):
 def tao_global(tao, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Global parameters
+    Output global parameters.
     
     Returns
     -------
@@ -2166,6 +2304,7 @@ def tao_global(tao, *, verbose=False, as_dict=True, raises=True):
     -----
     Command syntax:
       python global
+    
     Output syntax is parameter list form. See documentation at the beginning of this file.
     
     Note: The follow is intentionally left out:
@@ -2190,7 +2329,7 @@ def tao_global(tao, *, verbose=False, as_dict=True, raises=True):
 def help(tao, *, verbose=False, as_dict=True, raises=True):
     """
     
-    returns list of "help xxx" topics
+    Output list of "help xxx" topics
     
     Returns
     -------
@@ -2216,7 +2355,8 @@ def help(tao, *, verbose=False, as_dict=True, raises=True):
 def inum(tao, who, *, verbose=False, as_dict=True, raises=True):
     """
     
-    INUM
+    Output list of possible values for an INUM parameter.
+    For example, possible index numbers for the branches of a lattice.
     
     Parameters
     ----------
@@ -2247,8 +2387,8 @@ def inum(tao, who, *, verbose=False, as_dict=True, raises=True):
 def lat_calc_done(tao, branch_name, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Check if a lattice recalculation has been proformed since the last time
-      "python lat_calc_done" was called.
+    Output if a lattice recalculation has been proformed since the last 
+      time "python lat_calc_done" was called.
     
     Parameters
     ----------
@@ -2279,7 +2419,7 @@ def lat_calc_done(tao, branch_name, *, verbose=False, as_dict=True, raises=True)
 def lat_ele_list(tao, *, branch_name='', verbose=False, as_dict=True, raises=True):
     """
     
-    Lattice element list.
+    Output lattice element list.
     
     Parameters
     ----------
@@ -2293,6 +2433,7 @@ def lat_ele_list(tao, *, branch_name='', verbose=False, as_dict=True, raises=Tru
     -----
     Command syntax:
       python lat_ele_list {branch_name}
+    
     {branch_name} should have the form:
       {ix_uni}@{ix_branch}
     
@@ -2312,7 +2453,7 @@ def lat_ele_list(tao, *, branch_name='', verbose=False, as_dict=True, raises=Tru
 def lat_branch_list(tao, *, ix_universe='', verbose=False, as_dict=True, raises=True):
     """
     
-    Lattice branch list
+    Output lattice branch list
     
     Parameters
     ----------
@@ -2346,7 +2487,7 @@ def lat_branch_list(tao, *, ix_universe='', verbose=False, as_dict=True, raises=
 def lat_list(tao, elements, who, *, ix_uni='', ix_branch='', which='model', flags='-array_out -track_only', verbose=False, as_dict=True, raises=True):
     """
     
-    List of parameters at ends of lattice elements
+    Output list of parameters at ends of lattice elements
     
     Parameters
     ----------
@@ -2370,6 +2511,7 @@ def lat_list(tao, elements, who, *, ix_uni='', ix_branch='', which='model', flag
     -----
     Command syntax:
       python lat_list {flags} {ix_uni}@{ix_branch}>>{elements}|{which} {who}
+    
     where:
      Optional {flags} are:
       -no_slaves : If present, multipass_slave and super_slave elements will not be matched to.
@@ -2399,7 +2541,7 @@ def lat_list(tao, elements, who, *, ix_uni='', ix_branch='', which='model', flag
         ele.s, ele.l
         ele.e_tot, ele.p0c
         ele.mat6, ele.vec0
-        ele.{attribute} Where {attribute} is a Bmad syntax element attribute. (ele.beta_a, etc.)
+        ele.{attribute} Where {attribute} is a Bmad syntax element attribute. (EG: ele.beta_a, ele.k1, etc.)
     
       {elements} is a string to match element names to.
         Use "*" to match to all elements.
@@ -2409,6 +2551,7 @@ def lat_list(tao, elements, who, *, ix_uni='', ix_branch='', which='model', flag
       python lat_list 3@0>>Q*|base real:ele.s    
     
     Note: vector layout of mat6(6,6) is: [mat6(1,:), mat6(2,:), ...mat6(6,:)]
+    Also see: "python ele:param"
     
     Examples
     --------
@@ -2444,7 +2587,7 @@ def lat_list(tao, elements, who, *, ix_uni='', ix_branch='', which='model', flag
 def lat_param_units(tao, param_name, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Units of a parameter associated with a lattice or lattice element.
+    Output units of a parameter associated with a lattice or lattice element.
     
     Parameters
     ----------
@@ -2475,7 +2618,7 @@ def lat_param_units(tao, param_name, *, verbose=False, as_dict=True, raises=True
 def matrix(tao, ele1_id, ele2_id, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Matrix value from the exit end of one element to the exit end of the other.
+    Output matrix value from the exit end of one element to the exit end of the other.
     
     Parameters
     ----------
@@ -2490,6 +2633,7 @@ def matrix(tao, ele1_id, ele2_id, *, verbose=False, as_dict=True, raises=True):
     -----
     Command syntax:
       python matrix {ele1_id} {ele2_id}
+    
     where:
       {ele1_id} is the start element.
       {ele2_id} is the end element.
@@ -2516,7 +2660,7 @@ def matrix(tao, ele1_id, ele2_id, *, verbose=False, as_dict=True, raises=True):
 def merit(tao, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Merit value.
+    Output merit value.
     
     Returns
     -------
@@ -2542,7 +2686,7 @@ def merit(tao, *, verbose=False, as_dict=True, raises=True):
 def orbit_at_s(tao, s, *, ix_uni='', ix_branch='', which='model', verbose=False, as_dict=True, raises=True):
     """
     
-    Twiss at given s position.
+    Output twiss at given s position.
     
     Parameters
     ----------
@@ -2559,6 +2703,7 @@ def orbit_at_s(tao, s, *, ix_uni='', ix_branch='', which='model', verbose=False,
     -----
     Command syntax:
       python orbit_at_s {ix_uni}@{ix_branch}>>{s}|{which}
+    
     where:
       {which} is one of:
         model
@@ -2612,7 +2757,7 @@ def place_buffer(tao, *, verbose=False, as_dict=True, raises=True):
 def plot_curve(tao, curve_name, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Curve information for a plot
+    Output curve information for a plot
     
     Parameters
     ----------
@@ -2643,7 +2788,7 @@ def plot_curve(tao, curve_name, *, verbose=False, as_dict=True, raises=True):
 def plot_lat_layout(tao, ix_universe: 1, ix_branch: 0, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Plot Lat_layout info
+    Output plot Lat_layout info
     
     Parameters
     ----------
@@ -2658,6 +2803,7 @@ def plot_lat_layout(tao, ix_universe: 1, ix_branch: 0, *, verbose=False, as_dict
     -----
     Command syntax:
       python plot_lat_layout {ix_universe}@{ix_branch}
+    
     Note: The returned list of element positions is not ordered in increasing
           longitudinal position.
     
@@ -2678,7 +2824,7 @@ def plot_lat_layout(tao, ix_universe: 1, ix_branch: 0, *, verbose=False, as_dict
 def plot_list(tao, r_or_g, *, verbose=False, as_dict=True, raises=True):
     """
     
-    List of plot templates or plot regions.
+    Output list of plot templates or plot regions.
     
     Parameters
     ----------
@@ -2692,6 +2838,7 @@ def plot_list(tao, r_or_g, *, verbose=False, as_dict=True, raises=True):
     -----
     Command syntax:
       python plot_list {r_or_g}
+    
     where "{r/g}" is:
       "r"      ! list regions
       "t"      ! list template plots
@@ -2712,7 +2859,7 @@ def plot_list(tao, r_or_g, *, verbose=False, as_dict=True, raises=True):
 def plot_graph(tao, graph_name, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Graph
+    Output graph info.
     
     Parameters
     ----------
@@ -2726,6 +2873,7 @@ def plot_graph(tao, graph_name, *, verbose=False, as_dict=True, raises=True):
     -----
     Command syntax:
       python plot_graph {graph_name}
+    
     {graph_name} is in the form:
       {p_name}.{g_name}
     where
@@ -2749,7 +2897,7 @@ def plot_graph(tao, graph_name, *, verbose=False, as_dict=True, raises=True):
 def plot_histogram(tao, curve_name, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Plot Histogram
+    Output plot histogram info.
     
     Parameters
     ----------
@@ -2800,6 +2948,7 @@ def plot_plot_manage(tao, plot_location, plot_name, n_graph, graph1_name, graph2
     Command syntax:
       python plot_plot_manage {plot_location}^^{plot_name}^^
                              {n_graph}^^{graph1_name}^^{graph2_name}^^{graphN_name}
+    
     Use "@Tnnn" sytax for {plot_location} to place a plot. A plot may be placed in a 
     spot where there is already a template.
     Extra graph names can be included with ^^ connection. 
@@ -2842,6 +2991,7 @@ def plot_curve_manage(tao, graph_name, curve_index, curve_name, *, verbose=False
     -----
     Command syntax:
       python plot_curve_manage {graph_name}^^{curve_index}^^{curve_name}
+    
     If {curve_index} corresponds to an existing curve then this curve is deleted.
     In this case the {curve_name} is ignored and does not have to be present.
     If {curve_index} does not not correspond to an existing curve, {curve_index}
@@ -2881,6 +3031,7 @@ def plot_graph_manage(tao, plot_name, graph_index, graph_name, *, verbose=False,
     -----
     Command syntax:
       python plot_graph_manage {plot_name}^^{graph_index}^^{graph_name}
+    
     If {graph_index} corresponds to an existing graph then this graph is deleted.
     In this case the {graph_name} is ignored and does not have to be present.
     If {graph_index} does not not correspond to an existing graph, {graph_index}
@@ -2921,6 +3072,7 @@ def plot_line(tao, region_name, graph_name, curve_name, *, x_or_y='', verbose=Fa
     -----
     Command syntax:
       python plot_line {region_name}.{graph_name}.{curve_name} {x_or_y}
+    
     Optional {x-or-y} may be set to "x" or "y" to get the smooth line points x or y 
     component put into the real array buffer.
     Note: The plot must come from a region, and not a template, since no template plots 
@@ -2949,7 +3101,7 @@ def plot_line(tao, region_name, graph_name, curve_name, *, x_or_y='', verbose=Fa
 def plot_symbol(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Locations to draw symbols for a plot curve.
+    Output locations to draw symbols for a plot curve.
     
     Parameters
     ----------
@@ -2966,6 +3118,7 @@ def plot_symbol(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=Fal
     -----
     Command syntax:
       python plot_symbol {region_name}.{graph_name}.{curve_name} {x_or_y}
+    
     Optional {x_or_y} may be set to "x" or "y" to get the symbol x or y 
     positions put into the real array buffer.
     Note: The plot must come from a region, and not a template, 
@@ -2996,7 +3149,7 @@ def plot_symbol(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=Fal
 def plot_transfer(tao, from_plot, to_plot, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Transfer plot parameters from the "from plot" to the "to plot" (or plots).
+    Output transfer plot parameters from the "from plot" to the "to plot" (or plots).
     
     Parameters
     ----------
@@ -3011,6 +3164,7 @@ def plot_transfer(tao, from_plot, to_plot, *, verbose=False, as_dict=True, raise
     -----
     Command syntax:
       python plot_transfer {from_plot} {to_plot}
+    
     To avoid confusion, use "@Tnnn" and "@Rnnn" syntax for {from_plot}.
     If {to_plot} is not present and {from_plot} is a template plot, the "to plots" 
      are the equivalent region plots with the same name. And vice versa 
@@ -3033,7 +3187,7 @@ def plot_transfer(tao, from_plot, to_plot, *, verbose=False, as_dict=True, raise
 def plot1(tao, name, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Info on a given plot.
+    Output info on a given plot.
     
     Parameters
     ----------
@@ -3047,6 +3201,7 @@ def plot1(tao, name, *, verbose=False, as_dict=True, raises=True):
     -----
     Command syntax:
       python plot1 {name}
+    
     {name} should be the region name if the plot is associated with a region.
     Output syntax is parameter list form. See documentation at the beginning of this file.
     
@@ -3066,7 +3221,7 @@ def plot1(tao, name, *, verbose=False, as_dict=True, raises=True):
 def ptc_com(tao, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Ptc_com structure components
+    Output Ptc_com structure components.
     
     Returns
     -------
@@ -3092,7 +3247,7 @@ def ptc_com(tao, *, verbose=False, as_dict=True, raises=True):
 def ring_general(tao, *, ix_uni='', ix_branch='', which='model', verbose=False, as_dict=True, raises=True):
     """
     
-    Lattice branch with closed geometry info (emittances, etc.)
+    Output lattice branch with closed geometry info (emittances, etc.)
     
     Parameters
     ----------
@@ -3108,12 +3263,22 @@ def ring_general(tao, *, ix_uni='', ix_branch='', which='model', verbose=False, 
     -----
     Command syntax:
       python ring_general {ix_uni}@{ix_branch}|{which}
+    
     where {which} is one of:
       model
       base
       design
     Example:
       python ring_general 1@0|model
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
+     args:
+        ix_uni: 1
+        ix_branch: 0
+        which: model
     
     """
     cmd = f'python ring_general {ix_uni}@{ix_branch}|{which}'
@@ -3124,7 +3289,7 @@ def ring_general(tao, *, ix_uni='', ix_branch='', which='model', verbose=False, 
 def shape_list(tao, who, *, verbose=False, as_dict=True, raises=True):
     """
     
-    lat_layout and floor_plan shapes list
+    Output lat_layout or floor_plan shapes list
     
     Parameters
     ----------
@@ -3138,6 +3303,7 @@ def shape_list(tao, who, *, verbose=False, as_dict=True, raises=True):
     -----
     Command syntax:
       python shape_list {who}
+    
     {who} is one of:
       lat_layout
       floor_plan
@@ -3158,7 +3324,7 @@ def shape_list(tao, who, *, verbose=False, as_dict=True, raises=True):
 def shape_manage(tao, who, index, add_or_delete, *, verbose=False, as_dict=True, raises=True):
     """
     
-    element shape creation or destruction
+    Element shape creation or destruction
     
     Parameters
     ----------
@@ -3207,7 +3373,7 @@ def shape_manage(tao, who, index, add_or_delete, *, verbose=False, as_dict=True,
 def shape_pattern_list(tao, *, ix_pattern='', verbose=False, as_dict=True, raises=True):
     """
     
-    List of shape patterns or shape pattern points
+    Output list of shape patterns or shape pattern points
     
     Parameters
     ----------
@@ -3257,6 +3423,7 @@ def shape_pattern_manage(tao, ix_pattern, pat_name, pat_line_width, *, verbose=F
     -----
     Command syntax:
       python shape_pattern_manage {ix_pattern}^^{pat_name}^^{pat_line_width}
+    
     where:
       {ix_pattern}      -- Pattern index. Patterns with higher indexes will be moved up 
                                           if adding a pattern and down if deleting.
@@ -3299,6 +3466,7 @@ def shape_pattern_point_manage(tao, ix_pattern, ix_point, s, x, *, verbose=False
     -----
     Command syntax:
       python shape_pattern_point_manage {ix_pattern}^^{ix_point}^^{s}^^{x}
+    
     where:
       {ix_pattern}      -- Pattern index.
       {ix_point}        -- Point index. Points of higher indexes will be moved up
@@ -3324,7 +3492,7 @@ def shape_pattern_point_manage(tao, ix_pattern, ix_point, s, x, *, verbose=False
 def shape_set(tao, who, shape_index, ele_name, shape, color, shape_size, type_label, shape_draw, multi_shape, line_width, *, verbose=False, as_dict=True, raises=True):
     """
     
-    lat_layout or floor_plan shape set
+    Set lat_layout or floor_plan shape parameters.
     
     Parameters
     ----------
@@ -3349,6 +3517,7 @@ def shape_set(tao, who, shape_index, ele_name, shape, color, shape_size, type_la
       python shape_set {who}^^{shape_index}^^{ele_name}^^{shape}^^{color}^^
                        {shape_size}^^{type_label}^^{shape_draw}^^
                        {multi_shape}^^{line_width}
+    
     {who} is one of:
       lat_layout
       floor_plan
@@ -3378,7 +3547,7 @@ def shape_set(tao, who, shape_index, ele_name, shape, color, shape_size, type_la
 def show(tao, line, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Show command pass through
+    Output the output from a show command.
     
     Parameters
     ----------
@@ -3392,6 +3561,7 @@ def show(tao, line, *, verbose=False, as_dict=True, raises=True):
     -----
     Command syntax:
       python show {line}
+    
     {line} is the string to pass through to the show command.
     Example:
       python show lattice -python
@@ -3426,6 +3596,7 @@ def species_to_int(tao, species_str, *, verbose=False, as_dict=True, raises=True
     -----
     Command syntax:
       python species_to_int {species_str}
+    
     Example:
       python species_to_int CO2++
     
@@ -3459,6 +3630,7 @@ def species_to_str(tao, species_int, *, verbose=False, as_dict=True, raises=True
     -----
     Command syntax:
       python species_to_str {species_int}
+    
     Example:
       python species_to_str -1     ! Returns 'Electron'
     
@@ -3478,7 +3650,7 @@ def species_to_str(tao, species_int, *, verbose=False, as_dict=True, raises=True
 def spin_polarization(tao, *, ix_uni='', ix_branch='', which='model', verbose=False, as_dict=True, raises=True):
     """
     
-    Spin polarization information
+    Output spin polarization information
     
     Parameters
     ----------
@@ -3494,6 +3666,7 @@ def spin_polarization(tao, *, ix_uni='', ix_branch='', which='model', verbose=Fa
     -----
     Command syntax:
       python spin_polarization {ix_uni}@{ix_branch}|{which}
+    
     where {which} is one of:
       model
       base
@@ -3521,7 +3694,7 @@ def spin_polarization(tao, *, ix_uni='', ix_branch='', which='model', verbose=Fa
 def spin_resonance(tao, *, ix_uni='', ix_branch='', which='model', ref_ele='0', verbose=False, as_dict=True, raises=True):
     """
     
-    Spin resonance information
+    Output spin resonance information
     
     Parameters
     ----------
@@ -3536,6 +3709,15 @@ def spin_resonance(tao, *, ix_uni='', ix_branch='', which='model', ref_ele='0', 
     Command syntax:
       python spin_resonance {ix_uni}@{ix_branch}|{which} {ref_ele}
     
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
+     args: 
+       ix_uni: 1
+       ix_branch: 0
+       which: model
+    
     """
     cmd = f'python spin_resonance {ix_uni}@{ix_branch}|{which} {ref_ele}'
     if verbose: print(cmd)
@@ -3544,7 +3726,7 @@ def spin_resonance(tao, *, ix_uni='', ix_branch='', which='model', ref_ele='0', 
 def super_universe(tao, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Super_Universe information
+    Output super_Universe parameters.
     
     Returns
     -------
@@ -3570,7 +3752,7 @@ def super_universe(tao, *, verbose=False, as_dict=True, raises=True):
 def twiss_at_s(tao, s, *, ix_uni='', ix_branch='', which='model', verbose=False, as_dict=True, raises=True):
     """
     
-    Twiss at given s position
+    Output twiss parameters at given s position.
     
     Parameters
     ----------
@@ -3587,6 +3769,7 @@ def twiss_at_s(tao, s, *, ix_uni='', ix_branch='', which='model', verbose=False,
     -----
     Command syntax:
       python twiss_at_s {ix_uni}@{ix_branch}>>{s}|{which}
+    
     where {which} is one of:
       model
       base
@@ -3611,7 +3794,7 @@ def twiss_at_s(tao, s, *, ix_uni='', ix_branch='', which='model', verbose=False,
 def universe(tao, ix_universe, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Universe info
+    Output universe info.
     
     Parameters
     ----------
@@ -3625,6 +3808,7 @@ def universe(tao, ix_universe, *, verbose=False, as_dict=True, raises=True):
     -----
     Command syntax:
       python universe {ix_universe}
+    
     Use "python global" to get the number of universes.
     
     Examples
@@ -3643,7 +3827,7 @@ def universe(tao, ix_universe, *, verbose=False, as_dict=True, raises=True):
 def var(tao, var, *, slaves='', verbose=False, as_dict=True, raises=True):
     """
     
-    Info on an individual variable
+    Output parameters of a given variable.
     
     Parameters
     ----------
@@ -3709,6 +3893,7 @@ def var_create(tao, var_name, ele_name, attribute, universes, weight, step, low_
       python var_create {var_name}^^{ele_name}^^{attribute}^^{universes}^^
                         {weight}^^{step}^^{low_lim}^^{high_lim}^^{merit_type}^^
                         {good_user}^^{key_bound}^^{key_delta}
+    
     {var_name} is something like "kick[5]".
     Before using var_create, setup the appropriate v1_var array using 
     the "python var_v1_create" command.
@@ -3740,7 +3925,7 @@ def var_create(tao, var_name, ele_name, attribute, universes, weight, step, low_
 def var_general(tao, *, verbose=False, as_dict=True, raises=True):
     """
     
-    List of all variable v1 arrays
+    Output list of all variable v1 arrays
     
     Returns
     -------
@@ -3750,6 +3935,7 @@ def var_general(tao, *, verbose=False, as_dict=True, raises=True):
     -----
     Command syntax:
       python var_general
+    
     Output syntax:
       {v1_var name};{v1_var%v lower bound};{v1_var%v upper bound}
     
@@ -3768,7 +3954,7 @@ def var_general(tao, *, verbose=False, as_dict=True, raises=True):
 def var_v_array(tao, v1_var, *, verbose=False, as_dict=True, raises=True):
     """
     
-    List of variables for a given data_v1.
+    Output list of variables for a given data_v1.
     
     Parameters
     ----------
@@ -3782,6 +3968,7 @@ def var_v_array(tao, v1_var, *, verbose=False, as_dict=True, raises=True):
     -----
     Command syntax:
       python var_v_array {v1_var}
+    
     Example:
       python var_v_array quad_k1
     
@@ -3801,7 +3988,7 @@ def var_v_array(tao, v1_var, *, verbose=False, as_dict=True, raises=True):
 def var_v1_array(tao, v1_var, *, verbose=False, as_dict=True, raises=True):
     """
     
-    List of variables in a given variable v1 array
+    Output list of variables in a given variable v1 array
     
     Parameters
     ----------
@@ -3848,6 +4035,7 @@ def var_v1_create(tao, v1_name, n_var_min, n_var_max, *, verbose=False, as_dict=
     -----
     Command syntax:
       python var_v1_create {v1_name} {n_var_min} {n_var_max}
+    
     {n_var_min} and {n_var_max} are the lower and upper bounds of the var
     Example:
       python var_v1_create quad_k1 0 45
@@ -3915,7 +4103,7 @@ def var_v1_destroy(tao, v1_datum, *, verbose=False, as_dict=True, raises=True):
 def wave(tao, what, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Wave analysis info.
+    Output Wave analysis info.
     
     Parameters
     ----------
@@ -3929,6 +4117,7 @@ def wave(tao, what, *, verbose=False, as_dict=True, raises=True):
     -----
     Command syntax:
       python wave {what}
+    
     Where {what} is one of:
       params
       loc_header
