@@ -1,0 +1,16 @@
+# conda env create -f environment.yml
+name: bmad
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - ipykernel
+  - ipywidgets
+  - jupyterlab
+  - bmad
+  - openPMD-beamphysics
+  # PyTao release:
+  - pytao
+  # or PytTao Developer:
+#  - pip:
+#    - git+git://github.com/bmad-sim/pytao
