@@ -755,7 +755,13 @@ def data_d_array(tao, d2_name, d1_name, *, ix_universe='', verbose=False, as_dic
     
     Returns
     -------
-    string_list
+    datums: list of dicts
+        Each dict has keys:
+        'ix_d1', 'data_type', 'merit_type', 
+        'ele_ref_name', 'ele_start_name', 'ele_name', 
+        'meas_value', 'model_value', 'design_value', 
+        'useit_opt', 'useit_plot', 'good_user', 
+        'weight', 'exists'
     
     Notes
     -----

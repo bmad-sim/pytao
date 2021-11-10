@@ -1,6 +1,67 @@
 import numpy as np
 
 
+
+
+
+# Column names and types for parse_data_d_array
+DATA_D_COLS =  ['ix_d1',
+ 'data_type',
+ 'merit_type',
+ 'ele_ref_name',
+ 'ele_start_name',
+ 'ele_name',
+ 'meas_value',
+ 'model_value',
+ 'design_value',
+ 'useit_opt',
+ 'useit_plot',
+ 'good_user',
+ 'weight',
+ 'exists']
+DATA_D_TYPES = [int, str, str, str, str, str, float, float, float, bool, bool, bool, float, bool]
+
+def parse_data_d_array(lines):
+    """
+    Parses the output of the 'python data_d_array' command into a list of dicts. 
+    
+    This can be easily be case into a table. For example:
+    
+    import pandas as pd
+    ...
+    lines = tao.data_d_array('orbit', 'x')
+    dat = parse_data_d_array(lines)
+    df = pd.DataFrame(dat)
+    
+    
+    Parameters
+    ----------
+    lines : list of str
+        The output of the 'python data_d_array' command to parse
+    
+    Returns
+    -------
+    datums: list of dicts
+            Each dict has keys:
+            'ix_d1', 'data_type', 'merit_type', 
+            'ele_ref_name', 'ele_start_name', 'ele_name', 
+            'meas_value', 'model_value', 'design_value', 
+            'useit_opt', 'useit_plot', 'good_user', 
+            'weight', 'exists'
+    
+    """ 
+    result = []
+    for line in lines:
+        d = {}
+        result.append(d)
+        vals = line.split(';')
+        for name, typ, val in zip(DATA_D_COLS, DATA_D_TYPES, vals):
+            d[name] = typ(val)
+        
+    return result
+
+
+
 def parse_derivative(lines):
     """
     Parses the output of tao python derivative
