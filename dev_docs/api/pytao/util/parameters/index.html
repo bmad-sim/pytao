@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pytao.util.parameters &mdash; PyTao 0.1.6+3.g7165096 documentation</title>
+  <title>pytao.util.parameters &mdash; PyTao 0.1.6+5.gdf884e7 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
@@ -31,7 +31,7 @@
             <a href="../../../../../index.html" class="icon icon-home"> PyTao
           </a>
               <div class="version">
-                0.1.6+3.g7165096
+                0.1.6+5.gdf884e7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -150,12 +150,12 @@ Also defined are a few functions for parsing data into a single tao_parameter or
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
 <dl class="py data">
 <dt class="sig sig-object py" id="pytao.util.parameters.tao_startup_param_list">
-<span class="sig-prename descclassname"><span class="pre">pytao.util.parameters.</span></span><span class="sig-name descname"><span class="pre">tao_startup_param_list</span></span><em class="property"> <span class="pre">=</span> <span class="pre">['beam_file;FILE;T;',</span> <span class="pre">'beam_init_position_file;FILE;T;',</span> <span class="pre">'beam_track_data_file;FILE;T;',...</span></em><a class="headerlink" href="#pytao.util.parameters.tao_startup_param_list" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.util.parameters.</span></span><span class="sig-name descname"><span class="pre">tao_startup_param_list</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">['beam_file;FILE;T;',</span> <span class="pre">'beam_init_position_file;FILE;T;',</span> <span class="pre">'beam_track_data_file;FILE;T;',...</span></em><a class="headerlink" href="#pytao.util.parameters.tao_startup_param_list" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pytao.util.parameters.tao_parameter">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pytao.util.parameters.</span></span><span class="sig-name descname"><span class="pre">tao_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">can_vary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.parameters.tao_parameter" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pytao.util.parameters.</span></span><span class="sig-name descname"><span class="pre">tao_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">can_vary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.parameters.tao_parameter" title="Permalink to this definition"></a></dt>
 <dd><p>Basic class for holding the properties of a parameter in Tao.</p>
 <p>name:           The name of the parameter
 type:           “STR”, “INT”, “REAL”, “LOGIC”, “ENUM”, etc…
@@ -188,7 +188,7 @@ Returns None if comp_name was not found or if self.type != STRUCT</p>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="pytao.util.parameters.InvalidParamError">
-<em class="property"><span class="pre">exception</span> </em><span class="sig-prename descclassname"><span class="pre">pytao.util.parameters.</span></span><span class="sig-name descname"><span class="pre">InvalidParamError</span></span><a class="headerlink" href="#pytao.util.parameters.InvalidParamError" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pytao.util.parameters.</span></span><span class="sig-name descname"><span class="pre">InvalidParamError</span></span><a class="headerlink" href="#pytao.util.parameters.InvalidParamError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <p>Provides an exception for when a param_string is improperly formatted
 Examples of improper formatting include: not enough semicolons

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pytao.gui.tao_widget &mdash; PyTao 0.1.6+3.g7165096 documentation</title>
+  <title>pytao.gui.tao_widget &mdash; PyTao 0.1.6+5.gdf884e7 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
@@ -31,7 +31,7 @@
             <a href="../../../../../index.html" class="icon icon-home"> PyTao
           </a>
               <div class="version">
-                0.1.6+3.g7165096
+                0.1.6+5.gdf884e7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -151,7 +151,7 @@ parameter in tao</p>
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="pytao.gui.tao_widget.tk_tao_parameter">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pytao.gui.tao_widget.</span></span><span class="sig-name descname"><span class="pre">tk_tao_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao_parameter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">struct_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_widget.tk_tao_parameter" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pytao.gui.tao_widget.</span></span><span class="sig-name descname"><span class="pre">tk_tao_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao_parameter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">struct_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_widget.tk_tao_parameter" title="Permalink to this definition"></a></dt>
 <dd><p>Takes a tao_parameter (defined in parameters.py) and a tk frame,
 and creates an object containing the parameter and appropriate tk widget(s)
 for displaying and modifying the parameter and value
@@ -195,14 +195,14 @@ Does nothing if ttp.param.type != self.param.type</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pytao.gui.tao_widget.d1_data_list_entry">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pytao.gui.tao_widget.</span></span><span class="sig-name descname"><span class="pre">d1_data_list_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">master</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_widget.d1_data_list_entry" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pytao.gui.tao_widget.</span></span><span class="sig-name descname"><span class="pre">d1_data_list_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">master</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_widget.d1_data_list_entry" title="Permalink to this definition"></a></dt>
 <dd><p>Creates various tk widgets to display attributes of a single datum.
 Takes one line of output from python data_d_array as input.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pytao.gui.tao_widget.v1_var_list_entry">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pytao.gui.tao_widget.</span></span><span class="sig-name descname"><span class="pre">v1_var_list_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">master</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_widget.v1_var_list_entry" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pytao.gui.tao_widget.</span></span><span class="sig-name descname"><span class="pre">v1_var_list_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">master</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_widget.v1_var_list_entry" title="Permalink to this definition"></a></dt>
 <dd><p>Creates the widgets needed to display a single variable held in a v1_var array
 v_list should be one row of output from
 python var_v_array [variable name]</p>
