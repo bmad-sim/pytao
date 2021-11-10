@@ -7,6 +7,41 @@
 Module Contents
 ---------------
 
+.. py:data:: DATA_D_COLS
+   :annotation: = ['ix_d1', 'data_type', 'merit_type', 'ele_ref_name', 'ele_start_name', 'ele_name', 'meas_value',...
+
+   
+
+.. py:data:: DATA_D_TYPES
+   
+
+   
+
+.. py:function:: parse_data_d_array(lines)
+
+   Parses the output of the 'python data_d_array' command into a list of dicts.
+
+   This can be easily be case into a table. For example:
+
+   import pandas as pd
+   ...
+   lines = tao.data_d_array('orbit', 'x')
+   dat = parse_data_d_array(lines)
+   df = pd.DataFrame(dat)
+
+
+   :param lines: The output of the 'python data_d_array' command to parse
+   :type lines: list of str
+
+   :returns: **datums** -- Each dict has keys:
+             'ix_d1', 'data_type', 'merit_type',
+             'ele_ref_name', 'ele_start_name', 'ele_name',
+             'meas_value', 'model_value', 'design_value',
+             'useit_opt', 'useit_plot', 'good_user',
+             'weight', 'exists'
+   :rtype: list of dicts
+
+
 .. py:function:: parse_derivative(lines)
 
    Parses the output of tao python derivative

@@ -591,8 +591,13 @@ Module Contents
    :param ix_universe:
    :type ix_universe: optional
 
-   :returns:
-   :rtype: string_list
+   :returns: **datums** -- Each dict has keys:
+             'ix_d1', 'data_type', 'merit_type',
+             'ele_ref_name', 'ele_start_name', 'ele_name',
+             'meas_value', 'model_value', 'design_value',
+             'useit_opt', 'useit_plot', 'good_user',
+             'weight', 'exists'
+   :rtype: list of dicts
 
    .. rubric:: Notes
 

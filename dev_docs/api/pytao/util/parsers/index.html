@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pytao.util.parsers &mdash; PyTao 0.1.6 documentation</title>
+  <title>pytao.util.parsers &mdash; PyTao 0.1.6+3.g7165096 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
@@ -31,7 +31,7 @@
             <a href="../../../../../index.html" class="icon icon-home"> PyTao
           </a>
               <div class="version">
-                0.1.6
+                0.1.6+3.g7165096
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -146,6 +146,44 @@
 <span id="pytao-util-parsers"></span><h1><a class="reference internal" href="#module-pytao.util.parsers" title="pytao.util.parsers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.util.parsers</span></code></a><a class="headerlink" href="#module-pytao.util.parsers" title="Permalink to this headline"></a></h1>
 <div class="section" id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<dl class="py data">
+<dt class="sig sig-object py" id="pytao.util.parsers.DATA_D_COLS">
+<span class="sig-prename descclassname"><span class="pre">pytao.util.parsers.</span></span><span class="sig-name descname"><span class="pre">DATA_D_COLS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">['ix_d1',</span> <span class="pre">'data_type',</span> <span class="pre">'merit_type',</span> <span class="pre">'ele_ref_name',</span> <span class="pre">'ele_start_name',</span> <span class="pre">'ele_name',</span> <span class="pre">'meas_value',...</span></em><a class="headerlink" href="#pytao.util.parsers.DATA_D_COLS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pytao.util.parsers.DATA_D_TYPES">
+<span class="sig-prename descclassname"><span class="pre">pytao.util.parsers.</span></span><span class="sig-name descname"><span class="pre">DATA_D_TYPES</span></span><a class="headerlink" href="#pytao.util.parsers.DATA_D_TYPES" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pytao.util.parsers.parse_data_d_array">
+<span class="sig-prename descclassname"><span class="pre">pytao.util.parsers.</span></span><span class="sig-name descname"><span class="pre">parse_data_d_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lines</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.parsers.parse_data_d_array" title="Permalink to this definition"></a></dt>
+<dd><p>Parses the output of the ‘python data_d_array’ command into a list of dicts.</p>
+<p>This can be easily be case into a table. For example:</p>
+<p>import pandas as pd
+…
+lines = tao.data_d_array(‘orbit’, ‘x’)
+dat = parse_data_d_array(lines)
+df = pd.DataFrame(dat)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lines</strong> (<em>list of str</em>) – The output of the ‘python data_d_array’ command to parse</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>datums</strong> – Each dict has keys:
+‘ix_d1’, ‘data_type’, ‘merit_type’,
+‘ele_ref_name’, ‘ele_start_name’, ‘ele_name’,
+‘meas_value’, ‘model_value’, ‘design_value’,
+‘useit_opt’, ‘useit_plot’, ‘good_user’,
+‘weight’, ‘exists’</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of dicts</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.util.parsers.parse_derivative">
 <span class="sig-prename descclassname"><span class="pre">pytao.util.parsers.</span></span><span class="sig-name descname"><span class="pre">parse_derivative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lines</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.parsers.parse_derivative" title="Permalink to this definition"></a></dt>
