@@ -3,7 +3,9 @@ import numpy as np
 
 
 
-data_d_cols =  ['ix_d1',
+
+# Column names and types for parse_data_d_array
+DATA_D_COLS =  ['ix_d1',
  'data_type',
  'merit_type',
  'ele_ref_name',
@@ -17,7 +19,7 @@ data_d_cols =  ['ix_d1',
  'good_user',
  'weight',
  'exists']
-data_d_types = [int, str, str, str, str, str, float, float, float, bool, bool, bool, float, bool]
+DATA_D_TYPES = [int, str, str, str, str, str, float, float, float, bool, bool, bool, float, bool]
 
 def parse_data_d_array(lines):
     """
@@ -53,7 +55,7 @@ def parse_data_d_array(lines):
         d = {}
         result.append(d)
         vals = line.split(';')
-        for name, typ, val in zip(data_d_cols, data_d_types, vals):
+        for name, typ, val in zip(DATA_D_COLS, DATA_D_TYPES, vals):
             d[name] = typ(val)
         
     return result
