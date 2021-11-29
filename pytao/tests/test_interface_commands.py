@@ -7,13 +7,13 @@ from pytao import interface_commands
 def test_beam_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init -noplot'))
-    ret = interface_commands.beam(tao, ix_universe='1')
+    ret = interface_commands.beam(tao, ix_uni='1')
             
         
 def test_beam_init_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init -noplot'))
-    ret = interface_commands.beam_init(tao, ix_universe='1')
+    ret = interface_commands.beam_init(tao, ix_uni='1')
             
         
 def test_bmad_com_1():
@@ -25,7 +25,7 @@ def test_bmad_com_1():
 def test_branch1_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
-    ret = interface_commands.branch1(tao, ix_universe='1', ix_branch='0')
+    ret = interface_commands.branch1(tao, ix_uni='1', ix_branch='0')
             
         
 def test_bunch_params_1():
@@ -85,19 +85,19 @@ def test_constraints_2():
 def test_data_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
-    ret = interface_commands.data(tao, ix_universe='', d2_name='twiss', d1_name='end', dat_index='1')
+    ret = interface_commands.data(tao, ix_uni='', d2_name='twiss', d1_name='end', dat_index='1')
             
         
 def test_data_2():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
-    ret = interface_commands.data(tao, ix_universe='1', d2_name='twiss', d1_name='end', dat_index='1')
+    ret = interface_commands.data(tao, ix_uni='1', d2_name='twiss', d1_name='end', dat_index='1')
             
         
 def test_data_d2_create_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
-    ret = interface_commands.data_d2_create(tao, ix_universe='1', d2_name='orbit', n_d1_data='2', d_data_arrays_name_min_max='x^^0^^45^^y^^1^^47')
+    ret = interface_commands.data_d2_create(tao, ix_uni='1', d2_name='orbit', n_d1_data='2', d_data_arrays_name_min_max='x^^0^^45^^y^^1^^47')
             
         
 def test_data_d2_destroy_1():
@@ -109,13 +109,13 @@ def test_data_d2_destroy_1():
 def test_data_d2_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
-    ret = interface_commands.data_d2(tao, ix_universe='1', d2_name='twiss')
+    ret = interface_commands.data_d2(tao, ix_uni='1', d2_name='twiss')
             
         
 def test_data_d_array_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
-    ret = interface_commands.data_d_array(tao, ix_universe='1', d2_name='twiss', d1_name='end')
+    ret = interface_commands.data_d_array(tao, ix_uni='1', d2_name='twiss', d1_name='end')
             
         
 def test_data_d1_array_1():
@@ -133,7 +133,7 @@ def test_data_parameter_1():
 def test_data_d2_array_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
-    ret = interface_commands.data_d2_array(tao, ix_universe='1')
+    ret = interface_commands.data_d2_array(tao, ix_uni='1')
             
         
 def test_data_set_design_value_1():
@@ -367,7 +367,7 @@ def test_lat_ele_list_1():
 def test_lat_branch_list_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
-    ret = interface_commands.lat_branch_list(tao, ix_universe='1')
+    ret = interface_commands.lat_branch_list(tao, ix_uni='1')
             
         
 def test_lat_list_1():
@@ -403,7 +403,7 @@ def test_merit_1():
 def test_orbit_at_s_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
-    ret = interface_commands.orbit_at_s(tao, ix_uni='1', ix_branch='0', s='0.001', which='model')
+    ret = interface_commands.orbit_at_s(tao, ix_uni='1', ele='10', s_offset='0.7', which='model')
             
         
 def test_place_buffer_1():
@@ -421,7 +421,7 @@ def test_plot_curve_1():
 def test_plot_lat_layout_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
-    ret = interface_commands.plot_lat_layout(tao, ix_universe='1', ix_branch='0')
+    ret = interface_commands.plot_lat_layout(tao, ix_uni='1', ix_branch='0')
             
         
 def test_plot_list_1():
@@ -571,13 +571,13 @@ def test_super_universe_1():
 def test_twiss_at_s_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
-    ret = interface_commands.twiss_at_s(tao, ix_uni='1', ix_branch='0', s='0', which='model')
+    ret = interface_commands.twiss_at_s(tao, ix_uni='1', ele='10', s_offset='0.7', which='model')
             
         
 def test_universe_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
-    ret = interface_commands.universe(tao, ix_universe='1')
+    ret = interface_commands.universe(tao, ix_uni='1')
             
         
 def test_var_1():
