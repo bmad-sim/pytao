@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pytao.interface_commands &mdash; PyTao 0.1.6+5.gdf884e7 documentation</title>
+  <title>pytao.interface_commands &mdash; PyTao 0.1.6+10.gd28b24a documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
@@ -31,7 +31,7 @@
             <a href="../../../../index.html" class="icon icon-home"> PyTao
           </a>
               <div class="version">
-                0.1.6+5.gdf884e7
+                0.1.6+10.gd28b24a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -143,11 +143,11 @@
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.interface_commands.beam">
-<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">beam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_universe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.beam" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">beam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.beam" title="Permalink to this definition"></a></dt>
 <dd><p>Output beam parameters that are not in the beam_init structure.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ix_universe</strong> (<em>optional</em>) – </p>
+<dd class="field-odd"><p><strong>ix_uni</strong> (<em>optional</em>) – </p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p></p>
@@ -158,9 +158,9 @@
 </dl>
 <p class="rubric">Notes</p>
 <dl class="simple">
-<dt>Command syntax:</dt><dd><p>python beam {ix_universe}</p>
+<dt>Command syntax:</dt><dd><p>python beam {ix_uni}</p>
 </dd>
-<dt>Where:</dt><dd><p>{ix_universe} is a universe index. Defaults to s%global%default_universe.</p>
+<dt>Where:</dt><dd><p>{ix_uni} is a universe index. Defaults to s%global%default_universe.</p>
 </dd>
 </dl>
 <p>Note: To set beam_init parameters use the “set beam” command.</p>
@@ -169,7 +169,7 @@
 <dt>Example: 1</dt><dd><p>init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
 args:</p>
 <blockquote>
-<div><p>ix_universe: 1</p>
+<div><p>ix_uni: 1</p>
 </div></blockquote>
 </dd>
 </dl>
@@ -177,11 +177,11 @@ args:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.interface_commands.beam_init">
-<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">beam_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_universe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.beam_init" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">beam_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.beam_init" title="Permalink to this definition"></a></dt>
 <dd><p>Output beam_init parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ix_universe</strong> (<em>optional</em>) – </p>
+<dd class="field-odd"><p><strong>ix_uni</strong> (<em>optional</em>) – </p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p></p>
@@ -192,9 +192,9 @@ args:</p>
 </dl>
 <p class="rubric">Notes</p>
 <dl class="simple">
-<dt>Command syntax:</dt><dd><p>python beam_init {ix_universe}</p>
+<dt>Command syntax:</dt><dd><p>python beam_init {ix_uni}</p>
 </dd>
-<dt>Where:</dt><dd><p>{ix_universe} is a universe index. Defaults to s%global%default_universe.</p>
+<dt>Where:</dt><dd><p>{ix_uni} is a universe index. Defaults to s%global%default_universe.</p>
 </dd>
 </dl>
 <p>Note: To set beam_init parameters use the “set beam_init” command</p>
@@ -203,7 +203,7 @@ args:</p>
 <dt>Example: 1</dt><dd><p>init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
 args:</p>
 <blockquote>
-<div><p>ix_universe: 1</p>
+<div><p>ix_uni: 1</p>
 </div></blockquote>
 </dd>
 </dl>
@@ -236,12 +236,12 @@ args:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.interface_commands.branch1">
-<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">branch1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_universe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.branch1" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">branch1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.branch1" title="Permalink to this definition"></a></dt>
 <dd><p>Output lattice branch information for a particular lattice branch.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ix_universe</strong> – </p></li>
+<li><p><strong>ix_uni</strong> – </p></li>
 <li><p><strong>ix_branch</strong> – </p></li>
 </ul>
 </dd>
@@ -254,9 +254,9 @@ args:</p>
 </dl>
 <p class="rubric">Notes</p>
 <dl class="simple">
-<dt>Command syntax:</dt><dd><p>python branch1 <a class="reference external" href="mailto:{ix_universe}&#37;&#52;&#48;{ix_branch">{ix_universe}<span>&#64;</span>{ix_branch</a>}</p>
+<dt>Command syntax:</dt><dd><p>python branch1 <a class="reference external" href="mailto:{ix_uni}&#37;&#52;&#48;{ix_branch">{ix_uni}<span>&#64;</span>{ix_branch</a>}</p>
 </dd>
-<dt>Where:</dt><dd><p>{ix_universe} is a universe index. Defaults to s%global%default_universe.
+<dt>Where:</dt><dd><p>{ix_uni} is a universe index. Defaults to s%global%default_universe.
 {ix_branch} is a lattice branch index. Defaults to s%global%default_branch.</p>
 </dd>
 </dl>
@@ -265,7 +265,7 @@ args:</p>
 <dt>Example: 1</dt><dd><p>init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
 args:</p>
 <blockquote>
-<div><p>ix_universe: 1
+<div><p>ix_uni: 1
 ix_branch: 0</p>
 </div></blockquote>
 </dd>
@@ -561,11 +561,7 @@ sec_constraint: none</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python constraints {who}</p>
 </dd>
-<dt>Where:</dt><dd><dl class="simple">
-<dt>{who} is one of:</dt><dd><p>data
-var</p>
-</dd>
-</dl>
+<dt>Where:</dt><dd><p>{who} is one of: “data” or “var”</p>
 </dd>
 <dt>Data constraints output is:</dt><dd><p>data name
 constraint type
@@ -625,9 +621,9 @@ args:</p>
 </dl>
 <p class="rubric">Notes</p>
 <dl class="simple">
-<dt>Command syntax:</dt><dd><p>python da_aperture {ix_universe}</p>
+<dt>Command syntax:</dt><dd><p>python da_aperture {ix_uni}</p>
 </dd>
-<dt>Where:</dt><dd><p>{ix_universe} is a universe index. Defaults to s%global%default_universe.</p>
+<dt>Where:</dt><dd><p>{ix_uni} is a universe index. Defaults to s%global%default_universe.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -649,23 +645,23 @@ args:</p>
 </dl>
 <p class="rubric">Notes</p>
 <dl class="simple">
-<dt>Command syntax:</dt><dd><p>python da_params {ix_universe}</p>
+<dt>Command syntax:</dt><dd><p>python da_params {ix_uni}</p>
 </dd>
-<dt>Where:</dt><dd><p>{ix_universe} is a universe index. Defaults to s%global%default_universe.</p>
+<dt>Where:</dt><dd><p>{ix_uni} is a universe index. Defaults to s%global%default_universe.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.interface_commands.data">
-<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d1_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_universe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dat_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.data" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d1_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dat_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.data" title="Permalink to this definition"></a></dt>
 <dd><p>Output Individual datum parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>d2_name</strong> – </p></li>
 <li><p><strong>d1_name</strong> – </p></li>
-<li><p><strong>ix_universe</strong> (<em>optional</em>) – </p></li>
+<li><p><strong>ix_uni</strong> (<em>optional</em>) – </p></li>
 <li><p><strong>dat_index</strong> (<em>default=1</em>) – </p></li>
 </ul>
 </dd>
@@ -678,9 +674,9 @@ args:</p>
 </dl>
 <p class="rubric">Notes</p>
 <dl class="simple">
-<dt>Command syntax:</dt><dd><p>python data <a class="reference external" href="mailto:{ix_universe}&#37;&#52;&#48;{d2_name}&#46;{d1_name">{ix_universe}<span>&#64;</span>{d2_name}<span>&#46;</span>{d1_name</a>}[{dat_index}]</p>
+<dt>Command syntax:</dt><dd><p>python data <a class="reference external" href="mailto:{ix_uni}&#37;&#52;&#48;{d2_name}&#46;{d1_name">{ix_uni}<span>&#64;</span>{d2_name}<span>&#46;</span>{d1_name</a>}[{dat_index}]</p>
 </dd>
-<dt>Where:</dt><dd><p>{ix_universe} is a universe index. Defaults to s%global%default_universe.
+<dt>Where:</dt><dd><p>{ix_uni} is a universe index. Defaults to s%global%default_universe.
 {d2_name} is the name of the d2_data structure the datum is in.
 {d1_datum} is the name of the d1_data structure the datum is in.
 {dat_index} is the index of the datum.</p>
@@ -694,7 +690,7 @@ args:</p>
 <dt>Example: 1</dt><dd><p>init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
 args:</p>
 <blockquote>
-<div><p>ix_universe:
+<div><p>ix_uni:
 d2_name: twiss
 d1_name: end
 dat_index: 1</p>
@@ -703,7 +699,7 @@ dat_index: 1</p>
 <dt>Example: 2</dt><dd><p>init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
 args:</p>
 <blockquote>
-<div><p>ix_universe: 1
+<div><p>ix_uni: 1
 d2_name: twiss
 d1_name: end
 dat_index: 1</p>
@@ -714,7 +710,7 @@ dat_index: 1</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.interface_commands.data_d2_create">
-<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">data_d2_create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_d1_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_data_arrays_name_min_max</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_universe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.data_d2_create" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">data_d2_create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_d1_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_data_arrays_name_min_max</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.data_d2_create" title="Permalink to this definition"></a></dt>
 <dd><p>Create a d2 data structure along with associated d1 and data arrays.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -722,7 +718,7 @@ dat_index: 1</p>
 <li><p><strong>d2_name</strong> – </p></li>
 <li><p><strong>n_d1_data</strong> – </p></li>
 <li><p><strong>d_data_arrays_name_min_max</strong> – </p></li>
-<li><p><strong>ix_universe</strong> (<em>optional</em>) – </p></li>
+<li><p><strong>ix_uni</strong> (<em>optional</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -734,9 +730,9 @@ dat_index: 1</p>
 </dl>
 <p class="rubric">Notes</p>
 <dl>
-<dt>Command syntax:</dt><dd><p>python data_d2_create <a class="reference external" href="mailto:{ix_universe}&#37;&#52;&#48;{d2_name}^^{n_d1_data}^^{d_data_arrays_name_min_max">{ix_universe}<span>&#64;</span>{d2_name}^^{n_d1_data}^^{d_data_arrays_name_min_max</a>}</p>
+<dt>Command syntax:</dt><dd><p>python data_d2_create <a class="reference external" href="mailto:{ix_uni}&#37;&#52;&#48;{d2_name}^^{n_d1_data}^^{d_data_arrays_name_min_max">{ix_uni}<span>&#64;</span>{d2_name}^^{n_d1_data}^^{d_data_arrays_name_min_max</a>}</p>
 </dd>
-<dt>Where:</dt><dd><p>{ix_universe} is a universe index. Defaults to s%global%default_universe.
+<dt>Where:</dt><dd><p>{ix_uni} is a universe index. Defaults to s%global%default_universe.
 {d2_name} is the name of the d2_data structure to create.
 {n_d1_data} is the number of associated d1 data structures.
 {d_data_arrays_name_min_max} has the form</p>
@@ -768,7 +764,7 @@ The “y” d1 structure has an associated data arrray with indexes in the range
 <dt>Example: 1</dt><dd><p>init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
 args:</p>
 <blockquote>
-<div><p>ix_universe: 1
+<div><p>ix_uni: 1
 d2_name: orbit
 n_d1_data: 2
 d_data_arrays_name_min_max: x^^0^^45^^y^^1^^47</p>
@@ -779,13 +775,13 @@ d_data_arrays_name_min_max: x^^0^^45^^y^^1^^47</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.interface_commands.data_d2_destroy">
-<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">data_d2_destroy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_universe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.data_d2_destroy" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">data_d2_destroy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.data_d2_destroy" title="Permalink to this definition"></a></dt>
 <dd><p>Destroy a d2 data structure along with associated d1 and data arrays.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>d2_name</strong> – </p></li>
-<li><p><strong>ix_universe</strong> (<em>optional</em>) – </p></li>
+<li><p><strong>ix_uni</strong> (<em>optional</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -797,9 +793,9 @@ d_data_arrays_name_min_max: x^^0^^45^^y^^1^^47</p>
 </dl>
 <p class="rubric">Notes</p>
 <dl class="simple">
-<dt>Command syntax:</dt><dd><p>python data_d2_destroy <a class="reference external" href="mailto:{ix_universe}&#37;&#52;&#48;{d2_name">{ix_universe}<span>&#64;</span>{d2_name</a>}</p>
+<dt>Command syntax:</dt><dd><p>python data_d2_destroy <a class="reference external" href="mailto:{ix_uni}&#37;&#52;&#48;{d2_name">{ix_uni}<span>&#64;</span>{d2_name</a>}</p>
 </dd>
-<dt>Where:</dt><dd><p>{ix_universe} is a universe index. Defaults to s%global%default_universe.
+<dt>Where:</dt><dd><p>{ix_uni} is a universe index. Defaults to s%global%default_universe.
 {d2_name} is the name of the d2_data structure to destroy.</p>
 </dd>
 </dl>
@@ -819,13 +815,13 @@ args:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.interface_commands.data_d2">
-<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">data_d2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_universe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.data_d2" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">data_d2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.data_d2" title="Permalink to this definition"></a></dt>
 <dd><p>Output information on a d2_datum.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>d2_name</strong> – </p></li>
-<li><p><strong>ix_universe</strong> (<em>optional</em>) – </p></li>
+<li><p><strong>ix_uni</strong> (<em>optional</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -837,9 +833,9 @@ args:</p>
 </dl>
 <p class="rubric">Notes</p>
 <dl class="simple">
-<dt>Command syntax:</dt><dd><p>python data_d2 <a class="reference external" href="mailto:{ix_universe}&#37;&#52;&#48;{d2_name">{ix_universe}<span>&#64;</span>{d2_name</a>}</p>
+<dt>Command syntax:</dt><dd><p>python data_d2 <a class="reference external" href="mailto:{ix_uni}&#37;&#52;&#48;{d2_name">{ix_uni}<span>&#64;</span>{d2_name</a>}</p>
 </dd>
-<dt>Where:</dt><dd><p>{ix_universe} is a universe index. Defaults to s%global%default_universe.
+<dt>Where:</dt><dd><p>{ix_uni} is a universe index. Defaults to s%global%default_universe.
 {d2_name} is the name of the d2_data structure.</p>
 </dd>
 </dl>
@@ -848,7 +844,7 @@ args:</p>
 <dt>Example: 1</dt><dd><p>init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
 args:</p>
 <blockquote>
-<div><p>ix_universe: 1
+<div><p>ix_uni: 1
 d2_name: twiss</p>
 </div></blockquote>
 </dd>
@@ -857,14 +853,14 @@ d2_name: twiss</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.interface_commands.data_d_array">
-<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">data_d_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d1_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_universe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.data_d_array" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">data_d_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d1_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.data_d_array" title="Permalink to this definition"></a></dt>
 <dd><p>Output list of datums for a given d1_data structure.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>d2_name</strong> – </p></li>
 <li><p><strong>d1_name</strong> – </p></li>
-<li><p><strong>ix_universe</strong> (<em>optional</em>) – </p></li>
+<li><p><strong>ix_uni</strong> (<em>optional</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -881,9 +877,9 @@ d2_name: twiss</p>
 </dl>
 <p class="rubric">Notes</p>
 <dl class="simple">
-<dt>Command syntax:</dt><dd><p>python data_d_array <a class="reference external" href="mailto:{ix_universe}&#37;&#52;&#48;{d2_name}&#46;{d1_name">{ix_universe}<span>&#64;</span>{d2_name}<span>&#46;</span>{d1_name</a>}</p>
+<dt>Command syntax:</dt><dd><p>python data_d_array <a class="reference external" href="mailto:{ix_uni}&#37;&#52;&#48;{d2_name}&#46;{d1_name">{ix_uni}<span>&#64;</span>{d2_name}<span>&#46;</span>{d1_name</a>}</p>
 </dd>
-<dt>Where:</dt><dd><p>{ix_universe} is a universe index. Defaults to s%global%default_universe.
+<dt>Where:</dt><dd><p>{ix_uni} is a universe index. Defaults to s%global%default_universe.
 {d2_name} is the name of the containing d2_data structure.
 {d1_name} is the name of the d1_data structure containing the array of datums.</p>
 </dd>
@@ -895,7 +891,7 @@ d2_name: twiss</p>
 <dt>Example: 1</dt><dd><p>init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
 args:</p>
 <blockquote>
-<div><p>ix_universe: 1
+<div><p>ix_uni: 1
 d2_name: twiss
 d1_name: end</p>
 </div></blockquote>
@@ -980,11 +976,11 @@ parameter: model_value</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.interface_commands.data_d2_array">
-<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">data_d2_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_universe</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.data_d2_array" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">data_d2_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.data_d2_array" title="Permalink to this definition"></a></dt>
 <dd><p>Output data d2 info for a given universe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ix_universe</strong> – </p>
+<dd class="field-odd"><p><strong>ix_uni</strong> – </p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p></p>
@@ -995,7 +991,7 @@ parameter: model_value</p>
 </dl>
 <p class="rubric">Notes</p>
 <dl class="simple">
-<dt>Command syntax:</dt><dd><p>python data_d2_array {ix_universe}</p>
+<dt>Command syntax:</dt><dd><p>python data_d2_array {ix_uni}</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -1005,7 +1001,7 @@ parameter: model_value</p>
 <dt>Example: 1</dt><dd><p>init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
 args:</p>
 <blockquote>
-<div><p>ix_universe : 1</p>
+<div><p>ix_uni : 1</p>
 </div></blockquote>
 </dd>
 </dl>
@@ -1206,16 +1202,11 @@ args:</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<dl>
+<dl class="simple">
 <dt>Command syntax:</dt><dd><p>python ele:ac_kicker {ele_id}|{which}</p>
 </dd>
 <dt>Where:</dt><dd><p>{ele_id} is an element name or index.
-{which} is one of</p>
-<blockquote>
-<div><p>model
-base
-design</p>
-</div></blockquote>
+{which} is one of: “model”, “base” or “design”</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -1257,17 +1248,12 @@ which: model</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python ele:cartesian_map {ele_id}|{which} {index} {who}</p>
 </dd>
-<dt>where {ele_id} is an element name or index and {which} is one of</dt><dd><p>model
-base
-design</p>
+<dt>Where:</dt><dd><p>{ele_id} is an element name or index
+{which} is one of: “model”, “base” or “design”
+{index} is the index number in the ele%cartesian_map(:) array
+{who} is one of: “base”, or “terms”</p>
 </dd>
 </dl>
-<p>{index} is the index number in the ele%cartesian_map(:) array
-{who} is one of:</p>
-<blockquote>
-<div><p>base
-terms</p>
-</div></blockquote>
 <p class="rubric">Example</p>
 <p>python ele:cartesian_map 3&#64;1&gt;&gt;7|model 2 base</p>
 <p>This gives element number 7 in branch 1 of universe 3.</p>
@@ -1306,20 +1292,19 @@ who: base</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<dl class="simple">
+<dl>
 <dt>Command syntax:</dt><dd><p>python ele:chamber_wall {ele_id}|{which} {index} {who}</p>
 </dd>
-<dt>where {ele_id} is an element name or index and {which} is one of</dt><dd><p>model
-base
-design</p>
-</dd>
-</dl>
-<p>{index} is index of the wall.
+<dt>Where:</dt><dd><p>{ele_id} is an element name or index.
+{which} is one of: “model”, “base” or “design”
+{index} is index of the wall.
 {who} is one of:</p>
 <blockquote>
-<div><p>x       ! Return min/max in horizontal plane
-y       ! Return min/max in vertical plane</p>
+<div><p>“x”       ! Return min/max in horizontal plane
+“y”       ! Return min/max in vertical plane</p>
 </div></blockquote>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
 <dl>
 <dt>Example: 1</dt><dd><p>init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall3d
@@ -1357,9 +1342,8 @@ Used for group, overlay and ramper type elements.</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python ele:control_var {ele_id}|{which}</p>
 </dd>
-<dt>where {ele_id} is an element name or index and {which} is one of</dt><dd><p>model
-base
-design</p>
+<dt>Where:</dt><dd><p>{ele_id} is an element name or index.
+{which} is one of: “model”, “base” or “design”</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -1401,17 +1385,12 @@ which: model</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python ele:cylindrical_map {ele_id}|{which} {index} {who}</p>
 </dd>
-<dt>where {ele_id} is an element name or index and {which} is one of</dt><dd><p>model
-base
-design</p>
+<dt>Where</dt><dd><p>{ele_id} is an element name or index.
+{which} is one of: “model”, “base” or “design”
+{index} is the index number in the ele%cylindrical_map(:) array
+{who} is one of: “base”, or “terms”</p>
 </dd>
 </dl>
-<p>{index} is the index number in the ele%cylindrical_map(:) array
-{who} is one of:</p>
-<blockquote>
-<div><p>base
-terms</p>
-</div></blockquote>
 <p class="rubric">Example</p>
 <p>python ele:cylindrical_map 3&#64;1&gt;&gt;7|model 2 base</p>
 <p>This gives map #2 of element number 7 in branch 1 of universe 3.</p>
@@ -1451,9 +1430,8 @@ who: base</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python ele:elec_multipoles {ele_id}|{which}</p>
 </dd>
-<dt>where {ele_id} is an element name or index and {which} is one of</dt><dd><p>model
-base
-design</p>
+<dt>Where:</dt><dd><p>{ele_id} is an element name or index.
+{which} is one of: “model”, “base” or “design”</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -1492,20 +1470,21 @@ without element misalignments and “Actual” is with misalignments.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<dl class="simple">
+<dl>
 <dt>Command syntax:</dt><dd><p>python ele:floor {ele_id}|{which} {where}</p>
 </dd>
-<dt>where {ele_id} is an element name or index and {which} is one of</dt><dd><p>model
-base
-design</p>
-</dd>
-<dt>{where} is an optional argument which, if present, is one of</dt><dd><p>beginning  ! Upstream end
+<dt>Where:</dt><dd><p>{ele_id} is an element name or index.
+{which} is one of: “model”, “base” or “design”
+{where} is an optional argument which, if present, is one of</p>
+<blockquote>
+<div><p>beginning  ! Upstream end
 center     ! Middle of element
 end        ! Downstream end (default)</p>
+</div></blockquote>
 </dd>
 </dl>
-<p>Note: {where} ignored for photonic elements crystal, mirror, and multilayer_mirror.
-.. rubric:: Example</p>
+<p>Note: {where} ignored for photonic elements crystal, mirror, and multilayer_mirror.</p>
+<p class="rubric">Example</p>
 <p>python ele:floor 3&#64;1&gt;&gt;7|model</p>
 <p>This gives element number 7 in branch 1 of universe 3.</p>
 <p class="rubric">Examples</p>
@@ -1553,14 +1532,12 @@ where: center</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python ele:grid_field {ele_id}|{which} {index} {who}</p>
 </dd>
-<dt>where {ele_id} is an element name or index and {which} is one of</dt><dd><p>model, base, design</p>
+<dt>Where:</dt><dd><p>{ele_id} is an element name or index.
+{which} is one of: “model”, “base” or “design”
+{index} is the index number in the ele%grid_field(:) array.
+{who} is one of: “base”, or “points”</p>
 </dd>
 </dl>
-<p>{index} is the index number in the ele%grid_field(:) array.
-{who} is one of:</p>
-<blockquote>
-<div><p>base, points</p>
-</div></blockquote>
 <p class="rubric">Example</p>
 <p>python ele:grid_field 3&#64;1&gt;&gt;7|model 2 base</p>
 <p>This gives grid #2 of element number 7 in branch 1 of universe 3.</p>
@@ -1600,9 +1577,8 @@ who: base</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python ele:gen_attribs {ele_id}|{which}</p>
 </dd>
-<dt>where {ele_id} is an element name or index and {which} is one of</dt><dd><p>model
-base
-design</p>
+<dt>Where:</dt><dd><p>{ele_id} is an element name or index.
+{which} is one of: “model”, “base” or “design”</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -1642,9 +1618,8 @@ which: model</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python ele:head {ele_id}|{which}</p>
 </dd>
-<dt>where {ele_id} is an element name or index and {which} is one of</dt><dd><p>model
-base
-design</p>
+<dt>Where:</dt><dd><p>{ele_id} is an element name or index.
+{which} is one of: “model”, “base” or “design”</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -1684,9 +1659,8 @@ which: model</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python ele:lord_slave {ele_id}|{which}</p>
 </dd>
-<dt>where {ele_id} is an element name or index and {which} is one of</dt><dd><p>model
-base
-design</p>
+<dt>Where:</dt><dd><p>{ele_id} is an element name or index.
+{which} is one of: “model”, “base” or “design”</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -1732,13 +1706,9 @@ which: model</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python ele:mat6 {ele_id}|{which} {who}</p>
 </dd>
-<dt>where {ele_id} is an element name or index and {which} is one of</dt><dd><p>model
-base
-design</p>
-</dd>
-<dt>{who} is one of:</dt><dd><p>mat6
-vec0
-err</p>
+<dt>Where:</dt><dd><p>{ele_id} is an element name or index.
+{which} is one of: “model”, “base” or “design”
+{who} is one of: “mat6”, “vec0”, or “err”</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -1779,9 +1749,8 @@ who: mat6</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python ele:methods {ele_id}|{which}</p>
 </dd>
-<dt>where {ele_id} is an element name or index and {which} is one of</dt><dd><p>model
-base
-design</p>
+<dt>Where:</dt><dd><p>{ele_id} is an element name or index.
+{which} is one of: “model”, “base” or “design”</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -1821,9 +1790,8 @@ which: model</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python ele:multipoles {ele_id}|{which}</p>
 </dd>
-<dt>where {ele_id} is an element name or index and {which} is one of</dt><dd><p>model
-base
-design</p>
+<dt>Where:</dt><dd><p>{ele_id} is an element name or index.
+{which} is one of: “model”, “base” or “design”</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -1863,9 +1831,8 @@ which: model</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python ele:orbit {ele_id}|{which}</p>
 </dd>
-<dt>where {ele_id} is an element name or index and {which} is one of</dt><dd><p>model
-base
-design</p>
+<dt>Where:</dt><dd><p>{ele_id} is an element name or index.
+{which} is one of: “model”, “base” or “design”</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -1903,17 +1870,17 @@ which: model</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<dl class="simple">
+<dl>
 <dt>Command syntax:</dt><dd><p>python ele:param {ele_id}|{which} {who}</p>
 </dd>
-<dt>where {ele_id} is an element name or index and {which} is one of</dt><dd><p>model
-base
-design</p>
+<dt>Where:</dt><dd><p>{ele_id} is an element name or index.
+{which} is one of: “model”, “base” or “design”
+{who} values are the same as {who} values for “python lat_list” except for “ele:mat6” and “ele:vec0”.</p>
+<blockquote>
+<div><p>Note: Here {who} must be a single parameter and not a list.</p>
+</div></blockquote>
 </dd>
 </dl>
-<p>Possible {who} values is the same as possible {who} values for “python lat_list”
-except for “ele:mat6” and “ele:vec0”.
-Note: Here {who} must be a single parameter and not a list.</p>
 <p class="rubric">Example</p>
 <p>python ele:param 3&#64;1&gt;&gt;7|model e_tot</p>
 <p>This gives E_tot of element number 7 in branch 1 of universe 3.</p>
@@ -1956,13 +1923,9 @@ who: orbit.vec.1</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python ele:photon {ele_id}|{which} {who}</p>
 </dd>
-<dt>where {ele_id} is an element name or index and {which} is one of</dt><dd><p>model
-base
-design</p>
-</dd>
-<dt>{who} is one of:</dt><dd><p>base
-material
-curvature</p>
+<dt>Where:</dt><dd><p>{ele_id} is an element name or index.
+{which} is one of: “model”, “base” or “design”
+{who} is one of: “base”, “material”, or “curvature”</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -2003,9 +1966,8 @@ who: base</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python ele:spin_taylor {ele_id}|{which}</p>
 </dd>
-<dt>where {ele_id} is an element name or index and {which} is one of</dt><dd><p>model
-base
-design</p>
+<dt>Where:</dt><dd><p>{ele_id} is an element name or index.
+{which} is one of: “model”, “base” or “design”</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -2045,9 +2007,8 @@ which: model</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python ele:taylor {ele_id}|{which}</p>
 </dd>
-<dt>where {ele_id} is an element name or index and {which} is one of</dt><dd><p>model
-base
-design</p>
+<dt>Where:</dt><dd><p>{ele_id} is an element name or index.
+{which} is one of: “model”, “base” or “design”</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -2089,17 +2050,12 @@ which: model</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python ele:taylor_field {ele_id}|{which} {index} {who}</p>
 </dd>
-<dt>where {ele_id} is an element name or index and {which} is one of</dt><dd><p>model
-base
-design</p>
+<dt>Where:</dt><dd><p>{ele_id} is an element name or index.
+{which} is one of: “model”, “base” or “design”
+{index} is the index number in the ele%taylor_field(:) array
+{who} is one of: “base”, or “terms”.</p>
 </dd>
 </dl>
-<p>{index} is the index number in the ele%taylor_field(:) array
-{who} is one of:</p>
-<blockquote>
-<div><p>base
-terms</p>
-</div></blockquote>
 <p class="rubric">Example</p>
 <p>python ele:taylor_field 3&#64;1&gt;&gt;7|model 2 base</p>
 <p>This gives element number 7 in branch 1 of universe 3.</p>
@@ -2139,9 +2095,8 @@ who: terms</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python ele:twiss {ele_id}|{which}</p>
 </dd>
-<dt>where {ele_id} is an element name or index and {which} is one of</dt><dd><p>model
-base
-design</p>
+<dt>Where:</dt><dd><p>{ele_id} is an element name or index.
+{which} is one of: “model”, “base” or “design”</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -2179,17 +2134,17 @@ which: model</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<dl class="simple">
+<dl>
 <dt>Command syntax:</dt><dd><p>python ele:wake {ele_id}|{which} {who}</p>
 </dd>
-<dt>where {ele_id} is an element name or index and {which} is one of</dt><dd><p>model
-base
-design</p>
-</dd>
-<dt>{Who} is one of</dt><dd><p>base
-sr_long     sr_long_table
-sr_trans    sr_trans_table
-lr_mode_table</p>
+<dt>Where:</dt><dd><p>{ele_id} is an element name or index.
+{which} is one of: “model”, “base” or “design”
+{Who} is one of:</p>
+<blockquote>
+<div><p>“sr_long”        “sr_long_table”
+“sr_trans”       “sr_trans_table”
+“lr_mode_table”  “base”</p>
+</div></blockquote>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -2232,17 +2187,12 @@ who: sr_long</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python ele:wall3d {ele_id}|{which} {index} {who}</p>
 </dd>
-<dt>where {ele_id} is an element name or index and {which} is one of</dt><dd><p>model
-base
-design</p>
+<dt>Where:</dt><dd><p>{ele_id} is an element name or index.
+{which} is one of: “model”, “base” or “design”
+{index} is the index number in the ele%wall3d(:) array (size obtained from “ele:head”).
+{who} is one of: “base”, or “table”.</p>
 </dd>
 </dl>
-<p>{index} is the index number in the ele%wall3d(:) array (size obtained from “ele:head”).
-{who} is one of:</p>
-<blockquote>
-<div><p>base
-table</p>
-</div></blockquote>
 <p class="rubric">Example</p>
 <p>python ele:wall3d 3&#64;1&gt;&gt;7|model 2 base</p>
 <p>This gives element number 7 in branch 1 of universe 3.</p>
@@ -2323,11 +2273,8 @@ args:</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python em_field {ele_id}|{which} {x} {y} {z} {t_or_z}</p>
 </dd>
-<dt>where {which} is one of:</dt><dd><p>model
-base
-design</p>
-</dd>
-<dt>Where:</dt><dd><p>{x}, {y}  – Transverse coords.
+<dt>Where:</dt><dd><p>{which} is one of: “model”, “base” or “design”
+{x}, {y}  – Transverse coords.
 {z}       – Longitudinal coord with respect to entrance end of element.
 {t_or_z}  – time or phase space z depending if lattice is setup for absolute time tracking.</p>
 </dd>
@@ -2603,11 +2550,11 @@ args:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.interface_commands.lat_branch_list">
-<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">lat_branch_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_universe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.lat_branch_list" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">lat_branch_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.lat_branch_list" title="Permalink to this definition"></a></dt>
 <dd><p>Output lattice branch list</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ix_universe</strong> (<em>optional</em>) – </p>
+<dd class="field-odd"><p><strong>ix_uni</strong> (<em>optional</em>) – </p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p></p>
@@ -2618,7 +2565,7 @@ args:</p>
 </dl>
 <p class="rubric">Notes</p>
 <dl class="simple">
-<dt>Command syntax:</dt><dd><p>python lat_branch_list {ix_universe}</p>
+<dt>Command syntax:</dt><dd><p>python lat_branch_list {ix_uni}</p>
 </dd>
 <dt>Output syntax:</dt><dd><p>branch_index;branch_name;n_ele_track;n_ele_max</p>
 </dd>
@@ -2628,7 +2575,7 @@ args:</p>
 <dt>Example: 1</dt><dd><p>init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
 args:</p>
 <blockquote>
-<div><p>ix_universe: 1</p>
+<div><p>ix_uni: 1</p>
 </div></blockquote>
 </dd>
 </dl>
@@ -2662,7 +2609,7 @@ args:</p>
 <dl>
 <dt>Command syntax:</dt><dd><p>python lat_list {flags} <a class="reference external" href="mailto:{ix_uni}&#37;&#52;&#48;{ix_branch">{ix_uni}<span>&#64;</span>{ix_branch</a>}&gt;&gt;{elements}|{which} {who}</p>
 </dd>
-<dt>where:</dt><dd><dl>
+<dt>Where:</dt><dd><dl>
 <dt>Optional {flags} are:</dt><dd><p>-no_slaves : If present, multipass_slave and super_slave elements will not be matched to.
 -track_only : If present, lord elements will not be matched to.
 -index_order : If present, order elements by element index instead of the standard s-position.
@@ -2671,11 +2618,8 @@ args:</p>
 <div><p>tao_c_interface_com%c_integer arrays. See the code below for when %c_real vs %c_integer is used.
 Note: Only a single {who} item permitted when -array_out is present.</p>
 </div></blockquote>
+<p>{which} is one of: “model”, “base” or “design”</p>
 <dl class="simple">
-<dt>{which} is one of:</dt><dd><p>model
-base
-design</p>
-</dd>
 <dt>{who} is a comma deliminated list of:</dt><dd><p>orbit.floor.x, orbit.floor.y, orbit.floor.z    ! Floor coords at particle orbit.
 orbit.spin.1, orbit.spin.2, orbit.spin.3,
 orbit.vec.1, orbit.vec.2, orbit.vec.3, orbit.vec.4, orbit.vec.5, orbit.vec.6,
@@ -2782,7 +2726,7 @@ args:</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python matrix {ele1_id} {ele2_id}</p>
 </dd>
-<dt>where:</dt><dd><p>{ele1_id} is the start element.
+<dt>Where:</dt><dd><p>{ele1_id} is the start element.
 {ele2_id} is the end element.</p>
 </dd>
 </dl>
@@ -2829,14 +2773,14 @@ args:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.interface_commands.orbit_at_s">
-<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">orbit_at_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'model'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.orbit_at_s" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">orbit_at_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ele</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'model'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.orbit_at_s" title="Permalink to this definition"></a></dt>
 <dd><p>Output twiss at given s position.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>s</strong> – </p></li>
 <li><p><strong>ix_uni</strong> (<em>optional</em>) – </p></li>
-<li><p><strong>ix_branch</strong> (<em>optional</em>) – </p></li>
+<li><p><strong>ele</strong> (<em>optional</em>) – </p></li>
+<li><p><strong>s_offset</strong> (<em>optional</em>) – </p></li>
 <li><p><strong>which</strong> (<em>default=model</em>) – </p></li>
 </ul>
 </dd>
@@ -2849,15 +2793,15 @@ args:</p>
 </dl>
 <p class="rubric">Notes</p>
 <dl>
-<dt>Command syntax:</dt><dd><p>python orbit_at_s <a class="reference external" href="mailto:{ix_uni}&#37;&#52;&#48;{ix_branch">{ix_uni}<span>&#64;</span>{ix_branch</a>}&gt;&gt;{s}|{which}</p>
+<dt>Command syntax:</dt><dd><p>python orbit_at_s <a class="reference external" href="mailto:{ix_uni}&#37;&#52;&#48;{ele}-">{ix_uni}<span>&#64;</span>{ele}-</a>&gt;{s_offset}|{which}</p>
 </dd>
-<dt>where:</dt><dd><dl class="simple">
-<dt>{which} is one of:</dt><dd><p>model
-base
-design</p>
-</dd>
-</dl>
-<p>{s} is the longitudinal s-position.</p>
+<dt>Where:</dt><dd><p>{ix_uni} is a universe index. Defaults to s%global%default_universe.
+{ele} is an element name or index. Default at the Beginning element at start of branch 0.
+{s_offset} is the offset of the evaluation point from the downstream end of ele. Default is 0.</p>
+<blockquote>
+<div><p>If {s_offset} is present, the preceeding “-&gt;” sign must be present. EG: Something like “23|model” will</p>
+</div></blockquote>
+<p>{which} is one of: “model”, “base” or “design”.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -2866,8 +2810,8 @@ design</p>
 args:</p>
 <blockquote>
 <div><p>ix_uni: 1
-ix_branch: 0
-s: 0.001
+ele: 10
+s_offset: 0.7
 which: model</p>
 </div></blockquote>
 </dd>
@@ -2933,12 +2877,12 @@ args:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.interface_commands.plot_lat_layout">
-<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">plot_lat_layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_universe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="m"><span class="pre">1</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="m"><span class="pre">0</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.plot_lat_layout" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">plot_lat_layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="m"><span class="pre">1</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="m"><span class="pre">0</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.plot_lat_layout" title="Permalink to this definition"></a></dt>
 <dd><p>Output plot Lat_layout info</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ix_universe</strong> (<em>1</em>) – </p></li>
+<li><p><strong>ix_uni</strong> (<em>1</em>) – </p></li>
 <li><p><strong>ix_branch</strong> (<em>0</em>) – </p></li>
 </ul>
 </dd>
@@ -2951,7 +2895,7 @@ args:</p>
 </dl>
 <p class="rubric">Notes</p>
 <dl class="simple">
-<dt>Command syntax:</dt><dd><p>python plot_lat_layout <a class="reference external" href="mailto:{ix_universe}&#37;&#52;&#48;{ix_branch">{ix_universe}<span>&#64;</span>{ix_branch</a>}</p>
+<dt>Command syntax:</dt><dd><p>python plot_lat_layout <a class="reference external" href="mailto:{ix_uni}&#37;&#52;&#48;{ix_branch">{ix_uni}<span>&#64;</span>{ix_branch</a>}</p>
 </dd>
 <dt>Note: The returned list of element positions is not ordered in increasing</dt><dd><p>longitudinal position.</p>
 </dd>
@@ -2961,7 +2905,7 @@ args:</p>
 <dt>Example: 1</dt><dd><p>init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
 args:</p>
 <blockquote>
-<div><p>ix_universe: 1
+<div><p>ix_uni: 1
 ix_branch: 0</p>
 </div></blockquote>
 </dd>
@@ -3589,7 +3533,7 @@ args:</p>
 <dl>
 <dt>Command syntax:</dt><dd><p>python shape_pattern_manage {ix_pattern}^^{pat_name}^^{pat_line_width}</p>
 </dd>
-<dt>where:</dt><dd><dl class="simple">
+<dt>Where:</dt><dd><dl class="simple">
 <dt>{ix_pattern}      – Pattern index. Patterns with higher indexes will be moved up</dt><dd><p>if adding a pattern and down if deleting.</p>
 </dd>
 </dl>
@@ -3637,7 +3581,7 @@ pat_line_width : 1</p>
 <dl>
 <dt>Command syntax:</dt><dd><p>python shape_pattern_point_manage {ix_pattern}^^{ix_point}^^{s}^^{x}</p>
 </dd>
-<dt>where:</dt><dd><p>{ix_pattern}      – Pattern index.
+<dt>Where:</dt><dd><p>{ix_pattern}      – Pattern index.
 {ix_point}        – Point index. Points of higher indexes will be moved up</p>
 <blockquote>
 <div><p>if adding a point and down if deleting.</p>
@@ -3879,6 +3823,11 @@ which: model</p>
 <dl class="simple">
 <dt>Command syntax:</dt><dd><p>python spin_resonance <a class="reference external" href="mailto:{ix_uni}&#37;&#52;&#48;{ix_branch}|{which">{ix_uni}<span>&#64;</span>{ix_branch}|{which</a>} {ref_ele}</p>
 </dd>
+<dt>Where:</dt><dd><p>{ix_uni} is a universe index. Defaults to s%global%default_universe.
+{ix_branch} is a lattice branch index. Defaults to s%global%default_branch.
+{which} is one of: “model”, “base” or “design”
+{ref_ele} is an element name or index.</p>
+</dd>
 </dl>
 <p class="rubric">Examples</p>
 <dl>
@@ -3920,14 +3869,14 @@ args:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.interface_commands.twiss_at_s">
-<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">twiss_at_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_branch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'model'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.twiss_at_s" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">twiss_at_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ele</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'model'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.twiss_at_s" title="Permalink to this definition"></a></dt>
 <dd><p>Output twiss parameters at given s position.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>s</strong> – </p></li>
 <li><p><strong>ix_uni</strong> (<em>optional</em>) – </p></li>
-<li><p><strong>ix_branch</strong> (<em>optional</em>) – </p></li>
+<li><p><strong>ele</strong> (<em>optional</em>) – </p></li>
+<li><p><strong>s_offset</strong> (<em>optional</em>) – </p></li>
 <li><p><strong>which</strong> (<em>default=model</em>) – </p></li>
 </ul>
 </dd>
@@ -3939,12 +3888,16 @@ args:</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<dl class="simple">
-<dt>Command syntax:</dt><dd><p>python twiss_at_s <a class="reference external" href="mailto:{ix_uni}&#37;&#52;&#48;{ix_branch">{ix_uni}<span>&#64;</span>{ix_branch</a>}&gt;&gt;{s}|{which}</p>
+<dl>
+<dt>Command syntax:</dt><dd><p>python twiss_at_s <a class="reference external" href="mailto:{ix_uni}&#37;&#52;&#48;{ele}-">{ix_uni}<span>&#64;</span>{ele}-</a>&gt;{s_offset}|{which}</p>
 </dd>
-<dt>where {which} is one of:</dt><dd><p>model
-base
-design</p>
+<dt>Where:</dt><dd><p>{ix_uni} is a universe index. Defaults to s%global%default_universe.
+{ele} is an element name or index. Default at the Beginning element at start of branch 0.
+{s_offset} is the offset of the evaluation point from the downstream end of ele. Default is 0.</p>
+<blockquote>
+<div><p>If {s_offset} is present, the preceeding “-&gt;” sign must be present. EG: Something like “23|model” will</p>
+</div></blockquote>
+<p>{which} is one of: “model”, “base” or “design”.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -3953,8 +3906,8 @@ design</p>
 args:</p>
 <blockquote>
 <div><p>ix_uni: 1
-ix_branch: 0
-s: 0
+ele: 10
+s_offset: 0.7
 which: model</p>
 </div></blockquote>
 </dd>
@@ -3963,11 +3916,11 @@ which: model</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pytao.interface_commands.universe">
-<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">universe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_universe</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.universe" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytao.interface_commands.</span></span><span class="sig-name descname"><span class="pre">universe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_uni</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.interface_commands.universe" title="Permalink to this definition"></a></dt>
 <dd><p>Output universe info.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ix_universe</strong> – </p>
+<dd class="field-odd"><p><strong>ix_uni</strong> – </p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p></p>
@@ -3978,7 +3931,7 @@ which: model</p>
 </dl>
 <p class="rubric">Notes</p>
 <dl class="simple">
-<dt>Command syntax:</dt><dd><p>python universe {ix_universe}</p>
+<dt>Command syntax:</dt><dd><p>python universe {ix_uni}</p>
 </dd>
 </dl>
 <p>Use “python global” to get the number of universes.</p>
@@ -3987,7 +3940,7 @@ which: model</p>
 <dt>Example: 1</dt><dd><p>init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
 args:</p>
 <blockquote>
-<div><p>ix_universe: 1</p>
+<div><p>ix_uni: 1</p>
 </div></blockquote>
 </dd>
 </dl>

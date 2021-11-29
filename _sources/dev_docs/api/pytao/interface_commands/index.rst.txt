@@ -7,12 +7,12 @@
 Module Contents
 ---------------
 
-.. py:function:: beam(tao, *, ix_universe='', verbose=False, as_dict=True, raises=True)
+.. py:function:: beam(tao, *, ix_uni='', verbose=False, as_dict=True, raises=True)
 
    Output beam parameters that are not in the beam_init structure.
 
-   :param ix_universe:
-   :type ix_universe: optional
+   :param ix_uni:
+   :type ix_uni: optional
 
    :returns:
    :rtype: string_list
@@ -20,10 +20,10 @@ Module Contents
    .. rubric:: Notes
 
    Command syntax:
-     python beam {ix_universe}
+     python beam {ix_uni}
 
    Where:
-     {ix_universe} is a universe index. Defaults to s%global%default_universe.
+     {ix_uni} is a universe index. Defaults to s%global%default_universe.
 
    Note: To set beam_init parameters use the "set beam" command.
 
@@ -32,15 +32,15 @@ Module Contents
    Example: 1
     init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
     args:
-      ix_universe: 1
+      ix_uni: 1
 
 
-.. py:function:: beam_init(tao, *, ix_universe='', verbose=False, as_dict=True, raises=True)
+.. py:function:: beam_init(tao, *, ix_uni='', verbose=False, as_dict=True, raises=True)
 
    Output beam_init parameters.
 
-   :param ix_universe:
-   :type ix_universe: optional
+   :param ix_uni:
+   :type ix_uni: optional
 
    :returns:
    :rtype: string_list
@@ -48,10 +48,10 @@ Module Contents
    .. rubric:: Notes
 
    Command syntax:
-     python beam_init {ix_universe}
+     python beam_init {ix_uni}
 
    Where:
-     {ix_universe} is a universe index. Defaults to s%global%default_universe.
+     {ix_uni} is a universe index. Defaults to s%global%default_universe.
 
    Note: To set beam_init parameters use the "set beam_init" command
 
@@ -60,7 +60,7 @@ Module Contents
    Example: 1
     init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
     args:
-      ix_universe: 1
+      ix_uni: 1
 
 
 .. py:function:: bmad_com(tao, *, verbose=False, as_dict=True, raises=True)
@@ -82,12 +82,12 @@ Module Contents
     args:
 
 
-.. py:function:: branch1(tao, ix_universe, ix_branch, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: branch1(tao, ix_uni, ix_branch, *, verbose=False, as_dict=True, raises=True)
 
    Output lattice branch information for a particular lattice branch.
 
-   :param ix_universe:
-   :type ix_universe: ""
+   :param ix_uni:
+   :type ix_uni: ""
    :param ix_branch:
    :type ix_branch: ""
 
@@ -97,10 +97,10 @@ Module Contents
    .. rubric:: Notes
 
    Command syntax:
-     python branch1 {ix_universe}@{ix_branch}
+     python branch1 {ix_uni}@{ix_branch}
 
    Where:
-     {ix_universe} is a universe index. Defaults to s%global%default_universe.
+     {ix_uni} is a universe index. Defaults to s%global%default_universe.
      {ix_branch} is a lattice branch index. Defaults to s%global%default_branch.
 
    .. rubric:: Examples
@@ -108,7 +108,7 @@ Module Contents
    Example: 1
     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
-      ix_universe: 1
+      ix_uni: 1
       ix_branch: 0
 
 
@@ -337,9 +337,8 @@ Module Contents
      python constraints {who}
 
    Where:
-     {who} is one of:
-       data
-       var
+     {who} is one of: "data" or "var"
+
    Data constraints output is:
      data name
      constraint type
@@ -390,10 +389,10 @@ Module Contents
    .. rubric:: Notes
 
    Command syntax:
-     python da_aperture {ix_universe}
+     python da_aperture {ix_uni}
 
    Where:
-     {ix_universe} is a universe index. Defaults to s%global%default_universe.
+     {ix_uni} is a universe index. Defaults to s%global%default_universe.
 
 
 .. py:function:: da_params(tao, *, ix_uni='', verbose=False, as_dict=True, raises=True)
@@ -409,20 +408,20 @@ Module Contents
    .. rubric:: Notes
 
    Command syntax:
-     python da_params {ix_universe}
+     python da_params {ix_uni}
 
    Where:
-     {ix_universe} is a universe index. Defaults to s%global%default_universe.
+     {ix_uni} is a universe index. Defaults to s%global%default_universe.
 
 
-.. py:function:: data(tao, d2_name, d1_name, *, ix_universe='', dat_index='1', verbose=False, as_dict=True, raises=True)
+.. py:function:: data(tao, d2_name, d1_name, *, ix_uni='', dat_index='1', verbose=False, as_dict=True, raises=True)
 
    Output Individual datum parameters.
 
    :param d2_name:
    :param d1_name:
-   :param ix_universe:
-   :type ix_universe: optional
+   :param ix_uni:
+   :type ix_uni: optional
    :param dat_index:
    :type dat_index: default=1
 
@@ -432,10 +431,10 @@ Module Contents
    .. rubric:: Notes
 
    Command syntax:
-     python data {ix_universe}@{d2_name}.{d1_name}[{dat_index}]
+     python data {ix_uni}@{d2_name}.{d1_name}[{dat_index}]
 
    Where:
-     {ix_universe} is a universe index. Defaults to s%global%default_universe.
+     {ix_uni} is a universe index. Defaults to s%global%default_universe.
      {d2_name} is the name of the d2_data structure the datum is in.
      {d1_datum} is the name of the d1_data structure the datum is in.
      {dat_index} is the index of the datum.
@@ -451,7 +450,7 @@ Module Contents
    Example: 1
     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
-      ix_universe:
+      ix_uni:
       d2_name: twiss
       d1_name: end
       dat_index: 1
@@ -459,21 +458,21 @@ Module Contents
    Example: 2
     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
-      ix_universe: 1
+      ix_uni: 1
       d2_name: twiss
       d1_name: end
       dat_index: 1
 
 
-.. py:function:: data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_universe='', verbose=False, as_dict=True, raises=True)
+.. py:function:: data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_uni='', verbose=False, as_dict=True, raises=True)
 
    Create a d2 data structure along with associated d1 and data arrays.
 
    :param d2_name:
    :param n_d1_data:
    :param d_data_arrays_name_min_max:
-   :param ix_universe:
-   :type ix_universe: optional
+   :param ix_uni:
+   :type ix_uni: optional
 
    :returns:
    :rtype: None
@@ -481,10 +480,10 @@ Module Contents
    .. rubric:: Notes
 
    Command syntax:
-     python data_d2_create {ix_universe}@{d2_name}^^{n_d1_data}^^{d_data_arrays_name_min_max}
+     python data_d2_create {ix_uni}@{d2_name}^^{n_d1_data}^^{d_data_arrays_name_min_max}
 
    Where:
-     {ix_universe} is a universe index. Defaults to s%global%default_universe.
+     {ix_uni} is a universe index. Defaults to s%global%default_universe.
      {d2_name} is the name of the d2_data structure to create.
      {n_d1_data} is the number of associated d1 data structures.
      {d_data_arrays_name_min_max} has the form
@@ -513,19 +512,19 @@ Module Contents
    Example: 1
     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
-      ix_universe: 1
+      ix_uni: 1
       d2_name: orbit
       n_d1_data: 2
       d_data_arrays_name_min_max: x^^0^^45^^y^^1^^47
 
 
-.. py:function:: data_d2_destroy(tao, d2_name, *, ix_universe='', verbose=False, as_dict=True, raises=True)
+.. py:function:: data_d2_destroy(tao, d2_name, *, ix_uni='', verbose=False, as_dict=True, raises=True)
 
    Destroy a d2 data structure along with associated d1 and data arrays.
 
    :param d2_name:
-   :param ix_universe:
-   :type ix_universe: optional
+   :param ix_uni:
+   :type ix_uni: optional
 
    :returns:
    :rtype: None
@@ -533,10 +532,10 @@ Module Contents
    .. rubric:: Notes
 
    Command syntax:
-     python data_d2_destroy {ix_universe}@{d2_name}
+     python data_d2_destroy {ix_uni}@{d2_name}
 
    Where:
-     {ix_universe} is a universe index. Defaults to s%global%default_universe.
+     {ix_uni} is a universe index. Defaults to s%global%default_universe.
      {d2_name} is the name of the d2_data structure to destroy.
 
    .. rubric:: Example
@@ -553,13 +552,13 @@ Module Contents
       d2_name: orbit
 
 
-.. py:function:: data_d2(tao, d2_name, *, ix_universe='', verbose=False, as_dict=True, raises=True)
+.. py:function:: data_d2(tao, d2_name, *, ix_uni='', verbose=False, as_dict=True, raises=True)
 
    Output information on a d2_datum.
 
    :param d2_name:
-   :param ix_universe:
-   :type ix_universe: optional
+   :param ix_uni:
+   :type ix_uni: optional
 
    :returns:
    :rtype: string_list
@@ -567,10 +566,10 @@ Module Contents
    .. rubric:: Notes
 
    Command syntax:
-     python data_d2 {ix_universe}@{d2_name}
+     python data_d2 {ix_uni}@{d2_name}
 
    Where:
-     {ix_universe} is a universe index. Defaults to s%global%default_universe.
+     {ix_uni} is a universe index. Defaults to s%global%default_universe.
      {d2_name} is the name of the d2_data structure.
 
    .. rubric:: Examples
@@ -578,18 +577,18 @@ Module Contents
    Example: 1
     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
-      ix_universe: 1
+      ix_uni: 1
       d2_name: twiss
 
 
-.. py:function:: data_d_array(tao, d2_name, d1_name, *, ix_universe='', verbose=False, as_dict=True, raises=True)
+.. py:function:: data_d_array(tao, d2_name, d1_name, *, ix_uni='', verbose=False, as_dict=True, raises=True)
 
    Output list of datums for a given d1_data structure.
 
    :param d2_name:
    :param d1_name:
-   :param ix_universe:
-   :type ix_universe: optional
+   :param ix_uni:
+   :type ix_uni: optional
 
    :returns: **datums** -- Each dict has keys:
              'ix_d1', 'data_type', 'merit_type',
@@ -602,10 +601,10 @@ Module Contents
    .. rubric:: Notes
 
    Command syntax:
-     python data_d_array {ix_universe}@{d2_name}.{d1_name}
+     python data_d_array {ix_uni}@{d2_name}.{d1_name}
 
    Where:
-     {ix_universe} is a universe index. Defaults to s%global%default_universe.
+     {ix_uni} is a universe index. Defaults to s%global%default_universe.
      {d2_name} is the name of the containing d2_data structure.
      {d1_name} is the name of the d1_data structure containing the array of datums.
 
@@ -618,7 +617,7 @@ Module Contents
    Example: 1
     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
-      ix_universe: 1
+      ix_uni: 1
       d2_name: twiss
       d1_name: end
 
@@ -680,11 +679,11 @@ Module Contents
       parameter: model_value
 
 
-.. py:function:: data_d2_array(tao, ix_universe, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: data_d2_array(tao, ix_uni, *, verbose=False, as_dict=True, raises=True)
 
    Output data d2 info for a given universe.
 
-   :param ix_universe:
+   :param ix_uni:
 
    :returns:
    :rtype: string_list
@@ -692,7 +691,7 @@ Module Contents
    .. rubric:: Notes
 
    Command syntax:
-     python data_d2_array {ix_universe}
+     python data_d2_array {ix_uni}
 
    .. rubric:: Example
 
@@ -703,7 +702,7 @@ Module Contents
    Example: 1
     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
-      ix_universe : 1
+      ix_uni : 1
 
 
 .. py:function:: data_set_design_value(tao, *, verbose=False, as_dict=True, raises=True)
@@ -889,10 +888,8 @@ Module Contents
 
    Where:
      {ele_id} is an element name or index.
-     {which} is one of
-       model
-       base
-       design
+     {which} is one of: "model", "base" or "design"
+
    .. rubric:: Example
 
    python ele:ac_kicker 3@1>>7|model
@@ -926,14 +923,12 @@ Module Contents
    Command syntax:
      python ele:cartesian_map {ele_id}|{which} {index} {who}
 
-   where {ele_id} is an element name or index and {which} is one of
-     model
-     base
-     design
-   {index} is the index number in the ele%cartesian_map(:) array
-   {who} is one of:
-     base
-     terms
+   Where:
+     {ele_id} is an element name or index
+     {which} is one of: "model", "base" or "design"
+     {index} is the index number in the ele%cartesian_map(:) array
+     {who} is one of: "base", or "terms"
+
    .. rubric:: Example
 
    python ele:cartesian_map 3@1>>7|model 2 base
@@ -969,14 +964,13 @@ Module Contents
    Command syntax:
      python ele:chamber_wall {ele_id}|{which} {index} {who}
 
-   where {ele_id} is an element name or index and {which} is one of
-     model
-     base
-     design
-   {index} is index of the wall.
-   {who} is one of:
-     x       ! Return min/max in horizontal plane
-     y       ! Return min/max in vertical plane
+   Where:
+     {ele_id} is an element name or index.
+     {which} is one of: "model", "base" or "design"
+     {index} is index of the wall.
+     {who} is one of:
+       "x"       ! Return min/max in horizontal plane
+       "y"       ! Return min/max in vertical plane
 
    .. rubric:: Examples
 
@@ -1006,10 +1000,10 @@ Module Contents
    Command syntax:
      python ele:control_var {ele_id}|{which}
 
-   where {ele_id} is an element name or index and {which} is one of
-     model
-     base
-     design
+   Where:
+     {ele_id} is an element name or index.
+     {which} is one of: "model", "base" or "design"
+
    .. rubric:: Example
 
    python ele:control_var 3@1>>7|model
@@ -1043,14 +1037,12 @@ Module Contents
    Command syntax:
      python ele:cylindrical_map {ele_id}|{which} {index} {who}
 
-   where {ele_id} is an element name or index and {which} is one of
-     model
-     base
-     design
-   {index} is the index number in the ele%cylindrical_map(:) array
-   {who} is one of:
-     base
-     terms
+   Where
+     {ele_id} is an element name or index.
+     {which} is one of: "model", "base" or "design"
+     {index} is the index number in the ele%cylindrical_map(:) array
+     {who} is one of: "base", or "terms"
+
    .. rubric:: Example
 
    python ele:cylindrical_map 3@1>>7|model 2 base
@@ -1084,10 +1076,10 @@ Module Contents
    Command syntax:
      python ele:elec_multipoles {ele_id}|{which}
 
-   where {ele_id} is an element name or index and {which} is one of
-     model
-     base
-     design
+   Where:
+     {ele_id} is an element name or index.
+     {which} is one of: "model", "base" or "design"
+
    .. rubric:: Example
 
    python ele:elec_multipoles 3@1>>7|model
@@ -1122,15 +1114,15 @@ Module Contents
    Command syntax:
      python ele:floor {ele_id}|{which} {where}
 
-   where {ele_id} is an element name or index and {which} is one of
-     model
-     base
-     design
-   {where} is an optional argument which, if present, is one of
-     beginning  ! Upstream end
-     center     ! Middle of element
-     end        ! Downstream end (default)
+   Where:
+     {ele_id} is an element name or index.
+     {which} is one of: "model", "base" or "design"
+     {where} is an optional argument which, if present, is one of
+       beginning  ! Upstream end
+       center     ! Middle of element
+       end        ! Downstream end (default)
    Note: {where} ignored for photonic elements crystal, mirror, and multilayer_mirror.
+
    .. rubric:: Example
 
    python ele:floor 3@1>>7|model
@@ -1172,11 +1164,12 @@ Module Contents
    Command syntax:
      python ele:grid_field {ele_id}|{which} {index} {who}
 
-   where {ele_id} is an element name or index and {which} is one of
-     model, base, design
-   {index} is the index number in the ele%grid_field(:) array.
-   {who} is one of:
-     base, points
+   Where:
+     {ele_id} is an element name or index.
+     {which} is one of: "model", "base" or "design"
+     {index} is the index number in the ele%grid_field(:) array.
+     {who} is one of: "base", or "points"
+
    .. rubric:: Example
 
    python ele:grid_field 3@1>>7|model 2 base
@@ -1210,10 +1203,10 @@ Module Contents
    Command syntax:
      python ele:gen_attribs {ele_id}|{which}
 
-   where {ele_id} is an element name or index and {which} is one of
-     model
-     base
-     design
+   Where:
+     {ele_id} is an element name or index.
+     {which} is one of: "model", "base" or "design"
+
    .. rubric:: Example
 
    python ele:gen_attribs 3@1>>7|model
@@ -1245,10 +1238,10 @@ Module Contents
    Command syntax:
      python ele:head {ele_id}|{which}
 
-   where {ele_id} is an element name or index and {which} is one of
-     model
-     base
-     design
+   Where:
+     {ele_id} is an element name or index.
+     {which} is one of: "model", "base" or "design"
+
    .. rubric:: Example
 
    python ele:head 3@1>>7|model
@@ -1280,10 +1273,10 @@ Module Contents
    Command syntax:
      python ele:lord_slave {ele_id}|{which}
 
-   where {ele_id} is an element name or index and {which} is one of
-     model
-     base
-     design
+   Where:
+     {ele_id} is an element name or index.
+     {which} is one of: "model", "base" or "design"
+
    .. rubric:: Example
 
    python ele:lord_slave 3@1>>7|model
@@ -1323,14 +1316,11 @@ Module Contents
    Command syntax:
      python ele:mat6 {ele_id}|{which} {who}
 
-   where {ele_id} is an element name or index and {which} is one of
-     model
-     base
-     design
-   {who} is one of:
-     mat6
-     vec0
-     err
+   Where:
+     {ele_id} is an element name or index.
+     {which} is one of: "model", "base" or "design"
+     {who} is one of: "mat6", "vec0", or "err"
+
    .. rubric:: Example
 
    python ele:mat6 3@1>>7|model mat6
@@ -1363,10 +1353,10 @@ Module Contents
    Command syntax:
      python ele:methods {ele_id}|{which}
 
-   where {ele_id} is an element name or index and {which} is one of
-     model
-     base
-     design
+   Where:
+     {ele_id} is an element name or index.
+     {which} is one of: "model", "base" or "design"
+
    .. rubric:: Example
 
    python ele:methods 3@1>>7|model
@@ -1398,10 +1388,10 @@ Module Contents
    Command syntax:
      python ele:multipoles {ele_id}|{which}
 
-   where {ele_id} is an element name or index and {which} is one of
-     model
-     base
-     design
+   Where:
+     {ele_id} is an element name or index.
+     {which} is one of: "model", "base" or "design"
+
    .. rubric:: Example
 
    python ele:multipoles 3@1>>7|model
@@ -1433,10 +1423,10 @@ Module Contents
    Command syntax:
      python ele:orbit {ele_id}|{which}
 
-   where {ele_id} is an element name or index and {which} is one of
-     model
-     base
-     design
+   Where:
+     {ele_id} is an element name or index.
+     {which} is one of: "model", "base" or "design"
+
    .. rubric:: Example
 
    python ele:orbit 3@1>>7|model
@@ -1469,13 +1459,11 @@ Module Contents
    Command syntax:
      python ele:param {ele_id}|{which} {who}
 
-   where {ele_id} is an element name or index and {which} is one of
-     model
-     base
-     design
-   Possible {who} values is the same as possible {who} values for "python lat_list"
-   except for "ele:mat6" and "ele:vec0".
-   Note: Here {who} must be a single parameter and not a list.
+   Where:
+     {ele_id} is an element name or index.
+     {which} is one of: "model", "base" or "design"
+     {who} values are the same as {who} values for "python lat_list" except for "ele:mat6" and "ele:vec0".
+           Note: Here {who} must be a single parameter and not a list.
 
    .. rubric:: Example
 
@@ -1515,14 +1503,11 @@ Module Contents
    Command syntax:
      python ele:photon {ele_id}|{which} {who}
 
-   where {ele_id} is an element name or index and {which} is one of
-     model
-     base
-     design
-   {who} is one of:
-     base
-     material
-     curvature
+   Where:
+     {ele_id} is an element name or index.
+     {which} is one of: "model", "base" or "design"
+     {who} is one of: "base", "material", or "curvature"
+
    .. rubric:: Example
 
    python ele:photon 3@1>>7|model base
@@ -1555,10 +1540,10 @@ Module Contents
    Command syntax:
      python ele:spin_taylor {ele_id}|{which}
 
-   where {ele_id} is an element name or index and {which} is one of
-     model
-     base
-     design
+   Where:
+     {ele_id} is an element name or index.
+     {which} is one of: "model", "base" or "design"
+
    .. rubric:: Example
 
    python ele:spin_taylor 3@1>>7|model
@@ -1590,10 +1575,10 @@ Module Contents
    Command syntax:
      python ele:taylor {ele_id}|{which}
 
-   where {ele_id} is an element name or index and {which} is one of
-     model
-     base
-     design
+   Where:
+     {ele_id} is an element name or index.
+     {which} is one of: "model", "base" or "design"
+
    .. rubric:: Example
 
    python ele:taylor 3@1>>7|model
@@ -1627,14 +1612,12 @@ Module Contents
    Command syntax:
      python ele:taylor_field {ele_id}|{which} {index} {who}
 
-   where {ele_id} is an element name or index and {which} is one of
-     model
-     base
-     design
-   {index} is the index number in the ele%taylor_field(:) array
-   {who} is one of:
-     base
-     terms
+   Where:
+     {ele_id} is an element name or index.
+     {which} is one of: "model", "base" or "design"
+     {index} is the index number in the ele%taylor_field(:) array
+     {who} is one of: "base", or "terms".
+
    .. rubric:: Example
 
    python ele:taylor_field 3@1>>7|model 2 base
@@ -1668,10 +1651,10 @@ Module Contents
    Command syntax:
      python ele:twiss {ele_id}|{which}
 
-   where {ele_id} is an element name or index and {which} is one of
-     model
-     base
-     design
+   Where:
+     {ele_id} is an element name or index.
+     {which} is one of: "model", "base" or "design"
+
    .. rubric:: Example
 
    python ele:twiss 3@1>>7|model
@@ -1704,15 +1687,14 @@ Module Contents
    Command syntax:
      python ele:wake {ele_id}|{which} {who}
 
-   where {ele_id} is an element name or index and {which} is one of
-     model
-     base
-     design
-   {Who} is one of
-     base
-     sr_long     sr_long_table
-     sr_trans    sr_trans_table
-     lr_mode_table
+   Where:
+     {ele_id} is an element name or index.
+     {which} is one of: "model", "base" or "design"
+     {Who} is one of:
+         "sr_long"        "sr_long_table"
+         "sr_trans"       "sr_trans_table"
+         "lr_mode_table"  "base"
+
    .. rubric:: Example
 
    python ele:wake 3@1>>7|model
@@ -1747,14 +1729,11 @@ Module Contents
    Command syntax:
      python ele:wall3d {ele_id}|{which} {index} {who}
 
-   where {ele_id} is an element name or index and {which} is one of
-     model
-     base
-     design
-   {index} is the index number in the ele%wall3d(:) array (size obtained from "ele:head").
-   {who} is one of:
-     base
-     table
+   Where:
+     {ele_id} is an element name or index.
+     {which} is one of: "model", "base" or "design"
+     {index} is the index number in the ele%wall3d(:) array (size obtained from "ele:head").
+     {who} is one of: "base", or "table".
    .. rubric:: Example
 
    python ele:wall3d 3@1>>7|model 2 base
@@ -1820,11 +1799,8 @@ Module Contents
    Command syntax:
      python em_field {ele_id}|{which} {x} {y} {z} {t_or_z}
 
-   where {which} is one of:
-     model
-     base
-     design
    Where:
+     {which} is one of: "model", "base" or "design"
      {x}, {y}  -- Transverse coords.
      {z}       -- Longitudinal coord with respect to entrance end of element.
      {t_or_z}  -- time or phase space z depending if lattice is setup for absolute time tracking.
@@ -2031,12 +2007,12 @@ Module Contents
       branch_name: 1@0
 
 
-.. py:function:: lat_branch_list(tao, *, ix_universe='', verbose=False, as_dict=True, raises=True)
+.. py:function:: lat_branch_list(tao, *, ix_uni='', verbose=False, as_dict=True, raises=True)
 
    Output lattice branch list
 
-   :param ix_universe:
-   :type ix_universe: optional
+   :param ix_uni:
+   :type ix_uni: optional
 
    :returns:
    :rtype: string_list
@@ -2044,7 +2020,7 @@ Module Contents
    .. rubric:: Notes
 
    Command syntax:
-     python lat_branch_list {ix_universe}
+     python lat_branch_list {ix_uni}
 
    Output syntax:
      branch_index;branch_name;n_ele_track;n_ele_max
@@ -2054,7 +2030,7 @@ Module Contents
    Example: 1
     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
-      ix_universe: 1
+      ix_uni: 1
 
 
 .. py:function:: lat_list(tao, elements, who, *, ix_uni='', ix_branch='', which='model', flags='-array_out -track_only', verbose=False, as_dict=True, raises=True)
@@ -2081,7 +2057,7 @@ Module Contents
    Command syntax:
      python lat_list {flags} {ix_uni}@{ix_branch}>>{elements}|{which} {who}
 
-   where:
+   Where:
     Optional {flags} are:
      -no_slaves : If present, multipass_slave and super_slave elements will not be matched to.
      -track_only : If present, lord elements will not be matched to.
@@ -2090,10 +2066,7 @@ Module Contents
        tao_c_interface_com%c_integer arrays. See the code below for when %c_real vs %c_integer is used.
        Note: Only a single {who} item permitted when -array_out is present.
 
-     {which} is one of:
-       model
-       base
-       design
+     {which} is one of: "model", "base" or "design"
 
      {who} is a comma deliminated list of:
        orbit.floor.x, orbit.floor.y, orbit.floor.z    ! Floor coords at particle orbit.
@@ -2181,7 +2154,7 @@ Module Contents
    Command syntax:
      python matrix {ele1_id} {ele2_id}
 
-   where:
+   Where:
      {ele1_id} is the start element.
      {ele2_id} is the end element.
    If {ele2_id} = {ele1_id}, the 1-turn transfer map is computed.
@@ -2219,15 +2192,16 @@ Module Contents
     args:
 
 
-.. py:function:: orbit_at_s(tao, s, *, ix_uni='', ix_branch='', which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: orbit_at_s(tao, *, ix_uni='', ele='', s_offset='', which='model', verbose=False, as_dict=True, raises=True)
 
    Output twiss at given s position.
 
-   :param s:
    :param ix_uni:
    :type ix_uni: optional
-   :param ix_branch:
-   :type ix_branch: optional
+   :param ele:
+   :type ele: optional
+   :param s_offset:
+   :type s_offset: optional
    :param which:
    :type which: default=model
 
@@ -2237,14 +2211,14 @@ Module Contents
    .. rubric:: Notes
 
    Command syntax:
-     python orbit_at_s {ix_uni}@{ix_branch}>>{s}|{which}
+     python orbit_at_s {ix_uni}@{ele}->{s_offset}|{which}
 
-   where:
-     {which} is one of:
-       model
-       base
-       design
-     {s} is the longitudinal s-position.
+   Where:
+     {ix_uni} is a universe index. Defaults to s%global%default_universe.
+     {ele} is an element name or index. Default at the Beginning element at start of branch 0.
+     {s_offset} is the offset of the evaluation point from the downstream end of ele. Default is 0.
+        If {s_offset} is present, the preceeding "->" sign must be present. EG: Something like "23|model" will
+     {which} is one of: "model", "base" or "design".
 
    .. rubric:: Examples
 
@@ -2252,8 +2226,8 @@ Module Contents
     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       ix_uni: 1
-      ix_branch: 0
-      s: 0.001
+      ele: 10
+      s_offset: 0.7
       which: model
 
 
@@ -2299,12 +2273,12 @@ Module Contents
       curve_name: r13.g.a
 
 
-.. py:function:: plot_lat_layout(tao, ix_universe: 1, ix_branch: 0, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: plot_lat_layout(tao, ix_uni: 1, ix_branch: 0, *, verbose=False, as_dict=True, raises=True)
 
    Output plot Lat_layout info
 
-   :param ix_universe:
-   :type ix_universe: 1
+   :param ix_uni:
+   :type ix_uni: 1
    :param ix_branch:
    :type ix_branch: 0
 
@@ -2314,7 +2288,7 @@ Module Contents
    .. rubric:: Notes
 
    Command syntax:
-     python plot_lat_layout {ix_universe}@{ix_branch}
+     python plot_lat_layout {ix_uni}@{ix_branch}
 
    Note: The returned list of element positions is not ordered in increasing
          longitudinal position.
@@ -2324,7 +2298,7 @@ Module Contents
    Example: 1
     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
-      ix_universe: 1
+      ix_uni: 1
       ix_branch: 0
 
 
@@ -2804,7 +2778,7 @@ Module Contents
    Command syntax:
      python shape_pattern_manage {ix_pattern}^^{pat_name}^^{pat_line_width}
 
-   where:
+   Where:
      {ix_pattern}      -- Pattern index. Patterns with higher indexes will be moved up
                                          if adding a pattern and down if deleting.
      {pat_name}        -- Pattern name.
@@ -2838,7 +2812,7 @@ Module Contents
    Command syntax:
      python shape_pattern_point_manage {ix_pattern}^^{ix_point}^^{s}^^{x}
 
-   where:
+   Where:
      {ix_pattern}      -- Pattern index.
      {ix_point}        -- Point index. Points of higher indexes will be moved up
                                        if adding a point and down if deleting.
@@ -3037,6 +3011,12 @@ Module Contents
    Command syntax:
      python spin_resonance {ix_uni}@{ix_branch}|{which} {ref_ele}
 
+   Where:
+     {ix_uni} is a universe index. Defaults to s%global%default_universe.
+     {ix_branch} is a lattice branch index. Defaults to s%global%default_branch.
+     {which} is one of: "model", "base" or "design"
+     {ref_ele} is an element name or index.
+
    .. rubric:: Examples
 
    Example: 1
@@ -3066,15 +3046,16 @@ Module Contents
     args:
 
 
-.. py:function:: twiss_at_s(tao, s, *, ix_uni='', ix_branch='', which='model', verbose=False, as_dict=True, raises=True)
+.. py:function:: twiss_at_s(tao, *, ix_uni='', ele='', s_offset='', which='model', verbose=False, as_dict=True, raises=True)
 
    Output twiss parameters at given s position.
 
-   :param s:
    :param ix_uni:
    :type ix_uni: optional
-   :param ix_branch:
-   :type ix_branch: optional
+   :param ele:
+   :type ele: optional
+   :param s_offset:
+   :type s_offset: optional
    :param which:
    :type which: default=model
 
@@ -3084,12 +3065,14 @@ Module Contents
    .. rubric:: Notes
 
    Command syntax:
-     python twiss_at_s {ix_uni}@{ix_branch}>>{s}|{which}
+     python twiss_at_s {ix_uni}@{ele}->{s_offset}|{which}
 
-   where {which} is one of:
-     model
-     base
-     design
+   Where:
+     {ix_uni} is a universe index. Defaults to s%global%default_universe.
+     {ele} is an element name or index. Default at the Beginning element at start of branch 0.
+     {s_offset} is the offset of the evaluation point from the downstream end of ele. Default is 0.
+        If {s_offset} is present, the preceeding "->" sign must be present. EG: Something like "23|model" will
+     {which} is one of: "model", "base" or "design".
 
    .. rubric:: Examples
 
@@ -3097,16 +3080,16 @@ Module Contents
     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
       ix_uni: 1
-      ix_branch: 0
-      s: 0
+      ele: 10
+      s_offset: 0.7
       which: model
 
 
-.. py:function:: universe(tao, ix_universe, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: universe(tao, ix_uni, *, verbose=False, as_dict=True, raises=True)
 
    Output universe info.
 
-   :param ix_universe:
+   :param ix_uni:
 
    :returns:
    :rtype: string_list
@@ -3114,7 +3097,7 @@ Module Contents
    .. rubric:: Notes
 
    Command syntax:
-     python universe {ix_universe}
+     python universe {ix_uni}
 
    Use "python global" to get the number of universes.
 
@@ -3123,7 +3106,7 @@ Module Contents
    Example: 1
     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
     args:
-      ix_universe: 1
+      ix_uni: 1
 
 
 .. py:function:: var(tao, var, *, slaves='', verbose=False, as_dict=True, raises=True)
