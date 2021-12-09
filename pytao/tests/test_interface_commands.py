@@ -466,10 +466,22 @@ def test_plot_line_1():
     ret = interface_commands.plot_line(tao, region_name='beta', graph_name='g', curve_name='a', x_or_y='')
             
         
+def test_plot_line_2():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting -noplot'))
+    ret = interface_commands.plot_line(tao, region_name='beta', graph_name='g', curve_name='a', x_or_y='y')
+            
+        
 def test_plot_symbol_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting -noplot'))
     ret = interface_commands.plot_symbol(tao, region_name='r13', graph_name='g', curve_name='a', x_or_y='')
+            
+        
+def test_plot_symbol_2():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting -noplot'))
+    ret = interface_commands.plot_symbol(tao, region_name='r13', graph_name='g', curve_name='a', x_or_y='y')
             
         
 def test_plot_transfer_1():
