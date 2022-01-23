@@ -1,6 +1,3 @@
-
-
-
 # PyTao
 
 [PyTao]((https://bmad-sim.github.io/pytao/index.html)) is Python interface for [Tao](https://www.classe.cornell.edu/bmad/tao.html), which is based on the Bmad subroutine library for relativistic charged–particle and X-ray simulations in accelerators and storage rings.
