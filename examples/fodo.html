@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FODO optics &mdash; PyTao 0.1.6+10.gd28b24a documentation</title>
+  <title>FODO optics &mdash; PyTao 0.1.6+12.g8c3ce6e documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -16,8 +16,8 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -33,7 +33,7 @@
             <a href="../index.html" class="icon icon-home"> PyTao
           </a>
               <div class="version">
-                0.1.6+10.gd28b24a
+                0.1.6+12.g8c3ce6e
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -321,7 +321,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
-.prompt a.copybtn {
+.prompt .copybtn {
     display: none;
 }
 
@@ -390,8 +390,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>from pytao import Tao
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from pytao import Tao
 import numpy as np
 import matplotlib.pyplot as plt
 import os
@@ -403,8 +402,7 @@ import os
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>tao = Tao(&#39;-init $ACC_ROOT_DIR/tao/examples/fodo/tao.init -lat $ACC_ROOT_DIR/tao/examples/fodo/fodo.bmad -noplot&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tao = Tao(&#39;-init $ACC_ROOT_DIR/tao/examples/fodo/tao.init -lat $ACC_ROOT_DIR/tao/examples/fodo/fodo.bmad -noplot&#39;)
 </pre></div>
 </div>
 </div>
@@ -412,8 +410,7 @@ import os
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>def add_info(d):
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def add_info(d):
     twiss1 = tao.ele_twiss(&#39;q1&#39;)
     twiss2 = tao.ele_twiss(&#39;q2&#39;)
 
@@ -429,8 +426,7 @@ import os
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>%%tao
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%tao
 sho lat
 </pre></div>
 </div>
@@ -466,8 +462,7 @@ Tao&gt;
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>def set_kx(k1):
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def set_kx(k1):
     cmds = [f&#39;set ele q1 k1 = {k1}&#39;,
             f&#39;set ele q2 k1 = {-k1}&#39;]
 
@@ -506,8 +501,7 @@ x
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Scan k1
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Scan k1
 n1 = 20
 qvec1 = np.linspace(1, 25, n1)
 
@@ -525,8 +519,7 @@ for k in qvec1:
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Reshape data
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Reshape data
 DAT = {}
 for key in KEYS:
     print(key)
@@ -556,8 +549,7 @@ phi_b
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>DAT.keys()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>DAT.keys()
 </pre></div>
 </div>
 </div>
@@ -574,8 +566,7 @@ dict_keys([&#39;good&#39;, &#39;mean_beta_a&#39;, &#39;mean_beta_b&#39;, &#39;ph
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>for key in KEYS:
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>for key in KEYS:
     plt.plot(qvec1, DAT[key])
     plt.ylabel(key)
     plt.xlabel(r&#39;k1 (m$^{-2}$)&#39;)
@@ -627,8 +618,7 @@ dict_keys([&#39;good&#39;, &#39;mean_beta_a&#39;, &#39;mean_beta_b&#39;, &#39;ph
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>def set_k(k1, k2):
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def set_k(k1, k2):
     cmds = [f&#39;set ele q1 k1 = {k1}&#39;, f&#39;set ele q2 k1 = {-k2}&#39;]
 
     d = {}
@@ -666,8 +656,7 @@ x
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>set_k(1,1)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>set_k(1,1)
 </pre></div>
 </div>
 </div>
@@ -688,8 +677,7 @@ x
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>n1 = 50
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>n1 = 50
 n2 = 60
 qvec1 = np.linspace(1, 15, n1)
 qvec2 = np.linspace(1, 15, n2)
@@ -704,8 +692,7 @@ fK2 = K2.flatten()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>%%time
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%time
 # Make data
 
 tao.cmd(&#39;set global plot_on = F&#39;)
@@ -734,8 +721,7 @@ Wall time: 5.51 s
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Reshape data
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Reshape data
 DAT = {}
 for key in RESULTS[0]:
     print(key)
@@ -769,8 +755,7 @@ phi_b
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>NICE = {}
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>NICE = {}
 NICE[&#39;mean_beta_a&#39;] = r&#39;$&lt;\beta_x&gt;$&#39;
 NICE[&#39;mean_beta_b&#39;] = r&#39;$&lt;\beta_y&gt;$&#39;
 def nice(key):
@@ -784,8 +769,7 @@ def nice(key):
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>#fig, ax = plt.subplots(figsize=(10,8))
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#fig, ax = plt.subplots(figsize=(10,8))
 
 def plot1(key):
     plt.imshow(DAT[key], origin=&#39;lower&#39;,
@@ -822,8 +806,7 @@ plot1(&#39;mean_beta_b&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>def optimize(beta_a, beta_b):
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def optimize(beta_a, beta_b):
     cmds = f&quot;&quot;&quot;
 alias setbetas
 veto var *
@@ -874,8 +857,7 @@ optimize(10, 20)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Check merit
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Check merit
 tao.merit()
 </pre></div>
 </div>
@@ -893,8 +875,7 @@ tao.merit()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Check that the optimization worked
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Check that the optimization worked
 average_beta_a = tao.data(&#39;fodo&#39;, &#39;betas&#39;, dat_index=1)[&#39;model_value&#39;]
 average_beta_b = tao.data(&#39;fodo&#39;, &#39;betas&#39;, dat_index=2)[&#39;model_value&#39;]
 average_beta_a, average_beta_b
@@ -914,8 +895,7 @@ average_beta_a, average_beta_b
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># These are the K
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># These are the K
 kq1 = tao.ele_gen_attribs(&#39;Q1&#39;)[&#39;K1&#39;]
 kq2 = tao.ele_gen_attribs(&#39;Q2&#39;)[&#39;K1&#39;]
 kq1, kq2
@@ -939,8 +919,7 @@ kq1, kq2
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>tao.cmd(&#39;alias setbetas veto var *;veto dat *;use dat fodo.betas[1,2];set dat fodo.betas[1]|meas=[[1]];set dat fodo.betas[2]|meas=[[2]];use var quad;run;show var -bmad -good&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tao.cmd(&#39;alias setbetas veto var *;veto dat *;use dat fodo.betas[1,2];set dat fodo.betas[1]|meas=[[1]];set dat fodo.betas[2]|meas=[[2]];use var quad;run;show var -bmad -good&#39;)
 #tao.cmd(&#39;call SetBetas.tao&#39;, raises=False)
 
 lines = tao.cmd(&#39;setbetas 40 25&#39;, raises=False)
@@ -962,8 +941,7 @@ tao.merit()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>T = tao.ele_twiss(&#39;Q1&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>T = tao.ele_twiss(&#39;Q1&#39;)
 T
 </pre></div>
 </div>
@@ -1001,8 +979,7 @@ T
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>from pytao.misc.markers import make_markers
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from pytao.misc.markers import make_markers
 </pre></div>
 </div>
 </div>
@@ -1010,8 +987,7 @@ T
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>?make_markers
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>?make_markers
 </pre></div>
 </div>
 </div>
@@ -1034,8 +1010,7 @@ If filename is given, the lines will be written to ta file.
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>smax = 20.0 # m
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>smax = 20.0 # m
 
 # Alternatively, if the lattice were already loaded
 #smax = tao.lat_list(&#39;*&#39;, who=&#39;ele.s&#39;).max()
@@ -1061,8 +1036,7 @@ smax
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Make a lattice and write to a local file
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Make a lattice and write to a local file
 
 latfile = os.path.join(os.getcwd(), &#39;fodo10.bmad&#39;)
 
@@ -1096,8 +1070,7 @@ open(latfile, &#39;w&#39;).write(LAT2)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Run with this lattice
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Run with this lattice
 tao = Tao(f&#39;-init $ACC_ROOT_DIR/tao/examples/fodo/tao.init -lat {latfile} -noplot&#39;)
 </pre></div>
 </div>
@@ -1106,8 +1079,7 @@ tao = Tao(f&#39;-init $ACC_ROOT_DIR/tao/examples/fodo/tao.init -lat {latfile} -n
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Toggle the beam on and off
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Toggle the beam on and off
 tao.cmd(&#39;set beam_init n_particle = 1000&#39;)
 tao.cmd(&#39;set global track_type = beam;set global track_type = single&#39;)
 </pre></div>
@@ -1131,8 +1103,7 @@ tao.cmd(&#39;set global track_type = beam;set global track_type = single&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>import h5py
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import h5py
 from pmd_beamphysics import ParticleGroup, particle_paths
 
 with h5py.File(&#39;beam_dump.h5&#39;, &#39;r&#39;) as h5:
@@ -1149,9 +1120,7 @@ with h5py.File(&#39;beam_dump.h5&#39;, &#39;r&#39;) as h5:
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-
-<span></span>skip = 1 # make larger for faster plotting
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span>skip = 1 # make larger for faster plotting
 fig, axes = plt.subplots(2, figsize=(12,8))
 
 axes[0].plot(
@@ -1190,8 +1159,7 @@ for ax in axes:
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>k1 = &#39;sigma_x&#39;
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>k1 = &#39;sigma_x&#39;
 k2 = &#39;sigma_y&#39;
 
 x =  np.array([P[&#39;mean_t&#39;]*299792458 for P in Plist])
@@ -1230,8 +1198,7 @@ plt.legend()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Cleanup
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Cleanup
 !rm beam_dump.h5
 !rm {latfile}
 !rm markers.bmad

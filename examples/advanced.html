@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PyTao advanced usage &mdash; PyTao 0.1.6+10.gd28b24a documentation</title>
+  <title>PyTao advanced usage &mdash; PyTao 0.1.6+12.g8c3ce6e documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -16,8 +16,8 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -33,7 +33,7 @@
             <a href="../index.html" class="icon icon-home"> PyTao
           </a>
               <div class="version">
-                0.1.6+10.gd28b24a
+                0.1.6+12.g8c3ce6e
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -319,7 +319,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
-.prompt a.copybtn {
+.prompt .copybtn {
     display: none;
 }
 
@@ -385,8 +385,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Useful for debugging
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Useful for debugging
 %load_ext autoreload
 %autoreload 2
 
@@ -407,8 +406,7 @@ Populating the interactive namespace from numpy and matplotlib
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>from pytao import Tao, TaoModel, util, run_tao
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from pytao import Tao, TaoModel, util, run_tao
 from pytao.tao_ctypes.evaluate import evaluate_tao
 import os
 ?TaoModel
@@ -447,8 +445,7 @@ If workdir is given, then this temporary directory will be placed in workdir.
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Point to local installation
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Point to local installation
 BASE_DIR=os.environ[&#39;ACC_ROOT_DIR&#39;]
 print(&#39;Bmad installation: &#39;, BASE_DIR)
 
@@ -475,8 +472,7 @@ Bmad installation:  /Users/chrisonian/Code/bmad_svn/
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>M=run_tao(input_file=INPUT_FILE, ploton=True)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>M=run_tao(input_file=INPUT_FILE, ploton=True)
 M
 </pre></div>
 </div>
@@ -497,8 +493,7 @@ M
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>?evaluate_tao
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>?evaluate_tao
 </pre></div>
 </div>
 </div>
@@ -571,8 +566,7 @@ See: run_tao
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>res = evaluate_tao(settings={&#39;csr_param:write_csr_wake&#39;:True,
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>res = evaluate_tao(settings={&#39;csr_param:write_csr_wake&#39;:True,
                             &#39;csr_param:ds_track_step&#39;:0.001},
                    input_file=root+&#39;tao.init&#39;,
                    run_commands=[&#39;set global track_type=beam&#39;],
@@ -599,8 +593,7 @@ res
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>from pmd_beamphysics import ParticleGroup, particle_paths
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from pmd_beamphysics import ParticleGroup, particle_paths
 from h5py import File
 afile = res[&#39;beam_archive&#39;]
 h5 = File(afile, &#39;r&#39;)
@@ -625,8 +618,7 @@ ppaths
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>list(h5)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>list(h5)
 </pre></div>
 </div>
 </div>
@@ -643,8 +635,7 @@ ppaths
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>P = ParticleGroup(h5[ppaths[-1]])
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>P = ParticleGroup(h5[ppaths[-1]])
 P.plot(&#39;delta_t&#39;, &#39;delta_pz&#39;, bins=200)
 </pre></div>
 </div>
@@ -660,8 +651,7 @@ P.plot(&#39;delta_t&#39;, &#39;delta_pz&#39;, bins=200)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>os.remove(afile)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>os.remove(afile)
 </pre></div>
 </div>
 </div>
@@ -672,8 +662,7 @@ P.plot(&#39;delta_t&#39;, &#39;delta_pz&#39;, bins=200)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>M.evaluate(&#39;lat::orbit.x[end]&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>M.evaluate(&#39;lat::orbit.x[end]&#39;)
 </pre></div>
 </div>
 </div>
@@ -693,8 +682,7 @@ array([0.])
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>from pytao.misc.csr import read_csr_wake_data_h5, process_csr_wake_data
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from pytao.misc.csr import read_csr_wake_data_h5, process_csr_wake_data
 import numpy as np
 </pre></div>
 </div>
@@ -703,8 +691,7 @@ import numpy as np
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>cdat = read_csr_wake_data_h5(h5, &#39;csr_wake&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>cdat = read_csr_wake_data_h5(h5, &#39;csr_wake&#39;)
 </pre></div>
 </div>
 </div>
@@ -712,8 +699,7 @@ import numpy as np
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>cdat.keys()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>cdat.keys()
 </pre></div>
 </div>
 </div>
@@ -730,8 +716,7 @@ dict_keys([&#39;2:FF.PIP00B&#39;, &#39;3:FF.BEN01&#39;, &#39;4:FF.PIP01&#39;, &#
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># This is the actual data
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># This is the actual data
 dat = cdat[&#39;3:FF.BEN01&#39;][&#39;data&#39;]
 dat.shape
 </pre></div>
@@ -750,8 +735,7 @@ dat.shape
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># This will process into a more useful form for data analysis
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># This will process into a more useful form for data analysis
 pdat = process_csr_wake_data(cdat)
 
 ?process_csr_wake_data
@@ -789,8 +773,7 @@ that returns the ele_name from an ix_ele for convenience.
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>from pytao.misc.csr_plot import plot_csr_wake, plot_csr_stats
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from pytao.misc.csr_plot import plot_csr_wake, plot_csr_stats
 from pytao.misc.csr import csr_wake_stats_at_step
 </pre></div>
 </div>
@@ -799,8 +782,7 @@ from pytao.misc.csr import csr_wake_stats_at_step
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>from ipywidgets import interact
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from ipywidgets import interact
 def plot1(step=0):
     plot_csr_wake(pdat, step=step)
 nstep = len(pdat[&#39;z&#39;])
@@ -827,8 +809,7 @@ interact(plot1, step=(0, nstep-1, 1) )
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Another convenience plot
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Another convenience plot
 plot_csr_stats(pdat)
 </pre></div>
 </div>
@@ -844,8 +825,7 @@ plot_csr_stats(pdat)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Cleanup
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Cleanup
 !rm csr_wake.dat
 </pre></div>
 </div>

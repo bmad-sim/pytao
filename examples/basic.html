@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PyTao basic usage &mdash; PyTao 0.1.6+10.gd28b24a documentation</title>
+  <title>PyTao basic usage &mdash; PyTao 0.1.6+12.g8c3ce6e documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -16,8 +16,8 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -33,7 +33,7 @@
             <a href="../index.html" class="icon icon-home"> PyTao
           </a>
               <div class="version">
-                0.1.6+10.gd28b24a
+                0.1.6+12.g8c3ce6e
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -324,7 +324,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
-.prompt a.copybtn {
+.prompt .copybtn {
     display: none;
 }
 
@@ -390,8 +390,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Useful for debugging
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Useful for debugging
 %load_ext autoreload
 %autoreload 2
 </pre></div>
@@ -401,8 +400,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>%pylab --no-import-all inline
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%pylab --no-import-all inline
 %config InlineBackend.figure_format = &#39;retina&#39;
 </pre></div>
 </div>
@@ -422,8 +420,7 @@ Populating the interactive namespace from numpy and matplotlib
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>from pytao import Tao
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from pytao import Tao
 </pre></div>
 </div>
 </div>
@@ -431,8 +428,7 @@ Populating the interactive namespace from numpy and matplotlib
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>tao=Tao(&#39;-init $ACC_ROOT_DIR/tao/examples/cesr/tao.init -noplot&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tao=Tao(&#39;-init $ACC_ROOT_DIR/tao/examples/cesr/tao.init -noplot&#39;)
 </pre></div>
 </div>
 </div>
@@ -444,8 +440,7 @@ Populating the interactive namespace from numpy and matplotlib
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Tao command
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Tao command
 tao.cmd(&#39;show lat 1:10&#39;)
 </pre></div>
 </div>
@@ -478,8 +473,7 @@ tao.cmd(&#39;show lat 1:10&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Send a list of commands. This returns the corresponding list of outputs
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Send a list of commands. This returns the corresponding list of outputs
 tao.cmds(
     [&#39;set lattice model=design&#39;,
      &#39;set ele Q00W x_offset = 1e-6&#39;]
@@ -504,8 +498,7 @@ tao.cmds(
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>%%tao
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%tao
 sho lat 1:10
 sho ele 4
 </pre></div>
@@ -599,8 +592,7 @@ Tao&gt;
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>%%tao
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%tao
 help python
 </pre></div>
 </div>
@@ -667,8 +659,7 @@ Tao&gt;
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># This data is returned as specially formatted lists
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># This data is returned as specially formatted lists
 tao.cmd(&#39;python orbit_at_s 1@0&gt;&gt;1.2|model&#39;)
 </pre></div>
 </div>
@@ -705,8 +696,7 @@ tao.cmd(&#39;python orbit_at_s 1@0&gt;&gt;1.2|model&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Some commands have &#39;array_out&#39; options. For example, this seems to return nothing:
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Some commands have &#39;array_out&#39; options. For example, this seems to return nothing:
 tao.cmd(&#39;python lat_list -array_out 1@0&gt;&gt;Q*|model orbit.floor.x&#39;)
 </pre></div>
 </div>
@@ -724,8 +714,7 @@ tao.cmd(&#39;python lat_list -array_out 1@0&gt;&gt;Q*|model orbit.floor.x&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># But calling `.cmd_real` on the same command will get the data from an internal pointer:
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># But calling `.cmd_real` on the same command will get the data from an internal pointer:
 tao.cmd_real(&#39;python lat_list -array_out 1@0&gt;&gt;Q*|model orbit.floor.x&#39;)
 </pre></div>
 </div>
@@ -775,8 +764,7 @@ array([ 1.00000000e-06,  5.45328427e-03,  8.07343315e-03,  1.66177053e-02,
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>?tao.orbit_at_s
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>?tao.orbit_at_s
 </pre></div>
 </div>
 </div>
@@ -839,8 +827,7 @@ Example: 1
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>tao.orbit_at_s(1.2)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tao.orbit_at_s(1.2)
 </pre></div>
 </div>
 </div>
@@ -876,8 +863,7 @@ Example: 1
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Some commands can return arrays
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Some commands can return arrays
 ?tao.evaluate
 </pre></div>
 </div>
@@ -935,8 +921,7 @@ Example: 1
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>tao.evaluate(&#39;data::cbar.11[1:10]|model&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tao.evaluate(&#39;data::cbar.11[1:10]|model&#39;)
 </pre></div>
 </div>
 </div>
@@ -958,8 +943,7 @@ array([ 2.81638383e-03, -1.06486491e-03,  1.27317734e-04,  2.78171648e-04,
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>?tao.lat_list
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>?tao.lat_list
 </pre></div>
 </div>
 </div>
@@ -1054,8 +1038,7 @@ Note: vector layout of mat6(6,6) is: [mat6(1,:), mat6(2,:), ...mat6(6,:)]
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># By detault this returns an array of floats
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># By detault this returns an array of floats
 s = tao.lat_list(&#39;*&#39;, &#39;ele.s&#39;, verbose=True)
 s[0:5]
 </pre></div>
@@ -1082,8 +1065,7 @@ array([0.      , 0.      , 0.622301, 0.622301, 0.637956])
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># These particulars keys will return integers
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># These particulars keys will return integers
 state = tao.lat_list(&#39;*&#39;, &#39;orbit.state&#39;)
 ix = tao.lat_list(&#39;*&#39;, &#39;ele.ix_ele&#39;)
 state.dtype, ix.dtype
@@ -1103,8 +1085,7 @@ state.dtype, ix.dtype
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># And this one will return a list of strings
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># And this one will return a list of strings
 names = tao.lat_list(&#39;*&#39;, &#39;ele.name&#39;)
 names[0:5]
 </pre></div>
@@ -1123,8 +1104,7 @@ names[0:5]
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Simple plot of this data
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Simple plot of this data
 plt.plot(
     tao.lat_list(&#39;*&#39;, &#39;ele.s&#39;),
     tao.lat_list(&#39;*&#39;, &#39;orbit.vec.1&#39;),
@@ -1153,8 +1133,7 @@ plt.plot(
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Be careful with the flags. The defaults are:
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Be careful with the flags. The defaults are:
 plt.plot(tao.lat_list(&#39;*&#39;, &#39;ele.s&#39;, flags=&#39;-array_out -track_only&#39;))
 </pre></div>
 </div>
@@ -1179,8 +1158,7 @@ plt.plot(tao.lat_list(&#39;*&#39;, &#39;ele.s&#39;, flags=&#39;-array_out -track
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># -index_order will return
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># -index_order will return
 plt.plot(tao.lat_list(&#39;*&#39;, &#39;ele.s&#39;, flags=&#39;-array_out -index_order&#39;))
 </pre></div>
 </div>
@@ -1210,8 +1188,7 @@ plt.plot(tao.lat_list(&#39;*&#39;, &#39;ele.s&#39;, flags=&#39;-array_out -index
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>from pytao import interface_commands
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from pytao import interface_commands
 all_cmds = [name for name in dir(interface_commands) if not name.startswith(&#39;__&#39;)]
 print(all_cmds)
 </pre></div>
@@ -1229,8 +1206,7 @@ print(all_cmds)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># There are this many commands:
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># There are this many commands:
 len(all_cmds)
 </pre></div>
 </div>
@@ -1252,8 +1228,7 @@ len(all_cmds)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># This looks like a new object...
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># This looks like a new object...
 tao2=Tao(&#39;-init $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init -noplot&#39;)
 </pre></div>
 </div>
@@ -1262,8 +1237,7 @@ tao2=Tao(&#39;-init $ACC_ROOT_DIR/tao/examples/csr_beam_tracking/tao.init -noplo
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># ...but internally connects to
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># ...but internally connects to
 tao.lat_list(&#39;*&#39;, &#39;ele.name&#39;)
 </pre></div>
 </div>
@@ -1297,8 +1271,7 @@ tao.lat_list(&#39;*&#39;, &#39;ele.name&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>tao.bunch_params?
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tao.bunch_params?
 </pre></div>
 </div>
 </div>
@@ -1351,8 +1324,7 @@ Example: 1
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Statistical data
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Statistical data
 stats = tao.bunch_params(&#39;end&#39;)
 stats.keys()
 </pre></div>
@@ -1371,8 +1343,7 @@ dict_keys([&#39;beta_x&#39;, &#39;alpha_x&#39;, &#39;gamma_x&#39;, &#39;phi_x&#3
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>?tao.bunch1
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>?tao.bunch1
 </pre></div>
 </div>
 </div>
@@ -1435,8 +1406,7 @@ Example: 1
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Array data
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Array data
 x = tao.bunch1(&#39;end&#39;, coordinate=&#39;x&#39;)
 px = tao.bunch1(&#39;end&#39;, coordinate=&#39;px&#39;)
 plt.scatter(x, px)
@@ -1463,8 +1433,7 @@ plt.scatter(x, px)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># The state will be returned as an integer array.
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># The state will be returned as an integer array.
 state = tao.bunch1(&#39;end&#39;, coordinate=&#39;state&#39;)
 state.dtype
 </pre></div>
@@ -1491,8 +1460,7 @@ dtype(&#39;&lt;i4&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>from pmd_beamphysics import ParticleGroup
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from pmd_beamphysics import ParticleGroup
 </pre></div>
 </div>
 </div>
@@ -1500,8 +1468,7 @@ dtype(&#39;&lt;i4&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># This data is suitable for the ParticleGroup class
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># This data is suitable for the ParticleGroup class
 data = tao.bunch_data(&#39;end&#39;)
 data.keys()
 </pre></div>
@@ -1520,8 +1487,7 @@ dict_keys([&#39;x&#39;, &#39;px&#39;, &#39;y&#39;, &#39;py&#39;, &#39;t&#39;, &#
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>P = ParticleGroup(data=data)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>P = ParticleGroup(data=data)
 
 P.plot(&#39;x&#39;, &#39;px&#39;)
 </pre></div>
@@ -1538,8 +1504,7 @@ P.plot(&#39;x&#39;, &#39;px&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Tao&#39;s write format is already in the openPMD-beamphysics, so particles can be written and read in this way as well.
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Tao&#39;s write format is already in the openPMD-beamphysics, so particles can be written and read in this way as well.
 tao.cmd(&#39;write beam -at end test.h5&#39;)
 </pre></div>
 </div>
@@ -1557,8 +1522,7 @@ tao.cmd(&#39;write beam -at end test.h5&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>P2 = ParticleGroup(&#39;test.h5&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>P2 = ParticleGroup(&#39;test.h5&#39;)
 P2.plot(&#39;x&#39;, &#39;px&#39;)
 </pre></div>
 </div>
@@ -1574,8 +1538,7 @@ P2.plot(&#39;x&#39;, &#39;px&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># Cleanup
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Cleanup
 !rm test.h5
 </pre></div>
 </div>
@@ -1588,8 +1551,7 @@ P2.plot(&#39;x&#39;, &#39;px&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>tao.lat_list(&#39;*&#39;, &#39;ele.s&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tao.lat_list(&#39;*&#39;, &#39;ele.s&#39;)
 </pre></div>
 </div>
 </div>
@@ -1606,8 +1568,7 @@ array([0.   , 0.   , 0.06 , 0.193, 0.263, 0.385, 0.445, 0.445, 0.445])
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>try:
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>try:
     tao.lat_list(&#39;*&#39;, &#39;ele.saa&#39;)
 except Exception as ex:
     print(ex)
@@ -1628,8 +1589,7 @@ INVALID
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># This suppresses the exceptions, returning None
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># This suppresses the exceptions, returning None
 tao.lat_list(&#39;*&#39;, &#39;ele.saa&#39;, raises=False)
 </pre></div>
 </div>
@@ -1638,8 +1598,7 @@ tao.lat_list(&#39;*&#39;, &#39;ele.saa&#39;, raises=False)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>try:
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>try:
     tao.cmd(&#39;safaf&#39;)
 except Exception as ex:
     print(ex)
@@ -1659,8 +1618,7 @@ Command: safaf causes error: ERROR detected: [ERROR | 2021-AUG-11 13:33:23] tao_
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># This returns the lines
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># This returns the lines
 tao.cmd(&#39;safaf&#39;, raises=False)
 </pre></div>
 </div>
