@@ -2692,6 +2692,9 @@ def orbit_at_s(tao, *, ix_uni='', ele='', s_offset='', which='model', verbose=Fa
          If {s_offset} is present, the preceeding "->" sign must be present. EG: Something like "23|model" will
       {which} is one of: "model", "base" or "design".
     
+    Example:
+      python orbit_at_s Q10->0.4|model   ! Orbit at 0.4 meters from Q10 element exit end in model lattice.
+    
     Examples
     --------
     Example: 1
@@ -3048,6 +3051,9 @@ def plot_line(tao, region_name, graph_name, curve_name, *, x_or_y='', verbose=Fa
     Returns
     -------
     string_list
+        if x_or_y == ''
+    real_array
+        if x_or_y != ''
     
     Notes
     -----
@@ -3073,10 +3079,21 @@ def plot_line(tao, region_name, graph_name, curve_name, *, x_or_y='', verbose=Fa
        curve_name: a
        x_or_y:
     
+    Example: 2
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting
+     args:
+       region_name: beta
+       graph_name: g
+       curve_name: a
+       x_or_y: y
+    
     """
     cmd = f'python plot_line {region_name}.{graph_name}.{curve_name} {x_or_y}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='plot_line', cmd_type='string_list')
+    if x_or_y == '':
+        return __execute(tao, cmd, as_dict, raises, method_name='plot_line', cmd_type='string_list')
+    if x_or_y != '':
+        return __execute(tao, cmd, as_dict, raises, method_name='plot_line', cmd_type='real_array')
 
 
 def plot_symbol(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=False, as_dict=True, raises=True):
@@ -3094,6 +3111,9 @@ def plot_symbol(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=Fal
     Returns
     -------
     string_list
+        if x_or_y == ''
+    real_array
+        if x_or_y != ''
     
     Notes
     -----
@@ -3121,10 +3141,21 @@ def plot_symbol(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=Fal
        curve_name: a
        x_or_y: 
     
+    Example: 2
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting
+     args:
+       region_name: r13
+       graph_name: g
+       curve_name: a
+       x_or_y: y
+    
     """
     cmd = f'python plot_symbol {region_name}.{graph_name}.{curve_name} {x_or_y}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='plot_symbol', cmd_type='string_list')
+    if x_or_y == '':
+        return __execute(tao, cmd, as_dict, raises, method_name='plot_symbol', cmd_type='string_list')
+    if x_or_y != '':
+        return __execute(tao, cmd, as_dict, raises, method_name='plot_symbol', cmd_type='real_array')
 
 
 def plot_transfer(tao, from_plot, to_plot, *, verbose=False, as_dict=True, raises=True):
