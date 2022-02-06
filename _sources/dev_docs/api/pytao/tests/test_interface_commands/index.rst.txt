@@ -238,7 +238,13 @@ Module Contents
 .. py:function:: test_plot_line_1()
 
 
+.. py:function:: test_plot_line_2()
+
+
 .. py:function:: test_plot_symbol_1()
+
+
+.. py:function:: test_plot_symbol_2()
 
 
 .. py:function:: test_plot_transfer_1()

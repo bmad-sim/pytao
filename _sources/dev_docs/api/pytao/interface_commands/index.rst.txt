@@ -2220,6 +2220,10 @@ Module Contents
         If {s_offset} is present, the preceeding "->" sign must be present. EG: Something like "23|model" will
      {which} is one of: "model", "base" or "design".
 
+   .. rubric:: Example
+
+   python orbit_at_s Q10->0.4|model   ! Orbit at 0.4 meters from Q10 element exit end in model lattice.
+
    .. rubric:: Examples
 
    Example: 1
@@ -2489,8 +2493,8 @@ Module Contents
    :param x_or_y:
    :type x_or_y: optional
 
-   :returns:
-   :rtype: string_list
+   :returns: * *string_list* -- if x_or_y == ''
+             * *real_array* -- if x_or_y != ''
 
    .. rubric:: Notes
 
@@ -2517,6 +2521,14 @@ Module Contents
       curve_name: a
       x_or_y:
 
+   Example: 2
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting
+    args:
+      region_name: beta
+      graph_name: g
+      curve_name: a
+      x_or_y: y
+
 
 .. py:function:: plot_symbol(tao, region_name, graph_name, curve_name, x_or_y, *, verbose=False, as_dict=True, raises=True)
 
@@ -2527,8 +2539,8 @@ Module Contents
    :param curve_name:
    :param x_or_y:
 
-   :returns:
-   :rtype: string_list
+   :returns: * *string_list* -- if x_or_y == ''
+             * *real_array* -- if x_or_y != ''
 
    .. rubric:: Notes
 
@@ -2556,6 +2568,14 @@ Module Contents
       graph_name: g
       curve_name: a
       x_or_y:
+
+   Example: 2
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting
+    args:
+      region_name: r13
+      graph_name: g
+      curve_name: a
+      x_or_y: y
 
 
 .. py:function:: plot_transfer(tao, from_plot, to_plot, *, verbose=False, as_dict=True, raises=True)

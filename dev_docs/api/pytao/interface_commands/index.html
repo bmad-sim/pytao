@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pytao.interface_commands &mdash; PyTao 0.1.6+12.g8c3ce6e documentation</title>
+  <title>pytao.interface_commands &mdash; PyTao 0.1.6+14.g9552e09 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
@@ -31,7 +31,7 @@
             <a href="../../../../index.html" class="icon icon-home"> PyTao
           </a>
               <div class="version">
-                0.1.6+12.g8c3ce6e
+                0.1.6+14.g9552e09
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -2804,6 +2804,8 @@ args:</p>
 <p>{which} is one of: “model”, “base” or “design”.</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<p>python orbit_at_s Q10-&gt;0.4|model   ! Orbit at 0.4 meters from Q10 element exit end in model lattice.</p>
 <p class="rubric">Examples</p>
 <dl>
 <dt>Example: 1</dt><dd><p>init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
@@ -3160,10 +3162,11 @@ graph_name: beta.g</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>string_list</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>string_list</em> – if x_or_y == ‘’</p></li>
+<li><p><em>real_array</em> – if x_or_y != ‘’</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -3192,6 +3195,15 @@ curve_name: a
 x_or_y:</p>
 </div></blockquote>
 </dd>
+<dt>Example: 2</dt><dd><p>init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting
+args:</p>
+<blockquote>
+<div><p>region_name: beta
+graph_name: g
+curve_name: a
+x_or_y: y</p>
+</div></blockquote>
+</dd>
 </dl>
 </dd></dl>
 
@@ -3209,10 +3221,11 @@ x_or_y:</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>string_list</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>string_list</em> – if x_or_y == ‘’</p></li>
+<li><p><em>real_array</em> – if x_or_y != ‘’</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -3245,6 +3258,15 @@ args:</p>
 graph_name: g
 curve_name: a
 x_or_y:</p>
+</div></blockquote>
+</dd>
+<dt>Example: 2</dt><dd><p>init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting
+args:</p>
+<blockquote>
+<div><p>region_name: r13
+graph_name: g
+curve_name: a
+x_or_y: y</p>
 </div></blockquote>
 </dd>
 </dl>
