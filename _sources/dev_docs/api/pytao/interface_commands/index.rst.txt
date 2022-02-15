@@ -2146,8 +2146,9 @@ Module Contents
    :param ele1_id:
    :param ele2_id:
 
-   :returns:
-   :rtype: string_list
+   :returns: 'mat6' : np.array of shape (6,6)
+             'vec6' : np.array of shape(6)
+   :rtype: dict with keys
 
    .. rubric:: Notes
 

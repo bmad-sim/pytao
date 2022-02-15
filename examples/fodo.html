@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FODO optics &mdash; PyTao 0.1.6+14.g9552e09 documentation</title>
+  <title>FODO optics &mdash; PyTao 0.1.6+16.g4debf90 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -33,7 +33,7 @@
             <a href="../index.html" class="icon icon-home"> PyTao
           </a>
               <div class="version">
-                0.1.6+14.g9552e09
+                0.1.6+16.g4debf90
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -402,7 +402,7 @@ import os
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tao = Tao(&#39;-init $ACC_ROOT_DIR/tao/examples/fodo/tao.init -lat $ACC_ROOT_DIR/tao/examples/fodo/fodo.bmad -noplot&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tao = Tao(&#39;-init $ACC_ROOT_DIR/bmad-doc/tao_examples/fodo/tao.init -lat $ACC_ROOT_DIR/bmad-doc/tao_examples/fodo/fodo.bmad -noplot&#39;)
 </pre></div>
 </div>
 </div>
@@ -713,8 +713,8 @@ for k1, k2 in zip(fK1, fK2):
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-CPU times: user 3.41 s, sys: 2.02 s, total: 5.43 s
-Wall time: 5.51 s
+CPU times: user 2.32 s, sys: 1.45 s, total: 3.76 s
+Wall time: 3.88 s
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -976,7 +976,7 @@ T
 <h1>Beam tracking<a class="headerlink" href="#Beam-tracking" title="Permalink to this headline"></a></h1>
 <p>Here we will make a new lattice with 10 cells that calls the single fodo lattice.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from pytao.misc.markers import make_markers
@@ -984,7 +984,7 @@ T
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>?make_markers
@@ -1007,7 +1007,7 @@ If filename is given, the lines will be written to ta file.
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>smax = 20.0 # m
@@ -1024,7 +1024,7 @@ smax
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1033,7 +1033,7 @@ smax
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Make a lattice and write to a local file
@@ -1042,7 +1042,7 @@ latfile = os.path.join(os.getcwd(), &#39;fodo10.bmad&#39;)
 
 LAT2 = f&quot;&quot;&quot;
 
-call, file = $ACC_ROOT_DIR/tao/examples/fodo/fodo.bmad
+call, file = $ACC_ROOT_DIR/bmad-doc/tao_examples/fodo/fodo.bmad
 call, file = markers.bmad
 
 Q1[k1] = {kq1}
@@ -1058,25 +1058,25 @@ open(latfile, &#39;w&#39;).write(LAT2)
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-172
+181
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Run with this lattice
-tao = Tao(f&#39;-init $ACC_ROOT_DIR/tao/examples/fodo/tao.init -lat {latfile} -noplot&#39;)
+tao = Tao(f&#39;-init $ACC_ROOT_DIR/bmad-doc/tao_examples/fodo/tao.init -lat {latfile} -noplot&#39;)
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Toggle the beam on and off
@@ -1086,7 +1086,7 @@ tao.cmd(&#39;set global track_type = beam;set global track_type = single&#39;)
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1100,7 +1100,7 @@ tao.cmd(&#39;set global track_type = beam;set global track_type = single&#39;)
 <div class="section" id="Get-particles">
 <h2>Get particles<a class="headerlink" href="#Get-particles" title="Permalink to this headline"></a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import h5py
@@ -1117,7 +1117,7 @@ with h5py.File(&#39;beam_dump.h5&#39;, &#39;r&#39;) as h5:
 <h2>Pretty plot<a class="headerlink" href="#Pretty-plot" title="Permalink to this headline"></a></h2>
 <p>Traces can be made by gathering the coordinate arrays</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span>skip = 1 # make larger for faster plotting
@@ -1156,7 +1156,7 @@ for ax in axes:
 <div class="section" id="Get-some-statistics">
 <h2>Get some statistics<a class="headerlink" href="#Get-some-statistics" title="Permalink to this headline"></a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>k1 = &#39;sigma_x&#39;
@@ -1176,12 +1176,12 @@ plt.legend()
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.legend.Legend at 0x162e6a070&gt;
+&lt;matplotlib.legend.Legend at 0x11e3fa4f0&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">

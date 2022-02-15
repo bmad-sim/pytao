@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PyTao advanced usage &mdash; PyTao 0.1.6+14.g9552e09 documentation</title>
+  <title>PyTao advanced usage &mdash; PyTao 0.1.6+16.g4debf90 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -33,7 +33,7 @@
             <a href="../index.html" class="icon icon-home"> PyTao
           </a>
               <div class="version">
-                0.1.6+14.g9552e09
+                0.1.6+16.g4debf90
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -399,6 +399,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
+%pylab is deprecated, use %matplotlib inline and import the required libraries.
 Populating the interactive namespace from numpy and matplotlib
 </pre></div></div>
 </div>
@@ -441,29 +442,14 @@ If workdir is given, then this temporary directory will be placed in workdir.
 </div>
 <div class="section" id="Inititialize-Tao">
 <h2>Inititialize Tao<a class="headerlink" href="#Inititialize-Tao" title="Permalink to this headline"></a></h2>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Point to local installation
-BASE_DIR=os.environ[&#39;ACC_ROOT_DIR&#39;]
-print(&#39;Bmad installation: &#39;, BASE_DIR)
-
-# Pick an example init
-root = os.path.join(BASE_DIR, &#39;tao/examples/csr_beam_tracking/&#39;)
-
-INPUT_FILE = root+&#39;tao.init&#39;
-assert os.path.exists(INPUT_FILE), INPUT_FILE
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>INPUT_FILE = os.path.expandvars(&#39;$ACC_ROOT_DIR/bmad-doc/tao_examples/csr_beam_tracking/tao.init&#39;)
+assert os.path.exists(os.path.expandvars(INPUT_FILE))
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Bmad installation:  /Users/chrisonian/Code/bmad_svn/
-</pre></div></div>
 </div>
 </div>
 <div class="section" id="run_tao">
@@ -483,7 +469,7 @@ M
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;pytao.tao_ctypes.core.TaoModel at 0x10ee179d0&gt;
+&lt;pytao.tao_ctypes.core.TaoModel at 0x1093e4dc0&gt;
 </pre></div></div>
 </div>
 </div>
@@ -568,7 +554,7 @@ See: run_tao
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>res = evaluate_tao(settings={&#39;csr_param:write_csr_wake&#39;:True,
                             &#39;csr_param:ds_track_step&#39;:0.001},
-                   input_file=root+&#39;tao.init&#39;,
+                   input_file=INPUT_FILE,
                    run_commands=[&#39;set global track_type=beam&#39;],
                    expressions = [&#39;lat::orbit.x[FF.PIP02A]&#39;, &#39;beam::norm_emit.x[end]&#39;],
                    ploton=False,
@@ -586,7 +572,7 @@ res
 <div class="highlight"><pre>
 {&#39;lat::orbit.x[FF.PIP02A]&#39;: array([0.]),
  &#39;beam::norm_emit.x[end]&#39;: array([9.99823165e-07]),
- &#39;beam_archive&#39;: &#39;/Users/chrisonian/Code/GitHub/pytao/examples/bmad_beam_190cea455724a34f17188ae5afa8612c.h5&#39;}
+ &#39;beam_archive&#39;: &#39;/Users/chrisonian/Code/GitHub/pytao/examples/bmad_beam_0d0da43da13422705ae7e19dd349f9da.h5&#39;}
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -644,7 +630,7 @@ P.plot(&#39;delta_t&#39;, &#39;delta_pz&#39;, bins=200)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_advanced_12_0.png" class="no-scaled-link" src="../_images/examples_advanced_12_0.png" style="width: 394px; height: 262px;" />
+<img alt="../_images/examples_advanced_12_0.png" class="no-scaled-link" src="../_images/examples_advanced_12_0.png" style="width: 395px; height: 263px;" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -794,7 +780,7 @@ interact(plot1, step=(0, nstep-1, 1) )
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "73d64904676844ffbdea076a8f217240", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "cf42399420ab4b438585c4945dcdae30", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
