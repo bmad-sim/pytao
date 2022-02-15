@@ -11,6 +11,10 @@ import shutil
 import types
 
 
+import logging
+logger = logging.getLogger(__name__)
+
+
 #--------------------------------------
 
 class Tao:
@@ -41,8 +45,9 @@ class Tao:
         # If by any chance the interface_commands.py is broken and
         # we try to autogenerate it will complain about the broken
         # interface_commands file.
-        from pytao import interface_commands
-
+        
+        from pytao import interface_commands 
+        
         # Library needs to be set.
         self.so_lib_file = None
         if so_lib == '':
@@ -113,7 +118,9 @@ class Tao:
     # Init Tao
 
     def init(self, cmd):
+
         if not tao_ctypes.initialized:
+            logger.debug(f'Initializing Tao with: {cmd}')
             err = self.so_lib.tao_c_init_tao(cmd.encode('utf-8'))
             if err != 0:
                 raise ValueError(f'Unable to init Tao with: {cmd}')
@@ -135,6 +142,8 @@ class Tao:
         
         Returns a list of strings
         """
+        
+        logger.debug(f'Tao> {cmd}')
 
         self.so_lib.tao_c_command(cmd.encode('utf-8'))
         lines = self.get_output()
@@ -205,6 +214,8 @@ class Tao:
     # Only python commands that load the real array buffer can be used with this method.
 
     def cmd_real (self, cmd, raises=True):
+        logger.debug(f'Tao> {cmd}')
+        
         self.so_lib.tao_c_command(cmd.encode('utf-8'))
         n = self.so_lib.tao_c_real_array_size()
         self.so_lib.tao_c_get_real_array.restype = ctypes.POINTER(ctypes.c_double * n)
@@ -234,6 +245,8 @@ class Tao:
     # Only python commands that load the integer array buffer can be used with this method.
 
     def cmd_integer (self, cmd, raises=True):
+        logger.debug(f'Tao> {cmd}')
+        
         self.so_lib.tao_c_command(cmd.encode('utf-8'))
         n = self.so_lib.tao_c_integer_array_size()
         self.so_lib.tao_c_get_integer_array.restype = ctypes.POINTER(ctypes.c_int * n)
