@@ -113,7 +113,7 @@ def parse_derivative(lines):
 
 def parse_lat_ele_list(lines):
     """
-    Parses the output of tao lat_ele_list
+    Parses the output of tao python lat_ele_list
     
     Parameters
     ----------
@@ -127,4 +127,27 @@ def parse_lat_ele_list(lines):
     """
     
     return [s.split(';')[1] for s in lines]
+
+
+def parse_matrix(lines):
+    """
+    Parses the output of a tao python matix
+    
+    Parameters
+    ----------
+    lines : list of str
+        The output of the 'python matrix' command to parse
+    
+    Returns
+    -------
+    dict with keys:
+        'mat6' : np.array of shape (6,6)
+        'vec6' : np.array of shape(6)
+        
+    
+    """
+    m7 = np.array([[float(x) for x in line.split(';')[1:]] for line in lines])
+    return {'mat6':m7[:,0:6], 'vec0':m7[:,6]}
+
+
 
