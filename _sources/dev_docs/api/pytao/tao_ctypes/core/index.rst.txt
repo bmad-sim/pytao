@@ -7,6 +7,11 @@
 Module Contents
 ---------------
 
+.. py:data:: logger
+   
+
+   
+
 .. py:class:: Tao(init='', so_lib='')
 
    Class to run and interact with Tao. Requires libtao shared object.

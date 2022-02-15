@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PyTao basic usage &mdash; PyTao 0.1.6+16.g4debf90 documentation</title>
+  <title>PyTao basic usage &mdash; PyTao 0.1.6+18.gdec4470 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -33,7 +33,7 @@
             <a href="../index.html" class="icon icon-home"> PyTao
           </a>
               <div class="version">
-                0.1.6+16.g4debf90
+                0.1.6+18.gdec4470
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -69,6 +69,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#ParticleGroup-from-openPMD-beamphysics">ParticleGroup from openPMD-beamphysics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#Error-handling-and-Debugging">Error handling and Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#Logging">Logging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advanced.html">PyTao advanced usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fodo.html">FODO optics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fodo.html#Asymmetric-FODO">Asymmetric FODO</a></li>
@@ -1668,6 +1669,37 @@ tao.cmd(&#39;safaf&#39;, raises=False)
 <div class="highlight"><pre>
 [&#39;[ERROR | 2022-FEB-15 08:59:44] tao_command:&#39;,
  &#39;    UNRECOGNIZED COMMAND: safaf&#39;]
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Logging">
+<h1>Logging<a class="headerlink" href="#Logging" title="Permalink to this headline"></a></h1>
+<p>All input commands are recorded as debug messages using standard Python logging.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Enable stdout to see the log messages
+import logging
+import sys
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tao.cmd(&#39;sho ele 2&#39;);
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+DEBUG:pytao.tao_ctypes.core:Tao&gt; sho ele 2
 </pre></div></div>
 </div>
 </div>
