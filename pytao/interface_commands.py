@@ -2608,7 +2608,9 @@ def matrix(tao, ele1_id, ele2_id, *, verbose=False, as_dict=True, raises=True):
     
     Returns
     -------
-    string_list
+    dict with keys:
+        'mat6' : np.array of shape (6,6)
+        'vec6' : np.array of shape(6)
     
     Notes
     -----
