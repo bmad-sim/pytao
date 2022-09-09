@@ -6,3 +6,4 @@ nbsphinx-link
 sphinx-autoapi
 Pygments>=2.4.1
 docutils<0.17
+markupsafe==2.0.1
