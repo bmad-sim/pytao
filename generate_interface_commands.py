@@ -64,6 +64,12 @@ def generate_params(params):
     kwargs = []
     for idx, p in enumerate(params):
         name = sanitize(p.name)
+        
+        # Skip empty params. 
+        if not name:
+            assert len(params) == 1
+            continue
+        
         dtype = p.type
         if 'default=' in dtype:
             kwargs.append(f"{name}='{dtype[dtype.find('=')+1:].strip()}'")
