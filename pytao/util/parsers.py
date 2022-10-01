@@ -2,6 +2,21 @@ import numpy as np
 
 
 
+# Helpers
+def _parse_str_bool(s):
+    """
+    parses str to bool
+    '1', 't', 'T' -> True
+    '0', 'f', 'F' -> Flase
+    """
+    x = s.upper()[0]
+    if x in ('T', '1'):
+        return True
+    elif x in ('F', '0'):
+        return False
+    else:
+        raise ValueError ('Unknown bool: '+s) 
+
 
 
 # Column names and types for parse_data_d_array
@@ -148,6 +163,86 @@ def parse_matrix(lines):
     """
     m7 = np.array([[float(x) for x in line.split(';')[1:]] for line in lines])
     return {'mat6':m7[:,0:6], 'vec0':m7[:,6]}
+
+
+def parse_plot_list(lines):
+    """
+    Parses the output of the `python plot_list` command.
+    
+    This could be region or template data.
+    
+    
+    Parameters
+    ----------
+    lines : list of str
+        The output of the 'python plot_list' command to parse
+    
+    Returns
+    -------
+    if r_or_g == 't'
+        dict with template_name:index
+    
+    if r_or_g == 'r'
+        list of dicts with keys:
+            region
+            ix
+            plot_name
+            visible
+            x1, x2, y1, y1
+    
+    """
+    
+    # infer region or template output
+    nv = len(lines[0].split(';'))
+        
+    if nv == 2:
+        # Template
+        output = {}
+        for line in lines:
+            ix, name = line.split(';')
+            output[name] = int(ix)
+            
+    elif nv == 8:
+        # Region8
+        output = []
+        for line in lines:
+            ix, region_name, plot_name, visible, x1, x2, y1, y2 = line.split(';')
+            output.append({
+                                   'region': region_name,
+                                   'ix': int(ix),
+                                   'plot_name': plot_name,
+                                   'visible': _parse_str_bool(visible),
+                                   'x1': float(x1),
+                                   'x2': float(x2),
+                                   'y1': float(y1),
+                                   'y2': float(y2),
+                                  })
+        
+    else:
+        raise ValueError(f"Cannot parse {lines[0]}")
+    
+    return output
+
+
+def parse_var_v_array_line(line):
+    v = line.split(';')
+    out = dict(
+            ix_v1=int(v[0]),
+            var_attrib_name=v[1],
+            meas_value=float(v[2]),
+            model_value=float(v[3]),
+            design_value=float(v[4]),
+            useit_opt=_parse_str_bool(v[5]),
+            good_user=_parse_str_bool(v[6]),
+            weight=float(v[7]),
+              )
+    return out
+def parse_var_v_array(lines):
+    """
+    Parses the output of `python var_v_array` into a list of dicts
+    """
+    return [parse_var_v_array_line(line) for line in lines]
+
 
 
 

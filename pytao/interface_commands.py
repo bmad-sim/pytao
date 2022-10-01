@@ -316,12 +316,13 @@ def building_wall_graph(tao, graph, *, verbose=False, as_dict=True, raises=True)
     
     Notes
     -----
-    The graph defines the coordinate system for the (x, y) points.
     Command syntax:
       python building_wall_graph {graph}
     
     Where:
       {graph} is a plot region graph name.
+    
+    Note: The graph defines the coordinate system for the (x, y) points.
     
     Examples
     --------
@@ -604,6 +605,162 @@ def data(tao, d2_name, d1_name, *, ix_uni='', dat_index='1', verbose=False, as_d
     return __execute(tao, cmd, as_dict, raises, method_name='data', cmd_type='string_list')
 
 
+def data_d_array(tao, d2_name, d1_name, *, ix_uni='', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output list of datums for a given d1_data structure.
+    
+    Parameters
+    ----------
+    d2_name
+    d1_name
+    ix_uni : optional
+    
+    Returns
+    -------
+    datums: list of dicts
+        Each dict has keys:
+        'ix_d1', 'data_type', 'merit_type', 
+        'ele_ref_name', 'ele_start_name', 'ele_name', 
+        'meas_value', 'model_value', 'design_value', 
+        'useit_opt', 'useit_plot', 'good_user', 
+        'weight', 'exists'
+    
+    Notes
+    -----
+    Command syntax:
+      python data_d_array {ix_uni}@{d2_name}.{d1_name}
+    
+    Where:
+      {ix_uni} is a universe index. Defaults to s%global%default_universe.
+      {d2_name} is the name of the containing d2_data structure.
+      {d1_name} is the name of the d1_data structure containing the array of datums.
+    
+    Example:
+      python data_d_array 1@orbit.x
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
+     args:
+       ix_uni: 1 
+       d2_name: twiss
+       d1_name: end
+    
+    """
+    cmd = f'python data_d_array {ix_uni}@{d2_name}.{d1_name}'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='data_d_array', cmd_type='string_list')
+
+
+def data_d1_array(tao, d2_datum, *, ix_uni='', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output list of d1 arrays for a given data_d2.
+    
+    Parameters
+    ----------
+    d2_datum
+    ix_uni : optional
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python data_d1_array {d2_datum}
+    
+    {d2_datum} should be of the form
+      {ix_uni}@{d2_datum_name}
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
+     args:
+       ix_uni: 1 
+       d2_datum: twiss
+    
+    """
+    cmd = f'python data_d1_array {d2_datum}'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='data_d1_array', cmd_type='string_list')
+
+
+def data_d2(tao, d2_name, *, ix_uni='', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output information on a d2_datum.
+    
+    Parameters
+    ----------
+    d2_name
+    ix_uni : optional
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python data_d2 {ix_uni}@{d2_name}
+    
+    Where:
+      {ix_uni} is a universe index. Defaults to s%global%default_universe.
+      {d2_name} is the name of the d2_data structure.
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
+     args:
+       ix_uni: 1
+       d2_name: twiss
+    
+    """
+    cmd = f'python data_d2 {ix_uni}@{d2_name}'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='data_d2', cmd_type='string_list')
+
+
+def data_d2_array(tao, ix_uni, *, verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output data d2 info for a given universe.
+    
+    Parameters
+    ----------
+    ix_uni
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python data_d2_array {ix_uni}
+    
+    Example:
+      python data_d2_array 1
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
+     args:
+       ix_uni : 1 
+    
+    """
+    cmd = f'python data_d2_array {ix_uni}'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='data_d2_array', cmd_type='string_list')
+
+
 def data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_uni='', verbose=False, as_dict=True, raises=True):
     """
     
@@ -704,128 +861,6 @@ def data_d2_destroy(tao, d2_name, *, ix_uni='', verbose=False, as_dict=True, rai
     return __execute(tao, cmd, as_dict, raises, method_name='data_d2_destroy', cmd_type='None')
 
 
-def data_d2(tao, d2_name, *, ix_uni='', verbose=False, as_dict=True, raises=True):
-    """
-    
-    Output information on a d2_datum.
-    
-    Parameters
-    ----------
-    d2_name
-    ix_uni : optional
-    
-    Returns
-    -------
-    string_list
-    
-    Notes
-    -----
-    Command syntax:
-      python data_d2 {ix_uni}@{d2_name}
-    
-    Where:
-      {ix_uni} is a universe index. Defaults to s%global%default_universe.
-      {d2_name} is the name of the d2_data structure.
-    
-    Examples
-    --------
-    Example: 1
-     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
-     args:
-       ix_uni: 1
-       d2_name: twiss
-    
-    """
-    cmd = f'python data_d2 {ix_uni}@{d2_name}'
-    if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='data_d2', cmd_type='string_list')
-
-
-def data_d_array(tao, d2_name, d1_name, *, ix_uni='', verbose=False, as_dict=True, raises=True):
-    """
-    
-    Output list of datums for a given d1_data structure.
-    
-    Parameters
-    ----------
-    d2_name
-    d1_name
-    ix_uni : optional
-    
-    Returns
-    -------
-    datums: list of dicts
-        Each dict has keys:
-        'ix_d1', 'data_type', 'merit_type', 
-        'ele_ref_name', 'ele_start_name', 'ele_name', 
-        'meas_value', 'model_value', 'design_value', 
-        'useit_opt', 'useit_plot', 'good_user', 
-        'weight', 'exists'
-    
-    Notes
-    -----
-    Command syntax:
-      python data_d_array {ix_uni}@{d2_name}.{d1_name}
-    
-    Where:
-      {ix_uni} is a universe index. Defaults to s%global%default_universe.
-      {d2_name} is the name of the containing d2_data structure.
-      {d1_name} is the name of the d1_data structure containing the array of datums.
-    
-    Example:
-      python data_d_array 1@orbit.x
-    
-    Examples
-    --------
-    Example: 1
-     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
-     args:
-       ix_uni: 1 
-       d2_name: twiss
-       d1_name: end
-    
-    """
-    cmd = f'python data_d_array {ix_uni}@{d2_name}.{d1_name}'
-    if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='data_d_array', cmd_type='string_list')
-
-
-def data_d1_array(tao, d2_datum, *, ix_uni='', verbose=False, as_dict=True, raises=True):
-    """
-    
-    Output list of d1 arrays for a given data_d2.
-    
-    Parameters
-    ----------
-    d2_datum
-    ix_uni : optional
-    
-    Returns
-    -------
-    string_list
-    
-    Notes
-    -----
-    Command syntax:
-      python data_d1_array {d2_datum}
-    
-    {d2_datum} should be of the form
-      {ix_uni}@{d2_datum_name}
-    
-    Examples
-    --------
-    Example: 1
-     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
-     args:
-       ix_uni: 1 
-       d2_datum: twiss
-    
-    """
-    cmd = f'python data_d1_array {d2_datum}'
-    if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='data_d1_array', cmd_type='string_list')
-
-
 def data_parameter(tao, data_array, parameter, *, verbose=False, as_dict=True, raises=True):
     """
     
@@ -861,40 +896,6 @@ def data_parameter(tao, data_array, parameter, *, verbose=False, as_dict=True, r
     cmd = f'python data_parameter {data_array} {parameter}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, raises, method_name='data_parameter', cmd_type='string_list')
-
-
-def data_d2_array(tao, ix_uni, *, verbose=False, as_dict=True, raises=True):
-    """
-    
-    Output data d2 info for a given universe.
-    
-    Parameters
-    ----------
-    ix_uni
-    
-    Returns
-    -------
-    string_list
-    
-    Notes
-    -----
-    Command syntax:
-      python data_d2_array {ix_uni}
-    
-    Example:
-      python data_d2_array 1
-    
-    Examples
-    --------
-    Example: 1
-     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
-     args:
-       ix_uni : 1 
-    
-    """
-    cmd = f'python data_d2_array {ix_uni}'
-    if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='data_d2_array', cmd_type='string_list')
 
 
 def data_set_design_value(tao, *, verbose=False, as_dict=True, raises=True):
@@ -1756,7 +1757,7 @@ def ele_param(tao, ele_id, who, *, which='model', verbose=False, as_dict=True, r
     Where: 
       {ele_id} is an element name or index.
       {which} is one of: "model", "base" or "design"
-      {who} values are the same as {who} values for "python lat_list" except for "ele:mat6" and "ele:vec0".
+      {who} values are the same as {who} values for "python lat_list".
             Note: Here {who} must be a single parameter and not a list.
     
     Example:
@@ -2099,7 +2100,7 @@ def evaluate(tao, expression, *, flags='-array_out', verbose=False, as_dict=True
     ----------
     expression
     flags : default=-array_out
-        If -array_out, the output will be available in the tao_c_interface_com%c_real.!
+        If -array_out, the output will be available in the tao_c_interface_com%c_real.
     
     Returns
     -------
@@ -2519,10 +2520,14 @@ def lat_list(tao, elements, who, *, ix_uni='', ix_branch='', which='model', flag
         ele.b.beta, ele.b.alpha, ele.b.eta, ele.b.etap, ele.b.gamma, ele.b.phi,
         ele.x.eta, ele.x.etap,
         ele.y.eta, ele.y.etap,
+        ele.ref_time, ele.ref_time_start
         ele.s, ele.l
         ele.e_tot, ele.p0c
-        ele.mat6, ele.vec0
+        ele.mat6      ! Output: mat6(1,:), mat6(2,:), ... mat6(6,:)
+        ele.vec0      ! Output: vec0(1), ... vec0(6)
         ele.{attribute} Where {attribute} is a Bmad syntax element attribute. (EG: ele.beta_a, ele.k1, etc.)
+        ele.c_mat     ! Output: c_mat11, c_mat12, c_mat21, c_mat22.
+        ele.gamma_c   ! Parameter associated with coupling c-matrix.
     
       {elements} is a string to match element names to.
         Use "*" to match to all elements.
@@ -2531,7 +2536,6 @@ def lat_list(tao, elements, who, *, ix_uni='', ix_branch='', which='model', flag
       python lat_list -track 3@0>>Q*|base ele.s,orbit.vec.2
       python lat_list 3@0>>Q*|base real:ele.s    
     
-    Note: vector layout of mat6(6,6) is: [mat6(1,:), mat6(2,:), ...mat6(6,:)]
     Also see: "python ele:param"
     
     Examples
@@ -2818,7 +2822,15 @@ def plot_list(tao, r_or_g, *, verbose=False, as_dict=True, raises=True):
     
     Returns
     -------
-    string_list
+    if r_or_g == 't'
+        dict with template_name:index
+    if r_or_g == 'r'
+        list of dicts with keys:
+            region
+            ix
+            plot_name
+            visible
+            x1, x2, y1, y1
     
     Notes
     -----
@@ -2826,8 +2838,8 @@ def plot_list(tao, r_or_g, *, verbose=False, as_dict=True, raises=True):
       python plot_list {r_or_g}
     
     where "{r/g}" is:
-      "r"      ! list regions
-      "t"      ! list template plots
+      "r"      ! list regions of the form ix;region_name;plot_name;visible;x1;x2;y1;y2
+      "t"      ! list template plots of the form ix;name
     
     Examples
     --------
@@ -2911,19 +2923,17 @@ def plot_histogram(tao, curve_name, *, verbose=False, as_dict=True, raises=True)
     return __execute(tao, cmd, as_dict, raises, method_name='plot_histogram', cmd_type='string_list')
 
 
-def plot_plot_manage(tao, plot_location, plot_name, n_graph, graph1_name, graph2_name, graphN_name, *, verbose=False, as_dict=True, raises=True):
+def plot_template_manage(tao, template_location, template_name, *, n_graph='-1', graph_names='', verbose=False, as_dict=True, raises=True):
     """
     
     Template plot creation or destruction.
     
     Parameters
     ----------
-    plot_location
-    plot_name
-    n_graph
-    graph1_name
-    graph2_name
-    graphN_name
+    template_location
+    template_name
+    n_graph : default=-1
+    graph_names : default=
     
     Returns
     -------
@@ -2932,30 +2942,31 @@ def plot_plot_manage(tao, plot_location, plot_name, n_graph, graph1_name, graph2
     Notes
     -----
     Command syntax:
-      python plot_plot_manage {plot_location}^^{plot_name}^^
-                             {n_graph}^^{graph1_name}^^{graph2_name}^^{graphN_name}
+      python plot_template_manage {template_location}^^{template_name}^^
+                             {n_graph}^^{graph_names}
     
-    Use "@Tnnn" sytax for {plot_location} to place a plot. A plot may be placed in a 
-    spot where there is already a template.
-    Extra graph names can be included with ^^ connection. 
-    If {n_graph} is set to -1 then just delete the plot.
+    Where:
+      {template_location} is the location to place or delete a template plot. Use "@Tnnn" syntax for the location.
+      {template_name} is the name of the template plot. If deleting a plot this name is immaterial.
+      {n_graph} is the number of associated graphs. If set to -1 then any existing template plot is deleted.
+      {graph_names} are the names of the graphs.  graph_names should be in the form:
+         graph1_name^^graph2_name^^...^^graphN_name
+      for N=n_graph names
     
     Examples
     --------
     Example: 1
      init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
-       plot_location: @T1
-       plot_name: beta
-       n_graph: 1
-       graph1_name: g1
-       graph2_name: g2
-       graphN_name: gN
+       template_location: @T1
+       template_name: beta
+       n_graph: 2
+       graph_names: g1^^g2
     
     """
-    cmd = f'python plot_plot_manage {plot_location}^^{plot_name}^^{n_graph}^^{graph1_name}^^{graph2_name}^^{graphN_name}'
+    cmd = f'python plot_template_manage {template_location}^^{template_name}^^{n_graph}^^{graph_names}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='plot_plot_manage', cmd_type='None')
+    return __execute(tao, cmd, as_dict, raises, method_name='plot_template_manage', cmd_type='None')
 
 
 def plot_curve_manage(tao, graph_name, curve_index, curve_name, *, verbose=False, as_dict=True, raises=True):
@@ -3718,6 +3729,12 @@ def spin_resonance(tao, *, ix_uni='', ix_branch='', which='model', ref_ele='0', 
     ref_ele : default=0
         Reference element to calculate at.
     
+    Returns
+    -------
+    q_spin                        -- Spin tune
+    dq_a_min, dq_b_min, dq_c_min  -- Minimum tune separation between a,b,c mode tunes and spin tune.
+    xi_res_a, xi_res_b, xi_res_c  -- The linear spin/orbit "sum" and "difference" resonance strengths for a,b,c modes.
+    
     Notes
     -----
     Command syntax:
@@ -3741,6 +3758,9 @@ def spin_resonance(tao, *, ix_uni='', ix_branch='', which='model', ref_ele='0', 
     """
     cmd = f'python spin_resonance {ix_uni}@{ix_branch}|{which} {ref_ele}'
     if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='spin_resonance', cmd_type='q_spin                        -- Spin tune')
+    return __execute(tao, cmd, as_dict, raises, method_name='spin_resonance', cmd_type='dq_a_min, dq_b_min, dq_c_min  -- Minimum tune separation between a,b,c mode tunes and spin tune.')
+    return __execute(tao, cmd, as_dict, raises, method_name='spin_resonance', cmd_type='xi_res_a, xi_res_b, xi_res_c  -- The linear spin/orbit "sum" and "difference" resonance strengths for a,b,c modes.')
 
 
 def super_universe(tao, *, verbose=False, as_dict=True, raises=True):

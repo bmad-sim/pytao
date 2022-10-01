@@ -94,24 +94,6 @@ def test_data_2():
     ret = interface_commands.data(tao, ix_uni='1', d2_name='twiss', d1_name='end', dat_index='1')
             
         
-def test_data_d2_create_1():
-    
-    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
-    ret = interface_commands.data_d2_create(tao, ix_uni='1', d2_name='orbit', n_d1_data='2', d_data_arrays_name_min_max='x^^0^^45^^y^^1^^47')
-            
-        
-def test_data_d2_destroy_1():
-    
-    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
-    ret = interface_commands.data_d2_destroy(tao, d2_name='orbit')
-            
-        
-def test_data_d2_1():
-    
-    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
-    ret = interface_commands.data_d2(tao, ix_uni='1', d2_name='twiss')
-            
-        
 def test_data_d_array_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
@@ -124,16 +106,34 @@ def test_data_d1_array_1():
     ret = interface_commands.data_d1_array(tao, ix_uni='1', d2_datum='twiss')
             
         
-def test_data_parameter_1():
+def test_data_d2_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
-    ret = interface_commands.data_parameter(tao, data_array='twiss.end', parameter='model_value')
+    ret = interface_commands.data_d2(tao, ix_uni='1', d2_name='twiss')
             
         
 def test_data_d2_array_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
     ret = interface_commands.data_d2_array(tao, ix_uni='1')
+            
+        
+def test_data_d2_create_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
+    ret = interface_commands.data_d2_create(tao, ix_uni='1', d2_name='orbit', n_d1_data='2', d_data_arrays_name_min_max='x^^0^^45^^y^^1^^47')
+            
+        
+def test_data_d2_destroy_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
+    ret = interface_commands.data_d2_destroy(tao, d2_name='orbit')
+            
+        
+def test_data_parameter_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
+    ret = interface_commands.data_parameter(tao, data_array='twiss.end', parameter='model_value')
             
         
 def test_data_set_design_value_1():
@@ -442,10 +442,10 @@ def test_plot_histogram_1():
     ret = interface_commands.plot_histogram(tao, curve_name='r33.g.x')
             
         
-def test_plot_plot_manage_1():
+def test_plot_template_manage_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
-    ret = interface_commands.plot_plot_manage(tao, plot_location='@T1', plot_name='beta', n_graph='1', graph1_name='g1', graph2_name='g2', graphN_name='gN')
+    ret = interface_commands.plot_template_manage(tao, template_location='@T1', template_name='beta', n_graph='2', graph_names='g1^^g2')
             
         
 def test_plot_curve_manage_1():
