@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pytao.gui.tao_plot_windows &mdash; PyTao 0.1.7 documentation</title>
+  <title>pytao.gui.tao_plot_windows &mdash; PyTao 0.1.7+6.g9268dda documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
@@ -14,7 +14,9 @@
         <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/sphinx_highlight.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
@@ -31,7 +33,7 @@
             <a href="../../../../../index.html" class="icon icon-home"> PyTao
           </a>
               <div class="version">
-                0.1.7
+                0.1.7+6.g9268dda
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -144,10 +146,10 @@
 }
 </style>
 <div class="section" id="module-pytao.gui.tao_plot_windows">
-<span id="pytao-gui-tao-plot-windows"></span><h1><a class="reference internal" href="#module-pytao.gui.tao_plot_windows" title="pytao.gui.tao_plot_windows"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.gui.tao_plot_windows</span></code></a><a class="headerlink" href="#module-pytao.gui.tao_plot_windows" title="Permalink to this headline"></a></h1>
+<span id="pytao-gui-tao-plot-windows"></span><h1><a class="reference internal" href="#module-pytao.gui.tao_plot_windows" title="pytao.gui.tao_plot_windows"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.gui.tao_plot_windows</span></code></a><a class="headerlink" href="#module-pytao.gui.tao_plot_windows" title="Permalink to this heading"></a></h1>
 <p>Provides windows for viewing and editing plots in tao</p>
 <div class="section" id="module-contents">
-<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_place_plot_window">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pytao.gui.tao_plot_windows.</span></span><span class="sig-name descname"><span class="pre">tao_place_plot_window</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_place_plot_window" title="Permalink to this definition"></a></dt>
@@ -157,37 +159,37 @@ plots and plot them in matplotlib windows
 Currently only supported in matplotlib mode</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_place_plot_window.refresh">
-<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_place_plot_window.refresh" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_place_plot_window.refresh" title="Permalink to this definition"></a></dt>
 <dd><p>Responsible for creating widgets and filling them with plots</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_place_plot_window.plot_cmd">
-<span class="sig-name descname"><span class="pre">plot_cmd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_place_plot_window.plot_cmd" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">plot_cmd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_place_plot_window.plot_cmd" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_place_plot_window.mpl_plot">
-<span class="sig-name descname"><span class="pre">mpl_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_place_plot_window.mpl_plot" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">mpl_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_place_plot_window.mpl_plot" title="Permalink to this definition"></a></dt>
 <dd><p>Creates a new matplotlib window with the currently selected plot</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_place_plot_window.pg_plot">
-<span class="sig-name descname"><span class="pre">pg_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_place_plot_window.pg_plot" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">pg_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_place_plot_window.pg_plot" title="Permalink to this definition"></a></dt>
 <dd><p>Opens a window that asks the user where the plot should be placed,
 and places it on the pgplot page</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_place_plot_window.set_plot">
-<span class="sig-name descname"><span class="pre">set_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_place_plot_window.set_plot" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_place_plot_window.set_plot" title="Permalink to this definition"></a></dt>
 <dd><p>Sets self.plot to the selected plot in the list</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_place_plot_window.edit_template">
-<span class="sig-name descname"><span class="pre">edit_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_place_plot_window.edit_template" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">edit_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_place_plot_window.edit_template" title="Permalink to this definition"></a></dt>
 <dd><p>Opens up a plot editting window and loads the selected template</p>
 </dd></dl>
 
@@ -204,13 +206,13 @@ mainloop until the plots are closed.
 If the region to place the graph is not specified, one will be selected automatically.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_plot_window.refresh">
-<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_plot_window.refresh" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_plot_window.refresh" title="Permalink to this definition"></a></dt>
 <dd><p>Makes the call to matplotlib to draw the plot to the window</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_plot_window.destroy">
-<span class="sig-name descname"><span class="pre">destroy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_plot_window.destroy" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">destroy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_plot_window.destroy" title="Permalink to this definition"></a></dt>
 <dd><p>Overloaded here to remove self from root.refresh_windows</p>
 </dd></dl>
 
@@ -227,12 +229,12 @@ mode: ‘N’ for new template, ‘T’ for editing existing templates, and ‘R
 for editing active plots</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_new_plot_template_window.fill_plot_frame">
-<span class="sig-name descname"><span class="pre">fill_plot_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_new_plot_template_window.fill_plot_frame" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">fill_plot_frame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_new_plot_template_window.fill_plot_frame" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_new_plot_template_window.tr_setup">
-<span class="sig-name descname"><span class="pre">tr_setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_new_plot_template_window.tr_setup" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">tr_setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_new_plot_template_window.tr_setup" title="Permalink to this definition"></a></dt>
 <dd><p>Performs additional setup needed in template/region mode,
 i.e. creates drop down lists to select plots,
 and loads in the default plot, or the first plot in the list
@@ -242,44 +244,44 @@ Also adds options to the save box</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_new_plot_template_window.swap_mode">
-<span class="sig-name descname"><span class="pre">swap_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overide</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_new_plot_template_window.swap_mode" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">swap_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overide</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_new_plot_template_window.swap_mode" title="Permalink to this definition"></a></dt>
 <dd><p>Swaps between showing templates and active plots
 Will always run if overide is set to True</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_new_plot_template_window.clone_plot_method">
-<span class="sig-name descname"><span class="pre">clone_plot_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_new_plot_template_window.clone_plot_method" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">clone_plot_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_new_plot_template_window.clone_plot_method" title="Permalink to this definition"></a></dt>
 <dd><p>Clone the plot specified by plot_name</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_new_plot_template_window.create_template">
-<span class="sig-name descname"><span class="pre">create_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_new_plot_template_window.create_template" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">create_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_new_plot_template_window.create_template" title="Permalink to this definition"></a></dt>
 <dd><p>Reads the data input by the user and creates the plot template in tao</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_new_plot_template_window.create_and_plot">
-<span class="sig-name descname"><span class="pre">create_and_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_new_plot_template_window.create_and_plot" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">create_and_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_new_plot_template_window.create_and_plot" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_new_plot_template_window.plot_name_handler">
-<span class="sig-name descname"><span class="pre">plot_name_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_new_plot_template_window.plot_name_handler" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">plot_name_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_new_plot_template_window.plot_name_handler" title="Permalink to this definition"></a></dt>
 <dd><p>Reads the plot name into self.name, and warns the user if left blank</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_new_plot_template_window.x_axis_type_handler">
-<span class="sig-name descname"><span class="pre">x_axis_type_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_new_plot_template_window.x_axis_type_handler" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">x_axis_type_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_new_plot_template_window.x_axis_type_handler" title="Permalink to this definition"></a></dt>
 <dd><p>Sets self.x_axis_type to the selected x_axis_type
 Pass the keyword argument skip_graph_handlers=True to skip graph_type handlers</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_new_plot_template_window.refresh">
-<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_new_plot_template_window.refresh" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_new_plot_template_window.refresh" title="Permalink to this definition"></a></dt>
 <dd><p>In T/R mode, reloads plot properties from Tao
 In N mode, does nothing</p>
 </dd></dl>
@@ -293,7 +295,7 @@ In N mode, does nothing</p>
 <p>New and improved frame for editing graph properties</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.new_graph_frame.refresh">
-<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_graph_frame.refresh" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_graph_frame.refresh" title="Permalink to this definition"></a></dt>
 <dd><p>Grids the appropriate widgets for the current graph type,
 grids self.curve_frame or self.ele_frame as appropriate,
 then calls refresh for each of the curves if appropriate
@@ -302,21 +304,21 @@ then calls refresh for each of the curves if appropriate
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.new_graph_frame.delete">
-<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_graph_frame.delete" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_graph_frame.delete" title="Permalink to this definition"></a></dt>
 <dd><p>Deletes this graph frame
 Call with ask = False to skip confirmation</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.new_graph_frame.duplicate">
-<span class="sig-name descname"><span class="pre">duplicate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_graph_frame.duplicate" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">duplicate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_graph_frame.duplicate" title="Permalink to this definition"></a></dt>
 <dd><p>Adds a new graph_frame to self.parent.graph_frame that is a copy of
 this frame, and changes focus to that frame</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.new_graph_frame.clone">
-<span class="sig-name descname"><span class="pre">clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_graph_frame.clone" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_graph_frame.clone" title="Permalink to this definition"></a></dt>
 <dd><p>Clone an existing graph (already defined in tao, use self.duplicate() to
 make copies of graphs already defined in the new plot template window
 Does not clone plot properties</p>
@@ -324,7 +326,7 @@ Does not clone plot properties</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.new_graph_frame.graph_type_handler">
-<span class="sig-name descname"><span class="pre">graph_type_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_graph_frame.graph_type_handler" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">graph_type_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_graph_frame.graph_type_handler" title="Permalink to this definition"></a></dt>
 <dd><p>Checks that plot.x_axis_type is compatible with the selected graph type.
 If it is, updates self.type and calls self.refresh()
 If it is not, warns the user of the incompatibility.</p>
@@ -332,7 +334,7 @@ If it is not, warns the user of the incompatibility.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.new_graph_frame.name_handler">
-<span class="sig-name descname"><span class="pre">name_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_graph_frame.name_handler" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">name_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_graph_frame.name_handler" title="Permalink to this definition"></a></dt>
 <dd><p>Checks that a good name has been input for the graph and
 updates self.name as necessary.  Warns the user if the name
 is taken or empty</p>
@@ -347,7 +349,7 @@ is taken or empty</p>
 <p>Provides a frame to configure curve properties as necessary</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.new_curve_frame.refresh">
-<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_curve_frame.refresh" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_curve_frame.refresh" title="Permalink to this definition"></a></dt>
 <dd><p>Draws appropriate widgets to the frame depending on graph.type and
 plot.x_axis_type.  The parent graph is expected to verify that
 the graph and x_axis type are compatible before calling this method</p>
@@ -355,27 +357,27 @@ the graph and x_axis type are compatible before calling this method</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.new_curve_frame.clone">
-<span class="sig-name descname"><span class="pre">clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curve</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_curve_frame.clone" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curve</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_curve_frame.clone" title="Permalink to this definition"></a></dt>
 <dd><p>Clone the specified curve</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.new_curve_frame.delete">
-<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_curve_frame.delete" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_curve_frame.delete" title="Permalink to this definition"></a></dt>
 <dd><p>Deletes this graph frame
 Call with ask = False to skip confirmation</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.new_curve_frame.duplicate">
-<span class="sig-name descname"><span class="pre">duplicate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_curve_frame.duplicate" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">duplicate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_curve_frame.duplicate" title="Permalink to this definition"></a></dt>
 <dd><p>Duplicates this curve into the graph_frame specified by target
 target defaults to this curve_frame’s parent graph</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.new_curve_frame.name_handler">
-<span class="sig-name descname"><span class="pre">name_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_curve_frame.name_handler" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">name_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_curve_frame.name_handler" title="Permalink to this definition"></a></dt>
 <dd><p>Checks that a good name has been input for the curve and
 updates self.name as necessary.  Warns the user if the name
 is taken or empty</p>
@@ -383,7 +385,7 @@ is taken or empty</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.new_curve_frame.data_source_handler">
-<span class="sig-name descname"><span class="pre">data_source_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_curve_frame.data_source_handler" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">data_source_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.new_curve_frame.data_source_handler" title="Permalink to this definition"></a></dt>
 <dd><p>Keeps DAT_TYPE widgets in line with their respective
 data_source widgets</p>
 </dd></dl>
@@ -414,13 +416,13 @@ for plot placing.  Necessarily, functionality is also provided to
 subdivide combined regions into their smaller parts</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_pgplot_canvas.refresh">
-<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_pgplot_canvas.refresh" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_pgplot_canvas.refresh" title="Permalink to this definition"></a></dt>
 <dd><p>Redraws the pgplot page with the correct regions</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_pgplot_canvas.add_region">
-<span class="sig-name descname"><span class="pre">add_region</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_plot</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_pgplot_canvas.add_region" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_region</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_plot</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_pgplot_canvas.add_region" title="Permalink to this definition"></a></dt>
 <dd><p>Adds the region specified by name to the pgplot page.
 The name of the plot currently in the region will also
 be displayed if include_plot is True</p>
@@ -436,14 +438,14 @@ be displayed if include_plot is True</p>
 (number of rows/columns, number of lat_layouts, etc)</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_pgplot_config_window.refresh">
-<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_pgplot_config_window.refresh" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_pgplot_config_window.refresh" title="Permalink to this definition"></a></dt>
 <dd><p>Fetch the current settings for row, column, and lat_layout number
 and update rowvar, colvar, and latvar accordingly</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_pgplot_config_window.update_preview">
-<span class="sig-name descname"><span class="pre">update_preview</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_pgplot_config_window.update_preview" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">update_preview</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_pgplot_config_window.update_preview" title="Permalink to this definition"></a></dt>
 <dd><p>Draws rectangles to self.canvas to represent the pgplot
 window layout according to the values in self.rowvar,
 self.colvar, and self.latvar</p>
@@ -460,7 +462,7 @@ pgplot region a new plot should be placed in,
 and then places the plot in the requested region.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_pgplot_place_window.update_region">
-<span class="sig-name descname"><span class="pre">update_region</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_pgplot_place_window.update_region" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">update_region</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_pgplot_place_window.update_region" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the pgpage widget to display the plot
 as it would be placed in the selected region,
 and warns the user if placing the plot in that region
@@ -469,7 +471,7 @@ would cause other plots to be unplaced</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_pgplot_place_window.place_cmd">
-<span class="sig-name descname"><span class="pre">place_cmd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_pgplot_place_window.place_cmd" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">place_cmd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_pgplot_place_window.place_cmd" title="Permalink to this definition"></a></dt>
 <dd><p>Places self.plot in the selected region and closes this window</p>
 </dd></dl>
 
@@ -486,7 +488,7 @@ for floor plan and lat_layout plots</p>
 which: either “lat_layout” or “floor_plan”</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_ele_shape_window.refresh">
-<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_ele_shape_window.refresh" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_ele_shape_window.refresh" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -500,51 +502,51 @@ settings.</p>
 <p>pipe: the tao_interface used to querry/set ele shapes</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_building_wall_window.refresh">
-<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_building_wall_window.refresh" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_building_wall_window.refresh" title="Permalink to this definition"></a></dt>
 <dd><p>Redraws the table of wall sections with updated settings from tao</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_building_wall_window.get_selected">
-<span class="sig-name descname"><span class="pre">get_selected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_building_wall_window.get_selected" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_selected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_building_wall_window.get_selected" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the selected row in the table, for
 use with other methods like add_point, etc.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_building_wall_window.add_section">
-<span class="sig-name descname"><span class="pre">add_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_building_wall_window.add_section" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_building_wall_window.add_section" title="Permalink to this definition"></a></dt>
 <dd><p>Adds an empty building wall section</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_building_wall_window.add_point">
-<span class="sig-name descname"><span class="pre">add_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_building_wall_window.add_point" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_building_wall_window.add_point" title="Permalink to this definition"></a></dt>
 <dd><p>Adds a point to the selected building wall section</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_building_wall_window.delete_section">
-<span class="sig-name descname"><span class="pre">delete_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_building_wall_window.delete_section" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">delete_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_building_wall_window.delete_section" title="Permalink to this definition"></a></dt>
 <dd><p>Deletes the selected building wall section</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_building_wall_window.delete_point">
-<span class="sig-name descname"><span class="pre">delete_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_building_wall_window.delete_point" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">delete_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_building_wall_window.delete_point" title="Permalink to this definition"></a></dt>
 <dd><p>Deletes the selected building wall point</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_building_wall_window.floor_plan_default">
-<span class="sig-name descname"><span class="pre">floor_plan_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_building_wall_window.floor_plan_default" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">floor_plan_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_building_wall_window.floor_plan_default" title="Permalink to this definition"></a></dt>
 <dd><p>Opens a window for editing the floor_plan shape
 building_wall::*</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_plot_windows.tao_building_wall_window.floor_plan_selected">
-<span class="sig-name descname"><span class="pre">floor_plan_selected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_building_wall_window.floor_plan_selected" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">floor_plan_selected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_plot_windows.tao_building_wall_window.floor_plan_selected" title="Permalink to this definition"></a></dt>
 <dd><p>Opens a window for editing the floor_plan shape
 building_wall::name, where name is the name of the
 selected building wall section</p>

@@ -18,12 +18,12 @@ Module Contents
 
    Window for viewing and editing the beam_init struct
 
-   .. py:method:: refresh(self, event=None)
+   .. py:method:: refresh(event=None)
 
       Pulls beam settings from tao and updates the window contents
 
 
-   .. py:method:: apply(self, event=None)
+   .. py:method:: apply(event=None)
 
       Runs set commands to apply changes from this window to tao
 

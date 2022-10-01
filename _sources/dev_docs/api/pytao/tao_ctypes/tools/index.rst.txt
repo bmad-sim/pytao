@@ -18,7 +18,7 @@ Module Contents
 
    See: https://stackoverflow.com/questions/50916422/python-typeerror-object-of-type-int64-is-not-json-serializable/50916741
 
-   .. py:method:: default(self, obj)
+   .. py:method:: default(obj)
 
       Implement this method in a subclass such that it returns
       a serializable object for ``o``, or calls the base implementation

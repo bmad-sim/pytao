@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pytao.gui.tao_console &mdash; PyTao 0.1.7 documentation</title>
+  <title>pytao.gui.tao_console &mdash; PyTao 0.1.7+6.g9268dda documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
@@ -14,7 +14,9 @@
         <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/sphinx_highlight.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
@@ -31,7 +33,7 @@
             <a href="../../../../../index.html" class="icon icon-home"> PyTao
           </a>
               <div class="version">
-                0.1.7
+                0.1.7+6.g9268dda
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -144,9 +146,9 @@
 }
 </style>
 <div class="section" id="module-pytao.gui.tao_console">
-<span id="pytao-gui-tao-console"></span><h1><a class="reference internal" href="#module-pytao.gui.tao_console" title="pytao.gui.tao_console"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.gui.tao_console</span></code></a><a class="headerlink" href="#module-pytao.gui.tao_console" title="Permalink to this headline"></a></h1>
+<span id="pytao-gui-tao-console"></span><h1><a class="reference internal" href="#module-pytao.gui.tao_console" title="pytao.gui.tao_console"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.gui.tao_console</span></code></a><a class="headerlink" href="#module-pytao.gui.tao_console" title="Permalink to this heading"></a></h1>
 <div class="section" id="module-contents">
-<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="pytao.gui.tao_console.tao_console">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pytao.gui.tao_console.</span></span><span class="sig-name descname"><span class="pre">tao_console</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_console.tao_console" title="Permalink to this definition"></a></dt>
@@ -165,14 +167,14 @@ root: the tao root window (required to access command history,</p>
 <p>pipe: tao_interface object (needed to run commands)</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_console.tao_console.set_command">
-<span class="sig-name descname"><span class="pre">set_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_console.tao_console.set_command" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_console.tao_console.set_command" title="Permalink to this definition"></a></dt>
 <dd><p>Deletes the current command and sets self.command
 to new_command (also updates console display)</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_console.tao_console.show_output">
-<span class="sig-name descname"><span class="pre">show_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'normal'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noprompt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_console.tao_console.show_output" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">show_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'normal'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noprompt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_console.tao_console.show_output" title="Permalink to this definition"></a></dt>
 <dd><p>Prints output to the console and starts a new
 line for the command prompt.    Also clears
 self.command
@@ -182,12 +184,12 @@ With noprompt set True, a new Tao&gt; prompt will not be drawn</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_console.tao_console.warning_callback">
-<span class="sig-name descname"><span class="pre">warning_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_console.tao_console.warning_callback" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">warning_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_console.tao_console.warning_callback" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.gui.tao_console.tao_console.run_command">
-<span class="sig-name descname"><span class="pre">run_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_console.tao_console.run_command" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">run_command</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytao.gui.tao_console.tao_console.run_command" title="Permalink to this definition"></a></dt>
 <dd><p>Runs self.command at the Tao command line and
 displays the output.    Appends self.command to
 self.root.history and clears self.command.</p>

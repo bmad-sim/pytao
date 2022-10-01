@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FODO optics &mdash; PyTao 0.1.7 documentation</title>
+  <title>FODO optics &mdash; PyTao 0.1.7+6.g9268dda documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -14,7 +14,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -33,7 +35,7 @@
             <a href="../index.html" class="icon icon-home"> PyTao
           </a>
               <div class="version">
-                0.1.7
+                0.1.7+6.g9268dda
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -327,6 +329,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
 div.rendered_html table {
   border: none;
   border-collapse: collapse;
@@ -335,10 +338,14 @@ div.rendered_html table {
   font-size: 12px;
   table-layout: fixed;
 }
+.jp-RenderedHTMLCommon thead,
 div.rendered_html thead {
   border-bottom: 1px solid black;
   vertical-align: bottom;
 }
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
 div.rendered_html tr,
 div.rendered_html th,
 div.rendered_html td {
@@ -350,12 +357,15 @@ div.rendered_html td {
   max-width: none;
   border: none;
 }
+.jp-RenderedHTMLCommon th,
 div.rendered_html th {
   font-weight: bold;
 }
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
 div.rendered_html tbody tr:nth-child(odd) {
   background: #f5f5f5;
 }
+.jp-RenderedHTMLCommon tbody tr:hover,
 div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
@@ -383,7 +393,7 @@ div.rendered_html tbody tr:hover {
 }
 </style>
 <div class="section" id="FODO-optics">
-<h1>FODO optics<a class="headerlink" href="#FODO-optics" title="Permalink to this headline"></a></h1>
+<h1>FODO optics<a class="headerlink" href="#FODO-optics" title="Permalink to this heading"></a></h1>
 <p>This will demonstrate how to scan symmetrically and asymetrically the quadruople strengths in a standard FODO lattice.</p>
 <p>Later we will optimize for particular average beta function.</p>
 <p>Finally, we will track a beam and gather statistics from the particles.</p>
@@ -458,7 +468,7 @@ Tao&gt;
 </pre></div></div>
 </div>
 <div class="section" id="Symmetric-FODO">
-<h2>Symmetric FODO<a class="headerlink" href="#Symmetric-FODO" title="Permalink to this headline"></a></h2>
+<h2>Symmetric FODO<a class="headerlink" href="#Symmetric-FODO" title="Permalink to this heading"></a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
@@ -613,7 +623,7 @@ dict_keys([&#39;good&#39;, &#39;mean_beta_a&#39;, &#39;mean_beta_b&#39;, &#39;ph
 </div>
 </div>
 <div class="section" id="Asymmetric-FODO">
-<h1>Asymmetric FODO<a class="headerlink" href="#Asymmetric-FODO" title="Permalink to this headline"></a></h1>
+<h1>Asymmetric FODO<a class="headerlink" href="#Asymmetric-FODO" title="Permalink to this heading"></a></h1>
 <p>Scan k1 for each quad</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
@@ -751,7 +761,7 @@ phi_b
 </div>
 </div>
 <div class="section" id="Plots">
-<h1>Plots<a class="headerlink" href="#Plots" title="Permalink to this headline"></a></h1>
+<h1>Plots<a class="headerlink" href="#Plots" title="Permalink to this heading"></a></h1>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
@@ -802,7 +812,7 @@ plot1(&#39;mean_beta_b&#39;)
 </div>
 </div>
 <div class="section" id="Optimize-for-some-special-beta-functions">
-<h1>Optimize for some special beta functions<a class="headerlink" href="#Optimize-for-some-special-beta-functions" title="Permalink to this headline"></a></h1>
+<h1>Optimize for some special beta functions<a class="headerlink" href="#Optimize-for-some-special-beta-functions" title="Permalink to this heading"></a></h1>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
@@ -914,7 +924,7 @@ kq1, kq2
 </div>
 </div>
 <div class="section" id="Alternative-method:-alias">
-<h1>Alternative method: alias<a class="headerlink" href="#Alternative-method:-alias" title="Permalink to this headline"></a></h1>
+<h1>Alternative method: alias<a class="headerlink" href="#Alternative-method:-alias" title="Permalink to this heading"></a></h1>
 <p>A ‘simple’ Tao alias can be useful when running on the command line.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
@@ -974,7 +984,7 @@ T
 </div>
 </div>
 <div class="section" id="Beam-tracking">
-<h1>Beam tracking<a class="headerlink" href="#Beam-tracking" title="Permalink to this headline"></a></h1>
+<h1>Beam tracking<a class="headerlink" href="#Beam-tracking" title="Permalink to this heading"></a></h1>
 <p>Here we will make a new lattice with 10 cells that calls the single fodo lattice.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
@@ -1099,7 +1109,7 @@ tao.cmd(&#39;set global track_type = beam;set global track_type = single&#39;)
 </pre></div></div>
 </div>
 <div class="section" id="Get-particles">
-<h2>Get particles<a class="headerlink" href="#Get-particles" title="Permalink to this headline"></a></h2>
+<h2>Get particles<a class="headerlink" href="#Get-particles" title="Permalink to this heading"></a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
@@ -1115,7 +1125,7 @@ with h5py.File(&#39;beam_dump.h5&#39;, &#39;r&#39;) as h5:
 </div>
 </div>
 <div class="section" id="Pretty-plot">
-<h2>Pretty plot<a class="headerlink" href="#Pretty-plot" title="Permalink to this headline"></a></h2>
+<h2>Pretty plot<a class="headerlink" href="#Pretty-plot" title="Permalink to this heading"></a></h2>
 <p>Traces can be made by gathering the coordinate arrays</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
@@ -1155,7 +1165,7 @@ for ax in axes:
 </div>
 </div>
 <div class="section" id="Get-some-statistics">
-<h2>Get some statistics<a class="headerlink" href="#Get-some-statistics" title="Permalink to this headline"></a></h2>
+<h2>Get some statistics<a class="headerlink" href="#Get-some-statistics" title="Permalink to this heading"></a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
@@ -1194,7 +1204,7 @@ plt.legend()
 </div>
 </div>
 <div class="section" id="Cleanup">
-<h2>Cleanup<a class="headerlink" href="#Cleanup" title="Permalink to this headline"></a></h2>
+<h2>Cleanup<a class="headerlink" href="#Cleanup" title="Permalink to this heading"></a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>

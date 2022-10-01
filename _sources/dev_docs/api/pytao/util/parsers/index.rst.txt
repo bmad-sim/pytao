@@ -78,3 +78,32 @@ Module Contents
    :rtype: dict with keys
 
 
+.. py:function:: parse_plot_list(lines)
+
+   Parses the output of the `python plot_list` command.
+
+   This could be region or template data.
+
+
+   :param lines: The output of the 'python plot_list' command to parse
+   :type lines: list of str
+
+   :returns: * *if r_or_g == 't'* -- dict with template_name:index
+             * *if r_or_g == 'r'* --
+
+               list of dicts with keys:
+                   region
+                   ix
+                   plot_name
+                   visible
+                   x1, x2, y1, y1
+
+
+.. py:function:: parse_var_v_array_line(line)
+
+
+.. py:function:: parse_var_v_array(lines)
+
+   Parses the output of `python var_v_array` into a list of dicts
+
+

@@ -24,10 +24,10 @@ Module Contents
 
 .. py:class:: tao_io(init_args='', tao_exe='', timeout=600, expect_str='Tao>')
 
-   .. py:method:: cmd_in(self, cmd_str)
+   .. py:method:: cmd_in(cmd_str)
 
 
-   .. py:method:: cmd(self, cmd_str)
+   .. py:method:: cmd(cmd_str)
 
 
 

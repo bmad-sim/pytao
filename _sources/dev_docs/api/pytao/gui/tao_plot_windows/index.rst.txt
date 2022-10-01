@@ -20,31 +20,31 @@ Module Contents
    plots and plot them in matplotlib windows
    Currently only supported in matplotlib mode
 
-   .. py:method:: refresh(self)
+   .. py:method:: refresh()
 
       Responsible for creating widgets and filling them with plots
 
 
-   .. py:method:: plot_cmd(self, event=None)
+   .. py:method:: plot_cmd(event=None)
 
 
-   .. py:method:: mpl_plot(self, event=None)
+   .. py:method:: mpl_plot(event=None)
 
       Creates a new matplotlib window with the currently selected plot
 
 
-   .. py:method:: pg_plot(self, event=None)
+   .. py:method:: pg_plot(event=None)
 
       Opens a window that asks the user where the plot should be placed,
       and places it on the pgplot page
 
 
-   .. py:method:: set_plot(self, event=None)
+   .. py:method:: set_plot(event=None)
 
       Sets self.plot to the selected plot in the list
 
 
-   .. py:method:: edit_template(self, event=None)
+   .. py:method:: edit_template(event=None)
 
       Opens up a plot editting window and loads the selected template
 
@@ -60,12 +60,12 @@ Module Contents
    mainloop until the plots are closed.
    If the region to place the graph is not specified, one will be selected automatically.
 
-   .. py:method:: refresh(self, event=None, width=1)
+   .. py:method:: refresh(event=None, width=1)
 
       Makes the call to matplotlib to draw the plot to the window
 
 
-   .. py:method:: destroy(self)
+   .. py:method:: destroy()
 
       Overloaded here to remove self from root.refresh_windows
 
@@ -81,10 +81,10 @@ Module Contents
    mode: 'N' for new template, 'T' for editing existing templates, and 'R'
    for editing active plots
 
-   .. py:method:: fill_plot_frame(self)
+   .. py:method:: fill_plot_frame()
 
 
-   .. py:method:: tr_setup(self, default)
+   .. py:method:: tr_setup(default)
 
       Performs additional setup needed in template/region mode,
       i.e. creates drop down lists to select plots,
@@ -93,37 +93,37 @@ Module Contents
       Also adds options to the save box
 
 
-   .. py:method:: swap_mode(self, overide=False, event=None)
+   .. py:method:: swap_mode(overide=False, event=None)
 
       Swaps between showing templates and active plots
       Will always run if overide is set to True
 
 
-   .. py:method:: clone_plot_method(self, ask=True)
+   .. py:method:: clone_plot_method(ask=True)
 
       Clone the plot specified by plot_name
 
 
-   .. py:method:: create_template(self, event=None)
+   .. py:method:: create_template(event=None)
 
       Reads the data input by the user and creates the plot template in tao
 
 
-   .. py:method:: create_and_plot(self, event=None)
+   .. py:method:: create_and_plot(event=None)
 
 
-   .. py:method:: plot_name_handler(self, event=None)
+   .. py:method:: plot_name_handler(event=None)
 
       Reads the plot name into self.name, and warns the user if left blank
 
 
-   .. py:method:: x_axis_type_handler(self, *args, **kwargs)
+   .. py:method:: x_axis_type_handler(*args, **kwargs)
 
       Sets self.x_axis_type to the selected x_axis_type
       Pass the keyword argument skip_graph_handlers=True to skip graph_type handlers
 
 
-   .. py:method:: refresh(self, event=None)
+   .. py:method:: refresh(event=None)
 
       In T/R mode, reloads plot properties from Tao
       In N mode, does nothing
@@ -136,7 +136,7 @@ Module Contents
 
    New and improved frame for editing graph properties
 
-   .. py:method:: refresh(self)
+   .. py:method:: refresh()
 
       Grids the appropriate widgets for the current graph type,
       grids self.curve_frame or self.ele_frame as appropriate,
@@ -144,33 +144,33 @@ Module Contents
       (i.e. if self.type not in ['lat_layout', 'floor_plan'])
 
 
-   .. py:method:: delete(self, ask=True, event=None)
+   .. py:method:: delete(ask=True, event=None)
 
       Deletes this graph frame
       Call with ask = False to skip confirmation
 
 
-   .. py:method:: duplicate(self, event=None)
+   .. py:method:: duplicate(event=None)
 
       Adds a new graph_frame to self.parent.graph_frame that is a copy of
       this frame, and changes focus to that frame
 
 
-   .. py:method:: clone(self, graph, event=None)
+   .. py:method:: clone(graph, event=None)
 
       Clone an existing graph (already defined in tao, use self.duplicate() to
       make copies of graphs already defined in the new plot template window
       Does not clone plot properties
 
 
-   .. py:method:: graph_type_handler(self, *args)
+   .. py:method:: graph_type_handler(*args)
 
       Checks that plot.x_axis_type is compatible with the selected graph type.
       If it is, updates self.type and calls self.refresh()
       If it is not, warns the user of the incompatibility.
 
 
-   .. py:method:: name_handler(self, event=None)
+   .. py:method:: name_handler(event=None)
 
       Checks that a good name has been input for the graph and
       updates self.name as necessary.  Warns the user if the name
@@ -184,38 +184,38 @@ Module Contents
 
    Provides a frame to configure curve properties as necessary
 
-   .. py:method:: refresh(self)
+   .. py:method:: refresh()
 
       Draws appropriate widgets to the frame depending on graph.type and
       plot.x_axis_type.  The parent graph is expected to verify that
       the graph and x_axis type are compatible before calling this method
 
 
-   .. py:method:: clone(self, curve)
+   .. py:method:: clone(curve)
 
       Clone the specified curve
 
 
-   .. py:method:: delete(self, ask=True)
+   .. py:method:: delete(ask=True)
 
       Deletes this graph frame
       Call with ask = False to skip confirmation
 
 
-   .. py:method:: duplicate(self, target=None)
+   .. py:method:: duplicate(target=None)
 
       Duplicates this curve into the graph_frame specified by target
       target defaults to this curve_frame's parent graph
 
 
-   .. py:method:: name_handler(self, event=None)
+   .. py:method:: name_handler(event=None)
 
       Checks that a good name has been input for the curve and
       updates self.name as necessary.  Warns the user if the name
       is taken or empty
 
 
-   .. py:method:: data_source_handler(self, *args)
+   .. py:method:: data_source_handler(*args)
 
       Keeps DAT_TYPE widgets in line with their respective
       data_source widgets
@@ -245,12 +245,12 @@ Module Contents
    for plot placing.  Necessarily, functionality is also provided to
    subdivide combined regions into their smaller parts
 
-   .. py:method:: refresh(self, *args)
+   .. py:method:: refresh(*args)
 
       Redraws the pgplot page with the correct regions
 
 
-   .. py:method:: add_region(self, region, include_plot)
+   .. py:method:: add_region(region, include_plot)
 
       Adds the region specified by name to the pgplot page.
       The name of the plot currently in the region will also
@@ -265,13 +265,13 @@ Module Contents
    Provides a window for setting the pgplot window layout
    (number of rows/columns, number of lat_layouts, etc)
 
-   .. py:method:: refresh(self, event=None)
+   .. py:method:: refresh(event=None)
 
       Fetch the current settings for row, column, and lat_layout number
       and update rowvar, colvar, and latvar accordingly
 
 
-   .. py:method:: update_preview(self, *args)
+   .. py:method:: update_preview(*args)
 
       Draws rectangles to self.canvas to represent the pgplot
       window layout according to the values in self.rowvar,
@@ -287,7 +287,7 @@ Module Contents
    pgplot region a new plot should be placed in,
    and then places the plot in the requested region.
 
-   .. py:method:: update_region(self, event=None)
+   .. py:method:: update_region(event=None)
 
       Updates the pgpage widget to display the plot
       as it would be placed in the selected region,
@@ -295,7 +295,7 @@ Module Contents
       would cause other plots to be unplaced
 
 
-   .. py:method:: place_cmd(self, event=None)
+   .. py:method:: place_cmd(event=None)
 
       Places self.plot in the selected region and closes this window
 
@@ -312,7 +312,7 @@ Module Contents
    pipe: the tao_interface used to querry/set ele shapes
    which: either "lat_layout" or "floor_plan"
 
-   .. py:method:: refresh(self, event=None)
+   .. py:method:: refresh(event=None)
 
 
 
@@ -325,44 +325,44 @@ Module Contents
 
    pipe: the tao_interface used to querry/set ele shapes
 
-   .. py:method:: refresh(self, event=None)
+   .. py:method:: refresh(event=None)
 
       Redraws the table of wall sections with updated settings from tao
 
 
-   .. py:method:: get_selected(self, event=None)
+   .. py:method:: get_selected(event=None)
 
       Returns the selected row in the table, for
       use with other methods like add_point, etc.
 
 
-   .. py:method:: add_section(self, event=None)
+   .. py:method:: add_section(event=None)
 
       Adds an empty building wall section
 
 
-   .. py:method:: add_point(self, event=None)
+   .. py:method:: add_point(event=None)
 
       Adds a point to the selected building wall section
 
 
-   .. py:method:: delete_section(self, event=None)
+   .. py:method:: delete_section(event=None)
 
       Deletes the selected building wall section
 
 
-   .. py:method:: delete_point(self, event=None)
+   .. py:method:: delete_point(event=None)
 
       Deletes the selected building wall point
 
 
-   .. py:method:: floor_plan_default(self, event=None)
+   .. py:method:: floor_plan_default(event=None)
 
       Opens a window for editing the floor_plan shape
       building_wall::*
 
 
-   .. py:method:: floor_plan_selected(self, event=None)
+   .. py:method:: floor_plan_selected(event=None)
 
       Opens a window for editing the floor_plan shape
       building_wall::name, where name is the name of the

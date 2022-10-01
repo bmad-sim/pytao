@@ -9,7 +9,7 @@ Module Contents
 
 .. py:class:: taoplot(pipe, PlotRegion)
 
-   .. py:method:: plot(self, width)
+   .. py:method:: plot(width)
 
       Returns a figure containing graphs using the data in the region PlotRegion of the tao instance in pipe, and plots a lat_layout below if applicable.
       Also returns information about the indices and locations of elements, width is used to modify the width of floor plan elements and the size of the lat layout.

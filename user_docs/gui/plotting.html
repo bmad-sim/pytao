@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Plotting &mdash; PyTao 0.1.7 documentation</title>
+  <title>Plotting &mdash; PyTao 0.1.7+6.g9268dda documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -14,7 +14,9 @@
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -31,7 +33,7 @@
             <a href="../../index.html" class="icon icon-home"> PyTao
           </a>
               <div class="version">
-                0.1.7
+                0.1.7+6.g9268dda
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -144,7 +146,7 @@
 }
 </style>
 <div class="section" id="plotting">
-<h1>Plotting<a class="headerlink" href="#plotting" title="Permalink to this headline"></a></h1>
+<h1>Plotting<a class="headerlink" href="#plotting" title="Permalink to this heading"></a></h1>
 <p>One of the GUI’s strong suits is the ability to view an manipulate plots using
 matplotlib.</p>
 <p>Existing plots can be viewed and edited, and new templates can be defined on the
@@ -152,7 +154,7 @@ fly.</p>
 <p>Note: the GUI does support classic PG/PLplots, but it is recommended to use
 matplotlib as the plotting engine due to the extra features it offers.</p>
 <div class="section" id="viewing-plots">
-<h2>Viewing Plots<a class="headerlink" href="#viewing-plots" title="Permalink to this headline"></a></h2>
+<h2>Viewing Plots<a class="headerlink" href="#viewing-plots" title="Permalink to this heading"></a></h2>
 <p>The figures below show how to plot existing templates in the GUI.</p>
 <p>The plot template window lists all of the currently defined plot templates as
 well as their descriptions.</p>
@@ -180,7 +182,7 @@ and then clicking the “Plot” button.</p>
 window and clicking “Edit Template”.</p>
 </div>
 <div class="section" id="interacting-with-plots">
-<h2>Interacting with Plots<a class="headerlink" href="#interacting-with-plots" title="Permalink to this headline"></a></h2>
+<h2>Interacting with Plots<a class="headerlink" href="#interacting-with-plots" title="Permalink to this heading"></a></h2>
 <p>Interacting with plots in the GUI is primarily done using the toolbar along the
 bottom of the plotting window.</p>
 <p>Starting from the left, the home button returns the graph to the starting view.
@@ -208,7 +210,7 @@ centerline. Clicking on the slider will adjust the width of the displayed
 elements.</p>
 </div>
 <div class="section" id="plotting-initialization">
-<h2>Plotting Initialization<a class="headerlink" href="#plotting-initialization" title="Permalink to this headline"></a></h2>
+<h2>Plotting Initialization<a class="headerlink" href="#plotting-initialization" title="Permalink to this heading"></a></h2>
 <p>When operating the GUI in matplotlib mode, you can specify a list of template
 plots to plot in matplotlib as soon as tao starts.  These templates should be
 listed in a file called plot.gui.init, which should be in the same directory

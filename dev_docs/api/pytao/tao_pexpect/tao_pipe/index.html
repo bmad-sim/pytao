@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pytao.tao_pexpect.tao_pipe &mdash; PyTao 0.1.7 documentation</title>
+  <title>pytao.tao_pexpect.tao_pipe &mdash; PyTao 0.1.7+6.g9268dda documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
@@ -14,7 +14,9 @@
         <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/sphinx_highlight.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
@@ -31,7 +33,7 @@
             <a href="../../../../../index.html" class="icon icon-home"> PyTao
           </a>
               <div class="version">
-                0.1.7
+                0.1.7+6.g9268dda
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -144,7 +146,7 @@
 }
 </style>
 <div class="section" id="module-pytao.tao_pexpect.tao_pipe">
-<span id="pytao-tao-pexpect-tao-pipe"></span><h1><a class="reference internal" href="#module-pytao.tao_pexpect.tao_pipe" title="pytao.tao_pexpect.tao_pipe"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_pexpect.tao_pipe</span></code></a><a class="headerlink" href="#module-pytao.tao_pexpect.tao_pipe" title="Permalink to this headline"></a></h1>
+<span id="pytao-tao-pexpect-tao-pipe"></span><h1><a class="reference internal" href="#module-pytao.tao_pexpect.tao_pipe" title="pytao.tao_pexpect.tao_pipe"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.tao_pexpect.tao_pipe</span></code></a><a class="headerlink" href="#module-pytao.tao_pexpect.tao_pipe" title="Permalink to this heading"></a></h1>
 <p>Class for piping in commands to Tao from python and for grabbing Tao output.</p>
 <dl class="simple">
 <dt>This module needs the pexpect module which can be downloaded from:</dt><dd><p>&lt;<a class="reference external" href="http://sourceforge.net/projects/pexpect/">http://sourceforge.net/projects/pexpect/</a>&gt;</p>
@@ -156,18 +158,18 @@ pipe = tao_pipe.tao_io(“-lat my_lat.bmad”)   # Init
 pipe.cmd(“show uni”)                         # Issue a command &amp; print output at terminal.
 tao_output = pipe.cmd_in(“show uni”)         # Get the output of a command. No terminal output.</p>
 <div class="section" id="module-contents">
-<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="pytao.tao_pexpect.tao_pipe.tao_io">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pytao.tao_pexpect.tao_pipe.</span></span><span class="sig-name descname"><span class="pre">tao_io</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">init_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tao_exe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">600</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expect_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Tao&gt;'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_pexpect.tao_pipe.tao_io" title="Permalink to this definition"></a></dt>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="pytao.tao_pexpect.tao_pipe.tao_io.cmd_in">
-<span class="sig-name descname"><span class="pre">cmd_in</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_pexpect.tao_pipe.tao_io.cmd_in" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">cmd_in</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd_str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_pexpect.tao_pipe.tao_io.cmd_in" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pytao.tao_pexpect.tao_pipe.tao_io.cmd">
-<span class="sig-name descname"><span class="pre">cmd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_pexpect.tao_pipe.tao_io.cmd" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">cmd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd_str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.tao_pexpect.tao_pipe.tao_io.cmd" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

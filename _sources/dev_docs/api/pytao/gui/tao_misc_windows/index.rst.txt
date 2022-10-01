@@ -18,7 +18,7 @@ Module Contents
 
    Generic window for displaying and editing a list of parameters
 
-   .. py:method:: set_callback(self)
+   .. py:method:: set_callback()
 
 
 
@@ -28,7 +28,7 @@ Module Contents
 
    Generic window for displaying and editing a list of parameters
 
-   .. py:method:: set_callback(self)
+   .. py:method:: set_callback()
 
 
 
@@ -41,10 +41,10 @@ Module Contents
    Subclasses set tao_id before running this __init__ to handle
    adding/removing themselves from root window lists
 
-   .. py:method:: refresh(self)
+   .. py:method:: refresh()
 
 
-   .. py:method:: re_run(self, cmd_string, mode, event=None)
+   .. py:method:: re_run(cmd_string, mode, event=None)
 
       Re-runs the given command or command file (cmd_string),
       using the specified mode.
@@ -55,7 +55,7 @@ Module Contents
       the command line or call_file box, and does not run it
 
 
-   .. py:method:: re_run_callback(self, cmd_string, mode, event=None)
+   .. py:method:: re_run_callback(cmd_string, mode, event=None)
 
       Formats a callback to self.re_run
 

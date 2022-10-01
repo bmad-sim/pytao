@@ -23,13 +23,13 @@ Module Contents
            the gui's global variablese, etc)
    pipe: tao_interface object (needed to run commands)
 
-   .. py:method:: set_command(self, new_command)
+   .. py:method:: set_command(new_command)
 
       Deletes the current command and sets self.command
       to new_command (also updates console display)
 
 
-   .. py:method:: show_output(self, output, mode='normal', noprompt=False)
+   .. py:method:: show_output(output, mode='normal', noprompt=False)
 
       Prints output to the console and starts a new
       line for the command prompt.    Also clears
@@ -38,10 +38,10 @@ Module Contents
       With noprompt set True, a new Tao> prompt will not be drawn
 
 
-   .. py:method:: warning_callback(self, *args)
+   .. py:method:: warning_callback(*args)
 
 
-   .. py:method:: run_command(self)
+   .. py:method:: run_command()
 
       Runs self.command at the Tao command line and
       displays the output.    Appends self.command to

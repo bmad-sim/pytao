@@ -52,25 +52,25 @@ Module Contents
 .. py:function:: test_data_2()
 
 
-.. py:function:: test_data_d2_create_1()
-
-
-.. py:function:: test_data_d2_destroy_1()
-
-
-.. py:function:: test_data_d2_1()
-
-
 .. py:function:: test_data_d_array_1()
 
 
 .. py:function:: test_data_d1_array_1()
 
 
-.. py:function:: test_data_parameter_1()
+.. py:function:: test_data_d2_1()
 
 
 .. py:function:: test_data_d2_array_1()
+
+
+.. py:function:: test_data_d2_create_1()
+
+
+.. py:function:: test_data_d2_destroy_1()
+
+
+.. py:function:: test_data_parameter_1()
 
 
 .. py:function:: test_data_set_design_value_1()
@@ -226,7 +226,7 @@ Module Contents
 .. py:function:: test_plot_histogram_1()
 
 
-.. py:function:: test_plot_plot_manage_1()
+.. py:function:: test_plot_template_manage_1()
 
 
 .. py:function:: test_plot_curve_manage_1()

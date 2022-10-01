@@ -230,12 +230,13 @@ Module Contents
 
    .. rubric:: Notes
 
-   The graph defines the coordinate system for the (x, y) points.
    Command syntax:
      python building_wall_graph {graph}
 
    Where:
      {graph} is a plot region graph name.
+
+   Note: The graph defines the coordinate system for the (x, y) points.
 
    .. rubric:: Examples
 
@@ -464,6 +465,130 @@ Module Contents
       dat_index: 1
 
 
+.. py:function:: data_d_array(tao, d2_name, d1_name, *, ix_uni='', verbose=False, as_dict=True, raises=True)
+
+   Output list of datums for a given d1_data structure.
+
+   :param d2_name:
+   :param d1_name:
+   :param ix_uni:
+   :type ix_uni: optional
+
+   :returns: **datums** -- Each dict has keys:
+             'ix_d1', 'data_type', 'merit_type',
+             'ele_ref_name', 'ele_start_name', 'ele_name',
+             'meas_value', 'model_value', 'design_value',
+             'useit_opt', 'useit_plot', 'good_user',
+             'weight', 'exists'
+   :rtype: list of dicts
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python data_d_array {ix_uni}@{d2_name}.{d1_name}
+
+   Where:
+     {ix_uni} is a universe index. Defaults to s%global%default_universe.
+     {d2_name} is the name of the containing d2_data structure.
+     {d1_name} is the name of the d1_data structure containing the array of datums.
+
+   .. rubric:: Example
+
+   python data_d_array 1@orbit.x
+
+   .. rubric:: Examples
+
+   Example: 1
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
+    args:
+      ix_uni: 1
+      d2_name: twiss
+      d1_name: end
+
+
+.. py:function:: data_d1_array(tao, d2_datum, *, ix_uni='', verbose=False, as_dict=True, raises=True)
+
+   Output list of d1 arrays for a given data_d2.
+
+   :param d2_datum:
+   :param ix_uni:
+   :type ix_uni: optional
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python data_d1_array {d2_datum}
+
+   {d2_datum} should be of the form
+     {ix_uni}@{d2_datum_name}
+
+   .. rubric:: Examples
+
+   Example: 1
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
+    args:
+      ix_uni: 1
+      d2_datum: twiss
+
+
+.. py:function:: data_d2(tao, d2_name, *, ix_uni='', verbose=False, as_dict=True, raises=True)
+
+   Output information on a d2_datum.
+
+   :param d2_name:
+   :param ix_uni:
+   :type ix_uni: optional
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python data_d2 {ix_uni}@{d2_name}
+
+   Where:
+     {ix_uni} is a universe index. Defaults to s%global%default_universe.
+     {d2_name} is the name of the d2_data structure.
+
+   .. rubric:: Examples
+
+   Example: 1
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
+    args:
+      ix_uni: 1
+      d2_name: twiss
+
+
+.. py:function:: data_d2_array(tao, ix_uni, *, verbose=False, as_dict=True, raises=True)
+
+   Output data d2 info for a given universe.
+
+   :param ix_uni:
+
+   :returns:
+   :rtype: string_list
+
+   .. rubric:: Notes
+
+   Command syntax:
+     python data_d2_array {ix_uni}
+
+   .. rubric:: Example
+
+   python data_d2_array 1
+
+   .. rubric:: Examples
+
+   Example: 1
+    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
+    args:
+      ix_uni : 1
+
+
 .. py:function:: data_d2_create(tao, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_uni='', verbose=False, as_dict=True, raises=True)
 
    Create a d2 data structure along with associated d1 and data arrays.
@@ -552,104 +677,6 @@ Module Contents
       d2_name: orbit
 
 
-.. py:function:: data_d2(tao, d2_name, *, ix_uni='', verbose=False, as_dict=True, raises=True)
-
-   Output information on a d2_datum.
-
-   :param d2_name:
-   :param ix_uni:
-   :type ix_uni: optional
-
-   :returns:
-   :rtype: string_list
-
-   .. rubric:: Notes
-
-   Command syntax:
-     python data_d2 {ix_uni}@{d2_name}
-
-   Where:
-     {ix_uni} is a universe index. Defaults to s%global%default_universe.
-     {d2_name} is the name of the d2_data structure.
-
-   .. rubric:: Examples
-
-   Example: 1
-    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
-    args:
-      ix_uni: 1
-      d2_name: twiss
-
-
-.. py:function:: data_d_array(tao, d2_name, d1_name, *, ix_uni='', verbose=False, as_dict=True, raises=True)
-
-   Output list of datums for a given d1_data structure.
-
-   :param d2_name:
-   :param d1_name:
-   :param ix_uni:
-   :type ix_uni: optional
-
-   :returns: **datums** -- Each dict has keys:
-             'ix_d1', 'data_type', 'merit_type',
-             'ele_ref_name', 'ele_start_name', 'ele_name',
-             'meas_value', 'model_value', 'design_value',
-             'useit_opt', 'useit_plot', 'good_user',
-             'weight', 'exists'
-   :rtype: list of dicts
-
-   .. rubric:: Notes
-
-   Command syntax:
-     python data_d_array {ix_uni}@{d2_name}.{d1_name}
-
-   Where:
-     {ix_uni} is a universe index. Defaults to s%global%default_universe.
-     {d2_name} is the name of the containing d2_data structure.
-     {d1_name} is the name of the d1_data structure containing the array of datums.
-
-   .. rubric:: Example
-
-   python data_d_array 1@orbit.x
-
-   .. rubric:: Examples
-
-   Example: 1
-    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
-    args:
-      ix_uni: 1
-      d2_name: twiss
-      d1_name: end
-
-
-.. py:function:: data_d1_array(tao, d2_datum, *, ix_uni='', verbose=False, as_dict=True, raises=True)
-
-   Output list of d1 arrays for a given data_d2.
-
-   :param d2_datum:
-   :param ix_uni:
-   :type ix_uni: optional
-
-   :returns:
-   :rtype: string_list
-
-   .. rubric:: Notes
-
-   Command syntax:
-     python data_d1_array {d2_datum}
-
-   {d2_datum} should be of the form
-     {ix_uni}@{d2_datum_name}
-
-   .. rubric:: Examples
-
-   Example: 1
-    init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
-    args:
-      ix_uni: 1
-      d2_datum: twiss
-
-
 .. py:function:: data_parameter(tao, data_array, parameter, *, verbose=False, as_dict=True, raises=True)
 
    Output an array of values for a particular datum parameter for a given array of datums,
@@ -677,32 +704,6 @@ Module Contents
     args:
       data_array: twiss.end
       parameter: model_value
-
-
-.. py:function:: data_d2_array(tao, ix_uni, *, verbose=False, as_dict=True, raises=True)
-
-   Output data d2 info for a given universe.
-
-   :param ix_uni:
-
-   :returns:
-   :rtype: string_list
-
-   .. rubric:: Notes
-
-   Command syntax:
-     python data_d2_array {ix_uni}
-
-   .. rubric:: Example
-
-   python data_d2_array 1
-
-   .. rubric:: Examples
-
-   Example: 1
-    init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
-    args:
-      ix_uni : 1
 
 
 .. py:function:: data_set_design_value(tao, *, verbose=False, as_dict=True, raises=True)
@@ -1462,7 +1463,7 @@ Module Contents
    Where:
      {ele_id} is an element name or index.
      {which} is one of: "model", "base" or "design"
-     {who} values are the same as {who} values for "python lat_list" except for "ele:mat6" and "ele:vec0".
+     {who} values are the same as {who} values for "python lat_list".
            Note: Here {who} must be a single parameter and not a list.
 
    .. rubric:: Example
@@ -1756,7 +1757,7 @@ Module Contents
    Output the value of an expression. The result may be a vector.
 
    :param expression:
-   :param flags: If -array_out, the output will be available in the tao_c_interface_com%c_real.!
+   :param flags: If -array_out, the output will be available in the tao_c_interface_com%c_real.
    :type flags: default=-array_out
 
    :returns: * *string_list* -- if '-array_out' not in flags
@@ -2080,10 +2081,14 @@ Module Contents
        ele.b.beta, ele.b.alpha, ele.b.eta, ele.b.etap, ele.b.gamma, ele.b.phi,
        ele.x.eta, ele.x.etap,
        ele.y.eta, ele.y.etap,
+       ele.ref_time, ele.ref_time_start
        ele.s, ele.l
        ele.e_tot, ele.p0c
-       ele.mat6, ele.vec0
+       ele.mat6      ! Output: mat6(1,:), mat6(2,:), ... mat6(6,:)
+       ele.vec0      ! Output: vec0(1), ... vec0(6)
        ele.{attribute} Where {attribute} is a Bmad syntax element attribute. (EG: ele.beta_a, ele.k1, etc.)
+       ele.c_mat     ! Output: c_mat11, c_mat12, c_mat21, c_mat22.
+       ele.gamma_c   ! Parameter associated with coupling c-matrix.
 
      {elements} is a string to match element names to.
        Use "*" to match to all elements.
@@ -2093,7 +2098,6 @@ Module Contents
    python lat_list -track 3@0>>Q*|base ele.s,orbit.vec.2
    python lat_list 3@0>>Q*|base real:ele.s
 
-   Note: vector layout of mat6(6,6) is: [mat6(1,:), mat6(2,:), ...mat6(6,:)]
    Also see: "python ele:param"
 
    .. rubric:: Examples
@@ -2313,8 +2317,15 @@ Module Contents
 
    :param r_or_g:
 
-   :returns:
-   :rtype: string_list
+   :returns: * *if r_or_g == 't'* -- dict with template_name:index
+             * *if r_or_g == 'r'* --
+
+               list of dicts with keys:
+                   region
+                   ix
+                   plot_name
+                   visible
+                   x1, x2, y1, y1
 
    .. rubric:: Notes
 
@@ -2322,8 +2333,8 @@ Module Contents
      python plot_list {r_or_g}
 
    where "{r/g}" is:
-     "r"      ! list regions
-     "t"      ! list template plots
+     "r"      ! list regions of the form ix;region_name;plot_name;visible;x1;x2;y1;y2
+     "t"      ! list template plots of the form ix;name
 
    .. rubric:: Examples
 
@@ -2384,16 +2395,16 @@ Module Contents
       curve_name: r33.g.x
 
 
-.. py:function:: plot_plot_manage(tao, plot_location, plot_name, n_graph, graph1_name, graph2_name, graphN_name, *, verbose=False, as_dict=True, raises=True)
+.. py:function:: plot_template_manage(tao, template_location, template_name, *, n_graph='-1', graph_names='', verbose=False, as_dict=True, raises=True)
 
    Template plot creation or destruction.
 
-   :param plot_location:
-   :param plot_name:
+   :param template_location:
+   :param template_name:
    :param n_graph:
-   :param graph1_name:
-   :param graph2_name:
-   :param graphN_name:
+   :type n_graph: default=-1
+   :param graph_names:
+   :type graph_names: default=
 
    :returns:
    :rtype: None
@@ -2401,25 +2412,26 @@ Module Contents
    .. rubric:: Notes
 
    Command syntax:
-     python plot_plot_manage {plot_location}^^{plot_name}^^
-                            {n_graph}^^{graph1_name}^^{graph2_name}^^{graphN_name}
+     python plot_template_manage {template_location}^^{template_name}^^
+                            {n_graph}^^{graph_names}
 
-   Use "@Tnnn" sytax for {plot_location} to place a plot. A plot may be placed in a
-   spot where there is already a template.
-   Extra graph names can be included with ^^ connection.
-   If {n_graph} is set to -1 then just delete the plot.
+   Where:
+     {template_location} is the location to place or delete a template plot. Use "@Tnnn" syntax for the location.
+     {template_name} is the name of the template plot. If deleting a plot this name is immaterial.
+     {n_graph} is the number of associated graphs. If set to -1 then any existing template plot is deleted.
+     {graph_names} are the names of the graphs.  graph_names should be in the form:
+        graph1_name^^graph2_name^^...^^graphN_name
+     for N=n_graph names
 
    .. rubric:: Examples
 
    Example: 1
     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
     args:
-      plot_location: @T1
-      plot_name: beta
-      n_graph: 1
-      graph1_name: g1
-      graph2_name: g2
-      graphN_name: gN
+      template_location: @T1
+      template_name: beta
+      n_graph: 2
+      graph_names: g1^^g2
 
 
 .. py:function:: plot_curve_manage(tao, graph_name, curve_index, curve_name, *, verbose=False, as_dict=True, raises=True)
@@ -3026,6 +3038,10 @@ Module Contents
    :type which: default=model
    :param ref_ele: Reference element to calculate at.
    :type ref_ele: default=0
+
+   :returns: * *q_spin                        -- Spin tune*
+             * *dq_a_min, dq_b_min, dq_c_min  -- Minimum tune separation between a,b,c mode tunes and spin tune.*
+             * *xi_res_a, xi_res_b, xi_res_c  -- The linear spin/orbit "sum" and "difference" resonance strengths for a,b,c modes.*
 
    .. rubric:: Notes
 

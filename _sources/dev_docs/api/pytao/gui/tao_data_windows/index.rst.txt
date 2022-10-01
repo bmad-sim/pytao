@@ -21,7 +21,7 @@ Module Contents
    Subclasses set tao_id before running this __init__ to handle
    adding/removing themselves from root window lists
 
-   .. py:method:: refresh(self)
+   .. py:method:: refresh()
 
       Clears self.list_frame and fills it with the current universe's
       d2/d1 data
@@ -37,18 +37,18 @@ Module Contents
    NOTE: master should be the frame that this frame is gridded into
    (usually a list_frame), while root should be the application root window
 
-   .. py:method:: open_d1_callback(self, d2_data_name, d1_data_name, pipe, ix_lb, ix_ub, u_ix)
+   .. py:method:: open_d1_callback(d2_data_name, d1_data_name, pipe, ix_lb, ix_ub, u_ix)
 
 
-   .. py:method:: edit_d2_callback(self, d2_data_name, pipe)
+   .. py:method:: edit_d2_callback(d2_data_name, pipe)
 
 
-   .. py:method:: edit_d2(self, d2_data_name, pipe)
+   .. py:method:: edit_d2(d2_data_name, pipe)
 
       Opens the new data window and clones this d2_array in for editing
 
 
-   .. py:method:: open_d1(self, d2_data_name, d1_data_name, pipe, ix_lb, ix_ub, u_ix)
+   .. py:method:: open_d1(d2_data_name, d1_data_name, pipe, ix_lb, ix_ub, u_ix)
 
       Opens a window with detailed information for d2_data_name.d1_data_name
 
@@ -60,39 +60,39 @@ Module Contents
 
    With lw set to True, opens a lw_table_window instead
 
-   .. py:method:: refresh(self)
+   .. py:method:: refresh()
 
       Creates a treeview to display the table information,
       and binds double click to open one item
 
 
-   .. py:method:: list_row_fetch(self, index)
+   .. py:method:: list_row_fetch(index)
 
       Returns row number index to be appended to self.list_rows
 
 
-   .. py:method:: lw_list_row_fetch(self, index)
+   .. py:method:: lw_list_row_fetch(index)
 
       For use with lw_table_window.  Returns a list of the values
       to be displayed in each column of row #index.
 
 
-   .. py:method:: lw_detail_callback(self, event=None)
+   .. py:method:: lw_detail_callback(event=None)
 
       Callback for the light-weight table to open a detail window
 
 
-   .. py:method:: bulk_set(self, fill_choices, parent)
+   .. py:method:: bulk_set(fill_choices, parent)
 
       Overload of lw_table_window.bulk_set that calls refresh data and plot windows
 
 
-   .. py:method:: open_detail_window(self, index)
+   .. py:method:: open_detail_window(index)
 
       Opens up a detail window for the given index.
 
 
-   .. py:method:: detail_set_callback(self, tao_list, set_str)
+   .. py:method:: detail_set_callback(tao_list, set_str)
 
       Overload of lw_table_window.detail_set_callback that refreshes
       data-related windows
@@ -106,39 +106,39 @@ Module Contents
    Provides a window for creating new d2 data arrays (and their associated d1 arrays)
    Pass the name of an existing d2_array to open that array and start editing its d1_arrays
 
-   .. py:method:: fill_d2_frame(self)
+   .. py:method:: fill_d2_frame()
 
 
-   .. py:method:: load_d2_frame(self)
+   .. py:method:: load_d2_frame()
 
 
-   .. py:method:: load_d1_frame(self, ask=True)
+   .. py:method:: load_d1_frame(ask=True)
 
       Ungrids self.d2_frame, grids self.d1_frame, and sets up a notebook
       for the d1_frames if necessary.
       Set ask=False to skip message boxes
 
 
-   .. py:method:: create_data(self, event=None)
+   .. py:method:: create_data(event=None)
 
       Takes the information from the d2_frame and d1_frames and runs
       the necessary commands to create the data in tao, then closes
       the create data window
 
 
-   .. py:method:: tab_handler(self, event=None)
+   .. py:method:: tab_handler(event=None)
 
       Handles new tab creation and updates self.d1_index as necessary
 
 
-   .. py:method:: add_d1_frame(self, d1_name, d2_name, event=None)
+   .. py:method:: add_d1_frame(d1_name, d2_name, event=None)
 
       Creates a new d1_frame for d1_name and reads existing data in from Tao if present
       Takes a line of output from python data_d1_array for d1_name
       d2_name should be "uni@d2_name"
 
 
-   .. py:method:: refresh(self)
+   .. py:method:: refresh()
 
       Only here in case something tries to refresh this window
 
@@ -154,36 +154,36 @@ Module Contents
    Also pass the full name that should be used for data lookup
    (e.g. 1@orbit.x)
 
-   .. py:method:: fill_defaults(self, event=None)
+   .. py:method:: fill_defaults(event=None)
 
       Copies the properties of the first datum and makes them the defaults at the d1 level
 
 
-   .. py:method:: delete(self, ask=True, event=None)
+   .. py:method:: delete(ask=True, event=None)
 
       Deletes this d1_array frame
       Call with ask = False to skip confirmation
 
 
-   .. py:method:: duplicate(self, event=None)
+   .. py:method:: duplicate(event=None)
 
       Adds a new d1_frame to self.d2_array.d1_frame_list that is a copy of
       this frame, and changes focus to that frame
 
 
-   .. py:method:: make_datum_frame(self, event=None)
+   .. py:method:: make_datum_frame(event=None)
 
       Adds an entry to self.data_dict if necessary, and updates
       self.datum_frame to show the values for the current datum
 
 
-   .. py:method:: datum_fill(self, ix)
+   .. py:method:: datum_fill(ix)
 
       "Fills" the value in self.d1_array_wids[ix] to all datums in self.data_dict
       Actually just erases the values in self.data_dict, which produces the same effect
 
 
-   .. py:method:: lat_browser(self, which)
+   .. py:method:: lat_browser(which)
 
       Opens a modified lattice table window to select elements en masse
       which should be either 'name', 'start_name', or 'ref_name'
@@ -191,7 +191,7 @@ Module Contents
       d1_array's data sequentially
 
 
-   .. py:method:: name_handler(self, event=None, strict=False)
+   .. py:method:: name_handler(event=None, strict=False)
 
       Checks whether the input name is valid, and
       sets the tab name to it if it is
@@ -202,7 +202,7 @@ Module Contents
       for an empty name
 
 
-   .. py:method:: ix_min_handler(self, event=None, strict=False)
+   .. py:method:: ix_min_handler(event=None, strict=False)
 
       Checks if the starting index is valid,
       and updates self.ix_min if it is.
@@ -214,7 +214,7 @@ Module Contents
       for an empty ix_min
 
 
-   .. py:method:: length_handler(self, event=None, strict=False)
+   .. py:method:: length_handler(event=None, strict=False)
 
       Checks that the d1 array length has been set
       to a valid value, and updates self.length if it has.
@@ -223,13 +223,13 @@ Module Contents
       value, and None if left blank.
 
 
-   .. py:method:: data_source_handler(self, *args)
+   .. py:method:: data_source_handler(*args)
 
       Updates the data_source widget to only show valid data types
       for the currently selected data source
 
 
-   .. py:method:: data_type_handler(self, *args)
+   .. py:method:: data_type_handler(*args)
 
       Sets the state of the ele buttons appropriately for the currently selected data type
 

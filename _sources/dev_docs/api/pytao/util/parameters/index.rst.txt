@@ -36,7 +36,7 @@ Module Contents
    sub_param:      The name of the sub_parameter associated with this parameter,
                    For example: ele_name has the sub parameter ix_ele.
 
-   .. py:method:: get_component(self, comp_name)
+   .. py:method:: get_component(comp_name)
 
       Looks for a component called comp_name in self, and returns the component
       with the matching name

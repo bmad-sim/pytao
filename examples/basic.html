@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PyTao basic usage &mdash; PyTao 0.1.7 documentation</title>
+  <title>PyTao basic usage &mdash; PyTao 0.1.7+6.g9268dda documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -14,7 +14,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -33,7 +35,7 @@
             <a href="../index.html" class="icon icon-home"> PyTao
           </a>
               <div class="version">
-                0.1.7
+                0.1.7+6.g9268dda
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -330,6 +332,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
 div.rendered_html table {
   border: none;
   border-collapse: collapse;
@@ -338,10 +341,14 @@ div.rendered_html table {
   font-size: 12px;
   table-layout: fixed;
 }
+.jp-RenderedHTMLCommon thead,
 div.rendered_html thead {
   border-bottom: 1px solid black;
   vertical-align: bottom;
 }
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
 div.rendered_html tr,
 div.rendered_html th,
 div.rendered_html td {
@@ -353,12 +360,15 @@ div.rendered_html td {
   max-width: none;
   border: none;
 }
+.jp-RenderedHTMLCommon th,
 div.rendered_html th {
   font-weight: bold;
 }
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
 div.rendered_html tbody tr:nth-child(odd) {
   background: #f5f5f5;
 }
+.jp-RenderedHTMLCommon tbody tr:hover,
 div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
@@ -386,7 +396,7 @@ div.rendered_html tbody tr:hover {
 }
 </style>
 <div class="section" id="PyTao-basic-usage">
-<h1>PyTao basic usage<a class="headerlink" href="#PyTao-basic-usage" title="Permalink to this headline"></a></h1>
+<h1>PyTao basic usage<a class="headerlink" href="#PyTao-basic-usage" title="Permalink to this heading"></a></h1>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
@@ -416,7 +426,7 @@ Populating the interactive namespace from numpy and matplotlib
 </pre></div></div>
 </div>
 <div class="section" id="Inititialize-Tao">
-<h2>Inititialize Tao<a class="headerlink" href="#Inititialize-Tao" title="Permalink to this headline"></a></h2>
+<h2>Inititialize Tao<a class="headerlink" href="#Inititialize-Tao" title="Permalink to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">Tao</span></code> is the basic object. Anything used to initialize Tao on the command line can be used to initialize a Tao object</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
@@ -436,7 +446,7 @@ Populating the interactive namespace from numpy and matplotlib
 </div>
 </div>
 <div class="section" id="Send-a-command">
-<h2>Send a command<a class="headerlink" href="#Send-a-command" title="Permalink to this headline"></a></h2>
+<h2>Send a command<a class="headerlink" href="#Send-a-command" title="Permalink to this heading"></a></h2>
 <p>Anything that you would normally type at a Tao&gt; prompt can be sent as a string. The return is a list of output strings.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
@@ -494,7 +504,7 @@ tao.cmds(
 </div>
 </div>
 <div class="section" id="Jupyter-magic-%%tao">
-<h2>Jupyter magic %%tao<a class="headerlink" href="#Jupyter-magic-%%tao" title="Permalink to this headline"></a></h2>
+<h2>Jupyter magic %%tao<a class="headerlink" href="#Jupyter-magic-%%tao" title="Permalink to this heading"></a></h2>
 <p>This is an alternative way to send commands to Tao directly in the jupyter notebook, using the %%tao magic. Multiple lines can be executed.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
@@ -587,7 +597,7 @@ Tao&gt;
 </div>
 </div>
 <div class="section" id="Interface-commands">
-<h2>Interface commands<a class="headerlink" href="#Interface-commands" title="Permalink to this headline"></a></h2>
+<h2>Interface commands<a class="headerlink" href="#Interface-commands" title="Permalink to this heading"></a></h2>
 <p>Output above from the <code class="docutils literal notranslate"><span class="pre">show</span></code> command is designed to be human-readable. In general you should <strong>not</strong> try to parse these strings for data. For data, Tao has a special set of commands to send back data suitable for parsing in Python (or other software).</p>
 <p>Below are the raw commands.</p>
 <div class="nbinput docutils container">
@@ -761,7 +771,7 @@ array([ 1.00000000e-06,  5.45328427e-03,  8.07343315e-03,  1.66177053e-02,
 </div>
 </div>
 <div class="section" id="Tao-method-commands">
-<h1>Tao method commands<a class="headerlink" href="#Tao-method-commands" title="Permalink to this headline"></a></h1>
+<h1>Tao method commands<a class="headerlink" href="#Tao-method-commands" title="Permalink to this heading"></a></h1>
 <p>For convenience, all of these commands are available as methods of the Tao class, and automatically parse the output.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
@@ -944,7 +954,7 @@ array([ 2.81638383e-03, -1.06486491e-03,  1.27317734e-04,  2.78171648e-04,
 </pre></div></div>
 </div>
 <div class="section" id="lat_list">
-<h2>lat_list<a class="headerlink" href="#lat_list" title="Permalink to this headline"></a></h2>
+<h2>lat_list<a class="headerlink" href="#lat_list" title="Permalink to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">lat_list</span></code> can be used to efficiently extract array data</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
@@ -1208,7 +1218,7 @@ plt.plot(tao.lat_list(&#39;*&#39;, &#39;ele.s&#39;, flags=&#39;-array_out -index
 </div>
 </div>
 <div class="section" id="All-method-commands">
-<h1>All method commands<a class="headerlink" href="#All-method-commands" title="Permalink to this headline"></a></h1>
+<h1>All method commands<a class="headerlink" href="#All-method-commands" title="Permalink to this heading"></a></h1>
 <p>There are many method commands. Please explore the documentation to find the ones that will best suit your needs.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
@@ -1248,7 +1258,7 @@ len(all_cmds)
 </div>
 </div>
 <div class="section" id="Other-Tao-instances">
-<h1>Other Tao instances<a class="headerlink" href="#Other-Tao-instances" title="Permalink to this headline"></a></h1>
+<h1>Other Tao instances<a class="headerlink" href="#Other-Tao-instances" title="Permalink to this heading"></a></h1>
 <p>Unfortunately there can only be one Tao instance per process, because the internal structures are held in memory and accessed via ctypes. So this will replace the</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
@@ -1286,7 +1296,7 @@ tao.lat_list(&#39;*&#39;, &#39;ele.name&#39;)
 </pre></div></div>
 </div>
 <div class="section" id="Bunch-data">
-<h2>Bunch data<a class="headerlink" href="#Bunch-data" title="Permalink to this headline"></a></h2>
+<h2>Bunch data<a class="headerlink" href="#Bunch-data" title="Permalink to this heading"></a></h2>
 <p>This example has bunch data. There are three methods:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">tao.bunch_params</span></code> to get a dict of statistical data</p></li>
@@ -1489,7 +1499,7 @@ dtype(&#39;&lt;i4&#39;)
 </div>
 </div>
 <div class="section" id="ParticleGroup-from-openPMD-beamphysics">
-<h1>ParticleGroup from openPMD-beamphysics<a class="headerlink" href="#ParticleGroup-from-openPMD-beamphysics" title="Permalink to this headline"></a></h1>
+<h1>ParticleGroup from openPMD-beamphysics<a class="headerlink" href="#ParticleGroup-from-openPMD-beamphysics" title="Permalink to this heading"></a></h1>
 <p>openPMD-beamphysics is an external package that can be useful for further bunch analysis, plotting, and conversion.</p>
 <p><a class="reference external" href="https://github.com/ChristopherMayes/openPMD-beamphysics">https://github.com/ChristopherMayes/openPMD-beamphysics</a></p>
 <p>Here is example usage to extract bunch data and instantiate as a ParticleGroup object.</p>
@@ -1583,7 +1593,7 @@ P2.plot(&#39;x&#39;, &#39;px&#39;)
 </div>
 </div>
 <div class="section" id="Error-handling-and-Debugging">
-<h1>Error handling and Debugging<a class="headerlink" href="#Error-handling-and-Debugging" title="Permalink to this headline"></a></h1>
+<h1>Error handling and Debugging<a class="headerlink" href="#Error-handling-and-Debugging" title="Permalink to this heading"></a></h1>
 <p>All methods have a <code class="docutils literal notranslate"><span class="pre">raises=True</span></code> option. This will raise a RuntimeError if any errors are seen from Tao.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
@@ -1673,7 +1683,7 @@ tao.cmd(&#39;safaf&#39;, raises=False)
 </div>
 </div>
 <div class="section" id="Logging">
-<h1>Logging<a class="headerlink" href="#Logging" title="Permalink to this headline"></a></h1>
+<h1>Logging<a class="headerlink" href="#Logging" title="Permalink to this heading"></a></h1>
 <p>All input commands are recorded as debug messages using standard Python logging.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:

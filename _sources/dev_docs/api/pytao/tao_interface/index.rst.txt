@@ -48,12 +48,12 @@ Module Contents
    respectively, e.g. in ctypes mode, the cmd_real method can be accessed by
    self.ctypes_pipe.cmd_real()
 
-   .. py:method:: cmd_in(self, cmd_str)
+   .. py:method:: cmd_in(cmd_str)
 
       Runs cmd_str at the Tao command line and returns the output as a string
 
 
-   .. py:method:: cmd(self, cmd_str)
+   .. py:method:: cmd(cmd_str)
 
       Runs cmd_str at the Tao command line and prints the output
       to standard out

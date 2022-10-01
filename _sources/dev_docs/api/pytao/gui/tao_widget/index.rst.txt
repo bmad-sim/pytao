@@ -24,29 +24,29 @@ Module Contents
    plot: for DAT_TYPE_Z, the plot where x_axis_type should be checked
    struct_name: for the components of a STRUCT, pass the struct name here
 
-   .. py:method:: print_info(self, *args)
+   .. py:method:: print_info(*args)
 
       Prints diagnostic info about this widget for testing purposes
 
 
-   .. py:method:: value(self)
+   .. py:method:: value()
 
       Returns the value in the input field(s) of self, appropriately typed
       If an invalid value is input, returns None
 
 
-   .. py:method:: copy(self, ttp)
+   .. py:method:: copy(ttp)
 
       Copy the the value(s) of the tk_var(s) of ttp into self
       Does nothing if ttp.param.type != self.param.type
 
 
-   .. py:method:: param_copy(self, tao_param)
+   .. py:method:: param_copy(tao_param)
 
       Copies tao_param.value into self.tk_var (and slaves if appropriate)
 
 
-   .. py:method:: open_file(self)
+   .. py:method:: open_file()
 
       Provides a dialog window for selecting a file
 

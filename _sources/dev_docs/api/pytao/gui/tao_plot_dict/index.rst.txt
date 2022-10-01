@@ -21,7 +21,7 @@ Module Contents
    Specialized dictionary for keeping track of plots and regions in tao
    mode should be either "matplotlib" or "pgplot"
 
-   .. py:method:: place_template(self, template, region=None)
+   .. py:method:: place_template(template, region=None)
 
       Places the given template plot in the specified region
       If no region is specified, automatically chooses the next available region
@@ -30,18 +30,18 @@ Module Contents
       that a valid region name is provided, otherwise the plot will not be placed
 
 
-   .. py:method:: unplace_template(self, template)
+   .. py:method:: unplace_template(template)
 
       Remove the given template from self and unplace it in tao
 
 
-   .. py:method:: unplace_region(self, region)
+   .. py:method:: unplace_region(region)
 
       Unplace whatever template is in the specified region, and remove the
       corresponding entry(ies) from self
 
 
-   .. py:method:: pgplot_update(self)
+   .. py:method:: pgplot_update()
 
       Reads the current state of plot regions in Tao, and
       sets self.pgplot_settings appropriately

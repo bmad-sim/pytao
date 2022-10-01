@@ -41,52 +41,52 @@ Module Contents
 
       
 
-   .. py:method:: enter_axes(self, event)
+   .. py:method:: enter_axes(event)
 
       handles the mouse entering axes
 
 
-   .. py:method:: leave_axes(self, event)
+   .. py:method:: leave_axes(event)
 
       handles the mouse leaving axes
 
 
-   .. py:method:: onKeyPress(self, event)
+   .. py:method:: onKeyPress(event)
 
       handles key presses
 
 
-   .. py:method:: onKeyRelease(self, event)
+   .. py:method:: onKeyRelease(event)
 
       handles releasing key presses
 
 
-   .. py:method:: zoom_factory(self, axes, canv, event, on=False, cid='none', base_scale=1.5)
+   .. py:method:: zoom_factory(axes, canv, event, on=False, cid='none', base_scale=1.5)
 
       controls connections for scroll wheel zooming
 
 
-   .. py:method:: home(self, *args)
+   .. py:method:: home(*args)
 
       Restore the original view.
 
 
-   .. py:method:: pan(self, *args)
+   .. py:method:: pan(*args)
 
       Activate the pan/zoom tool. pan with left button, zoom with right or with with scroll wheel
 
 
-   .. py:method:: help(self)
+   .. py:method:: help()
 
       help tool which opens a tk window with instructions on graph interaction
 
 
-   .. py:method:: redraw(self)
+   .. py:method:: redraw()
 
       forces recalculation of points in window
 
 
-   .. py:method:: slider(self)
+   .. py:method:: slider()
 
       opens a new matplotlib figure with a slider that adjusts the size of a lat layout if one is present or adjusts the width of floor plan elements if a floor plan is present
 

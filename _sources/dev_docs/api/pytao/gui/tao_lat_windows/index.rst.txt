@@ -21,39 +21,39 @@ Module Contents
    displayed when the window is created
    Format for default: [universe, branch, element, base/model/design]
 
-   .. py:method:: refresh(self, event=None, ask=True, *args)
+   .. py:method:: refresh(event=None, ask=True, *args)
 
       This is where most of the element information is actually created
 
 
-   .. py:method:: close_cmd(self, event=None)
+   .. py:method:: close_cmd(event=None)
 
       Ask the user to save any unsaved changes before closing
 
 
-   .. py:method:: s_callback(self, index)
+   .. py:method:: s_callback(index)
 
 
-   .. py:method:: show(self, index)
+   .. py:method:: show(index)
 
       Grids the parameter frame with given index to the body frame
 
 
-   .. py:method:: h_callback(self, index)
+   .. py:method:: h_callback(index)
 
 
-   .. py:method:: hide(self, index)
+   .. py:method:: hide(index)
 
       Un-grids the paramter frame with the given index
 
 
-   .. py:method:: ele_set(self, event=None, refresh_self=True)
+   .. py:method:: ele_set(event=None, refresh_self=True)
 
       Runs set commands for all the parameter frames and refreshes the window
       This window will only be refreshed if refresh_self=True
 
 
-   .. py:method:: check_for_changes(self)
+   .. py:method:: check_for_changes()
 
       Returns True if the current element has unsaved changes
 
@@ -71,15 +71,15 @@ Module Contents
            the multipole information
    pipe: tao_interface object
 
-   .. py:method:: show_all_orders(self, event=None)
+   .. py:method:: show_all_orders(event=None)
 
       Expands the table to include all orders of multipoles
 
 
-   .. py:method:: set_params(self, set_str, event=None)
+   .. py:method:: set_params(set_str, event=None)
 
 
-   .. py:method:: check_for_changes(self)
+   .. py:method:: check_for_changes()
 
 
 
@@ -91,13 +91,13 @@ Module Contents
    with an interface to select which rows/columns
    are displayed
 
-   .. py:method:: save_template(self, event=None)
+   .. py:method:: save_template(event=None)
 
       Writes the current switches to the file in self.template_file
       using the name given in self.temp_save.tk_var (if any)
 
 
-   .. py:method:: temp_file_load(self, event=None)
+   .. py:method:: temp_file_load(event=None)
 
       Tries to load the specified template file, and creates an OptionMenu to pick
       from defined templates if successful.  Also creates a save template button
@@ -106,45 +106,45 @@ Module Contents
       whose values are the switches for those templates
 
 
-   .. py:method:: temp_chooser_callback(self, event=None)
+   .. py:method:: temp_chooser_callback(event=None)
 
       Fills in the switches specified by the template and refreshes
 
 
-   .. py:method:: col_filter_callback(self, event=None)
+   .. py:method:: col_filter_callback(event=None)
 
 
-   .. py:method:: ele_list_callback(self, event=None, *args)
+   .. py:method:: ele_list_callback(event=None, *args)
 
 
-   .. py:method:: open_filter_menu(self, event=None)
+   .. py:method:: open_filter_menu(event=None)
 
       Opens a menu to set the various row filters
 
 
-   .. py:method:: toggle_advanced(self, event=None)
+   .. py:method:: toggle_advanced(event=None)
 
       Toggles self.use_advanced and enables/disables the appropriate widgets
 
 
-   .. py:method:: fill_switches(self, event=None)
+   .. py:method:: fill_switches(event=None)
 
       Fills the switch widgets to reflect the values in self.switches
 
 
-   .. py:method:: get_switches(self, event=None)
+   .. py:method:: get_switches(event=None)
 
       Scans all widgets to get the switches that will be used
 
 
-   .. py:method:: refresh(self, event=None)
+   .. py:method:: refresh(event=None)
 
       Fetches the lattice table with the new table
       parameters and updates the window
       Returns the number of elements found
 
 
-   .. py:method:: open_ele_window(self, event=None)
+   .. py:method:: open_ele_window(event=None)
 
       Opens an element window for the currently selected row
 
@@ -169,14 +169,14 @@ Module Contents
    and the base index for the array will be set to 1 if
    it is not already set
 
-   .. py:method:: apply_callback(self, event=None)
+   .. py:method:: apply_callback(event=None)
 
       Checks that good indices have been input in self.ix_min_var
       and self.ix_max_var, and then copies ele names into ele_which
       for the selected data/var indices
 
 
-   .. py:method:: refresh(self, event=None)
+   .. py:method:: refresh(event=None)
 
       Overload of tao_lattice_window.refresh() that prints the number
       of elements found

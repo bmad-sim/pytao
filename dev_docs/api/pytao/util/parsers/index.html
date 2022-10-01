@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pytao.util.parsers &mdash; PyTao 0.1.7 documentation</title>
+  <title>pytao.util.parsers &mdash; PyTao 0.1.7+6.g9268dda documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
@@ -14,7 +14,9 @@
         <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/sphinx_highlight.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
@@ -31,7 +33,7 @@
             <a href="../../../../../index.html" class="icon icon-home"> PyTao
           </a>
               <div class="version">
-                0.1.7
+                0.1.7+6.g9268dda
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -144,9 +146,9 @@
 }
 </style>
 <div class="section" id="module-pytao.util.parsers">
-<span id="pytao-util-parsers"></span><h1><a class="reference internal" href="#module-pytao.util.parsers" title="pytao.util.parsers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.util.parsers</span></code></a><a class="headerlink" href="#module-pytao.util.parsers" title="Permalink to this headline"></a></h1>
+<span id="pytao-util-parsers"></span><h1><a class="reference internal" href="#module-pytao.util.parsers" title="pytao.util.parsers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytao.util.parsers</span></code></a><a class="headerlink" href="#module-pytao.util.parsers" title="Permalink to this heading"></a></h1>
 <div class="section" id="module-contents">
-<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
 <dl class="py data">
 <dt class="sig sig-object py" id="pytao.util.parsers.DATA_D_COLS">
 <span class="sig-prename descclassname"><span class="pre">pytao.util.parsers.</span></span><span class="sig-name descname"><span class="pre">DATA_D_COLS</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">['ix_d1',</span> <span class="pre">'data_type',</span> <span class="pre">'merit_type',</span> <span class="pre">'ele_ref_name',</span> <span class="pre">'ele_start_name',</span> <span class="pre">'ele_name',</span> <span class="pre">'meas_value',...</span></em><a class="headerlink" href="#pytao.util.parsers.DATA_D_COLS" title="Permalink to this definition"></a></dt>
@@ -169,7 +171,7 @@ dat = parse_data_d_array(lines)
 df = pd.DataFrame(dat)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>lines</strong> (<em>list of str</em>) – The output of the ‘python data_d_array’ command to parse</p>
+<dd class="field-odd"><p><strong>lines</strong> (<em>list</em><em> of </em><em>str</em>) – The output of the ‘python data_d_array’ command to parse</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>datums</strong> – Each dict has keys:
@@ -191,7 +193,7 @@ df = pd.DataFrame(dat)</p>
 <dd><p>Parses the output of tao python derivative</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>lines</strong> (<em>list of str</em>) – The output of the ‘python derivative’ command to parse</p>
+<dd class="field-odd"><p><strong>lines</strong> (<em>list</em><em> of </em><em>str</em>) – The output of the ‘python derivative’ command to parse</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><p><strong>out</strong> – Dictionary with keys corresponding to universe indexes (int),
@@ -213,7 +215,7 @@ with dModel_dVar as the value:</p>
 <dd><p>Parses the output of tao python lat_ele_list</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>lines</strong> (<em>list of str</em>) – The output of the ‘python lat_ele_list’ command to parse</p>
+<dd class="field-odd"><p><strong>lines</strong> (<em>list</em><em> of </em><em>str</em>) – The output of the ‘python lat_ele_list’ command to parse</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p></p>
@@ -230,7 +232,7 @@ with dModel_dVar as the value:</p>
 <dd><p>Parses the output of a tao python matix</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>lines</strong> (<em>list of str</em>) – The output of the ‘python matrix’ command to parse</p>
+<dd class="field-odd"><p><strong>lines</strong> (<em>list</em><em> of </em><em>str</em>) – The output of the ‘python matrix’ command to parse</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>‘mat6’ : np.array of shape (6,6)
@@ -240,6 +242,45 @@ with dModel_dVar as the value:</p>
 <dd class="field-odd"><p>dict with keys</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pytao.util.parsers.parse_plot_list">
+<span class="sig-prename descclassname"><span class="pre">pytao.util.parsers.</span></span><span class="sig-name descname"><span class="pre">parse_plot_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lines</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.parsers.parse_plot_list" title="Permalink to this definition"></a></dt>
+<dd><p>Parses the output of the <cite>python plot_list</cite> command.</p>
+<p>This could be region or template data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lines</strong> (<em>list</em><em> of </em><em>str</em>) – The output of the ‘python plot_list’ command to parse</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul>
+<li><p><em>if r_or_g == ‘t’</em> – dict with template_name:index</p></li>
+<li><p><em>if r_or_g == ‘r’</em> –</p>
+<dl class="simple">
+<dt>list of dicts with keys:</dt><dd><p>region
+ix
+plot_name
+visible
+x1, x2, y1, y1</p>
+</dd>
+</dl>
+</li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pytao.util.parsers.parse_var_v_array_line">
+<span class="sig-prename descclassname"><span class="pre">pytao.util.parsers.</span></span><span class="sig-name descname"><span class="pre">parse_var_v_array_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.parsers.parse_var_v_array_line" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pytao.util.parsers.parse_var_v_array">
+<span class="sig-prename descclassname"><span class="pre">pytao.util.parsers.</span></span><span class="sig-name descname"><span class="pre">parse_var_v_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lines</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytao.util.parsers.parse_var_v_array" title="Permalink to this definition"></a></dt>
+<dd><p>Parses the output of <cite>python var_v_array</cite> into a list of dicts</p>
 </dd></dl>
 
 </div>

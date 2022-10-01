@@ -24,7 +24,7 @@ Module Contents
    Subclasses MUST set self.root before running this
    __init__ method.
 
-   .. py:method:: destroy(self)
+   .. py:method:: destroy()
 
       Overloaded here to remove self from root.refresh_windows
 
@@ -52,13 +52,13 @@ Module Contents
    Subclasses set tao_id before running this __init__ to handle
    adding/removing themselves from root window lists
 
-   .. py:method:: bind_mouse(self, event)
+   .. py:method:: bind_mouse(event)
 
 
-   .. py:method:: unbind_mouse(self, event)
+   .. py:method:: unbind_mouse(event)
 
 
-   .. py:method:: mouse_scroll(self, event)
+   .. py:method:: mouse_scroll(event)
 
 
 
@@ -72,22 +72,22 @@ Module Contents
    self.frame should be used for placing widgets into
    this frame
 
-   .. py:method:: frame_handler(self, event)
+   .. py:method:: frame_handler(event)
 
 
-   .. py:method:: canvas_handler(self, event)
+   .. py:method:: canvas_handler(event)
 
 
-   .. py:method:: scrollhelper(self, event)
+   .. py:method:: scrollhelper(event)
 
 
-   .. py:method:: bind_mouse(self, event)
+   .. py:method:: bind_mouse(event)
 
 
-   .. py:method:: unbind_mouse(self, event)
+   .. py:method:: unbind_mouse(event)
 
 
-   .. py:method:: mouse_scroll(self, event)
+   .. py:method:: mouse_scroll(event)
 
 
 
@@ -99,12 +99,12 @@ Module Contents
    number of columns
    tao_list should be a list of tao_parameters
 
-   .. py:method:: set_params(self, set_str, event=None)
+   .. py:method:: set_params(set_str, event=None)
 
       Runs tao_set on self.tao_list
 
 
-   .. py:method:: check_for_changes(self)
+   .. py:method:: check_for_changes()
 
       Runs check_for_changes (from tao_set) on self.tao_list
 
@@ -141,29 +141,29 @@ Module Contents
            the str.format() method
            example format strings: "set data 1@{}|", "set data 1@{}[{}]|"
 
-   .. py:method:: refresh(self)
+   .. py:method:: refresh()
 
 
-   .. py:method:: fill(self, index, event=None)
+   .. py:method:: fill(index, event=None)
 
       Fills the column specified by bulk_template to the bulk edit value,
       saves the bulk edit value for efficient calls to tao_set,
       and clears the bulk edit box
 
 
-   .. py:method:: fill_callback(self, index, event=None)
+   .. py:method:: fill_callback(index, event=None)
 
 
-   .. py:method:: apply(self)
+   .. py:method:: apply()
 
 
-   .. py:method:: open_detail_window_callback(self, index)
+   .. py:method:: open_detail_window_callback(index)
 
 
-   .. py:method:: open_detail_window(self, index)
+   .. py:method:: open_detail_window(index)
 
 
-   .. py:method:: detail_set_callback(self, tao_list, set_str)
+   .. py:method:: detail_set_callback(tao_list, set_str)
 
 
 
@@ -176,34 +176,34 @@ Module Contents
    machines, for example).  Table is read only but individual
    entries can still be opened for editing with double click.
 
-   .. py:method:: toggle_show_all(self, event=None)
+   .. py:method:: toggle_show_all(event=None)
 
 
-   .. py:method:: refresh(self)
+   .. py:method:: refresh()
 
       Creates a treeview to display the table information,
       and binds double click to open one item
 
 
-   .. py:method:: open_detail_window_callback(self, event=None)
+   .. py:method:: open_detail_window_callback(event=None)
 
       Checks the table for the currently selected row and
       makes a call to open_detail_window_callback
 
 
-   .. py:method:: open_bulk_window(self, event=None)
+   .. py:method:: open_bulk_window(event=None)
 
       Opens a window with bulk settings for meas_value,
       ref_value, weight, and good_user.
 
 
-   .. py:method:: bulk_set(self, fill_choices, parent)
+   .. py:method:: bulk_set(fill_choices, parent)
 
       Runs set commands to set variables specified in a bulk window
       appropriately.
 
 
-   .. py:method:: make_bulk_frame(self, parent, bulk_item, usebmd=False)
+   .. py:method:: make_bulk_frame(parent, bulk_item, usebmd=False)
 
       Creates a frame with all the widgets needed for one parameter in the
       bulk settings window.
@@ -214,12 +214,12 @@ Module Contents
       Returns a tuple (fill_frame, where_frame, fill_vars)
 
 
-   .. py:method:: open_detail_window(self, index)
+   .. py:method:: open_detail_window(index)
 
       Opens up a detail window for the given index.
 
 
-   .. py:method:: detail_set_callback(self, tao_list, set_str)
+   .. py:method:: detail_set_callback(tao_list, set_str)
 
 
 
@@ -237,26 +237,26 @@ Module Contents
    In addition, the class provides tk variables for each of these widgets,
            named the same but without _chooser at the end
 
-   .. py:method:: make_branch(self, event=None)
+   .. py:method:: make_branch(event=None)
 
       This is necessary because the list of options
       to show in the branch chooser depends on what
       universe you are in
 
 
-   .. py:method:: make_ele_chooser(self, event=None)
+   .. py:method:: make_ele_chooser(event=None)
 
       This is necessary because different branches
       have different lists of elements to display
 
 
-   .. py:method:: update(self, event=None)
+   .. py:method:: update(event=None)
 
       Sets self.ele to its index value (as a string)
       Returns 0 if setting self.ele failed, 1 if succeeded
 
 
-   .. py:method:: update_branch(self, *args)
+   .. py:method:: update_branch(*args)
 
       Trace callback for self.branch_name to update self.branch
 
@@ -278,12 +278,12 @@ Module Contents
    num_bars: the number of progress bars
    Other init arguments are passed to the tk.Toplevel.__init__ method
 
-   .. py:method:: set_max(self, ix, val)
+   .. py:method:: set_max(ix, val)
 
       Sets the max value for self.bars[ix] to val
 
 
-   .. py:method:: set_val(self, ix, val, update=True)
+   .. py:method:: set_val(ix, val, update=True)
 
       Sets to value of self.bars[ix] to val
       Note that self.set_max should be used first to set the progress bar max
@@ -306,13 +306,13 @@ Module Contents
    orient: grid the buttons horizontally or vertically (may be 'horizontal' or 'vertical')
    Other arguments are passed to the tk.Toplevel.__init__ method
 
-   .. py:method:: button_callback(self, choice)
+   .. py:method:: button_callback(choice)
 
 
-   .. py:method:: button_cmd(self, choice)
+   .. py:method:: button_cmd(choice)
 
 
-   .. py:method:: cancel(self, *args)
+   .. py:method:: cancel(*args)
 
 
 
@@ -331,20 +331,20 @@ Module Contents
    new_tab_func will likely be the init method for a tk.Frame subclass
    pipe: the tao_interface in use
 
-   .. py:method:: add_tab(self, ix=None, *args, **kwargs)
+   .. py:method:: add_tab(ix=None, *args, **kwargs)
 
       Adds a new tab at the specified index
       If ix is not specified, the tab is added at the end of the list
       *args and **kwargs are passed to self.new_tab_func after self
 
 
-   .. py:method:: remove_tab(self, ix, destroy=False)
+   .. py:method:: remove_tab(ix, destroy=False)
 
       Removes the tab at the specified position
       Does not destroy the removed frame unless destroy==True
 
 
-   .. py:method:: update_name(self, ix=None)
+   .. py:method:: update_name(ix=None)
 
       Updates the tab title to match the frame name for the
       tab in the specified position
@@ -363,64 +363,64 @@ Module Contents
    pipe: the tao_interface used to querry/set ele shapes
    which: either "lat_layout" or "floor_plan"
 
-   .. py:method:: refresh(self)
+   .. py:method:: refresh()
 
       Sets the table contents equal to the output of
       python shape_list lat_layout/floor_plan as requested
 
 
-   .. py:method:: width_adjust(self, event=None)
+   .. py:method:: width_adjust(event=None)
 
       Adjusts column widths and total table width to show all contents
 
 
-   .. py:method:: get_focus_ix(self)
+   .. py:method:: get_focus_ix()
 
       Returns the index of the focus row (lowest index = 0, not 1)
 
 
-   .. py:method:: edit_shape(self, event=None)
+   .. py:method:: edit_shape(event=None)
 
       Opens a window for editing the selected ele_shape
 
 
-   .. py:method:: swap_shapes(self, ix1, ix2)
+   .. py:method:: swap_shapes(ix1, ix2)
 
       Swaps the shapes with indices ix1 and ix2
       (0 based) and refreshes the window
 
 
-   .. py:method:: move_up(self, event=None)
+   .. py:method:: move_up(event=None)
 
       Moves the selected item up one position, and shifts
       the others down by one
 
 
-   .. py:method:: move_down(self, event=None)
+   .. py:method:: move_down(event=None)
 
       Moves the selected item down one position, and shifts
       the others down by one
 
 
-   .. py:method:: duplicate_item(self, event=None)
+   .. py:method:: duplicate_item(event=None)
 
       Copies the selected shape and adds a duplicate of it to
       the shape table at the next index
 
 
-   .. py:method:: delete_item(self, event=None)
+   .. py:method:: delete_item(event=None)
 
       Removes the selected item from the ele_shape table
       and shifts other ele_shapes accordingly
 
 
-   .. py:method:: new_at_top(self, event=None)
+   .. py:method:: new_at_top(event=None)
 
       Adds a new empty shape to the top of the ele_list
       and shifts other elements down
 
 
-   .. py:method:: new_at_bottom(self, event=None)
+   .. py:method:: new_at_bottom(event=None)
 
       Adds a new empty shape to the bottom of the ele_list
       and shifts other elements down

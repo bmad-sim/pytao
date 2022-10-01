@@ -11,24 +11,24 @@ Module Contents
 
    Bases: :py:obj:`pytao.gui.tao_beam_windows.tk.Tk`
 
-   .. py:method:: start_main(self)
+   .. py:method:: start_main()
 
 
-   .. py:method:: sh_console(self, event=None)
+   .. py:method:: sh_console(event=None)
 
       Packs or unpacks self.console as appropriate
 
 
-   .. py:method:: tao_call(self, event=None)
+   .. py:method:: tao_call(event=None)
 
       Runs the command file in self.call_file, appends it to the history,
       and clears self.call_file
 
 
-   .. py:method:: menubar_init(self)
+   .. py:method:: menubar_init()
 
 
-   .. py:method:: default_plots(self, include_init=True)
+   .. py:method:: default_plots(include_init=True)
 
       If self.plot_mode == "matplotlib", opens all the
       plot templates listed in plot.gui.init in
@@ -37,124 +37,124 @@ Module Contents
       Will only place plots from the place buffer if include_init is False
 
 
-   .. py:method:: tao_load(self, init_frame)
+   .. py:method:: tao_load(init_frame)
 
       Handles the startup of tao, including parsing gui.init and commandline
       arguments.
 
 
-   .. py:method:: new_data_cmd(self)
+   .. py:method:: new_data_cmd()
 
 
-   .. py:method:: new_var_cmd(self)
+   .. py:method:: new_var_cmd()
 
 
-   .. py:method:: new_template_cmd(self)
+   .. py:method:: new_template_cmd()
 
 
-   .. py:method:: write_data_cmd(self)
+   .. py:method:: write_data_cmd()
 
       Writes a fortran namelist file for all d2_arrays
 
 
-   .. py:method:: write_var_cmd(self)
+   .. py:method:: write_var_cmd()
 
       Writes a fortran namelist file for all v1_arrays
 
 
-   .. py:method:: reinit_cmd(self)
+   .. py:method:: reinit_cmd()
 
       Quit Tao, destroy the main frame, and respawn the init frame
 
 
-   .. py:method:: quit_cmd(self, event='')
+   .. py:method:: quit_cmd(event='')
 
 
-   .. py:method:: optimizer_cmd(self)
+   .. py:method:: optimizer_cmd()
 
 
-   .. py:method:: beam_init_cmd(self)
+   .. py:method:: beam_init_cmd()
 
 
-   .. py:method:: plot_template_cmd(self)
+   .. py:method:: plot_template_cmd()
 
 
-   .. py:method:: plot_region_cmd(self)
+   .. py:method:: plot_region_cmd()
 
 
-   .. py:method:: building_wall_cmd(self)
+   .. py:method:: building_wall_cmd()
 
 
-   .. py:method:: wave_cmd(self)
+   .. py:method:: wave_cmd()
 
 
-   .. py:method:: set_global_vars_cmd(self)
+   .. py:method:: set_global_vars_cmd()
 
 
-   .. py:method:: set_bmad_com_cmd(self)
+   .. py:method:: set_bmad_com_cmd()
 
 
-   .. py:method:: view_vars_cmd(self)
+   .. py:method:: view_vars_cmd()
 
 
-   .. py:method:: view_data_cmd(self)
+   .. py:method:: view_data_cmd()
 
 
-   .. py:method:: view_ele_cmd(self)
+   .. py:method:: view_ele_cmd()
 
 
-   .. py:method:: view_lattice_cmd(self)
+   .. py:method:: view_lattice_cmd()
 
 
-   .. py:method:: lat_layout_shape_cmd(self)
+   .. py:method:: lat_layout_shape_cmd()
 
 
-   .. py:method:: floor_plan_shape_cmd(self)
+   .. py:method:: floor_plan_shape_cmd()
 
 
-   .. py:method:: new_data_event(self, event)
+   .. py:method:: new_data_event(event)
 
 
-   .. py:method:: new_var_event(self, event)
+   .. py:method:: new_var_event(event)
 
 
-   .. py:method:: new_template_event(self, event)
+   .. py:method:: new_template_event(event)
 
 
-   .. py:method:: global_vars_event(self, event)
+   .. py:method:: global_vars_event(event)
 
 
-   .. py:method:: bmad_com_event(self, event)
+   .. py:method:: bmad_com_event(event)
 
 
-   .. py:method:: view_data_event(self, event)
+   .. py:method:: view_data_event(event)
 
 
-   .. py:method:: view_ele_event(self, event)
+   .. py:method:: view_ele_event(event)
 
 
-   .. py:method:: view_lattice_event(self, event)
+   .. py:method:: view_lattice_event(event)
 
 
-   .. py:method:: plot_template_event(self, event)
+   .. py:method:: plot_template_event(event)
 
 
-   .. py:method:: plot_region_event(self, event)
+   .. py:method:: plot_region_event(event)
 
 
-   .. py:method:: view_vars_event(self, event)
+   .. py:method:: view_vars_event(event)
 
 
-   .. py:method:: beam_init_event(self, event)
+   .. py:method:: beam_init_event(event)
 
 
-   .. py:method:: reinit_event(self, event)
+   .. py:method:: reinit_event(event)
 
 
-   .. py:method:: view_history_cmd(self)
+   .. py:method:: view_history_cmd()
 
 
-   .. py:method:: debug_cmd(self)
+   .. py:method:: debug_cmd()
 
 
 

@@ -27,21 +27,21 @@ Module Contents
    tao = tao_ctypes.Tao()
    tao.init("command line args here...")
 
-   .. py:method:: get_output(self, reset=True)
+   .. py:method:: get_output(reset=True)
 
       Returns a list of output strings.
       If reset, the internal Tao buffers will be reset.
 
 
-   .. py:method:: reset_output(self)
+   .. py:method:: reset_output()
 
       Resets all output buffers
 
 
-   .. py:method:: init(self, cmd)
+   .. py:method:: init(cmd)
 
 
-   .. py:method:: cmd(self, cmd, raises=True)
+   .. py:method:: cmd(cmd, raises=True)
 
       Runs a command, and returns the text output
 
@@ -51,7 +51,7 @@ Module Contents
       Returns a list of strings
 
 
-   .. py:method:: cmds(self, cmds, suppress_lattice_calc=True, suppress_plotting=True, raises=True)
+   .. py:method:: cmds(cmds, suppress_lattice_calc=True, suppress_plotting=True, raises=True)
 
       Runs a list of commands
 
@@ -70,13 +70,13 @@ Module Contents
       :returns: list of results corresponding to the commands
 
 
-   .. py:method:: cmd_real(self, cmd, raises=True)
+   .. py:method:: cmd_real(cmd, raises=True)
 
 
-   .. py:method:: cmd_integer(self, cmd, raises=True)
+   .. py:method:: cmd_integer(cmd, raises=True)
 
 
-   .. py:method:: register_cell_magic(self)
+   .. py:method:: register_cell_magic()
 
       Registers a cell magic in Jupyter notebooks
       Invoke by
@@ -104,26 +104,25 @@ Module Contents
    If use_tempdir==True, then the input_file and its directory will be copied to a temporary directory.
    If workdir is given, then this temporary directory will be placed in workdir.
 
-   .. py:method:: configure(self)
-
-
-   .. py:method:: init_line(self)
-
-
-   .. py:method:: reinit(self)
-
-
-   .. py:method:: vprint(self, *args, **kwargs)
-
-
-   .. py:method:: globals(self)
-      :property:
+   .. py:property:: globals
 
       Returns dict of tao parameters.
       Note that the name of this function cannot be named 'global'
 
 
-   .. py:method:: evaluate(self, expression)
+   .. py:method:: configure()
+
+
+   .. py:method:: init_line()
+
+
+   .. py:method:: reinit()
+
+
+   .. py:method:: vprint(*args, **kwargs)
+
+
+   .. py:method:: evaluate(expression)
 
       .. rubric:: Example
 
