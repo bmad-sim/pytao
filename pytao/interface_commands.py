@@ -2822,9 +2822,9 @@ def plot_list(tao, r_or_g, *, verbose=False, as_dict=True, raises=True):
     
     Returns
     -------
-    if region data:
-        dict of 
-    if template_data:
+    if r_or_g == 't'
+        dict with template_name:index
+    if r_or_g == 'r'
         list of dicts with keys:
             region
             ix
@@ -2923,19 +2923,17 @@ def plot_histogram(tao, curve_name, *, verbose=False, as_dict=True, raises=True)
     return __execute(tao, cmd, as_dict, raises, method_name='plot_histogram', cmd_type='string_list')
 
 
-def plot_plot_manage(tao, plot_location, plot_name, n_graph, graph1_name, graph2_name, graphN_name, *, verbose=False, as_dict=True, raises=True):
+def plot_template_manage(tao, template_location, template_name, *, n_graph='-1', graph_names='', verbose=False, as_dict=True, raises=True):
     """
     
     Template plot creation or destruction.
     
     Parameters
     ----------
-    plot_location
-    plot_name
-    n_graph
-    graph1_name
-    graph2_name
-    graphN_name
+    template_location
+    template_name
+    n_graph : default=-1
+    graph_names : default=
     
     Returns
     -------
@@ -2944,30 +2942,31 @@ def plot_plot_manage(tao, plot_location, plot_name, n_graph, graph1_name, graph2
     Notes
     -----
     Command syntax:
-      python plot_plot_manage {plot_location}^^{plot_name}^^
-                             {n_graph}^^{graph1_name}^^{graph2_name}^^{graphN_name}
+      python plot_template_manage {template_location}^^{template_name}^^
+                             {n_graph}^^{graph_names}
     
-    Use "@Tnnn" sytax for {plot_location} to place a plot. A plot may be placed in a 
-    spot where there is already a template.
-    Extra graph names can be included with ^^ connection. 
-    If {n_graph} is set to -1 then just delete the plot.
+    Where:
+      {template_location} is the location to place or delete a template plot. Use "@Tnnn" syntax for the location.
+      {template_name} is the name of the template plot. If deleting a plot this name is immaterial.
+      {n_graph} is the number of associated graphs. If set to -1 then any existing template plot is deleted.
+      {graph_names} are the names of the graphs.  graph_names should be in the form:
+         graph1_name^^graph2_name^^...^^graphN_name
+      for N=n_graph names
     
     Examples
     --------
     Example: 1
      init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching
      args:
-       plot_location: @T1
-       plot_name: beta
-       n_graph: 1
-       graph1_name: g1
-       graph2_name: g2
-       graphN_name: gN
+       template_location: @T1
+       template_name: beta
+       n_graph: 2
+       graph_names: g1^^g2
     
     """
-    cmd = f'python plot_plot_manage {plot_location}^^{plot_name}^^{n_graph}^^{graph1_name}^^{graph2_name}^^{graphN_name}'
+    cmd = f'python plot_template_manage {template_location}^^{template_name}^^{n_graph}^^{graph_names}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='plot_plot_manage', cmd_type='None')
+    return __execute(tao, cmd, as_dict, raises, method_name='plot_template_manage', cmd_type='None')
 
 
 def plot_curve_manage(tao, graph_name, curve_index, curve_name, *, verbose=False, as_dict=True, raises=True):

@@ -442,10 +442,10 @@ def test_plot_histogram_1():
     ret = interface_commands.plot_histogram(tao, curve_name='r33.g.x')
             
         
-def test_plot_plot_manage_1():
+def test_plot_template_manage_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching -noplot'))
-    ret = interface_commands.plot_plot_manage(tao, plot_location='@T1', plot_name='beta', n_graph='1', graph1_name='g1', graph2_name='g2', graphN_name='gN')
+    ret = interface_commands.plot_template_manage(tao, template_location='@T1', template_name='beta', n_graph='2', graph_names='g1^^g2')
             
         
 def test_plot_curve_manage_1():
