@@ -114,14 +114,26 @@ def process_csr_wake_data(data):
     
     # Sort by ix_ele
     skeys = sorted(data, key=lambda n: data[n]['ix_ele'] )
-    labels = data[skeys[0]]['labels'].tolist()
+    labels = data[skeys[0]]['labels']#.tolist()
     #return labels
 
     output = {}
     # Concatenate all
     dat = np.concatenate([data[key]['data'] for key in skeys ])
-    output['s_position'] = np.concatenate([data[key]['s_positions'] for key in skeys ])
-    
+    # s are relative to the element
+    slist = []
+    s0 = 0
+    for key in skeys:
+        s_rel = data[key]['s_positions']
+        s = s_rel + s0
+        slist.append(s)
+        s0 = s[-1]
+    output['s_position'] = np.hstack(slist)
+    # OLD
+    # output['s_position'] = np.concatenate([data[key]['s_positions'] for key in skeys ])
+
+
+
     # Fill out ix_ele
     output['ix_ele'] = np.concatenate([np.full(len(data[key]['s_positions']),  data[key]['ix_ele']) for key in skeys])
     
@@ -171,7 +183,7 @@ def csr_wake_stats_at_step(data, step=0):
     return avkick, stdkick, avz, stdz    
 
 
-def write_csr_wake_data_h5(h5, data, name=None):
+def write_csr_wake_data_h5(h5, data, name='csr_wake'):
     """
     Write parsed csr_wake data to an open h5 handle
     """
@@ -187,7 +199,7 @@ def write_csr_wake_data_h5(h5, data, name=None):
             else:
                 g.attrs[k] = v
                 
-def read_csr_wake_data_h5(h5, name=None):
+def read_csr_wake_data_h5(h5, name='csr_wake'):
     """
     Read csr_wake data from h5 file.
     
