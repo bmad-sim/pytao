@@ -22,9 +22,10 @@ def bunch_data(tao, ele_id, *, which='model', ix_bunch=1,  verbose=False):
         
     Returns
     -------
-    data : dict of arrays, with keys:
-        'x', 'px', 'y', 'py', 't', 'pz', 'status', 'weight', 'z', 'species'
+    data : dict
+         dict of arrays, with keys 'x', 'px', 'y', 'py', 't', 'pz', 'status', 'weight', 'z', 'species'
         
+
     Examples
     --------
     Example: 1

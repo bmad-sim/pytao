@@ -2,10 +2,9 @@ import os
 import ctypes
 import numpy as np
 from pytao import tao_ctypes
-from pytao.tao_ctypes import extra_commands
 from pytao.tao_ctypes.util import error_in_lines
 from pytao.util.parameters import tao_parameter_dict
-from .tools import full_path
+from pytao.tao_ctypes.tools import full_path
 import tempfile
 import shutil
 import types
@@ -47,6 +46,7 @@ class Tao:
         # interface_commands file.
         
         from pytao import interface_commands 
+        from pytao.tao_ctypes import extra_commands
         
         # Library needs to be set.
         self.so_lib_file = None

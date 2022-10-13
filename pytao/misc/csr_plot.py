@@ -67,6 +67,7 @@ def plot_csr_stats(data, **kwargs):
     nsteps = len(data['z'])
     
     stats = np.array([csr_wake_stats_at_step(data, step=i) for i in range(nsteps)])
+    print(stats.shape)
     
     fig, ax = plt.subplots(**kwargs)
     

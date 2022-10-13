@@ -28,6 +28,12 @@ def test_branch1_1():
     ret = interface_commands.branch1(tao, ix_uni='1', ix_branch='0')
             
         
+def test_bunch_comb_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init -noplot'))
+    ret = interface_commands.bunch_comb(tao, who='x.beta')
+            
+        
 def test_bunch_params_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init -noplot'))

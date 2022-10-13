@@ -166,6 +166,67 @@ def branch1(tao, ix_uni, ix_branch, *, verbose=False, as_dict=True, raises=True)
     return __execute(tao, cmd, as_dict, raises, method_name='branch1', cmd_type='string_list')
 
 
+def bunch_comb(tao, who, *, ix_uni='', ix_branch='', ix_bunch='1', flags='-array_out', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Outputs bunch parameters at a comb point. 
+    
+    Parameters
+    ----------
+    who
+    ix_uni : optional
+    ix_branch : optional
+    ix_bunch : default=1
+    flags : default=-array_out
+    
+    Returns
+    -------
+    string_list
+        if '-array_out' not in flags
+    real_array
+        if '-array_out' in flags
+    
+    Notes
+    -----
+    Command syntax:
+      python bunch_comb {flags} {who} {ix_uni}@{ix_branch} {ix_bunch}
+    
+    Where:
+      {flag} is optionally "-array_out".
+      {ix_uni} is a universe index. Defaults to s%global%default_universe.
+      {ix_branch} is a branch index. Defaults to s%global%default_branch.
+      {ix_bunch} is the bunch index. Defaults to 1.
+      {who} is one of:
+        x, px, y, py, z, pz, t, s, spin.x, spin.y, spin.z, p0c, beta     -- centroid 
+        x.Q, y.Q, z.Q, a.Q, b.Q, c.Q where Q is one of: beta, alpha, gamma, phi, eta, etap,
+                                                                    sigma, sigma_p, emit, norm_emit
+        sigma.IJ where I, J in range [1,6]
+        rel_min.I, rel_max.I where I in range [1,6]
+        charge_live, n_particle_live, n_particle_lost_in_ele, ix_ele
+    
+      If flags=-array_out, the output will be available in the tao_c_interface_com%c_real.
+    
+      Note: If ix_uni or ix_branch is present, "@" must be present.
+    
+    Example:
+      python bunch_comb py 2@1 1
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init
+     args:
+       who: x.beta
+    
+    """
+    cmd = f'python bunch_comb {flags} {who} {ix_uni}@{ix_branch} {ix_bunch}'
+    if verbose: print(cmd)
+    if '-array_out' not in flags:
+        return __execute(tao, cmd, as_dict, raises, method_name='bunch_comb', cmd_type='string_list')
+    if '-array_out' in flags:
+        return __execute(tao, cmd, as_dict, raises, method_name='bunch_comb', cmd_type='real_array')
+
+
 def bunch_params(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
@@ -2720,8 +2781,9 @@ def orbit_at_s(tao, *, ix_uni='', ele='', s_offset='', which='model', verbose=Fa
 def place_buffer(tao, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Output place command buffer and reset the buffer.
+    Output the place command buffer and reset the buffer.
     The contents of the buffer are the place commands that the user has issued.
+    See the Tao manual for more details.
     
     Returns
     -------
@@ -2747,7 +2809,7 @@ def place_buffer(tao, *, verbose=False, as_dict=True, raises=True):
 def plot_curve(tao, curve_name, *, verbose=False, as_dict=True, raises=True):
     """
     
-    Output curve information for a plot
+    Output curve information for a plot.
     
     Parameters
     ----------
@@ -4001,10 +4063,6 @@ def var_v_array(tao, v1_var, *, verbose=False, as_dict=True, raises=True):
     Parameters
     ----------
     v1_var
-    
-    Returns
-    -------
-    string_list
     
     Notes
     -----
