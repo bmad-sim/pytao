@@ -8,19 +8,19 @@
       
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.5.2">
     
     
       
-        <title>PyTao</title>
+        <title>Development - PyTao</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.9f9400aa.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.9f9400aa.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.cbb835fc.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
         
       
       
@@ -37,11 +37,11 @@
       
     
     
-      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="stylesheets/extra.css">
+      <link rel="stylesheet" href="../stylesheets/extra.css">
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#pytao" class="md-skip">
+        <a href="#development-guidelines" class="md-skip">
           Skip to content
         </a>
       
@@ -84,7 +84,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="PyTao" class="md-header__button md-logo" aria-label="PyTao" data-md-component="logo">
+    <a href=".." title="PyTao" class="md-header__button md-logo" aria-label="PyTao" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -103,7 +103,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              Development
             
           </span>
         </div>
@@ -197,12 +197,10 @@
         
   
   
-    
-  
 
 
   <li class="md-tabs__item">
-    <a href="." class="md-tabs__link md-tabs__link--active">
+    <a href=".." class="md-tabs__link">
       Home
     </a>
   </li>
@@ -214,7 +212,7 @@
 
 
   <li class="md-tabs__item">
-    <a href="installation/" class="md-tabs__link">
+    <a href="../installation/" class="md-tabs__link">
       Installation
     </a>
   </li>
@@ -229,7 +227,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="examples/basic/" class="md-tabs__link">
+      <a href="../examples/basic/" class="md-tabs__link">
         Examples
       </a>
     </li>
@@ -239,13 +237,15 @@
         
   
   
+    
+  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="development/" class="md-tabs__link">
+      <a href="./" class="md-tabs__link md-tabs__link--active">
         Dev
       </a>
     </li>
@@ -261,7 +261,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="api/pytao/" class="md-tabs__link">
+      <a href="../api/pytao/" class="md-tabs__link">
         API
       </a>
     </li>
@@ -289,7 +289,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="PyTao" class="md-nav__button md-logo" aria-label="PyTao" data-md-component="logo">
+    <a href=".." title="PyTao" class="md-nav__button md-logo" aria-label="PyTao" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -318,21 +318,11 @@
 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
         Home
       </a>
-      
     </li>
   
 
@@ -345,7 +335,7 @@
   
   
     <li class="md-nav__item">
-      <a href="installation/" class="md-nav__link">
+      <a href="../installation/" class="md-nav__link">
         Installation
       </a>
     </li>
@@ -398,7 +388,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/basic/" class="md-nav__link">
+      <a href="../examples/basic/" class="md-nav__link">
         PyTao Basics
       </a>
     </li>
@@ -412,7 +402,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/bunch/" class="md-nav__link">
+      <a href="../examples/bunch/" class="md-nav__link">
         Bunch Commands
       </a>
     </li>
@@ -426,7 +416,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/special_parsers/" class="md-nav__link">
+      <a href="../examples/special_parsers/" class="md-nav__link">
         Special Parsers
       </a>
     </li>
@@ -440,7 +430,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/fodo/" class="md-nav__link">
+      <a href="../examples/fodo/" class="md-nav__link">
         FODO optics
       </a>
     </li>
@@ -454,7 +444,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/advanced/" class="md-nav__link">
+      <a href="../examples/advanced/" class="md-nav__link">
         Advanced usage
       </a>
     </li>
@@ -474,12 +464,14 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
       
       
       
@@ -504,11 +496,80 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="development/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Development
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Development
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-local-checkout" class="md-nav__link">
+    Creating a Local Checkout
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#commit-guidelines" class="md-nav__link">
+    Commit Guidelines
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#merging-changes" class="md-nav__link">
+    Merging Changes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#syncing-your-local-checkout" class="md-nav__link">
+    Syncing your Local Checkout
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#note" class="md-nav__link">
+    Note
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -558,7 +619,7 @@
   
   
     <li class="md-nav__item">
-      <a href="api/pytao/" class="md-nav__link">
+      <a href="../api/pytao/" class="md-nav__link">
         PyTao
       </a>
     </li>
@@ -592,6 +653,49 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-local-checkout" class="md-nav__link">
+    Creating a Local Checkout
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#commit-guidelines" class="md-nav__link">
+    Commit Guidelines
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#merging-changes" class="md-nav__link">
+    Merging Changes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#syncing-your-local-checkout" class="md-nav__link">
+    Syncing your Local Checkout
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#note" class="md-nav__link">
+    Note
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -607,25 +711,122 @@
 
                   
 
-  <a href="https://github.com/bmad-sim/pytao/edit/master/docs/index.md" title="Edit this page" class="md-content__button md-icon">
+  <a href="https://github.com/bmad-sim/pytao/edit/master/docs/development.md" title="Edit this page" class="md-content__button md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
   </a>
 
 
-<h1 id="pytao">PyTao</h1>
-<p><strong>Tao</strong> is an open source general purpose program for charged particle and X-ray
-simulations in accelerators and storage rings. It is built on top of the <em>Bmad</em>
-toolkit (software library) which provides the needed computational routines
-needed to do simulations. Essentially you can think of <em>Tao</em> as a car and <em>Bmad</em>
-as the engine that powers the car. In fact <em>Bmad</em> powers a number of other
-simulation programs but that is getting outside of the scope of this manual.
-It is sometimes convenient to be able to run <em>Tao</em> via Python. For example,in an
-online control system environment.</p>
-<p><strong>PyTao</strong> is wrapper on top of <em>Tao</em> and allow users to access the <em>Tao</em> library
-via <strong>ctypes</strong> or <strong>pexpect</strong>.</p>
-<p>Documentation for <em>Bmad</em> and <em>Tao</em>, as well as information for downloading the
-code if needed is given on the <a href="https://www.classe.cornell.edu/bmad">Bmad web site</a></p>
+<h1 id="development-guidelines">Development Guidelines</h1>
+<p>It is recommended that PyTao is updated and maintained in the following
+way. This workflow was not invented by this project, there are many
+helpful tutorials online like
+<a href="https://guides.github.com/introduction/flow">this</a> if you want more
+information.</p>
+<h2 id="creating-a-local-checkout">Creating a Local Checkout</h2>
+<p>If you want to make changes to a repository the first step is to create
+your own fork. This allows you to create feature branches without
+cluttering the main repository. It also assures that the main repository
+is only added to by Pull Request and review. Repositories can be forked
+from the GitHub site like presented at <a href="https://help.github.com/articles/fork-a-repo">this
+example</a>. Once this
+repository is created, you can clone into your own workspace.</p>
+<div class="highlight"><pre><span></span><code>$ git clone https://YOUR-USERNAME@github.com/YOUR-USERNAME/REPOSITORY.git
+</code></pre></div>
+<p>Now, that we have a copy of the repository create a branch for the
+feature or bug you would like to work on.</p>
+<div class="highlight"><pre><span></span><code>$ git checkout -b my-feature
+
+$ git status
+On branch my-feature
+nothing to commit, working tree clean
+</code></pre></div>
+<h2 id="commit-guidelines">Commit Guidelines</h2>
+<p>Now you are ready to start working! Make changes to files and commit
+them to your new branch. We like to preface our commit messages with a
+descriptor code. This makes it easier for someone reviewing your commit
+history to see what you have done. These are borrowed from the
+<a href="https://docs.scipy.org/doc/numpy/dev/gitwash/development_workflow.html#writing-the-commit-message">NumPy</a>
+development documentation.</p>
+<p>Code   Description</p>
+<hr />
+<p>API    an (incompatible) API change
+  BLD    change related to building
+  BUG    bug fix
+  DEP    deprecate something, or remove a deprecated object
+  DEV    development tool or utility
+  DOC    documentation
+  ENH    enhancement
+  MNT    maintenance commit (refactoring, typos, etc.)
+  REV    revert an earlier commit
+  STY    style fix (whitespace, PEP8)
+  TST    addition or modification of tests
+  REL    related to releasing numpy
+  WIP    Commit that is a work in progress</p>
+<p>It is also helpful underneath classes and functions to write docstrings.
+These are later converted by Sphinx into HTML documentation. They also
+are a valuable tool for exploration of a codebase within an IPython
+terminal. Docstrings should follow the form described in the <a href="http://www.sphinx-doc.org/en/stable/ext/example_numpy.html">NumPy
+documentation</a></p>
+<h2 id="merging-changes">Merging Changes</h2>
+<p>Once you are happy with your code, <code>push</code> it back to your fork on
+GitHub.</p>
+<div class="highlight"><pre><span></span><code>$ git push origin my-feature
+</code></pre></div>
+<p>You should now be able to create a Pull Request back to the original
+repository. <strong>You should never commit directly back to the original
+repository</strong>. In fact, if you are creating a new repository it is
+possible to strictly disallow this by explicitly protecting certain
+branches from direct commits.The reason we feel strongly that Pull
+Requests are necessary because they:</p>
+<p>1)  Allows other collaborators to view the changes you made, and give
+    feedback.
+2)  Leave an easily understood explanation to why these changes are
+    necessary.</p>
+<p>Once these changes are deemed acceptable to enter the main repository,
+they Pull Request can be merged.</p>
+<h2 id="syncing-your-local-checkout">Syncing your Local Checkout</h2>
+<p>Inevitably, changes to the upstream repository will occur and you will
+need to update your local checkout to reflect those. The first step is
+to make your local checkout aware of the upstream repository. If this is
+done correctly, you should see something like this:</p>
+<div class="highlight"><pre><span></span><code>$ git remote add upstream https://github.com/UPSTREAM-ORG/REPOSITORY.git
+$ git remote -v
+origin   https://github.com/YOUR-USERNAME/REPOSITORY.git <span class="o">(</span>fetch<span class="o">)</span>
+origin   https://github.com/YOUR-USERNAME/REPOSITORY.git <span class="o">(</span>push<span class="o">)</span>
+upstream https://github.com/UPSTREAM-ORG/REPOSITORY.git <span class="o">(</span>fetch<span class="o">)</span>
+upstream https://github.com/UPSTREAM-ORG/REPOSITORY.git <span class="o">(</span>push<span class="o">)</span>
+</code></pre></div>
+<p>Now, we need to fetch any changes from the upstream repository.
+<code>git fetch</code> will grab the latest commits that were merged since we made
+our own fork</p>
+<div class="highlight"><pre><span></span><code>$ git fetch upstream
+</code></pre></div>
+<p>Ideally you haven\'t made any changes to your <code>master</code> branch. So you
+should be able to merge the latest <code>master</code> branch from the upstream
+repository without concern. All you need to do is to switch to your
+<code>master</code> branch, and pull in the changes from the upstream remote. It is
+usually a good idea to push any changes back to your fork as well.</p>
+<div class="highlight"><pre><span></span><code>$ git checkout master
+$ git pull upstream master
+$ git push origin master
+</code></pre></div>
+<p>Finally, we need to update our feature-branch to have the new changes.
+Here we use a <code>git rebase</code> to take our local changes, remove them
+temporarily, pull the upstream changes into our branch, and then re-add
+our local changes on the tip of the commit history. This avoids
+extraneous merge commits that clog the commit history of the branch. A
+more in-depth discussion can be found
+<a href="https://www.atlassian.com/git/tutorials/merging-vs-rebasing">here</a>.
+This process should look like this:</p>
+<div class="highlight"><pre><span></span><code>$ git checkout my-feature
+$ git rebase upstream/master
+</code></pre></div>
+<h2 id="note">Note</h2>
+<p>This process should not be done if you think that anyone else is also
+working on that branch. The rebasing process re-writes the commit
+history so any other checkout of the same branch referring to the old
+history will create duplicates of all the commits.</p>
 
 
 
@@ -651,15 +852,30 @@ code if needed is given on the <a href="https://www.classe.cornell.edu/bmad">Bma
     
     <nav class="md-footer__inner md-grid" aria-label="Footer" >
       
+        
+        <a href="../examples/advanced/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Advanced usage" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Advanced usage
+            </div>
+          </div>
+        </a>
+      
       
         
-        <a href="installation/" class="md-footer__link md-footer__link--next" aria-label="Next: Installation" rel="next">
+        <a href="../api/pytao/" class="md-footer__link md-footer__link--next" aria-label="Next: PyTao" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Installation
+              PyTao
             </div>
           </div>
           <div class="md-footer__button md-icon">
@@ -695,10 +911,10 @@ code if needed is given on the <a href="https://www.classe.cornell.edu/bmad">Bma
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.top", "navigation.tabs", "navigation.indexes"], "search": "assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.top", "navigation.tabs", "navigation.indexes"], "search": "../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="assets/javascripts/bundle.39f04ddb.min.js"></script>
+      <script src="../assets/javascripts/bundle.39f04ddb.min.js"></script>
       
     
   </body>
