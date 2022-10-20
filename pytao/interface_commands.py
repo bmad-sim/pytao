@@ -192,19 +192,18 @@ def bunch_comb(tao, who, *, ix_uni='', ix_branch='', ix_bunch='1', flags='-array
       python bunch_comb {flags} {who} {ix_uni}@{ix_branch} {ix_bunch}
     
     Where:
-      {flag} is optionally "-array_out".
+      {flags} are optional switches:
+          -array_out : If present, the output will be available in the tao_c_interface_com%c_real.
       {ix_uni} is a universe index. Defaults to s%global%default_universe.
       {ix_branch} is a branch index. Defaults to s%global%default_branch.
       {ix_bunch} is the bunch index. Defaults to 1.
       {who} is one of:
-        x, px, y, py, z, pz, t, s, spin.x, spin.y, spin.z, p0c, beta     -- centroid 
-        x.Q, y.Q, z.Q, a.Q, b.Q, c.Q where Q is one of: beta, alpha, gamma, phi, eta, etap,
+          x, px, y, py, z, pz, t, s, spin.x, spin.y, spin.z, p0c, beta     -- centroid 
+          x.Q, y.Q, z.Q, a.Q, b.Q, c.Q where Q is one of: beta, alpha, gamma, phi, eta, etap,
                                                                     sigma, sigma_p, emit, norm_emit
         sigma.IJ where I, J in range [1,6]
         rel_min.I, rel_max.I where I in range [1,6]
         charge_live, n_particle_live, n_particle_lost_in_ele, ix_ele
-    
-      If flags=-array_out, the output will be available in the tao_c_interface_com%c_real.
     
       Note: If ix_uni or ix_branch is present, "@" must be present.
     
@@ -2175,8 +2174,13 @@ def evaluate(tao, expression, *, flags='-array_out', verbose=False, as_dict=True
     Command syntax:
       python evaluate {flags} {expression}
     
+    Where:
+      Optional {flags} are:
+          -array_out : If present, the output will be available in the tao_c_interface_com%c_real.
+      {expression} is expression to be evaluated.
+    
     Example:
-      python evaluate data::cbar.11[1:10]|model
+      python evaluate 3+data::cbar.11[1:10]|model
     
     Examples
     --------
@@ -3734,6 +3738,70 @@ def species_to_str(tao, species_int, *, verbose=False, as_dict=True, raises=True
     return __execute(tao, cmd, as_dict, raises, method_name='species_to_str', cmd_type='string_list')
 
 
+def spin_invariant(tao, who, *, ix_uni='', ix_branch='', which='model', flags='-array_out', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output closed orbit spin axes n0, l0, or m0 at the ends of all lattice elements in a branch.
+    n0, l0, and m0 are solutions of the T-BMT equation.
+    n0 is periodic while l0 and m0 are not. At the beginning of the branch, the orientation of the 
+    l0 or m0 axes in the plane perpendicular to the n0 axis is chosen a bit arbitrarily.
+    See the Bmad manual for more details.
+    
+    Parameters
+    ----------
+    who
+    ix_uni : optional
+    ix_branch : optional
+    which : default=model
+    flags : default=-array_out
+    
+    Returns
+    -------
+    string_list
+        if '-array_out' not in flags
+    real_array
+        if '-array_out' in flags
+    
+    Notes
+    -----
+    Command syntax:
+      python spin_invariant {flags} {who} {ix_uni}@{ix_branch}|{which}
+    
+    Where:
+      {flags} are optional switches:
+          -array_out : If present, the output will be available in the tao_c_interface_com%c_real.
+      {who} is one of: l0, n0, or m0
+      {ix_uni} is a universe index. Defaults to s%global%default_universe.
+      {ix_branch} is a branch index. Defaults to s%global%default_branch.
+      {which} is one of:
+        model
+        base
+        design
+    
+    Example:
+      python spin_invariant 1@0|model
+    
+    Note: This command is under development. If you want to use please contact David Sagan.
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
+     args: 
+       who: l0
+       ix_uni: 1
+       ix_branch: 0
+       which: model
+    
+    """
+    cmd = f'python spin_invariant {flags} {who} {ix_uni}@{ix_branch}|{which}'
+    if verbose: print(cmd)
+    if '-array_out' not in flags:
+        return __execute(tao, cmd, as_dict, raises, method_name='spin_invariant', cmd_type='string_list')
+    if '-array_out' in flags:
+        return __execute(tao, cmd, as_dict, raises, method_name='spin_invariant', cmd_type='real_array')
+
+
 def spin_polarization(tao, *, ix_uni='', ix_branch='', which='model', verbose=False, as_dict=True, raises=True):
     """
     
@@ -3754,10 +3822,14 @@ def spin_polarization(tao, *, ix_uni='', ix_branch='', which='model', verbose=Fa
     Command syntax:
       python spin_polarization {ix_uni}@{ix_branch}|{which}
     
-    where {which} is one of:
-      model
-      base
-      design
+    Where:
+      {ix_uni} is a universe index. Defaults to s%global%default_universe.
+      {ix_branch} is a branch index. Defaults to s%global%default_branch.
+      {which} is one of:
+        model
+        base
+        design
+    
     Example:
       python spin_polarization 1@0|model
     
@@ -4200,14 +4272,14 @@ def var_v1_destroy(tao, v1_datum, *, verbose=False, as_dict=True, raises=True):
     return __execute(tao, cmd, as_dict, raises, method_name='var_v1_destroy', cmd_type='string_list')
 
 
-def wave(tao, what, *, verbose=False, as_dict=True, raises=True):
+def wave(tao, who, *, verbose=False, as_dict=True, raises=True):
     """
     
     Output Wave analysis info.
     
     Parameters
     ----------
-    what
+    who
     
     Returns
     -------
@@ -4216,9 +4288,9 @@ def wave(tao, what, *, verbose=False, as_dict=True, raises=True):
     Notes
     -----
     Command syntax:
-      python wave {what}
+      python wave {who}
     
-    Where {what} is one of:
+    Where {who} is one of:
       params
       loc_header
       locations
@@ -4229,10 +4301,10 @@ def wave(tao, what, *, verbose=False, as_dict=True, raises=True):
     Example: 1
      init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
      args:
-       what: params
+       who: params
     
     """
-    cmd = f'python wave {what}'
+    cmd = f'python wave {who}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, raises, method_name='wave', cmd_type='string_list')
 

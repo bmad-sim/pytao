@@ -568,6 +568,12 @@ def test_species_to_str_1():
     ret = interface_commands.species_to_str(tao, species_int='-1')
             
         
+def test_spin_invariant_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
+    ret = interface_commands.spin_invariant(tao, who='l0', ix_uni='1', ix_branch='0', which='model')
+            
+        
 def test_spin_polarization_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
@@ -649,6 +655,6 @@ def test_var_v1_destroy_1():
 def test_wave_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
-    ret = interface_commands.wave(tao, what='params')
+    ret = interface_commands.wave(tao, who='params')
             
         

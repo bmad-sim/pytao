@@ -224,6 +224,21 @@ def parse_plot_list(lines):
     return output
 
 
+
+def parse_spin_invariant(flat_array):
+    """
+    Reshape the (3*n) shaped array output of `spin_invariant`
+    to be (n, 3)
+    
+    Do nothing with lines (list) output. 
+    
+    """
+    if isinstance(flat_array, list): 
+        return flat_array
+    else:
+        return flat_array.reshape(len(flat_array)//3, 3)
+
+
 def parse_var_v_array_line(line):
     v = line.split(';')
     out = dict(
