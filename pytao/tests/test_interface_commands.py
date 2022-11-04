@@ -286,12 +286,6 @@ def test_ele_taylor_1():
     ret = interface_commands.ele_taylor(tao, ele_id='1@0>>34', which='model')
             
         
-def test_ele_taylor_field_1():
-    
-    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field -noplot'))
-    ret = interface_commands.ele_taylor_field(tao, ele_id='1@0>>9', which='model', index='1', who='terms')
-            
-        
 def test_ele_twiss_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))

@@ -805,6 +805,9 @@ def data_d2_array(tao, ix_uni, *, verbose=False, as_dict=True, raises=True):
     Command syntax:
       python data_d2_array {ix_uni}
     
+    Where:
+      {ix_uni} is a universe index. Defaults to s%global%default_universe.
+    
     Example:
       python data_d2_array 1
     
@@ -1970,10 +1973,10 @@ def ele_taylor(tao, ele_id, *, which='model', verbose=False, as_dict=True, raise
     return __execute(tao, cmd, as_dict, raises, method_name='ele_taylor', cmd_type='string_list')
 
 
-def ele_taylor_field(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True):
+def ele_gen_grad_map(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
-    Output element taylor_field 
+    Output element gen_grad_map 
     
     Parameters
     ----------
@@ -1989,32 +1992,22 @@ def ele_taylor_field(tao, ele_id, index, who, *, which='model', verbose=False, a
     Notes
     -----
     Command syntax:
-      python ele:taylor_field {ele_id}|{which} {index} {who}
+      python ele:gen_grad_map {ele_id}|{which} {index} {who}
     
     Where: 
       {ele_id} is an element name or index.
       {which} is one of: "model", "base" or "design"
-      {index} is the index number in the ele%taylor_field(:) array
+      {index} is the index number in the ele%gen_grad_map(:) array
       {who} is one of: "base", or "terms".
     
     Example:
-      python ele:taylor_field 3@1>>7|model 2 base
+      python ele:gen_grad_map 3@1>>7|model 2 base
     This gives element number 7 in branch 1 of universe 3.
     
-    Examples
-    --------
-    Example: 1
-     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field
-     args:
-      ele_id: 1@0>>9
-      which: model
-      index: 1
-      who: terms
-    
     """
-    cmd = f'python ele:taylor_field {ele_id}|{which} {index} {who}'
+    cmd = f'python ele:gen_grad_map {ele_id}|{which} {index} {who}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='ele_taylor_field', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_gen_grad_map', cmd_type='string_list')
 
 
 def ele_twiss(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
