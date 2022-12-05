@@ -170,6 +170,7 @@ def bunch_comb(tao, who, *, ix_uni='', ix_branch='', ix_bunch='1', flags='-array
     """
     
     Outputs bunch parameters at a comb point. 
+    Also see the "write bunch_comb" and "show bunch -comb" commands.
     
     Parameters
     ----------
@@ -804,6 +805,9 @@ def data_d2_array(tao, ix_uni, *, verbose=False, as_dict=True, raises=True):
     -----
     Command syntax:
       python data_d2_array {ix_uni}
+    
+    Where:
+      {ix_uni} is a universe index. Defaults to s%global%default_universe.
     
     Example:
       python data_d2_array 1
@@ -1451,6 +1455,94 @@ def ele_floor(tao, ele_id, *, which='model', where='end', verbose=False, as_dict
     return __execute(tao, cmd, as_dict, raises, method_name='ele_floor', cmd_type='string_list')
 
 
+def ele_gen_attribs(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output element general attributes
+    
+    Parameters
+    ----------
+    ele_id
+    which : default=model
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python ele:gen_attribs {ele_id}|{which}
+    
+    Where: 
+      {ele_id} is an element name or index.
+      {which} is one of: "model", "base" or "design"
+    
+    Example:
+      python ele:gen_attribs 3@1>>7|model
+    This gives element number 7 in branch 1 of universe 3.
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
+     args:
+      ele_id: 1@0>>1
+      which: model
+    
+    """
+    cmd = f'python ele:gen_attribs {ele_id}|{which}'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_gen_attribs', cmd_type='string_list')
+
+
+def ele_gen_grad_map(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output element gen_grad_map 
+    
+    Parameters
+    ----------
+    ele_id
+    index
+    who
+    which : default=model
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python ele:gen_grad_map {ele_id}|{which} {index} {who}
+    
+    Where: 
+      {ele_id} is an element name or index.
+      {which} is one of: "model", "base" or "design"
+      {index} is the index number in the ele%gen_grad_map(:) array
+      {who} is one of: "base", or "derivs".
+    
+    Example:
+      python ele:gen_grad_map 3@1>>7|model 2 base
+    This gives element number 7 in branch 1 of universe 3.
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field
+     args:
+      ele_id: 1@0>>9
+      which: model
+      index: 1
+      who: derivs
+    
+    """
+    cmd = f'python ele:gen_grad_map {ele_id}|{which} {index} {who}'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='ele_gen_grad_map', cmd_type='string_list')
+
+
 def ele_grid_field(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True):
     """
     
@@ -1496,47 +1588,6 @@ def ele_grid_field(tao, ele_id, index, who, *, which='model', verbose=False, as_
     cmd = f'python ele:grid_field {ele_id}|{which} {index} {who}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, raises, method_name='ele_grid_field', cmd_type='string_list')
-
-
-def ele_gen_attribs(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
-    """
-    
-    Output element general attributes
-    
-    Parameters
-    ----------
-    ele_id
-    which : default=model
-    
-    Returns
-    -------
-    string_list
-    
-    Notes
-    -----
-    Command syntax:
-      python ele:gen_attribs {ele_id}|{which}
-    
-    Where: 
-      {ele_id} is an element name or index.
-      {which} is one of: "model", "base" or "design"
-    
-    Example:
-      python ele:gen_attribs 3@1>>7|model
-    This gives element number 7 in branch 1 of universe 3.
-    
-    Examples
-    --------
-    Example: 1
-     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
-     args:
-      ele_id: 1@0>>1
-      which: model
-    
-    """
-    cmd = f'python ele:gen_attribs {ele_id}|{which}'
-    if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='ele_gen_attribs', cmd_type='string_list')
 
 
 def ele_head(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
@@ -1968,53 +2019,6 @@ def ele_taylor(tao, ele_id, *, which='model', verbose=False, as_dict=True, raise
     cmd = f'python ele:taylor {ele_id}|{which}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, raises, method_name='ele_taylor', cmd_type='string_list')
-
-
-def ele_taylor_field(tao, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True):
-    """
-    
-    Output element taylor_field 
-    
-    Parameters
-    ----------
-    ele_id
-    index
-    who
-    which : default=model
-    
-    Returns
-    -------
-    string_list
-    
-    Notes
-    -----
-    Command syntax:
-      python ele:taylor_field {ele_id}|{which} {index} {who}
-    
-    Where: 
-      {ele_id} is an element name or index.
-      {which} is one of: "model", "base" or "design"
-      {index} is the index number in the ele%taylor_field(:) array
-      {who} is one of: "base", or "terms".
-    
-    Example:
-      python ele:taylor_field 3@1>>7|model 2 base
-    This gives element number 7 in branch 1 of universe 3.
-    
-    Examples
-    --------
-    Example: 1
-     init: -init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field
-     args:
-      ele_id: 1@0>>9
-      which: model
-      index: 1
-      who: terms
-    
-    """
-    cmd = f'python ele:taylor_field {ele_id}|{which} {index} {who}'
-    if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='ele_taylor_field', cmd_type='string_list')
 
 
 def ele_twiss(tao, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):

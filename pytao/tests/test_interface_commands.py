@@ -214,16 +214,22 @@ def test_ele_floor_2():
     ret = interface_commands.ele_floor(tao, ele_id='1@0>>1', which='model', where='center')
             
         
-def test_ele_grid_field_1():
-    
-    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_grid -noplot'))
-    ret = interface_commands.ele_grid_field(tao, ele_id='1@0>>1', which='model', index='1', who='base')
-            
-        
 def test_ele_gen_attribs_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
     ret = interface_commands.ele_gen_attribs(tao, ele_id='1@0>>1', which='model')
+            
+        
+def test_ele_gen_grad_map_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field -noplot'))
+    ret = interface_commands.ele_gen_grad_map(tao, ele_id='1@0>>9', which='model', index='1', who='derivs')
+            
+        
+def test_ele_grid_field_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_grid -noplot'))
+    ret = interface_commands.ele_grid_field(tao, ele_id='1@0>>1', which='model', index='1', who='base')
             
         
 def test_ele_head_1():
@@ -284,12 +290,6 @@ def test_ele_taylor_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_taylor -noplot'))
     ret = interface_commands.ele_taylor(tao, ele_id='1@0>>34', which='model')
-            
-        
-def test_ele_taylor_field_1():
-    
-    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field -noplot'))
-    ret = interface_commands.ele_taylor_field(tao, ele_id='1@0>>9', which='model', index='1', who='terms')
             
         
 def test_ele_twiss_1():
