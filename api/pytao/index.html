@@ -16234,7 +16234,7 @@ For example, possible index numbers for the branches of a lattice.</p>
           <td>
                 <code>string_list</code>
           </td>
-          <td><p>if ('-array_out' not in flags) or (who in ['ele.name'])</p></td>
+          <td><p>if ('-array_out' not in flags) or (who in ['ele.name', 'ele.key'])</p></td>
         </tr>
         <tr>
           <td>
@@ -16269,7 +16269,7 @@ For example, possible index numbers for the branches of a lattice.</p>
     orbit.t, orbit.beta,
     orbit.state,     ! Note: state is an integer. alive$ = 1, anything else is lost.
     orbit.energy, orbit.pc,
-    ele.name, ele.ix_ele, ele.ix_branch
+    ele.name, ele.key, ele.ix_ele, ele.ix_branch
     ele.a.beta, ele.a.alpha, ele.a.eta, ele.a.etap, ele.a.gamma, ele.a.phi,
     ele.b.beta, ele.b.alpha, ele.b.eta, ele.b.etap, ele.b.gamma, ele.b.phi,
     ele.x.eta, ele.x.etap,
@@ -16423,7 +16423,7 @@ For example, possible index numbers for the branches of a lattice.</p>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    string_list</span>
-<span class="sd">        if (&#39;-array_out&#39; not in flags) or (who in [&#39;ele.name&#39;])</span>
+<span class="sd">        if (&#39;-array_out&#39; not in flags) or (who in [&#39;ele.name&#39;, &#39;ele.key&#39;])</span>
 <span class="sd">    integer_array</span>
 <span class="sd">        if &#39;-array_out&#39; in flags and who in [&#39;orbit.state&#39;, &#39;ele.ix_ele&#39;]</span>
 <span class="sd">    real_array</span>
@@ -16452,7 +16452,7 @@ For example, possible index numbers for the branches of a lattice.</p>
 <span class="sd">        orbit.t, orbit.beta,</span>
 <span class="sd">        orbit.state,     ! Note: state is an integer. alive$ = 1, anything else is lost.</span>
 <span class="sd">        orbit.energy, orbit.pc,</span>
-<span class="sd">        ele.name, ele.ix_ele, ele.ix_branch</span>
+<span class="sd">        ele.name, ele.key, ele.ix_ele, ele.ix_branch</span>
 <span class="sd">        ele.a.beta, ele.a.alpha, ele.a.eta, ele.a.etap, ele.a.gamma, ele.a.phi,</span>
 <span class="sd">        ele.b.beta, ele.b.alpha, ele.b.eta, ele.b.etap, ele.b.gamma, ele.b.phi,</span>
 <span class="sd">        ele.x.eta, ele.x.etap,</span>
@@ -16498,7 +16498,7 @@ For example, possible index numbers for the branches of a lattice.</p>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;python lat_list </span><span class="si">{</span><span class="n">flags</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">ix_uni</span><span class="si">}</span><span class="s1">@</span><span class="si">{</span><span class="n">ix_branch</span><span class="si">}</span><span class="s1">&gt;&gt;</span><span class="si">{</span><span class="n">elements</span><span class="si">}</span><span class="s1">|</span><span class="si">{</span><span class="n">which</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">who</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;-array_out&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">flags</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">who</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ele.name&#39;</span><span class="p">]):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;-array_out&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">flags</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">who</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ele.name&#39;</span><span class="p">,</span> <span class="s1">&#39;ele.key&#39;</span><span class="p">]):</span>
         <span class="k">return</span> <span class="n">__execute</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">as_dict</span><span class="p">,</span> <span class="n">raises</span><span class="p">,</span> <span class="n">method_name</span><span class="o">=</span><span class="s1">&#39;lat_list&#39;</span><span class="p">,</span> <span class="n">cmd_type</span><span class="o">=</span><span class="s1">&#39;string_list&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="s1">&#39;-array_out&#39;</span> <span class="ow">in</span> <span class="n">flags</span> <span class="ow">and</span> <span class="n">who</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;orbit.state&#39;</span><span class="p">,</span> <span class="s1">&#39;ele.ix_ele&#39;</span><span class="p">]:</span>
         <span class="k">return</span> <span class="n">__execute</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">as_dict</span><span class="p">,</span> <span class="n">raises</span><span class="p">,</span> <span class="n">method_name</span><span class="o">=</span><span class="s1">&#39;lat_list&#39;</span><span class="p">,</span> <span class="n">cmd_type</span><span class="o">=</span><span class="s1">&#39;integer_array&#39;</span><span class="p">)</span>
