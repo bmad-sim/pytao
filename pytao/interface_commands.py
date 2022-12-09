@@ -2555,7 +2555,7 @@ def lat_list(tao, elements, who, *, ix_uni='', ix_branch='', which='model', flag
     Returns
     -------
     string_list
-        if ('-array_out' not in flags) or (who in ['ele.name'])
+        if ('-array_out' not in flags) or (who in ['ele.name', 'ele.key'])
     integer_array
         if '-array_out' in flags and who in ['orbit.state', 'ele.ix_ele']
     real_array
@@ -2584,7 +2584,7 @@ def lat_list(tao, elements, who, *, ix_uni='', ix_branch='', which='model', flag
         orbit.t, orbit.beta,
         orbit.state,     ! Note: state is an integer. alive$ = 1, anything else is lost.
         orbit.energy, orbit.pc,
-        ele.name, ele.ix_ele, ele.ix_branch
+        ele.name, ele.key, ele.ix_ele, ele.ix_branch
         ele.a.beta, ele.a.alpha, ele.a.eta, ele.a.etap, ele.a.gamma, ele.a.phi,
         ele.b.beta, ele.b.alpha, ele.b.eta, ele.b.etap, ele.b.gamma, ele.b.phi,
         ele.x.eta, ele.x.etap,
@@ -2630,7 +2630,7 @@ def lat_list(tao, elements, who, *, ix_uni='', ix_branch='', which='model', flag
     """
     cmd = f'python lat_list {flags} {ix_uni}@{ix_branch}>>{elements}|{which} {who}'
     if verbose: print(cmd)
-    if ('-array_out' not in flags) or (who in ['ele.name']):
+    if ('-array_out' not in flags) or (who in ['ele.name', 'ele.key']):
         return __execute(tao, cmd, as_dict, raises, method_name='lat_list', cmd_type='string_list')
     if '-array_out' in flags and who in ['orbit.state', 'ele.ix_ele']:
         return __execute(tao, cmd, as_dict, raises, method_name='lat_list', cmd_type='integer_array')
