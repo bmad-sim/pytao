@@ -3869,9 +3869,7 @@ def spin_resonance(tao, *, ix_uni='', ix_branch='', which='model', ref_ele='0', 
     
     Returns
     -------
-    spin_tune                   -- Spin tune
-    dq_X_sum, dq_X_diff         -- Tune sum Q_spin+Q_mode and tune difference Q_spin-Q_mode for modes X = a, b, and c.
-    xi_res_X_sum, xi_res_X_diff -- The linear spin/orbit sum and difference resonance strengths for X = a, b, and c modes.
+    string_list
     
     Notes
     -----
@@ -3883,6 +3881,10 @@ def spin_resonance(tao, *, ix_uni='', ix_branch='', which='model', ref_ele='0', 
       {ix_branch} is a lattice branch index. Defaults to s%global%default_branch.
       {which} is one of: "model", "base" or "design"
       {ref_ele} is an element name or index.
+    This will return a string_list with the following fields:
+      spin_tune                   -- Spin tune
+      dq_X_sum, dq_X_diff         -- Tune sum Q_spin+Q_mode and tune difference Q_spin-Q_mode for modes X = a, b, and c.
+      xi_res_X_sum, xi_res_X_diff -- The linear spin/orbit sum and difference resonance strengths for X = a, b, and c modes.  
     
     Examples
     --------
@@ -3896,9 +3898,7 @@ def spin_resonance(tao, *, ix_uni='', ix_branch='', which='model', ref_ele='0', 
     """
     cmd = f'python spin_resonance {ix_uni}@{ix_branch}|{which} {ref_ele}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='spin_resonance', cmd_type='spin_tune                   -- Spin tune')
-    return __execute(tao, cmd, as_dict, raises, method_name='spin_resonance', cmd_type='dq_X_sum, dq_X_diff         -- Tune sum Q_spin+Q_mode and tune difference Q_spin-Q_mode for modes X = a, b, and c.')
-    return __execute(tao, cmd, as_dict, raises, method_name='spin_resonance', cmd_type='xi_res_X_sum, xi_res_X_diff -- The linear spin/orbit sum and difference resonance strengths for X = a, b, and c modes.')
+    return __execute(tao, cmd, as_dict, raises, method_name='spin_resonance', cmd_type='string_list')
 
 
 def super_universe(tao, *, verbose=False, as_dict=True, raises=True):
