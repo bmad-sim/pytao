@@ -491,6 +491,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#taylor_map" class="md-nav__link">
+    taylor_map
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#var_v_array" class="md-nav__link">
     var_v_array
   </a>
@@ -703,6 +710,13 @@
         <li class="md-nav__item">
   <a href="#spin_invariant" class="md-nav__link">
     spin_invariant
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#taylor_map" class="md-nav__link">
+    taylor_map
   </a>
   
 </li>
@@ -2160,7 +2174,7 @@ result[0:5]</div>
         [ 5.30821801e-03, -2.93203403e-04,  1.07833933e-04,
          -1.59653540e-05,  1.15997844e-02,  9.47355103e-01]]),
  &#39;vec0&#39;: array([ 3.92874185e-04,  4.73093997e-03,  1.86151032e-06, -9.57458177e-05,
-        -7.06703194e-05,  5.03940861e-06])}</pre>
+        -7.06703195e-05,  5.03940861e-06])}</pre>
 </div>
 
 </div>
@@ -2372,13 +2386,360 @@ result['cbar']</div>
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>array([[ 0.        ,  0.99835951,  0.05725636],
-       [ 0.        ,  0.99835951,  0.05725636],
-       [-0.05286859,  0.99704453,  0.05574159],
+<pre>array([[ 0.        ,  0.99835693,  0.05730134],
+       [ 0.        ,  0.99835693,  0.05730134],
+       [-0.05286846,  0.99704202,  0.05578657],
        ...,
-       [-0.24326298,  0.96860779,  0.05120619],
-       [-0.29421225,  0.95444398,  0.0497579 ],
-       [-0.29421225,  0.95444398,  0.0497579 ]])</pre>
+       [-0.24326432,  0.96860132,  0.05132215],
+       [-0.29421324,  0.95443762,  0.04987387],
+       [-0.29421324,  0.95443762,  0.04987387]])</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="taylor_map">taylor_map<a class="anchor-link" href="#taylor_map">&#182;</a></h2>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+        
+        
+        <div class="CodeMirror cm-s-jupyter">
+        <div class="zeroclipboard-container">
+            <clipboard-copy for="cell-11">
+            <div>
+                <span class="notice" hidden>Copied!</span>
+                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
+                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
+                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
+                </svg>
+                </div>
+            </clipboard-copy>
+        </div>
+            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tt</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">taylor_map</span><span class="p">(</span><span class="s1">&#39;beginning&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">tt</span>
+</pre></div>
+<div id="cell-11" class="clipboard-copy-txt">tt = tao.taylor_map('beginning', 'end', order=2)
+tt</div>
+    
+        </div>
+    </div>
+
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[11]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>{1: {(0, 0, 0, 0, 0, 0): -1.66366333759722e-05,
+  (1, 0, 0, 0, 0, 0): -0.98519671205819,
+  (0, 1, 0, 0, 0, 0): -0.179943541517691,
+  (0, 0, 1, 0, 0, 0): -0.0296993930657326,
+  (2, 0, 0, 0, 0, 0): 0.446084074062404,
+  (1, 1, 0, 0, 0, 0): -1.00837219802008,
+  (0, 2, 0, 0, 0, 0): 1.02620360694523,
+  (1, 0, 1, 0, 0, 0): -0.826523572570798,
+  (0, 1, 1, 0, 0, 0): 0.667387955335811,
+  (0, 0, 2, 0, 0, 0): 44.7241375905259,
+  (0, 0, 0, 1, 0, 0): -3.89707865898771e-05,
+  (1, 0, 0, 1, 0, 0): -0.00123737572126291,
+  (0, 1, 0, 1, 0, 0): -0.0371117319593359,
+  (0, 0, 1, 1, 0, 0): -4.03450589572333,
+  (0, 0, 0, 0, 1, 0): -0.00131163342324048,
+  (1, 0, 0, 0, 1, 0): -0.149523235756398,
+  (0, 1, 0, 0, 1, 0): 0.029933390640651,
+  (0, 0, 1, 0, 1, 0): 0.105807460060821,
+  (0, 0, 0, 0, 0, 1): 0.0017586048202403,
+  (1, 0, 0, 0, 0, 1): 2.90298773721115,
+  (0, 1, 0, 0, 0, 1): 3.49579130618299,
+  (0, 0, 1, 0, 0, 1): 7.9708341316512,
+  (0, 0, 0, 2, 0, 0): -0.0184811091699413,
+  (0, 0, 0, 1, 1, 0): -0.003927668984989,
+  (0, 0, 0, 0, 2, 0): 0.000742823789546335,
+  (0, 0, 0, 1, 0, 1): 0.0279423415941064,
+  (0, 0, 0, 0, 1, 1): -0.0134033770897939,
+  (0, 0, 0, 0, 0, 2): -2.3897138620353},
+ 2: {(0, 0, 0, 0, 0, 0): 0.00239048642760557,
+  (1, 0, 0, 0, 0, 0): 0.195138002376757,
+  (0, 1, 0, 0, 0, 0): -0.979350347682325,
+  (0, 0, 1, 0, 0, 0): -0.00732021295405437,
+  (2, 0, 0, 0, 0, 0): 1.32506748649621,
+  (1, 1, 0, 0, 0, 0): -0.169186300685088,
+  (0, 2, 0, 0, 0, 0): 0.295801385979281,
+  (1, 0, 1, 0, 0, 0): -0.96218556631098,
+  (0, 1, 1, 0, 0, 0): 0.697979832552667,
+  (0, 0, 2, 0, 0, 0): 100.4842734186,
+  (0, 0, 0, 1, 0, 0): 0.000900228227254792,
+  (1, 0, 0, 1, 0, 0): 0.0452520027458704,
+  (0, 1, 0, 1, 0, 0): 0.00972376885848887,
+  (0, 0, 1, 1, 0, 0): -2.89154417518796,
+  (0, 0, 0, 0, 1, 0): -0.00589560314337173,
+  (1, 0, 0, 0, 1, 0): -0.0608693413004555,
+  (0, 1, 0, 0, 1, 0): 0.131510043050467,
+  (0, 0, 1, 0, 1, 0): 0.0812502436293018,
+  (0, 0, 0, 0, 0, 1): -0.0381872457880368,
+  (1, 0, 0, 0, 0, 1): -9.55218064677532,
+  (0, 1, 0, 0, 0, 1): -5.335802923253,
+  (0, 0, 1, 0, 0, 1): 4.52923839437024,
+  (0, 0, 0, 2, 0, 0): 0.0629079369883946,
+  (0, 0, 0, 1, 1, 0): -0.00149863586050049,
+  (0, 0, 0, 0, 2, 0): 0.000587988434557604,
+  (0, 0, 0, 1, 0, 1): -0.318535804526085,
+  (0, 0, 0, 0, 1, 1): 0.0412942967355363,
+  (0, 0, 0, 0, 0, 2): 0.766029680911888},
+ 3: {(0, 0, 0, 0, 0, 0): 1.05157632168018e-06,
+  (1, 0, 0, 0, 0, 0): -0.000864193360687148,
+  (0, 1, 0, 0, 0, 0): 6.2349746068594e-05,
+  (0, 0, 1, 0, 0, 0): -0.873566454495138,
+  (2, 0, 0, 0, 0, 0): -0.021755264571247,
+  (1, 1, 0, 0, 0, 0): 0.000631168055501329,
+  (0, 2, 0, 0, 0, 0): -0.0181605569086748,
+  (1, 0, 1, 0, 0, 0): 4.98227516204765,
+  (0, 1, 1, 0, 0, 0): -3.43330386588843,
+  (0, 0, 2, 0, 0, 0): -0.30556110029474,
+  (0, 0, 0, 1, 0, 0): -0.00856834872283825,
+  (1, 0, 0, 1, 0, 0): -0.132656652750767,
+  (0, 1, 0, 1, 0, 0): -0.0220531116960351,
+  (0, 0, 1, 1, 0, 0): 0.00641085058780673,
+  (0, 0, 0, 0, 1, 0): 1.6809350908082e-05,
+  (1, 0, 0, 0, 1, 0): 0.00244665905725343,
+  (0, 1, 0, 0, 1, 0): -0.00396412854036316,
+  (0, 0, 1, 0, 1, 0): -0.299055161079561,
+  (0, 0, 0, 0, 0, 1): 0.00264467550353966,
+  (1, 0, 0, 0, 0, 1): 0.319510871140782,
+  (0, 1, 0, 0, 0, 1): 0.0141710429126652,
+  (0, 0, 1, 0, 0, 1): -8.26626635360818,
+  (0, 0, 0, 2, 0, 0): -0.000318155048259954,
+  (0, 0, 0, 1, 1, 0): 0.000633772508434312,
+  (0, 0, 0, 0, 2, 0): -2.10025917657553e-05,
+  (0, 0, 0, 1, 0, 1): 0.0846818381006226,
+  (0, 0, 0, 0, 1, 1): -0.00127341245019892,
+  (0, 0, 0, 0, 0, 2): 0.0218741951614826},
+ 4: {(0, 0, 0, 0, 0, 0): 1.8208724834155e-06,
+  (1, 0, 0, 0, 0, 0): 0.0117108773314672,
+  (0, 1, 0, 0, 0, 0): 0.0298731605834205,
+  (0, 0, 1, 0, 0, 0): 26.6637945909594,
+  (2, 0, 0, 0, 0, 0): 0.0868176648480034,
+  (1, 1, 0, 0, 0, 0): 0.861041599205373,
+  (0, 2, 0, 0, 0, 0): 0.190822077637394,
+  (1, 0, 1, 0, 0, 0): 92.6293363369127,
+  (0, 1, 1, 0, 0, 0): 46.0396579525467,
+  (0, 0, 2, 0, 0, 0): 0.449570864100835,
+  (0, 0, 0, 1, 0, 0): -0.883232864346298,
+  (1, 0, 0, 1, 0, 0): -0.0824329613484915,
+  (0, 1, 0, 1, 0, 0): 4.59607349001394,
+  (0, 0, 1, 1, 0, 0): 0.608976435120368,
+  (0, 0, 0, 0, 1, 0): 2.46914546230119e-05,
+  (1, 0, 0, 0, 1, 0): 0.0364418131179566,
+  (0, 1, 0, 0, 1, 0): 0.00478841747132545,
+  (0, 0, 1, 0, 1, 0): -0.70648557160593,
+  (0, 0, 0, 0, 0, 1): -0.0404817456330952,
+  (1, 0, 0, 0, 0, 1): -2.7508268739449,
+  (0, 1, 0, 0, 0, 1): -8.49871977354268,
+  (0, 0, 1, 0, 0, 1): -131.350469233168,
+  (0, 0, 0, 2, 0, 0): 0.00467518361765874,
+  (0, 0, 0, 1, 1, 0): 0.27622186914085,
+  (0, 0, 0, 0, 2, 0): -1.88224329677988e-05,
+  (0, 0, 0, 1, 0, 1): 4.50404232670703,
+  (0, 0, 0, 0, 1, 1): 0.00433744439256249,
+  (0, 0, 0, 0, 0, 2): 0.120062183673475},
+ 5: {(0, 0, 0, 0, 0, 0): -0.000398882588712762,
+  (1, 0, 0, 0, 0, 0): -0.0886758259290487,
+  (0, 1, 0, 0, 0, 0): -0.00609682040276844,
+  (0, 0, 1, 0, 0, 0): 0.034909892380564,
+  (2, 0, 0, 0, 0, 0): -4.519240455494,
+  (1, 1, 0, 0, 0, 0): -3.25593688600086,
+  (0, 2, 0, 0, 0, 0): -2.0003144732623,
+  (1, 0, 1, 0, 0, 0): 6.7266578468532,
+  (0, 1, 1, 0, 0, 0): -7.66846068379188,
+  (0, 0, 2, 0, 0, 0): -193.642594393435,
+  (0, 0, 0, 1, 0, 0): -0.00268389911220214,
+  (1, 0, 0, 1, 0, 0): -0.311170309916436,
+  (0, 1, 0, 1, 0, 0): -0.0386864505841833,
+  (0, 0, 1, 1, 0, 0): 7.80657921475156,
+  (0, 0, 0, 0, 1, 0): 0.947807431039409,
+  (1, 0, 0, 0, 1, 0): 0.0362496490043536,
+  (0, 1, 0, 0, 1, 0): 0.00990156375984023,
+  (0, 0, 1, 0, 1, 0): -0.0420518206185864,
+  (0, 0, 0, 0, 0, 1): -8.79504641967275,
+  (1, 0, 0, 0, 0, 1): 1.22125663934235,
+  (0, 1, 0, 0, 0, 1): 5.23256813195699,
+  (0, 0, 1, 0, 0, 1): 1.12060938559709,
+  (0, 0, 0, 2, 0, 0): -0.0114705876653343,
+  (0, 0, 0, 1, 1, 0): 0.00185581393937905,
+  (0, 0, 0, 0, 2, 0): -0.000315152148003149,
+  (0, 0, 0, 1, 0, 1): -0.00772321940148457,
+  (0, 0, 0, 0, 1, 1): 0.0126181509751087,
+  (0, 0, 0, 0, 0, 2): 0.359841796667693},
+ 6: {(0, 0, 0, 0, 0, 0): -7.15739820393372e-06,
+  (1, 0, 0, 0, 0, 0): 0.00531272359425348,
+  (0, 1, 0, 0, 0, 0): -0.000311134007792478,
+  (0, 0, 1, 0, 0, 0): 0.000106214720754606,
+  (2, 0, 0, 0, 0, 0): -0.00957619259893647,
+  (1, 1, 0, 0, 0, 0): -0.17652943885921,
+  (0, 2, 0, 0, 0, 0): -0.0275164105577225,
+  (1, 0, 1, 0, 0, 0): -0.0170302250977828,
+  (0, 1, 1, 0, 0, 0): 0.00530860770952831,
+  (0, 0, 2, 0, 0, 0): 2.02217549671287,
+  (0, 0, 0, 1, 0, 0): -1.59179292944828e-05,
+  (1, 0, 0, 1, 0, 0): -0.00164369179574546,
+  (0, 1, 0, 1, 0, 0): -0.00408626579499492,
+  (0, 0, 1, 1, 0, 0): -0.155773825543804,
+  (0, 0, 0, 0, 1, 0): 0.0115997890373252,
+  (1, 0, 0, 0, 1, 0): -0.000234175697657741,
+  (0, 1, 0, 0, 1, 0): 0.00142844208912524,
+  (0, 0, 1, 0, 1, 0): 0.000135673863198016,
+  (0, 0, 0, 0, 0, 1): 0.947365021068867,
+  (1, 0, 0, 0, 0, 1): -0.056440876315371,
+  (0, 1, 0, 0, 0, 1): 0.0133198448948318,
+  (0, 0, 1, 0, 0, 1): 0.00296870760445469,
+  (0, 0, 0, 2, 0, 0): -0.000889800671127164,
+  (0, 0, 0, 1, 1, 0): -1.09956805007306e-07,
+  (0, 0, 0, 0, 2, 0): 4.33654784090917e-06,
+  (0, 0, 0, 1, 0, 1): -0.00200397698506115,
+  (0, 0, 0, 0, 1, 1): 0.000905234895444868,
+  (0, 0, 0, 0, 0, 2): 0.00959503159161002}}</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+        
+        
+        <div class="CodeMirror cm-s-jupyter">
+        <div class="zeroclipboard-container">
+            <clipboard-copy for="cell-12">
+            <div>
+                <span class="notice" hidden>Copied!</span>
+                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
+                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
+                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
+                </svg>
+                </div>
+            </clipboard-copy>
+        </div>
+            <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Compare some terms with the matrix calc:</span>
+<span class="n">tao</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="s1">&#39;beginning&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">)[</span><span class="s1">&#39;mat6&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>  <span class="n">tt</span><span class="p">[</span><span class="mi">1</span><span class="p">][(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span>
+</pre></div>
+<div id="cell-12" class="clipboard-copy-txt"># Compare some terms with the matrix calc:
+tao.matrix('beginning', 'end')['mat6'][0,0],  tt[1][(1,0,0,0,0,0)]</div>
+    
+        </div>
+    </div>
+
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[12]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>(-0.985453321293601, -0.98519671205819)</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+        
+        
+        <div class="CodeMirror cm-s-jupyter">
+        <div class="zeroclipboard-container">
+            <clipboard-copy for="cell-13">
+            <div>
+                <span class="notice" hidden>Copied!</span>
+                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
+                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
+                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
+                </svg>
+                </div>
+            </clipboard-copy>
+        </div>
+            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="s1">&#39;beginning&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">)[</span><span class="s1">&#39;mat6&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>  <span class="n">tt</span><span class="p">[</span><span class="mi">2</span><span class="p">][(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span>
+</pre></div>
+<div id="cell-13" class="clipboard-copy-txt">tao.matrix('beginning', 'end')['mat6'][1,0],  tt[2][(1,0,0,0,0,0)]</div>
+    
+        </div>
+    </div>
+
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[13]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>(0.194136497705346, 0.195138002376757)</pre>
 </div>
 
 </div>
@@ -2405,12 +2766,12 @@ result['cbar']</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
         <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-11">
+            <clipboard-copy for="cell-14">
             <div>
                 <span class="notice" hidden>Copied!</span>
                 <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
@@ -2423,7 +2784,7 @@ result['cbar']</div>
             <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">var_v_array</span><span class="p">(</span><span class="s1">&#39;quad_k1&#39;</span><span class="p">)</span>
 <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
 </pre></div>
-<div id="cell-11" class="clipboard-copy-txt">result = tao.var_v_array('quad_k1')
+<div id="cell-14" class="clipboard-copy-txt">result = tao.var_v_array('quad_k1')
 result[0:2]</div>
     
         </div>
@@ -2440,7 +2801,7 @@ result[0:2]</div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[11]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[14]:</div>
 
 
 

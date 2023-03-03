@@ -2500,6 +2500,26 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#pytao.interface_commands.taylor_map" class="md-nav__link">
+    taylor_map()
+  </a>
+  
+    <nav class="md-nav" aria-label="taylor_map()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pytao.interface_commands.taylor_map--notes" class="md-nav__link">
+    Notes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#pytao.interface_commands.twiss_at_s" class="md-nav__link">
     twiss_at_s()
   </a>
@@ -4682,6 +4702,26 @@
         
           <li class="md-nav__item">
   <a href="#pytao.interface_commands.tao_global--notes" class="md-nav__link">
+    Notes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pytao.interface_commands.taylor_map" class="md-nav__link">
+    taylor_map()
+  </a>
+  
+    <nav class="md-nav" aria-label="taylor_map()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pytao.interface_commands.taylor_map--notes" class="md-nav__link">
     Notes
   </a>
   
@@ -21593,19 +21633,7 @@ See the Bmad manual for more details.</p>
     <tbody>
         <tr>
           <td>
-                <code>q_spin                        -- Spin tune</code>
-          </td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>
-                <code>dq_a_min, dq_b_min, dq_c_min  -- Minimum tune separation between a,b,c mode tunes and spin tune.</code>
-          </td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>
-                <code>xi_res_a, xi_res_b, xi_res_c  -- The linear spin</code>
+                <code>string_list</code>
           </td>
           <td></td>
         </tr>
@@ -21618,7 +21646,11 @@ See the Bmad manual for more details.</p>
   {ix_uni} is a universe index. Defaults to s%global%default_universe.
   {ix_branch} is a lattice branch index. Defaults to s%global%default_branch.
   {which} is one of: "model", "base" or "design"
-  {ref_ele} is an element name or index.</p>
+  {ref_ele} is an element name or index.
+This will return a string_list with the following fields:
+  spin_tune                   -- Spin tune
+  dq_X_sum, dq_X_diff         -- Tune sum Q_spin+Q_mode and tune difference Q_spin-Q_mode for modes X = a, b, and c.
+  xi_res_X_sum, xi_res_X_diff -- The linear spin/orbit sum and difference resonance strengths for X = a, b, and c modes.  </p>
 
 <p><strong>Examples:</strong></p>
     <p>Example: 1
@@ -21689,9 +21721,7 @@ See the Bmad manual for more details.</p>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    q_spin                        -- Spin tune</span>
-<span class="sd">    dq_a_min, dq_b_min, dq_c_min  -- Minimum tune separation between a,b,c mode tunes and spin tune.</span>
-<span class="sd">    xi_res_a, xi_res_b, xi_res_c  -- The linear spin/orbit &quot;sum&quot; and &quot;difference&quot; resonance strengths for a,b,c modes.</span>
+<span class="sd">    string_list</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -21703,6 +21733,10 @@ See the Bmad manual for more details.</p>
 <span class="sd">      {ix_branch} is a lattice branch index. Defaults to s%global%default_branch.</span>
 <span class="sd">      {which} is one of: &quot;model&quot;, &quot;base&quot; or &quot;design&quot;</span>
 <span class="sd">      {ref_ele} is an element name or index.</span>
+<span class="sd">    This will return a string_list with the following fields:</span>
+<span class="sd">      spin_tune                   -- Spin tune</span>
+<span class="sd">      dq_X_sum, dq_X_diff         -- Tune sum Q_spin+Q_mode and tune difference Q_spin-Q_mode for modes X = a, b, and c.</span>
+<span class="sd">      xi_res_X_sum, xi_res_X_diff -- The linear spin/orbit sum and difference resonance strengths for X = a, b, and c modes.  </span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -21716,9 +21750,7 @@ See the Bmad manual for more details.</p>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;python spin_resonance </span><span class="si">{</span><span class="n">ix_uni</span><span class="si">}</span><span class="s1">@</span><span class="si">{</span><span class="n">ix_branch</span><span class="si">}</span><span class="s1">|</span><span class="si">{</span><span class="n">which</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">ref_ele</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">__execute</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">as_dict</span><span class="p">,</span> <span class="n">raises</span><span class="p">,</span> <span class="n">method_name</span><span class="o">=</span><span class="s1">&#39;spin_resonance&#39;</span><span class="p">,</span> <span class="n">cmd_type</span><span class="o">=</span><span class="s1">&#39;q_spin                        -- Spin tune&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">__execute</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">as_dict</span><span class="p">,</span> <span class="n">raises</span><span class="p">,</span> <span class="n">method_name</span><span class="o">=</span><span class="s1">&#39;spin_resonance&#39;</span><span class="p">,</span> <span class="n">cmd_type</span><span class="o">=</span><span class="s1">&#39;dq_a_min, dq_b_min, dq_c_min  -- Minimum tune separation between a,b,c mode tunes and spin tune.&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">__execute</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">as_dict</span><span class="p">,</span> <span class="n">raises</span><span class="p">,</span> <span class="n">method_name</span><span class="o">=</span><span class="s1">&#39;spin_resonance&#39;</span><span class="p">,</span> <span class="n">cmd_type</span><span class="o">=</span><span class="s1">&#39;xi_res_a, xi_res_b, xi_res_c  -- The linear spin/orbit &quot;sum&quot; and &quot;difference&quot; resonance strengths for a,b,c modes.&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">__execute</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">as_dict</span><span class="p">,</span> <span class="n">raises</span><span class="p">,</span> <span class="n">method_name</span><span class="o">=</span><span class="s1">&#39;spin_resonance&#39;</span><span class="p">,</span> <span class="n">cmd_type</span><span class="o">=</span><span class="s1">&#39;string_list&#39;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -21944,6 +21976,198 @@ See the Bmad manual for more details.</p>
 
 
 
+<h3 id="pytao.interface_commands.taylor_map" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">taylor_map</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">ele1_id</span><span class="p">,</span> <span class="n">ele2_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Output Taylor map between two points.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>ele1_id</code></td>
+          <td>
+          </td>
+          <td></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>ele2_id</code></td>
+          <td>
+          </td>
+          <td></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>order</code></td>
+          <td>
+                <code>default</code>
+          </td>
+          <td></td>
+          <td>
+                <code>&#39;1&#39;</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>dict of dict of taylor terms</code>
+          </td>
+          <td><p>{2: { (3,0,0,0,0,0)}: 4.56, ... 
+corresponding to: px_out = 4.56 * x_in^3</p></td>
+        </tr>
+    </tbody>
+  </table>
+      <h5 id="pytao.interface_commands.taylor_map--notes">Notes</h5>
+<p>Command syntax:
+  python taylor_map {ele1_id} {ele2_id} {order}</p>
+<p>Where:
+  {ele1_id} is the start element.
+  {ele2_id} is the end element.
+  {order} is the map order. Default is order set in the lattice file. {order} cannot be larger than 
+        what is set by the lattice file. 
+If {ele2_id} = {ele1_id}, the 1-turn transfer map is computed.
+Note: {ele2_id} should just be an element name or index without universe, branch, or model/base/design specification.
+Example:
+  python taylor_map 2@1&gt;&gt;q01w|design q02w  2</p>
+
+<p><strong>Examples:</strong></p>
+    <p>Example: 1
+ init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
+ args:
+   ele1_id: 1@0&gt;&gt;q01w|design
+   ele2_id: q02w
+   order: 1</p>
+
+      <details class="quote">
+        <summary>Source code in <code>pytao/interface_commands.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3930</span>
+<span class="normal">3931</span>
+<span class="normal">3932</span>
+<span class="normal">3933</span>
+<span class="normal">3934</span>
+<span class="normal">3935</span>
+<span class="normal">3936</span>
+<span class="normal">3937</span>
+<span class="normal">3938</span>
+<span class="normal">3939</span>
+<span class="normal">3940</span>
+<span class="normal">3941</span>
+<span class="normal">3942</span>
+<span class="normal">3943</span>
+<span class="normal">3944</span>
+<span class="normal">3945</span>
+<span class="normal">3946</span>
+<span class="normal">3947</span>
+<span class="normal">3948</span>
+<span class="normal">3949</span>
+<span class="normal">3950</span>
+<span class="normal">3951</span>
+<span class="normal">3952</span>
+<span class="normal">3953</span>
+<span class="normal">3954</span>
+<span class="normal">3955</span>
+<span class="normal">3956</span>
+<span class="normal">3957</span>
+<span class="normal">3958</span>
+<span class="normal">3959</span>
+<span class="normal">3960</span>
+<span class="normal">3961</span>
+<span class="normal">3962</span>
+<span class="normal">3963</span>
+<span class="normal">3964</span>
+<span class="normal">3965</span>
+<span class="normal">3966</span>
+<span class="normal">3967</span>
+<span class="normal">3968</span>
+<span class="normal">3969</span>
+<span class="normal">3970</span>
+<span class="normal">3971</span>
+<span class="normal">3972</span>
+<span class="normal">3973</span>
+<span class="normal">3974</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">taylor_map</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">ele1_id</span><span class="p">,</span> <span class="n">ele2_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Output Taylor map between two points.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ele1_id</span>
+<span class="sd">    ele2_id</span>
+<span class="sd">    order : default=1</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict of dict of taylor terms:</span>
+<span class="sd">        {2: { (3,0,0,0,0,0)}: 4.56, ... </span>
+<span class="sd">            corresponding to: px_out = 4.56 * x_in^3</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Command syntax:</span>
+<span class="sd">      python taylor_map {ele1_id} {ele2_id} {order}</span>
+
+<span class="sd">    Where:</span>
+<span class="sd">      {ele1_id} is the start element.</span>
+<span class="sd">      {ele2_id} is the end element.</span>
+<span class="sd">      {order} is the map order. Default is order set in the lattice file. {order} cannot be larger than </span>
+<span class="sd">            what is set by the lattice file. </span>
+<span class="sd">    If {ele2_id} = {ele1_id}, the 1-turn transfer map is computed.</span>
+<span class="sd">    Note: {ele2_id} should just be an element name or index without universe, branch, or model/base/design specification.</span>
+<span class="sd">    Example:</span>
+<span class="sd">      python taylor_map 2@1&gt;&gt;q01w|design q02w  2</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Example: 1</span>
+<span class="sd">     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init</span>
+<span class="sd">     args:</span>
+<span class="sd">       ele1_id: 1@0&gt;&gt;q01w|design</span>
+<span class="sd">       ele2_id: q02w</span>
+<span class="sd">       order: 1</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;python taylor_map </span><span class="si">{</span><span class="n">ele1_id</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">ele2_id</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">order</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">__execute</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">as_dict</span><span class="p">,</span> <span class="n">raises</span><span class="p">,</span> <span class="n">method_name</span><span class="o">=</span><span class="s1">&#39;taylor_map&#39;</span><span class="p">,</span> <span class="n">cmd_type</span><span class="o">=</span><span class="s1">&#39;string_list&#39;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
 <h3 id="pytao.interface_commands.twiss_at_s" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">twiss_at_s</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">ele</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">s_offset</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
 
@@ -22046,48 +22270,48 @@ See the Bmad manual for more details.</p>
 
       <details class="quote">
         <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3930</span>
-<span class="normal">3931</span>
-<span class="normal">3932</span>
-<span class="normal">3933</span>
-<span class="normal">3934</span>
-<span class="normal">3935</span>
-<span class="normal">3936</span>
-<span class="normal">3937</span>
-<span class="normal">3938</span>
-<span class="normal">3939</span>
-<span class="normal">3940</span>
-<span class="normal">3941</span>
-<span class="normal">3942</span>
-<span class="normal">3943</span>
-<span class="normal">3944</span>
-<span class="normal">3945</span>
-<span class="normal">3946</span>
-<span class="normal">3947</span>
-<span class="normal">3948</span>
-<span class="normal">3949</span>
-<span class="normal">3950</span>
-<span class="normal">3951</span>
-<span class="normal">3952</span>
-<span class="normal">3953</span>
-<span class="normal">3954</span>
-<span class="normal">3955</span>
-<span class="normal">3956</span>
-<span class="normal">3957</span>
-<span class="normal">3958</span>
-<span class="normal">3959</span>
-<span class="normal">3960</span>
-<span class="normal">3961</span>
-<span class="normal">3962</span>
-<span class="normal">3963</span>
-<span class="normal">3964</span>
-<span class="normal">3965</span>
-<span class="normal">3966</span>
-<span class="normal">3967</span>
-<span class="normal">3968</span>
-<span class="normal">3969</span>
-<span class="normal">3970</span>
-<span class="normal">3971</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">twiss_at_s</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">ele</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">s_offset</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3977</span>
+<span class="normal">3978</span>
+<span class="normal">3979</span>
+<span class="normal">3980</span>
+<span class="normal">3981</span>
+<span class="normal">3982</span>
+<span class="normal">3983</span>
+<span class="normal">3984</span>
+<span class="normal">3985</span>
+<span class="normal">3986</span>
+<span class="normal">3987</span>
+<span class="normal">3988</span>
+<span class="normal">3989</span>
+<span class="normal">3990</span>
+<span class="normal">3991</span>
+<span class="normal">3992</span>
+<span class="normal">3993</span>
+<span class="normal">3994</span>
+<span class="normal">3995</span>
+<span class="normal">3996</span>
+<span class="normal">3997</span>
+<span class="normal">3998</span>
+<span class="normal">3999</span>
+<span class="normal">4000</span>
+<span class="normal">4001</span>
+<span class="normal">4002</span>
+<span class="normal">4003</span>
+<span class="normal">4004</span>
+<span class="normal">4005</span>
+<span class="normal">4006</span>
+<span class="normal">4007</span>
+<span class="normal">4008</span>
+<span class="normal">4009</span>
+<span class="normal">4010</span>
+<span class="normal">4011</span>
+<span class="normal">4012</span>
+<span class="normal">4013</span>
+<span class="normal">4014</span>
+<span class="normal">4015</span>
+<span class="normal">4016</span>
+<span class="normal">4017</span>
+<span class="normal">4018</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">twiss_at_s</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">ele</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">s_offset</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output twiss parameters at given s position.</span>
@@ -22202,37 +22426,37 @@ See the Bmad manual for more details.</p>
 
       <details class="quote">
         <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3974</span>
-<span class="normal">3975</span>
-<span class="normal">3976</span>
-<span class="normal">3977</span>
-<span class="normal">3978</span>
-<span class="normal">3979</span>
-<span class="normal">3980</span>
-<span class="normal">3981</span>
-<span class="normal">3982</span>
-<span class="normal">3983</span>
-<span class="normal">3984</span>
-<span class="normal">3985</span>
-<span class="normal">3986</span>
-<span class="normal">3987</span>
-<span class="normal">3988</span>
-<span class="normal">3989</span>
-<span class="normal">3990</span>
-<span class="normal">3991</span>
-<span class="normal">3992</span>
-<span class="normal">3993</span>
-<span class="normal">3994</span>
-<span class="normal">3995</span>
-<span class="normal">3996</span>
-<span class="normal">3997</span>
-<span class="normal">3998</span>
-<span class="normal">3999</span>
-<span class="normal">4000</span>
-<span class="normal">4001</span>
-<span class="normal">4002</span>
-<span class="normal">4003</span>
-<span class="normal">4004</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">universe</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">ix_uni</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4021</span>
+<span class="normal">4022</span>
+<span class="normal">4023</span>
+<span class="normal">4024</span>
+<span class="normal">4025</span>
+<span class="normal">4026</span>
+<span class="normal">4027</span>
+<span class="normal">4028</span>
+<span class="normal">4029</span>
+<span class="normal">4030</span>
+<span class="normal">4031</span>
+<span class="normal">4032</span>
+<span class="normal">4033</span>
+<span class="normal">4034</span>
+<span class="normal">4035</span>
+<span class="normal">4036</span>
+<span class="normal">4037</span>
+<span class="normal">4038</span>
+<span class="normal">4039</span>
+<span class="normal">4040</span>
+<span class="normal">4041</span>
+<span class="normal">4042</span>
+<span class="normal">4043</span>
+<span class="normal">4044</span>
+<span class="normal">4045</span>
+<span class="normal">4046</span>
+<span class="normal">4047</span>
+<span class="normal">4048</span>
+<span class="normal">4049</span>
+<span class="normal">4050</span>
+<span class="normal">4051</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">universe</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">ix_uni</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output universe info.</span>
@@ -22351,43 +22575,43 @@ See the Bmad manual for more details.</p>
 
       <details class="quote">
         <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4007</span>
-<span class="normal">4008</span>
-<span class="normal">4009</span>
-<span class="normal">4010</span>
-<span class="normal">4011</span>
-<span class="normal">4012</span>
-<span class="normal">4013</span>
-<span class="normal">4014</span>
-<span class="normal">4015</span>
-<span class="normal">4016</span>
-<span class="normal">4017</span>
-<span class="normal">4018</span>
-<span class="normal">4019</span>
-<span class="normal">4020</span>
-<span class="normal">4021</span>
-<span class="normal">4022</span>
-<span class="normal">4023</span>
-<span class="normal">4024</span>
-<span class="normal">4025</span>
-<span class="normal">4026</span>
-<span class="normal">4027</span>
-<span class="normal">4028</span>
-<span class="normal">4029</span>
-<span class="normal">4030</span>
-<span class="normal">4031</span>
-<span class="normal">4032</span>
-<span class="normal">4033</span>
-<span class="normal">4034</span>
-<span class="normal">4035</span>
-<span class="normal">4036</span>
-<span class="normal">4037</span>
-<span class="normal">4038</span>
-<span class="normal">4039</span>
-<span class="normal">4040</span>
-<span class="normal">4041</span>
-<span class="normal">4042</span>
-<span class="normal">4043</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">slaves</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4054</span>
+<span class="normal">4055</span>
+<span class="normal">4056</span>
+<span class="normal">4057</span>
+<span class="normal">4058</span>
+<span class="normal">4059</span>
+<span class="normal">4060</span>
+<span class="normal">4061</span>
+<span class="normal">4062</span>
+<span class="normal">4063</span>
+<span class="normal">4064</span>
+<span class="normal">4065</span>
+<span class="normal">4066</span>
+<span class="normal">4067</span>
+<span class="normal">4068</span>
+<span class="normal">4069</span>
+<span class="normal">4070</span>
+<span class="normal">4071</span>
+<span class="normal">4072</span>
+<span class="normal">4073</span>
+<span class="normal">4074</span>
+<span class="normal">4075</span>
+<span class="normal">4076</span>
+<span class="normal">4077</span>
+<span class="normal">4078</span>
+<span class="normal">4079</span>
+<span class="normal">4080</span>
+<span class="normal">4081</span>
+<span class="normal">4082</span>
+<span class="normal">4083</span>
+<span class="normal">4084</span>
+<span class="normal">4085</span>
+<span class="normal">4086</span>
+<span class="normal">4087</span>
+<span class="normal">4088</span>
+<span class="normal">4089</span>
+<span class="normal">4090</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">slaves</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output parameters of a given variable.</span>
@@ -22611,54 +22835,7 @@ the "python var_v1_create" command.</p>
 
       <details class="quote">
         <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4046</span>
-<span class="normal">4047</span>
-<span class="normal">4048</span>
-<span class="normal">4049</span>
-<span class="normal">4050</span>
-<span class="normal">4051</span>
-<span class="normal">4052</span>
-<span class="normal">4053</span>
-<span class="normal">4054</span>
-<span class="normal">4055</span>
-<span class="normal">4056</span>
-<span class="normal">4057</span>
-<span class="normal">4058</span>
-<span class="normal">4059</span>
-<span class="normal">4060</span>
-<span class="normal">4061</span>
-<span class="normal">4062</span>
-<span class="normal">4063</span>
-<span class="normal">4064</span>
-<span class="normal">4065</span>
-<span class="normal">4066</span>
-<span class="normal">4067</span>
-<span class="normal">4068</span>
-<span class="normal">4069</span>
-<span class="normal">4070</span>
-<span class="normal">4071</span>
-<span class="normal">4072</span>
-<span class="normal">4073</span>
-<span class="normal">4074</span>
-<span class="normal">4075</span>
-<span class="normal">4076</span>
-<span class="normal">4077</span>
-<span class="normal">4078</span>
-<span class="normal">4079</span>
-<span class="normal">4080</span>
-<span class="normal">4081</span>
-<span class="normal">4082</span>
-<span class="normal">4083</span>
-<span class="normal">4084</span>
-<span class="normal">4085</span>
-<span class="normal">4086</span>
-<span class="normal">4087</span>
-<span class="normal">4088</span>
-<span class="normal">4089</span>
-<span class="normal">4090</span>
-<span class="normal">4091</span>
-<span class="normal">4092</span>
-<span class="normal">4093</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4093</span>
 <span class="normal">4094</span>
 <span class="normal">4095</span>
 <span class="normal">4096</span>
@@ -22667,7 +22844,54 @@ the "python var_v1_create" command.</p>
 <span class="normal">4099</span>
 <span class="normal">4100</span>
 <span class="normal">4101</span>
-<span class="normal">4102</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_create</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">var_name</span><span class="p">,</span> <span class="n">ele_name</span><span class="p">,</span> <span class="n">attribute</span><span class="p">,</span> <span class="n">universes</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">low_lim</span><span class="p">,</span> <span class="n">high_lim</span><span class="p">,</span> <span class="n">merit_type</span><span class="p">,</span> <span class="n">good_user</span><span class="p">,</span> <span class="n">key_bound</span><span class="p">,</span> <span class="n">key_delta</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">4102</span>
+<span class="normal">4103</span>
+<span class="normal">4104</span>
+<span class="normal">4105</span>
+<span class="normal">4106</span>
+<span class="normal">4107</span>
+<span class="normal">4108</span>
+<span class="normal">4109</span>
+<span class="normal">4110</span>
+<span class="normal">4111</span>
+<span class="normal">4112</span>
+<span class="normal">4113</span>
+<span class="normal">4114</span>
+<span class="normal">4115</span>
+<span class="normal">4116</span>
+<span class="normal">4117</span>
+<span class="normal">4118</span>
+<span class="normal">4119</span>
+<span class="normal">4120</span>
+<span class="normal">4121</span>
+<span class="normal">4122</span>
+<span class="normal">4123</span>
+<span class="normal">4124</span>
+<span class="normal">4125</span>
+<span class="normal">4126</span>
+<span class="normal">4127</span>
+<span class="normal">4128</span>
+<span class="normal">4129</span>
+<span class="normal">4130</span>
+<span class="normal">4131</span>
+<span class="normal">4132</span>
+<span class="normal">4133</span>
+<span class="normal">4134</span>
+<span class="normal">4135</span>
+<span class="normal">4136</span>
+<span class="normal">4137</span>
+<span class="normal">4138</span>
+<span class="normal">4139</span>
+<span class="normal">4140</span>
+<span class="normal">4141</span>
+<span class="normal">4142</span>
+<span class="normal">4143</span>
+<span class="normal">4144</span>
+<span class="normal">4145</span>
+<span class="normal">4146</span>
+<span class="normal">4147</span>
+<span class="normal">4148</span>
+<span class="normal">4149</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_create</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">var_name</span><span class="p">,</span> <span class="n">ele_name</span><span class="p">,</span> <span class="n">attribute</span><span class="p">,</span> <span class="n">universes</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">low_lim</span><span class="p">,</span> <span class="n">high_lim</span><span class="p">,</span> <span class="n">merit_type</span><span class="p">,</span> <span class="n">good_user</span><span class="p">,</span> <span class="n">key_bound</span><span class="p">,</span> <span class="n">key_delta</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Create a single variable</span>
@@ -22774,33 +22998,33 @@ the "python var_v1_create" command.</p>
 
       <details class="quote">
         <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4105</span>
-<span class="normal">4106</span>
-<span class="normal">4107</span>
-<span class="normal">4108</span>
-<span class="normal">4109</span>
-<span class="normal">4110</span>
-<span class="normal">4111</span>
-<span class="normal">4112</span>
-<span class="normal">4113</span>
-<span class="normal">4114</span>
-<span class="normal">4115</span>
-<span class="normal">4116</span>
-<span class="normal">4117</span>
-<span class="normal">4118</span>
-<span class="normal">4119</span>
-<span class="normal">4120</span>
-<span class="normal">4121</span>
-<span class="normal">4122</span>
-<span class="normal">4123</span>
-<span class="normal">4124</span>
-<span class="normal">4125</span>
-<span class="normal">4126</span>
-<span class="normal">4127</span>
-<span class="normal">4128</span>
-<span class="normal">4129</span>
-<span class="normal">4130</span>
-<span class="normal">4131</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_general</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4152</span>
+<span class="normal">4153</span>
+<span class="normal">4154</span>
+<span class="normal">4155</span>
+<span class="normal">4156</span>
+<span class="normal">4157</span>
+<span class="normal">4158</span>
+<span class="normal">4159</span>
+<span class="normal">4160</span>
+<span class="normal">4161</span>
+<span class="normal">4162</span>
+<span class="normal">4163</span>
+<span class="normal">4164</span>
+<span class="normal">4165</span>
+<span class="normal">4166</span>
+<span class="normal">4167</span>
+<span class="normal">4168</span>
+<span class="normal">4169</span>
+<span class="normal">4170</span>
+<span class="normal">4171</span>
+<span class="normal">4172</span>
+<span class="normal">4173</span>
+<span class="normal">4174</span>
+<span class="normal">4175</span>
+<span class="normal">4176</span>
+<span class="normal">4177</span>
+<span class="normal">4178</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_general</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output list of all variable v1 arrays</span>
@@ -22899,35 +23123,35 @@ the "python var_v1_create" command.</p>
 
       <details class="quote">
         <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4164</span>
-<span class="normal">4165</span>
-<span class="normal">4166</span>
-<span class="normal">4167</span>
-<span class="normal">4168</span>
-<span class="normal">4169</span>
-<span class="normal">4170</span>
-<span class="normal">4171</span>
-<span class="normal">4172</span>
-<span class="normal">4173</span>
-<span class="normal">4174</span>
-<span class="normal">4175</span>
-<span class="normal">4176</span>
-<span class="normal">4177</span>
-<span class="normal">4178</span>
-<span class="normal">4179</span>
-<span class="normal">4180</span>
-<span class="normal">4181</span>
-<span class="normal">4182</span>
-<span class="normal">4183</span>
-<span class="normal">4184</span>
-<span class="normal">4185</span>
-<span class="normal">4186</span>
-<span class="normal">4187</span>
-<span class="normal">4188</span>
-<span class="normal">4189</span>
-<span class="normal">4190</span>
-<span class="normal">4191</span>
-<span class="normal">4192</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_v1_array</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">v1_var</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4211</span>
+<span class="normal">4212</span>
+<span class="normal">4213</span>
+<span class="normal">4214</span>
+<span class="normal">4215</span>
+<span class="normal">4216</span>
+<span class="normal">4217</span>
+<span class="normal">4218</span>
+<span class="normal">4219</span>
+<span class="normal">4220</span>
+<span class="normal">4221</span>
+<span class="normal">4222</span>
+<span class="normal">4223</span>
+<span class="normal">4224</span>
+<span class="normal">4225</span>
+<span class="normal">4226</span>
+<span class="normal">4227</span>
+<span class="normal">4228</span>
+<span class="normal">4229</span>
+<span class="normal">4230</span>
+<span class="normal">4231</span>
+<span class="normal">4232</span>
+<span class="normal">4233</span>
+<span class="normal">4234</span>
+<span class="normal">4235</span>
+<span class="normal">4236</span>
+<span class="normal">4237</span>
+<span class="normal">4238</span>
+<span class="normal">4239</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_v1_array</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">v1_var</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output list of variables in a given variable v1 array</span>
@@ -23064,57 +23288,57 @@ partially created variable and generating unwanted error messages.</p>
 
       <details class="quote">
         <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4195</span>
-<span class="normal">4196</span>
-<span class="normal">4197</span>
-<span class="normal">4198</span>
-<span class="normal">4199</span>
-<span class="normal">4200</span>
-<span class="normal">4201</span>
-<span class="normal">4202</span>
-<span class="normal">4203</span>
-<span class="normal">4204</span>
-<span class="normal">4205</span>
-<span class="normal">4206</span>
-<span class="normal">4207</span>
-<span class="normal">4208</span>
-<span class="normal">4209</span>
-<span class="normal">4210</span>
-<span class="normal">4211</span>
-<span class="normal">4212</span>
-<span class="normal">4213</span>
-<span class="normal">4214</span>
-<span class="normal">4215</span>
-<span class="normal">4216</span>
-<span class="normal">4217</span>
-<span class="normal">4218</span>
-<span class="normal">4219</span>
-<span class="normal">4220</span>
-<span class="normal">4221</span>
-<span class="normal">4222</span>
-<span class="normal">4223</span>
-<span class="normal">4224</span>
-<span class="normal">4225</span>
-<span class="normal">4226</span>
-<span class="normal">4227</span>
-<span class="normal">4228</span>
-<span class="normal">4229</span>
-<span class="normal">4230</span>
-<span class="normal">4231</span>
-<span class="normal">4232</span>
-<span class="normal">4233</span>
-<span class="normal">4234</span>
-<span class="normal">4235</span>
-<span class="normal">4236</span>
-<span class="normal">4237</span>
-<span class="normal">4238</span>
-<span class="normal">4239</span>
-<span class="normal">4240</span>
-<span class="normal">4241</span>
-<span class="normal">4242</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4242</span>
 <span class="normal">4243</span>
 <span class="normal">4244</span>
-<span class="normal">4245</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_v1_create</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">v1_name</span><span class="p">,</span> <span class="n">n_var_min</span><span class="p">,</span> <span class="n">n_var_max</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">4245</span>
+<span class="normal">4246</span>
+<span class="normal">4247</span>
+<span class="normal">4248</span>
+<span class="normal">4249</span>
+<span class="normal">4250</span>
+<span class="normal">4251</span>
+<span class="normal">4252</span>
+<span class="normal">4253</span>
+<span class="normal">4254</span>
+<span class="normal">4255</span>
+<span class="normal">4256</span>
+<span class="normal">4257</span>
+<span class="normal">4258</span>
+<span class="normal">4259</span>
+<span class="normal">4260</span>
+<span class="normal">4261</span>
+<span class="normal">4262</span>
+<span class="normal">4263</span>
+<span class="normal">4264</span>
+<span class="normal">4265</span>
+<span class="normal">4266</span>
+<span class="normal">4267</span>
+<span class="normal">4268</span>
+<span class="normal">4269</span>
+<span class="normal">4270</span>
+<span class="normal">4271</span>
+<span class="normal">4272</span>
+<span class="normal">4273</span>
+<span class="normal">4274</span>
+<span class="normal">4275</span>
+<span class="normal">4276</span>
+<span class="normal">4277</span>
+<span class="normal">4278</span>
+<span class="normal">4279</span>
+<span class="normal">4280</span>
+<span class="normal">4281</span>
+<span class="normal">4282</span>
+<span class="normal">4283</span>
+<span class="normal">4284</span>
+<span class="normal">4285</span>
+<span class="normal">4286</span>
+<span class="normal">4287</span>
+<span class="normal">4288</span>
+<span class="normal">4289</span>
+<span class="normal">4290</span>
+<span class="normal">4291</span>
+<span class="normal">4292</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_v1_create</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">v1_name</span><span class="p">,</span> <span class="n">n_var_min</span><span class="p">,</span> <span class="n">n_var_max</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Create a v1 variable structure along with associated var array.</span>
@@ -23237,35 +23461,35 @@ partially created variable and generating unwanted error messages.</p>
 
       <details class="quote">
         <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4248</span>
-<span class="normal">4249</span>
-<span class="normal">4250</span>
-<span class="normal">4251</span>
-<span class="normal">4252</span>
-<span class="normal">4253</span>
-<span class="normal">4254</span>
-<span class="normal">4255</span>
-<span class="normal">4256</span>
-<span class="normal">4257</span>
-<span class="normal">4258</span>
-<span class="normal">4259</span>
-<span class="normal">4260</span>
-<span class="normal">4261</span>
-<span class="normal">4262</span>
-<span class="normal">4263</span>
-<span class="normal">4264</span>
-<span class="normal">4265</span>
-<span class="normal">4266</span>
-<span class="normal">4267</span>
-<span class="normal">4268</span>
-<span class="normal">4269</span>
-<span class="normal">4270</span>
-<span class="normal">4271</span>
-<span class="normal">4272</span>
-<span class="normal">4273</span>
-<span class="normal">4274</span>
-<span class="normal">4275</span>
-<span class="normal">4276</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_v1_destroy</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">v1_datum</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4295</span>
+<span class="normal">4296</span>
+<span class="normal">4297</span>
+<span class="normal">4298</span>
+<span class="normal">4299</span>
+<span class="normal">4300</span>
+<span class="normal">4301</span>
+<span class="normal">4302</span>
+<span class="normal">4303</span>
+<span class="normal">4304</span>
+<span class="normal">4305</span>
+<span class="normal">4306</span>
+<span class="normal">4307</span>
+<span class="normal">4308</span>
+<span class="normal">4309</span>
+<span class="normal">4310</span>
+<span class="normal">4311</span>
+<span class="normal">4312</span>
+<span class="normal">4313</span>
+<span class="normal">4314</span>
+<span class="normal">4315</span>
+<span class="normal">4316</span>
+<span class="normal">4317</span>
+<span class="normal">4318</span>
+<span class="normal">4319</span>
+<span class="normal">4320</span>
+<span class="normal">4321</span>
+<span class="normal">4322</span>
+<span class="normal">4323</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_v1_destroy</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">v1_datum</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Destroy a v1 var structure along with associated var sub-array.</span>
@@ -23350,34 +23574,34 @@ partially created variable and generating unwanted error messages.</p>
 
       <details class="quote">
         <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4134</span>
-<span class="normal">4135</span>
-<span class="normal">4136</span>
-<span class="normal">4137</span>
-<span class="normal">4138</span>
-<span class="normal">4139</span>
-<span class="normal">4140</span>
-<span class="normal">4141</span>
-<span class="normal">4142</span>
-<span class="normal">4143</span>
-<span class="normal">4144</span>
-<span class="normal">4145</span>
-<span class="normal">4146</span>
-<span class="normal">4147</span>
-<span class="normal">4148</span>
-<span class="normal">4149</span>
-<span class="normal">4150</span>
-<span class="normal">4151</span>
-<span class="normal">4152</span>
-<span class="normal">4153</span>
-<span class="normal">4154</span>
-<span class="normal">4155</span>
-<span class="normal">4156</span>
-<span class="normal">4157</span>
-<span class="normal">4158</span>
-<span class="normal">4159</span>
-<span class="normal">4160</span>
-<span class="normal">4161</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_v_array</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">v1_var</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4181</span>
+<span class="normal">4182</span>
+<span class="normal">4183</span>
+<span class="normal">4184</span>
+<span class="normal">4185</span>
+<span class="normal">4186</span>
+<span class="normal">4187</span>
+<span class="normal">4188</span>
+<span class="normal">4189</span>
+<span class="normal">4190</span>
+<span class="normal">4191</span>
+<span class="normal">4192</span>
+<span class="normal">4193</span>
+<span class="normal">4194</span>
+<span class="normal">4195</span>
+<span class="normal">4196</span>
+<span class="normal">4197</span>
+<span class="normal">4198</span>
+<span class="normal">4199</span>
+<span class="normal">4200</span>
+<span class="normal">4201</span>
+<span class="normal">4202</span>
+<span class="normal">4203</span>
+<span class="normal">4204</span>
+<span class="normal">4205</span>
+<span class="normal">4206</span>
+<span class="normal">4207</span>
+<span class="normal">4208</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_v_array</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">v1_var</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output list of variables for a given data_v1.</span>
@@ -23482,41 +23706,41 @@ partially created variable and generating unwanted error messages.</p>
 
       <details class="quote">
         <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4279</span>
-<span class="normal">4280</span>
-<span class="normal">4281</span>
-<span class="normal">4282</span>
-<span class="normal">4283</span>
-<span class="normal">4284</span>
-<span class="normal">4285</span>
-<span class="normal">4286</span>
-<span class="normal">4287</span>
-<span class="normal">4288</span>
-<span class="normal">4289</span>
-<span class="normal">4290</span>
-<span class="normal">4291</span>
-<span class="normal">4292</span>
-<span class="normal">4293</span>
-<span class="normal">4294</span>
-<span class="normal">4295</span>
-<span class="normal">4296</span>
-<span class="normal">4297</span>
-<span class="normal">4298</span>
-<span class="normal">4299</span>
-<span class="normal">4300</span>
-<span class="normal">4301</span>
-<span class="normal">4302</span>
-<span class="normal">4303</span>
-<span class="normal">4304</span>
-<span class="normal">4305</span>
-<span class="normal">4306</span>
-<span class="normal">4307</span>
-<span class="normal">4308</span>
-<span class="normal">4309</span>
-<span class="normal">4310</span>
-<span class="normal">4311</span>
-<span class="normal">4312</span>
-<span class="normal">4313</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">wave</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">who</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4326</span>
+<span class="normal">4327</span>
+<span class="normal">4328</span>
+<span class="normal">4329</span>
+<span class="normal">4330</span>
+<span class="normal">4331</span>
+<span class="normal">4332</span>
+<span class="normal">4333</span>
+<span class="normal">4334</span>
+<span class="normal">4335</span>
+<span class="normal">4336</span>
+<span class="normal">4337</span>
+<span class="normal">4338</span>
+<span class="normal">4339</span>
+<span class="normal">4340</span>
+<span class="normal">4341</span>
+<span class="normal">4342</span>
+<span class="normal">4343</span>
+<span class="normal">4344</span>
+<span class="normal">4345</span>
+<span class="normal">4346</span>
+<span class="normal">4347</span>
+<span class="normal">4348</span>
+<span class="normal">4349</span>
+<span class="normal">4350</span>
+<span class="normal">4351</span>
+<span class="normal">4352</span>
+<span class="normal">4353</span>
+<span class="normal">4354</span>
+<span class="normal">4355</span>
+<span class="normal">4356</span>
+<span class="normal">4357</span>
+<span class="normal">4358</span>
+<span class="normal">4359</span>
+<span class="normal">4360</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">wave</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">who</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output Wave analysis info.</span>
