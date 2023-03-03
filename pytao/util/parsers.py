@@ -239,6 +239,34 @@ def parse_spin_invariant(flat_array):
         return flat_array.reshape(len(flat_array)//3, 3)
 
 
+    
+def parse_taylor_map(lines):
+    """
+    Parses the output of the `python taylor_map` command.
+    
+    Parameters
+    ----------
+    lines : list of str
+        The output of the 'python taylor_map' command to parse
+    
+    Returns
+    -------
+    dict of dict of taylor terms:
+        {2: { (3,0,0,0,0,0)}: 4.56, ... 
+            corresponding to: px_out = 4.56 * x_in^3
+    
+    
+    """
+    tt = {i:{} for i in range(1,7)}
+    for term_str in lines:
+        t = term_str.split(';')
+        out = int(t[0])
+        coef = float(t[2])
+        exponents =  tuple([int(i) for i in t[3:]])
+        tt[out][exponents] = coef
+    return tt    
+    
+    
 def parse_var_v_array_line(line):
     v = line.split(';')
     out = dict(
