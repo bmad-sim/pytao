@@ -592,6 +592,12 @@ def test_super_universe_1():
     ret = interface_commands.super_universe(tao)
             
         
+def test_taylor_map_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
+    ret = interface_commands.taylor_map(tao, ele1_id='1@0>>q01w|design', ele2_id='q02w', order='1')
+            
+        
 def test_twiss_at_s_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))

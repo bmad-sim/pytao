@@ -3869,9 +3869,7 @@ def spin_resonance(tao, *, ix_uni='', ix_branch='', which='model', ref_ele='0', 
     
     Returns
     -------
-    q_spin                        -- Spin tune
-    dq_a_min, dq_b_min, dq_c_min  -- Minimum tune separation between a,b,c mode tunes and spin tune.
-    xi_res_a, xi_res_b, xi_res_c  -- The linear spin/orbit "sum" and "difference" resonance strengths for a,b,c modes.
+    string_list
     
     Notes
     -----
@@ -3883,6 +3881,10 @@ def spin_resonance(tao, *, ix_uni='', ix_branch='', which='model', ref_ele='0', 
       {ix_branch} is a lattice branch index. Defaults to s%global%default_branch.
       {which} is one of: "model", "base" or "design"
       {ref_ele} is an element name or index.
+    This will return a string_list with the following fields:
+      spin_tune                   -- Spin tune
+      dq_X_sum, dq_X_diff         -- Tune sum Q_spin+Q_mode and tune difference Q_spin-Q_mode for modes X = a, b, and c.
+      xi_res_X_sum, xi_res_X_diff -- The linear spin/orbit sum and difference resonance strengths for X = a, b, and c modes.  
     
     Examples
     --------
@@ -3896,9 +3898,7 @@ def spin_resonance(tao, *, ix_uni='', ix_branch='', which='model', ref_ele='0', 
     """
     cmd = f'python spin_resonance {ix_uni}@{ix_branch}|{which} {ref_ele}'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='spin_resonance', cmd_type='q_spin                        -- Spin tune')
-    return __execute(tao, cmd, as_dict, raises, method_name='spin_resonance', cmd_type='dq_a_min, dq_b_min, dq_c_min  -- Minimum tune separation between a,b,c mode tunes and spin tune.')
-    return __execute(tao, cmd, as_dict, raises, method_name='spin_resonance', cmd_type='xi_res_a, xi_res_b, xi_res_c  -- The linear spin/orbit "sum" and "difference" resonance strengths for a,b,c modes.')
+    return __execute(tao, cmd, as_dict, raises, method_name='spin_resonance', cmd_type='string_list')
 
 
 def super_universe(tao, *, verbose=False, as_dict=True, raises=True):
@@ -3925,6 +3925,53 @@ def super_universe(tao, *, verbose=False, as_dict=True, raises=True):
     cmd = f'python super_universe'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, raises, method_name='super_universe', cmd_type='string_list')
+
+
+def taylor_map(tao, ele1_id, ele2_id, *, order='1', verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output Taylor map between two points.
+    
+    Parameters
+    ----------
+    ele1_id
+    ele2_id
+    order : default=1
+    
+    Returns
+    -------
+    dict of dict of taylor terms:
+        {2: { (3,0,0,0,0,0)}: 4.56, ... 
+            corresponding to: px_out = 4.56 * x_in^3
+    
+    Notes
+    -----
+    Command syntax:
+      python taylor_map {ele1_id} {ele2_id} {order}
+    
+    Where:
+      {ele1_id} is the start element.
+      {ele2_id} is the end element.
+      {order} is the map order. Default is order set in the lattice file. {order} cannot be larger than 
+            what is set by the lattice file. 
+    If {ele2_id} = {ele1_id}, the 1-turn transfer map is computed.
+    Note: {ele2_id} should just be an element name or index without universe, branch, or model/base/design specification.
+    Example:
+      python taylor_map 2@1>>q01w|design q02w  2
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
+     args:
+       ele1_id: 1@0>>q01w|design
+       ele2_id: q02w
+       order: 1
+    
+    """
+    cmd = f'python taylor_map {ele1_id} {ele2_id} {order}'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='taylor_map', cmd_type='string_list')
 
 
 def twiss_at_s(tao, *, ix_uni='', ele='', s_offset='', which='model', verbose=False, as_dict=True, raises=True):
