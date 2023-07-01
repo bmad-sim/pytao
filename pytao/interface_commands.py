@@ -2380,7 +2380,7 @@ def tao_global(tao, *, verbose=False, as_dict=True, raises=True):
     return __execute(tao, cmd, as_dict, raises, method_name='tao_global', cmd_type='string_list')
 
 
-def global_optimation(tao, *, verbose=False, as_dict=True, raises=True):
+def global_optimization(tao, *, verbose=False, as_dict=True, raises=True):
     """
     
     Output optimization parameters.
@@ -2393,7 +2393,7 @@ def global_optimation(tao, *, verbose=False, as_dict=True, raises=True):
     Notes
     -----
     Command syntax:
-      python global:opti_de
+      python global:optimization
     
     Output syntax is parameter list form. See documentation at the beginning of this file.
     
@@ -2404,9 +2404,9 @@ def global_optimation(tao, *, verbose=False, as_dict=True, raises=True):
      args:
     
     """
-    cmd = f'python global:opti_de'
+    cmd = f'python global:optimization'
     if verbose: print(cmd)
-    return __execute(tao, cmd, as_dict, raises, method_name='global_optimation', cmd_type='string_list')
+    return __execute(tao, cmd, as_dict, raises, method_name='global_optimization', cmd_type='string_list')
 
 
 def global_opti_de(tao, *, verbose=False, as_dict=True, raises=True):
