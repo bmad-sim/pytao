@@ -126,6 +126,26 @@ def parse_derivative(lines):
 
 
 
+def parse_ele_control_var(lines):
+    """
+    Parses the output of tao python ele_control_var
+    
+    Parameters
+    ----------
+    lines : list of str
+        The output of the 'python ele_control_var' command to parse
+    
+    Returns
+    -------
+    dict of attributes and values
+    
+    """
+    d = {}
+    for line in lines:
+        ix, name, value = line.split(';')
+        d[name] = float(value)    
+    return d
+
 def parse_lat_ele_list(lines):
     """
     Parses the output of tao python lat_ele_list
@@ -163,6 +183,24 @@ def parse_matrix(lines):
     """
     m7 = np.array([[float(x) for x in line.split(';')[1:]] for line in lines])
     return {'mat6':m7[:,0:6], 'vec0':m7[:,6]}
+
+
+def parse_merit(lines):
+    """
+    Parses the output of a tao python merit
+    
+    Parameters
+    ----------
+    lines : list of str
+        The output of the 'python matrix' command to parse
+    
+    Returns
+    -------
+    merit: float
+        Value of the merit function
+    """
+    assert len(lines) == 1
+    return float(lines[0])
 
 
 def parse_plot_list(lines):

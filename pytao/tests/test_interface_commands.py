@@ -346,6 +346,18 @@ def test_tao_global_1():
     ret = interface_commands.tao_global(tao)
             
         
+def test_global_optimization_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
+    ret = interface_commands.global_optimization(tao)
+            
+        
+def test_global_opti_de_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
+    ret = interface_commands.global_opti_de(tao)
+            
+        
 def test_help_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
@@ -554,6 +566,12 @@ def test_show_1():
     
     tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
     ret = interface_commands.show(tao, line='-python')
+            
+        
+def test_space_charge_com_1():
+    
+    tao = Tao(os.path.expandvars('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'))
+    ret = interface_commands.space_charge_com(tao)
             
         
 def test_species_to_int_1():

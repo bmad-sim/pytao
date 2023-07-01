@@ -1282,7 +1282,7 @@ def ele_control_var(tao, ele_id, *, which='model', verbose=False, as_dict=True, 
     
     Returns
     -------
-    string_list
+    dict of attributes and values
     
     Notes
     -----
@@ -2380,6 +2380,63 @@ def tao_global(tao, *, verbose=False, as_dict=True, raises=True):
     return __execute(tao, cmd, as_dict, raises, method_name='tao_global', cmd_type='string_list')
 
 
+def global_optimization(tao, *, verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output optimization parameters.
+    Also see global:opti_de.
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python global:optimization
+    
+    Output syntax is parameter list form. See documentation at the beginning of this file.
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
+     args:
+    
+    """
+    cmd = f'python global:optimization'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='global_optimization', cmd_type='string_list')
+
+
+def global_opti_de(tao, *, verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output DE optimization parameters.
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python global:opti_de
+    
+    Output syntax is parameter list form. See documentation at the beginning of this file.
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
+     args:
+    
+    """
+    cmd = f'python global:opti_de'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='global_opti_de', cmd_type='string_list')
+
+
 def help(tao, *, verbose=False, as_dict=True, raises=True):
     """
     
@@ -2720,7 +2777,8 @@ def merit(tao, *, verbose=False, as_dict=True, raises=True):
     
     Returns
     -------
-    string_list
+    merit: float
+        Value of the merit function
     
     Notes
     -----
@@ -3672,6 +3730,34 @@ def show(tao, line, *, verbose=False, as_dict=True, raises=True):
     cmd = f'python show {line}'
     if verbose: print(cmd)
     return __execute(tao, cmd, as_dict, raises, method_name='show', cmd_type='string_list')
+
+
+def space_charge_com(tao, *, verbose=False, as_dict=True, raises=True):
+    """
+    
+    Output space_charge_com structure parameters.
+    
+    Returns
+    -------
+    string_list
+    
+    Notes
+    -----
+    Command syntax:
+      python space_charge_com
+    
+    Output syntax is parameter list form. See documentation at the beginning of this file.
+    
+    Examples
+    --------
+    Example: 1
+     init: -init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init
+     args:
+    
+    """
+    cmd = f'python space_charge_com'
+    if verbose: print(cmd)
+    return __execute(tao, cmd, as_dict, raises, method_name='space_charge_com', cmd_type='string_list')
 
 
 def species_to_int(tao, species_str, *, verbose=False, as_dict=True, raises=True):
