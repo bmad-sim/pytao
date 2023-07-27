@@ -218,6 +218,10 @@ class Tao:
         
         self.so_lib.tao_c_command(cmd.encode('utf-8'))
         n = self.so_lib.tao_c_real_array_size()
+        # Empty array
+        if n == 0:
+            return np.array([], dtype=float)     
+            
         self.so_lib.tao_c_get_real_array.restype = ctypes.POINTER(ctypes.c_double * n)
 
         # Check the output for errors
@@ -249,6 +253,10 @@ class Tao:
         
         self.so_lib.tao_c_command(cmd.encode('utf-8'))
         n = self.so_lib.tao_c_integer_array_size()
+        # Empty array
+        if n == 0:
+            return np.array([], dtype=int)
+
         self.so_lib.tao_c_get_integer_array.restype = ctypes.POINTER(ctypes.c_int * n)
 
         # Check the output for errors
