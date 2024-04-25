@@ -323,7 +323,7 @@ def bunch1(tao, ele_id, coordinate, *, which='model', ix_bunch='1', verbose=Fals
       {ele_id} is an element name or index.
       {which} is one of: "model", "base" or "design"
       {ix_bunch} is the bunch index.
-      {coordinate} is one of: x, px, y, py, z, pz, "s", "t", "charge", "p0c", "state"
+      {coordinate} is one of: x, px, y, py, z, pz, "s", "t", "charge", "p0c", "state", "ix_ele"
     
     For example, if {coordinate} = "px", the phase space px coordinate of each particle
     of the bunch is displayed. The "state" of a particle is an integer. A value of 1 means
@@ -340,12 +340,17 @@ def bunch1(tao, ele_id, coordinate, *, which='model', ix_bunch='1', verbose=Fals
        ix_bunch: 1
     
     """
+    # Define data types for each coordinate
+    coord_dtypes = {k: 'real_array' for k in ["x", "px", "y", "py", "z", "pz", "s", "t", "charge", "p0c"]}
+    coord_dtypes.update({k: 'integer_array' for k in ["state", "ix_ele"]})
+
+    # Construct tao command (and print if requested)
     cmd = f'python bunch1 {ele_id}|{which} {ix_bunch} {coordinate}'
-    if verbose: print(cmd)
-    if coordinate != 'state':
-        return __execute(tao, cmd, as_dict, raises, method_name='bunch1', cmd_type='real_array')
-    if coordinate == 'state':
-        return __execute(tao, cmd, as_dict, raises, method_name='bunch1', cmd_type='integer_array')
+    if verbose:
+      print(cmd)
+    
+    # Execute the command through tao
+    return __execute(tao, cmd, as_dict, raises, method_name='bunch1', cmd_type=coord_dtypes[coordinate])
 
 
 def building_wall_list(tao, *, ix_section='', verbose=False, as_dict=True, raises=True):
