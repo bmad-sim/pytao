@@ -5,17 +5,47 @@ from pytao.util import parsers as __parsers
 
 
 def __execute(tao, cmd, as_dict=True, raises=True, method_name=None, cmd_type="string_list"):
+    """
+    
+    A wrapper to handle commonly used options when running a command through tao.
+
+    Parameters
+    ----------
+    tao : Tao
+      The handle to tao to run the command on
+    cmd : str
+      The command to run
+    as_dict : bool, optional
+      Return string data as a dict? by default True
+    raises : bool, optional
+      Raise exception on tao errors? by default True
+    method_name : str/None, optional
+      Name of the caller. Required for custom parsers for commands, by default None
+    cmd_type : str, optional
+      The type of data returned by tao in its common memory, by default "string_list"
+
+    Returns
+    -------
+    Any
+      Result from running tao. The type of data depends on configuration, but is generally a list of strings, a dict, or a
+      numpy array.
+    """
+    # Grab the correct method for calling tao
     func_for_type = {
         "string_list": tao.cmd,
         "real_array": tao.cmd_real,
         "integer_array": tao.cmd_integer
     }
     func = func_for_type.get(cmd_type, tao.cmd)
+    
+    # Run it and process w/ custom parser if exists
     ret = func(cmd, raises=raises)
     special_parser = getattr(__parsers, f'parse_{method_name}', "")
     if special_parser:
         data = special_parser(ret)
         return data
+    
+    # Handle string data
     if "string" in cmd_type:
         try:
             if as_dict:
@@ -25,9 +55,7 @@ def __execute(tao, cmd, as_dict=True, raises=True, method_name=None, cmd_type="s
         except Exception as ex:
             # TODO: use logger instead of: print('Failed to parse string data. Returning raw value. Exception was: ', ex)
             return ret
-            
         return data
-        
     return ret
 
 
