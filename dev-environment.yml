@@ -17,6 +17,6 @@ dependencies:
   - mkdocs
   - mkdocstrings
   - mkdocs-material
-  - mkdocs-jupyter
+  - mkdocs-jupyter==0.24.6
   - mkdocstrings-python
 
