@@ -71,14 +71,14 @@ def plot_csr_stats(data, **kwargs):
     
     fig, ax = plt.subplots(**kwargs)
     
-    ax.set_xlabel('s (m)')
+    ax.set_xlabel(r'$s$ (m)')
     ax.set_ylabel('CSR Kick/m')
     ax.plot(s_pos, stats[:,0], color='black', label='Average Wake')
     ax.plot(s_pos, stats[:,1], color='red', label='std Wake')
     
     ax2 = ax.twinx()
-    ax2.plot(s_pos, stats[:,3]*1e15/299792458, color='blue', label='$\sigma_z/c (fs)$')
-    ax2.set_ylabel('$\sigma_z/c (fs)$')
+    ax2.plot(s_pos, stats[:,3]*1e15/299792458, color='blue', label=r'$\sigma_z/c$ (fs)')
+    ax2.set_ylabel(r'$\sigma_z/c$ (fs)')
     ax.legend()
 
     
