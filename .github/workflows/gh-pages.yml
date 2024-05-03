@@ -26,6 +26,7 @@ jobs:
       - name: Pin MkDocs to 1.5.2
         shell: bash -l {0}
         run: |
+          mamba list
           mamba install -c conda-forge mkdocs==1.5.2 --yes
       - name: Build Docs
         shell: bash -l {0}
