@@ -14,9 +14,9 @@ dependencies:
   - ipywidgets
   - matplotlib
   - pygments
-  - mkdocs #==1.5.2 # pin because of a bug in the latest: ModuleNotFoundError: No module named 'mkdocs.tests'
+  - mkdocs
   - mkdocstrings
   - mkdocs-material
-  - mkdocs-jupyter
+  - mkdocs-jupyter==0.24.6
   - mkdocstrings-python
 
