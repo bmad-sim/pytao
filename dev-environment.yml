@@ -1,9 +1,9 @@
-# conda env create -f environment.yml
+# conda env create -f dev-environment.yml
 name: pytao-dev
 channels:
   - conda-forge
 dependencies:
-  - python=3.9
+  - python=3.11
 # Developer
   - openPMD-beamphysics
   - numpydoc
@@ -14,9 +14,9 @@ dependencies:
   - ipywidgets
   - matplotlib
   - pygments
-  - mkdocs
+  - mkdocs==1.5.2 # pin because of a bug in the latest: ModuleNotFoundError: No module named 'mkdocs.tests'
   - mkdocstrings
   - mkdocs-material
-  - mkdocs-jupyter==0.24.6
+  - mkdocs-jupyter
   - mkdocstrings-python
 
