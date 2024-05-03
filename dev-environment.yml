@@ -3,7 +3,7 @@ name: pytao-dev
 channels:
   - conda-forge
 dependencies:
-  - python==3.11
+  - python==3.9
 # Developer
   - openPMD-beamphysics
   - numpydoc
