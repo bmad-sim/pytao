@@ -14,7 +14,7 @@ dependencies:
   - ipywidgets
   - matplotlib
   - pygments
-  - mkdocs
+  - mkdocs==1.5.2
   - mkdocstrings
   - mkdocs-material
   - mkdocs-jupyter==0.24.6
