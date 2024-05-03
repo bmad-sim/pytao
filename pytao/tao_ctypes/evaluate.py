@@ -116,7 +116,7 @@ def evaluate_tao(settings,
                     g.attrs[k] = v
                     
             # CSR wake
-            csr_wake_file = os.path.join(M.path, 'csr_wake.dat')
+            csr_wake_file = os.path.join(M.path, 'wake.dat')
 
             if archive_csr_wake and os.path.exists(csr_wake_file):
                 csr_wake_data = parse_csr_wake(csr_wake_file)

@@ -1,9 +1,9 @@
-# conda env create -f environment.yml
+# conda env create -f dev-environment.yml
 name: pytao-dev
 channels:
   - conda-forge
 dependencies:
-  - python=3.9
+  - python==3.12
 # Developer
   - openPMD-beamphysics
   - numpydoc
@@ -14,9 +14,9 @@ dependencies:
   - ipywidgets
   - matplotlib
   - pygments
-  - mkdocs
+  - mkdocs==1.5.2
   - mkdocstrings
   - mkdocs-material
-  - mkdocs-jupyter
+  - mkdocs-jupyter==0.24.6
   - mkdocstrings-python
 

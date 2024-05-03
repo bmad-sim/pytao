@@ -89,6 +89,9 @@ def parse_pytype(type, val):
     if type == 'REAL':
         return float(val)
 
+    if type == 'INT_ARR':
+        return np.array(val).astype(int)
+
     if type == 'REAL_ARR':
         return np.array(val).astype(float)
 
