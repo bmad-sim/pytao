@@ -45,9 +45,6 @@ class TaoCore:
         # we try to autogenerate it will complain about the broken
         # interface_commands file.
         
-        from pytao import interface_commands 
-        from pytao.tao_ctypes import extra_commands
-        
         # Library needs to be set.
         self.so_lib_file = None
         if so_lib == '':
