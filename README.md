@@ -11,7 +11,6 @@ Documentation for Bmad and Tao, as well as information for downloading the code 
 [![Documentation](https://img.shields.io/badge/api-reference-blue.svg)](https://bmad-sim.github.io/pytao/dev_docs/api/index.html)  |
 
 
-
 ## Installation
 
 See the [PyTao installation instructions](https://bmad-sim.github.io/pytao/user_docs/index.html) for details. The preferred installation method is using conda:
