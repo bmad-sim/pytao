@@ -23,6 +23,12 @@ jobs:
         with:
           depth: 1
 
+      - uses: actions/checkout@v4
+        with:
+          repository: bmad-sim/bmad-ecosystem
+          depth: 1
+          path: /home/runner/bmad
+
       - uses: conda-incubator/setup-miniconda@v3
         with:
           python-version: ${{ matrix.python-version }}
@@ -30,12 +36,6 @@ jobs:
           channels: conda-forge
           activate-environment: pytao-dev
           environment-file: dev-environment.yml
-
-      - uses: actions/checkout@v4
-        with:
-          repository: https://github.com/bmad-sim/bmad-ecosystem
-          depth: 1
-          path: /home/runner/bmad
 
       - name: Setup Bmad
         run: |
