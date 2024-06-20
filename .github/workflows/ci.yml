@@ -27,7 +27,7 @@ jobs:
         with:
           repository: bmad-sim/bmad-ecosystem
           fetch-depth: 1
-          path: /home/runner/work/pytao/pytao/bmad
+          path: bmad
 
       - uses: conda-incubator/setup-miniconda@v3
         with:
@@ -41,8 +41,6 @@ jobs:
         run: |
           PYTAO_ROOT=/home/runner/work/pytao/pytao
           echo "ACC_ROOT_DIR=$PYTAO_ROOT/bmad" >> $GITHUB_ENV
-          # echo "TAO_DIR=/home/runner/bmad/bmad_dist/tao" >> $GITHUB_ENV
-          # echo "ACC_EXE=/home/runner/bmad/bmad_dist/production/bin" >> $GITHUB_ENV
 
       - name: Show conda environment packages
         shell: bash -l {0}
