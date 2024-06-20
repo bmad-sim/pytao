@@ -3,20 +3,27 @@ name: pytao-dev
 channels:
   - conda-forge
 dependencies:
-  - python==3.12
-# Developer
+  - python >=3.10
   - openPMD-beamphysics
   - numpydoc
+  - bmad
   - bokeh
-  - pytest
-  - pytest-cov
   - jupyterlab>3
   - ipywidgets
   - matplotlib
+  - numpy
+  - h5py
+  - pexpect
+  # Developer
   - pygments
-  - mkdocs==1.5.2
+  - pytest
+  - pytest-cov
+  - mkdocs
   - mkdocstrings
   - mkdocs-material
-  - mkdocs-jupyter==0.24.6
+  - mkdocs-jupyter
   - mkdocstrings-python
-
+  - pip
+  - pip:
+      # Install pytao from here.
+      - .
