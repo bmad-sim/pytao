@@ -766,6 +766,33 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#pytao.interface_commands.__execute" class="md-nav__link">
+    __execute
+  </a>
+  
+    <nav class="md-nav" aria-label="__execute">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pytao.interface_commands.__execute--parameters" class="md-nav__link">
+    Parameters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pytao.interface_commands.__execute--returns" class="md-nav__link">
+    Returns
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#pytao.interface_commands.beam" class="md-nav__link">
     beam
   </a>
@@ -5174,6 +5201,33 @@
   <a href="#pytao.interface_commands" class="md-nav__link">
     interface_commands
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pytao.interface_commands.__execute" class="md-nav__link">
+    __execute
+  </a>
+  
+    <nav class="md-nav" aria-label="__execute">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pytao.interface_commands.__execute--parameters" class="md-nav__link">
+    Parameters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pytao.interface_commands.__execute--returns" class="md-nav__link">
+    Returns
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -10689,6 +10743,143 @@ sho lat</p>
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="pytao.interface_commands.__execute" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">__execute</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">method_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmd_type</span><span class="o">=</span><span class="s1">&#39;string_list&#39;</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>A wrapper to handle commonly used options when running a command through tao.</p>
+<h4 id="pytao.interface_commands.__execute--parameters">Parameters</h4>
+<p>tao : Tao
+  The handle to tao to run the command on
+cmd : str
+  The command to run
+as_dict : bool, optional
+  Return string data as a dict? by default True
+raises : bool, optional
+  Raise exception on tao errors? by default True
+method_name : str/None, optional
+  Name of the caller. Required for custom parsers for commands, by default None
+cmd_type : str, optional
+  The type of data returned by tao in its common memory, by default "string_list"</p>
+<h4 id="pytao.interface_commands.__execute--returns">Returns</h4>
+<p>Any
+  Result from running tao. The type of data depends on configuration, but is generally a list of strings, a dict, or a
+  numpy array.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>pytao/interface_commands.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">__execute</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">method_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmd_type</span><span class="o">=</span><span class="s2">&quot;string_list&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    A wrapper to handle commonly used options when running a command through tao.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tao : Tao</span>
+<span class="sd">      The handle to tao to run the command on</span>
+<span class="sd">    cmd : str</span>
+<span class="sd">      The command to run</span>
+<span class="sd">    as_dict : bool, optional</span>
+<span class="sd">      Return string data as a dict? by default True</span>
+<span class="sd">    raises : bool, optional</span>
+<span class="sd">      Raise exception on tao errors? by default True</span>
+<span class="sd">    method_name : str/None, optional</span>
+<span class="sd">      Name of the caller. Required for custom parsers for commands, by default None</span>
+<span class="sd">    cmd_type : str, optional</span>
+<span class="sd">      The type of data returned by tao in its common memory, by default &quot;string_list&quot;</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Any</span>
+<span class="sd">      Result from running tao. The type of data depends on configuration, but is generally a list of strings, a dict, or a</span>
+<span class="sd">      numpy array.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">func_for_type</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;string_list&quot;</span><span class="p">:</span> <span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">,</span>
+        <span class="s2">&quot;real_array&quot;</span><span class="p">:</span> <span class="n">tao</span><span class="o">.</span><span class="n">cmd_real</span><span class="p">,</span>
+        <span class="s2">&quot;integer_array&quot;</span><span class="p">:</span> <span class="n">tao</span><span class="o">.</span><span class="n">cmd_integer</span>
+    <span class="p">}</span>
+    <span class="n">func</span> <span class="o">=</span> <span class="n">func_for_type</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cmd_type</span><span class="p">,</span> <span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">)</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="n">raises</span><span class="p">)</span>
+    <span class="n">special_parser</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__parsers</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;parse_</span><span class="si">{</span><span class="n">method_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">special_parser</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">special_parser</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span>
+    <span class="k">if</span> <span class="s2">&quot;string&quot;</span> <span class="ow">in</span> <span class="n">cmd_type</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">as_dict</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">parse_tao_python_data</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">tao_parameter_dict</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="c1"># TODO: use logger instead of: print(&#39;Failed to parse string data. Returning raw value. Exception was: &#39;, ex)</span>
+            <span class="k">return</span> <span class="n">ret</span>
+
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="k">return</span> <span class="n">ret</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 <div class="doc doc-object doc-function">
 
