@@ -71,7 +71,7 @@ def parse_data_d_array(lines):
         result.append(d)
         vals = line.split(';')       
         for name, typ, val in zip(DATA_D_COLS, DATA_D_TYPES, vals):
-            if typ == bool:
+            if typ is bool:
                 val = _parse_str_bool(val)
             else:
                 val = typ(val)
