@@ -21,9 +21,12 @@ dependencies:
   - mkdocs
   - mkdocstrings
   - mkdocs-material
-  - mkdocs-jupyter
+  # NOTE: we are installing mkdocs-jupyter with pip for now
+  # due to the following: https://github.com/conda-forge/mkdocs-jupyter-feedstock/issues/31
+  # - mkdocs-jupyter
   - mkdocstrings-python
   - pip
   - pip:
+      - mkdocs-jupyter>=0.24.7
       # Install pytao from here.
       - .
