@@ -543,6 +543,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#data_d_array" class="md-nav__link">
+    <span class="md-ellipsis">
+      data_d_array
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#derivative" class="md-nav__link">
     <span class="md-ellipsis">
       derivative
@@ -801,6 +810,15 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#data_d_array" class="md-nav__link">
+    <span class="md-ellipsis">
+      data_d_array
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#derivative" class="md-nav__link">
@@ -1363,18 +1381,18 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d5e84efc-3a4e-4b52-860b-40c595c439bf">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=33fefcfc-eb6e-4a98-9346-8ea62d8ec1a9">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="derivative">derivative<a class="anchor-link" href="#derivative">¶</a></h2>
+<h2 id="data_d_array">data_d_array<a class="anchor-link" href="#data_d_array">¶</a></h2>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=ed6c0fe6-0836-47b1-b6e2-ace2433b247e">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=6f549bd6-a8d3-472d-8a17-74ffb4a7b3ea">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1392,22 +1410,52 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s1">'veto var *;veto dat *;'</span><span class="p">)</span>
-<span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s1">'use var quad_k1[3:5]'</span><span class="p">)</span>
-<span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s1">'set dat orbit.x[1:5]|meas=0'</span><span class="p">)</span>
-<span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s1">'use dat orbit.x[1:5]'</span><span class="p">);</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">.</span><span class="n">data_d_array</span><span class="p">(</span><span class="s1">'orbit'</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">)[</span><span class="mi">7</span><span class="p">]</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-3">tao.cmd('veto var *;veto dat *;')
-tao.cmd('use var quad_k1[3:5]')
-tao.cmd('set dat orbit.x[1:5]|meas=0')
-tao.cmd('use dat orbit.x[1:5]');</div>
+<div class="clipboard-copy-txt" id="cell-3">tao.data_d_array('orbit', 'x')[7]</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
+<pre>{'ix_d1': 7,
+ 'data_type': 'orbit.x',
+ 'merit_type': 'target',
+ 'ele_ref_name': '',
+ 'ele_start_name': '',
+ 'ele_name': 'DET_07W',
+ 'meas_value': 0.0,
+ 'model_value': -0.00909995345026739,
+ 'design_value': -0.00909995345026739,
+ 'useit_opt': False,
+ 'useit_plot': False,
+ 'good_user': True,
+ 'weight': 1000000.0,
+ 'exists': True}</pre>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=d8b4ede2-8437-4050-a2c0-7fdf65046cd9">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d5e84efc-3a4e-4b52-860b-40c595c439bf">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="derivative">derivative<a class="anchor-link" href="#derivative">¶</a></h2>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=ed6c0fe6-0836-47b1-b6e2-ace2433b247e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1425,10 +1473,43 @@ tao.cmd('use dat orbit.x[1:5]');</div>
 </div>
 </clipboard-copy>
 </div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s1">'veto var *;veto dat *;'</span><span class="p">)</span>
+<span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s1">'use var quad_k1[3:5]'</span><span class="p">)</span>
+<span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s1">'set dat orbit.x[1:5]|meas=0'</span><span class="p">)</span>
+<span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s1">'use dat orbit.x[1:5]'</span><span class="p">);</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-4">tao.cmd('veto var *;veto dat *;')
+tao.cmd('use var quad_k1[3:5]')
+tao.cmd('set dat orbit.x[1:5]|meas=0')
+tao.cmd('use dat orbit.x[1:5]');</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=d8b4ede2-8437-4050-a2c0-7fdf65046cd9">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy for="cell-5">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">derivative</span><span class="p">()</span>
 <span class="n">result</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4">result = tao.derivative()
+<div class="clipboard-copy-txt" id="cell-5">result = tao.derivative()
 result</div>
 </div>
 </div>
@@ -1439,7 +1520,7 @@ result</div>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
 <pre>{1: array([[-0.01758468, -0.03303896,  0.00216133],
         [-0.01711307, -0.03578883,  0.00283783],
@@ -1467,10 +1548,10 @@ result</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-5">
+<clipboard-copy for="cell-6">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -1482,7 +1563,7 @@ result</div>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-5">result[1].shape</div>
+<div class="clipboard-copy-txt" id="cell-6">result[1].shape</div>
 </div>
 </div>
 </div>
@@ -1492,7 +1573,7 @@ result</div>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
 <pre>(4, 3)</pre>
 </div>
@@ -1517,10 +1598,10 @@ result</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-6">
+<clipboard-copy for="cell-7">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -1532,7 +1613,7 @@ result</div>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">.</span><span class="n">ele_control_var</span><span class="p">(</span><span class="s1">'H01W'</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-6">tao.ele_control_var('H01W')</div>
+<div class="clipboard-copy-txt" id="cell-7">tao.ele_control_var('H01W')</div>
 </div>
 </div>
 </div>
@@ -1542,7 +1623,7 @@ result</div>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
 <pre>{'HKICK': 0.0}</pre>
 </div>
@@ -1567,10 +1648,10 @@ result</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-7">
+<clipboard-copy for="cell-8">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -1584,7 +1665,7 @@ result</div>
 
 <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-7">result = tao.lat_ele_list()
+<div class="clipboard-copy-txt" id="cell-8">result = tao.lat_ele_list()
 
 result[0:5]</div>
 </div>
@@ -1596,7 +1677,7 @@ result[0:5]</div>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[8]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
 <pre>['BEGINNING', 'IP_L0', 'CLEO_SOL#3', 'DET_00W', 'CLEO_SOL#4']</pre>
 </div>
@@ -1621,10 +1702,10 @@ result[0:5]</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [9]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-8">
+<clipboard-copy for="cell-9">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -1636,7 +1717,7 @@ result[0:5]</div>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="s1">'beginning'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-8">tao.matrix('beginning', 'end')</div>
+<div class="clipboard-copy-txt" id="cell-9">tao.matrix('beginning', 'end')</div>
 </div>
 </div>
 </div>
@@ -1646,22 +1727,22 @@ result[0:5]</div>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[8]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[9]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
 <pre>{'mat6': array([[-9.85453321e-01, -1.78459151e-01, -2.95064264e-02,
-         -3.72328920e-05, -1.28463592e-03,  1.69891481e-03],
-        [ 1.94136498e-01, -9.79571649e-01, -7.19934556e-03,
-          8.91976973e-04, -5.89572298e-03, -3.81443391e-02],
-        [-8.56326179e-04,  6.02559417e-05, -8.76189776e-01,
-         -8.41353620e-03,  1.67854914e-05,  2.64910024e-03],
-        [ 1.16108945e-02,  2.96794811e-02,  2.66272919e+01,
-         -8.85649651e-01,  2.27202186e-05, -4.04349281e-02],
-        [-8.86152432e-02, -6.13453812e-03,  3.48586755e-02,
-         -2.68733712e-03,  9.47817598e-01, -8.79515336e+00],
-        [ 5.30821801e-03, -2.93203403e-04,  1.07833933e-04,
-         -1.59653540e-05,  1.15997844e-02,  9.47355103e-01]]),
- 'vec0': array([ 3.92874185e-04,  4.73093997e-03,  1.86151032e-06, -9.57458177e-05,
-        -7.06703195e-05,  5.03940861e-06])}</pre>
+         -3.72328912e-05, -1.28463592e-03,  1.69890832e-03],
+        [ 1.94136498e-01, -9.79571649e-01, -7.19934541e-03,
+          8.91976963e-04, -5.89572298e-03, -3.81443689e-02],
+        [-8.56326169e-04,  6.02559410e-05, -8.76189778e-01,
+         -8.41353610e-03,  1.67854914e-05,  2.64910033e-03],
+        [ 1.16108943e-02,  2.96794811e-02,  2.66272918e+01,
+         -8.85649653e-01,  2.27202188e-05, -4.04349279e-02],
+        [-8.86152164e-02, -6.13453961e-03,  3.48586759e-02,
+         -2.68733720e-03,  9.47817657e-01, -8.79514378e+00],
+        [ 5.30821801e-03, -2.93203403e-04,  1.07833932e-04,
+         -1.59653540e-05,  1.15997844e-02,  9.47355161e-01]]),
+ 'vec0': array([ 3.92874185e-04,  4.73093997e-03,  1.86151033e-06, -9.57458176e-05,
+        -7.06702236e-05,  5.03940903e-06])}</pre>
 </div>
 </div>
 </div>
@@ -1684,10 +1765,10 @@ result[0:5]</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [9]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-9">
+<clipboard-copy for="cell-10">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -1699,7 +1780,7 @@ result[0:5]</div>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">.</span><span class="n">merit</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-9">tao.merit()</div>
+<div class="clipboard-copy-txt" id="cell-10">tao.merit()</div>
 </div>
 </div>
 </div>
@@ -1709,9 +1790,9 @@ result[0:5]</div>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[9]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[10]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>411.826621947845</pre>
+<pre>411.826621947889</pre>
 </div>
 </div>
 </div>
@@ -1734,10 +1815,10 @@ result[0:5]</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-10">
+<clipboard-copy for="cell-11">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -1751,7 +1832,7 @@ result[0:5]</div>
 
 <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-10">result = tao.plot_list('r')
+<div class="clipboard-copy-txt" id="cell-11">result = tao.plot_list('r')
 
 result[0:2]</div>
 </div>
@@ -1763,7 +1844,7 @@ result[0:2]</div>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[10]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[11]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
 <pre>[{'region': 'top',
   'ix': 1,
@@ -1792,10 +1873,10 @@ result[0:2]</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-11">
+<clipboard-copy for="cell-12">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -1810,7 +1891,7 @@ result[0:2]</div>
 
 <span class="n">result</span><span class="p">[</span><span class="s1">'cbar'</span><span class="p">]</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-11"># 't' gives a mapping of template plot to index
+<div class="clipboard-copy-txt" id="cell-12"># 't' gives a mapping of template plot to index
 result = tao.plot_list('t')
 
 result['cbar']</div>
@@ -1823,7 +1904,7 @@ result['cbar']</div>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[11]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[12]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
 <pre>5</pre>
 </div>
@@ -1848,10 +1929,10 @@ result['cbar']</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-12">
+<clipboard-copy for="cell-13">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -1863,7 +1944,7 @@ result['cbar']</div>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">.</span><span class="n">spin_invariant</span><span class="p">(</span><span class="s1">'l0'</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-12">tao.spin_invariant('l0')</div>
+<div class="clipboard-copy-txt" id="cell-13">tao.spin_invariant('l0')</div>
 </div>
 </div>
 </div>
@@ -1873,7 +1954,7 @@ result['cbar']</div>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[12]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[13]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
 <pre>array([[ 0.        ,  0.99835693,  0.05730134],
        [ 0.        ,  0.99835693,  0.05730134],
@@ -1904,214 +1985,6 @@ result['cbar']</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy for="cell-13">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tt</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">taylor_map</span><span class="p">(</span><span class="s1">'beginning'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">tt</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-13">tt = tao.taylor_map('beginning', 'end', order=2)
-tt</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[13]:</div>
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>{1: {(0, 0, 0, 0, 0, 0): -1.66366332601307e-05,
-  (1, 0, 0, 0, 0, 0): -0.985196712119849,
-  (0, 1, 0, 0, 0, 0): -0.17994354147886,
-  (0, 0, 1, 0, 0, 0): -0.0296993930624785,
-  (2, 0, 0, 0, 0, 0): 0.446035109687681,
-  (1, 1, 0, 0, 0, 0): -1.00830805320129,
-  (0, 2, 0, 0, 0, 0): 1.02618260820533,
-  (1, 0, 1, 0, 0, 0): -0.826518069338921,
-  (0, 1, 1, 0, 0, 0): 0.667384351613117,
-  (0, 0, 2, 0, 0, 0): 44.7241374657912,
-  (0, 0, 0, 1, 0, 0): -3.89707865939949e-05,
-  (1, 0, 0, 1, 0, 0): -0.00123738942379549,
-  (0, 1, 0, 1, 0, 0): -0.0371117229911406,
-  (0, 0, 1, 1, 0, 0): -4.03450589552225,
-  (0, 0, 0, 0, 1, 0): -0.00131163342298458,
-  (1, 0, 0, 0, 1, 0): -0.149522830215827,
-  (0, 1, 0, 0, 1, 0): 0.02993312487446,
-  (0, 0, 1, 0, 1, 0): 0.10580743725882,
-  (0, 0, 0, 0, 0, 1): 0.00175860484437048,
-  (1, 0, 0, 0, 0, 1): 2.90301787044488,
-  (0, 1, 0, 0, 0, 1): 3.49577156783013,
-  (0, 0, 1, 0, 0, 1): 7.97083243963905,
-  (0, 0, 0, 2, 0, 0): -0.0184811091788232,
-  (0, 0, 0, 1, 1, 0): -0.00392766892829161,
-  (0, 0, 0, 0, 2, 0): 0.000742822949788133,
-  (0, 0, 0, 1, 0, 1): 0.0279423458347018,
-  (0, 0, 0, 0, 1, 1): -0.0134035018484371,
-  (0, 0, 0, 0, 0, 2): -2.38971849234666},
- 2: {(0, 0, 0, 0, 0, 0): 0.00239048642780657,
-  (1, 0, 0, 0, 0, 0): 0.195138002251368,
-  (0, 1, 0, 0, 0, 0): -0.979350347597212,
-  (0, 0, 1, 0, 0, 0): -0.00732021294637251,
-  (2, 0, 0, 0, 0, 0): 1.32496482271115,
-  (1, 1, 0, 0, 0, 0): -0.169051815247669,
-  (0, 2, 0, 0, 0, 0): 0.295757362731708,
-  (1, 0, 1, 0, 0, 0): -0.962174031407233,
-  (0, 1, 1, 0, 0, 0): 0.697972279522991,
-  (0, 0, 2, 0, 0, 0): 100.484273138117,
-  (0, 0, 0, 1, 0, 0): 0.000900228227228298,
-  (1, 0, 0, 1, 0, 0): 0.0452519741325243,
-  (0, 1, 0, 1, 0, 0): 0.00972378758918665,
-  (0, 0, 1, 1, 0, 0): -2.89154417462971,
-  (0, 0, 0, 0, 1, 0): -0.0058956031428734,
-  (1, 0, 0, 0, 1, 0): -0.0608684910749376,
-  (0, 1, 0, 0, 1, 0): 0.131509485895043,
-  (0, 0, 1, 0, 1, 0): 0.0812501958421715,
-  (0, 0, 0, 0, 0, 1): -0.0381872457523367,
-  (1, 0, 0, 0, 0, 1): -9.55211746743359,
-  (0, 1, 0, 0, 0, 1): -5.33584430615958,
-  (0, 0, 1, 0, 0, 1): 4.52923484817316,
-  (0, 0, 0, 2, 0, 0): 0.0629079369885579,
-  (0, 0, 0, 1, 1, 0): -0.00149863574209327,
-  (0, 0, 0, 0, 2, 0): 0.00058798667411987,
-  (0, 0, 0, 1, 0, 1): -0.318535795672364,
-  (0, 0, 0, 0, 1, 1): 0.0412940351778409,
-  (0, 0, 0, 0, 0, 2): 0.76601997278978},
- 3: {(0, 0, 0, 0, 0, 0): 1.0515763216609e-06,
-  (1, 0, 0, 0, 0, 0): -0.000864193360451855,
-  (0, 1, 0, 0, 0, 0): 6.23497459210984e-05,
-  (0, 0, 1, 0, 0, 0): -0.873566454499895,
-  (2, 0, 0, 0, 0, 0): -0.0217550808042083,
-  (1, 1, 0, 0, 0, 0): 0.000630927291902906,
-  (0, 2, 0, 0, 0, 0): -0.0181604780847751,
-  (1, 0, 1, 0, 0, 0): 4.98227513200016,
-  (0, 1, 1, 0, 0, 0): -3.4333038464796,
-  (0, 0, 2, 0, 0, 0): -0.305561099314914,
-  (0, 0, 0, 1, 0, 0): -0.00856834872273157,
-  (1, 0, 0, 1, 0, 0): -0.132656652388745,
-  (0, 1, 0, 1, 0, 0): -0.0220531119498717,
-  (0, 0, 1, 1, 0, 0): 0.00641085056761062,
-  (0, 0, 0, 0, 1, 0): 1.68093509078226e-05,
-  (1, 0, 0, 0, 1, 0): 0.00244665753480257,
-  (0, 1, 0, 0, 1, 0): -0.00396412754254092,
-  (0, 0, 1, 0, 1, 0): -0.299055160952994,
-  (0, 0, 0, 0, 0, 1): 0.00264467550352783,
-  (1, 0, 0, 0, 0, 1): 0.319510758049708,
-  (0, 1, 0, 0, 0, 1): 0.0141711170025867,
-  (0, 0, 1, 0, 0, 1): -8.26626634426424,
-  (0, 0, 0, 2, 0, 0): -0.000318155048226441,
-  (0, 0, 0, 1, 1, 0): 0.000633772506825134,
-  (0, 0, 0, 0, 2, 0): -2.10025886123832e-05,
-  (0, 0, 0, 1, 0, 1): 0.0846818379830365,
-  (0, 0, 0, 0, 1, 1): -0.00127341198186583,
-  (0, 0, 0, 0, 0, 2): 0.0218742125374431},
- 4: {(0, 0, 0, 0, 0, 0): 1.82087247131977e-06,
-  (1, 0, 0, 0, 0, 0): 0.0117108773369882,
-  (0, 1, 0, 0, 0, 0): 0.0298731605797835,
-  (0, 0, 1, 0, 0, 0): 26.6637945906609,
-  (2, 0, 0, 0, 0, 0): 0.0868221858129598,
-  (1, 1, 0, 0, 0, 0): 0.86103567651534,
-  (0, 2, 0, 0, 0, 0): 0.190824016565316,
-  (1, 0, 1, 0, 0, 0): 92.6293355303031,
-  (0, 1, 1, 0, 0, 0): 46.0396584639104,
-  (0, 0, 2, 0, 0, 0): 0.449570890860524,
-  (0, 0, 0, 1, 0, 0): -0.883232864347685,
-  (1, 0, 0, 1, 0, 0): -0.0824329630587235,
-  (0, 1, 0, 1, 0, 0): 4.59607349167949,
-  (0, 0, 1, 1, 0, 0): 0.608976435276033,
-  (0, 0, 0, 0, 1, 0): 2.4691454598523e-05,
-  (1, 0, 0, 0, 1, 0): 0.0364417756743412,
-  (0, 1, 0, 0, 1, 0): 0.00478844201012632,
-  (0, 0, 1, 0, 1, 0): -0.706485568151731,
-  (0, 0, 0, 0, 0, 1): -0.0404817456350846,
-  (1, 0, 0, 0, 0, 1): -2.75082965585596,
-  (0, 1, 0, 0, 0, 1): -8.49871795108685,
-  (0, 0, 1, 0, 0, 1): -131.350468959094,
-  (0, 0, 0, 2, 0, 0): 0.00467518361799328,
-  (0, 0, 0, 1, 1, 0): 0.276221869149317,
-  (0, 0, 0, 0, 2, 0): -1.88223554340163e-05,
-  (0, 0, 0, 1, 0, 1): 4.50404232758137,
-  (0, 0, 0, 0, 1, 1): 0.00433745591028218,
-  (0, 0, 0, 0, 0, 2): 0.120062611084724},
- 5: {(0, 0, 0, 0, 0, 0): -0.000398882588691682,
-  (1, 0, 0, 0, 0, 0): -0.0886757830666738,
-  (0, 1, 0, 0, 0, 0): -0.00609684852614364,
-  (0, 0, 1, 0, 0, 0): 0.0349098899729758,
-  (2, 0, 0, 0, 0, 0): -4.48468034439034,
-  (1, 1, 0, 0, 0, 0): -3.30120883823249,
-  (0, 2, 0, 0, 0, 0): -1.98549498347646,
-  (1, 0, 1, 0, 0, 0): 6.72277540400784,
-  (0, 1, 1, 0, 0, 0): -7.6659184728811,
-  (0, 0, 2, 0, 0, 0): -193.642502871923,
-  (0, 0, 0, 1, 0, 0): -0.00268389910630068,
-  (1, 0, 0, 1, 0, 0): -0.311160697510315,
-  (0, 1, 0, 1, 0, 0): -0.0386927423048583,
-  (0, 0, 1, 1, 0, 0): 7.80657907173444,
-  (0, 0, 0, 0, 1, 0): 0.947807430858377,
-  (1, 0, 0, 0, 1, 0): 0.0359634388474073,
-  (0, 1, 0, 0, 1, 0): 0.0100891161863174,
-  (0, 0, 1, 0, 1, 0): -0.0420357368238885,
-  (0, 0, 0, 0, 0, 1): -8.79504643341939,
-  (1, 0, 0, 0, 0, 1): 1.19998827069517,
-  (0, 1, 0, 0, 0, 1): 5.24649885594377,
-  (0, 0, 1, 0, 0, 1): 1.12180295443156,
-  (0, 0, 0, 2, 0, 0): -0.0114705862748437,
-  (0, 0, 0, 1, 1, 0): 0.00185577416561418,
-  (0, 0, 0, 0, 2, 0): -0.000314559544069885,
-  (0, 0, 0, 1, 0, 1): -0.00772619373441908,
-  (0, 0, 0, 0, 1, 1): 0.0127061989949057,
-  (0, 0, 0, 0, 0, 2): 0.363109905501546},
- 6: {(0, 0, 0, 0, 0, 0): -7.15739820507555e-06,
-  (1, 0, 0, 0, 0, 0): 0.00531272384962832,
-  (0, 1, 0, 0, 0, 0): -0.000311134175372412,
-  (0, 0, 1, 0, 0, 0): 0.000106214706401075,
-  (2, 0, 0, 0, 0, 0): -0.00937029754594035,
-  (1, 1, 0, 0, 0, 0): -0.176799150721886,
-  (0, 2, 0, 0, 0, 0): -0.0274281220955725,
-  (1, 0, 1, 0, 0, 0): -0.0170533551050314,
-  (0, 1, 1, 0, 0, 0): 0.00532375315763478,
-  (0, 0, 2, 0, 0, 0): 2.02217604187271,
-  (0, 0, 0, 1, 0, 0): -1.59179292590083e-05,
-  (1, 0, 0, 1, 0, 0): -0.00164363452912023,
-  (0, 1, 0, 1, 0, 0): -0.00408630327838242,
-  (0, 0, 1, 1, 0, 0): -0.155773826394074,
-  (0, 0, 0, 0, 1, 0): 0.0115997890362465,
-  (1, 0, 0, 0, 1, 0): -0.000235880823383565,
-  (0, 1, 0, 0, 1, 0): 0.0014295594515164,
-  (0, 0, 1, 0, 1, 0): 0.000135769683986905,
-  (0, 0, 0, 0, 0, 1): 0.947365020986965,
-  (1, 0, 0, 0, 0, 1): -0.0565675845483893,
-  (0, 1, 0, 0, 0, 1): 0.0134028384613013,
-  (0, 0, 1, 0, 0, 1): 0.00297581839887475,
-  (0, 0, 0, 2, 0, 0): -0.000889800662803543,
-  (0, 0, 0, 1, 1, 0): -1.10193760593274e-07,
-  (0, 0, 0, 0, 2, 0): 4.34007834305251e-06,
-  (0, 0, 0, 1, 0, 1): -0.00200399470489132,
-  (0, 0, 0, 0, 1, 1): 0.00090575945041951,
-  (0, 0, 0, 0, 0, 2): 0.00961450164308911}}</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=8d9c95ab-02ce-4982-880c-e723665d35d1">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
@@ -2125,11 +1998,11 @@ tt</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Compare some terms with the matrix calc:</span>
-<span class="n">tao</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="s1">'beginning'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">)[</span><span class="s1">'mat6'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>  <span class="n">tt</span><span class="p">[</span><span class="mi">1</span><span class="p">][(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tt</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">taylor_map</span><span class="p">(</span><span class="s1">'beginning'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">tt</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-14"># Compare some terms with the matrix calc:
-tao.matrix('beginning', 'end')['mat6'][0,0],  tt[1][(1,0,0,0,0,0)]</div>
+<div class="clipboard-copy-txt" id="cell-14">tt = tao.taylor_map('beginning', 'end', order=2)
+tt</div>
 </div>
 </div>
 </div>
@@ -2141,14 +2014,181 @@ tao.matrix('beginning', 'end')['mat6'][0,0],  tt[1][(1,0,0,0,0,0)]</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[14]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>(-0.98545332129361, -0.985196712119849)</pre>
+<pre>{1: {(0, 0, 0, 0, 0, 0): -1.66366332399e-05,
+  (1, 0, 0, 0, 0, 0): -0.985196712163254,
+  (0, 1, 0, 0, 0, 0): -0.179943541449763,
+  (0, 0, 1, 0, 0, 0): -0.0296993930597934,
+  (2, 0, 0, 0, 0, 0): 0.446014935799591,
+  (1, 1, 0, 0, 0, 0): -1.0082815874369,
+  (0, 2, 0, 0, 0, 0): 1.02617393824841,
+  (1, 0, 1, 0, 0, 0): -0.826515800051477,
+  (0, 1, 1, 0, 0, 0): 0.667382863899269,
+  (0, 0, 2, 0, 0, 0): 44.7241374179086,
+  (0, 0, 0, 1, 0, 0): -3.8970786607117e-05,
+  (1, 0, 0, 1, 0, 0): -0.00123739509633878,
+  (0, 1, 0, 1, 0, 0): -0.0371117192737988,
+  (0, 0, 1, 1, 0, 0): -4.03450589571566,
+  (0, 0, 0, 0, 1, 0): -0.00131163342274997,
+  (1, 0, 0, 0, 1, 0): -0.14952266472463,
+  (0, 1, 0, 0, 1, 0): 0.0299330163946578,
+  (0, 0, 1, 0, 1, 0): 0.105807427956391,
+  (0, 0, 0, 0, 0, 1): 0.00175860485756863,
+  (1, 0, 0, 0, 0, 1): 2.90302998820428,
+  (0, 1, 0, 0, 0, 1): 3.49576360623984,
+  (0, 0, 1, 0, 0, 1): 7.97083175659058,
+  (0, 0, 0, 2, 0, 0): -0.0184811091743142,
+  (0, 0, 0, 1, 1, 0): -0.00392766890504798,
+  (0, 0, 0, 0, 2, 0): 0.00074282261016428,
+  (0, 0, 0, 1, 0, 1): 0.0279423475598951,
+  (0, 0, 0, 0, 1, 1): -0.01340355160728,
+  (0, 0, 0, 0, 0, 2): -2.38972031608605},
+ 2: {(0, 0, 0, 0, 0, 0): 0.00239048642749099,
+  (1, 0, 0, 0, 0, 0): 0.195138002156719,
+  (0, 1, 0, 0, 0, 0): -0.979350347537081,
+  (0, 0, 1, 0, 0, 0): -0.00732021294143655,
+  (2, 0, 0, 0, 0, 0): 1.3249225261134,
+  (1, 1, 0, 0, 0, 0): -0.168996332588702,
+  (0, 2, 0, 0, 0, 0): 0.295739189067929,
+  (1, 0, 1, 0, 0, 0): -0.962169276481757,
+  (0, 1, 1, 0, 0, 0): 0.697969162655591,
+  (0, 0, 2, 0, 0, 0): 100.484273040881,
+  (0, 0, 0, 1, 0, 0): 0.000900228227216367,
+  (1, 0, 0, 1, 0, 0): 0.0452519623233577,
+  (0, 1, 0, 1, 0, 0): 0.00972379532280073,
+  (0, 0, 1, 1, 0, 0): -2.89154417505891,
+  (0, 0, 0, 0, 1, 0): -0.00589560314244696,
+  (1, 0, 0, 0, 1, 0): -0.0608681441596298,
+  (0, 1, 0, 0, 1, 0): 0.131509258514247,
+  (0, 0, 1, 0, 1, 0): 0.0812501763521962,
+  (0, 0, 0, 0, 0, 1): -0.0381872457210249,
+  (1, 0, 0, 0, 0, 1): -9.55209206188755,
+  (0, 1, 0, 0, 0, 1): -5.33586099635078,
+  (0, 0, 1, 0, 0, 1): 4.52923341679699,
+  (0, 0, 0, 2, 0, 0): 0.0629079369870873,
+  (0, 0, 0, 1, 1, 0): -0.00149863569373015,
+  (0, 0, 0, 0, 2, 0): 0.000587985962294018,
+  (0, 0, 0, 1, 0, 1): -0.31853579207818,
+  (0, 0, 0, 0, 1, 1): 0.0412939308727921,
+  (0, 0, 0, 0, 0, 2): 0.76601614933276},
+ 3: {(0, 0, 0, 0, 0, 0): 1.05157632159555e-06,
+  (1, 0, 0, 0, 0, 0): -0.000864193360286813,
+  (0, 1, 0, 0, 0, 0): 6.23497458058423e-05,
+  (0, 0, 1, 0, 0, 0): -0.8735664544964,
+  (2, 0, 0, 0, 0, 0): -0.0217550050697433,
+  (1, 1, 0, 0, 0, 0): 0.000630827921344786,
+  (0, 2, 0, 0, 0, 0): -0.0181604455258593,
+  (1, 0, 1, 0, 0, 0): 4.98227511703817,
+  (0, 1, 1, 0, 0, 0): -3.43330383649897,
+  (0, 0, 2, 0, 0, 0): -0.305561098724387,
+  (0, 0, 0, 1, 0, 0): -0.00856834872278235,
+  (1, 0, 0, 1, 0, 0): -0.132656652144751,
+  (0, 1, 0, 1, 0, 0): -0.0220531121048376,
+  (0, 0, 1, 1, 0, 0): 0.00641085055272046,
+  (0, 0, 0, 0, 1, 0): 1.68093509057174e-05,
+  (1, 0, 0, 0, 1, 0): 0.00244665691322182,
+  (0, 1, 0, 0, 1, 0): -0.00396412713502785,
+  (0, 0, 1, 0, 1, 0): -0.299055160891415,
+  (0, 0, 0, 0, 0, 1): 0.00264467550336364,
+  (1, 0, 0, 0, 0, 1): 0.319510712558262,
+  (0, 1, 0, 0, 0, 1): 0.014171146893256,
+  (0, 0, 1, 0, 0, 1): -8.26626633959935,
+  (0, 0, 0, 2, 0, 0): -0.000318155048161447,
+  (0, 0, 0, 1, 1, 0): 0.000633772505878565,
+  (0, 0, 0, 0, 2, 0): -2.10025873360676e-05,
+  (0, 0, 0, 1, 0, 1): 0.0846818379113344,
+  (0, 0, 0, 0, 1, 1): -0.00127341179496129,
+  (0, 0, 0, 0, 0, 2): 0.0218742193846649},
+ 4: {(0, 0, 0, 0, 0, 0): 1.82087247551517e-06,
+  (1, 0, 0, 0, 0, 0): 0.0117108773410044,
+  (0, 1, 0, 0, 0, 0): 0.0298731605771444,
+  (0, 0, 1, 0, 0, 0): 26.6637945908307,
+  (2, 0, 0, 0, 0, 0): 0.0868240483566442,
+  (1, 1, 0, 0, 0, 0): 0.86103323300697,
+  (0, 2, 0, 0, 0, 0): 0.190824817094323,
+  (1, 0, 1, 0, 0, 0): 92.6293350991725,
+  (0, 1, 1, 0, 0, 0): 46.0396587460772,
+  (0, 0, 2, 0, 0, 0): 0.449570908257767,
+  (0, 0, 0, 1, 0, 0): -0.883232864347968,
+  (1, 0, 0, 1, 0, 0): -0.0824329649632892,
+  (0, 1, 0, 1, 0, 0): 4.59607349264319,
+  (0, 0, 1, 1, 0, 0): 0.608976435371927,
+  (0, 0, 0, 0, 1, 0): 2.46914545805481e-05,
+  (1, 0, 0, 0, 1, 0): 0.0364417603959309,
+  (0, 1, 0, 0, 1, 0): 0.00478845202559958,
+  (0, 0, 1, 0, 1, 0): -0.706485566536203,
+  (0, 0, 0, 0, 0, 1): -0.040481745636089,
+  (1, 0, 0, 0, 0, 1): -2.75083077446046,
+  (0, 1, 0, 0, 0, 1): -8.49871721620549,
+  (0, 0, 1, 0, 0, 1): -131.350468854564,
+  (0, 0, 0, 2, 0, 0): 0.00467518361753533,
+  (0, 0, 0, 1, 1, 0): 0.276221869154924,
+  (0, 0, 0, 0, 2, 0): -1.88223240798573e-05,
+  (0, 0, 0, 1, 0, 1): 4.50404232769246,
+  (0, 0, 0, 0, 1, 1): 0.00433746050352927,
+  (0, 0, 0, 0, 0, 2): 0.120062779434416},
+ 5: {(0, 0, 0, 0, 0, 0): -0.000398882588537139,
+  (1, 0, 0, 0, 0, 0): -0.0886757519916239,
+  (0, 1, 0, 0, 0, 0): -0.00609686912285954,
+  (0, 0, 1, 0, 0, 0): 0.0349098882028274,
+  (2, 0, 0, 0, 0, 0): -4.47044214172974,
+  (1, 1, 0, 0, 0, 0): -3.31988559556483,
+  (0, 2, 0, 0, 0, 0): -1.97937737937025,
+  (1, 0, 1, 0, 0, 0): 6.72117517990414,
+  (0, 1, 1, 0, 0, 0): -7.6648695472956,
+  (0, 0, 2, 0, 0, 0): -193.642470636415,
+  (0, 0, 0, 1, 0, 0): -0.00268389910185181,
+  (1, 0, 0, 1, 0, 0): -0.311156736963806,
+  (0, 1, 0, 1, 0, 0): -0.03869533588054,
+  (0, 0, 1, 1, 0, 0): 7.80657913492895,
+  (0, 0, 0, 0, 1, 0): 0.9478074307323,
+  (1, 0, 0, 0, 1, 0): 0.0358466617148942,
+  (0, 1, 0, 0, 1, 0): 0.010165655302366,
+  (0, 0, 1, 0, 1, 0): -0.0420291778081111,
+  (0, 0, 0, 0, 0, 1): -8.79504644245375,
+  (1, 0, 0, 0, 0, 1): 1.19143615751156,
+  (0, 1, 0, 0, 0, 1): 5.25211714015594,
+  (0, 0, 1, 0, 0, 1): 1.1222846771318,
+  (0, 0, 0, 2, 0, 0): -0.0114705854836205,
+  (0, 0, 0, 1, 1, 0): 0.00185575794581298,
+  (0, 0, 0, 0, 2, 0): -0.000314319937158193,
+  (0, 0, 0, 1, 0, 1): -0.00772739903188279,
+  (0, 0, 0, 0, 1, 1): 0.0127413092157923,
+  (0, 0, 0, 0, 0, 2): 0.364396954728399},
+ 6: {(0, 0, 0, 0, 0, 0): -7.15739820527216e-06,
+  (1, 0, 0, 0, 0, 0): 0.00531272403470964,
+  (0, 1, 0, 0, 0, 0): -0.000311134298030367,
+  (0, 0, 1, 0, 0, 0): 0.000106214695876511,
+  (2, 0, 0, 0, 0, 0): -0.00928547217254939,
+  (1, 1, 0, 0, 0, 0): -0.1769104192046,
+  (0, 2, 0, 0, 0, 0): -0.0273916759401037,
+  (1, 0, 1, 0, 0, 0): -0.0170628885813259,
+  (0, 1, 1, 0, 0, 0): 0.00533000221930043,
+  (0, 0, 2, 0, 0, 0): 2.02217623395134,
+  (0, 0, 0, 1, 0, 0): -1.59179292331625e-05,
+  (1, 0, 0, 1, 0, 0): -0.00164361093394946,
+  (0, 1, 0, 1, 0, 0): -0.00408631872975518,
+  (0, 0, 1, 1, 0, 0): -0.155773826018652,
+  (0, 0, 0, 0, 1, 0): 0.0115997890354962,
+  (1, 0, 0, 0, 1, 0): -0.000236576535579418,
+  (0, 1, 0, 0, 1, 0): 0.00143001544142555,
+  (0, 0, 1, 0, 1, 0): 0.000135808759997953,
+  (0, 0, 0, 0, 0, 1): 0.947365020933153,
+  (1, 0, 0, 0, 0, 1): -0.0566185345310877,
+  (0, 1, 0, 0, 0, 1): 0.013436309919337,
+  (0, 0, 1, 0, 0, 1): 0.00297868830544677,
+  (0, 0, 0, 2, 0, 0): -0.00088980065810877,
+  (0, 0, 0, 1, 1, 0): -1.10290390902046e-07,
+  (0, 0, 0, 0, 2, 0): 4.34150580706664e-06,
+  (0, 0, 0, 1, 0, 1): -0.00200400188548278,
+  (0, 0, 0, 0, 1, 1): 0.000905968623531625,
+  (0, 0, 0, 0, 0, 2): 0.00962216934673814}}</pre>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=d55272fc-1ff1-4106-9361-5d4f44edd158">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=8d9c95ab-02ce-4982-880c-e723665d35d1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2166,9 +2206,11 @@ tao.matrix('beginning', 'end')['mat6'][0,0],  tt[1][(1,0,0,0,0,0)]</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="s1">'beginning'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">)[</span><span class="s1">'mat6'</span><span class="p">][</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>  <span class="n">tt</span><span class="p">[</span><span class="mi">2</span><span class="p">][(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Compare some terms with the matrix calc:</span>
+<span class="n">tao</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="s1">'beginning'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">)[</span><span class="s1">'mat6'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>  <span class="n">tt</span><span class="p">[</span><span class="mi">1</span><span class="p">][(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-15">tao.matrix('beginning', 'end')['mat6'][1,0],  tt[2][(1,0,0,0,0,0)]</div>
+<div class="clipboard-copy-txt" id="cell-15"># Compare some terms with the matrix calc:
+tao.matrix('beginning', 'end')['mat6'][0,0],  tt[1][(1,0,0,0,0,0)]</div>
 </div>
 </div>
 </div>
@@ -2180,7 +2222,46 @@ tao.matrix('beginning', 'end')['mat6'][0,0],  tt[1][(1,0,0,0,0,0)]</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[15]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>(0.194136497705356, 0.195138002251368)</pre>
+<pre>(-0.985453321293537, -0.985196712163254)</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=d55272fc-1ff1-4106-9361-5d4f44edd158">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy for="cell-16">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="s1">'beginning'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">)[</span><span class="s1">'mat6'</span><span class="p">][</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>  <span class="n">tt</span><span class="p">[</span><span class="mi">2</span><span class="p">][(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-16">tao.matrix('beginning', 'end')['mat6'][1,0],  tt[2][(1,0,0,0,0,0)]</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[16]:</div>
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
+<pre>(0.194136497704459, 0.195138002156719)</pre>
 </div>
 </div>
 </div>
@@ -2203,10 +2284,10 @@ tao.matrix('beginning', 'end')['mat6'][0,0],  tt[1][(1,0,0,0,0,0)]</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [17]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-16">
+<clipboard-copy for="cell-17">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2219,7 +2300,7 @@ tao.matrix('beginning', 'end')['mat6'][0,0],  tt[1][(1,0,0,0,0,0)]</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">var_v_array</span><span class="p">(</span><span class="s1">'quad_k1'</span><span class="p">)</span>
 <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-16">result = tao.var_v_array('quad_k1')
+<div class="clipboard-copy-txt" id="cell-17">result = tao.var_v_array('quad_k1')
 result[0:2]</div>
 </div>
 </div>
@@ -2230,7 +2311,7 @@ result[0:2]</div>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[16]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[17]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
 <pre>[{'ix_v1': 0,
   'var_attrib_name': 'Q00W[K1]',
