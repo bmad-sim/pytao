@@ -4,64 +4,58 @@ on:
   push:
   pull_request:
   schedule:
-    - cron: '0 0 * * *'  # every day at midnight
+    - cron: "0 0 * * *" # every day at midnight
 
 jobs:
   build:
+    name: ${{ matrix.os }} Python ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     defaults:
-        run:
-          shell: bash
+      run:
+        shell: bash
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        python-version: [3.7]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
-      - name: Install System Dependencies
-        run: |
-          sudo apt-get install build-essential curl wget cmake gfortran automake \
-          autoconf libtool m4 libgomp1 libreadline-dev libncurses-dev pkg-config \
-          libcairo2-dev libpango1.0-dev libxt-dev libx11-dev -y
+      - uses: actions/checkout@v4
+        with:
+          repository: bmad-sim/bmad-ecosystem
+          fetch-depth: 1
+          path: bmad
 
-      - name: Check Latest Bmad Release
-        run: |
-          echo "Latest release is: $(curl https://www.classe.cornell.edu/~cesrulib/downloads/latest_distribution_file_prefix)"
-          # Set Environment variable for further steps
-          echo "BMADDIST=$(curl https://www.classe.cornell.edu/~cesrulib/downloads/latest_distribution_file_prefix)" >> $GITHUB_ENV
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+      - uses: conda-incubator/setup-miniconda@v3
         with:
           python-version: ${{ matrix.python-version }}
-
-      - uses: actions/cache@v2
-        id: cache
-        with:
-          path: ~/bmad
-          key: ${{ runner.os }}-${{ env.BMADDIST }}
-
-      - name: Install Bmad - ${{ env.BMADDIST }}
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: .github/scripts/install_bmad.sh
+          mamba-version: "*"
+          channels: conda-forge
+          activate-environment: pytao-dev
+          environment-file: dev-environment.yml
 
       - name: Setup Bmad
         run: |
-          echo "ACC_ROOT_DIR=/home/runner/bmad/bmad_dist" >> $GITHUB_ENV
-          echo "ACC_EXE=/home/runner/bmad/bmad_dist/production/bin" >> $GITHUB_ENV
-          echo "TAO_DIR=/home/runner/bmad/bmad_dist/tao" >> $GITHUB_ENV
-          echo "/home/runner/bmad/bmad_dist/production/bin/" >> $GITHUB_PATH
+          PYTAO_ROOT=/home/runner/work/pytao/pytao
+          echo "ACC_ROOT_DIR=$PYTAO_ROOT/bmad" >> $GITHUB_ENV
 
-      - name: Install Python Dependencies
+      - name: Show conda environment packages
+        shell: bash -l {0}
         run: |
-          pip install -r requirements.txt
-          pip install -r test-requirements.txt
+          conda list
 
-      - name: Install PyTao
+      - name: Ensure importability
+        shell: bash -l {0}
         run: |
-          pip install .
+          cd /
+          python -c "import pytao"
 
       - name: Run Tests
+        shell: bash -l {0}
         run: |
-          python run_tests.py
+          echo -e '## Test results\n\n```' >> "$GITHUB_STEP_SUMMARY"
+          pytest -v --cov=pytao/ pytao/tests 2>&1 | tee -a "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
