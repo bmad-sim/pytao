@@ -101,6 +101,12 @@ class _TaoPipe:
         self._subproc_in_fd = None
         self._subproc_out_fd = None
 
+    def close(self):
+        try:
+            self.send_receive("quit", "", raises=False)
+        except TaoDisconnectedError:
+            pass
+
     def _tao_subprocess_monitor(self, subproc: subprocess.Popen):
         if subproc is None:
             return
@@ -169,6 +175,9 @@ class SubprocessTao(Tao):
     def __init__(self, *args, **kwargs):
         self._pipe = _TaoPipe()
         super().__init__(*args, **kwargs)
+
+    def close_subprocess(self):
+        self._pipe.close()
 
     def init(self, cmd):
         return self._pipe.send_receive("init", cmd, raises=True)

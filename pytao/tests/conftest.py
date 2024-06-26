@@ -1,5 +1,8 @@
+import contextlib
 import pytest
 import os
+
+from .. import Tao, SubprocessTao
 
 
 @pytest.fixture
@@ -17,3 +20,29 @@ def ensure_count():
     from ..util import parsers
 
     parsers.Settings.ensure_count = True
+
+
+@contextlib.contextmanager
+def ensure_successful_parsing(caplog):
+    yield
+    errors = [record for record in caplog.get_records("call") if record.levelno == logging.ERROR]
+    for error in errors:
+        if "Failed to parse string data" in error.message:
+            pytest.fail(error.message)
+
+
+@pytest.fixture(
+    params=[Tao, SubprocessTao],
+    ids=["Tao", "SubprocessTao"],
+)
+def tao_cls(request: pytest.FixtureRequest):
+    return request.param
+
+
+@contextlib.contextmanager
+def new_tao(tao_cls, init):
+    tao = tao_cls(os.path.expandvars(f"{init} -noplot"))
+    yield tao
+    if hasattr(tao, "close_subprocess"):
+        print("Closing tao subprocess")
+        tao.close_subprocess()
