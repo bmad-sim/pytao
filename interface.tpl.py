@@ -53,7 +53,7 @@ class Tao(TaoCore):
         ret = func(cmd, raises=raises)
         special_parser = getattr(_pytao_parsers, f"parse_{method_name}", "")
         if special_parser and callable(special_parser):
-            data = special_parser(ret)
+            data = special_parser(ret, cmd=cmd)
             return data
         if "string" in cmd_type:
             try:
@@ -63,6 +63,7 @@ class Tao(TaoCore):
                     data = tao_parameter_dict(ret)
             except Exception:
                 logger.exception("Failed to parse string data. Returning raw value.")
+                raise  # TODO: remove me
                 return ret
 
             return data

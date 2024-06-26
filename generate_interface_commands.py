@@ -152,7 +152,18 @@ cmds_to_module = [
 
 print()
 
+
+# TODO: bring these back to bmad
+hotfixes = {
+    "var": {
+        "command_str": "python var {var} {slaves}",
+    }
+}
+
 for method, metadata in cmds_from_tao.items():
+    if method in hotfixes:
+        metadata.update(hotfixes[method])
+
     docstring = metadata['description']
     command_str = sanitize(metadata['command_str'])
 
@@ -164,6 +175,7 @@ for method, metadata in cmds_from_tao.items():
         code = generate_method_code(np_docs, clean_method, command_str, np_docs['Returns'])
     except Exception as ex:
         print(f'***Error generating code for: {method}. Exception was: {ex}')
+        raise
 
     method_template = f'''
     def {clean_method}({params}):
@@ -215,13 +227,26 @@ cmds_to_test_module = [f"""# ===================================================
 # Generated on: {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 # ==============================================================================
 
+import contextlib
 import os
+import logging
+
+import pytest
+
 from pytao import Tao
 from pytao import interface_commands
 
 def new_tao(init):
     return Tao(os.path.expandvars(f"{{init}} -noplot"))
-    
+
+
+@contextlib.contextmanager
+def ensure_successful_parsing(caplog):
+    yield
+    errors = [record for record in caplog.get_records("call") if record.levelno == logging.ERROR]
+    for error in errors:
+        if "Failed to parse string data" in error.message:
+            pytest.fail(error.message)
 """]
 
 for method, metadata in cmds_from_tao.items():
@@ -239,10 +264,11 @@ for method, metadata in cmds_from_tao.items():
         args = [f"{k}='{v}'" for k, v in test_meta['args'].items()]
         test_code = f'''
 tao = new_tao('{test_meta['init']}')
-tao.{clean_method}({', '.join(args)})
+with ensure_successful_parsing(caplog):
+    tao.{clean_method}({', '.join(args)})
         '''
         method_template = f'''
-def test_{clean_method}_{test_name}():
+def test_{clean_method}_{test_name}(caplog):
 {add_tabs(test_code, 1)}
         '''
         cmds_to_test_module.append(method_template)
