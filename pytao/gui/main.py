@@ -4,8 +4,6 @@ import sys
 
 from .module_check import module_check
 
-module_check()
-
 import tkinter as tk
 from tkinter import filedialog, font, messagebox
 
@@ -21,6 +19,8 @@ from .tao_plot_dict import *
 from .tao_plot_windows import *
 from .tao_var_windows import *
 from .tao_widget import *
+
+module_check()
 
 # ---------------------------------------------------------------
 # Root window
