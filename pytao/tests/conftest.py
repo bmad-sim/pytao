@@ -10,3 +10,10 @@ def rootdir():
 @pytest.fixture
 def config_file(rootdir):
     return open(f"{rootdir}/test_files/iris_config.yml", "r")
+
+
+@pytest.fixture(autouse=True)
+def ensure_count():
+    from ..util import parsers
+
+    parsers.Settings.ensure_count = True

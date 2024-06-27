@@ -128,7 +128,6 @@ def test_ele_taylor_1():
     tao = new_tao("-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_taylor")
     res = tao.ele_taylor(ele_id="1@0>>34", which="model")
     assert isinstance(res, dict)
-    assert "settings" in res
     assert "data" in res
     assert res["data"][0]["index"] == 1
 

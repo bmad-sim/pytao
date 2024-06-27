@@ -1,12 +1,16 @@
 import logging
 
-from typing import Dict, List
+from typing import Dict, List, Optional
 import numpy as np
 
 from ..tao_ctypes.util import parse_tao_python_data, parse_bool
 
 
 logger = logging.getLogger(__name__)
+
+
+class Settings:
+    ensure_count: bool = False
 
 
 # Helpers
@@ -370,6 +374,20 @@ def parse_var_v_array(lines, cmd=""):
 
 
 def fix_value(value: str, typ: type):
+    """
+    Apply some fixes for known problematic tao output.
+
+    Parameters
+    ----------
+    value : str
+        The tao output value string.
+    typ : type
+        The expected Python type.
+
+    Returns
+    -------
+    typ
+    """
     value = value.strip()
     if typ is bool:
         return _parse_str_bool(value)
@@ -388,7 +406,7 @@ def fix_value(value: str, typ: type):
 def _parse_by_keys_to_types(
     lines: List[str],
     key_to_type: Dict[str, type],
-    ensure_count: bool = True,
+    ensure_count: Optional[bool] = None,
 ) -> List[dict]:
     """
     Parse Tao command output, with predetermined field names and associated types.
@@ -407,13 +425,17 @@ def _parse_by_keys_to_types(
     ensure_count : bool, optional
         Fail if the number of output fields doesn't match up with the expected
         ones in ``key_to_type``.
+        Defaults to ``Settings.ensure_count`` which can be easily toggled
+        application-wide.  This is only enabled by default for the test suite.
 
     Returns
     -------
     list of dict
     """
+    if ensure_count is None:
+        ensure_count = Settings.ensure_count
+
     if ensure_count:
-        # TODO: consider removing or only toggling on during test suite
         for line in lines:
             assert len(key_to_type) == len(line.split(";"))
 
