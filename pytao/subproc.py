@@ -16,10 +16,29 @@ logger = logging.getLogger(__name__)
 
 
 class TaoDisconnectedError(Exception):
+    """The Tao subprocess quit, crashed, or otherwise disconnected."""
+
     pass
 
 
 def read_length_from_pipe(pipe) -> int:
+    """
+    Get the buffer length from the pipe.
+
+    Parameters
+    ----------
+    pipe : file-like object
+
+    Returns
+    -------
+    int
+        Buffer length.
+
+    Raises
+    ------
+    TaoDisconnectedError
+        If the pipe is closed and a length cannot be read.
+    """
     length_bytes = pipe.read(ctypes.sizeof(ctypes.c_uint32))
     if not length_bytes:
         logger.debug("<- disconnected")
@@ -29,6 +48,23 @@ def read_length_from_pipe(pipe) -> int:
 
 
 def read_pickled_data(pipe) -> dict:
+    """
+    Read pickled data from the pipe.
+
+    Parameters
+    ----------
+    pipe : file-like object
+
+    Returns
+    -------
+    dict
+        Deserialized data.  Numpy arrays are handled automatically.
+
+    Raises
+    ------
+    TaoDisconnectedError
+        If the pipe is closed and a length cannot be read.
+    """
     length = read_length_from_pipe(pipe)
     buffer = pipe.read(length)
     if len(buffer) != length:
@@ -43,6 +79,15 @@ def read_pickled_data(pipe) -> dict:
 
 
 def write_pickled_data(pipe, data):
+    """
+    Read pickled data from the pipe.
+
+    Parameters
+    ----------
+    pipe : file-like object, or file
+    data :
+        Picklable data
+    """
     logger.debug(f"-> {data}")
     message_bytes = pickle.dumps(data) + b"\n"
     to_write = bytes(ctypes.c_uint32(len(message_bytes))) + message_bytes
@@ -54,6 +99,8 @@ def write_pickled_data(pipe, data):
 
 
 class SerializedArray(typing.TypedDict):
+    """Representation of a serialized numpy array as a picklable dict."""
+
     __type__: typing.Literal["array"]
     shape: typing.Tuple[int, ...]
     dtype: np.dtype
@@ -70,6 +117,7 @@ def array_to_dict(arr: np.ndarray) -> SerializedArray:
 
 
 def dict_to_array(data: SerializedArray) -> np.ndarray:
+    """Deserialize a SerializedArray back to a np.ndarray."""
     assert isinstance(data, dict)
     assert data["__type__"] == "array"
     arr = np.frombuffer(bytearray(data["data"]), dtype=data["dtype"])
@@ -77,6 +125,16 @@ def dict_to_array(data: SerializedArray) -> np.ndarray:
 
 
 def _get_result(value, raises: bool = True):
+    """
+    Pick out the result data from the subprocess return value.
+
+    Parameters
+    ----------
+    value : dict
+        The deserialized dictionary result from the subprocess.
+    raises : bool, optional
+        Raise on errors.
+    """
     if not isinstance(value, dict):
         raise ValueError(f"Unexpected result type: {type(value)}")
     if "result" in value:
@@ -94,6 +152,8 @@ def _get_result(value, raises: bool = True):
 
 
 class _TaoPipe:
+    """Tao subprocess Pipe helper."""
+
     def __init__(self):
         self._subproc = None
         self._read_pipe = None
@@ -102,12 +162,17 @@ class _TaoPipe:
         self._subproc_out_fd = None
 
     def close(self):
+        """Close the pipe."""
+        if self._subproc_out_fd is None:
+            return
+
         try:
             self.send_receive("quit", "", raises=False)
         except TaoDisconnectedError:
             pass
 
     def _tao_subprocess_monitor(self, subproc: subprocess.Popen):
+        """Subprocess monitor thread.  Cleans up after the subprocess ends."""
         if subproc is None:
             return
         in_fd = self._subproc_in_fd
@@ -130,6 +195,7 @@ class _TaoPipe:
             self._monitor_thread = None
 
     def _send(self, cmd: str, argument: str):
+        """Send `cmd` with `argument` over the pipe."""
         if self._subproc is None:
             self._subproc = self._init_subprocess()
 
@@ -140,9 +206,11 @@ class _TaoPipe:
         )
 
     def _receive(self):
+        """Read back the command result from the subprocess."""
         return read_pickled_data(self._read_pipe)
 
     def _init_subprocess(self) -> subprocess.Popen:
+        """Initialize the Tao subprocess, the pipe, and monitor thread."""
         logger.debug("Initializing Tao subprocess")
         assert self._subproc is None
         self._subproc_in_fd, self._subproc_out_fd = os.pipe()
@@ -167,11 +235,33 @@ class _TaoPipe:
         return subproc
 
     def send_receive(self, cmd: str, argument: str, raises: bool):
+        """
+        Send a command and receive a result through the pipe.
+
+        Parameters
+        ----------
+        cmd : one of {"init", "cmd", "cmd_real", "cmd_integer", "quit"}
+            The command class to send.
+        argument : str
+            The argument to send to the command.
+        raises : bool
+            Raise if the subprocess command raises or disconnects.
+        """
         self._send(cmd, argument)
         return _get_result(self._receive(), raises=raises)
 
 
 class SubprocessTao(Tao):
+    """
+    Subprocess helper for Tao.
+
+    This special version of the `Tao` class executes a Python subprocess which
+    interacts with Tao through ctypes.
+
+    This can be used exactly as the normal `Tao` object with the primary added
+    benefit that Fortran crashes will not affect the main Python process.
+    """
+
     def __init__(self, *args, **kwargs):
         self._pipe = _TaoPipe()
         super().__init__(*args, **kwargs)
@@ -180,51 +270,17 @@ class SubprocessTao(Tao):
         self._pipe.close()
 
     def init(self, cmd):
+        """Initialize Tao with the given `cmd`."""
         return self._pipe.send_receive("init", cmd, raises=True)
 
     def cmd(self, cmd, raises=True):
+        """Runs a command, and returns the output."""
         return self._pipe.send_receive("cmd", cmd, raises=raises)
 
     def cmd_real(self, cmd, raises=True):
+        """Runs a command, and returns a floating point array."""
         return self._pipe.send_receive("cmd_real", cmd, raises=raises)
 
     def cmd_integer(self, cmd, raises=True):
+        """Runs a command, and returns an integer array."""
         return self._pipe.send_receive("cmd_integer", cmd, raises=raises)
-
-
-def _tao_subprocess(output_fd: int) -> None:
-    logger.debug("Tao subprocess handler started")
-
-    tao = Tao()
-
-    with os.fdopen(output_fd, "wb") as output_pipe:
-        while True:
-            message = read_pickled_data(sys.stdin.buffer)
-            try:
-                command = message["command"]
-                if command == "init":
-                    output = tao.init(*message["args"])
-                elif command == "cmd":
-                    output = tao.cmd(*message["args"])
-                elif command == "cmd_real":
-                    output = tao.cmd_real(*message["args"])
-                elif command == "cmd_integer":
-                    output = tao.cmd_integer(*message["args"])
-                elif command == "quit":
-                    sys.exit(0)
-                else:
-                    output = "unknown command"
-            except Exception as ex:
-                write_pickled_data(
-                    output_pipe,
-                    {
-                        "error": str(ex),
-                        "error_cls": type(ex).__name__,
-                        "traceback": traceback.format_exc(),
-                    },
-                )
-            else:
-                if isinstance(output, np.ndarray):
-                    output = array_to_dict(output)
-
-                write_pickled_data(output_pipe, {"result": output})
