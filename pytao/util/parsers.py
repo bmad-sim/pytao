@@ -18,7 +18,7 @@ def _parse_str_bool(s):
     """
     parses str to bool
     '1', 't', 'T' -> True
-    '0', 'f', 'F' -> Flase
+    '0', 'f', 'F' -> False
     """
     x = s.upper()[0]
     if x in ("T", "1"):
