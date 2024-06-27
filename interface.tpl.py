@@ -1,10 +1,10 @@
 import logging
 import numpy as np
 
-from pytao.tao_ctypes.core import TaoCore
-from pytao.tao_ctypes.util import parse_tao_python_data
-from ..util.parameters import tao_parameter_dict
-from ..util import parsers as _pytao_parsers
+from .tao_ctypes.core import TaoCore
+from .tao_ctypes.util import parse_tao_python_data
+from .util.parameters import tao_parameter_dict
+from .util import parsers as _pytao_parsers
 
 
 logger = logging.getLogger(__name__)
