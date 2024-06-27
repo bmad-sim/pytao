@@ -3,17 +3,11 @@ Provides windows for viewing and editing beam properties in tao
 """
 
 import tkinter as tk
-from tkinter import ttk
-from tkinter import messagebox
 
-from pytao.util.parameters import str_to_tao_param, tao_parameter_dict
+from pytao.util.parameters import str_to_tao_param
 from .tao_widget import *
-from .taoplot import taoplot
 from .tao_set import *
 from .tao_base_windows import *
-from .tao_lat_windows import tao_ele_window
-from .tao_ele_location import in_element
-from .tao_mpl_toolbar import taotoolbar
 
 
 # -------------------------------------------------------

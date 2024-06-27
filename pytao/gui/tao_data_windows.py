@@ -5,10 +5,9 @@ Provides windows for viewing and editing data arrays in tao
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-from tkinter import filedialog
 
 from .tao_widget import *
-from pytao.util.parameters import str_to_tao_param, tao_parameter_dict
+from pytao.util.parameters import str_to_tao_param
 from .tao_set import *
 from .tao_base_windows import *
 from .tao_lat_windows import tao_ele_browser

@@ -11,9 +11,7 @@ from tkinter import filedialog
 from tkinter import font
 
 from .tao_widget import *
-from .tao_set import tao_set
 from pytao.util.parameters import str_to_tao_param, tao_startup_param_dict
-from pytao.util.parameters import tao_parameter_dict
 from .tao_console import tao_console
 from .tao_plot_dict import *
 from .tao_interface import tao_interface

@@ -5,9 +5,8 @@ Provides windows for viewing and editing variable arrays in tao
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-from tkinter import filedialog
 
-from pytao.util.parameters import str_to_tao_param, tao_parameter_dict
+from pytao.util.parameters import str_to_tao_param
 from .tao_widget import *
 from .tao_set import *
 from .tao_base_windows import *

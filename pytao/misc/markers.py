@@ -1,5 +1,4 @@
 # Make superimosed markers for extra beam saving
-import numpy as np
 
 
 def make_markers(slist, filename=None, ref=None):

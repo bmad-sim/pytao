@@ -1,9 +1,4 @@
-from .taoplot import taoplot
-import matplotlib
-import matplotlib.pyplot as plt
-import numpy as np
 import math
-from matplotlib.path import Path
 
 # --------------------------------------
 

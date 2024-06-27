@@ -3,7 +3,6 @@ This module defines the lat_element class, representing a single lattice
 element in tao
 """
 
-from .parameters import tao_parameter
 from .parameters import tao_parameter_dict
 
 

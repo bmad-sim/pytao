@@ -248,7 +248,7 @@ class Tao(TaoCore):
          args:
 
         """
-        cmd = f"python bmad_com"
+        cmd = "python bmad_com"
         if verbose:
             print(cmd)
         return self.__execute(
@@ -1240,7 +1240,7 @@ class Tao(TaoCore):
          args:
 
         """
-        cmd = f"python data_set_design_value"
+        cmd = "python data_set_design_value"
         if verbose:
             print(cmd)
         return self.__execute(
@@ -1419,7 +1419,7 @@ class Tao(TaoCore):
          args:
 
         """
-        cmd = f"python derivative"
+        cmd = "python derivative"
         if verbose:
             print(cmd)
         return self.__execute(
@@ -2867,7 +2867,7 @@ class Tao(TaoCore):
          args:
 
         """
-        cmd = f"python global"
+        cmd = "python global"
         if verbose:
             print(cmd)
         return self.__execute(
@@ -2898,7 +2898,7 @@ class Tao(TaoCore):
          args:
 
         """
-        cmd = f"python global:optimization"
+        cmd = "python global:optimization"
         if verbose:
             print(cmd)
         return self.__execute(
@@ -2932,7 +2932,7 @@ class Tao(TaoCore):
          args:
 
         """
-        cmd = f"python global:opti_de"
+        cmd = "python global:opti_de"
         if verbose:
             print(cmd)
         return self.__execute(
@@ -2960,7 +2960,7 @@ class Tao(TaoCore):
          args:
 
         """
-        cmd = f"python help"
+        cmd = "python help"
         if verbose:
             print(cmd)
         return self.__execute(
@@ -3028,7 +3028,7 @@ class Tao(TaoCore):
            branch_name: 1@0
 
         """
-        cmd = f"python lat_calc_done"
+        cmd = "python lat_calc_done"
         if verbose:
             print(cmd)
         return self.__execute(
@@ -3326,7 +3326,7 @@ class Tao(TaoCore):
          args:
 
         """
-        cmd = f"python merit"
+        cmd = "python merit"
         if verbose:
             print(cmd)
         return self.__execute(
@@ -3415,7 +3415,7 @@ class Tao(TaoCore):
          args:
 
         """
-        cmd = f"python place_buffer"
+        cmd = "python place_buffer"
         if verbose:
             print(cmd)
         return self.__execute(
@@ -4022,7 +4022,7 @@ class Tao(TaoCore):
          args:
 
         """
-        cmd = f"python ptc_com"
+        cmd = "python ptc_com"
         if verbose:
             print(cmd)
         return self.__execute(
@@ -4453,7 +4453,7 @@ class Tao(TaoCore):
          args:
 
         """
-        cmd = f"python space_charge_com"
+        cmd = "python space_charge_com"
         if verbose:
             print(cmd)
         return self.__execute(
@@ -4762,7 +4762,7 @@ class Tao(TaoCore):
          args:
 
         """
-        cmd = f"python super_universe"
+        cmd = "python super_universe"
         if verbose:
             print(cmd)
         return self.__execute(
@@ -5057,7 +5057,7 @@ class Tao(TaoCore):
          args:
 
         """
-        cmd = f"python var_general"
+        cmd = "python var_general"
         if verbose:
             print(cmd)
         return self.__execute(

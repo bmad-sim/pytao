@@ -7,7 +7,6 @@ from pytao.util.parameters import tao_parameter_dict
 from pytao.tao_ctypes.tools import full_path
 import tempfile
 import shutil
-import types
 
 
 import logging
@@ -67,7 +66,7 @@ class TaoCore:
                 self.so_lib = lib
                 self.so_lib_file = lib_file
             else:
-                raise ValueError(f"Shared object libtao library not found.")
+                raise ValueError("Shared object libtao library not found.")
 
         self.so_lib.tao_c_out_io_buffer_get_line.restype = ctypes.c_char_p
         self.so_lib.tao_c_out_io_buffer_reset.restype = None

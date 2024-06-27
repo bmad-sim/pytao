@@ -9,11 +9,9 @@ from tkinter import messagebox
 import matplotlib
 
 matplotlib.use("TkAgg")
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.backends._backend_tk import FigureManagerTk
 from matplotlib.backend_bases import key_press_handler
-from matplotlib.widgets import Slider
 
 from pytao.util.parameters import str_to_tao_param, tao_parameter_dict
 from .tao_widget import *

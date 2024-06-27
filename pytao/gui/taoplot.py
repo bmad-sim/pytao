@@ -3,8 +3,6 @@ import matplotlib as mp
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.path import Path
-from matplotlib.backend_tools import ToolBase, ToolToggleBase
-from matplotlib.widgets import Slider, Button, RadioButtons
 
 from .tao_interface import *
 from pytao.util.parameters import *
