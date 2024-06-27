@@ -50,25 +50,23 @@ class Tao(TaoCore):
             "integer_array": self.cmd_integer,
         }
         func = func_for_type.get(cmd_type, self.cmd)
-        ret = func(cmd, raises=raises)
-        special_parser = getattr(_pytao_parsers, f"parse_{method_name}", "")
-        if special_parser and callable(special_parser):
-            data = special_parser(ret, cmd=cmd)
-            return data
-        if "string" in cmd_type:
-            try:
-                if as_dict:
-                    data = parse_tao_python_data(ret)
-                else:
-                    data = tao_parameter_dict(ret)
-            except Exception:
-                logger.exception("Failed to parse string data. Returning raw value.")
-                raise  # TODO: remove me
-                return ret
-
-            return data
-
-        return ret
+        raw_output = func(cmd, raises=raises)
+        special_parser = getattr(_pytao_parsers, f"parse_{method_name}", None)
+        try:
+            if special_parser and callable(special_parser):
+                return special_parser(raw_output, cmd=cmd)
+            if "string" not in cmd_type:
+                return raw_output
+            if as_dict:
+                return parse_tao_python_data(raw_output)
+            return tao_parameter_dict(raw_output)
+        except Exception:
+            if raises:
+                raise
+            logger.exception(
+                "Failed to parse string data with custom parser. Returning raw value."
+            )
+            return raw_output
 
     def bunch_data(self, ele_id, *, which="model", ix_bunch=1, verbose=False):
         """
