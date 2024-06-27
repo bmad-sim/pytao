@@ -7,7 +7,6 @@ from matplotlib.path import Path
 from pytao.util.parameters import str_to_tao_param
 
 
-
 class taoplot:
     def __init__(self, pipe, PlotRegion):
         """initializer, takes a tao interface and a graph region"""
@@ -818,7 +817,7 @@ class taoplot:
 
             # Lat layout branch and universe information
             if layInfoDict["ix_universe"].value != -1:
-                universe = layInfoDict[ix_universe].value
+                universe = layInfoDict["ix_universe"].value
             else:
                 universe = 1
             branch = layInfoDict["-1^ix_branch"].value
@@ -1151,7 +1150,7 @@ class taoplot:
             # dictionary of tao_parameter name string keys to the corresponding tao_parameter object
 
             if floInfoDict["ix_universe"].value != -1:
-                universe = floInfoDict[ix_universe].value
+                universe = floInfoDict["ix_universe"].value
 
             else:
                 universe = 1
@@ -2038,7 +2037,7 @@ class taoplot:
             or gInfoDict["graph^type"].value == "floor_plan"
         ):
             if gInfoDict["ix_universe"].value != -1:
-                gUniverse = gInfoDict[ix_universe].value
+                gUniverse = gInfoDict["ix_universe"].value
 
             else:
                 gUniverse = 1
@@ -2048,7 +2047,7 @@ class taoplot:
 
         else:
             if gInfoDict["ix_universe"].value != -1:
-                gUniverse = gInfoDict[ix_universe].value
+                gUniverse = gInfoDict["ix_universe"].value
 
             else:
                 gUniverse = 1
