@@ -1372,9 +1372,9 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">=</span><span class="n">Tao</span><span class="p">(</span><span class="s1">'-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot'</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span> <span class="o">=</span> <span class="n">Tao</span><span class="p">(</span><span class="s2">"-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2">tao=Tao('-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot')</div>
+<div class="clipboard-copy-txt" id="cell-2">tao = Tao("-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init -noplot")</div>
 </div>
 </div>
 </div>
@@ -1410,9 +1410,9 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">.</span><span class="n">data_d_array</span><span class="p">(</span><span class="s1">'orbit'</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">)[</span><span class="mi">7</span><span class="p">]</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">.</span><span class="n">data_d_array</span><span class="p">(</span><span class="s2">"orbit"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">)[</span><span class="mi">7</span><span class="p">]</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-3">tao.data_d_array('orbit', 'x')[7]</div>
+<div class="clipboard-copy-txt" id="cell-3">tao.data_d_array("orbit", "x")[7]</div>
 </div>
 </div>
 </div>
@@ -1473,15 +1473,15 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s1">'veto var *;veto dat *;'</span><span class="p">)</span>
-<span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s1">'use var quad_k1[3:5]'</span><span class="p">)</span>
-<span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s1">'set dat orbit.x[1:5]|meas=0'</span><span class="p">)</span>
-<span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s1">'use dat orbit.x[1:5]'</span><span class="p">);</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s2">"veto var *;veto dat *;"</span><span class="p">)</span>
+<span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s2">"use var quad_k1[3:5]"</span><span class="p">)</span>
+<span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s2">"set dat orbit.x[1:5]|meas=0"</span><span class="p">)</span>
+<span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s2">"use dat orbit.x[1:5]"</span><span class="p">);</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4">tao.cmd('veto var *;veto dat *;')
-tao.cmd('use var quad_k1[3:5]')
-tao.cmd('set dat orbit.x[1:5]|meas=0')
-tao.cmd('use dat orbit.x[1:5]');</div>
+<div class="clipboard-copy-txt" id="cell-4">tao.cmd("veto var *;veto dat *;")
+tao.cmd("use var quad_k1[3:5]")
+tao.cmd("set dat orbit.x[1:5]|meas=0")
+tao.cmd("use dat orbit.x[1:5]");</div>
 </div>
 </div>
 </div>
@@ -1611,9 +1611,9 @@ result</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">.</span><span class="n">ele_control_var</span><span class="p">(</span><span class="s1">'H01W'</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">.</span><span class="n">ele_control_var</span><span class="p">(</span><span class="s2">"H01W"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-7">tao.ele_control_var('H01W')</div>
+<div class="clipboard-copy-txt" id="cell-7">tao.ele_control_var("H01W")</div>
 </div>
 </div>
 </div>
@@ -1715,9 +1715,9 @@ result[0:5]</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="s1">'beginning'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="s2">"beginning"</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-9">tao.matrix('beginning', 'end')</div>
+<div class="clipboard-copy-txt" id="cell-9">tao.matrix("beginning", "end")</div>
 </div>
 </div>
 </div>
@@ -1828,11 +1828,11 @@ result[0:5]</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">plot_list</span><span class="p">(</span><span class="s1">'r'</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">plot_list</span><span class="p">(</span><span class="s2">"r"</span><span class="p">)</span>
 
 <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-11">result = tao.plot_list('r')
+<div class="clipboard-copy-txt" id="cell-11">result = tao.plot_list("r")
 
 result[0:2]</div>
 </div>
@@ -1887,14 +1887,14 @@ result[0:2]</div>
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># 't' gives a mapping of template plot to index</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">plot_list</span><span class="p">(</span><span class="s1">'t'</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">plot_list</span><span class="p">(</span><span class="s2">"t"</span><span class="p">)</span>
 
-<span class="n">result</span><span class="p">[</span><span class="s1">'cbar'</span><span class="p">]</span>
+<span class="n">result</span><span class="p">[</span><span class="s2">"cbar"</span><span class="p">]</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-12"># 't' gives a mapping of template plot to index
-result = tao.plot_list('t')
+result = tao.plot_list("t")
 
-result['cbar']</div>
+result["cbar"]</div>
 </div>
 </div>
 </div>
@@ -1942,9 +1942,9 @@ result['cbar']</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">.</span><span class="n">spin_invariant</span><span class="p">(</span><span class="s1">'l0'</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">.</span><span class="n">spin_invariant</span><span class="p">(</span><span class="s2">"l0"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-13">tao.spin_invariant('l0')</div>
+<div class="clipboard-copy-txt" id="cell-13">tao.spin_invariant("l0")</div>
 </div>
 </div>
 </div>
@@ -1998,10 +1998,10 @@ result['cbar']</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tt</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">taylor_map</span><span class="p">(</span><span class="s1">'beginning'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tt</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">taylor_map</span><span class="p">(</span><span class="s2">"beginning"</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">tt</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-14">tt = tao.taylor_map('beginning', 'end', order=2)
+<div class="clipboard-copy-txt" id="cell-14">tt = tao.taylor_map("beginning", "end", order=2)
 tt</div>
 </div>
 </div>
@@ -2207,10 +2207,10 @@ tt</div>
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Compare some terms with the matrix calc:</span>
-<span class="n">tao</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="s1">'beginning'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">)[</span><span class="s1">'mat6'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>  <span class="n">tt</span><span class="p">[</span><span class="mi">1</span><span class="p">][(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span>
+<span class="n">tao</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="s2">"beginning"</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">)[</span><span class="s2">"mat6"</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">tt</span><span class="p">[</span><span class="mi">1</span><span class="p">][(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-15"># Compare some terms with the matrix calc:
-tao.matrix('beginning', 'end')['mat6'][0,0],  tt[1][(1,0,0,0,0,0)]</div>
+tao.matrix("beginning", "end")["mat6"][0, 0], tt[1][(1, 0, 0, 0, 0, 0)]</div>
 </div>
 </div>
 </div>
@@ -2247,9 +2247,9 @@ tao.matrix('beginning', 'end')['mat6'][0,0],  tt[1][(1,0,0,0,0,0)]</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="s1">'beginning'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">)[</span><span class="s1">'mat6'</span><span class="p">][</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>  <span class="n">tt</span><span class="p">[</span><span class="mi">2</span><span class="p">][(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">tao</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="s2">"beginning"</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">)[</span><span class="s2">"mat6"</span><span class="p">][</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">tt</span><span class="p">[</span><span class="mi">2</span><span class="p">][(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-16">tao.matrix('beginning', 'end')['mat6'][1,0],  tt[2][(1,0,0,0,0,0)]</div>
+<div class="clipboard-copy-txt" id="cell-16">tao.matrix("beginning", "end")["mat6"][1, 0], tt[2][(1, 0, 0, 0, 0, 0)]</div>
 </div>
 </div>
 </div>
@@ -2297,10 +2297,10 @@ tao.matrix('beginning', 'end')['mat6'][0,0],  tt[1][(1,0,0,0,0,0)]</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">var_v_array</span><span class="p">(</span><span class="s1">'quad_k1'</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">var_v_array</span><span class="p">(</span><span class="s2">"quad_k1"</span><span class="p">)</span>
 <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-17">result = tao.var_v_array('quad_k1')
+<div class="clipboard-copy-txt" id="cell-17">result = tao.var_v_array("quad_k1")
 result[0:2]</div>
 </div>
 </div>
