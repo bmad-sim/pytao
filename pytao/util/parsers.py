@@ -361,6 +361,10 @@ def parse_var_v_array_line(line, cmd=""):
 def parse_var_v_array(lines, cmd=""):
     """
     Parses the output of `python var_v_array` into a list of dicts
+
+    Returns
+    -------
+    list of dict
     """
     return [parse_var_v_array_line(line) for line in lines]
 
@@ -382,8 +386,32 @@ def fix_value(value: str, typ: type):
 
 
 def _parse_by_keys_to_types(
-    lines: List[str], key_to_type: Dict[str, type], ensure_count: bool = True
+    lines: List[str],
+    key_to_type: Dict[str, type],
+    ensure_count: bool = True,
 ) -> List[dict]:
+    """
+    Parse Tao command output, with predetermined field names and associated types.
+
+    Each output line is converted according to ``key_to_type``, such that ``N``
+    lines of output will result in N dictionaries with keys
+    ``key_to_type.keys()`` with corresponding values cast to the indicated
+    type.
+
+    Parameters
+    ----------
+    lines : List[str]
+        Raw Tao output.
+    key_to_type : Dict[str, type]
+        Dictionary of key name to expected Python type.
+    ensure_count : bool, optional
+        Fail if the number of output fields doesn't match up with the expected
+        ones in ``key_to_type``.
+
+    Returns
+    -------
+    list of dict
+    """
     if ensure_count:
         # TODO: consider removing or only toggling on during test suite
         for line in lines:
@@ -401,6 +429,20 @@ def _parse_by_keys_to_types(
 
 
 def _get_cmd_args(cmd: str) -> List[str]:
+    """
+    Get command arguments.
+
+    (python) (command) [(arg1) (arg2) ... (argN)]
+
+    Parameters
+    ----------
+    cmd : str
+        The raw Tao command, including "python" as the first argument.
+
+    Returns
+    -------
+    list of str
+    """
     _python, _cmd, *args = cmd.strip().split()
     return args
 
@@ -411,7 +453,7 @@ def parse_building_wall_list(lines, cmd=""):
 
     Returns
     -------
-    datums: list of dicts
+    list of dicts
     """
     args = _get_cmd_args(cmd)
     if args:
@@ -446,7 +488,7 @@ def parse_building_wall_graph(lines, cmd=""):
 
     Returns
     -------
-    datums: list of dicts
+    list of dicts
     """
     return _parse_by_keys_to_types(
         lines,
@@ -466,7 +508,8 @@ def parse_constraints(lines, cmd=""):
 
     Returns
     -------
-    datums: list of dicts
+    list of dicts
+        The keys depend on "data" or "var"
     """
     args = _get_cmd_args(cmd)
     if args and args[0] == "data":
@@ -510,7 +553,7 @@ def parse_data_d1_array(lines, cmd=""):
 
     Returns
     -------
-    datums: list of dicts
+    list of dicts
     """
     return _parse_by_keys_to_types(
         lines,
@@ -532,7 +575,7 @@ def parse_data_d2_array(lines, cmd=""):
 
     Returns
     -------
-    datums: list of str
+    list of str
     """
     return lines
 
@@ -543,7 +586,7 @@ def parse_data_parameter(lines, cmd=""):
 
     Returns
     -------
-    datums : list
+    list of dict
     """
     args = _get_cmd_args(cmd)
     if len(args) < 2:
@@ -610,7 +653,8 @@ def parse_datum_has_ele(lines, cmd=""):
 
     Returns
     -------
-    datums : list of values
+    str or None
+        "no", "yes", "maybe", "provisional"
     """
     return lines[0] if lines else None
 
@@ -621,7 +665,7 @@ def parse_ele_chamber_wall(lines, cmd=""):
 
     Returns
     -------
-    datums : list of values
+    list of dict
     """
     return _parse_by_keys_to_types(
         lines,
@@ -635,7 +679,7 @@ def parse_ele_elec_multipoles(lines, cmd=""):
 
     Returns
     -------
-    info : dict
+    dict
     """
     logic_lines = [line for line in lines if "LOGIC" in line]
     lines = [line for line in lines if line not in logic_lines]
@@ -663,7 +707,9 @@ def parse_ele_gen_grad_map(lines, cmd=""):
 
     Returns
     -------
-    info : dict
+    dict or list of dict
+        "derivs" mode will be a list of dictionaries.
+        Normal mode will be a single dictionary.
     """
 
     args = _get_cmd_args(cmd)
@@ -687,7 +733,7 @@ def parse_ele_lord_slave(lines, cmd=""):
 
     Returns
     -------
-    info : dict
+    list of dict
     """
     return _parse_by_keys_to_types(
         lines,
@@ -702,7 +748,13 @@ def parse_ele_lord_slave(lines, cmd=""):
 
 
 def parse_ele_multipoles(lines, cmd=""):
-    """ """
+    """
+    Parse ele_multipoles results.
+
+    Returns
+    -------
+    dict
+    """
     logic_lines = [line for line in lines if "LOGIC" in line]
     lines = [line for line in lines if line not in logic_lines]
     key_to_type = {"index": int}
@@ -721,7 +773,11 @@ def parse_ele_multipoles(lines, cmd=""):
 
 def parse_ele_taylor(lines, cmd=""):
     """
-    (TODO)
+    Parse ele_taylor results.
+
+    Returns
+    -------
+    dict
     """
 
     def split_sections(lines):
@@ -762,13 +818,19 @@ def parse_ele_taylor(lines, cmd=""):
     settings = parse_tao_python_data(logic_lines)
     sections = split_sections(lines)
     return {
-        "settings": settings,
+        **settings,
         "data": [parse_section(section) for section in sections],
     }
 
 
 def parse_ele_spin_taylor(lines, cmd=""):
-    """ """
+    """
+    Parse ele_spin_taylor results.
+
+    Returns
+    -------
+    list of dict
+    """
     return _parse_by_keys_to_types(
         lines,
         {
@@ -786,7 +848,13 @@ def parse_ele_spin_taylor(lines, cmd=""):
 
 
 def parse_ele_wall3d(lines, cmd=""):
-    ""
+    """
+    Parse ele_wall3d results.
+
+    Returns
+    -------
+    list of dict
+    """
 
     def split_sections(lines):
         sections = []
@@ -828,7 +896,13 @@ def parse_ele_wall3d(lines, cmd=""):
 
 
 def parse_em_field(lines, cmd=""):
-    ""
+    """
+    Parse em_field results.
+
+    Returns
+    -------
+    dict
+    """
     return _parse_by_keys_to_types(
         lines,
         {
@@ -843,7 +917,13 @@ def parse_em_field(lines, cmd=""):
 
 
 def parse_enum(lines, cmd=""):
-    ""
+    """
+    Parse enum results.
+
+    Returns
+    -------
+    list of dict
+    """
     return _parse_by_keys_to_types(
         lines,
         {
@@ -854,7 +934,13 @@ def parse_enum(lines, cmd=""):
 
 
 def parse_floor_plan(lines, cmd=""):
-    ""
+    """
+    Parse floor_plan results.
+
+    Returns
+    -------
+    list of dict
+    """
     return _parse_by_keys_to_types(
         lines,
         {
@@ -884,7 +970,13 @@ def parse_floor_plan(lines, cmd=""):
 
 
 def parse_floor_orbit(lines, cmd=""):
-    ""
+    """
+    Parse floor_orbit results.
+
+    Returns
+    -------
+    list of dict
+    """
     res = []
     for line in lines:
         data = _parse_by_keys_to_types(
@@ -1035,7 +1127,13 @@ def parse_plot_line(lines, cmd=""):
 
 
 def parse_plot_symbol(lines, cmd=""):
-    ""
+    """
+    Parse plot_symbol results.
+
+    Returns
+    -------
+    list of dict or np.ndarray
+    """
     if isinstance(lines, np.ndarray):
         return lines
     return _parse_by_keys_to_types(
@@ -1050,7 +1148,13 @@ def parse_plot_symbol(lines, cmd=""):
 
 
 def parse_shape_list(lines, cmd=""):
-    ""
+    """
+    Parse shape_list results.
+
+    Returns
+    -------
+    list of dict
+    """
     return _parse_by_keys_to_types(
         lines,
         {
@@ -1068,7 +1172,13 @@ def parse_shape_list(lines, cmd=""):
 
 
 def parse_shape_pattern_list(lines, cmd=""):
-    ""
+    """
+    Parse shape_pattern_list results.
+
+    Returns
+    -------
+    list of dict
+    """
     args = _get_cmd_args(cmd)
     if not args:
         return _parse_by_keys_to_types(
@@ -1088,22 +1198,44 @@ def parse_shape_pattern_list(lines, cmd=""):
 
 
 def parse_show(lines, cmd=""):
-    ""
+    """
+    Parse show results.
+
+    Returns
+    -------
+    list of str
+        This is raw list of strings from tao, as parsing is not currently
+        supported.
+    """
     return lines  # raise NotImplementedError()
 
 
 def parse_species_to_int(lines, cmd=""):
-    ""
+    """
+    Parse species_to_int results.
+
+    Returns
+    -------
+    int
+    """
     return int(lines[0])
 
 
 def parse_species_to_str(lines, cmd=""):
-    ""
+    """
+    Parse species_to_str results.
+
+    Returns
+    -------
+    str
+    """
     return lines[0]
 
 
 def parse_spin_polarization(lines, cmd=""):
     """
+    Parse spin_polarization results.
+
     Returns
     -------
     dict
@@ -1117,7 +1249,13 @@ def parse_spin_polarization(lines, cmd=""):
 
 
 def parse_spin_resonance(lines, cmd=""):
-    ""
+    """
+    Parse spin_resonance results.
+
+    Returns
+    -------
+    dict
+    """
     lines = [
         line
         for line in lines
@@ -1127,7 +1265,13 @@ def parse_spin_resonance(lines, cmd=""):
 
 
 def parse_super_universe(lines, cmd=""):
-    ""
+    """
+    Parse super_universe results.
+
+    Returns
+    -------
+    dict
+    """
 
     def fix_line(line):
         bug_prefix = "n_v1_var_used;INT;F"
@@ -1142,7 +1286,15 @@ def parse_super_universe(lines, cmd=""):
 
 
 def parse_var(lines, cmd=""):
-    ""
+    """
+    Parse var results.
+
+    Returns
+    -------
+    dict, or list of dict
+        "slaves" mode will be a list of dicts.
+        Normal mode will be a dict.
+    """
     args = _get_cmd_args(cmd)
     if "slaves" in args:
         return _parse_by_keys_to_types(
@@ -1158,7 +1310,13 @@ def parse_var(lines, cmd=""):
 
 
 def parse_var_general(lines, cmd=""):
-    ""
+    """
+    Parse var_general results.
+
+    Returns
+    -------
+    list of dict
+    """
     return _parse_by_keys_to_types(
         lines,
         {
@@ -1171,7 +1329,13 @@ def parse_var_general(lines, cmd=""):
 
 
 def parse_var_v1_array(lines, cmd=""):
-    ""
+    """
+    Parse var_v1_array results.
+
+    Returns
+    -------
+    dict
+    """
     ix_v1_var = lines[-1]
 
     res = parse_tao_python_data([ix_v1_var])
@@ -1192,5 +1356,11 @@ def parse_var_v1_array(lines, cmd=""):
 
 
 def parse_lat_list(lines, cmd=""):
-    ""
+    """
+    Parse lat_list results.
+
+    Returns
+    -------
+    list of str
+    """
     return lines
