@@ -1,0 +1,39 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks.git
+    rev: v4.6.0
+    hooks:
+      # Remove unnecessary whitespace at the end of lines:
+      # - id: trailing-whitespace
+      # Ensure that text files have a newline at the end:
+      # - id: end-of-file-fixer
+      # Verify that Python source code is valid:
+      - id: check-ast
+      # Ensure filenames won't have conflicts on case insensitive platforms:
+      - id: check-case-conflict
+      # Check JSON files for valid syntax:
+      - id: check-json
+      # Check XML files for valid syntax:
+      - id: check-xml
+      # Check YAML files for valid syntax:
+      - id: check-yaml
+      # Check TOML files for valid syntax:
+      - id: check-toml
+      # Check that there are no remnants of merge conflicts in files:
+      - id: check-merge-conflict
+      # Check that symlinks are valid:
+      - id: check-symlinks
+      # Check that there's no code before a docstring
+      - id: check-docstring-first
+      # Check that too large of files are not committed (50MB):
+      - id: check-added-large-files
+        args: ["--maxkb=100000"]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.8
+    hooks:
+      - id: ruff
+        args: ["--config", "python/pyproject.toml"]
+        types_or: [python]
+        exclude: "^(pytao/_version.py)$"

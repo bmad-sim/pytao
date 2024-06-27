@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 #--------------------------------------
 
-class Tao:
+class TaoCore:
     """
     Class to run and interact with Tao. Requires libtao shared object.
 
@@ -45,9 +45,6 @@ class Tao:
         # we try to autogenerate it will complain about the broken
         # interface_commands file.
         
-        from pytao import interface_commands 
-        from pytao.tao_ctypes import extra_commands
-        
         # Library needs to be set.
         self.so_lib_file = None
         if so_lib == '':
@@ -73,27 +70,15 @@ class Tao:
         self.so_lib.tao_c_out_io_buffer_get_line.restype = ctypes.c_char_p
         self.so_lib.tao_c_out_io_buffer_reset.restype = None
 
-        # Extra methods
-        self._import_commands(interface_commands)
-        self._import_commands(extra_commands)
-
         try:
             self.register_cell_magic()
-        except:
+        except Exception:
             pass
 
         if init:
             self.init(init)
             
             
-    def _import_commands(self, module):
-        deny_list = getattr(module, '__deny_list', [])
-        # Add in methods from `interface_commands`
-        methods = [m for m in dir(module) if not m.startswith('__') and m not in deny_list]
-        for m in methods:
-            func = module.__dict__[m]
-            setattr(self, m, types.MethodType(func, self))            
-
     #---------------------------------------------
     # Used by init and cmd routines
 
@@ -332,7 +317,7 @@ def auto_discovery_libtao():
 
 #----------------------------------------------------------------------
 
-class TaoModel(Tao):
+class TaoModel(TaoCore):
     """
     Base class for setting up a Tao model in a directory. Builds upon the Tao class.
 
