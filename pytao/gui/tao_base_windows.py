@@ -8,8 +8,8 @@ import sys
 import tkinter as tk
 from tkinter import messagebox, ttk
 
-from .tao_set import *
-from .tao_widget import *
+from .tao_set import check_for_changes, tao_set
+from .tao_widget import tao_parameter, tk_tao_linker, tk_tao_parameter
 
 
 # -----------------------------------------------------

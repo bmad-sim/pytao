@@ -14,12 +14,13 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 from pytao.util.parameters import str_to_tao_param, tao_parameter_dict
 
-from .tao_base_windows import *
+from .tao_base_windows import (Tao_Popup, Tao_Toplevel, ele_shape_frame, tabbed_frame,
+                               tao_message_box, tao_scroll_frame)
 from .tao_ele_location import in_element
 from .tao_lat_windows import tao_ele_window
 from .tao_mpl_toolbar import taotoolbar
-from .tao_set import *
-from .tao_widget import *
+from .tao_set import tao_set
+from .tao_widget import tk_tao_parameter
 from .taoplot import taoplot
 
 # -----------------------------------------------------

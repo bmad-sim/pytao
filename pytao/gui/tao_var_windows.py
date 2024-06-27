@@ -7,10 +7,10 @@ from tkinter import messagebox, ttk
 
 from pytao.util.parameters import str_to_tao_param
 
-from .tao_base_windows import *
+from .tao_base_windows import (Tao_Toplevel, lw_table_window, table_window, tao_list_window,
+                               tao_message_box)
 from .tao_lat_windows import tao_ele_browser
-from .tao_set import *
-from .tao_widget import *
+from .tao_widget import tk_tao_parameter, v1_var_list_entry
 
 # -----------------------------------------------------
 # Variable Window

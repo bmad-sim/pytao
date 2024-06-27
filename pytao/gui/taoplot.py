@@ -4,9 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.path import Path
 
-from pytao.util.parameters import *
+from pytao.util.parameters import str_to_tao_param
 
-from .tao_interface import *
 
 
 class taoplot:
