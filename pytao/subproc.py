@@ -150,7 +150,7 @@ class _TaoPipe:
             [
                 sys.executable,
                 "-m",
-                "pytao.subproc",
+                "pytao.subproc_main",
                 str(self._subproc_out_fd),
             ],
             stdin=subprocess.PIPE,
@@ -228,15 +228,3 @@ def _tao_subprocess(output_fd: int) -> None:
                     output = array_to_dict(output)
 
                 write_pickled_data(output_pipe, {"result": output})
-
-
-if __name__ == "__main__":
-    try:
-        output_fd = int(sys.argv[1])
-    except (IndexError, ValueError):
-        print(
-            f"Usage: {sys.executable} {__file__} (output_file_descriptor)",
-            file=sys.stderr,
-        )
-        exit(1)
-    _tao_subprocess(output_fd)
