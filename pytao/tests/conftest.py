@@ -26,7 +26,11 @@ def ensure_count():
 @contextlib.contextmanager
 def ensure_successful_parsing(caplog):
     yield
-    errors = [record for record in caplog.get_records("call") if record.levelno == logging.ERROR]
+    errors = [
+        record
+        for record in caplog.get_records("call")
+        if record.levelno == logging.ERROR
+    ]
     for error in errors:
         if "Failed to parse string data" in error.message:
             pytest.fail(error.message)
