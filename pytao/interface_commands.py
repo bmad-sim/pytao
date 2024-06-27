@@ -11,8 +11,8 @@ import numpy as np
 
 from pytao.tao_ctypes.core import TaoCore
 from pytao.tao_ctypes.util import parse_tao_python_data
-from pytao.util import parsers as _pytao_parsers
-from pytao.util.parameters import tao_parameter_dict
+from ..util import parsers as _pytao_parsers
+from ..util.parameters import tao_parameter_dict
 
 logger = logging.getLogger(__name__)
 

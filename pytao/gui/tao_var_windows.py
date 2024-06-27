@@ -5,10 +5,15 @@ Provides windows for viewing and editing variable arrays in tao
 import tkinter as tk
 from tkinter import messagebox, ttk
 
-from pytao.util.parameters import str_to_tao_param
+from ..util.parameters import str_to_tao_param
 
-from .tao_base_windows import (Tao_Toplevel, lw_table_window, table_window, tao_list_window,
-                               tao_message_box)
+from .tao_base_windows import (
+    Tao_Toplevel,
+    lw_table_window,
+    table_window,
+    tao_list_window,
+    tao_message_box,
+)
 from .tao_lat_windows import tao_ele_browser
 from .tao_widget import tk_tao_parameter, v1_var_list_entry
 
@@ -762,9 +767,7 @@ class new_v1_frame(tk.Frame):
         # Grid widgets
         tk.Label(self.var_frame, text="Must be a real number")
         tk.Label(self.var_frame, text="Must be a real number")
-        tk.Label(
-            self.var_frame, text="Low limit must be less than high limit"
-        )
+        tk.Label(self.var_frame, text="Low limit must be less than high limit")
         for i in range(len(self.var_wid_list)):
             self.var_wid_list[i].tk_label.grid(row=i, column=0, sticky="E")
             self.var_wid_list[i].tk_wid.grid(row=i, column=1, sticky="EW")

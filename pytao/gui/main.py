@@ -7,7 +7,7 @@ from .module_check import module_check
 import tkinter as tk
 from tkinter import filedialog, font, messagebox
 
-from pytao.util.parameters import str_to_tao_param, tao_startup_param_dict
+from ..util.parameters import str_to_tao_param, tao_startup_param_dict
 
 from .tao_beam_windows import tao_beam_init_window
 from .tao_console import tao_console

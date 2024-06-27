@@ -9,7 +9,7 @@ import numpy as np
 from pytao import tao_ctypes
 from pytao.tao_ctypes.tools import full_path
 from pytao.tao_ctypes.util import error_in_lines
-from pytao.util.parameters import tao_parameter_dict
+from ..util.parameters import tao_parameter_dict
 
 logger = logging.getLogger(__name__)
 
@@ -289,8 +289,8 @@ class TaoCore:
                 print("-------------------------")
                 print("Tao> " + c)
                 res = self.cmd(c)
-                for l in res:
-                    print(l)
+                for line in res:
+                    print(line)
 
         del tao
 

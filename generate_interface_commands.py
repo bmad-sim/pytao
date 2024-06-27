@@ -2,7 +2,7 @@
 # coding: utf-8
 
 from numpydoc.docscrape import NumpyDocString
-from pytao.util import parsers
+from ..util import parsers
 import datetime
 import json
 import keyword

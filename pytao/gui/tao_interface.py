@@ -6,18 +6,22 @@ a few extra features to facilitate communication with the GUI
 import time
 import tkinter as tk
 
-import pytao
-from pytao.tao_interface import filter_output, new_stdout
+from ..tao_interface import filter_output, new_stdout, tao_interface as _tao_interface
 
 
-class tao_interface(pytao.tao_interface):
+class tao_interface(_tao_interface):
     """
     Provides an interface between the GUI and
     the Tao command line
     """
 
     def __init__(
-        self, mode="ctypes", init_args="", tao_exe="", expect_str="Tao>", so_lib=""
+        self,
+        mode="ctypes",
+        init_args="",
+        tao_exe="",
+        expect_str="Tao>",
+        so_lib="",
     ):
         # DEBUG
         self.debug = False  # set true to print debug messages
@@ -26,8 +30,7 @@ class tao_interface(pytao.tao_interface):
         if self.debug:
             print(init_args)
         ###
-        pytao.tao_interface.__init__(
-            self,
+        super().__init__(
             mode=mode,
             init_args=init_args,
             tao_exe=tao_exe,
@@ -92,7 +95,7 @@ class tao_interface(pytao.tao_interface):
             output = "single_mode not supported on the GUI command line"
             self.message_type = "error"
         else:
-            output = pytao.tao_interface.cmd_in(self, cmd_str)
+            output = super().cmd_in(cmd_str)
 
         # Parse output for error messages
         if cmd_str.find("spawn ") == 0:

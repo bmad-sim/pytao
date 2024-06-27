@@ -8,7 +8,7 @@ the parameters that have been modified.
 
 from tkinter import messagebox
 
-from pytao.util.parameters import tao_parameter_dict
+from ..util.parameters import tao_parameter_dict
 
 
 def check_for_changes(tao_list):

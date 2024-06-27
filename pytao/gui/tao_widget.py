@@ -7,7 +7,7 @@ parameter in tao
 import tkinter as tk
 from tkinter import filedialog, ttk
 
-from pytao.util.parameters import str_to_tao_param, tao_parameter
+from ..util.parameters import str_to_tao_param, tao_parameter
 
 from .data_type_list import data_type_list
 

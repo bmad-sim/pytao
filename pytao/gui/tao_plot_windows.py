@@ -12,10 +12,16 @@ from matplotlib.backend_bases import key_press_handler
 from matplotlib.backends._backend_tk import FigureManagerTk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-from pytao.util.parameters import str_to_tao_param, tao_parameter_dict
+from ..util.parameters import str_to_tao_param, tao_parameter_dict
 
-from .tao_base_windows import (Tao_Popup, Tao_Toplevel, ele_shape_frame, tabbed_frame,
-                               tao_message_box, tao_scroll_frame)
+from .tao_base_windows import (
+    Tao_Popup,
+    Tao_Toplevel,
+    ele_shape_frame,
+    tabbed_frame,
+    tao_message_box,
+    tao_scroll_frame,
+)
 from .tao_ele_location import in_element
 from .tao_lat_windows import tao_ele_window
 from .tao_mpl_toolbar import taotoolbar
@@ -1290,7 +1296,9 @@ class new_graph_frame(tk.Frame):
         self.graph_type_handler()
         self.refresh()
         # Copy the curves if necessary
-        if ("num_curves" in graph_dict.keys()) and (graph_dict["num_curves"] is not None):
+        if ("num_curves" in graph_dict.keys()) and (
+            graph_dict["num_curves"] is not None
+        ):
             # Remove existing curves
             for i in range(len(self.curve_frame.tab_list)):
                 self.curve_frame.remove_tab(0, destroy=True)
@@ -2490,14 +2498,12 @@ class tao_building_wall_window(Tao_Toplevel):
         def create(event=None):
             """Create the new section"""
             self.pipe.cmd_in(
-                "python building_wall_point "
-                + str(section_ix)
-                + "^^"
-                + str(point_ix)
-                + "^^"
-                + name
-                + "^^"
-                + constraint
+                "python building_wall_point " + str(section_ix) + "^^" + str(point_ix)
+                # TODO: this is broken
+                # + "^^"
+                # + name
+                # + "^^"
+                # + constraint
             )
             win.destroy()
             self.refresh()
