@@ -347,3 +347,13 @@ def test_var_v1_array_1():
 def test_lat_list_from_chris():
     tao = new_tao("-init $ACC_ROOT_DIR/bmad-doc/tao_examples/cesr/tao.init -noplot")
     names = tao.lat_list("*", "ele.name")
+    assert isinstance(names[0], str)
+
+
+def test_plot_graph_1():
+    tao = new_tao(
+        "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching"
+    )
+    res = tao.plot_graph(graph_name="beta.g")
+    assert isinstance(res, dict)
+    assert "name" in res
