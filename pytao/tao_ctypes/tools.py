@@ -95,7 +95,7 @@ def execute2(cmd, timeout=None, cwd=None):
     except subprocess.TimeoutExpired as ex:
         output["log"] = ex.stdout + "\n" + str(ex)
         output["why_error"] = "timeout"
-    except:
+    except Exception:
         output["log"] = "unknown run error"
         output["why_error"] = "unknown"
     return output

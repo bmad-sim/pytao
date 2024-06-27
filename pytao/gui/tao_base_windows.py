@@ -166,7 +166,7 @@ class tao_list_window(Tao_Toplevel):
                 self.canvas.yview_scroll(-1, "units")
             elif event.num == 5:
                 self.canvas.yview_scroll(1, "units")
-        except:  # in case this gets called when it shouldn't
+        except Exception:  # in case this gets called when it shouldn't
             pass
 
 
@@ -253,7 +253,7 @@ class tao_scroll_frame(tk.Frame):
                 self._canvas.yview_scroll(-1, "units")
             elif event.num == 5:
                 self._canvas.yview_scroll(1, "units")
-        except:  # in case this gets called when it shouldn't
+        except Exception:  # in case this gets called when it shouldn't
             pass
 
 

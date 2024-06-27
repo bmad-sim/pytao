@@ -80,19 +80,19 @@ class tao_parameter:
         elif param_type == "INT":
             try:
                 self.value = int(param_value)
-            except:
+            except Exception:
                 self.value = None
         elif param_type == "REAL":
             try:
                 self.value = float(param_value)
-            except:
+            except Exception:
                 self.value = None
         elif param_type == "LOGIC":
             self.value = param_value == "T"
         elif param_type == "INUM":
             try:
                 self.value = int(param_value)
-            except:
+            except Exception:
                 self.value = None
         else:
             print("UNKNOWN PARAMETER TYPE: " + param_type)
@@ -182,7 +182,7 @@ def str_to_tao_param(param_str):
             x = v[3:][i]
             try:
                 arr.append(float(x))
-            except:
+            except Exception:
                 if i == len(v[3:]) - 1:  # last item, could be a related parameter name
                     if len(x) > 0:
                         sub_param = x

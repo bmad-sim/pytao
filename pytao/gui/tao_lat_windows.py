@@ -162,11 +162,11 @@ class tao_ele_window(tao_list_window):
                     # set up shared variables for multipoles_on and scale_multipoles
                     try:
                         x = self.list_frame.mp_on_var.get()
-                    except:
+                    except Exception:
                         self.list_frame.mp_on_var = tk.BooleanVar()
                     try:
                         x = self.list_frame.scale_mp_var.get()
-                    except:
+                    except Exception:
                         self.list_frame.scale_mp_var = tk.BooleanVar()
                     tao_output = self.pipe.cmd_in(
                         "python ele:" + key + " " + self.element.id
@@ -446,7 +446,7 @@ class tao_ele_window(tao_list_window):
         something_changed = False
         try:
             something_changed = check_for_changes(self.head_tk_tao_params)
-        except:
+        except Exception:
             pass
         try:
             for i in range(len(self.p_frames)):
@@ -454,7 +454,7 @@ class tao_ele_window(tao_list_window):
                     something_changed = (
                         something_changed | self.p_frames[i].check_for_changes()
                     )
-        except:
+        except Exception:
             pass
         return something_changed
 

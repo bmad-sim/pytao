@@ -477,7 +477,7 @@ def tao_object_evaluate(tao_object, expression):
 
     try:
         fvals = np.asarray(vals, dtype=np.float)
-    except:
+    except Exception:
         fvals = vals
 
     # Return single value, or array

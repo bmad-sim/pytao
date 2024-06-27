@@ -81,7 +81,7 @@ def evaluate_tao(
     for expression in expressions:
         try:
             val = M.evaluate(expression)
-        except:
+        except Exception:
             print(f"error with {expression}")
             val = None
         output[expression] = val

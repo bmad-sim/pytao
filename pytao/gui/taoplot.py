@@ -374,7 +374,7 @@ class taoplot:
                             LineCoords.append([float(pList[j][1]), float(pList[j][2])])
                         PointsSuperList.append(LineCoords)
                         LineCoords = []
-            except:  # handle graph with no lines
+            except Exception:  # handle graph with no lines
                 lInfo = []
                 PointsSuperList = []
                 for i in cList:
@@ -403,7 +403,7 @@ class taoplot:
                         SymCoords.append([float(sList[j][2]), float(sList[j][3])])
                     SymbolSuperList.append(SymCoords)
                     SymCoords = []
-            except:  # Handle graph with no symbols
+            except Exception:  # Handle graph with no symbols
                 sInfo = []
                 SymbolSuperList = []
                 for i in cList:
@@ -431,7 +431,7 @@ class taoplot:
                     hInfoDictList.append(hInfoDict)
                     hInfoDict = {}
 
-            except:
+            except Exception:
                 hInfo = []
 
             # Plot Data
@@ -1870,7 +1870,7 @@ class taoplot:
                             fbwYList.append(float(fbwInfo[j].split(";")[3]))
                             try:
                                 fbwRadiusList.append(float(fbwInfo[j].split(";")[4]))
-                            except:
+                            except Exception:
                                 fbwRadiusList.append(0.0)
                     k = max(fbwIndexList)  # max line index
 

@@ -146,7 +146,7 @@ class tao_console(tk.Frame):
         # Try to refresh the history window
         try:
             self.root.history_window.refresh()
-        except:
+        except Exception:
             pass
         # Check the place buffer and place plots
         self.root.default_plots(include_init=False)

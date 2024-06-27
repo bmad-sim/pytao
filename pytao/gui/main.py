@@ -170,7 +170,7 @@ class tao_root_window(tk.Tk):
         # Try to refresh history window
         try:
             self.history_window.refresh()
-        except:
+        except Exception:
             pass
         # Check the place buffer and place plots
         self.default_plots(include_init=False)
@@ -283,7 +283,7 @@ class tao_root_window(tk.Tk):
                 plot_list = plot_file.read()
                 plot_list = plot_list.splitlines()
                 plot_file.close()
-            except:
+            except Exception:
                 plot_list = []
         else:
             plot_list = []
@@ -363,7 +363,7 @@ class tao_root_window(tk.Tk):
                 new_font.configure(size=new_size)
                 self.option_add("*Font", new_font)
                 self.font_size = new_size
-            except:
+            except Exception:
                 self.font_size = None
             # set self.lw
             self.lw = lw_var.get()
@@ -455,7 +455,7 @@ class tao_root_window(tk.Tk):
                 new_font = font.nametofont("TkDefaultFont")
                 new_font.configure(size=new_size)
                 self.option_add("*Font", new_font)
-            except:
+            except Exception:
                 pass
             return "break"  # Do not load into Tao yet
 
@@ -538,7 +538,7 @@ class tao_root_window(tk.Tk):
             init_list = init_file.read()
             init_list = init_list.splitlines()
             init_file.close()
-        except:
+        except Exception:
             init_list = []
 
         for key, value in clargs.items():  # add clargs to init_list
@@ -777,7 +777,7 @@ class tao_root_window(tk.Tk):
                 # better safe than sorry
                 try:
                     child.destroy()
-                except:
+                except Exception:
                     pass
             sys.exit(0)
         else:
@@ -874,7 +874,7 @@ class tao_root_window(tk.Tk):
         try:
             self.history_window.lift()
             # self.history_window.force_focus()
-        except:
+        except Exception:
             self.history_window = tao_history_window(self)
 
     def debug_cmd(self):

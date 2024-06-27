@@ -299,12 +299,12 @@ class tk_tao_parameter:
         elif self.param.type in ["INT", "INUM"]:
             try:
                 return int(self.tk_var.get())
-            except:
+            except Exception:
                 return None
         elif self.param.type == "REAL":
             try:
                 return float(self.tk_var.get())
-            except:
+            except Exception:
                 return None
         elif self.param.type == "LOGIC":
             return bool(self.tk_var.get())
@@ -318,7 +318,7 @@ class tk_tao_parameter:
             for i in range(len(self._svar)):
                 try:
                     output.append(float(self._svar[i].get()))
-                except:
+                except Exception:
                     output.append(None)
             return output
         elif self.param.type == "STRUCT":
@@ -437,7 +437,7 @@ class tk_tao_parameter:
             try:
                 float(self._svar[i].get())
                 new_val = new_val + str(float(self._svar[i].get()))
-            except:
+            except Exception:
                 # Use zero if not a float
                 new_val = new_val + str(0.0)
             new_val = new_val + ";"
@@ -463,7 +463,7 @@ class tk_tao_parameter:
                     try:
                         if self._data_source not in item["data_source"]:
                             continue
-                    except:
+                    except Exception:
                         pass
                 item = item["name"].split("<")[0]
                 if item != "":
@@ -615,7 +615,7 @@ class tk_tao_parameter:
                 if len(self._svar[k].get()) != 0:
                     try:
                         x = int(self._svar[k].get()[-1])
-                    except:
+                    except Exception:
                         self._svar[k].set(self._svar[k].get()[:-1])
                 # Prevent length from being greater than 6 digits
                 self._svar[k].set((self._svar[k].get())[-1 * length :])
