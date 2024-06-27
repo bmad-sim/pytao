@@ -262,6 +262,7 @@ for method, metadata in cmds_from_tao.items():
     
     for test_name, test_meta in tests.items():
         args = [f"{k}='{v}'" for k, v in test_meta['args'].items()]
+        args.append("verbose=True")
         test_code = f'''
 tao = new_tao('{test_meta['init']}')
 with ensure_successful_parsing(caplog):
