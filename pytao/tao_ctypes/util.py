@@ -58,8 +58,8 @@ def parse_tao_lat_ele_list(lines):
     ixlist = parse_tao_lat_ele_list(tao.cmd('python lat_ele_list 1@0'))
     """
     ix = {}
-    for l in lines:
-        index, name = l.split(";")
+    for line in lines:
+        index, name = line.split(";")
         ix[name] = int(index)
     return ix
 
@@ -149,8 +149,8 @@ def parse_tao_python_data(lines, clean_key=True):
     returns dict with data
     """
     dat = {}
-    for l in lines:
-        dat.update(parse_tao_python_data1(l, clean_key))
+    for line in lines:
+        dat.update(parse_tao_python_data1(line, clean_key))
 
     return dat
 

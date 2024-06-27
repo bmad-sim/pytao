@@ -12,16 +12,17 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../'))
+
+sys.path.insert(0, os.path.abspath("../../"))
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'PyTao'
-copyright = '2021, David Sagan'
-author = 'David Sagan'
+project = "PyTao"
+copyright = "2021, David Sagan"
+author = "David Sagan"
 
-import pytao
+import pytao  # noqa: E402
 
 # The short X.Y version.
 version = pytao.__version__
@@ -36,15 +37,15 @@ release = pytao.__version__
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-'sphinxcontrib.napoleon',
-'sphinx_rtd_theme',
-'nbsphinx',
-'nbsphinx_link',
-'autoapi.extension'
+    "sphinxcontrib.napoleon",
+    "sphinx_rtd_theme",
+    "nbsphinx",
+    "nbsphinx_link",
+    "autoapi.extension",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -57,26 +58,24 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+html_theme = "sphinx_rtd_theme"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 
 # -- Options for autoapi extension -------------------------------------------
 autoapi_type = "python"
 
-autoapi_dirs = ['../../pytao']
+autoapi_dirs = ["../../pytao"]
 
-autoapi_root = 'dev_docs/api'
+autoapi_root = "dev_docs/api"
 
-autoapi_options = [
-'members', 'undoc-members', 'show-inheritance'
-]
+autoapi_options = ["members", "undoc-members", "show-inheritance"]
 autoapi_add_toctree_entry = True
 
 
 # -- Options for nbsphinx extension -------------------------------------------
 
-nbsphinx_execute = 'never'
+nbsphinx_execute = "never"

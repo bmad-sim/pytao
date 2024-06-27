@@ -24,4 +24,5 @@ __all__ = [
     "run_tao",
     "evaluate_tao",
     "tao_interface",
+    "SubprocessTao",
 ]

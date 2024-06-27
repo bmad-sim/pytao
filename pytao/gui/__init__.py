@@ -15,3 +15,5 @@ gui.init file as its argument (see GUI documentation for more info)
 """
 
 from .main import tao_root_window
+
+__all__ = ["tao_root_window"]
