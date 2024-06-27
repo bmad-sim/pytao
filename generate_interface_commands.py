@@ -227,26 +227,8 @@ cmds_to_test_module = [f"""# ===================================================
 # Generated on: {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 # ==============================================================================
 
-import contextlib
-import os
-import logging
+from .conftest import ensure_successful_parsing, new_tao
 
-import pytest
-
-from pytao import Tao
-from pytao import interface_commands
-
-def new_tao(init):
-    return Tao(os.path.expandvars(f"{{init}} -noplot"))
-
-
-@contextlib.contextmanager
-def ensure_successful_parsing(caplog):
-    yield
-    errors = [record for record in caplog.get_records("call") if record.levelno == logging.ERROR]
-    for error in errors:
-        if "Failed to parse string data" in error.message:
-            pytest.fail(error.message)
 """]
 
 for method, metadata in cmds_from_tao.items():
@@ -264,12 +246,12 @@ for method, metadata in cmds_from_tao.items():
         args = [f"{k}='{v}'" for k, v in test_meta['args'].items()]
         args.append("verbose=True")
         test_code = f'''
-tao = new_tao('{test_meta['init']}')
 with ensure_successful_parsing(caplog):
-    tao.{clean_method}({', '.join(args)})
+    with new_tao(tao_cls, '{test_meta['init']}') as tao:
+        tao.{clean_method}({', '.join(args)})
         '''
         method_template = f'''
-def test_{clean_method}_{test_name}(caplog):
+def test_{clean_method}_{test_name}(caplog, tao_cls):
 {add_tabs(test_code, 1)}
         '''
         cmds_to_test_module.append(method_template)

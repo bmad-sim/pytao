@@ -11,6 +11,7 @@ from .tao_ctypes import TaoModel, run_tao
 from .tao_ctypes.evaluate import evaluate_tao
 from .tao_interface import tao_interface
 from .interface_commands import Tao
+from .subproc import SubprocessTao
 
 
 from ._version import get_versions
