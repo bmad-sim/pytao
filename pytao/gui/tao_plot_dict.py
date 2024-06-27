@@ -46,9 +46,8 @@ class tao_plot_dict(dict):
             # Check that region is a valid region name
             if region in self._known_region_names:
                 name = region
-                num = self._known_region_names.index(region)
+                self._known_region_names.index(region)
             elif region in self._known_region_nums:
-                num = region
                 name = self._known_region_nums.index(region)
             else:  # region is not a valid region name
                 return
@@ -64,8 +63,6 @@ class tao_plot_dict(dict):
         """
         # Get list of regions from tao
         plot_list_r = self.pipe.cmd_in("python plot_list r").splitlines()
-        index_list = []
-        region_list = []
         for i in range(len(plot_list_r)):
             ix, region_name = plot_list_r[i].split(";")[:2]
             if region:

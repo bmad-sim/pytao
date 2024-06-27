@@ -32,7 +32,7 @@ class tao_console(tk.Frame):
         else:
             font_name = "Courier"
         # set font+font size
-        if self.root.font_size != None:
+        if self.root.font_size is not None:
             self._wid.configure(
                 font=(font_name, self.root.font_size), fg="white", bg="black"
             )

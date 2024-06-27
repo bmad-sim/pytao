@@ -104,8 +104,8 @@ class taotoolbar(NavigationToolbar2Tk):
 
         fig = canv[0].get_figure()  # get the figure of interest
 
-        enter = fig.canvas.mpl_connect("axes_enter_event", self.enter_axes)
-        leave = fig.canvas.mpl_connect("axes_leave_event", self.leave_axes)
+        fig.canvas.mpl_connect("axes_enter_event", self.enter_axes)
+        fig.canvas.mpl_connect("axes_leave_event", self.leave_axes)
 
         self.cidKeyP = fig.canvas.mpl_connect("key_press_event", self.onKeyPress)
         self.cidKeyR = fig.canvas.mpl_connect("key_release_event", self.onKeyRelease)
@@ -132,14 +132,14 @@ class taotoolbar(NavigationToolbar2Tk):
                         scale_factor = base_scale
                     else:
                         scale_factor = 1
-                    if self.xzoom == True:  # new x limits
+                    if self.xzoom is True:  # new x limits
                         ax.set_xlim(
                             [
                                 xdata - x_left * scale_factor,
                                 xdata + x_right * scale_factor,
                             ]
                         )
-                    if self.yzoom == True:  # new y limits
+                    if self.yzoom is True:  # new y limits
                         ax.set_ylim(
                             [
                                 ydata - y_top * scale_factor,
@@ -151,10 +151,10 @@ class taotoolbar(NavigationToolbar2Tk):
                     pass  # scrolling outside of graph
 
         # attach the call backs
-        if on == True and cid == "none":
+        if on is True and cid == "none":
             self.cid = fig.canvas.mpl_connect("scroll_event", zoom_fun)
 
-        if on != True:
+        if on is not True:
             fig.canvas.mpl_disconnect(cid)
             self.cid = "none"
 
@@ -228,14 +228,14 @@ class taotoolbar(NavigationToolbar2Tk):
             )
             self.mode = "pan/zoom"
             scale_canv = self.canvas
-            scale = self.zoom_factory(
+            self.zoom_factory(
                 self, scale_canv.figure.get_axes(), scale_canv, True, self.cid
             )
             self.canvas.widgetlock(self)
         else:
             self.canvas.widgetlock.release(self)
             scale_canv = self.canvas
-            scale = self.zoom_factory(
+            self.zoom_factory(
                 self, scale_canv.figure.get_axes(), scale_canv, False, self.cid
             )
         for a in self.canvas.figure.get_axes():
@@ -245,7 +245,6 @@ class taotoolbar(NavigationToolbar2Tk):
 
     def help(self):
         """help tool which opens a tk window with instructions on graph interaction"""
-        image = None
 
         win = tk.Toplevel(self.parent)
 

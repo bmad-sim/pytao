@@ -57,7 +57,7 @@ class tk_tao_parameter:
             self.tk_wid = tk.Label(frame, textvariable=self.tk_var)
         elif self.param.type in ["STR", "INT", "REAL", "SPECIES"]:
             self.tk_var = tk.StringVar()
-            if self.param.value == None:
+            if self.param.value is None:
                 self.tk_var.set("")
             else:
                 self.tk_var.set(str(self.param.value))
@@ -66,7 +66,7 @@ class tk_tao_parameter:
             self.tk_var = tk.StringVar()
             self.tk_var.set(self.param.value)
             if self.param.type == "ENUM":
-                if self.param.prefix == None:
+                if self.param.prefix is None:
                     options = enum_fetch(self.param.name, pipe)
                 else:
                     options = enum_fetch(
@@ -90,13 +90,13 @@ class tk_tao_parameter:
         elif self.param.type == "INUM":
             self.tk_var = tk.StringVar()
             self.tk_var.set(self.param.value)
-            if self.param.prefix == None:
+            if self.param.prefix is None:
                 options = inum_fetch(self.param.name, pipe)
             else:
                 options = inum_fetch(self.param.prefix + "^" + self.param.name, pipe)
             if options == [""]:
                 options = [self.param.value]
-            if self.param.value == None:
+            if self.param.value is None:
                 self.tk_var.set(options[0])
             self.tk_wid = tk.OptionMenu(frame, self.tk_var, *options)
             # Check for and remove num^ from self.param.name
@@ -275,7 +275,7 @@ class tk_tao_parameter:
                 self._c.config(state="disabled")
         # Bind info printing
         if pipe != 0:
-            if pipe.debug == True:
+            if pipe.debug is True:
                 self.tk_wid.bind("<Button-3>", self.print_info)
 
     def print_info(self, *args):
@@ -324,7 +324,7 @@ class tk_tao_parameter:
         elif self.param.type == "STRUCT":
             d = {}
             for ttp in self._s:
-                if ttp.value() != None:
+                if ttp.value() is not None:
                     d[ttp.param.name] = ttp.value()
             return d
 
@@ -341,7 +341,7 @@ class tk_tao_parameter:
             if len(ttp._svar) != len(self._svar):
                 return
             for i in range(len(self._svar)):
-                if ttp.value()[i] != None:
+                if ttp.value()[i] is not None:
                     self._svar[i].set(ttp.value()[i])
         elif self.param.type == "STRUCT":
             for i in range(len(self._s)):
@@ -355,7 +355,7 @@ class tk_tao_parameter:
         if not isinstance(tao_param, tao_parameter):
             return
         if self.param.type in ["STR", "INT", "REAL", "SPECIES"]:
-            if tao_param.value == None:
+            if tao_param.value is None:
                 self.tk_var.set("")
             else:
                 self.tk_var.set(str(tao_param.value))
@@ -435,7 +435,7 @@ class tk_tao_parameter:
         for i in range(len(self._svar)):
             # Check that the variable contains a float
             try:
-                x = float(self._svar[i].get())
+                float(self._svar[i].get())
                 new_val = new_val + str(float(self._svar[i].get()))
             except:
                 # Use zero if not a float
@@ -548,7 +548,7 @@ class tk_tao_parameter:
             elif p.find("<digits") != -1:  # Fixed length int
                 p = p.split("s")[1]
                 p = p.split(">")[0]
-                length = int(p)
+                int(p)
                 self._s.append(tk.Entry(self.tk_wid, textvariable=self._svar[k]))
             elif p.find("<int>") != -1:  # Integer
                 self._s.append(tk.Entry(self.tk_wid, textvariable=self._svar[k]))
@@ -708,7 +708,7 @@ class tk_tao_parameter:
                     return False
             elif p.find("<digits") != -1:  # Fixed length int
                 try:
-                    junk_var = int(x[k + 1])  # don't need the value
+                    int(x[k + 1])  # don't need the value
                 except ValueError:
                     return False
                 p = p.split("s")[1]
@@ -718,12 +718,12 @@ class tk_tao_parameter:
                     return False
             elif p.find("<int>") != -1:  # Integer
                 try:
-                    junk_var = int(x[k + 1])  # don't need the value
+                    int(x[k + 1])  # don't need the value
                 except ValueError:
                     return False
             elif p.find("<real>") != -1:  # Float
                 try:
-                    junk_var = float(x[k + 1])  # don't need the value
+                    float(x[k + 1])  # don't need the value
                 except ValueError:
                     return False
             k = k + 1
@@ -819,7 +819,7 @@ class tk_tao_parameter:
                 a = "-"
             else:
                 a = None
-            if a == None:
+            if a is None:
                 return [x]
             else:
                 return [x[: x.find(a)]] + [a] + parse_comps(x[x.find(a) + 1 :])
@@ -844,7 +844,7 @@ class tk_tao_parameter:
         Writes the contents of self._svar into self.tk_var (for COMPONENT
         parameters only), then calls self._c_refresh()
         """
-        if self._handle_block == True:  # prevent this function from triggering itself
+        if self._handle_block is True:  # prevent this function from triggering itself
             return
         if self.param.type != "COMPONENT":
             return

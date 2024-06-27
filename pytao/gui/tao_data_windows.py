@@ -131,13 +131,13 @@ class d2_data_frame:
 
     def edit_d2(self, d2_data_name, pipe):
         """Opens the new data window and clones this d2_array in for editing"""
-        win = tao_new_data_window(self.root, pipe, default=d2_data_name)
+        tao_new_data_window(self.root, pipe, default=d2_data_name)
 
     def open_d1(self, d2_data_name, d1_data_name, pipe, ix_lb, ix_ub, u_ix):
         """
         Opens a window with detailed information for d2_data_name.d1_data_name
         """
-        win = tao_d1_data_window(
+        tao_d1_data_window(
             self.root, pipe, d2_data_name + "." + d1_data_name, u_ix, ix_lb, ix_ub
         )
 
@@ -303,7 +303,7 @@ class tao_new_data_window(Tao_Toplevel):
         self.d1_frame_list = []
 
         self.fill_d2_frame()
-        if default != None:
+        if default is not None:
             self.d2_param_list[0].tk_var.set(default)
             self.load_d1_frame(ask=False)
             for d1_frame in self.d1_frame_list:
@@ -1176,7 +1176,7 @@ class new_d1_frame(tk.Frame):
         d1_array's data sequentially
         """
         # Make sure ix_min and length are not invalidly set
-        if (self.ix_min_handler() == False) or (self.length_handler() == False):
+        if (self.ix_min_handler() is False) or (self.length_handler() is False):
             return
         # Autosize the array if self.length == -1
         if self.length == -1:
@@ -1184,7 +1184,7 @@ class new_d1_frame(tk.Frame):
         else:
             autosize = False
         name = self.d2_array.name + "." + self.name
-        win = tao_ele_browser(
+        tao_ele_browser(
             self.d2_array.root,
             self.pipe,
             name,

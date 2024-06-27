@@ -86,7 +86,7 @@ class tao_ele_window(tao_list_window):
             )
             if x:
                 self.ele_set()
-            if x == None:
+            if x is None:
                 return  # don't refresh if "Cancel" is picked
         # Update the ele_wids and check for successful update
         if not self.ele_wids.update():
@@ -232,7 +232,7 @@ class tao_ele_window(tao_list_window):
                             bele[bele.find(">>") + 2 :],
                             self.ele_wids.bmd.get(),
                         ]
-                        win = tao_ele_window(self.root, self.pipe, settings)
+                        tao_ele_window(self.root, self.pipe, settings)
                         return "break"
 
                     ls_tree.bind("<Double-Button-1>", open_ele_window)
@@ -303,7 +303,7 @@ class tao_ele_window(tao_list_window):
                     vec0 = tk_tao_parameter(
                         str_to_tao_param(vec0), self.p_frames[i], self.pipe
                     )
-                    separator = tk.Frame(self.p_frames[i], height=10, bd=1).grid(
+                    tk.Frame(self.p_frames[i], height=10, bd=1).grid(
                         row=8, column=1, columnspan=6, sticky="EW"
                     )
                     vec0.tk_label.grid(row=9, column=0, sticky="EW")
@@ -351,7 +351,7 @@ class tao_ele_window(tao_list_window):
             )
             if x:
                 self.ele_set(refresh_self=False)
-            if x == None:
+            if x is None:
                 return  # don't close if "Cancel" is picked
         # Actually close the window
         self.destroy()
@@ -1213,7 +1213,7 @@ class tao_lattice_window(Tao_Toplevel):
                 str(row["values"][0]),
                 self.branch_wids.bmd.get(),
             ]
-            win = tao_ele_window(self.root, self.pipe, settings)
+            tao_ele_window(self.root, self.pipe, settings)
 
 
 class tao_ele_browser(tao_lattice_window):

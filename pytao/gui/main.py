@@ -310,7 +310,7 @@ class tao_root_window(tk.Tk):
             if plot in plot_templates:
                 if self.plot_mode == "matplotlib":
                     # Make a window for the plot
-                    win = tao_plot_window(self, plot, self.pipe, region=plot_regions[i])
+                    tao_plot_window(self, plot, self.pipe, region=plot_regions[i])
                 elif self.plot_mode == "pgplot/plplot":
                     # self.placed (tao_plot_dict) will keep track of how many
                     # rows/columns of the pgplot window are available
@@ -526,7 +526,7 @@ class tao_root_window(tk.Tk):
         # parameter:value
         # E.g. init_file:tao.init
         # E.g. rf_on:T
-        if gui_init_file == None:
+        if gui_init_file is None:
             # Try to use gui.init if init file not specified
             gui_init_file = os.path.expanduser("gui.init")
         else:
@@ -726,13 +726,13 @@ class tao_root_window(tk.Tk):
     # Menu bar callbacks
 
     def new_data_cmd(self):
-        win = tao_new_data_window(self, self.pipe)
+        tao_new_data_window(self, self.pipe)
 
     def new_var_cmd(self):
-        win = tao_new_var_window(self, self.pipe)
+        tao_new_var_window(self, self.pipe)
 
     def new_template_cmd(self):
-        win = tao_new_plot_template_window(self, self.pipe)
+        tao_new_plot_template_window(self, self.pipe)
 
     def write_data_cmd(self):
         """
@@ -789,44 +789,44 @@ class tao_root_window(tk.Tk):
         win.title("Optimizer")
 
     def beam_init_cmd(self):
-        win = tao_beam_init_window(self, self.pipe)
+        tao_beam_init_window(self, self.pipe)
 
     def plot_template_cmd(self):
-        win = tao_place_plot_window(self, self.pipe)
+        tao_place_plot_window(self, self.pipe)
 
     def plot_region_cmd(self):
         # win = tao_plot_tr_window(self, self.pipe, "R")
-        win = tao_new_plot_template_window(self, self.pipe, None, "T")
+        tao_new_plot_template_window(self, self.pipe, None, "T")
 
     def building_wall_cmd(self):
-        win = tao_building_wall_window(self, self.pipe)
+        tao_building_wall_window(self, self.pipe)
 
     def wave_cmd(self):
         print("Wave called")
 
     def set_global_vars_cmd(self):
-        win = tao_global_vars_window(self)
+        tao_global_vars_window(self)
 
     def set_bmad_com_cmd(self):
-        win = tao_bmad_com_window(self)
+        tao_bmad_com_window(self)
 
     def view_vars_cmd(self):
-        win = tao_var_general_window(self, self.pipe)
+        tao_var_general_window(self, self.pipe)
 
     def view_data_cmd(self):
-        win = tao_d2_data_window(self, self.pipe)
+        tao_d2_data_window(self, self.pipe)
 
     def view_ele_cmd(self):
-        win = tao_ele_window(self, self.pipe)
+        tao_ele_window(self, self.pipe)
 
     def view_lattice_cmd(self):
-        win = tao_lattice_window(self, self.pipe)
+        tao_lattice_window(self, self.pipe)
 
     def lat_layout_shape_cmd(self):
-        win = tao_ele_shape_window(self, self.pipe, "lat_layout")
+        tao_ele_shape_window(self, self.pipe, "lat_layout")
 
     def floor_plan_shape_cmd(self):
-        win = tao_ele_shape_window(self, self.pipe, "floor_plan")
+        tao_ele_shape_window(self, self.pipe, "floor_plan")
 
     # Other callbacks
 

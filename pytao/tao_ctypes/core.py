@@ -285,7 +285,6 @@ class TaoCore:
         def tao(line, cell):
             cell = cell.format(**globals())
             cmds = cell.split("\n")
-            output = []
             for c in cmds:
                 print("-------------------------")
                 print("Tao> " + c)

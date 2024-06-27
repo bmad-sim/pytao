@@ -137,7 +137,7 @@ class tao_place_plot_window(Tao_Toplevel):
             )
             return
         self.set_plot()
-        win = tao_plot_window(self.root, self.plot, self.pipe)
+        tao_plot_window(self.root, self.plot, self.pipe)
 
     def pg_plot(self, event=None):
         """
@@ -150,7 +150,7 @@ class tao_place_plot_window(Tao_Toplevel):
             )
             return
         self.set_plot()
-        win = tao_pgplot_place_window(self.root, self.plot, self.pipe)
+        tao_pgplot_place_window(self.root, self.plot, self.pipe)
 
     def set_plot(self, event=None):
         """
@@ -172,7 +172,7 @@ class tao_place_plot_window(Tao_Toplevel):
                 "Error", "Please choose a template to edit.", parent=self
             )
             return
-        win = tao_new_plot_template_window(self.root, self.pipe, self.plot, "T")
+        tao_new_plot_template_window(self.root, self.pipe, self.plot, "T")
 
 
 # ----------------------------------------------------
@@ -673,7 +673,7 @@ class tao_new_plot_template_window(Tao_Toplevel):
                 use_plot_props = None
         # Copy in plot properties if necessary
         self.handler_block = True
-        if use_plot_props != None:
+        if use_plot_props is not None:
             plot1 = tao_parameter_dict(
                 self.pipe.cmd_in("python plot1 " + use_plot_props).splitlines()
             )
@@ -1288,7 +1288,7 @@ class new_graph_frame(tk.Frame):
         self.graph_type_handler()
         self.refresh()
         # Copy the curves if necessary
-        if ("num_curves" in graph_dict.keys()) and (graph_dict["num_curves"] != None):
+        if ("num_curves" in graph_dict.keys()) and (graph_dict["num_curves"] is not None):
             # Remove existing curves
             for i in range(len(self.curve_frame.tab_list)):
                 self.curve_frame.remove_tab(0, destroy=True)
@@ -1734,7 +1734,7 @@ class new_curve_frame(tk.Frame):
         Duplicates this curve into the graph_frame specified by target
         target defaults to this curve_frame's parent graph
         """
-        if target == None:
+        if target is None:
             target = self.graph
         # Don't run any handlers for this curve_frame
         # self.handler_block = True

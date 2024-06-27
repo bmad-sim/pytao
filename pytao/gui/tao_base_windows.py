@@ -86,7 +86,7 @@ class tao_list_window(Tao_Toplevel):
         self, root, title, use_upper=False, min_width=0, parent=None, *args, **kwargs
     ):
         self.root = root
-        if parent != None:
+        if parent is not None:
             Tao_Toplevel.__init__(self, parent, *args, **kwargs)
         else:
             Tao_Toplevel.__init__(self, root, *args, **kwargs)
@@ -272,7 +272,6 @@ class tao_parameter_frame(tk.Frame):
         self.tao_list = []  # List for tk_tao_parameters
         for p in tao_list:
             self.tao_list.append(tk_tao_parameter(p, self, pipe))
-        cols = []  # A list of the parts of tao_list,
         # after being divided into n_col columns
         # Don't count units# in list length
         real_len = len(self.tao_list)
@@ -335,7 +334,7 @@ class tao_parameter_window(tao_list_window):
         for k in range(len(self.tao_list)):
             self.tao_list[k].tk_label.grid(row=k, column=0, sticky="W")
             self.tao_list[k].tk_wid.grid(row=k, column=1, sticky="EW")
-            if self.tao_list[k].sub_wid != None:
+            if self.tao_list[k].sub_wid is not None:
                 self.tao_list[k].sub_wid.grid(row=k, column=2, sticky="W")
         # Attempt to bind data_source and data_types together
         data_source_ix = None
@@ -343,7 +342,7 @@ class tao_parameter_window(tao_list_window):
             if self.tao_list[k].param.name == "data_source":
                 data_source_ix = k
                 break
-        if data_source_ix != None:
+        if data_source_ix is not None:
             # Define _data_source_handler
             def _dat_source_handler(*args):
                 """Updates _data_source for DAT_TYPE widgets in this window"""
@@ -1018,7 +1017,7 @@ class tao_branch_widgets:
         self.ele_label = tk.StringVar()  # For showing index range
         self.bmd = tk.StringVar()  # Base/Model/Design
         self.bme = tk.StringVar()  # Beginning/Middle/End
-        if default != None:
+        if default is not None:
             self.uni.set(str(default[0]))
             self.branch.set(str(default[1]))
             self.ele.set(str(default[2]))
@@ -1355,7 +1354,7 @@ class tabbed_frame(tk.Frame):
         If ix is not specified, the tab is added at the end of the list
         *args and **kwargs are passed to self.new_tab_func after self
         """
-        if ix == None:
+        if ix is None:
             ix = len(self.tab_list)
         if ix < len(self.tab_list):
             self.tab_list = (
@@ -1663,7 +1662,7 @@ class ele_shape_frame(tk.Frame):
         """
         # Get currently selected row
         current_ix = self.get_focus_ix()
-        if current_ix == None:
+        if current_ix is None:
             return
         self.swap_shapes(current_ix, current_ix - 1)
 
@@ -1674,7 +1673,7 @@ class ele_shape_frame(tk.Frame):
         """
         # Get currently selected row
         current_ix = self.get_focus_ix()
-        if current_ix == None:
+        if current_ix is None:
             return
         self.swap_shapes(current_ix, current_ix + 1)
 
@@ -1684,7 +1683,7 @@ class ele_shape_frame(tk.Frame):
         the shape table at the next index
         """
         ix = self.get_focus_ix()
-        if ix == None:
+        if ix is None:
             return
         # Add a new row in tao
         self.pipe.cmd_in(
@@ -1703,7 +1702,7 @@ class ele_shape_frame(tk.Frame):
         and shifts other ele_shapes accordingly
         """
         ix = self.get_focus_ix()
-        if ix == None:
+        if ix is None:
             return
         self.pipe.cmd_in(
             "python shape_manage " + self.type + " " + str(ix + 1) + " delete"

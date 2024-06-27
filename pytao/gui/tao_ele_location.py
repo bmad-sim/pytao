@@ -68,7 +68,7 @@ def in_element(x, y, fig_info):
 
                 else:
                     try:  # sbend click detection already handled in taoplot
-                        if returnList[15][str(i)].contains_point([x, y]) == True:
+                        if returnList[15][str(i)].contains_point([x, y]) is True:
                             inIndexList.append(i)
 
                     except KeyError:  # other floor plan elements
@@ -80,8 +80,7 @@ def in_element(x, y, fig_info):
                                 returnList[14][str(i)],
                                 x,
                                 y,
-                            )
-                            == True
+                            ) is True
                         ):
                             inIndexList.append(i)
         # find floor_plan elements containing the specified point

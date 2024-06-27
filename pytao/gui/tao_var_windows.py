@@ -69,13 +69,13 @@ class tao_var_general_window(tao_list_window):
         return lambda: self.open_v1(v1_var_name)
 
     def open_v1(self, v1_var_name):
-        win = tao_v1_var_window(self.root, self.pipe, v1_var_name)
+        tao_v1_var_window(self.root, self.pipe, v1_var_name)
 
     def edit_v1_callback(self, v1_var_name):
         return lambda: self.edit_v1(v1_var_name)
 
     def edit_v1(self, v1_var_name):
-        win = tao_new_var_window(self.root, self.pipe, default=v1_var_name)
+        tao_new_var_window(self.root, self.pipe, default=v1_var_name)
 
     def delete_v1_callback(self, v1_var_name):
         return lambda: self.delete_v1(v1_var_name)
@@ -242,7 +242,7 @@ class tao_new_var_window(Tao_Toplevel):
         self.create_b.pack(side="right")
 
         # Clone default if it exists
-        if default != None:
+        if default is not None:
             self.v1_frame_list[0].clone(default)
 
     def create_variables(self, event=None):
@@ -725,7 +725,7 @@ class new_v1_frame(tk.Frame):
                     low_lim = float(self.v1_array_wids[6].tk_var.get())
                 except ValueError:
                     low_lim = None
-                if low_lim == None:
+                if low_lim is None:
                     self.low_high_warning_1.grid(row=7, column=2, sticky="W")
                     fail = True
                 else:
@@ -738,7 +738,7 @@ class new_v1_frame(tk.Frame):
                     high_lim = float(self.v1_array_wids[7].tk_var.get())
                 except ValueError:
                     high_lim = None
-                if high_lim == None:
+                if high_lim is None:
                     self.low_high_warning_2.grid(row=8, column=2, sticky="W")
                     fail = True
                 else:
@@ -746,7 +746,7 @@ class new_v1_frame(tk.Frame):
             else:
                 high_lim = None
             # Make sure low < high
-            if (low_lim != None) & (high_lim != None):
+            if (low_lim is not None) & (high_lim is not None):
                 if low_lim > high_lim:
                     self.low_high_warning_3.grid(row=7, column=2, sticky="W")
                     fail = True
@@ -759,9 +759,9 @@ class new_v1_frame(tk.Frame):
                 return 1
 
         # Grid widgets
-        low_high_warning_1 = tk.Label(self.var_frame, text="Must be a real number")
-        low_high_warning_2 = tk.Label(self.var_frame, text="Must be a real number")
-        low_high_warning_3 = tk.Label(
+        tk.Label(self.var_frame, text="Must be a real number")
+        tk.Label(self.var_frame, text="Must be a real number")
+        tk.Label(
             self.var_frame, text="Low limit must be less than high limit"
         )
         for i in range(len(self.var_wid_list)):
@@ -799,14 +799,14 @@ class new_v1_frame(tk.Frame):
         v1_array's variables sequentially
         """
         # Make sure ix_min and length are not invalidly set
-        if (self.ix_min_handler() == False) or (self.length_handler() == False):
+        if (self.ix_min_handler() is False) or (self.length_handler() is False):
             return
         # Autosize the array if self.length == -1
         if self.length == -1:
             autosize = True
         else:
             autosize = False
-        win = tao_ele_browser(
+        tao_ele_browser(
             self.parent.root, self.pipe, self.name, self, "var", autosize=autosize
         )
 
@@ -981,7 +981,7 @@ class new_v1_frame(tk.Frame):
                 high_lim = None
             if strict:
                 self.low_warning.grid(**self.low_warning_gs)
-            if high_lim == None:
+            if high_lim is None:
                 self.high_warning.grid(**self.high_warning_gs)
                 return False
             return None
@@ -992,7 +992,7 @@ class new_v1_frame(tk.Frame):
                 low_lim = None
             if strict:
                 self.high_warning.grid(**self.high_warning_gs)
-            if low_lim == None:
+            if low_lim is None:
                 self.low_warning.grid(**self.low_warning_gs)
                 return False
             return None

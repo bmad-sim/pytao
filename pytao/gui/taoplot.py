@@ -451,7 +451,7 @@ class taoplot:
                         cInfoDictList[i]["line"].get_component("pattern").lower()
                     ]
                 )  # line style
-                if cInfoDictList[i]["draw_line"].value == True:  # line width if drawn
+                if cInfoDictList[i]["draw_line"].value is True:  # line width if drawn
                     CurveData.append(cInfoDictList[i]["line"].get_component("width"))
                 else:
                     CurveData.append(0)
@@ -476,7 +476,7 @@ class taoplot:
                 else:
                     CurveData.append("none")
 
-                if (cInfoDictList[i]["draw_symbols"].value == True) and SymbolsDict[
+                if (cInfoDictList[i]["draw_symbols"].value is True) and SymbolsDict[
                     cInfoDictList[i]["symbol"].get_component("type")
                 ] != "":  # symbol size if drawn
                     CurveData.append(cInfoDictList[i]["symbol"].get_component("height"))
@@ -697,7 +697,7 @@ class taoplot:
                 plt.axis("off")
             # sets up floor plan plot
 
-            if gInfoDict["draw_axes"].value == False:
+            if gInfoDict["draw_axes"].value is False:
                 plt.axis("off")
             # hides axes if draw_axes is turned off
 
@@ -740,7 +740,7 @@ class taoplot:
                 raise NotImplementedError("unknown graph type")
 
             if (
-                (gInfoDict["draw_curve_legend"].value == True and LabelList != [""])
+                (gInfoDict["draw_curve_legend"].value is True and LabelList != [""])
                 and gInfoDict["graph^type"].value != "lat_layout"
                 and gInfoDict["graph^type"].value != "floor_plan"
             ):
@@ -770,7 +770,7 @@ class taoplot:
         # -----------------------
         # Plots lat layouts
 
-        if LatLayout == True:
+        if LatLayout is True:
             if (
                 gInfoDict["graph^type"].value != "lat_layout"
             ):  # add space for lat layout below graph
@@ -1134,7 +1134,7 @@ class taoplot:
 
         # Plots floor plans
 
-        if FloorPlan == True:
+        if FloorPlan is True:
             gSubPlotForFloorPlan = fig.add_subplot(
                 len(gNameList) + 1, 1, len(gNameList) + 1, sharex=gSubPlotList[1]
             )
@@ -1479,7 +1479,7 @@ class taoplot:
                         )
                         # center of circle used to draw arc edges of sbends
 
-                        if intersection == False:
+                        if intersection is False:
                             gSubPlotForFloorPlan.plot(
                                 [
                                     x1 - off1 * np.sin(angStart - relAngStart),
@@ -1506,7 +1506,7 @@ class taoplot:
                             )
                         # draw sbend edges if bend angle is 0
 
-                        elif intersection != False:
+                        elif intersection is not False:
                             angle1 = 360 + conv * np.arctan2(
                                 y1
                                 + off1 * np.cos(angStart - relAngStart)
@@ -1676,7 +1676,7 @@ class taoplot:
                     """floor plan click detection"""
 
                     if (
-                        ele_key == "sbend" and intersection != False
+                        ele_key == "sbend" and intersection is not False
                     ):  # for sbend click detection
                         c1 = [
                             x1 - off1 * np.sin(angStart - relAngStart),
@@ -1817,7 +1817,7 @@ class taoplot:
                 except KeyError:
                     pass
 
-                if gInfoDict["draw_axes"].value == False:
+                if gInfoDict["draw_axes"].value is False:
                     plt.axis("off")
                 # hides axes if draw_axes is turned off
 
@@ -2073,7 +2073,7 @@ class taoplot:
             fpeShapeDict = []
             fpeCenterDict = []
             fpeRadiusDict = []
-        if LatLayout != True:
+        if LatLayout is not True:
             eleIndexList = []
             eleStartDict = []
             eleEndDict = []

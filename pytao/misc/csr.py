@@ -67,7 +67,7 @@ def parse_csr_wake(file, prepend_index=True):
             # Check for new step
             if line.startswith("!#-----------------------------"):
                 line = f.readline()
-                step = int(line.split("index:")[-1])
+                int(line.split("index:")[-1])
                 line = f.readline()
                 s_position = float(line.split()[-1])
                 f.readline()  # header
@@ -164,13 +164,13 @@ def csr_wake_stats_at_step(data, step=0):
 
     z = data["z"][step, :]
 
-    zmax = z.max()
-    zmin = z.min()
+    z.max()
+    z.min()
     nz = len(z)
     dz = z.ptp() / (nz - 1)
     density = data["charge_per_meter"][step, :]
     dsum = np.sum(density)
-    qtot = dsum * dz
+    dsum * dz
     density = density / dsum
 
     avz = np.sum(z * density)

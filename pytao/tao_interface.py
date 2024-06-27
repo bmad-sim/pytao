@@ -111,7 +111,7 @@ class tao_interface:
             self.ctypes_pipe = TaoCore(so_lib=so_lib)
             lib_found = True
         except OSError:  # so_lib not found
-            if LIB_DIR != None:
+            if LIB_DIR is not None:
                 try:
                     self.ctypes_pipe = TaoCore(so_lib=LIB_DIR + "libtao.so")
                     lib_found = True
@@ -210,4 +210,4 @@ class tao_interface:
         Runs cmd_str at the Tao command line and prints the output
         to standard out
         """
-        output = self.cmd_in(cmd_str)
+        self.cmd_in(cmd_str)
