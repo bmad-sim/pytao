@@ -3,11 +3,11 @@ This module defines a modified version of the tao_interface class with
 a few extra features to facilitate communication with the GUI
 """
 
-import tkinter as tk
 import time
+import tkinter as tk
 
 import pytao
-from pytao.tao_interface import new_stdout, filter_output
+from pytao.tao_interface import filter_output, new_stdout
 
 
 class tao_interface(pytao.tao_interface):

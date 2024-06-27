@@ -1,13 +1,12 @@
-import os
 import logging
+import os
 import sys
 import traceback
 
 import numpy as np
 
 from .interface_commands import Tao
-from .subproc import read_pickled_data, write_pickled_data, array_to_dict
-
+from .subproc import array_to_dict, read_pickled_data, write_pickled_data
 
 logger = logging.getLogger(__name__)
 

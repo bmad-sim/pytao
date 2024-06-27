@@ -1,7 +1,7 @@
-from .csr import csr_wake_stats_at_step
-
 import matplotlib.pyplot as plt
 import numpy as np
+
+from .csr import csr_wake_stats_at_step
 
 
 def plot_csr_wake(data, step=0, **kwargs):

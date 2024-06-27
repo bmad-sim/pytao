@@ -1,11 +1,12 @@
-import numpy as np
 import matplotlib as mp
-import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.path import Path
 
-from .tao_interface import *
 from pytao.util.parameters import *
+
+from .tao_interface import *
 
 
 class taoplot:

@@ -3,13 +3,13 @@ Contains the base classes used by many (if not all) of the windows
 in the GUI for tao.
 """
 
+import copy
 import sys
 import tkinter as tk
-from tkinter import ttk
-from tkinter import messagebox
-import copy
-from .tao_widget import *
+from tkinter import messagebox, ttk
+
 from .tao_set import *
+from .tao_widget import *
 
 
 # -----------------------------------------------------

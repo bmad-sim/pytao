@@ -1,10 +1,9 @@
 import logging
-
 from typing import Dict, List, Optional
+
 import numpy as np
 
-from ..tao_ctypes.util import parse_tao_python_data, parse_bool
-
+from ..tao_ctypes.util import parse_bool, parse_tao_python_data
 
 logger = logging.getLogger(__name__)
 

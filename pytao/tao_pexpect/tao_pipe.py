@@ -11,10 +11,11 @@ Example:
   tao_output = pipe.cmd_in("show uni")         # Get the output of a command. No terminal output.
 """
 
-import pexpect
 import os
 import string
 import sys
+
+import pexpect
 
 
 class tao_io:

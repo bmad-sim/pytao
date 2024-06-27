@@ -1,27 +1,26 @@
 # Check for required modules:
-import sys
 import os
+import sys
+
 from .module_check import module_check
 
 module_check()
 
 import tkinter as tk
-from tkinter import messagebox
-from tkinter import filedialog
-from tkinter import font
+from tkinter import filedialog, font, messagebox
 
-from .tao_widget import *
 from pytao.util.parameters import str_to_tao_param, tao_startup_param_dict
-from .tao_console import tao_console
-from .tao_plot_dict import *
-from .tao_interface import tao_interface
 
+from .tao_beam_windows import *
+from .tao_console import tao_console
 from .tao_data_windows import *
+from .tao_interface import tao_interface
 from .tao_lat_windows import *
 from .tao_misc_windows import *
+from .tao_plot_dict import *
 from .tao_plot_windows import *
 from .tao_var_windows import *
-from .tao_beam_windows import *
+from .tao_widget import *
 
 # ---------------------------------------------------------------
 # Root window

@@ -1,10 +1,10 @@
-import tkinter as tk
 import os
+import tkinter as tk
 
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import NavigationToolbar2Tk
-from matplotlib.backend_tools import *
 from matplotlib import rcParams
+from matplotlib.backend_tools import *
+from matplotlib.backends.backend_tkagg import NavigationToolbar2Tk
 from matplotlib.widgets import Slider
 
 from pytao.util.parameters import *

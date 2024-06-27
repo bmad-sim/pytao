@@ -1,15 +1,15 @@
-import os
 import ctypes
+import logging
+import os
+import shutil
+import tempfile
+
 import numpy as np
+
 from pytao import tao_ctypes
+from pytao.tao_ctypes.tools import full_path
 from pytao.tao_ctypes.util import error_in_lines
 from pytao.util.parameters import tao_parameter_dict
-from pytao.tao_ctypes.tools import full_path
-import tempfile
-import shutil
-
-
-import logging
 
 logger = logging.getLogger(__name__)
 

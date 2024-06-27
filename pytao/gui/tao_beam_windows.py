@@ -5,9 +5,10 @@ Provides windows for viewing and editing beam properties in tao
 import tkinter as tk
 
 from pytao.util.parameters import str_to_tao_param
-from .tao_widget import *
-from .tao_set import *
+
 from .tao_base_windows import *
+from .tao_set import *
+from .tao_widget import *
 
 
 # -------------------------------------------------------

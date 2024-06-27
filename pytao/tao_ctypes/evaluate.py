@@ -1,11 +1,10 @@
-from .core import run_tao
-from ..misc.csr import parse_csr_wake, write_csr_wake_data_h5
-
-from .tools import fingerprint
+import os
 
 from h5py import File
 
-import os
+from ..misc.csr import parse_csr_wake, write_csr_wake_data_h5
+from .core import run_tao
+from .tools import fingerprint
 
 
 def evaluate_tao(

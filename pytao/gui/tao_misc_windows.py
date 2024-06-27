@@ -4,10 +4,11 @@ Provides miscellaneous windows needed in the GUI for tao
 
 import tkinter as tk
 
-from .tao_widget import *
 from pytao.util.parameters import str_to_tao_param
-from .tao_set import *
+
 from .tao_base_windows import *
+from .tao_set import *
+from .tao_widget import *
 
 # ----------------------------------------------------
 # Global Variables window

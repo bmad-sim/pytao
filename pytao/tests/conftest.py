@@ -1,9 +1,10 @@
 import contextlib
 import logging
-import pytest
 import os
 
-from .. import Tao, SubprocessTao
+import pytest
+
+from .. import SubprocessTao, Tao
 
 
 @pytest.fixture

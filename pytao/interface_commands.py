@@ -6,13 +6,13 @@
 # ==============================================================================
 
 import logging
+
 import numpy as np
 
 from pytao.tao_ctypes.core import TaoCore
 from pytao.tao_ctypes.util import parse_tao_python_data
-from pytao.util.parameters import tao_parameter_dict
 from pytao.util import parsers as _pytao_parsers
-
+from pytao.util.parameters import tao_parameter_dict
 
 logger = logging.getLogger(__name__)
 

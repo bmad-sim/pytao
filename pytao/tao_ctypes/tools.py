@@ -1,8 +1,9 @@
-import subprocess
-from hashlib import blake2b
-import numpy as np
 import json
 import os
+import subprocess
+from hashlib import blake2b
+
+import numpy as np
 
 """
 General tools, not specific to Tao

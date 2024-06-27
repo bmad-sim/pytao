@@ -5,13 +5,13 @@ backend implementations.  Also defined here are a couple of helper functions
 for the tao_interface class.
 """
 
-import sys
+import io
 import os
 import re
-import io
+import sys
 
-from .tao_pexpect import tao_io
 from .tao_ctypes import TaoCore
+from .tao_pexpect import tao_io
 
 
 class new_stdout(object):

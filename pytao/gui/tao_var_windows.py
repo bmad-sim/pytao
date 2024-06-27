@@ -3,14 +3,15 @@ Provides windows for viewing and editing variable arrays in tao
 """
 
 import tkinter as tk
-from tkinter import ttk
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 
 from pytao.util.parameters import str_to_tao_param
-from .tao_widget import *
-from .tao_set import *
+
 from .tao_base_windows import *
 from .tao_lat_windows import tao_ele_browser
+from .tao_set import *
+from .tao_widget import *
+
 # -----------------------------------------------------
 # Variable Window
 

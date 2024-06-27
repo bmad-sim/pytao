@@ -7,6 +7,7 @@ the parameters that have been modified.
 """
 
 from tkinter import messagebox
+
 from pytao.util.parameters import tao_parameter_dict
 
 

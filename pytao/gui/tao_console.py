@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import font
-from .tao_plot_windows import tao_pgplot_config_window  # needed for pgplot update
+
+from .tao_plot_windows import \
+    tao_pgplot_config_window  # needed for pgplot update
 
 
 class tao_console(tk.Frame):
