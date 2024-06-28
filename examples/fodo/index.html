@@ -1465,7 +1465,7 @@ Tao&gt;
         <span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s2">"set global lattice_calc_on = T"</span><span class="p">)</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">"good"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">add_info</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-    <span class="k">except</span><span class="p">:</span>
+    <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">"good"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">return</span> <span class="n">d</span>
@@ -1484,7 +1484,7 @@ Tao&gt;
         tao.cmd("set global lattice_calc_on = T")
         d["good"] = True
         add_info(d)
-    except:
+    except RuntimeError:
         d["good"] = False
 
     return d
@@ -1823,7 +1823,7 @@ Tao&gt;
         <span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s2">"set global lattice_calc_on = T"</span><span class="p">)</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">"good"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">add_info</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-    <span class="k">except</span><span class="p">:</span>
+    <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">"good"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">return</span> <span class="n">d</span>
@@ -1842,7 +1842,7 @@ Tao&gt;
         tao.cmd("set global lattice_calc_on = T")
         d["good"] = True
         add_info(d)
-    except:
+    except RuntimeError:
         d["good"] = False
 
     return d
@@ -2013,8 +2013,8 @@ for k1, k2 in zip(fK1, fK2):
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>CPU times: user 4.34 s, sys: 1.26 s, total: 5.6 s
-Wall time: 5.83 s
+<pre>CPU times: user 4.28 s, sys: 931 ms, total: 5.21 s
+Wall time: 5.44 s
 </pre>
 </div>
 </div>
@@ -3121,7 +3121,7 @@ plt.legend()</ct></div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[33]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>&lt;matplotlib.legend.Legend at 0x177eab5f0&gt;</pre>
+<pre>&lt;matplotlib.legend.Legend at 0x156de98e0&gt;</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
