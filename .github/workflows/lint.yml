@@ -1,0 +1,29 @@
+name: Lint
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Install pre-commit
+        run: python -m pip install pre-commit
+
+      - name: List Python package versions
+        run: python -m pip freeze --local
+
+      - name: Run pre-commit on all files
+        shell: bash -l {0}
+        env:
+          RUFF_OUTPUT_FORMAT: github
+        run: |
+          pre-commit run \
+            --show-diff-on-failure \
+            --color=always \
+            --all-files
