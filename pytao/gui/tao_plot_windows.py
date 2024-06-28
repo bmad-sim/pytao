@@ -56,9 +56,9 @@ class tao_place_plot_window(Tao_Toplevel):
         self.button_frame.grid_columnconfigure(1, weight=1)
         # self.button_frame.pack(side='bottom', fill='x', expand=1)
         self.refresh()
-        tk.Button(
-            self.button_frame, text="Edit Template", command=self.edit_template
-        ).grid(row=0, column=0, sticky="EW")
+        tk.Button(self.button_frame, text="Edit Template", command=self.edit_template).grid(
+            row=0, column=0, sticky="EW"
+        )
         tk.Button(self.button_frame, text="Plot!", command=self.plot_cmd).grid(
             row=0, column=1, sticky="EW"
         )
@@ -109,9 +109,7 @@ class tao_place_plot_window(Tao_Toplevel):
             self.tree.column(titles[j], width=widths[j], minwidth=widths[j])
 
         # Scrollbars
-        vbar = ttk.Scrollbar(
-            self.list_frame, orient="vertical", command=self.tree.yview
-        )
+        vbar = ttk.Scrollbar(self.list_frame, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=vbar.set)
 
         vbar.pack(side="right", fill="y", expand=0)
@@ -140,9 +138,7 @@ class tao_place_plot_window(Tao_Toplevel):
         Creates a new matplotlib window with the currently selected plot
         """
         if self.set_plot():
-            messagebox.showwarning(
-                "Error", "Please choose a template to plot.", parent=self
-            )
+            messagebox.showwarning("Error", "Please choose a template to plot.", parent=self)
             return
         self.set_plot()
         tao_plot_window(self.root, self.plot, self.pipe)
@@ -153,9 +149,7 @@ class tao_place_plot_window(Tao_Toplevel):
         and places it on the pgplot page
         """
         if self.set_plot():
-            messagebox.showwarning(
-                "Error", "Please choose a template to plot.", parent=self
-            )
+            messagebox.showwarning("Error", "Please choose a template to plot.", parent=self)
             return
         self.set_plot()
         tao_pgplot_place_window(self.root, self.plot, self.pipe)
@@ -176,9 +170,7 @@ class tao_place_plot_window(Tao_Toplevel):
         Opens up a plot editting window and loads the selected template
         """
         if self.set_plot():
-            messagebox.showwarning(
-                "Error", "Please choose a template to edit.", parent=self
-            )
+            messagebox.showwarning("Error", "Please choose a template to edit.", parent=self)
             return
         tao_new_plot_template_window(self.root, self.pipe, self.plot, "T")
 
@@ -211,10 +203,7 @@ class tao_plot_window(Tao_Toplevel):
         valid = True
         for i in range(str_to_tao_param(plot1[0]).value):
             plot_graph = pipe.cmd_in(
-                "python plot_graph "
-                + tmp_reg
-                + "."
-                + str_to_tao_param(plot1[i + 1]).value
+                "python plot_graph " + tmp_reg + "." + str_to_tao_param(plot1[i + 1]).value
             ).splitlines()
             if not tao_parameter_dict(plot_graph)["is_valid"].value:
                 valid = False
@@ -266,9 +255,7 @@ class tao_plot_window(Tao_Toplevel):
         toolbar = taotoolbar(canvas, self, width, self.root.GUI_DIR)
         toolbar.update()
         # DO NOT TOUCH
-        canvas.manager = FigureManagerTk(
-            canvas, self.fig.number, tk.Toplevel(self.root)
-        )
+        canvas.manager = FigureManagerTk(canvas, self.fig.number, tk.Toplevel(self.root))
 
         # toolbar = taotoolbar(canvas, self)
         # toolbar.update()
@@ -429,9 +416,7 @@ class tao_new_plot_template_window(Tao_Toplevel):
 
         # Warning labels
         self.name_warning_1 = tk.Label(self.plot_frame, text="Cannot be empty")
-        self.name_warning_2 = tk.Label(
-            self.plot_frame, text="Cannot contain whitespace"
-        )
+        self.name_warning_2 = tk.Label(self.plot_frame, text="Cannot contain whitespace")
 
         # Responses to edits
         self.plot_param_list[0].tk_wid.bind("<FocusOut>", self.plot_name_handler)
@@ -453,9 +438,7 @@ class tao_new_plot_template_window(Tao_Toplevel):
             values=existing_plot_templates,
             state="readonly",
         )
-        self.clone_b = tk.Button(
-            self.plot_frame, text="Clone", command=self.clone_plot_method
-        )
+        self.clone_b = tk.Button(self.plot_frame, text="Clone", command=self.clone_plot_method)
 
         tk.Label(self.plot_frame, text="Clone existing plot:").grid(
             row=i + pfo, column=0, sticky="W"
@@ -478,9 +461,9 @@ class tao_new_plot_template_window(Tao_Toplevel):
         tk.Label(self.control_frame, text="Save as new template").grid(
             row=0, column=1, sticky="W"
         )
-        tk.Radiobutton(
-            self.control_frame, variable=self.write_var, value="overwrite"
-        ).grid(row=1, column=0, sticky="W")
+        tk.Radiobutton(self.control_frame, variable=self.write_var, value="overwrite").grid(
+            row=1, column=0, sticky="W"
+        )
         tk.Label(self.control_frame, text="Overwrite existing template:").grid(
             row=1, column=1, sticky="W"
         )
@@ -497,9 +480,9 @@ class tao_new_plot_template_window(Tao_Toplevel):
         self.overwrite_box.grid(row=1, column=2, sticky="EW")
 
         if self.mode != "N":
-            tk.Radiobutton(
-                self.control_frame, variable=self.write_var, value="self"
-            ).grid(row=2, column=0, sticky="W")
+            tk.Radiobutton(self.control_frame, variable=self.write_var, value="self").grid(
+                row=2, column=0, sticky="W"
+            )
             tk.Label(self.control_frame, text="Save changes to this plot").grid(
                 row=2, column=1, sticky="W"
             )
@@ -655,9 +638,7 @@ class tao_new_plot_template_window(Tao_Toplevel):
         else:
             return
         # Specified plot to clone
-        plot1 = tao_parameter_dict(
-            self.pipe.cmd_in("python plot1 " + plot_name).splitlines()
-        )
+        plot1 = tao_parameter_dict(self.pipe.cmd_in("python plot1 " + plot_name).splitlines())
         num_graphs = plot1["num_graphs"].value
         for i in range(1, num_graphs + 1):
             clone_graphs.append(plot1["graph[" + str(i) + "]"].value)
@@ -763,9 +744,7 @@ class tao_new_plot_template_window(Tao_Toplevel):
                         messages.append(caret_message)
                         broken = True
                         break
-                    if (str(ttp.tk_var.get()).find(" ") != -1) and (
-                        ttp.param.name == "name"
-                    ):
+                    if (str(ttp.tk_var.get()).find(" ") != -1) and (ttp.param.name == "name"):
                         messages.append(curve_name_m)
                         broken = True
                         break
@@ -946,9 +925,7 @@ class new_graph_frame(tk.Frame):
         self.plot = plot
         self.pipe = plot.pipe
         self.handler_block = False
-        self._uf = tk.Frame(
-            self
-        )  # Used to make graph frame and curve notebook uniform width
+        self._uf = tk.Frame(self)  # Used to make graph frame and curve notebook uniform width
         self._uf.grid(row=0, column=0, sticky="NSEW")
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)  # , uniform="uf")
@@ -965,9 +942,9 @@ class new_graph_frame(tk.Frame):
         self.bind_all("<Control-b>", f)
 
         # Delete button
-        tk.Button(
-            self._uf, text="DELETE THIS GRAPH", fg="red", command=self.delete
-        ).grid(row=0, column=0, columnspan=3, sticky="EW")
+        tk.Button(self._uf, text="DELETE THIS GRAPH", fg="red", command=self.delete).grid(
+            row=0, column=0, columnspan=3, sticky="EW"
+        )
 
         # Duplicate button
         tk.Button(self._uf, text="Duplicate this graph", command=self.duplicate).grid(
@@ -1058,22 +1035,16 @@ class new_graph_frame(tk.Frame):
         # "Rotation:", "View:", "Orbit scale:", "Orbit color:",
         # "Flip label side:", "Absolute size:", "Draw only first pass:"]
         self.wids["floor_plan"] = list(map(graph_ttp, self.wids["floor_plan"]))
-        self.labels["floor_plan"] = list(
-            map(graph_label_maker, self.labels["floor_plan"])
-        )
+        self.labels["floor_plan"] = list(map(graph_label_maker, self.labels["floor_plan"]))
         # Lat layouts
         self.wids["lat_layout"] = ["ix_universe;INT;T;", "ix_branch;INT;T;"]
         self.labels["lat_layout"] = ["Universe:", "Branch:"]
         self.wids["lat_layout"] = list(map(graph_ttp, self.wids["lat_layout"]))
-        self.labels["lat_layout"] = list(
-            map(graph_label_maker, self.labels["lat_layout"])
-        )
+        self.labels["lat_layout"] = list(map(graph_label_maker, self.labels["lat_layout"]))
         # Dynamic aperture
         self.wids["dynamic_aperture"] = ["ix_universe;INT;T;"]
         self.labels["dynamic_aperture"] = ["Universe:"]
-        self.wids["dynamic_aperture"] = list(
-            map(graph_ttp, self.wids["dynamic_aperture"])
-        )
+        self.wids["dynamic_aperture"] = list(map(graph_ttp, self.wids["dynamic_aperture"]))
         self.labels["dynamic_aperture"] = list(
             map(graph_label_maker, self.labels["dynamic_aperture"])
         )
@@ -1081,16 +1052,12 @@ class new_graph_frame(tk.Frame):
         self.wids["histogram"] = ["ix_universe;INT;T;"]
         self.labels["histogram"] = ["Universe:"]
         self.wids["histogram"] = list(map(graph_ttp, self.wids["histogram"]))
-        self.labels["histogram"] = list(
-            map(graph_label_maker, self.labels["histogram"])
-        )
+        self.labels["histogram"] = list(map(graph_label_maker, self.labels["histogram"]))
         # Phase space plots
         self.wids["phase_space"] = ["ix_universe;INT;T;"]
         self.labels["phase_space"] = ["Universe:"]
         self.wids["phase_space"] = list(map(graph_ttp, self.wids["phase_space"]))
-        self.labels["phase_space"] = list(
-            map(graph_label_maker, self.labels["phase_space"])
-        )
+        self.labels["phase_space"] = list(map(graph_label_maker, self.labels["phase_space"]))
         # Graph styling
         self.style_wids = [
             qp_axis_props("x;STRUCT;T"),
@@ -1145,12 +1112,8 @@ class new_graph_frame(tk.Frame):
         self.curve_frame = tabbed_frame(self, lambda arg: new_curve_frame(arg, self))
 
         # Element shapes (for lat_layouts and floor_plans)
-        self.lat_layout_frame = ele_shape_frame(
-            self, self.plot.root, self.pipe, "lat_layout"
-        )
-        self.floor_plan_frame = ele_shape_frame(
-            self, self.plot.root, self.pipe, "floor_plan"
-        )
+        self.lat_layout_frame = ele_shape_frame(self, self.plot.root, self.pipe, "lat_layout")
+        self.floor_plan_frame = ele_shape_frame(self, self.plot.root, self.pipe, "floor_plan")
 
         # Grid everything else
         self._scroll_frame.grid(
@@ -1296,9 +1259,7 @@ class new_graph_frame(tk.Frame):
         self.graph_type_handler()
         self.refresh()
         # Copy the curves if necessary
-        if ("num_curves" in graph_dict.keys()) and (
-            graph_dict["num_curves"] is not None
-        ):
+        if ("num_curves" in graph_dict.keys()) and (graph_dict["num_curves"] is not None):
             # Remove existing curves
             for i in range(len(self.curve_frame.tab_list)):
                 self.curve_frame.remove_tab(0, destroy=True)
@@ -1400,9 +1361,7 @@ class new_curve_frame(tk.Frame):
         )
 
         # Duplicate button
-        self.dup_b = tk.Button(
-            self, text="Duplicate this curve", command=self.duplicate
-        )
+        self.dup_b = tk.Button(self, text="Duplicate this curve", command=self.duplicate)
 
         self.delete_b.grid(row=0, column=0, columnspan=3, sticky="EW")
         self.dup_b.grid(row=1, column=0, columnspan=3, sticky="EW")
@@ -1540,16 +1499,12 @@ class new_curve_frame(tk.Frame):
         for key1 in self.wids.keys():
             for key2 in self.wids[key1].keys():
                 self.wids[key1][key2] = list(map(curve_ttp, self.wids[key1][key2]))
-                self.labels[key1][key2] = list(
-                    map(curve_label, self.labels[key1][key2])
-                )
+                self.labels[key1][key2] = list(map(curve_label, self.labels[key1][key2]))
         # Copy lists as necessary
-        self.wids["ele_index"]["data"] = self.wids["s"]["data"] = self.wids["index"][
+        self.wids["ele_index"]["data"] = self.wids["s"]["data"] = self.wids["index"]["data"]
+        self.labels["ele_index"]["data"] = self.labels["s"]["data"] = self.labels["index"][
             "data"
         ]
-        self.labels["ele_index"]["data"] = self.labels["s"]["data"] = self.labels[
-            "index"
-        ]["data"]
         self.wids["var"]["data"] = self.wids["lat"]["data"]
         self.labels["var"]["data"] = self.labels["lat"]["data"]
         self.wids["phase_space"]["histogram"] = self.wids["histogram"]["histogram"]
@@ -1669,9 +1624,7 @@ class new_curve_frame(tk.Frame):
         # print(self.wids['s'].keys())
         for i in range(len(self.wids[x_axis_type][graph_type])):
             self.labels[x_axis_type][graph_type][i].grid(row=i, column=0, sticky="W")
-            self.wids[x_axis_type][graph_type][i].tk_wid.grid(
-                row=i, column=1, sticky="EW"
-            )
+            self.wids[x_axis_type][graph_type][i].tk_wid.grid(row=i, column=1, sticky="EW")
         offset = i + 1
 
         # Grid the style widgets
@@ -1893,9 +1846,7 @@ class tao_pgplot_canvas(tk.Frame):
                 # y values are measured from the bottom up
                 ylo = 5 + (1 - float(r[7])) * self.height
                 yhi = 5 + (1 - float(r[6])) * self.height
-                for item in self.page.find_overlapping(
-                    xlo + 1, ylo + 1, xhi - 1, yhi - 1
-                ):
+                for item in self.page.find_overlapping(xlo + 1, ylo + 1, xhi - 1, yhi - 1):
                     # print("Overlapping item tags:")
                     tags = self.page.gettags(item)
                     # print(tags)
@@ -2126,9 +2077,7 @@ class tao_pgplot_config_window(Tao_Toplevel):
         collist.grid(row=2, column=1, sticky="EW")
 
         # lat_layouts
-        ttk.Separator(self.control_frame).grid(
-            row=3, column=0, columnspan=2, sticky="EW"
-        )
+        ttk.Separator(self.control_frame).grid(row=3, column=0, columnspan=2, sticky="EW")
         latlabel = tk.Label(self.control_frame, text="Lat_layout area")
         latlabel.grid(row=4, column=0, columnspan=2, sticky="W")
         latlabel1 = tk.Label(self.control_frame, text="Columns:")
@@ -2145,9 +2094,7 @@ class tao_pgplot_config_window(Tao_Toplevel):
         self.preview_frame.grid_columnconfigure(0, weight=1)
         plabel = tk.Label(self.preview_frame, text="Preview")
         plabel.grid(row=0, column=0, sticky="EW")
-        self.pgpage = tao_pgplot_canvas(
-            self.preview_frame, "config", self.root, self.pipe
-        )
+        self.pgpage = tao_pgplot_canvas(self.preview_frame, "config", self.root, self.pipe)
         self.pgpage.grid(row=1, column=0, sticky="NSEW")
 
         # Variable traces
@@ -2242,9 +2189,7 @@ class tao_pgplot_place_window(Tao_Toplevel):
             label.grid_forget()
         self.warning_labels = []
         # Update pgpage and get overlapping regions
-        self.region = (
-            "" if (self.region_var.get() == "Select...") else self.region_var.get()
-        )
+        self.region = "" if (self.region_var.get() == "Select...") else self.region_var.get()
         self.pgpage.place_region = self.region
         self.pgpage.place_plot = self.plot
         overlapping = self.pgpage.refresh()
@@ -2390,9 +2335,7 @@ class tao_building_wall_window(Tao_Toplevel):
                 "", "end", text="Section " + str(sec[0]), values=sec[1:]
             )
             # Add points for this section
-            points = self.pipe.cmd_in(
-                "python building_wall_list " + sec[0]
-            ).splitlines()
+            points = self.pipe.cmd_in("python building_wall_list " + sec[0]).splitlines()
             for pt in points:
                 self.table.insert(
                     current_level,
@@ -2449,12 +2392,7 @@ class tao_building_wall_window(Tao_Toplevel):
             constraint = constraint_var.get().lower()
             constraint = constraint.replace(" ", "_")
             self.pipe.cmd_in(
-                "python building_wall_section "
-                + str(new_ix)
-                + "^^"
-                + name
-                + "^^"
-                + constraint
+                "python building_wall_section " + str(new_ix) + "^^" + name + "^^" + constraint
             )
             win.destroy()
             self.refresh()

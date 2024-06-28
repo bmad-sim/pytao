@@ -25,9 +25,7 @@ class tk_tao_parameter:
     struct_name: for the components of a STRUCT, pass the struct name here
     """
 
-    def __init__(
-        self, tao_parameter, frame, pipe=0, data_source="", plot="", struct_name=""
-    ):
+    def __init__(self, tao_parameter, frame, pipe=0, data_source="", plot="", struct_name=""):
         self.param = tao_parameter
         self.pipe = pipe
         self.sub_wid = None  # to be set externally, e.g. by tk_tao_linker
@@ -70,9 +68,7 @@ class tk_tao_parameter:
                 if self.param.prefix is None:
                     options = enum_fetch(self.param.name, pipe)
                 else:
-                    options = enum_fetch(
-                        self.param.prefix + "^" + self.param.name, pipe
-                    )
+                    options = enum_fetch(self.param.prefix + "^" + self.param.name, pipe)
             elif self.param.type == "ENUM_Z":  # added to handle DAT_TYPE_Z
                 options = enum_fetch("data_type_z", pipe)
                 self.param.type = "ENUM"
@@ -107,9 +103,7 @@ class tk_tao_parameter:
             self.tk_var.set(self.param.value)
             if self.tk_var.get() == "":
                 self.tk_var.set("Browse...")
-            self.tk_wid = tk.Button(
-                frame, textvariable=self.tk_var, command=self.open_file
-            )
+            self.tk_wid = tk.Button(frame, textvariable=self.tk_var, command=self.open_file)
         elif self.param.type == "LOGIC":
             self.tk_var = tk.BooleanVar()
             self.tk_var.set(self.param.value)
@@ -137,9 +131,7 @@ class tk_tao_parameter:
             self._no_s_refresh = False
             self.tk_var = tk.StringVar()  # This is for the entire value
             self.tk_var.set(self.param.value)
-            self.tk_wid = tk.Frame(
-                frame
-            )  # The "widget" that should be placed by the gui
+            self.tk_wid = tk.Frame(frame)  # The "widget" that should be placed by the gui
             self._data_source = data_source
             self._mvar = tk.StringVar()  # The master variable
             self._mvar.set((self.tk_var.get()).split(".")[0])
@@ -625,9 +617,7 @@ class tk_tao_parameter:
                     x = int(self._svar[k].get())
                     x = len(self._svar[k].get())
                     if x < 6:
-                        new_tk_var = (
-                            new_tk_var + "." + (6 - x) * "0" + self._svar[k].get()
-                        )
+                        new_tk_var = new_tk_var + "." + (6 - x) * "0" + self._svar[k].get()
                     else:
                         new_tk_var = new_tk_var + "." + self._svar[k].get()
                 except ValueError:

@@ -1,8 +1,7 @@
 import tkinter as tk
 from tkinter import font
 
-from .tao_plot_windows import \
-    tao_pgplot_config_window  # needed for pgplot update
+from .tao_plot_windows import tao_pgplot_config_window  # needed for pgplot update
 
 
 class tao_console(tk.Frame):
@@ -35,9 +34,7 @@ class tao_console(tk.Frame):
             font_name = "Courier"
         # set font+font size
         if self.root.font_size is not None:
-            self._wid.configure(
-                font=(font_name, self.root.font_size), fg="white", bg="black"
-            )
+            self._wid.configure(font=(font_name, self.root.font_size), fg="white", bg="black")
         else:
             self._wid.configure(font=(font_name, 16), fg="white", bg="black")
         self._wid.configure(insertbackground="white")
@@ -194,12 +191,8 @@ class tao_console(tk.Frame):
         if (event.state != 8) & (event.char != "") & (event.char).isprintable():
             # Make sure we insert at the command prompt
             if (not self._curs_check()) & (self._wid.index("insert") != self.cstart):
-                self._wid.mark_set(
-                    "insert", self.cstart + "+" + str(len(self.command)) + "c"
-                )
-            self.command = (
-                self.command[: self.cpos] + event.char + self.command[self.cpos :]
-            )
+                self._wid.mark_set("insert", self.cstart + "+" + str(len(self.command)) + "c")
+            self.command = self.command[: self.cpos] + event.char + self.command[self.cpos :]
             self._wid.insert("insert", event.char)
             self.cpos += 1
             self._wid.see(self.cstart)

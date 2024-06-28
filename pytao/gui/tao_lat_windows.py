@@ -8,7 +8,12 @@ from tkinter import messagebox, ttk
 from ..util.lattice_element import lat_element
 from ..util.parameters import str_to_tao_param
 
-from .tao_base_windows import Tao_Toplevel, tao_branch_widgets, tao_list_window, tao_parameter_frame
+from .tao_base_windows import (
+    Tao_Toplevel,
+    tao_branch_widgets,
+    tao_list_window,
+    tao_parameter_frame,
+)
 from .tao_set import check_for_changes, tao_set
 from .tao_widget import tk_tao_parameter
 
@@ -58,9 +63,7 @@ class tao_ele_window(tao_list_window):
         self.ele_wids = tao_branch_widgets(self.top_frame, self.pipe, self.default)
         tk.Label(self.top_frame, text="Universe").grid(row=0, column=0)
         tk.Label(self.top_frame, text="Branch").grid(row=0, column=1)
-        tk.Label(self.top_frame, textvariable=self.ele_wids.ele_label).grid(
-            row=0, column=2
-        )
+        tk.Label(self.top_frame, textvariable=self.ele_wids.ele_label).grid(row=0, column=2)
         tk.Label(self.top_frame, text="Base/Model/Design").grid(row=0, column=3)
 
         # Configure and place widgets
@@ -169,9 +172,7 @@ class tao_ele_window(tao_list_window):
                         x = self.list_frame.scale_mp_var.get()
                     except Exception:
                         self.list_frame.scale_mp_var = tk.BooleanVar()
-                    tao_output = self.pipe.cmd_in(
-                        "python ele:" + key + " " + self.element.id
-                    )
+                    tao_output = self.pipe.cmd_in("python ele:" + key + " " + self.element.id)
                     self.p_frames.append(
                         tao_multipole_frame(self.list_frame, tao_output, self.pipe)
                     )
@@ -212,9 +213,7 @@ class tao_ele_window(tao_list_window):
                                 "", "end", text=line[0], values=line[1:]
                             )
                         else:
-                            ls_tree.insert(
-                                current_level, "end", text=line[0], values=line[1:]
-                            )
+                            ls_tree.insert(current_level, "end", text=line[0], values=line[1:])
                     # Fix scrolling
                     ls_tree.bind("<Enter>", self.unbind_mouse)
                     ls_tree.bind("<Leave>", self.bind_mouse)
@@ -252,15 +251,11 @@ class tao_ele_window(tao_list_window):
                 if key == "mat6":
                     # tao_list = '\n' + self.pipe.cmd_in("python ele:mat6 "
                     #        + self.element.id + ' err')
-                    tao_list = self.pipe.cmd_in(
-                        "python ele:mat6 " + self.element.id + " mat6"
-                    )
+                    tao_list = self.pipe.cmd_in("python ele:mat6 " + self.element.id + " mat6")
                     # tao_list += '\n' + self.pipe.cmd_in("python ele:mat6 "
                     #        + self.element.id + ' vec0')
                 else:
-                    tao_list = self.pipe.cmd_in(
-                        "python ele:" + key + " " + self.element.id
-                    )
+                    tao_list = self.pipe.cmd_in("python ele:" + key + " " + self.element.id)
                 self.tao_lists.append(tao_list.splitlines())
                 for j in range(len(self.tao_lists[i])):
                     self.tao_lists[i][j] = str_to_tao_param(self.tao_lists[i][j])
@@ -271,9 +266,7 @@ class tao_ele_window(tao_list_window):
                 else:
                     n_cols = 2
                 self.p_frames.append(
-                    tao_parameter_frame(
-                        self.list_frame, self.tao_lists[i], n_cols, self.pipe
-                    )
+                    tao_parameter_frame(self.list_frame, self.tao_lists[i], n_cols, self.pipe)
                 )
                 self.p_names.append(key)
                 if key == "floor":  # column titles
@@ -289,18 +282,14 @@ class tao_ele_window(tao_list_window):
                     title_frame.grid(row=0, column=1, sticky="EW")
                 if key == "mat6":
                     # add symplectic error
-                    sym_err = self.pipe.cmd_in(
-                        "python ele:mat6 " + self.element.id + " err"
-                    )
+                    sym_err = self.pipe.cmd_in("python ele:mat6 " + self.element.id + " err")
                     sym_err = tk_tao_parameter(
                         str_to_tao_param(sym_err), self.p_frames[i], self.pipe
                     )
                     sym_err.tk_label.grid(row=0, column=0, sticky="W")
                     sym_err.tk_wid.grid(row=0, column=1, sticky="W")
                     # add vec0
-                    vec0 = self.pipe.cmd_in(
-                        "python ele:mat6 " + self.element.id + " vec0"
-                    )
+                    vec0 = self.pipe.cmd_in("python ele:mat6 " + self.element.id + " vec0")
                     vec0 = tk_tao_parameter(
                         str_to_tao_param(vec0), self.p_frames[i], self.pipe
                     )
@@ -321,9 +310,7 @@ class tao_ele_window(tao_list_window):
                         tk.Label(self.p_frames[i], text=mat6_list[j - 1]).grid(
                             row=j + 1, column=0, sticky="E"
                         )
-                    tk.Label(self.p_frames[i], text="mat6").grid(
-                        row=1, column=0, sticky="EW"
-                    )
+                    tk.Label(self.p_frames[i], text="mat6").grid(row=1, column=0, sticky="EW")
                     title_frame.grid(row=1, column=1, sticky="EW")
                 self.sh_b_list[i].grid(row=2 * i, column=0, sticky="W")
                 # self.p_frames[i].pack()
@@ -417,9 +404,7 @@ class tao_ele_window(tao_list_window):
                         ]
                         for i in range(len(p._svar)):
                             floor_list.append(
-                                str_to_tao_param(
-                                    names[i] + ";REAL;T;" + p._svar[i].get()
-                                )
+                                str_to_tao_param(names[i] + ";REAL;T;" + p._svar[i].get())
                             )
                             floor_list[i] = tk_tao_parameter(
                                 floor_list[i], self.head_frame, self.pipe
@@ -494,18 +479,16 @@ class tao_multipole_frame(tk.Frame):
                 str_to_tao_param(self.top_info[i]), self.top_frame, self.pipe
             )
             # Link the multipoles and elec_multipoles variables
-            self.top_info[i].tk_var = (
-                parent.mp_on_var if i == 0 else parent.scale_mp_var
-            )
+            self.top_info[i].tk_var = parent.mp_on_var if i == 0 else parent.scale_mp_var
             self.top_info[i].tk_var.set(self.top_info[i].param.value)
             self.top_info[i].tk_wid = tk.Checkbutton(
                 self.top_frame, variable=self.top_info[i].tk_var
             )
             self.top_info[i].tk_label.grid(row=0, column=2 * i, sticky="E")
             self.top_info[i].tk_wid.grid(row=0, column=2 * i + 1, sticky="W")
-        tk.Button(
-            self.top_frame, text="Show all orders", command=self.show_all_orders
-        ).grid(row=0, column=4, sticky="W")
+        tk.Button(self.top_frame, text="Show all orders", command=self.show_all_orders).grid(
+            row=0, column=4, sticky="W"
+        )
 
         # Display the table (rest of output)
         if len(tao_output) < 3:
@@ -523,9 +506,7 @@ class tao_multipole_frame(tk.Frame):
             j = 1  # column counter
             for item in line[1:]:
                 name = self.titles[j]
-                name = (
-                    name[: name.find("n")] + str(line[0]) + name[name.find("n") + 1 :]
-                )
+                name = name[: name.find("n")] + str(line[0]) + name[name.find("n") + 1 :]
                 can_vary = "T" if j < 3 else "F"
                 self.tk_tao_list.append(
                     tk_tao_parameter(
@@ -551,21 +532,15 @@ class tao_multipole_frame(tk.Frame):
             child.grid_forget()
         # Re-grid the titles
         for j in range(len(self.titles)):
-            tk.Label(self.table_frame, text=self.titles[j]).grid(
-                row=0, column=j, sticky="EW"
-            )
+            tk.Label(self.table_frame, text=self.titles[j]).grid(row=0, column=j, sticky="EW")
         # the multipoles:
         x = 0  # counts position in self.tk_tao_list
         for i in range(22):  # supports orders 0 through 21
-            tk.Label(self.table_frame, text=str(i)).grid(
-                row=i + 1, column=0, sticky="EW"
-            )
+            tk.Label(self.table_frame, text=str(i)).grid(row=i + 1, column=0, sticky="EW")
             # Check if widgets exist for this order
             if str(i) in self.shown_orders:
                 for j in range(len(self.titles) - 1):
-                    self.tk_tao_list[x].tk_wid.grid(
-                        row=i + 1, column=j + 1, sticky="EW"
-                    )
+                    self.tk_tao_list[x].tk_wid.grid(row=i + 1, column=j + 1, sticky="EW")
                     x += 1
             else:
                 # Create new widgets, grid them, and append to self.tk_tao_list
@@ -633,9 +608,7 @@ class tao_lattice_window(Tao_Toplevel):
         self.temp_var.set("NO TEMPLATE FILE SELECTED")
         self.temp_chooser = tk.OptionMenu(self.top_frame, self.temp_var, [])
         self.temp_chooser.grid(row=4, column=3, sticky="EW")
-        self.save_button = tk.Button(
-            self.top_frame, text="Save", command=self.save_template
-        )
+        self.save_button = tk.Button(self.top_frame, text="Save", command=self.save_template)
         self.save_button.grid(row=4, column=5, sticky="W")
         self.temp_save = tk_tao_parameter(
             str_to_tao_param("name;STR;T;"), self.top_frame, self.pipe
@@ -676,9 +649,7 @@ class tao_lattice_window(Tao_Toplevel):
         self.att_box = tk.Entry(self.top_frame, textvariable=self.col_atts)
         self.att_box.configure(state="disabled")
         self.att_box.grid(row=1, column=3, sticky="EW")
-        tk.Label(self.top_frame, text="Template file:").grid(
-            row=1, column=4, sticky="EW"
-        )
+        tk.Label(self.top_frame, text="Template file:").grid(row=1, column=4, sticky="EW")
         self.col_file = tk_tao_parameter(
             str_to_tao_param("col_file;FILE;T;"), self.top_frame, self.pipe
         )
@@ -716,9 +687,9 @@ class tao_lattice_window(Tao_Toplevel):
 
         # Advanced Options
         self.use_advanced = False
-        tk.Button(
-            self.top_frame, text="Advanced\nOn/Off", command=self.toggle_advanced
-        ).grid(row=2, column=7, rowspan=2, sticky="NSEW")
+        tk.Button(self.top_frame, text="Advanced\nOn/Off", command=self.toggle_advanced).grid(
+            row=2, column=7, rowspan=2, sticky="NSEW"
+        )
         tk.Label(self.top_frame, text="Advanced:").grid(row=3, column=0, sticky="W")
         self.advanced_var = tk.StringVar()
         self.advanced_var.set(self.switches)
@@ -856,13 +827,9 @@ class tao_lattice_window(Tao_Toplevel):
         ]
         buttons = []
         for i in range(len(self.filter_vars)):
-            buttons.append(
-                tk.Checkbutton(win, text=filters[i], variable=self.filter_vars[i])
-            )
+            buttons.append(tk.Checkbutton(win, text=filters[i], variable=self.filter_vars[i]))
             buttons[i].grid(row=i, column=0, sticky="W")
-        tk.Entry(win, textvariable=self.remove_if_zero).grid(
-            row=3, column=1, sticky="EW"
-        )
+        tk.Entry(win, textvariable=self.remove_if_zero).grid(row=3, column=1, sticky="EW")
         tk.Entry(win, textvariable=self.s_range).grid(row=4, column=1, sticky="EW")
         # Apply button
         tk.Button(win, text="Apply Filters", command=self.refresh).grid(
@@ -1102,9 +1069,7 @@ class tao_lattice_window(Tao_Toplevel):
         parameters and updates the window
         Returns the number of elements found
         """
-        LENGTH_SCALE = (
-            10  # pixels per character that should be allotted for each column
-        )
+        LENGTH_SCALE = 10  # pixels per character that should be allotted for each column
         # Clear the existing table
         for child in self.table_frame.winfo_children():
             child.destroy()
@@ -1172,12 +1137,8 @@ class tao_lattice_window(Tao_Toplevel):
                 self.tree.column(lattice[0][j], anchor="e")
 
         # Scrollbars
-        hbar = ttk.Scrollbar(
-            self.table_frame, orient="horizontal", command=self.tree.xview
-        )
-        vbar = ttk.Scrollbar(
-            self.table_frame, orient="vertical", command=self.tree.yview
-        )
+        hbar = ttk.Scrollbar(self.table_frame, orient="horizontal", command=self.tree.xview)
+        vbar = ttk.Scrollbar(self.table_frame, orient="vertical", command=self.tree.yview)
         self.tree.configure(xscrollcommand=hbar.set, yscrollcommand=vbar.set)
 
         vbar.pack(side="right", fill="y", expand=0)
@@ -1281,9 +1242,7 @@ class tao_ele_browser(tao_lattice_window):
         self.ele_list_box.grid(row=1, column=1, columnspan=2, sticky="EW")
         self.ele_list_opt.set("Custom")
         self.ele_list_box.focus_set()
-        self.search_button = tk.Button(
-            self.top_frame, text="Search!", command=self.refresh
-        )
+        self.search_button = tk.Button(self.top_frame, text="Search!", command=self.refresh)
         self.search_button.grid(row=0, column=3, rowspan=2, sticky="NSW")
 
         # Remove template widgets
@@ -1298,20 +1257,14 @@ class tao_ele_browser(tao_lattice_window):
         self.data_frame = tk.Frame(self.top_frame)
         self.data_frame.grid(row=0, column=6, rowspan=2, sticky="NS")
         if not autosize:
-            tk.Label(
-                self.data_frame, text="Apply ele names to " + self.name + "["
-            ).pack(side="left")
+            tk.Label(self.data_frame, text="Apply ele names to " + self.name + "[").pack(
+                side="left"
+            )
             self.ix_min_var = tk.StringVar()
-            tk.Entry(self.data_frame, width=5, textvariable=self.ix_min_var).pack(
-                side="left"
-            )
-            tk.Label(self.data_frame, text="] through " + self.name + "[").pack(
-                side="left"
-            )
+            tk.Entry(self.data_frame, width=5, textvariable=self.ix_min_var).pack(side="left")
+            tk.Label(self.data_frame, text="] through " + self.name + "[").pack(side="left")
             self.ix_max_var = tk.StringVar()
-            tk.Entry(self.data_frame, width=5, textvariable=self.ix_max_var).pack(
-                side="left"
-            )
+            tk.Entry(self.data_frame, width=5, textvariable=self.ix_max_var).pack(side="left")
             tk.Label(self.data_frame, text="]").pack(side="left")
             self.ix_min_var.set(self.parent.ix_min)
             self.ix_max_var.set(self.parent.ix_max)
@@ -1383,9 +1336,7 @@ class tao_ele_browser(tao_lattice_window):
             elif self.parent_type == "var":
                 if i not in self.parent.var_dict.keys():
                     self.parent.var_dict[i] = {}
-                self.parent.var_dict[i]["ele_" + self.which] = names[
-                    (i - ix_min) % len(names)
-                ]
+                self.parent.var_dict[i]["ele_" + self.which] = names[(i - ix_min) % len(names)]
 
     def _fixed_size_apply_callback(self):
         """
@@ -1440,9 +1391,7 @@ class tao_ele_browser(tao_lattice_window):
                 message += "data indices.  "
             elif self.parent_type == "var":
                 message += "variable indices.  "
-            message += (
-                "Would you like to apply the first element names in the list to your "
-            )
+            message += "Would you like to apply the first element names in the list to your "
             if self.parent_type == "data":
                 message += "data and discard the rest?"
             elif self.parent_type == "var":
@@ -1473,9 +1422,7 @@ class tao_ele_browser(tao_lattice_window):
             elif self.parent_type == "var":
                 if i not in self.parent.var_dict.keys():
                     self.parent.var_dict[i] = {}
-                self.parent.var_dict[i]["ele_" + self.which] = names[
-                    (i - ix_min) % len(names)
-                ]
+                self.parent.var_dict[i]["ele_" + self.which] = names[(i - ix_min) % len(names)]
 
     def refresh(self, event=None):
         """

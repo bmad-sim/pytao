@@ -73,9 +73,7 @@ def test_data_parameter_1(tao_cls):
         "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
     ) as tao:
         assert (
-            tao.data_parameter(data_array="twiss.end", parameter="model_value")[0][
-                "index"
-            ]
+            tao.data_parameter(data_array="twiss.end", parameter="model_value")[0]["index"]
             == 1
         )
 
@@ -98,9 +96,7 @@ def test_ele_chamber_wall_1(tao_cls):
         tao_cls, "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall3d"
     ) as tao:
         assert set(
-            tao.ele_chamber_wall(ele_id="1@0>>1", which="model", index="1", who="x")[
-                0
-            ].keys()
+            tao.ele_chamber_wall(ele_id="1@0>>1", which="model", index="1", who="x")[0].keys()
         ) == {
             "section",
             "longitudinal_position",
@@ -121,9 +117,9 @@ def test_ele_gen_grad_map_1(tao_cls):
         tao_cls, "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field"
     ) as tao:
         assert set(
-            tao.ele_gen_grad_map(
-                ele_id="1@0>>9", which="model", index="1", who="derivs"
-            )[0].keys()
+            tao.ele_gen_grad_map(ele_id="1@0>>9", which="model", index="1", who="derivs")[
+                0
+            ].keys()
         ) == {"i", "j", "k", "dz", "deriv"}
 
 
@@ -192,9 +188,7 @@ def test_em_field_1(tao_cls):
     with new_tao(
         tao_cls, "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init"
     ) as tao:
-        res = tao.em_field(
-            ele_id="1@0>>22", which="model", x="0", y="0", z="0", t_or_z="0"
-        )
+        res = tao.em_field(ele_id="1@0>>22", which="model", x="0", y="0", z="0", t_or_z="0")
     assert "B1" in res
 
 
@@ -276,9 +270,7 @@ def test_plot_line_1(tao_cls):
         tao_cls,
         "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting",
     ) as tao:
-        res = tao.plot_line(
-            region_name="beta", graph_name="g", curve_name="a", x_or_y=""
-        )
+        res = tao.plot_line(region_name="beta", graph_name="g", curve_name="a", x_or_y="")
     assert "x" in res[0]
 
 
@@ -287,16 +279,12 @@ def test_plot_line_2(tao_cls):
         tao_cls,
         "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting",
     ) as tao:
-        res = tao.plot_line(
-            region_name="beta", graph_name="g", curve_name="a", x_or_y="y"
-        )
+        res = tao.plot_line(region_name="beta", graph_name="g", curve_name="a", x_or_y="y")
         assert isinstance(
             res,
             np.ndarray,
         )
-        res = tao.plot_line(
-            region_name="beta", graph_name="g", curve_name="a", x_or_y=""
-        )
+        res = tao.plot_line(region_name="beta", graph_name="g", curve_name="a", x_or_y="")
         assert "index" in res[0]
 
 
@@ -305,9 +293,7 @@ def test_plot_symbol_1(tao_cls):
         tao_cls,
         "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting",
     ) as tao:
-        res = tao.plot_symbol(
-            region_name="r13", graph_name="g", curve_name="a", x_or_y=""
-        )
+        res = tao.plot_symbol(region_name="r13", graph_name="g", curve_name="a", x_or_y="")
     assert "index" in res[0]
 
 

@@ -28,9 +28,7 @@ def ensure_count():
 def ensure_successful_parsing(caplog):
     yield
     errors = [
-        record
-        for record in caplog.get_records("call")
-        if record.levelno == logging.ERROR
+        record for record in caplog.get_records("call") if record.levelno == logging.ERROR
     ]
     for error in errors:
         if "Failed to parse string data" in error.message:

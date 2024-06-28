@@ -66,9 +66,7 @@ def test_bunch1_1(caplog, tao_cls):
             tao_cls,
             "-init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init",
         ) as tao:
-            tao.bunch1(
-                ele_id="end", coordinate="x", which="model", ix_bunch="1", verbose=True
-            )
+            tao.bunch1(ele_id="end", coordinate="x", which="model", ix_bunch="1", verbose=True)
 
 
 def test_building_wall_list_1(caplog, tao_cls):
@@ -145,9 +143,7 @@ def test_data_1(caplog, tao_cls):
             tao_cls,
             "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
         ) as tao:
-            tao.data(
-                ix_uni="", d2_name="twiss", d1_name="end", dat_index="1", verbose=True
-            )
+            tao.data(ix_uni="", d2_name="twiss", d1_name="end", dat_index="1", verbose=True)
 
 
 def test_data_2(caplog, tao_cls):
@@ -156,9 +152,7 @@ def test_data_2(caplog, tao_cls):
             tao_cls,
             "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
         ) as tao:
-            tao.data(
-                ix_uni="1", d2_name="twiss", d1_name="end", dat_index="1", verbose=True
-            )
+            tao.data(ix_uni="1", d2_name="twiss", d1_name="end", dat_index="1", verbose=True)
 
 
 def test_data_d_array_1(caplog, tao_cls):
@@ -225,9 +219,7 @@ def test_data_parameter_1(caplog, tao_cls):
             tao_cls,
             "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
         ) as tao:
-            tao.data_parameter(
-                data_array="twiss.end", parameter="model_value", verbose=True
-            )
+            tao.data_parameter(data_array="twiss.end", parameter="model_value", verbose=True)
 
 
 def test_data_set_design_value_1(caplog, tao_cls):
@@ -439,9 +431,7 @@ def test_ele_param_1(caplog, tao_cls):
         with new_tao(
             tao_cls, "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_photon"
         ) as tao:
-            tao.ele_param(
-                ele_id="1@0>>1", which="model", who="orbit.vec.1", verbose=True
-            )
+            tao.ele_param(ele_id="1@0>>1", which="model", who="orbit.vec.1", verbose=True)
 
 
 def test_ele_photon_1(caplog, tao_cls):
@@ -667,9 +657,7 @@ def test_orbit_at_s_1(caplog, tao_cls):
         with new_tao(
             tao_cls, "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init"
         ) as tao:
-            tao.orbit_at_s(
-                ix_uni="1", ele="10", s_offset="0.7", which="model", verbose=True
-            )
+            tao.orbit_at_s(ix_uni="1", ele="10", s_offset="0.7", which="model", verbose=True)
 
 
 def test_place_buffer_1(caplog, tao_cls):
@@ -867,9 +855,7 @@ def test_shape_manage_1(caplog, tao_cls):
         with new_tao(
             tao_cls, "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init"
         ) as tao:
-            tao.shape_manage(
-                who="floor_plan", index="1", add_or_delete="add", verbose=True
-            )
+            tao.shape_manage(who="floor_plan", index="1", add_or_delete="add", verbose=True)
 
 
 def test_shape_pattern_list_1(caplog, tao_cls):
@@ -967,9 +953,7 @@ def test_spin_polarization_1(caplog, tao_cls):
         with new_tao(
             tao_cls, "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init"
         ) as tao:
-            tao.spin_polarization(
-                ix_uni="1", ix_branch="0", which="model", verbose=True
-            )
+            tao.spin_polarization(ix_uni="1", ix_branch="0", which="model", verbose=True)
 
 
 def test_spin_resonance_1(caplog, tao_cls):
@@ -993,9 +977,7 @@ def test_taylor_map_1(caplog, tao_cls):
         with new_tao(
             tao_cls, "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init"
         ) as tao:
-            tao.taylor_map(
-                ele1_id="1@0>>q01w|design", ele2_id="q02w", order="1", verbose=True
-            )
+            tao.taylor_map(ele1_id="1@0>>q01w|design", ele2_id="q02w", order="1", verbose=True)
 
 
 def test_twiss_at_s_1(caplog, tao_cls):
@@ -1003,9 +985,7 @@ def test_twiss_at_s_1(caplog, tao_cls):
         with new_tao(
             tao_cls, "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init"
         ) as tao:
-            tao.twiss_at_s(
-                ix_uni="1", ele="10", s_offset="0.7", which="model", verbose=True
-            )
+            tao.twiss_at_s(ix_uni="1", ele="10", s_offset="0.7", which="model", verbose=True)
 
 
 def test_universe_1(caplog, tao_cls):
@@ -1086,9 +1066,7 @@ def test_var_v1_create_1(caplog, tao_cls):
         with new_tao(
             tao_cls, "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init"
         ) as tao:
-            tao.var_v1_create(
-                v1_name="quad_k1", n_var_min="0", n_var_max="45", verbose=True
-            )
+            tao.var_v1_create(v1_name="quad_k1", n_var_min="0", n_var_max="45", verbose=True)
 
 
 def test_var_v1_destroy_1(caplog, tao_cls):

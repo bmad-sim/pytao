@@ -75,9 +75,7 @@ class tao_interface:
     self.ctypes_pipe.cmd_real()
     """
 
-    def __init__(
-        self, mode="ctypes", init_args="", tao_exe="", expect_str="Tao>", so_lib=""
-    ):
+    def __init__(self, mode="ctypes", init_args="", tao_exe="", expect_str="Tao>", so_lib=""):
         self.mode = mode
         self.exe_lib_warnings = ""
         self.exe_lib_warning_type = "normal"
@@ -100,9 +98,7 @@ class tao_interface:
         else:
             exe_found = False
             if mode == "pexpect":
-                self.exe_lib_warnings += (
-                    "Warning: no executable found, defaulting to ctypes"
-                )
+                self.exe_lib_warnings += "Warning: no executable found, defaulting to ctypes"
                 self.exe_lib_warning_type = "error"
 
         # Check for shared library (and set up self.ctypes_pipe)

@@ -65,9 +65,7 @@ class tao_var_general_window(tao_list_window):
             ).grid(row=i, column=3)
             # tk.Button(self.list_frame, text="Write...",
             #        command=self.write_v1).grid(row=i, column=3)
-            tk.Label(self.list_frame, text=item[2] + ":" + item[3]).grid(
-                row=i, column=4
-            )
+            tk.Label(self.list_frame, text=item[2] + ":" + item[3]).grid(row=i, column=4)
             tk.Label(self.list_frame, text=item[1]).grid(row=i, column=5)
             i = i + 1
 
@@ -274,9 +272,7 @@ class tao_new_var_window(Tao_Toplevel):
                 messages.append("Please check the end index for " + v1_frame.name)
             # Check low/high limits
             if not v1_frame.low_high_handler(strict=True):
-                messages.append(
-                    "Please check the low and high limits for " + v1_frame.name
-                )
+                messages.append("Please check the low and high limits for " + v1_frame.name)
             # Check for semicolons in any fields
             semi_message = "Semicolons not allowed in any input field"
             caret_message = "Carets not allowed in any input field"
@@ -325,9 +321,7 @@ class tao_new_var_window(Tao_Toplevel):
                             missing_atts.append(ix)
         if missing_atts != []:
             missing_atts.sort()
-            att_msg = (
-                "The following variables were assigned elements but not attributes:\n"
-            )
+            att_msg = "The following variables were assigned elements but not attributes:\n"
             for ix in missing_atts:
                 att_msg += v1_frame.name + "[" + str(ix) + "]" + "\n"
             messages.append(att_msg)
@@ -400,9 +394,7 @@ class tao_new_var_window(Tao_Toplevel):
                             continue
                         if v1_frame.v1_array_wids[v1_ix].param.type == "LOGIC":
                             cmd_str += (
-                                "T^^"
-                                if v1_frame.v1_array_wids[v1_ix].tk_var.get()
-                                else "F^^"
+                                "T^^" if v1_frame.v1_array_wids[v1_ix].tk_var.get() else "F^^"
                             )
                         elif p == "universes":  # cannot be empty
                             u = v1_frame.v1_array_wids[v1_ix].tk_var.get()
@@ -502,9 +494,7 @@ class new_v1_frame(tk.Frame):
         ]
         # Grid widgets and labels:
         for i in range(len(self.v1_array_wids)):
-            tk.Label(self, text=self.v1_array_labels[i]).grid(
-                row=i + 3, column=0, sticky="W"
-            )
+            tk.Label(self, text=self.v1_array_labels[i]).grid(row=i + 3, column=0, sticky="W")
             self.v1_array_wids[i].tk_wid.grid(row=i + 3, column=1, sticky="EW")
         i = i + 3
 
@@ -516,9 +506,7 @@ class new_v1_frame(tk.Frame):
         self.length_warning = tk.Label(self, text="Must be a positive integer")
         self.low_warning = tk.Label(self, text="Must be a real number")
         self.high_warning = tk.Label(self, text="Must be a real number")
-        self.low_high_warning = tk.Label(
-            self, text="Min value must be smaller than max value"
-        )
+        self.low_high_warning = tk.Label(self, text="Min value must be smaller than max value")
 
         # Grid settings for the above warnings
         self.name_warning_gs = {"row": 3, "column": 2, "sticky": "EW"}
@@ -579,9 +567,9 @@ class new_v1_frame(tk.Frame):
         self.var_chooser.grid(row=i + 4, column=1, sticky="EW")
 
         # Delete button
-        tk.Button(
-            self, text="DELETE THIS V1_ARRAY", fg="red", command=self.delete
-        ).grid(row=0, column=0, columnspan=3, sticky="EW")
+        tk.Button(self, text="DELETE THIS V1_ARRAY", fg="red", command=self.delete).grid(
+            row=0, column=0, columnspan=3, sticky="EW"
+        )
 
         # Duplicate button
         tk.Button(self, text="Duplicate this v1_array", command=self.duplicate).grid(
@@ -596,9 +584,9 @@ class new_v1_frame(tk.Frame):
         self.v1_clone = tk.StringVar()
         self.v1_clone.set(v1_list[0])
         tk.OptionMenu(self, self.v1_clone, *v1_list).grid(row=2, column=1, sticky="EW")
-        tk.Button(
-            self, text="Clone", command=lambda: self.clone(self.v1_clone.get())
-        ).grid(row=2, column=2, sticky="W")
+        tk.Button(self, text="Clone", command=lambda: self.clone(self.v1_clone.get())).grid(
+            row=2, column=2, sticky="W"
+        )
 
         # Focus the v1 name widget
         self.v1_array_wids[0].tk_wid.focus_set()
@@ -810,9 +798,7 @@ class new_v1_frame(tk.Frame):
             autosize = True
         else:
             autosize = False
-        tao_ele_browser(
-            self.parent.root, self.pipe, self.name, self, "var", autosize=autosize
-        )
+        tao_ele_browser(self.parent.root, self.pipe, self.name, self, "var", autosize=autosize)
 
     def name_handler(self, event=None, strict=False):
         """
@@ -1088,6 +1074,4 @@ class new_v1_frame(tk.Frame):
             self.var_dict[i]["universes"] = universes
         # Set v1 defaults to var_dict[self.ix_min] values
         for i in range(1, len(var_params)):
-            self.v1_array_wids[i + 1].tk_var.set(
-                self.var_dict[self.ix_min][var_params[i]]
-            )
+            self.v1_array_wids[i + 1].tk_var.set(self.var_dict[self.ix_min][var_params[i]])

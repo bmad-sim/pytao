@@ -101,15 +101,7 @@ class tao_parameter:
         return str(self.value)
 
     def __repr__(self):
-        return (
-            self.name
-            + ";"
-            + self.type
-            + ";"
-            + str(self.can_vary)
-            + ";"
-            + str(self.value)
-        )
+        return self.name + ";" + self.type + ";" + str(self.can_vary) + ";" + str(self.value)
 
     def get_component(self, comp_name):
         """

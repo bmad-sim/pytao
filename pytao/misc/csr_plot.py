@@ -72,8 +72,6 @@ def plot_csr_stats(data, **kwargs):
     ax.plot(s_pos, stats[:, 1], color="red", label="std Wake")
 
     ax2 = ax.twinx()
-    ax2.plot(
-        s_pos, stats[:, 3] * 1e15 / 299792458, color="blue", label=r"$\sigma_z/c$ (fs)"
-    )
+    ax2.plot(s_pos, stats[:, 3] * 1e15 / 299792458, color="blue", label=r"$\sigma_z/c$ (fs)")
     ax2.set_ylabel(r"$\sigma_z/c$ (fs)")
     ax.legend()

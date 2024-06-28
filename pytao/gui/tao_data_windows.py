@@ -7,8 +7,14 @@ from tkinter import messagebox, ttk
 
 from ..util.parameters import str_to_tao_param
 
-from .tao_base_windows import (Tao_Toplevel, lw_table_window, table_window, tao_list_window,
-                               tao_message_box, tao_progress_window)
+from .tao_base_windows import (
+    Tao_Toplevel,
+    lw_table_window,
+    table_window,
+    tao_list_window,
+    tao_message_box,
+    tao_progress_window,
+)
 from .tao_lat_windows import tao_ele_browser
 from .tao_widget import d1_data_list_entry, tk_tao_parameter
 
@@ -30,9 +36,7 @@ class tao_d2_data_window(tao_list_window):
         for i in range(n_universe.value):
             u_ix_list.append(str(i + 1))
         self.u_ix.set(u_ix_list[0])
-        u_ix_box = tk.OptionMenu(
-            self.univ_frame, self.u_ix, *u_ix_list, command=self.refresh
-        )
+        u_ix_box = tk.OptionMenu(self.univ_frame, self.u_ix, *u_ix_list, command=self.refresh)
         u_ix_box.grid(row=0, column=1, sticky="W")
         self.univ_frame.pack(fill="both", expand=0)
 
@@ -90,9 +94,7 @@ class d2_data_frame:
             self.d1_using_list.append(item[4])
             self.d1_ix_lb_list.append(int(item[5]))
             self.d1_ix_ub_list.append(int(item[6]))
-        tk.Label(self.frame, text=self.name).grid(
-            row=0, column=0, columnspan=4, sticky="W"
-        )
+        tk.Label(self.frame, text=self.name).grid(row=0, column=0, columnspan=4, sticky="W")
         tk.Label(self.frame, text="Indices").grid(row=0, column=4)
         tk.Label(self.frame, text="Using").grid(row=0, column=5)
         for i in [0, 4, 5]:
@@ -123,9 +125,7 @@ class d2_data_frame:
             tk.Label(self.frame, text=self.d1_using_list[i]).grid(row=i + 1, column=5)
 
     def open_d1_callback(self, d2_data_name, d1_data_name, pipe, ix_lb, ix_ub, u_ix):
-        return lambda: self.open_d1(
-            d2_data_name, d1_data_name, pipe, ix_lb, ix_ub, u_ix
-        )
+        return lambda: self.open_d1(d2_data_name, d1_data_name, pipe, ix_lb, ix_ub, u_ix)
 
     def edit_d2_callback(self, d2_data_name, pipe):
         return lambda: self.edit_d2(d2_data_name, pipe)
@@ -251,13 +251,7 @@ class tao_d1_data_window(lw_table_window):
 
     def open_detail_window(self, index):
         self.param_list = self.pipe.cmd_in(
-            "python data "
-            + str(self.u_ix)
-            + "@"
-            + self.array_name
-            + "["
-            + str(index)
-            + "]"
+            "python data " + str(self.u_ix) + "@" + self.array_name + "[" + str(index) + "]"
         )
         self.param_list = self.param_list.splitlines()
         for i in range(len(self.param_list)):
@@ -311,9 +305,9 @@ class tao_new_data_window(Tao_Toplevel):
                 d1_frame.fill_defaults()
 
     def fill_d2_frame(self):
-        tk.Label(
-            self.d2_frame, text="New D2 Data Structure", font=("Sans", 16, "bold")
-        ).grid(row=0, column=0, columnspan=2, sticky="EW")
+        tk.Label(self.d2_frame, text="New D2 Data Structure", font=("Sans", 16, "bold")).grid(
+            row=0, column=0, columnspan=2, sticky="EW"
+        )
 
         # Small bit of setup
         self.uni = tk.StringVar()
@@ -394,9 +388,7 @@ class tao_new_data_window(Tao_Toplevel):
             return
 
         # Conditions
-        c1 = (
-            name in self.pipe.cmd_in("python data_d2_array 1").splitlines()
-        )  # name in use
+        c1 = name in self.pipe.cmd_in("python data_d2_array 1").splitlines()  # name in use
         c2 = self.clone_d2.get() != "None"  # clone has been specified
         c3 = self.name != name  # name has changed
         c4 = False  # discard existing work
@@ -473,15 +465,11 @@ class tao_new_data_window(Tao_Toplevel):
             self.notebook.bind("<<NotebookTabChanged>>", self.tab_handler)
 
             # Back button
-            self.back_b = tk.Button(
-                self.d1_frame, text="Back", command=self.load_d2_frame
-            )
+            self.back_b = tk.Button(self.d1_frame, text="Back", command=self.load_d2_frame)
             self.back_b.pack(side="left")
 
             # Create button
-            self.create_b = tk.Button(
-                self.d1_frame, text="Create!", command=self.create_data
-            )
+            self.create_b = tk.Button(self.d1_frame, text="Create!", command=self.create_data)
             self.create_b.pack(side="right")
 
         self.d2_frame.grid_forget()
@@ -507,9 +495,7 @@ class tao_new_data_window(Tao_Toplevel):
             if name in clone_dict.keys():
                 for d1 in clone_dict[name]:
                     self.add_d1_frame(d1, u + "@" + name)
-            if (self.clone_d2.get() in clone_dict.keys()) and (
-                name != self.clone_d2.get()
-            ):
+            if (self.clone_d2.get() in clone_dict.keys()) and (name != self.clone_d2.get()):
                 for d1 in clone_dict[self.clone_d2.get()]:
                     self.add_d1_frame(d1, u + "@" + self.clone_d2.get())
             self.notebook.select(0)
@@ -648,14 +634,7 @@ class tao_new_data_window(Tao_Toplevel):
                     self.pw.set_val(self.pw.ix, j - d1_frame.ix_min)
                     cmd_str = "python datum_create "
                     cmd_str += (
-                        str(u)
-                        + "@"
-                        + self.name
-                        + "."
-                        + d1_frame.name
-                        + "["
-                        + str(j)
-                        + "]"
+                        str(u) + "@" + self.name + "." + d1_frame.name + "[" + str(j) + "]"
                     )
                     for p in datum_params:
                         # look in d1_frame.data_dict
@@ -664,9 +643,7 @@ class tao_new_data_window(Tao_Toplevel):
                         ):
                             value = d1_frame.data_dict[j][p]
                         elif p in d1_params:
-                            value = d1_frame.d1_array_wids[
-                                d1_params.index(p)
-                            ].tk_var.get()
+                            value = d1_frame.d1_array_wids[d1_params.index(p)].tk_var.get()
                         elif p in d2_params:
                             value = self.d2_param_list[d2_params.index(p)].tk_var.get()
                         else:
@@ -719,9 +696,7 @@ class tao_new_data_window(Tao_Toplevel):
         d2_name should be "uni@d2_name"
         """
         d1 = d1_name.split(";")[3]
-        self.d1_frame_list.append(
-            new_d1_frame(self, name=d1, full_name=d2_name + "." + d1)
-        )
+        self.d1_frame_list.append(new_d1_frame(self, name=d1, full_name=d2_name + "." + d1))
         ix = len(self.d1_frame_list) - 1
         self.notebook.insert(ix, self.d1_frame_list[-1])
         self.notebook.tab(ix, text=d1)
@@ -809,9 +784,7 @@ class new_d1_frame(tk.Frame):
         tk.Label(self, text=self.d1_array_labels[0]).grid(row=3, column=0, sticky="W")
         self.d1_array_wids[0].tk_wid.grid(row=3, column=1, sticky="EW")
         for i in range(1, len(self.d1_array_wids)):
-            tk.Label(self, text=self.d1_array_labels[i]).grid(
-                row=i + 4, column=0, sticky="W"
-            )
+            tk.Label(self, text=self.d1_array_labels[i]).grid(row=i + 4, column=0, sticky="W")
             self.d1_array_wids[i].tk_wid.grid(row=i + 4, column=1, sticky="EW")
         i = i + 4
         # Set name
@@ -854,9 +827,9 @@ class new_d1_frame(tk.Frame):
             return lambda: self.datum_fill(ix)
 
         for ix in range(1, 6):
-            tk.Button(
-                self, text="Fill to datums", command=datum_fill_callback(ix)
-            ).grid(row=ix + 4, column=2, sticky="EW")
+            tk.Button(self, text="Fill to datums", command=datum_fill_callback(ix)).grid(
+                row=ix + 4, column=2, sticky="EW"
+            )
 
         ttk.Separator(self, orient="horizontal").grid(
             row=i + 1, column=0, columnspan=3, sticky="EW"
@@ -964,9 +937,9 @@ class new_d1_frame(tk.Frame):
             self.make_datum_frame()
 
         # Delete button
-        tk.Button(
-            self, text="DELETE THIS D1_ARRAY", fg="red", command=self.delete
-        ).grid(row=1, column=0, columnspan=3, sticky="EW")
+        tk.Button(self, text="DELETE THIS D1_ARRAY", fg="red", command=self.delete).grid(
+            row=1, column=0, columnspan=3, sticky="EW"
+        )
 
         # Duplicate button
         tk.Button(self, text="Duplicate this d1_array", command=self.duplicate).grid(
@@ -974,9 +947,7 @@ class new_d1_frame(tk.Frame):
         )
 
         # Vertical separator and titles
-        ttk.Separator(self, orient="vertical").grid(
-            row=0, column=3, rowspan=30, sticky="NS"
-        )
+        ttk.Separator(self, orient="vertical").grid(row=0, column=3, rowspan=30, sticky="NS")
         tk.Label(self, text="D1_array Settings:", font="Sans 16").grid(
             row=0, column=0, sticky="W"
         )
@@ -1234,9 +1205,7 @@ class new_d1_frame(tk.Frame):
         self.name_warning_empty.grid_forget()
         self.name_warning_invalid.grid_forget()
         if self.name != name:
-            if self.d1_array_wids[2]._is_valid_dat_type(
-                self.d2_array.name + "." + name
-            ):
+            if self.d1_array_wids[2]._is_valid_dat_type(self.d2_array.name + "." + name):
                 # set data type
                 self.d1_array_wids[2].tk_var.set(self.d2_array.name + "." + name)
         self.name = name
@@ -1282,9 +1251,7 @@ class new_d1_frame(tk.Frame):
         if self.length != -1:
             # print("updating ix_max and data_chooser")
             self.ix_max = self.ix_min + self.length - 1
-            self.data_chooser.configure(
-                values=list(range(self.ix_min, self.ix_max + 1))
-            )
+            self.data_chooser.configure(values=list(range(self.ix_min, self.ix_max + 1)))
         return True
 
     def length_handler(self, event=None, strict=False):
@@ -1326,9 +1293,7 @@ class new_d1_frame(tk.Frame):
         if self.ix_min != -1:
             # print("updating self.ix_max and data_chooser")
             self.ix_max = self.ix_min + self.length - 1
-            self.data_chooser.configure(
-                values=list(range(self.ix_min, self.ix_max + 1))
-            )
+            self.data_chooser.configure(values=list(range(self.ix_min, self.ix_max + 1)))
         return True
 
     def data_source_handler(self, *args):

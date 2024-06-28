@@ -65,10 +65,7 @@ def tao_dict_set(tao_dict, set_format, pipe):
     for key in tao_dict.keys():
         for param in tao_dict[key].keys():
             pipe.cmd_in(
-                set_format.format(str(key))
-                + str(param)
-                + " = "
-                + str(tao_dict[key][param])
+                set_format.format(str(key)) + str(param) + " = " + str(tao_dict[key][param])
             )
     # Maybe turn lattice calc back on
     pipe.cmd_in("set global plot_on = " + plot_on)
@@ -122,9 +119,7 @@ def tao_set(tao_list, set_str, pipe, overide=False):
                     continue
                 new_val = int(item.tk_var.get())
             except ValueError:
-                messagebox.showwarning(
-                    "Error", item.param.name + " must be an integer "
-                )
+                messagebox.showwarning("Error", item.param.name + " must be an integer ")
                 new_val = item.param.value
         elif item.param.type == "REAL":
             try:
@@ -178,9 +173,7 @@ def tao_set(tao_list, set_str, pipe, overide=False):
                     set_val = item.param.value
                 msg = pipe.cmd_in(set_str + item.param.name + " = " + set_val)
             else:
-                msg = pipe.cmd_in(
-                    set_str + item.param.name + " = " + str(item.param.value)
-                )
+                msg = pipe.cmd_in(set_str + item.param.name + " = " + str(item.param.value))
             # if msg.find("ERROR") != -1:
             if msg != "":
                 messagebox.showwarning(item.param.name, msg)

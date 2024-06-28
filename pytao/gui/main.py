@@ -16,8 +16,14 @@ from .tao_interface import tao_interface
 from .tao_lat_windows import tao_lattice_window
 from .tao_misc_windows import tao_bmad_com_window, tao_global_vars_window, tao_history_window
 from .tao_plot_dict import tao_plot_dict
-from .tao_plot_windows import (tao_building_wall_window, tao_ele_shape_window, tao_ele_window,
-                               tao_new_plot_template_window, tao_place_plot_window, tao_plot_window)
+from .tao_plot_windows import (
+    tao_building_wall_window,
+    tao_ele_shape_window,
+    tao_ele_window,
+    tao_new_plot_template_window,
+    tao_place_plot_window,
+    tao_plot_window,
+)
 from .tao_var_windows import tao_new_var_window, tao_var_general_window
 from .tao_widget import tk_tao_parameter
 
@@ -129,12 +135,12 @@ class tao_root_window(tk.Tk):
         self.history.append([])  # Tao and shell history
         self.history_pos = 0  # Used for scrolling in history on command line
         self.history.append([])  # Call history
-        tk.Button(
-            self.cmd_frame, text="View History...", command=self.view_history_cmd
-        ).grid(row=0, column=1, sticky="EW")
-        tk.Button(
-            self.cmd_frame, text="Show/Hide Console", command=self.sh_console
-        ).grid(row=0, column=0, sticky="EW")
+        tk.Button(self.cmd_frame, text="View History...", command=self.view_history_cmd).grid(
+            row=0, column=1, sticky="EW"
+        )
+        tk.Button(self.cmd_frame, text="Show/Hide Console", command=self.sh_console).grid(
+            row=0, column=0, sticky="EW"
+        )
         self.console = tao_console(self.cmd_frame, self, self.pipe)
         self.cmd_frame.columnconfigure(0, weight=1)
         self.cmd_frame.columnconfigure(1, weight=1)
@@ -184,14 +190,10 @@ class tao_root_window(tk.Tk):
         self.menubar = tk.Menu(self)
 
         file_menu = tk.Menu(self.menubar, tearoff=0)
-        file_menu.add_command(
-            label="Write Data Namelist...", command=self.write_data_cmd
-        )
+        file_menu.add_command(label="Write Data Namelist...", command=self.write_data_cmd)
         file_menu.add_command(label="Write Var Namelist...", command=self.write_var_cmd)
         file_menu.add_separator()
-        file_menu.add_command(
-            label="Reinit...", command=self.reinit_cmd, accelerator="Alt+Q"
-        )
+        file_menu.add_command(label="Reinit...", command=self.reinit_cmd, accelerator="Alt+Q")
         file_menu.add_command(label="Quit", command=self.quit_cmd, accelerator="Ctrl+Q")
         self.menubar.add_cascade(label="File", menu=file_menu)
 
@@ -222,12 +224,8 @@ class tao_root_window(tk.Tk):
         view_menu.add_command(
             label="Lattice...", command=self.view_lattice_cmd, accelerator="Ctrl+L"
         )
-        view_menu.add_command(
-            label="Lat_layout Shapes...", command=self.lat_layout_shape_cmd
-        )
-        view_menu.add_command(
-            label="Floor_plan Shapes...", command=self.floor_plan_shape_cmd
-        )
+        view_menu.add_command(label="Lat_layout Shapes...", command=self.lat_layout_shape_cmd)
+        view_menu.add_command(label="Floor_plan Shapes...", command=self.floor_plan_shape_cmd)
         view_menu.add_command(
             label="Global Variables...",
             command=self.set_global_vars_cmd,
@@ -371,9 +369,10 @@ class tao_root_window(tk.Tk):
             # With noinit, make sure lattice file is chosen
             ix_noinit = tk_list.index("noinit")
             ix_lat_file = tk_list.index("lattice_file")
-            if tk_list[ix_noinit].tk_var.get() and tk_list[
-                ix_lat_file
-            ].tk_var.get() in ["", "Browse..."]:
+            if tk_list[ix_noinit].tk_var.get() and tk_list[ix_lat_file].tk_var.get() in [
+                "",
+                "Browse...",
+            ]:
                 messagebox.showwarning(
                     "Warning",
                     "A lattice file is required when starting Tao without an init file.",
@@ -433,9 +432,7 @@ class tao_root_window(tk.Tk):
                 if "pipe" in self.__dict__ and self.pipe.mode == "ctypes":
                     self.pipe.cmd_in("reinit tao " + init_args)
                 else:
-                    self.pipe = tao_interface(
-                        mode, init_args, so_lib=tao_lib.tk_var.get()
-                    )
+                    self.pipe = tao_interface(mode, init_args, so_lib=tao_lib.tk_var.get())
             self.old_init_args = init_args
 
             init_frame.destroy()
@@ -557,9 +554,7 @@ class tao_root_window(tk.Tk):
                 value = entry[entry.find(":") + 1 :]
                 value = value.strip()
             else:
-                messagebox.showwarning(
-                    "Error!", "Bad line in gui.init file:\n" + entry0
-                )
+                messagebox.showwarning("Error!", "Bad line in gui.init file:\n" + entry0)
                 continue
 
             c1 = name in ["tao_executable", "tao_shared_library"]
@@ -629,26 +624,20 @@ class tao_root_window(tk.Tk):
         ).grid(row=k, column=1, sticky="W")
         pexp_label = tk.Label(init_frame, text="Tao Executable")
         ctype_label = tk.Label(init_frame, text="Tao Shared Library")
-        tao_exe = tk_tao_parameter(
-            str_to_tao_param("tao_executable;FILE;T;"), init_frame
-        )
+        tao_exe = tk_tao_parameter(str_to_tao_param("tao_executable;FILE;T;"), init_frame)
         if "tao_executable" in init_dict:
             tao_exe.tk_var.set(init_dict["tao_executable"])
         elif "ACC_LOCAL_ROOT" in os.environ.keys():
             tao_exe.tk_var.set(os.environ["ACC_LOCAL_ROOT"] + "/production/bin/tao")
         elif "ACC_EXE" in os.environ.keys():
             tao_exe.tk_var.set(os.environ["ACC_EXE"] + "/tao")
-        tao_lib = tk_tao_parameter(
-            str_to_tao_param("tao_shared_library;FILE;T;"), init_frame
-        )
+        tao_lib = tk_tao_parameter(str_to_tao_param("tao_shared_library;FILE;T;"), init_frame)
         if "tao_shared_library" in init_dict:
             tao_lib.tk_var.set(init_dict["tao_shared_library"])
         elif "ACC_LOCAL_ROOT" in os.environ.keys() and os.path.isfile(
             os.environ["ACC_LOCAL_ROOT"] + "/production/lib/libtao.so"
         ):
-            tao_lib.tk_var.set(
-                os.environ["ACC_LOCAL_ROOT"] + "/production/lib/libtao.so"
-            )
+            tao_lib.tk_var.set(os.environ["ACC_LOCAL_ROOT"] + "/production/lib/libtao.so")
         elif "ACC_ROOT_DIR" in os.environ.keys() and os.path.isfile(
             os.environ["ACC_ROOT_DIR"] + "/production/lib/libtao.so"
         ):
@@ -709,9 +698,7 @@ class tao_root_window(tk.Tk):
         c1 = "start_tao" in init_dict
         c2 = len(warning_messages) == 0
         c3 = "pipe" not in self.__dict__
-        c4 = ("start_tao" in init_dict.keys()) and (
-            init_dict["start_tao"] in ["T", "True"]
-        )
+        c4 = ("start_tao" in init_dict.keys()) and (init_dict["start_tao"] in ["T", "True"])
         if c1 & c2 & c3 & c4:
             param_load()
 
@@ -881,9 +868,7 @@ class tao_root_window(tk.Tk):
         win = tk.Toplevel(self)
         win.title("Debug")
 
-        tk.Label(win, text="Commands to print to stdout:").grid(
-            row=0, column=0, sticky="EW"
-        )
+        tk.Label(win, text="Commands to print to stdout:").grid(row=0, column=0, sticky="EW")
         var = tk.StringVar()
         opts = ["None", "Omit querries (show, python var_general, etc)", "All"]
         i = 1
@@ -921,9 +906,7 @@ class tao_root_window(tk.Tk):
                 self.pipe.debug = True
                 self.pipe.debug_patterns = "All"
 
-        tk.Button(win, text="Apply", command=set_debug).grid(
-            row=i, column=0, sticky="EW"
-        )
+        tk.Button(win, text="Apply", command=set_debug).grid(row=i, column=0, sticky="EW")
 
 
 # -----------------------------------------------------

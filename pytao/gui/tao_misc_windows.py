@@ -19,9 +19,7 @@ class tao_global_vars_window(tao_parameter_window):
         global_list = global_list.splitlines()
         for i in range(len(global_list)):
             global_list[i] = str_to_tao_param(global_list[i])
-        tao_parameter_window.__init__(
-            self, root, "Global Variables", global_list, root.pipe
-        )
+        tao_parameter_window.__init__(self, root, "Global Variables", global_list, root.pipe)
         b = tk.Button(
             self.button_frame, text="Set Global Variables", command=self.set_callback
         )
@@ -46,12 +44,8 @@ class tao_bmad_com_window(tao_parameter_window):
         bmad_list = bmad_list.splitlines()
         for i in range(len(bmad_list)):
             bmad_list[i] = str_to_tao_param(bmad_list[i])
-        tao_parameter_window.__init__(
-            self, root, "Bmad Parameters", bmad_list, root.pipe
-        )
-        b = tk.Button(
-            self.button_frame, text="Set Bmad Parameters", command=self.set_callback
-        )
+        tao_parameter_window.__init__(self, root, "Bmad Parameters", bmad_list, root.pipe)
+        b = tk.Button(self.button_frame, text="Set Bmad Parameters", command=self.set_callback)
         b.pack()
 
     def set_callback(self):
@@ -84,9 +78,7 @@ class tao_history_window(tao_list_window):
             for i in range(len(self.root.history[j])):
                 b = tk.Button(self.list_frame, text=self.root.history[j][i])
                 b.configure(command=self.re_run_callback(self.root.history[j][i], j))
-                b.bind(
-                    "<Button-3>", self.re_run_callback(self.root.history[j][i], j + 2)
-                )
+                b.bind("<Button-3>", self.re_run_callback(self.root.history[j][i], j + 2))
                 b.grid(row=ii, column=j)
                 ii -= 1
 

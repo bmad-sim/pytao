@@ -37,13 +37,7 @@ def sanitize(text):
     if "!" in text:
         ex_pos = text.find("!")
         text = text[:ex_pos]
-    return (
-        text.replace("%", "_")
-        .replace("(", "_")
-        .replace(")", "")
-        .replace("?", "")
-        .strip()
-    )
+    return text.replace("%", "_").replace("(", "_").replace(")", "").replace("?", "").strip()
 
 
 def add_tabs(text, tabs):
@@ -183,9 +177,7 @@ for method, metadata in cmds_from_tao.items():
 
     params = generate_params(np_docs["Parameters"])
     try:
-        code = generate_method_code(
-            np_docs, clean_method, command_str, np_docs["Returns"]
-        )
+        code = generate_method_code(np_docs, clean_method, command_str, np_docs["Returns"])
     except Exception as ex:
         print(f"***Error generating code for: {method}. Exception was: {ex}")
         raise

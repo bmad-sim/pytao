@@ -123,9 +123,7 @@ class Tao(TaoCore):
         # px from Bmad is px/p0c
         # pz from Bmad is delta = p/p0c -1.
         # pz = sqrt( (delta+1)**2 -px**2 -py**2)*p0c
-        dat["pz"] = (
-            np.sqrt((dat["pz"] + 1) ** 2 - dat["px"] ** 2 - dat["py"] ** 2) * p0c
-        )
+        dat["pz"] = np.sqrt((dat["pz"] + 1) ** 2 - dat["px"] ** 2 - dat["py"] ** 2) * p0c
         dat["px"] = dat["px"] * p0c
         dat["py"] = dat["py"] * p0c
 

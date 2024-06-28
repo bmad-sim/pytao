@@ -219,24 +219,16 @@ class taotoolbar(NavigationToolbar2Tk):
             self.mode = ""
 
         if self._active:
-            self._idPress = self.canvas.mpl_connect(
-                "button_press_event", self.press_pan
-            )
-            self._idRelease = self.canvas.mpl_connect(
-                "button_release_event", self.release_pan
-            )
+            self._idPress = self.canvas.mpl_connect("button_press_event", self.press_pan)
+            self._idRelease = self.canvas.mpl_connect("button_release_event", self.release_pan)
             self.mode = "pan/zoom"
             scale_canv = self.canvas
-            self.zoom_factory(
-                self, scale_canv.figure.get_axes(), scale_canv, True, self.cid
-            )
+            self.zoom_factory(self, scale_canv.figure.get_axes(), scale_canv, True, self.cid)
             self.canvas.widgetlock(self)
         else:
             self.canvas.widgetlock.release(self)
             scale_canv = self.canvas
-            self.zoom_factory(
-                self, scale_canv.figure.get_axes(), scale_canv, False, self.cid
-            )
+            self.zoom_factory(self, scale_canv.figure.get_axes(), scale_canv, False, self.cid)
         for a in self.canvas.figure.get_axes():
             a.set_navigate_mode(self._active)
 
@@ -322,9 +314,7 @@ Holding 'x' restricts zooming to the x axis, holding 'y' restricts zooming to th
         slidefig = plt.figure(figsize=[4, 0.7])
         slideax = slidefig.add_subplot(1, 1, 1)
         plt.title("Element Width Slider")
-        width_slider = Slider(
-            slideax, "width", 0, 2, self.width
-        )  # element width slider
+        width_slider = Slider(slideax, "width", 0, 2, self.width)  # element width slider
         slidefig.tight_layout(pad=0.5)
         slidefig.show()
 

@@ -58,9 +58,7 @@ def execute(cmd, cwd=None):
     Useful in Jupyter notebook
 
     """
-    popen = subprocess.Popen(
-        cmd, stdout=subprocess.PIPE, universal_newlines=True, cwd=cwd
-    )
+    popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True, cwd=cwd)
     for stdout_line in iter(popen.stdout.readline, ""):
         yield stdout_line
     popen.stdout.close()

@@ -181,9 +181,7 @@ data_type_list.append(
         "s_offset": True,
     }
 )
-data_type_list.append(
-    {"name": "expression.<str>", "data_source": ["lat"], "s_offset": False}
-)
+data_type_list.append({"name": "expression.<str>", "data_source": ["lat"], "s_offset": False})
 data_type_list.append(
     {
         "name": "floor.<enum>",
@@ -294,9 +292,7 @@ data_type_list.append({"name": "momentum", "data_source": ["lat"], "s_offset": T
 data_type_list.append(
     {"name": "momentum_compaction", "data_source": ["lat"], "s_offset": False}
 )
-data_type_list.append(
-    {"name": "n_particle_loss", "data_source": ["beam"], "s_offset": False}
-)
+data_type_list.append({"name": "n_particle_loss", "data_source": ["beam"], "s_offset": False})
 data_type_list.append(
     {
         "name": "orbit.<enum>",
@@ -318,9 +314,7 @@ data_type_list.append(
     }
 )
 data_type_list.append({"name": "pc", "data_source": ["beam", "lat"], "s_offset": False})
-data_type_list.append(
-    {"name": "periodic.tt.<int>", "data_source": ["lat"], "s_offset": False}
-)
+data_type_list.append({"name": "periodic.tt.<int>", "data_source": ["lat"], "s_offset": False})
 data_type_list.append(
     {
         "name": "phase.<enum>",
@@ -337,9 +331,7 @@ data_type_list.append(
         "s_offset": False,
     }
 )
-data_type_list.append(
-    {"name": "phase_frac_diff", "data_source": ["lat"], "s_offset": False}
-)
+data_type_list.append({"name": "phase_frac_diff", "data_source": ["lat"], "s_offset": False})
 data_type_list.append(
     {
         "name": "photon.<enum>",
@@ -385,9 +377,7 @@ data_type_list.append(
 data_type_list.append(
     {"name": "r.<digit:1-6><digit:1-6>", "data_source": ["lat"], "s_offset": False}
 )
-data_type_list.append(
-    {"name": "r56_compaction", "data_source": ["lat"], "s_offset": False}
-)
+data_type_list.append({"name": "r56_compaction", "data_source": ["lat"], "s_offset": False})
 data_type_list.append(
     {
         "name": "rad_int.<enum>",
@@ -433,9 +423,7 @@ data_type_list.append(
         "s_offset": False,
     }
 )
-data_type_list.append(
-    {"name": "ref_time", "data_source": ["beam", "lat"], "s_offset": True}
-)
+data_type_list.append({"name": "ref_time", "data_source": ["beam", "lat"], "s_offset": True})
 data_type_list.append(
     {
         "name": "rel_floor.<enum>",
@@ -491,9 +479,7 @@ data_type_list.append(
     }
 )
 data_type_list.append({"name": "s_position", "data_source": ["lat"], "s_offset": True})
-data_type_list.append(
-    {"name": "time", "data_source": ["beam", "lat"], "s_offset": True}
-)
+data_type_list.append({"name": "time", "data_source": ["beam", "lat"], "s_offset": True})
 data_type_list.append(
     {
         "name": "tune.<enum>",
@@ -528,6 +514,4 @@ data_type_list.append(
         "s_offset": False,
     }
 )
-data_type_list.append(
-    {"name": "wire.<real>", "data_source": ["beam"], "s_offset": False}
-)
+data_type_list.append({"name": "wire.<real>", "data_source": ["beam"], "s_offset": False})

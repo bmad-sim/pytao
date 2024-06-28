@@ -77,9 +77,7 @@ class tao_interface(_tao_interface):
                 sec = str(current_time.tm_sec)
                 if len(sec) == 1:
                     sec = "0" + sec
-                print(
-                    y + "-" + mo + "-" + day + " " + hr + ":" + mn + ":" + sec, cmd_str
-                )
+                print(y + "-" + mo + "-" + day + " " + hr + ":" + mn + ":" + sec, cmd_str)
         if cmd_str.find("dev ") == 0:
             cmd_str = cmd_str[4:]
             with new_stdout() as output:

@@ -1262,9 +1262,7 @@ def parse_spin_polarization(lines, cmd=""):
     dict
     """
     lines = [
-        line
-        for line in lines
-        if "[INFO]" not in line and "note: setting" not in line.lower()
+        line for line in lines if "[INFO]" not in line and "note: setting" not in line.lower()
     ]
     return parse_tao_python_data(lines)
 
@@ -1278,9 +1276,7 @@ def parse_spin_resonance(lines, cmd=""):
     dict
     """
     lines = [
-        line
-        for line in lines
-        if "[INFO]" not in line and "note: setting" not in line.lower()
+        line for line in lines if "[INFO]" not in line and "note: setting" not in line.lower()
     ]
     return parse_tao_python_data(lines)
 

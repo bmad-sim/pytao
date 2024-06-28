@@ -46,9 +46,7 @@ def in_element(x, y, fig_info):
                         < (center + returnList[17][str(i)])
                     ):
                         inIndexList.append([returnList[2], i])
-                elif (
-                    returnList[5][str(i)] < returnList[6][str(i)]
-                ):  # non wrapped elements
+                elif returnList[5][str(i)] < returnList[6][str(i)]:  # non wrapped elements
                     if returnList[5][str(i)] < x < returnList[6][str(i)]:
                         inIndexList.append([returnList[2], i])
                 elif returnList[5][str(i)] > returnList[6][str(i)]:  # wrapped elements
@@ -80,7 +78,8 @@ def in_element(x, y, fig_info):
                                 returnList[14][str(i)],
                                 x,
                                 y,
-                            ) is True
+                            )
+                            is True
                         ):
                             inIndexList.append(i)
         # find floor_plan elements containing the specified point

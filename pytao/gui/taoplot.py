@@ -11,9 +11,7 @@ class taoplot:
     def __init__(self, pipe, PlotRegion):
         """initializer, takes a tao interface and a graph region"""
         self.pipe = pipe  # tao_interface object
-        self.PlotRegion = (
-            PlotRegion  # string describing region in tao of the desired plot
-        )
+        self.PlotRegion = PlotRegion  # string describing region in tao of the desired plot
 
     ## @profile
     def plot(self, width):
@@ -303,9 +301,7 @@ class taoplot:
             if gNum == 1:
                 gSubPlotList.append(fig.add_subplot(gs[gNum - 1, 0]))
             elif gNum > 1:
-                gSubPlotList.append(
-                    fig.add_subplot(gs[gNum - 1, 0], sharex=gSubPlotList[1])
-                )
+                gSubPlotList.append(fig.add_subplot(gs[gNum - 1, 0], sharex=gSubPlotList[1]))
 
             # Graph Data...
 
@@ -314,9 +310,7 @@ class taoplot:
             gFullNameList.append(gFullName)
 
             # List of graph parameters from tao command python plot_graph
-            gInfo = pipe.cmd_in(
-                "python plot_graph " + gFullName, no_warn=True
-            ).splitlines()
+            gInfo = pipe.cmd_in("python plot_graph " + gFullName, no_warn=True).splitlines()
 
             # Dictionary of graph parameters.
             gInfoDict = {}
@@ -424,9 +418,7 @@ class taoplot:
                 for i in range(len(cList)):
                     hInfoDict = {}
                     for j in range(len(hInfo[i])):
-                        hInfoDict[hInfo[i][j].split(";")[0]] = str_to_tao_param(
-                            hInfo[i][j]
-                        )
+                        hInfoDict[hInfo[i][j].split(";")[0]] = str_to_tao_param(hInfo[i][j])
                     hInfoDictList.append(hInfoDict)
                     hInfoDict = {}
 
@@ -446,9 +438,7 @@ class taoplot:
                     mpl_color(cInfoDictList[i]["line"].get_component("color"))
                 )  # line color
                 CurveData.append(
-                    StylesDict[
-                        cInfoDictList[i]["line"].get_component("pattern").lower()
-                    ]
+                    StylesDict[cInfoDictList[i]["line"].get_component("pattern").lower()]
                 )  # line style
                 if cInfoDictList[i]["draw_line"].value is True:  # line width if drawn
                     CurveData.append(cInfoDictList[i]["line"].get_component("width"))
@@ -522,9 +512,7 @@ class taoplot:
                         2 * min(min(ypList), min(ysList)),
                     )
                 except ValueError:
-                    raise ValueError(
-                        "no points found, make sure data is properly initialized"
-                    )
+                    raise ValueError("no points found, make sure data is properly initialized")
                 # boundaries for wave analysis rectangles
 
                 if (
@@ -558,12 +546,8 @@ class taoplot:
                         LatLayout = True
 
                     # Wave region boundaries
-                    if (
-                        gInfoDict["graph^type"].value != "data"
-                    ):  # wave analysis rectangles
-                        wInfo = pipe.cmd_in(
-                            "python wave params", no_warn=True
-                        ).splitlines()
+                    if gInfoDict["graph^type"].value != "data":  # wave analysis rectangles
+                        wInfo = pipe.cmd_in("python wave params", no_warn=True).splitlines()
                         a1 = float(wInfo[1].split(";")[3])
                         a2 = float(wInfo[2].split(";")[3])
                         b1 = float(wInfo[3].split(";")[3])
@@ -671,9 +655,7 @@ class taoplot:
                     LineList.append(
                         gSubPlotList[gNum].hist(
                             xpList,
-                            bins=int(
-                                hInfoDictList[CurvesList.index(i)]["number"].value
-                            ),
+                            bins=int(hInfoDictList[CurvesList.index(i)]["number"].value),
                             weights=ypList,
                             histtype="step",
                             color=i[5],
@@ -710,9 +692,7 @@ class taoplot:
             # LineList gives names of curves
 
             plt.title(
-                mpl_string(gInfoDict["title"].value)
-                + " "
-                + gInfoDict["title_suffix"].value
+                mpl_string(gInfoDict["title"].value) + " " + gInfoDict["title_suffix"].value
             )
             # plot title
 
@@ -722,16 +702,11 @@ class taoplot:
                 for i in range(len(CurvesList)):
                     LegendList.append(LineList[i][0])
                     if mpl_string(cInfoDictList[i]["legend_text"].value) != "":
-                        LabelList.append(
-                            mpl_string(cInfoDictList[i]["legend_text"].value)
-                        )
+                        LabelList.append(mpl_string(cInfoDictList[i]["legend_text"].value))
                     elif (
-                        mpl_string(cInfoDictList[i]["data_type"].value)
-                        == "physical_aperture"
+                        mpl_string(cInfoDictList[i]["data_type"].value) == "physical_aperture"
                     ):
-                        LabelList.append(
-                            mpl_string(cInfoDictList[i]["data_type"].value)
-                        )
+                        LabelList.append(mpl_string(cInfoDictList[i]["data_type"].value))
                     else:
                         LabelList.append("")
                 # list of curves to be added to a legend and list of labels for each curve in the legend
@@ -750,17 +725,11 @@ class taoplot:
             plt.ylabel(mpl_string(gInfoDict["y"].get_component("label")))
             # plot axis labels
 
-            gSubPlotList[gNum].grid(
-                gInfoDict["draw_grid"].value, which="major", axis="both"
-            )
+            gSubPlotList[gNum].grid(gInfoDict["draw_grid"].value, which="major", axis="both")
             # plot grid
 
-            plt.xlim(
-                gInfoDict["x"].get_component("min"), gInfoDict["x"].get_component("max")
-            )
-            plt.ylim(
-                gInfoDict["y"].get_component("min"), gInfoDict["y"].get_component("max")
-            )
+            plt.xlim(gInfoDict["x"].get_component("min"), gInfoDict["x"].get_component("max"))
+            plt.ylim(gInfoDict["y"].get_component("min"), gInfoDict["y"].get_component("max"))
             # set axis limits
 
             gSubPlotList[gNum].set_axisbelow(True)
@@ -783,9 +752,7 @@ class taoplot:
                 )
 
             # List of parameter strings from tao command python plot_graph
-            layInfo = pipe.cmd_in(
-                "python plot_graph layout.g", no_warn=True
-            ).splitlines()
+            layInfo = pipe.cmd_in("python plot_graph layout.g", no_warn=True).splitlines()
 
             # Tao_parameter object names from python plot_graph
             # Dictionary of tao_parameter name string keys to the corresponding tao_parameter object
@@ -795,9 +762,7 @@ class taoplot:
 
             # Makes lat layout only have horizontal axis for panning and zooming
             twinAxes = latLayoutSubPlot.axes.twinx()
-            plt.xlim(
-                gInfoDict["x"].get_component("min"), gInfoDict["x"].get_component("max")
-            )
+            plt.xlim(gInfoDict["x"].get_component("min"), gInfoDict["x"].get_component("max"))
             plt.ylim(
                 layInfoDict["y"].get_component("min"),
                 layInfoDict["y"].get_component("max"),
@@ -843,9 +808,7 @@ class taoplot:
                 eleStartDict[eleInfo[i].split(";")[0]] = float(eleInfo[i].split(";")[1])
                 eleEndDict[eleInfo[i].split(";")[0]] = float(eleInfo[i].split(";")[2])
                 eleLwDict[eleInfo[i].split(";")[0]] = float(eleInfo[i].split(";")[3])
-                eleShapeDict[eleInfo[i].split(";")[0]] = (
-                    eleInfo[i].split(";")[4].lower()
-                )
+                eleShapeDict[eleInfo[i].split(";")[0]] = eleInfo[i].split(";")[4].lower()
                 eleY1Dict[eleInfo[i].split(";")[0]] = float(eleInfo[i].split(";")[5])
                 eleY2Dict[eleInfo[i].split(";")[0]] = float(eleInfo[i].split(";")[6])
                 eleColorDict[eleInfo[i].split(";")[0]] = mpl_color(
@@ -982,114 +945,50 @@ class taoplot:
 
                         # Draw wrapped box element
                         if shape == "box":
-                            latLayoutSubPlot.plot(
-                                [s1, s_max], [y1, y1], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s1, s_max], [y2, y2], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s_min, s2], [y1, y1], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s_min, s2], [y2, y2], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s1, s1], [y1, y2], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s2, s2], [y1, y2], lw=wid, color=color
-                            )
+                            latLayoutSubPlot.plot([s1, s_max], [y1, y1], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s1, s_max], [y2, y2], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s_min, s2], [y1, y1], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s_min, s2], [y2, y2], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s1, s1], [y1, y2], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s2, s2], [y1, y2], lw=wid, color=color)
 
                         # Draw wrapped xbox element
                         elif shape == "xbox":
-                            latLayoutSubPlot.plot(
-                                [s1, s_max], [y1, y1], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s1, s_max], [y2, y2], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s1, s_max], [y1, 0], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s1, s_max], [y2, 0], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s_min, s2], [y1, y1], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s_min, s2], [y2, y2], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s_min, s2], [0, y1], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s_min, s2], [0, y2], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s1, s1], [y1, y2], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s2, s2], [y1, y2], lw=wid, color=color
-                            )
+                            latLayoutSubPlot.plot([s1, s_max], [y1, y1], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s1, s_max], [y2, y2], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s1, s_max], [y1, 0], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s1, s_max], [y2, 0], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s_min, s2], [y1, y1], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s_min, s2], [y2, y2], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s_min, s2], [0, y1], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s_min, s2], [0, y2], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s1, s1], [y1, y2], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s2, s2], [y1, y2], lw=wid, color=color)
 
                         # Draw wrapped x element
                         elif shape == "x":
-                            latLayoutSubPlot.plot(
-                                [s1, s_max], [y1, 0], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s1, s_max], [y2, 0], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s_min, s2], [0, y1], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s_min, s2], [0, y2], lw=wid, color=color
-                            )
+                            latLayoutSubPlot.plot([s1, s_max], [y1, 0], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s1, s_max], [y2, 0], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s_min, s2], [0, y1], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s_min, s2], [0, y2], lw=wid, color=color)
 
                         # Draw wrapped bow tie element
                         elif shape == "bow_tie":
-                            latLayoutSubPlot.plot(
-                                [s1, s_max], [y1, y1], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s1, s_max], [y2, y2], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s1, s_max], [y1, 0], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s1, s_max], [y2, 0], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s_min, s2], [y1, y1], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s_min, s2], [y2, y2], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s_min, s2], [0, y1], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s_min, s2], [0, y2], lw=wid, color=color
-                            )
+                            latLayoutSubPlot.plot([s1, s_max], [y1, y1], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s1, s_max], [y2, y2], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s1, s_max], [y1, 0], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s1, s_max], [y2, 0], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s_min, s2], [y1, y1], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s_min, s2], [y2, y2], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s_min, s2], [0, y1], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s_min, s2], [0, y2], lw=wid, color=color)
 
                         # Draw wrapped diamond element
                         elif shape == "diamond":
-                            latLayoutSubPlot.plot(
-                                [s1, s_max], [0, y1], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s1, s_max], [0, y2], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s_min, s2], [y1, 0], lw=wid, color=color
-                            )
-                            latLayoutSubPlot.plot(
-                                [s_min, s2], [y2, 0], lw=wid, color=color
-                            )
+                            latLayoutSubPlot.plot([s1, s_max], [0, y1], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s1, s_max], [0, y2], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s_min, s2], [y1, 0], lw=wid, color=color)
+                            latLayoutSubPlot.plot([s_min, s2], [y2, 0], lw=wid, color=color)
 
                         # Draw wrapped element name
                         latLayoutSubPlot.text(
@@ -1126,9 +1025,7 @@ class taoplot:
             )
 
         else:
-            latLayoutSubPlot = fig.add_subplot(
-                gs[len(gNameList), 0], sharex=gSubPlotList[1]
-            )
+            latLayoutSubPlot = fig.add_subplot(gs[len(gNameList), 0], sharex=gSubPlotList[1])
             latLayoutSubPlot.remove()
 
         # Plots floor plans
@@ -1138,9 +1035,7 @@ class taoplot:
                 len(gNameList) + 1, 1, len(gNameList) + 1, sharex=gSubPlotList[1]
             )
 
-            floInfo = pipe.cmd_in(
-                "python plot_graph " + gFullName, no_warn=True
-            ).splitlines()
+            floInfo = pipe.cmd_in("python plot_graph " + gFullName, no_warn=True).splitlines()
             # list of plotting parameter strings from tao command python plot_graph
 
             floInfoDict = {}
@@ -1155,9 +1050,7 @@ class taoplot:
             else:
                 universe = 1
 
-            fpeInfo = pipe.cmd_in(
-                "python floor_plan " + gFullName, no_warn=True
-            ).splitlines()
+            fpeInfo = pipe.cmd_in("python floor_plan " + gFullName, no_warn=True).splitlines()
             # list of plotting parameter strings from tao command python floor_plan
 
             fpeIndexList = []  # Contains lists of branch index then element index for each point
@@ -1195,12 +1088,8 @@ class taoplot:
                 fpeEaDict[str(fpeIndexList[i])] = float(fpeInfo[i].split(";")[8])
                 fpeLwDict[str(fpeIndexList[i])] = float(fpeInfo[i].split(";")[9])
                 fpeShapeDict[str(fpeIndexList[i])] = fpeInfo[i].split(";")[10].lower()
-                fpeY1Dict[str(fpeIndexList[i])] = width * float(
-                    fpeInfo[i].split(";")[11]
-                )
-                fpeY2Dict[str(fpeIndexList[i])] = width * float(
-                    fpeInfo[i].split(";")[12]
-                )
+                fpeY1Dict[str(fpeIndexList[i])] = width * float(fpeInfo[i].split(";")[11])
+                fpeY2Dict[str(fpeIndexList[i])] = width * float(fpeInfo[i].split(";")[12])
                 fpeColorDict[str(fpeIndexList[i])] = mpl_color(
                     fpeInfo[i].split(";")[13].lower()
                 )
@@ -1247,9 +1136,7 @@ class taoplot:
                     # draw drift element
 
                     if off1 == 0 and off2 == 0 and ele_key != "sbend" and color != "":
-                        gSubPlotForFloorPlan.plot(
-                            [x1, x2], [y1, y2], lw=width, color=color
-                        )
+                        gSubPlotForFloorPlan.plot([x1, x2], [y1, y2], lw=width, color=color)
                     # draw line element
 
                     elif shape == "box" and ele_key != "sbend" and color != "":
@@ -1507,37 +1394,21 @@ class taoplot:
 
                         elif intersection is not False:
                             angle1 = 360 + conv * np.arctan2(
-                                y1
-                                + off1 * np.cos(angStart - relAngStart)
-                                - intersection[1],
-                                x1
-                                - off1 * np.sin(angStart - relAngStart)
-                                - intersection[0],
+                                y1 + off1 * np.cos(angStart - relAngStart) - intersection[1],
+                                x1 - off1 * np.sin(angStart - relAngStart) - intersection[0],
                             )
                             angle2 = 360 + conv * np.arctan2(
-                                y2
-                                + off1 * np.cos(angEnd + relAngEnd)
-                                - intersection[1],
-                                x2
-                                - off1 * np.sin(angEnd + relAngEnd)
-                                - intersection[0],
+                                y2 + off1 * np.cos(angEnd + relAngEnd) - intersection[1],
+                                x2 - off1 * np.sin(angEnd + relAngEnd) - intersection[0],
                             )
                             # angles of further curve endpoints relative to center of circle
                             angle3 = 360 + conv * np.arctan2(
-                                y1
-                                - off2 * np.cos(angStart - relAngStart)
-                                - intersection[1],
-                                x1
-                                + off2 * np.sin(angStart - relAngStart)
-                                - intersection[0],
+                                y1 - off2 * np.cos(angStart - relAngStart) - intersection[1],
+                                x1 + off2 * np.sin(angStart - relAngStart) - intersection[0],
                             )
                             angle4 = 360 + conv * np.arctan2(
-                                y2
-                                - off2 * np.cos(angEnd + relAngEnd)
-                                - intersection[1],
-                                x2
-                                + off2 * np.sin(angEnd + relAngEnd)
-                                - intersection[0],
+                                y2 - off2 * np.cos(angEnd + relAngEnd) - intersection[1],
+                                x2 + off2 * np.sin(angEnd + relAngEnd) - intersection[0],
                             )
                             # angles of closer curve endpoints relative to center of circle
 
@@ -1697,11 +1568,7 @@ class taoplot:
 
                         if angStart > angEnd:
                             outerRadius = np.sqrt(
-                                (
-                                    x1
-                                    - off1 * np.sin(angStart - relAngStart)
-                                    - intersection[0]
-                                )
+                                (x1 - off1 * np.sin(angStart - relAngStart) - intersection[0])
                                 ** 2
                                 + (
                                     y1
@@ -1711,11 +1578,7 @@ class taoplot:
                                 ** 2
                             )
                             innerRadius = np.sqrt(
-                                (
-                                    x1
-                                    + off2 * np.sin(angStart - relAngStart)
-                                    - intersection[0]
-                                )
+                                (x1 + off2 * np.sin(angStart - relAngStart) - intersection[0])
                                 ** 2
                                 + (
                                     y1
@@ -1726,11 +1589,7 @@ class taoplot:
                             )
                         else:
                             outerRadius = -np.sqrt(
-                                (
-                                    x1
-                                    - off1 * np.sin(angStart - relAngStart)
-                                    - intersection[0]
-                                )
+                                (x1 - off1 * np.sin(angStart - relAngStart) - intersection[0])
                                 ** 2
                                 + (
                                     y1
@@ -1740,11 +1599,7 @@ class taoplot:
                                 ** 2
                             )
                             innerRadius = -np.sqrt(
-                                (
-                                    x1
-                                    + off2 * np.sin(angStart - relAngStart)
-                                    - intersection[0]
-                                )
+                                (x1 + off2 * np.sin(angStart - relAngStart) - intersection[0])
                                 ** 2
                                 + (
                                     y1
@@ -1834,17 +1689,13 @@ class taoplot:
 
                 fbwCurveList = list(set(fbwCurveList))  # list of unique curve indices
 
-                bwn = pipe.cmd_in(
-                    "python building_wall_list", no_warn=True
-                ).splitlines()
+                bwn = pipe.cmd_in("python building_wall_list", no_warn=True).splitlines()
                 bwnTypeDict = {}
                 for i in range(len(bwn)):
                     bwnTypeDict[bwn[i].split(";")[0]] = bwn[i].split(";")[1]
                 # dictionary where keys are wall indices and values are the corresponding building wall types
 
-                fps = pipe.cmd_in(
-                    "python shape_list floor_plan", no_warn=True
-                ).splitlines()
+                fps = pipe.cmd_in("python shape_list floor_plan", no_warn=True).splitlines()
                 fpsTypeDict = {}  # building wall element types
                 fpsColorDict = {}  # building wall segment colors
                 for i in range(len(fps)):
@@ -1852,8 +1703,8 @@ class taoplot:
                         fps[i].split(";")[2].lower()
                     )
                     if fps[i].split(";")[1].split(":")[0].lower() == "building_wall":
-                        fpsColorDict[fps[i].split(";")[1].split(":")[2].lower()] = (
-                            mpl_color(fps[i].split(";")[3].lower())
+                        fpsColorDict[fps[i].split(";")[1].split(":")[2].lower()] = mpl_color(
+                            fps[i].split(";")[3].lower()
                         )
                 # dictionaries matching of the type building wall components to their color
 
@@ -1875,9 +1726,7 @@ class taoplot:
 
                     while k > 1:
                         kIndex = fbwIndexList.index(k)
-                        mIndex = fbwIndexList.index(
-                            k - 1
-                        )  # adjacent point to connect to
+                        mIndex = fbwIndexList.index(k - 1)  # adjacent point to connect to
                         if bwnTypeDict[str(i)] not in fpsColorDict.keys():
                             # TODO: This is a temporary fix to deal with building wall segments
                             # that don't have an associated floor_plan shape
@@ -1914,9 +1763,7 @@ class taoplot:
                             mpx = (fbwXList[mIndex] + fbwXList[kIndex]) / 2
                             mpy = (fbwYList[mIndex] + fbwYList[kIndex]) / 2
                             if (
-                                np.arctan2(
-                                    (fbwYList[mIndex] - mpy), (fbwXList[mIndex] - mpx)
-                                )
+                                np.arctan2((fbwYList[mIndex] - mpy), (fbwXList[mIndex] - mpx))
                                 < np.arctan2(centerList[0][1], centerList[0][0])
                                 < np.arctan2(
                                     (fbwYList[mIndex] - mpy), (fbwXList[mIndex] - mpx)
@@ -1925,9 +1772,7 @@ class taoplot:
                             ):
                                 center = (centerList[1][0], centerList[1][1])
                             elif (
-                                np.arctan2(
-                                    (fbwYList[mIndex] - mpy), (fbwXList[mIndex] - mpx)
-                                )
+                                np.arctan2((fbwYList[mIndex] - mpy), (fbwXList[mIndex] - mpx))
                                 < np.arctan2(centerList[0][1], centerList[0][0])
                                 < np.arctan2(
                                     (fbwYList[mIndex] - mpy), (fbwXList[mIndex] - mpx)
@@ -2017,15 +1862,9 @@ class taoplot:
             plt.ylabel(mpl_string(gInfoDict["y"].get_component("label")))
             # plot floor plan axis labels
 
-            gSubPlotForFloorPlan.grid(
-                gInfoDict["draw_grid"].value, which="major", axis="both"
-            )
-            plt.xlim(
-                gInfoDict["x"].get_component("min"), gInfoDict["x"].get_component("max")
-            )
-            plt.ylim(
-                gInfoDict["y"].get_component("min"), gInfoDict["y"].get_component("max")
-            )
+            gSubPlotForFloorPlan.grid(gInfoDict["draw_grid"].value, which="major", axis="both")
+            plt.xlim(gInfoDict["x"].get_component("min"), gInfoDict["x"].get_component("max"))
+            plt.ylim(gInfoDict["y"].get_component("min"), gInfoDict["y"].get_component("max"))
             gSubPlotForFloorPlan.set_axisbelow(True)
             # plot floor plan grid
 

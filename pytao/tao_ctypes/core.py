@@ -145,9 +145,7 @@ class TaoCore:
 
         return lines
 
-    def cmds(
-        self, cmds, suppress_lattice_calc=True, suppress_plotting=True, raises=True
-    ):
+    def cmds(self, cmds, suppress_lattice_calc=True, suppress_plotting=True, raises=True):
         """
         Runs a list of commands
 

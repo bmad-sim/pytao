@@ -130,9 +130,7 @@ class Tao(TaoCore):
         # px from Bmad is px/p0c
         # pz from Bmad is delta = p/p0c -1.
         # pz = sqrt( (delta+1)**2 -px**2 -py**2)*p0c
-        dat["pz"] = (
-            np.sqrt((dat["pz"] + 1) ** 2 - dat["px"] ** 2 - dat["py"] ** 2) * p0c
-        )
+        dat["pz"] = np.sqrt((dat["pz"] + 1) ** 2 - dat["px"] ** 2 - dat["py"] ** 2) * p0c
         dat["px"] = dat["px"] * p0c
         dat["py"] = dat["py"] * p0c
 
@@ -180,13 +178,9 @@ class Tao(TaoCore):
         cmd = f"python beam {ix_uni}@{ix_branch}"
         if verbose:
             print(cmd)
-        return self.__execute(
-            cmd, as_dict, raises, method_name="beam", cmd_type="string_list"
-        )
+        return self.__execute(cmd, as_dict, raises, method_name="beam", cmd_type="string_list")
 
-    def beam_init(
-        self, ix_branch, *, ix_uni="", verbose=False, as_dict=True, raises=True
-    ):
+    def beam_init(self, ix_branch, *, ix_uni="", verbose=False, as_dict=True, raises=True):
         """
 
         Output beam_init parameters.
@@ -370,9 +364,7 @@ class Tao(TaoCore):
                 cmd, as_dict, raises, method_name="bunch_comb", cmd_type="real_array"
             )
 
-    def bunch_params(
-        self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True
-    ):
+    def bunch_params(self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True):
         """
 
         Outputs bunch parameters at the exit end of a given lattice element.
@@ -481,9 +473,7 @@ class Tao(TaoCore):
                 cmd, as_dict, raises, method_name="bunch1", cmd_type="integer_array"
             )
 
-    def building_wall_list(
-        self, *, ix_section="", verbose=False, as_dict=True, raises=True
-    ):
+    def building_wall_list(self, *, ix_section="", verbose=False, as_dict=True, raises=True):
         """
 
         Output List of building wall sections or section points
@@ -882,9 +872,7 @@ class Tao(TaoCore):
         cmd = f"python data {ix_uni}@{d2_name}.{d1_name}[{dat_index}]"
         if verbose:
             print(cmd)
-        return self.__execute(
-            cmd, as_dict, raises, method_name="data", cmd_type="string_list"
-        )
+        return self.__execute(cmd, as_dict, raises, method_name="data", cmd_type="string_list")
 
     def data_d_array(
         self, d2_name, d1_name, *, ix_uni="", verbose=False, as_dict=True, raises=True
@@ -939,9 +927,7 @@ class Tao(TaoCore):
             cmd, as_dict, raises, method_name="data_d_array", cmd_type="string_list"
         )
 
-    def data_d1_array(
-        self, d2_datum, *, ix_uni="", verbose=False, as_dict=True, raises=True
-    ):
+    def data_d1_array(self, d2_datum, *, ix_uni="", verbose=False, as_dict=True, raises=True):
         """
 
         Output list of d1 arrays for a given data_d2.
@@ -1129,9 +1115,7 @@ class Tao(TaoCore):
             cmd, as_dict, raises, method_name="data_d2_create", cmd_type="None"
         )
 
-    def data_d2_destroy(
-        self, d2_name, *, ix_uni="", verbose=False, as_dict=True, raises=True
-    ):
+    def data_d2_destroy(self, d2_name, *, ix_uni="", verbose=False, as_dict=True, raises=True):
         """
 
         Destroy a d2 data structure along with associated d1 and data arrays.
@@ -1983,9 +1967,7 @@ class Tao(TaoCore):
             cmd, as_dict, raises, method_name="ele_grid_field", cmd_type="string_list"
         )
 
-    def ele_head(
-        self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True
-    ):
+    def ele_head(self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True):
         """
 
         Output "head" Element attributes
@@ -2134,9 +2116,7 @@ class Tao(TaoCore):
             cmd, as_dict, raises, method_name="ele_mat6", cmd_type="string_list"
         )
 
-    def ele_methods(
-        self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True
-    ):
+    def ele_methods(self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True):
         """
 
         Output element methods
@@ -2224,9 +2204,7 @@ class Tao(TaoCore):
             cmd, as_dict, raises, method_name="ele_multipoles", cmd_type="string_list"
         )
 
-    def ele_orbit(
-        self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True
-    ):
+    def ele_orbit(self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True):
         """
 
         Output element orbit
@@ -2416,9 +2394,7 @@ class Tao(TaoCore):
             cmd, as_dict, raises, method_name="ele_spin_taylor", cmd_type="string_list"
         )
 
-    def ele_taylor(
-        self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True
-    ):
+    def ele_taylor(self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True):
         """
 
         Output element taylor map
@@ -2461,9 +2437,7 @@ class Tao(TaoCore):
             cmd, as_dict, raises, method_name="ele_taylor", cmd_type="string_list"
         )
 
-    def ele_twiss(
-        self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True
-    ):
+    def ele_twiss(self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True):
         """
 
         Output element Twiss parameters
@@ -2767,9 +2741,7 @@ class Tao(TaoCore):
         cmd = f"python enum {enum_name}"
         if verbose:
             print(cmd)
-        return self.__execute(
-            cmd, as_dict, raises, method_name="enum", cmd_type="string_list"
-        )
+        return self.__execute(cmd, as_dict, raises, method_name="enum", cmd_type="string_list")
 
     def floor_plan(self, graph, *, verbose=False, as_dict=True, raises=True):
         """
@@ -2963,9 +2935,7 @@ class Tao(TaoCore):
         cmd = "python help"
         if verbose:
             print(cmd)
-        return self.__execute(
-            cmd, as_dict, raises, method_name="help", cmd_type="string_list"
-        )
+        return self.__execute(cmd, as_dict, raises, method_name="help", cmd_type="string_list")
 
     def inum(self, who, *, verbose=False, as_dict=True, raises=True):
         """
@@ -2997,9 +2967,7 @@ class Tao(TaoCore):
         cmd = f"python inum {who}"
         if verbose:
             print(cmd)
-        return self.__execute(
-            cmd, as_dict, raises, method_name="inum", cmd_type="string_list"
-        )
+        return self.__execute(cmd, as_dict, raises, method_name="inum", cmd_type="string_list")
 
     def lat_calc_done(self, branch_name, *, verbose=False, as_dict=True, raises=True):
         """
@@ -3923,9 +3891,7 @@ class Tao(TaoCore):
                 cmd, as_dict, raises, method_name="plot_symbol", cmd_type="real_array"
             )
 
-    def plot_transfer(
-        self, from_plot, to_plot, *, verbose=False, as_dict=True, raises=True
-    ):
+    def plot_transfer(self, from_plot, to_plot, *, verbose=False, as_dict=True, raises=True):
         """
 
         Output transfer plot parameters from the "from plot" to the "to plot" (or plots).
@@ -4172,9 +4138,7 @@ class Tao(TaoCore):
             cmd, as_dict, raises, method_name="shape_manage", cmd_type="string_list"
         )
 
-    def shape_pattern_list(
-        self, *, ix_pattern="", verbose=False, as_dict=True, raises=True
-    ):
+    def shape_pattern_list(self, *, ix_pattern="", verbose=False, as_dict=True, raises=True):
         """
 
         Output list of shape patterns or shape pattern points
@@ -4387,9 +4351,7 @@ class Tao(TaoCore):
         cmd = f"python shape_set {who}^^{shape_index}^^{ele_name}^^{shape}^^{color}^^{shape_size}^^{type_label}^^{shape_draw}^^{multi_shape}^^{line_width}"
         if verbose:
             print(cmd)
-        return self.__execute(
-            cmd, as_dict, raises, method_name="shape_set", cmd_type="None"
-        )
+        return self.__execute(cmd, as_dict, raises, method_name="shape_set", cmd_type="None")
 
     def show(self, line, *, verbose=False, as_dict=True, raises=True):
         """
@@ -4426,9 +4388,7 @@ class Tao(TaoCore):
         cmd = f"python show {line}"
         if verbose:
             print(cmd)
-        return self.__execute(
-            cmd, as_dict, raises, method_name="show", cmd_type="string_list"
-        )
+        return self.__execute(cmd, as_dict, raises, method_name="show", cmd_type="string_list")
 
     def space_charge_com(self, *, verbose=False, as_dict=True, raises=True):
         """
@@ -4950,9 +4910,7 @@ class Tao(TaoCore):
         cmd = f"python var {var} {slaves}"
         if verbose:
             print(cmd)
-        return self.__execute(
-            cmd, as_dict, raises, method_name="var", cmd_type="string_list"
-        )
+        return self.__execute(cmd, as_dict, raises, method_name="var", cmd_type="string_list")
 
     def var_create(
         self,
@@ -5258,6 +5216,4 @@ class Tao(TaoCore):
         cmd = f"python wave {who}"
         if verbose:
             print(cmd)
-        return self.__execute(
-            cmd, as_dict, raises, method_name="wave", cmd_type="string_list"
-        )
+        return self.__execute(cmd, as_dict, raises, method_name="wave", cmd_type="string_list")
