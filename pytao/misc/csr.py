@@ -163,11 +163,8 @@ def csr_wake_stats_at_step(data, step=0):
 
     z = data["z"][step, :]
 
-    nz = len(z)
-    dz = z.ptp() / (nz - 1)
     density = data["charge_per_meter"][step, :]
     dsum = np.sum(density)
-    dsum * dz
     density = density / dsum
 
     avz = np.sum(z * density)
