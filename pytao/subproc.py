@@ -5,7 +5,6 @@ import pickle
 import subprocess
 import sys
 import threading
-import traceback
 import typing
 
 import numpy as np

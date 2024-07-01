@@ -1,9 +1,10 @@
 import contextlib
 import logging
-import pytest
 import os
 
-from .. import Tao, SubprocessTao
+import pytest
+
+from .. import SubprocessTao, Tao
 
 
 @pytest.fixture
@@ -26,7 +27,9 @@ def ensure_count():
 @contextlib.contextmanager
 def ensure_successful_parsing(caplog):
     yield
-    errors = [record for record in caplog.get_records("call") if record.levelno == logging.ERROR]
+    errors = [
+        record for record in caplog.get_records("call") if record.levelno == logging.ERROR
+    ]
     for error in errors:
         if "Failed to parse string data" in error.message:
             pytest.fail(error.message)

@@ -3,20 +3,20 @@ repo_url: https://github.com/bmad-sim/pytao
 repo_name: Bmad-Sim/PyTao
 
 nav:
-    - Home: index.md
+  - Home: index.md
 
-    - Installation: installation.md
+  - Installation: installation.md
 
-    - Examples:
+  - Examples:
       - examples/basic.ipynb
       - examples/bunch.ipynb
       - examples/special_parsers.ipynb
       - examples/fodo.ipynb
       - examples/advanced.ipynb
 
-    - Dev:
+  - Dev:
       - development.md
-    - API:
+  - API:
       - PyTao: api/pytao.md
 
 theme:
@@ -24,7 +24,7 @@ theme:
     repo: fontawesome/brands/github
   name: material
 
-  custom_dir: overrides
+  custom_dir: docs/overrides
   features:
     - navigation.top
     - navigation.tabs
@@ -57,30 +57,23 @@ extra:
 extra_css:
   - stylesheets/extra.css
 
-
 plugins:
-    - search
+  - search
 
-    - mkdocs-jupyter:
-        include_source: True
-       # no_input: True
+  - mkdocs-jupyter:
+      include_source: True
+      # no_input: True
 
-    - mkdocstrings:
-        default_handler: python
-        handlers:
-          python:
-            selection:
-              docstring_style: "numpy"
-              inherited_members: false
-              filters:
-                - "!^_"  # exclude all members starting with _
-                - "^__init__$"  # but always include __init__ modules and methods
-            rendering:
-              show_source: true
-              show_root_heading: true
-
-
-
-
-
-
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          selection:
+            docstring_style: "numpy"
+            inherited_members: false
+            filters:
+              - "!^_" # exclude all members starting with _
+              - "^__init__$" # but always include __init__ modules and methods
+          rendering:
+            show_source: true
+            show_root_heading: true

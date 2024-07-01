@@ -1,0 +1,81 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=60", "setuptools_scm[toml]>=8.0"]
+
+[project]
+name = "pytao"
+description = "PyTao is the Python interface for Bmad's Tao"
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.9"
+dependencies = []
+dynamic = ["version"]
+keywords = []
+authors = [
+  { name = "David Sagan" },
+  { name = "Christopher Mayes" },
+  { name = "Hugo Slepicka" },
+]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering",
+]
+
+[project.scripts]
+pytao = "pytao.__main__:main"
+pytao-gui = "pytao.gui.__main__:main"
+
+[project.optional-dependencies]
+# Currently it's expected that users install via conda;
+# however, a pip-based installation should work as well.
+# `pip install .[all]`
+all = ["h5py", "numpy", "pexpect", "matplotlib", "openpmd-beamphysics"]
+
+[project.urls]
+Homepage = "https://www.classe.cornell.edu/bmad/tao.html"
+Documentation = "https://bmad-sim.github.io/pytao/"
+Repository = "https://github.com/bmad-sim/pytao"
+Issues = "https://github.com/bmad-sim/pytao/issues"
+
+[options]
+zip_safe = false
+include_package_data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pytao*"]
+namespaces = false
+
+[project.license]
+file = "LICENSE"
+
+[tool.ruff]
+extend-include = ["*.ipynb", "_version.py", "versioneer.py"]
+line-length = 95
+indent-width = 4
+target-version = "py39"
+
+[tool.ruff.lint]
+# select = [
+#   # Pycodestyle E errors: https://pycodestyle.pycqa.org/en/latest/intro.html
+#   "E4",
+#   "E7",
+#   "E9",
+#   # pyflakes F error codes:
+#   # https://flake8.pycqa.org/en/latest/user/error-codes.html
+#   "F",
+# ]
+ignore = []
+
+[tool.pytest.ini_options]
+addopts = "--cov=pytao/"
+log_cli_level = "info"
+log_level = "debug"
+testpaths = ["pytao/tests"]
+
+[tool.setuptools_scm]
+version_file = "pytao/_version.py"

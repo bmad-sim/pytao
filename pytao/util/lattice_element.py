@@ -1,12 +1,13 @@
-'''
+"""
 This module defines the lat_element class, representing a single lattice
 element in tao
-'''
-from .parameters import tao_parameter
+"""
+
 from .parameters import tao_parameter_dict
 
-class lat_element():
-    '''
+
+class lat_element:
+    """
     Holds the essential information for a given lattice element.
     A lat_element has the following properties:
     self.id: the ele identifier in the form uni@branch>>ele_ix|which
@@ -25,18 +26,18 @@ class lat_element():
     pipe: the tao_interface object to use for fetching the element info
             from tao (MUST be a tao_interface instance
             and not a tao_ctypes.Tao instance)
-    '''
+    """
+
     def __init__(self, u_ix, ix_branch, ix_ele, which, pipe):
         self.pipe = pipe
-        self.id = str(u_ix) + '@' + str(ix_branch) \
-                + '>>' + str(ix_ele) + '|' + which
+        self.id = str(u_ix) + "@" + str(ix_branch) + ">>" + str(ix_ele) + "|" + which
         fetch_cmd = "python ele:head " + self.id
         data_list = self.pipe.cmd_in(fetch_cmd)
         data_list = data_list.splitlines()
 
-        p_list = [] # For parameters
-        h_list = [] # For has#...
-        n_list = [] # For num#...
+        p_list = []  # For parameters
+        h_list = []  # For has#...
+        n_list = []  # For num#...
         # All elements have gen_attribs:
         h_list.append("gen_attribs;LOGIC;F;T")
         for item in data_list:
@@ -47,13 +48,13 @@ class lat_element():
             else:
                 # Manually set can_vary to F for base and design
                 if which != "model":
-                    item_parts = item.split(';')
+                    item_parts = item.split(";")
                     item = ""
                     for i in range(len(item_parts)):
                         if i != 2:
-                            item += item_parts[i] + ';'
+                            item += item_parts[i] + ";"
                         else:
-                            item += 'F;'
+                            item += "F;"
                     # Remove extra ;
                     item = item[:-1]
                 p_list.append(item)

@@ -31,9 +31,13 @@ repos:
         args: ["--maxkb=100000"]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.4.8
+    rev: v0.5.0
     hooks:
       - id: ruff
-        args: ["--config", "python/pyproject.toml"]
+        args: ["--config", "pyproject.toml"]
+        types_or: [python]
+        exclude: "^(pytao/_version.py)$"
+      - id: ruff-format
+        args: ["--config", "pyproject.toml"]
         types_or: [python]
         exclude: "^(pytao/_version.py)$"

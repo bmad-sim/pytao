@@ -1,5 +1,11 @@
 from .main import tao_root_window
-if __name__ == "__main__":
+
+
+def main():
     root = tao_root_window()
-    if root.do_mainloop: 
+    if root.do_mainloop:
         root.mainloop()
+
+
+if __name__ == "__main__":
+    main()

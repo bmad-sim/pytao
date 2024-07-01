@@ -114,3 +114,5 @@ ENV/
 
 # vim
 *.swp
+
+pytao/_version.py

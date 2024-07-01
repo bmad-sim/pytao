@@ -1,10 +1,10 @@
 import logging
 import numpy as np
 
-from pytao.tao_ctypes.core import TaoCore
-from pytao.tao_ctypes.util import parse_tao_python_data
-from pytao.util.parameters import tao_parameter_dict
-from pytao.util import parsers as _pytao_parsers
+from .tao_ctypes.core import TaoCore
+from .tao_ctypes.util import parse_tao_python_data
+from .util.parameters import tao_parameter_dict
+from .util import parsers as _pytao_parsers
 
 
 logger = logging.getLogger(__name__)
@@ -123,9 +123,7 @@ class Tao(TaoCore):
         # px from Bmad is px/p0c
         # pz from Bmad is delta = p/p0c -1.
         # pz = sqrt( (delta+1)**2 -px**2 -py**2)*p0c
-        dat["pz"] = (
-            np.sqrt((dat["pz"] + 1) ** 2 - dat["px"] ** 2 - dat["py"] ** 2) * p0c
-        )
+        dat["pz"] = np.sqrt((dat["pz"] + 1) ** 2 - dat["px"] ** 2 - dat["py"] ** 2) * p0c
         dat["px"] = dat["px"] * p0c
         dat["py"] = dat["py"] * p0c
 
