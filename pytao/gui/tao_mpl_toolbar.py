@@ -1,6 +1,7 @@
 import os
 import tkinter as tk
 
+import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
 from matplotlib.backends.backend_tkagg import NavigationToolbar2Tk
@@ -15,7 +16,7 @@ from ..util.parameters import str_to_tao_param
 
 class taotoolbar(NavigationToolbar2Tk):
     def __init__(self, canvas_, parent_, width_, GUI_DIR_):
-        self.basedir = os.path.join(rcParams["datapath"], "images")
+        self.basedir = os.path.join(matplotlib.get_data_path(), "images")
         self.GUI_DIR = GUI_DIR_
         self.toolitems = (
             ("Home", "Reset original view", "home", "home"),
@@ -57,10 +58,10 @@ class taotoolbar(NavigationToolbar2Tk):
                 gInfoDict = {}
                 for i in range(len(gInfo)):
                     gInfoDict[gInfo[i].split(";")[0]] = str_to_tao_param(gInfo[i])
-                gRange.append(gInfoDict["x"].get_component("min"))
-                gRange.append(gInfoDict["x"].get_component("max"))
-                gRange.append(gInfoDict["y"].get_component("min"))
-                gRange.append(gInfoDict["y"].get_component("max"))
+                gRange.append(gInfoDict["x.min"].value)
+                gRange.append(gInfoDict["x.max"].value)
+                gRange.append(gInfoDict["y.min"].value)
+                gRange.append(gInfoDict["y.max"].value)
                 self.gRangeList.append(gRange)
         except IndexError:  # incase number of graphs changes, like in wave analysis
             pass

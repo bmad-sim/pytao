@@ -296,6 +296,7 @@ class taoplot:
         ]  # List of graphs with the graph's matplotlib subplot as it's value. Indexed from 1.
         gFullNameList = []  # List of graph names, eg: r1.g or r3.x
 
+        gInfoDict = {}
         for gNum in range(1, len(gNameList) + 1):
             # Create plots in figure, second line also makes x axes scale together
             if gNum == 1:
@@ -721,15 +722,15 @@ class taoplot:
                 gSubPlotList[gNum].legend(LegendList, LabelList)
             # plot legend
 
-            plt.xlabel(mpl_string(gInfoDict["x"].get_component("label")))
-            plt.ylabel(mpl_string(gInfoDict["y"].get_component("label")))
+            plt.xlabel(mpl_string(gInfoDict["x.label"].value))
+            plt.ylabel(mpl_string(gInfoDict["y.label"].value))
             # plot axis labels
 
             gSubPlotList[gNum].grid(gInfoDict["draw_grid"].value, which="major", axis="both")
             # plot grid
 
-            plt.xlim(gInfoDict["x"].get_component("min"), gInfoDict["x"].get_component("max"))
-            plt.ylim(gInfoDict["y"].get_component("min"), gInfoDict["y"].get_component("max"))
+            plt.xlim(gInfoDict["x.min"].value, gInfoDict["x.max"].value)
+            plt.ylim(gInfoDict["y.min"].value, gInfoDict["y.max"].value)
             # set axis limits
 
             gSubPlotList[gNum].set_axisbelow(True)
@@ -762,10 +763,10 @@ class taoplot:
 
             # Makes lat layout only have horizontal axis for panning and zooming
             twinAxes = latLayoutSubPlot.axes.twinx()
-            plt.xlim(gInfoDict["x"].get_component("min"), gInfoDict["x"].get_component("max"))
+            plt.xlim(gInfoDict["x.min"].value, gInfoDict["x.max"].value)
             plt.ylim(
-                layInfoDict["y"].get_component("min"),
-                layInfoDict["y"].get_component("max"),
+                layInfoDict["y.min"].value,
+                layInfoDict["y.max"].value,
             )
             twinAxes.set_navigate(True)
             latLayoutSubPlot.axis("off")
@@ -775,8 +776,8 @@ class taoplot:
             latLayoutSubPlot.axes.set_navigate(False)
             latLayoutSubPlot.axhline(
                 y=0,
-                xmin=1.1 * layInfoDict["x"].get_component("min"),
-                xmax=1.1 * layInfoDict["x"].get_component("max"),
+                xmin=1.1 * layInfoDict["x.min"].value,
+                xmax=1.1 * layInfoDict["x.max"].value,
                 color="Black",
             )
 
@@ -940,8 +941,8 @@ class taoplot:
 
                     # Case where element is wrapped round the lattice ends.
                     else:
-                        s_min = layInfoDict["x"].get_component("min")
-                        s_max = layInfoDict["x"].get_component("max")
+                        s_min = layInfoDict["x.min"].value
+                        s_max = layInfoDict["x.max"].value
 
                         # Draw wrapped box element
                         if shape == "box":
@@ -1830,7 +1831,7 @@ class taoplot:
 
             """Floor Plan Orbit"""
 
-            if float(floInfoDict["floor_plan_orbit_scale"].value) != 0:
+            if float(floInfoDict["floor_plan.orbit_scale"].value) != 0:
                 fpoInfo = pipe.cmd_in(
                     "python floor_orbit " + gFullName, no_warn=True
                 ).splitlines()
@@ -1851,20 +1852,20 @@ class taoplot:
                 gSubPlotForFloorPlan.plot(
                     fpoXList,
                     fpoYList,
-                    color=floInfoDict["floor_plan_orbit_color"].value.lower(),
+                    color=floInfoDict["floor_plan.orbit_color"].value.lower(),
                 )
             # Lists of floor plan orbit point indices, x coordinates, and y coordinates
             # plot floor plan orbit
 
             """floor plan labels and axes"""
 
-            plt.xlabel(mpl_string(gInfoDict["x"].get_component("label")))
-            plt.ylabel(mpl_string(gInfoDict["y"].get_component("label")))
+            plt.xlabel(mpl_string(gInfoDict["x.label"].value))
+            plt.ylabel(mpl_string(gInfoDict["y.label"].value))
             # plot floor plan axis labels
 
             gSubPlotForFloorPlan.grid(gInfoDict["draw_grid"].value, which="major", axis="both")
-            plt.xlim(gInfoDict["x"].get_component("min"), gInfoDict["x"].get_component("max"))
-            plt.ylim(gInfoDict["y"].get_component("min"), gInfoDict["y"].get_component("max"))
+            plt.xlim(gInfoDict["x.min"].value, gInfoDict["x.max"].value)
+            plt.ylim(gInfoDict["y.min"].value, gInfoDict["y.max"].value)
             gSubPlotForFloorPlan.set_axisbelow(True)
             # plot floor plan grid
 
@@ -1892,12 +1893,11 @@ class taoplot:
                 gUniverse = 1
 
             gBranch = gInfoDict["-1^ix_branch"].value
-            if (
-                gInfoDict["component"].value == "model"
-                or gInfoDict["component"].value == "base"
-                or gInfoDict["component"].value == "design"
-            ):
-                gComponent = gInfoDict["component"].value
+            component_value = (
+                gInfoDict["component"].value if "component" in gInfoDict else None
+            )
+            if component_value in {"model", "base", "design"}:
+                gComponent = component_value
             else:
                 gComponent = "model"
         # get universe, branch, and component
