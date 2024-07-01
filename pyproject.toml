@@ -25,6 +25,10 @@ classifiers = [
   "Topic :: Scientific/Engineering",
 ]
 
+[project.scripts]
+pytao = "pytao.__main__:main"
+pytao-gui = "pytao.gui.__main__:main"
+
 [project.optional-dependencies]
 # Currently it's expected that users install via conda;
 # however, a pip-based installation should work as well.
