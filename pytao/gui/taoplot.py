@@ -7,6 +7,240 @@ from matplotlib.path import Path
 from ..util.parameters import str_to_tao_param
 
 
+def mpl_color(x):
+    """takes string containing pgplot color and returns corresponding matplotlib color"""
+    x = x.lower()
+    if x == "yellow_green":
+        return "greenyellow"
+    elif x == "light_green":
+        return "limegreen"
+    elif x == "navy_blue":
+        return "navy"
+    elif x == "reddish_purple":
+        return "mediumvioletred"
+    elif x == "dark_grey":
+        return "gray"
+    elif x == "light_grey":
+        return "lightgray"
+    elif x == "Transparent" or x == "transparent":
+        return "none"
+    else:
+        return x
+
+
+# End: def color
+
+
+def mpl_string(x):
+    """Takes string with pgplot characters and returns string with characters replaced with matplotlib equivalent.
+    Raises NotImplementedError if an unknown pgplot character is used."""
+    x = x.replace("\\", "\\\\")
+    if "\\\\" in x:
+        lx = "$" + x + "$"
+        while lx.find("\\\\d") != -1 and lx.find("\\\\u") != -1:
+            if lx.find("\\\\d") < lx.find("\\\\u"):
+                if lx.find("\\\\d") != -1:
+                    start = lx.find("\\\\d")
+                    end = lx.find("\\\\u")
+                    sx = lx[start : end + 3]
+                    lx = lx.replace(sx, "_" + sx[3:-3])
+                    sx = ""
+                    start = ""
+            else:
+                if lx.find("\\\\u") != -1:
+                    start = lx.find("\\\\u")
+                    end = lx.find("\\\\d")
+                    sx = lx[start : end + 3]
+                    lx = lx.replace(sx, "^" + sx[3:-3])
+                    sx = ""
+                    start = ""
+                    end = ""
+
+        lx = lx.replace(" ", "\\ ")
+        lx = lx.replace("%", "\\%")
+
+        lx = lx.replace("\\\\(2265)", "\\partial")
+        lx = lx.replace("\\\\ga", "\\alpha")
+        lx = lx.replace("\\\\gb", "\\beta")
+        lx = lx.replace("\\\\gg", "\\gamma")
+        lx = lx.replace("\\\\gd", "\\delta")
+        lx = lx.replace("\\\\ge", "\\epsilon")
+        lx = lx.replace("\\\\gz", "\\zeta")
+        lx = lx.replace("\\\\gy", "\\eta")
+        lx = lx.replace("\\\\gh", "\\theta")
+        lx = lx.replace("\\\\gi", "\\iota")
+        lx = lx.replace("\\\\gk", "\\kappa")
+        lx = lx.replace("\\\\gl", "\\lambda")
+        lx = lx.replace("\\\\gm", "\\mu")
+        lx = lx.replace("\\\\gn", "\\nu")
+        lx = lx.replace("\\\\gc", "\\xi")
+        lx = lx.replace("\\\\go", "\\omicron")
+        lx = lx.replace("\\\\gp", "\\pi")
+        lx = lx.replace("\\\\gr", "\\rho")
+        lx = lx.replace("\\\\gs", "\\sigma")
+        lx = lx.replace("\\\\gt", "\\tau")
+        lx = lx.replace("\\\\gu", "\\upsilon")
+        lx = lx.replace("\\\\gf", "\\phi")
+        lx = lx.replace("\\\\gx", "\\chi")
+        lx = lx.replace("\\\\gq", "\\psi")
+        lx = lx.replace("\\\\gw", "\\omega")
+
+        lx = lx.replace("\\\\gA", "A")
+        lx = lx.replace("\\\\gB", "B")
+        lx = lx.replace("\\\\gG", "\\Gamma")
+        lx = lx.replace("\\\\gD", "\\Delta")
+        lx = lx.replace("\\\\gE", "E")
+        lx = lx.replace("\\\\gZ", "Z")
+        lx = lx.replace("\\\\gY", "H")
+        lx = lx.replace("\\\\gH", "\\Theta")
+        lx = lx.replace("\\\\gI", "I")
+        lx = lx.replace("\\\\gK", "\\Kappa")
+        lx = lx.replace("\\\\gL", "\\Lambda")
+        lx = lx.replace("\\\\gM", "M")
+        lx = lx.replace("\\\\gN", "N")
+        lx = lx.replace("\\\\gC", "\\Xi")
+        lx = lx.replace("\\\\gO", "O")
+        lx = lx.replace("\\\\gP", "\\Pi")
+        lx = lx.replace("\\\\gR", "P")
+        lx = lx.replace("\\\\gS", "\\Sigma")
+        lx = lx.replace("\\\\gT", "T")
+        lx = lx.replace("\\\\gU", "\\Upsilon")
+        lx = lx.replace("\\\\gF", "\\Phi")
+        lx = lx.replace("\\\\gX", "X")
+        lx = lx.replace("\\\\gQ", "\\Psi")
+        lx = lx.replace("\\\\gW", "\\Omega")
+        lx = lx.replace("\\\\fn", "")
+        if "\\\\" in lx:
+            raise NotImplementedError(
+                "unknown character in string, character not yet added to mpl_string: "
+                + repr(lx)
+            )
+        return lx
+    else:
+        return x
+
+
+# End: def mpl_string(x)
+
+
+def circle_intersection(x1, y1, x2, y2, r):
+    """takes centers and radius of circles, returns the 2 intersection points of overlapping circles with equal radii"""
+    dx = x2 - x1
+    dy = y2 - y1
+    d = np.sqrt(dx**2 + dy**2)
+    a = d / 2
+    h = np.sqrt(r**2 - a**2)
+    xm = x1 + dx / 2
+    ym = y1 + dy / 2
+    xs1 = xm + h * dy / d
+    xs2 = xm - h * dy / d
+    ys1 = ym - h * dx / d
+    ys2 = ym + h * dx / d
+    return (xs1, ys1), (xs2, ys2)
+
+
+def line(p1, p2):
+    """returns lines based on given points to be used with intersect"""
+    A = p1[1] - p2[1]
+    B = p2[0] - p1[0]
+    C = p1[0] * p2[1] - p2[0] * p1[1]
+    return A, B, -C
+
+
+def intersect(L1, L2):
+    """returns intersection point of 2 lines from the line funciton, or false if the lines don't intersect"""
+    D = L1[0] * L2[1] - L1[1] * L2[0]
+    Dx = L1[2] * L2[1] - L1[1] * L2[2]
+    Dy = L1[0] * L2[2] - L1[2] * L2[0]
+
+    if D != 0:
+        x = Dx / D
+        y = Dy / D
+        return x, y
+    else:
+        return False
+
+
+StylesDict = {
+    "solid": "solid",
+    "dashed": "dashed",
+    "dash_dot": "dashdot",
+    "dotted": "dotted",
+    "dash_dot3": "dashdot",  # currently the same as dashdot
+    "1": "solid",
+    "2": "dashed",
+    "3": "dashdot",
+    "4": "dotted",
+    "5": "dashdot",
+}
+
+FillDict = {
+    "solid_fill": "full",
+    "no_fill": "none",
+    "hatched": "full",
+    "cross_hatched": "full",
+    "1": "full",
+    "2": "none",
+    "3": "full",
+    "4": "full",
+}
+
+# Dictionary with pgplot symbol strings as keys and corresponding matplotlib symbol strings as values
+SymbolsDict = {
+    "do_not_draw": "",
+    "square": "s",  # no fill
+    "dot": ".",
+    "plus": "+",
+    "times": (6, 2, 0),
+    "circle": "$\\circ$",
+    "x": "x",
+    "x_symbol": "x",
+    "triangle": "^",  # no fill
+    "circle_plus": "$\\oplus$",
+    "circle_dot": "$\\odot$",
+    "square_concave": (4, 1, 45),
+    "diamond": "d",  # no fill
+    "star5": "*",  # no fill
+    "triangle_filled": "^",  # fill
+    "red_cross": "P",
+    "star_of_david": (6, 1, 0),
+    "square_filled": "s",  # fill
+    "circle_filled": "o",  # fill
+    "star5_filled": "*",  # fill
+    "0": "s",  # no fill
+    "1": ".",
+    "2": "+",
+    "3": (6, 2, 0),
+    "4": "$\\circ$",
+    "5": "x",
+    "6": "s",
+    "7": "^",  # no fill
+    "8": "$\\oplus$",
+    "9": "$\\odot$",
+    "10": (4, 1, 45),
+    "11": "d",  # no fill
+    "12": "*",  # no fill
+    "13": "^",  # fill
+    "14": "P",
+    "15": (6, 1, 0),
+    "16": "s",  # fill
+    "17": "o",  # fill
+    "18": "*",  # fill
+    "-1": ",",
+    "-2": ",",
+    "-3": "(3,0,0)",
+    "-4": "(4,0,0)",
+    "-5": "(5,0,0)",
+    "-6": "(6,0,0)",
+    "-7": "(7,0,0)",
+    "-8": "(8,0,0)",
+    "-9": "(9,0,0)",
+    "-10": "(10,0,0)",
+    "-11": "(11,0,0)",
+    "-12": "(12,0,0)",
+}
+
+
 class taoplot:
     def __init__(self, pipe, PlotRegion):
         """initializer, takes a tao interface and a graph region"""
@@ -36,232 +270,6 @@ class taoplot:
         fpeCenterDict = {}
         fpeRadiusDict = {}
         pathDict = {}
-
-        def mpl_color(x):
-            """takes string containing pgplot color and returns corresponding matplotlib color"""
-            x = x.lower()
-            if x == "yellow_green":
-                return "greenyellow"
-            elif x == "light_green":
-                return "limegreen"
-            elif x == "navy_blue":
-                return "navy"
-            elif x == "reddish_purple":
-                return "mediumvioletred"
-            elif x == "dark_grey":
-                return "gray"
-            elif x == "light_grey":
-                return "lightgray"
-            elif x == "Transparent" or x == "transparent":
-                return "none"
-            else:
-                return x
-
-        # End: def color
-
-        def mpl_string(x):
-            """Takes string with pgplot characters and returns string with characters replaced with matplotlib equivalent.
-            Raises NotImplementedError if an unknown pgplot character is used."""
-            x = x.replace("\\", "\\\\")
-            if "\\\\" in x:
-                lx = "$" + x + "$"
-                while lx.find("\\\\d") != -1 and lx.find("\\\\u") != -1:
-                    if lx.find("\\\\d") < lx.find("\\\\u"):
-                        if lx.find("\\\\d") != -1:
-                            start = lx.find("\\\\d")
-                            end = lx.find("\\\\u")
-                            sx = lx[start : end + 3]
-                            lx = lx.replace(sx, "_" + sx[3:-3])
-                            sx = ""
-                            start = ""
-                    else:
-                        if lx.find("\\\\u") != -1:
-                            start = lx.find("\\\\u")
-                            end = lx.find("\\\\d")
-                            sx = lx[start : end + 3]
-                            lx = lx.replace(sx, "^" + sx[3:-3])
-                            sx = ""
-                            start = ""
-                            end = ""
-
-                lx = lx.replace(" ", "\\ ")
-                lx = lx.replace("%", "\\%")
-
-                lx = lx.replace("\\\\(2265)", "\\partial")
-                lx = lx.replace("\\\\ga", "\\alpha")
-                lx = lx.replace("\\\\gb", "\\beta")
-                lx = lx.replace("\\\\gg", "\\gamma")
-                lx = lx.replace("\\\\gd", "\\delta")
-                lx = lx.replace("\\\\ge", "\\epsilon")
-                lx = lx.replace("\\\\gz", "\\zeta")
-                lx = lx.replace("\\\\gy", "\\eta")
-                lx = lx.replace("\\\\gh", "\\theta")
-                lx = lx.replace("\\\\gi", "\\iota")
-                lx = lx.replace("\\\\gk", "\\kappa")
-                lx = lx.replace("\\\\gl", "\\lambda")
-                lx = lx.replace("\\\\gm", "\\mu")
-                lx = lx.replace("\\\\gn", "\\nu")
-                lx = lx.replace("\\\\gc", "\\xi")
-                lx = lx.replace("\\\\go", "\\omicron")
-                lx = lx.replace("\\\\gp", "\\pi")
-                lx = lx.replace("\\\\gr", "\\rho")
-                lx = lx.replace("\\\\gs", "\\sigma")
-                lx = lx.replace("\\\\gt", "\\tau")
-                lx = lx.replace("\\\\gu", "\\upsilon")
-                lx = lx.replace("\\\\gf", "\\phi")
-                lx = lx.replace("\\\\gx", "\\chi")
-                lx = lx.replace("\\\\gq", "\\psi")
-                lx = lx.replace("\\\\gw", "\\omega")
-
-                lx = lx.replace("\\\\gA", "A")
-                lx = lx.replace("\\\\gB", "B")
-                lx = lx.replace("\\\\gG", "\\Gamma")
-                lx = lx.replace("\\\\gD", "\\Delta")
-                lx = lx.replace("\\\\gE", "E")
-                lx = lx.replace("\\\\gZ", "Z")
-                lx = lx.replace("\\\\gY", "H")
-                lx = lx.replace("\\\\gH", "\\Theta")
-                lx = lx.replace("\\\\gI", "I")
-                lx = lx.replace("\\\\gK", "\\Kappa")
-                lx = lx.replace("\\\\gL", "\\Lambda")
-                lx = lx.replace("\\\\gM", "M")
-                lx = lx.replace("\\\\gN", "N")
-                lx = lx.replace("\\\\gC", "\\Xi")
-                lx = lx.replace("\\\\gO", "O")
-                lx = lx.replace("\\\\gP", "\\Pi")
-                lx = lx.replace("\\\\gR", "P")
-                lx = lx.replace("\\\\gS", "\\Sigma")
-                lx = lx.replace("\\\\gT", "T")
-                lx = lx.replace("\\\\gU", "\\Upsilon")
-                lx = lx.replace("\\\\gF", "\\Phi")
-                lx = lx.replace("\\\\gX", "X")
-                lx = lx.replace("\\\\gQ", "\\Psi")
-                lx = lx.replace("\\\\gW", "\\Omega")
-                lx = lx.replace("\\\\fn", "")
-                if "\\\\" in lx:
-                    raise NotImplementedError(
-                        "unknown character in string, character not yet added to mpl_string: "
-                        + repr(lx)
-                    )
-                return lx
-            else:
-                return x
-
-        # End: def mpl_string(x)
-
-        def circle_intersection(x1, y1, x2, y2, r):
-            """takes centers and radius of circles, returns the 2 intersection points of overlapping circles with equal radii"""
-            dx = x2 - x1
-            dy = y2 - y1
-            d = np.sqrt(dx**2 + dy**2)
-            a = d / 2
-            h = np.sqrt(r**2 - a**2)
-            xm = x1 + dx / 2
-            ym = y1 + dy / 2
-            xs1 = xm + h * dy / d
-            xs2 = xm - h * dy / d
-            ys1 = ym - h * dx / d
-            ys2 = ym + h * dx / d
-            return (xs1, ys1), (xs2, ys2)
-
-        def line(p1, p2):
-            """returns lines based on given points to be used with intersect"""
-            A = p1[1] - p2[1]
-            B = p2[0] - p1[0]
-            C = p1[0] * p2[1] - p2[0] * p1[1]
-            return A, B, -C
-
-        def intersect(L1, L2):
-            """returns intersection point of 2 lines from the line funciton, or false if the lines don't intersect"""
-            D = L1[0] * L2[1] - L1[1] * L2[0]
-            Dx = L1[2] * L2[1] - L1[1] * L2[2]
-            Dy = L1[0] * L2[2] - L1[2] * L2[0]
-
-            if D != 0:
-                x = Dx / D
-                y = Dy / D
-                return x, y
-            else:
-                return False
-
-        StylesDict = {
-            "solid": "solid",
-            "dashed": "dashed",
-            "dash_dot": "dashdot",
-            "dotted": "dotted",
-            "dash_dot3": "dashdot",  # currently the same as dashdot
-            "1": "solid",
-            "2": "dashed",
-            "3": "dashdot",
-            "4": "dotted",
-            "5": "dashdot",
-        }
-
-        FillDict = {
-            "solid_fill": "full",
-            "no_fill": "none",
-            "hatched": "full",
-            "cross_hatched": "full",
-            "1": "full",
-            "2": "none",
-            "3": "full",
-            "4": "full",
-        }
-
-        # Dictionary with pgplot symbol strings as keys and corresponding matplotlib symbol strings as values
-        SymbolsDict = {
-            "do_not_draw": "",
-            "square": "s",  # no fill
-            "dot": ".",
-            "plus": "+",
-            "times": (6, 2, 0),
-            "circle": "$\\circ$",
-            "x": "x",
-            "x_symbol": "x",
-            "triangle": "^",  # no fill
-            "circle_plus": "$\\oplus$",
-            "circle_dot": "$\\odot$",
-            "square_concave": (4, 1, 45),
-            "diamond": "d",  # no fill
-            "star5": "*",  # no fill
-            "triangle_filled": "^",  # fill
-            "red_cross": "P",
-            "star_of_david": (6, 1, 0),
-            "square_filled": "s",  # fill
-            "circle_filled": "o",  # fill
-            "star5_filled": "*",  # fill
-            "0": "s",  # no fill
-            "1": ".",
-            "2": "+",
-            "3": (6, 2, 0),
-            "4": "$\\circ$",
-            "5": "x",
-            "6": "s",
-            "7": "^",  # no fill
-            "8": "$\\oplus$",
-            "9": "$\\odot$",
-            "10": (4, 1, 45),
-            "11": "d",  # no fill
-            "12": "*",  # no fill
-            "13": "^",  # fill
-            "14": "P",
-            "15": (6, 1, 0),
-            "16": "s",  # fill
-            "17": "o",  # fill
-            "18": "*",  # fill
-            "-1": ",",
-            "-2": ",",
-            "-3": "(3,0,0)",
-            "-4": "(4,0,0)",
-            "-5": "(5,0,0)",
-            "-6": "(6,0,0)",
-            "-7": "(7,0,0)",
-            "-8": "(8,0,0)",
-            "-9": "(9,0,0)",
-            "-10": "(10,0,0)",
-            "-11": "(11,0,0)",
-            "-12": "(12,0,0)",
-        }
 
         # Plot Data...
 
