@@ -3,6 +3,7 @@ import logging
 import os
 import shutil
 import tempfile
+import textwrap
 
 import numpy as np
 
@@ -110,7 +111,8 @@ class TaoCore:
             logger.debug(f"Initializing Tao with: {cmd}")
             err = self.so_lib.tao_c_init_tao(cmd.encode("utf-8"))
             if err != 0:
-                raise ValueError(f"Unable to init Tao with: {cmd}")
+                message = textwrap.indent("\n".join(self.get_output() or ""), "  ")
+                raise ValueError(f"Unable to init Tao with: {cmd!r}. Tao output: {message}")
             tao_ctypes.initialized = True
             return self.get_output()
         else:
