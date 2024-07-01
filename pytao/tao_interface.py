@@ -80,16 +80,24 @@ class tao_interface:
         self.exe_lib_warnings = ""
         self.exe_lib_warning_type = "normal"
         # Where to look for the shared library/executable
-        if "ACC_LOCAL_ROOT" in os.environ.keys():
+        if "ACC_LOCAL_ROOT" in os.environ:
             EXE_DIR = os.environ["ACC_LOCAL_ROOT"] + "/production/bin/"
             LIB_DIR = os.environ["ACC_LOCAL_ROOT"] + "/production/lib/"
-        else:
+        elif "ACC_EXE" in os.environ:
             EXE_DIR = os.environ["ACC_EXE"] + "/"
             LIB_DIR = None
+        else:
+            EXE_DIR = None
+            LIB_DIR = None
+
         # Check for executable
         if os.path.isfile(tao_exe) and os.access(tao_exe, os.X_OK):
             exe_found = True
-        elif os.path.isfile(EXE_DIR + "tao") and os.access(EXE_DIR + "tao", os.X_OK):
+        elif (
+            EXE_DIR is not None
+            and os.path.isfile(EXE_DIR + "tao")
+            and os.access(EXE_DIR + "tao", os.X_OK)
+        ):
             tao_exe = EXE_DIR + "tao"
             exe_found = True
             if (mode == "pexpect") & (tao_exe != ""):
