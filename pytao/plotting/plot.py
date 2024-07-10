@@ -16,12 +16,12 @@ from . import pgplot, util
 logger = logging.getLogger(__name__)
 
 
-def plot_graph(
+def plot_normal_graph(
     tao: Tao,
     region_name: str,
     graph_name: str,
-    ax: matplotlib.axes.Axes,
     graph_info: Optional[dict] = None,
+    ax: Optional[matplotlib.axes.Axes] = None,
 ):
     # Graph "region.graph" full name, EG: "r13.g" or "top.x"
     graph_full_name = f"{region_name}.{graph_name}"
@@ -29,6 +29,10 @@ def plot_graph(
     if graph_info is None:
         graph_info = tao.plot_graph(f"{region_name}.{graph_name}")
         assert graph_info is not None
+
+    if ax is None:
+        _, ax = plt.subplots()
+        assert ax is not None
 
     # List of curve names
     all_curve_names = [graph_info[f"curve[{i + 1}]"] for i in range(graph_info["num_curves"])]
@@ -298,14 +302,18 @@ def plot_graph(
 
 def plot_lat_layout(
     tao: Tao,
-    ax: matplotlib.axes.Axes,
     region_name: str,
     graph_name: str,
     graph_info: Optional[dict] = None,
+    ax: Optional[matplotlib.axes.Axes] = None,
 ):
     if graph_info is None:
         graph_info = tao.plot_graph(f"{region_name}.{graph_name}")
         assert graph_info is not None
+
+    if ax is None:
+        _, ax = plt.subplots()
+        assert ax is not None
 
     # List of parameter strings from tao command python plot_graph
     layout_info = tao.plot_graph("lat_layout.g")
@@ -643,11 +651,15 @@ def _building_wall_to_arc(
 
 def plot_floor_plan(
     tao: Tao,
-    ax: matplotlib.axes.Axes,
     region_name: str,
     graph_name: str,
     graph_info: Optional[dict] = None,
+    ax: Optional[matplotlib.axes.Axes] = None,
 ):
+    if ax is None:
+        _, ax = plt.subplots()
+        assert ax is not None
+
     graph_full_name = f"{region_name}.{graph_name}"
 
     if graph_info is None:
@@ -1469,53 +1481,70 @@ def plot_floor_plan_element(
     # coordinates of corners of a floor plan element for clickable region
 
 
-def plot_region(tao: Tao, region_name: str):
-    # Creates plotting figure
-    fig = plt.figure()
-
-    # List of plotting parameter strings from tao command python plot1
+def get_graphs_in_region(tao: Tao, region_name: str):
     plot1_info = tao.plot1(region_name)
 
     if "num_graphs" not in plot1_info:
         raise RuntimeError("Plotting disabled?")
-    # List of graph names and heights
-    graph_names = [plot1_info[f"graph[{i + 1}]"] for i in range(plot1_info["num_graphs"])]
 
-    # gs = fig.add_gridspec(nrows=number_graphs, ncols=1, height_ratios=graph_heights)
-    gs = fig.subplots(nrows=len(graph_names), ncols=1, sharex=True, squeeze=False)
+    return [plot1_info[f"graph[{i + 1}]"] for i in range(plot1_info["num_graphs"])]
+
+
+def plot_graph(
+    tao: Tao,
+    region_name: str,
+    graph_name: str,
+    ax: Optional[matplotlib.axes.Axes] = None,
+):
+    graph_info = tao.plot_graph(f"{region_name}.{graph_name}")
+    graph_type = graph_info["graph^type"]
+
+    logger.debug(f"Plotting {region_name}.{graph_name} ({graph_type})")
+
+    if ax is None:
+        _, ax = plt.subplots()
+        assert ax is not None
+
+    if graph_type == "floor_plan":
+        return plot_floor_plan(
+            tao=tao,
+            ax=ax,
+            region_name=region_name,
+            graph_name=graph_name,
+            graph_info=graph_info,
+        )
+    if graph_type == "lat_layout":
+        return plot_lat_layout(
+            tao=tao,
+            ax=ax,
+            region_name=region_name,
+            graph_name=graph_name,
+            graph_info=graph_info,
+        )
+    return plot_normal_graph(
+        tao,
+        region_name=region_name,
+        graph_name=graph_name,
+        graph_info=graph_info,
+        ax=ax,
+    )
+
+
+def plot_region(tao: Tao, region_name: str):
+    fig = plt.figure()
+
+    graph_names = get_graphs_in_region(tao, region_name=region_name)
 
     if not len(graph_names):
         return
 
-    graph_info = {}
+    # gs = fig.add_gridspec(nrows=number_graphs, ncols=1, height_ratios=graph_heights)
+    gs = fig.subplots(nrows=len(graph_names), ncols=1, sharex=True, squeeze=False)
+
     for ax, graph_name in zip(gs[:, 0], graph_names):
-        # Create plots in figure, second line also makes x axes scale together
-
-        graph_info = tao.plot_graph(f"{region_name}.{graph_name}")
-        graph_type = graph_info["graph^type"]
-
-        print(f"Plotting {region_name}.{graph_name} ({graph_type})")
-        if graph_type == "floor_plan":
-            plot_floor_plan(
-                tao=tao,
-                ax=ax,
-                region_name=region_name,
-                graph_name=graph_name,
-                graph_info=graph_info,
-            )
-        elif graph_type == "lat_layout":
-            plot_lat_layout(
-                tao=tao,
-                ax=ax,
-                region_name=region_name,
-                graph_name=graph_name,
-                graph_info=graph_info,
-            )
-        else:
-            plot_graph(
-                tao,
-                region_name=region_name,
-                graph_name=graph_name,
-                graph_info=graph_info,
-                ax=ax,
-            )
+        plot_graph(
+            tao=tao,
+            region_name=region_name,
+            graph_name=graph_name,
+            ax=ax,
+        )
