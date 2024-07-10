@@ -563,6 +563,84 @@ def plot_lat_layout(
     ax.plot([0, 0], [-1.7 * y_max, 1.3 * y_max], lw=wid, color=color, alpha=0)
 
 
+def _building_wall_to_arc(
+    mx,
+    my,
+    kx,
+    ky,
+    k_radii,
+    color: str,
+):
+    (c0x, c0y), (c1x, c1y) = util.circle_intersection(
+        mx,
+        my,
+        kx,
+        ky,
+        abs(k_radii),
+    )
+    # radius and endpoints specify 2 possible circle centers for arcs
+    mpx = (mx + kx) / 2
+    mpy = (my + ky) / 2
+    if (
+        np.arctan2((my - mpy), (mx - mpx))
+        < np.arctan2(c0y, c0x)
+        < np.arctan2((my - mpy), (mx - mpx))
+        and k_radii > 0
+    ):
+        center = (c1x, c1y)
+    elif (
+        np.arctan2((my - mpy), (mx - mpx))
+        < np.arctan2(c0y, c0x)
+        < np.arctan2((my - mpy), (mx - mpx))
+        and k_radii < 0
+    ):
+        center = (c0x, c0y)
+    elif k_radii > 0:
+        center = (c0x, c0y)
+    else:
+        center = (c1x, c1y)
+    # find correct center
+
+    m_angle = 360 + math.degrees(
+        np.arctan2(
+            (my - center[1]),
+            (mx - center[0]),
+        )
+    )
+    k_angle = 360 + math.degrees(
+        np.arctan2(
+            (ky - center[1]),
+            (kx - center[0]),
+        )
+    )
+
+    if abs(k_angle - m_angle) <= 180:
+        if k_angle > m_angle:
+            t1 = m_angle
+            t2 = k_angle
+        else:
+            t1 = k_angle
+            t2 = m_angle
+    else:
+        if k_angle > m_angle:
+            t1 = k_angle
+            t2 = m_angle
+        else:
+            t1 = m_angle
+            t2 = k_angle
+    # pick correct start and end angle for arc
+
+    return matplotlib.patches.Arc(
+        center,
+        k_radii * 2,
+        k_radii * 2,
+        theta1=t1,
+        theta2=t2,
+        color=color,
+    )
+    # draw building wall arc
+
+
 def plot_floor_plan(
     tao: Tao,
     ax: matplotlib.axes.Axes,
@@ -593,14 +671,8 @@ def plot_floor_plan(
         plot_floor_plan_element(ax=ax, **info)
 
     building_wall_graph = tao.building_wall_graph(graph_full_name)
-    # list of plotting parameter strings from tao command python floor_building_wall
-
     building_wall_curves = set(graph["index"] for graph in building_wall_graph)
-
-    building_wall_curves = list(set(building_wall_curves))  # list of unique curve indices
-
     building_wall_types = {wall["index"]: wall["name"] for wall in tao.building_wall_list()}
-    # dictionary where keys are wall indices and values are the corresponding building wall types
 
     elem_to_color = {
         elem["ele_id"].split(":")[0]: pgplot.mpl_color(elem["color"])
@@ -608,23 +680,23 @@ def plot_floor_plan(
     }
 
     for curve_name in sorted(building_wall_curves):
-        fbwIndexList = []  # index of point in curve
-        fbwXList = []  # list of point x coordinates
-        fbwYList = []  # list of point y coordinates
-        fbwRadiusList = []  # straight line if element has 0 or missing radius
+        points = []  # index of point in curve
+        xs = []  # list of point x coordinates
+        ys = []  # list of point y coordinates
+        radii = []  # straight line if element has 0 or missing radius
         for bwg in building_wall_graph:
             if curve_name == bwg["index"]:
-                fbwIndexList.append(bwg["point"])
-                fbwXList.append(bwg["offset_x"])
-                fbwYList.append(bwg["offset_y"])
-                fbwRadiusList.append(bwg["radius"])
+                points.append(bwg["point"])
+                xs.append(bwg["offset_x"])
+                ys.append(bwg["offset_y"])
+                radii.append(bwg["radius"])
 
-        k = max(fbwIndexList)  # max line index
+        k = max(points)  # max line index
 
         while k > 1:
-            kIndex = fbwIndexList.index(k)
-            mIndex = fbwIndexList.index(k - 1)  # adjacent point to connect to
-            if building_wall_types[str(curve_name)] not in elem_to_color:
+            idx_k = points.index(k)
+            idx_m = points.index(k - 1)  # adjacent point to connect to
+            if building_wall_types[curve_name] not in elem_to_color:
                 # TODO: This is a temporary fix to deal with building wall segments
                 # that don't have an associated graph_info shape
                 # Currently this will fail to match to wild cards
@@ -634,91 +706,31 @@ def plot_floor_plan(
                 # graph_info shape settings for building walls will be required
                 # in the future, either through a python command in tao or
                 # with a method on the python to match wild cards to wall segment names
-                print(
-                    "No graph_info shape defined for building_wall segment "
-                    + building_wall_types[str(curve_name)]
+                logger.warning(
+                    f"No graph_info shape defined for building_wall segment {building_wall_types[curve_name]}"
                 )
                 k -= 1
                 continue
 
-            if fbwRadiusList[kIndex] == 0:  # draw building wall line
+            color = elem_to_color[building_wall_types[curve_name]]
+            if radii[idx_k] == 0:  # draw building wall line
                 ax.plot(
-                    [fbwXList[kIndex], fbwXList[mIndex]],
-                    [fbwYList[kIndex], fbwYList[mIndex]],
-                    color=elem_to_color[building_wall_types[str(curve_name)]],
+                    [xs[idx_k], xs[idx_m]],
+                    [ys[idx_k], ys[idx_m]],
+                    color=color,
                 )
 
             else:  # draw building wall arc
-                centers = util.circle_intersection(
-                    fbwXList[mIndex],
-                    fbwYList[mIndex],
-                    fbwXList[kIndex],
-                    fbwYList[kIndex],
-                    abs(fbwRadiusList[kIndex]),
-                )
-                # radius and endpoints specify 2 possible circle centers for arcs
-                mpx = (fbwXList[mIndex] + fbwXList[kIndex]) / 2
-                mpy = (fbwYList[mIndex] + fbwYList[kIndex]) / 2
-                if (
-                    np.arctan2((fbwYList[mIndex] - mpy), (fbwXList[mIndex] - mpx))
-                    < np.arctan2(centers[0][1], centers[0][0])
-                    < np.arctan2((fbwYList[mIndex] - mpy), (fbwXList[mIndex] - mpx))
-                    and fbwRadiusList[kIndex] > 0
-                ):
-                    center = (centers[1][0], centers[1][1])
-                elif (
-                    np.arctan2((fbwYList[mIndex] - mpy), (fbwXList[mIndex] - mpx))
-                    < np.arctan2(centers[0][1], centers[0][0])
-                    < np.arctan2((fbwYList[mIndex] - mpy), (fbwXList[mIndex] - mpx))
-                    and fbwRadiusList[kIndex] < 0
-                ):
-                    center = (centers[0][0], centers[0][1])
-                elif fbwRadiusList[kIndex] > 0:
-                    center = (centers[0][0], centers[0][1])
-                else:
-                    center = (centers[1][0], centers[1][1])
-                # find correct center
-
-                m_angle = 360 + math.degrees(
-                    np.arctan2(
-                        (fbwYList[mIndex] - center[1]),
-                        (fbwXList[mIndex] - center[0]),
-                    )
-                )
-                k_angle = 360 + math.degrees(
-                    np.arctan2(
-                        (fbwYList[kIndex] - center[1]),
-                        (fbwXList[kIndex] - center[0]),
-                    )
-                )
-
-                if abs(k_angle - m_angle) <= 180:
-                    if k_angle > m_angle:
-                        t1 = m_angle
-                        t2 = k_angle
-                    else:
-                        t1 = k_angle
-                        t2 = m_angle
-                else:
-                    if k_angle > m_angle:
-                        t1 = k_angle
-                        t2 = m_angle
-                    else:
-                        t1 = m_angle
-                        t2 = k_angle
-                # pick correct start and end angle for arc
-
                 ax.add_patch(
-                    matplotlib.patches.Arc(
-                        center,
-                        fbwRadiusList[kIndex] * 2,
-                        fbwRadiusList[kIndex] * 2,
-                        theta1=t1,
-                        theta2=t2,
-                        color=elem_to_color[building_wall_types[str(curve_name)]],
+                    _building_wall_to_arc(
+                        mx=xs[idx_m],
+                        my=ys[idx_m],
+                        kx=xs[idx_k],
+                        ky=ys[idx_k],
+                        k_radii=radii[idx_k],
+                        color=color,
                     )
                 )
-                # draw building wall arc
 
             k = k - 1
     # plot floor plan building walls
@@ -1464,6 +1476,8 @@ def plot_region(tao: Tao, region_name: str):
     # List of plotting parameter strings from tao command python plot1
     plot1_info = tao.plot1(region_name)
 
+    if "num_graphs" not in plot1_info:
+        raise RuntimeError("Plotting disabled?")
     # List of graph names and heights
     graph_names = [plot1_info[f"graph[{i + 1}]"] for i in range(plot1_info["num_graphs"])]
 
@@ -1505,32 +1519,3 @@ def plot_region(tao: Tao, region_name: str):
                 graph_info=graph_info,
                 ax=ax,
             )
-
-
-def main():
-    import os
-
-    if 1:
-        init = os.path.expandvars(
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_floor_orbit"
-        )
-        tao = Tao(init)
-        plot_region(tao, "r33")
-        plot_region(tao, "layout")
-        # tao.cmd("place layout floor_plan")
-        # plot_region(tao, "bottom")
-
-    else:
-        init = os.path.expandvars("-init $ACC_ROOT_DIR/bmad-doc/tao_examples/cesr/tao.init")
-        tao = Tao(init)
-        # init += " -noplot -external_plotting"
-        plot_region(tao, "top")
-        tao.cmd("place bottom floor_plan")
-        plot_region(tao, "bottom")
-        tao.cmd("place bottom lat_layout")
-        plot_region(tao, "bottom")
-    plt.show()
-
-
-if __name__ == "__main__":
-    main()
