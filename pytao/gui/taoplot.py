@@ -1,3 +1,5 @@
+import pprint
+
 import matplotlib as mp
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
@@ -761,7 +763,7 @@ class taoplot:
                 )
 
             # List of parameter strings from tao command python plot_graph
-            layInfo = pipe.cmd_in("python plot_graph layout.g", no_warn=True).splitlines()
+            layInfo = pipe.cmd_in("python plot_graph lat_layout.g", no_warn=True).splitlines()
 
             # Tao_parameter object names from python plot_graph
             # Dictionary of tao_parameter name string keys to the corresponding tao_parameter object
@@ -797,10 +799,20 @@ class taoplot:
             branch = layInfoDict["-1^ix_branch"].value
 
             # List of strings containing information about each element
-            eleInfo = pipe.cmd_in(
-                "python plot_lat_layout " + str(universe) + "@" + str(branch),
-                no_warn=True,
-            ).splitlines()
+            try:
+                eleInfo = pipe.cmd_in(
+                    "python plot_lat_layout " + str(universe) + "@" + str(branch),
+                    no_warn=True,
+                ).splitlines()
+            except RuntimeError as ex:
+                print(f"Failed to plot layout: {ex}")
+                print("The layout information dictionary is as follows:")
+                pprint.pprint(layInfoDict)
+                print("Trying branch 0...")
+                eleInfo = pipe.cmd_in(
+                    f"python plot_lat_layout {universe}@0",
+                    no_warn=True,
+                ).splitlines()
 
             # All dict keys and entries are strings which match a lattice layout element index (eg: '1') string to the corresponding information
             eleIndexList = []
