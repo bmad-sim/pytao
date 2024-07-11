@@ -1,10 +1,17 @@
+import matplotlib
 import contextlib
 import logging
 import os
+import pathlib
 
 import pytest
 
 from .. import SubprocessTao, Tao
+
+matplotlib.use("Agg")
+
+test_root = pathlib.Path(__file__).parent.resolve()
+test_artifacts = test_root / "artifacts"
 
 
 @pytest.fixture

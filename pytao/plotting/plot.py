@@ -21,8 +21,21 @@ from typing_extensions import NotRequired
 logger = logging.getLogger(__name__)
 
 
+class GraphInvalidError(Exception):
+    pass
+
+
 class NoCurveDataError(Exception):
     pass
+
+
+def _fix_limits(lim: Point) -> Point:
+    low, high = lim
+    if np.isclose(low, 0.0) and np.isclose(high, 0.0):
+        # TODO: matplotlib can sometimes get in a bad spot trying to plot empty data
+        # with very small limits
+        return (-0.001, 0.001)
+    return (low, high)
 
 
 FloorOrbitInfo = TypedDict(
@@ -790,7 +803,7 @@ class PlotBasicGraph:
         if graph_type == "floor_plan":
             raise ValueError()
         if graph_info["why_invalid"]:
-            raise ValueError(f"Graph not valid: {graph_info['why_invalid']}")
+            raise GraphInvalidError(f"Graph not valid: {graph_info['why_invalid']}")
 
         all_curve_names = [
             graph_info[f"curve[{i + 1}]"] for i in range(graph_info["num_curves"])
@@ -836,8 +849,8 @@ class PlotBasicGraph:
         ax.set_xlabel(self.xlabel)
         ax.set_ylabel(self.ylabel)
         ax.grid(self.draw_grid, which="major", axis="both")
-        ax.set_xlim(self.xlim)
-        ax.set_ylim(self.ylim)
+        ax.set_xlim(_fix_limits(self.xlim))
+        ax.set_ylim(_fix_limits(self.ylim))
         ax.set_axisbelow(True)
         return ax
 
@@ -938,7 +951,6 @@ class LatticeLayoutElement:
                     )
                 )
 
-            # Draw element name
             annotations.append(
                 PlotAnnotation(
                     x=(s1 + s2) / 2,
@@ -948,6 +960,7 @@ class LatticeLayoutElement:
                     verticalalignment="top",
                     clip_on=True,
                     color=color,
+                    rotation=90,
                 )
             )
 
@@ -1038,6 +1051,9 @@ class PlotLatticeLayoutGraph:
         y_max = self.y_max
         ax.plot([0, 0], [-1.7 * y_max, 1.3 * y_max], alpha=0)
 
+        ax.set_xlim(_fix_limits(self.xlim))
+        ax.set_ylim(_fix_limits(self.ylim))
+
     @property
     def y_max(self) -> float:
         ele_y1s = [elem.info["y1"] for elem in self.elements]
@@ -1102,24 +1118,6 @@ class PlotLatticeLayoutGraph:
             y2_floor=y2_floor,
             elements=elements,
         )
-
-
-def plot_normal_graph(
-    tao: Tao,
-    region_name: str,
-    graph_name: str,
-    graph_info: Optional[PlotGraphInfo] = None,
-    ax: Optional[matplotlib.axes.Axes] = None,
-) -> PlotBasicGraph:
-    result_graph = PlotBasicGraph.from_tao(
-        tao,
-        region_name=region_name,
-        graph_name=graph_name,
-        graph_info=graph_info,
-    )
-
-    result_graph.plot(ax)
-    return result_graph
 
 
 def _get_wrapped_shape_coords(
@@ -1188,21 +1186,6 @@ def _get_wrapped_shape_coords(
     return []
 
 
-def plot_lat_layout(
-    tao: Tao,
-    region_name: str,
-    graph_name: str,
-    graph_info: Optional[PlotGraphInfo] = None,
-    ax: Optional[matplotlib.axes.Axes] = None,
-):
-    graph = PlotLatticeLayoutGraph.from_tao(
-        tao,
-        region_name=region_name,
-        graph_name=graph_name,
-    )
-    graph.plot(ax=ax)
-
-
 def _building_wall_to_arc(
     mx,
     my,
@@ -1260,21 +1243,6 @@ def _building_wall_to_arc(
         theta2=t2,
         color=color,
     )
-
-
-def plot_floor_plan(
-    tao: Tao,
-    region_name: str,
-    graph_name: str,
-    graph_info: Optional[dict] = None,
-    ax: Optional[matplotlib.axes.Axes] = None,
-):
-    if ax is None:
-        _, ax = plt.subplots()
-        assert ax is not None
-
-    graph = FloorPlanGraph.from_tao(tao=tao, region_name=region_name, graph_name=graph_name)
-    graph.plot(ax)
 
 
 def _circle_to_patch(
@@ -1806,6 +1774,8 @@ class FloorPlanElement:
         rel_angle_start: float = 0.0,
         rel_angle_end: float = 0.0,
     ) -> FloorPlanElement:
+        ele_key = ele_key.lower()
+
         lines: List[PlotCurveLine] = []
         patches: List[PlotPatch] = []
         annotations: List[PlotAnnotation] = []
@@ -2228,8 +2198,8 @@ class FloorPlanGraph:
         ax.set_xlabel(self.xlabel)
         ax.set_ylabel(self.ylabel)
         ax.grid(self.draw_grid, which="major", axis="both")
-        ax.set_xlim(self.xlim)
-        ax.set_ylim(self.ylim)
+        ax.set_xlim(_fix_limits(self.xlim))
+        ax.set_ylim(_fix_limits(self.ylim))
         ax.set_axisbelow(True)
         return ax
 
@@ -2243,44 +2213,52 @@ def get_graphs_in_region(tao: Tao, region_name: str):
     return [plot1_info[f"graph[{i + 1}]"] for i in range(plot1_info["num_graphs"])]
 
 
+def make_graph(
+    tao: Tao,
+    region_name: str,
+    graph_name: str,
+):
+    graph_info = cast(PlotGraphInfo, tao.plot_graph(f"{region_name}.{graph_name}"))
+    graph_type = graph_info["graph^type"]
+
+    logger.debug(f"Creating graph {region_name}.{graph_name} ({graph_type})")
+
+    if graph_type == "floor_plan":
+        return FloorPlanGraph.from_tao(
+            tao=tao,
+            region_name=region_name,
+            graph_name=graph_name,
+            graph_info=graph_info,
+        )
+    if graph_type == "lat_layout":
+        return PlotLatticeLayoutGraph.from_tao(
+            tao,
+            region_name=region_name,
+            graph_name=graph_name,
+            graph_info=graph_info,
+        )
+    return PlotBasicGraph.from_tao(
+        tao,
+        region_name=region_name,
+        graph_name=graph_name,
+        graph_info=graph_info,
+    )
+
+
 def plot_graph(
     tao: Tao,
     region_name: str,
     graph_name: str,
     ax: Optional[matplotlib.axes.Axes] = None,
 ):
-    graph_info = tao.plot_graph(f"{region_name}.{graph_name}")
-    graph_type = graph_info["graph^type"]
-
-    logger.debug(f"Plotting {region_name}.{graph_name} ({graph_type})")
+    graph = make_graph(tao, region_name, graph_name)
 
     if ax is None:
         _, ax = plt.subplots()
         assert ax is not None
 
-    if graph_type == "floor_plan":
-        return plot_floor_plan(
-            tao=tao,
-            ax=ax,
-            region_name=region_name,
-            graph_name=graph_name,
-            graph_info=graph_info,
-        )
-    if graph_type == "lat_layout":
-        return plot_lat_layout(
-            tao=tao,
-            ax=ax,
-            region_name=region_name,
-            graph_name=graph_name,
-            graph_info=graph_info,
-        )
-    return plot_normal_graph(
-        tao,
-        region_name=region_name,
-        graph_name=graph_name,
-        graph_info=graph_info,
-        ax=ax,
-    )
+    graph.plot(ax)
+    return ax, graph
 
 
 def plot_region(tao: Tao, region_name: str):
