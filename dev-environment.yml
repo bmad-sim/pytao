@@ -14,6 +14,8 @@ dependencies:
   - numpy
   - h5py
   - pexpect
+  - rich
+  - pydantic >=2
   # Developer
   - pygments
   - pytest

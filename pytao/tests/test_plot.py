@@ -69,9 +69,10 @@ def test_plot_floor_layout(tao_cls):
         plot_region(tao, "layout")
         plt.show()
 
-        tao.cmd("place r33 floor_plan")
-        plot_region(tao, "r33")
+        tao.cmd("place r12 floor_plan")
+        _, graph = plot_graph(tao, "r12", "g")
         plt.show()
+        rich.print(graph)
 
 
 def test_plot_data(tao_cls):
@@ -85,6 +86,8 @@ def test_plot_data(tao_cls):
         plt.show()
 
         tao.cmd("place bottom floor_plan")
+
+        # rich.print(plot_region(tao, "bottom"))
         plot_region(tao, "bottom")
         plt.show()
 
@@ -99,11 +102,10 @@ def test_plot_all_visible(init_filename: pathlib.Path):
         for plot in visible_plots:
             for graph_name in get_graphs_in_region(tao, plot["region"]):
                 try:
-                    ax, graph = plot_graph(tao, plot["region"], graph_name)
+                    _ax, _graph = plot_graph(tao, plot["region"], graph_name)
                 except GraphInvalidError as ex:
                     # tao-reported; it's probably not our fault
                     logger.warning(f"Invalid graph error: {ex}")
                     continue
 
-                rich.print(graph)
-                plt.show()
+                plt.show()  # TODO uncomment

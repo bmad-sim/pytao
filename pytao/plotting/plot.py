@@ -29,13 +29,13 @@ class NoCurveDataError(Exception):
     pass
 
 
-def _fix_limits(lim: Point) -> Point:
+def _fix_limits(lim: Point, pad_factor: float = 0.0) -> Point:
     low, high = lim
     if np.isclose(low, 0.0) and np.isclose(high, 0.0):
         # TODO: matplotlib can sometimes get in a bad spot trying to plot empty data
         # with very small limits
         return (-0.001, 0.001)
-    return (low, high)
+    return (low - abs(low * pad_factor), high + abs(high * pad_factor))
 
 
 FloorOrbitInfo = TypedDict(
@@ -462,6 +462,7 @@ class PlotPatchArc(PlotPatchBase):
     angle: float = 0.0
     theta1: float = 0.0
     theta2: float = 360.0
+    fill: bool = False  # override
 
     def to_mpl(self) -> matplotlib.patches.Arc:
         return matplotlib.patches.Arc(
@@ -527,7 +528,7 @@ _command_to_mpl_path = {
 @dataclasses.dataclass
 class PlotPatchCustom(PlotPatchBase):
     commands: List[CustomPathCommand] = Field(default_factory=list)
-    vertices: List[List[Point]] = Field(default_factory=list)
+    vertices: List[Point] = Field(default_factory=list)
 
     @property
     def mpl_path_codes(self):
@@ -770,7 +771,7 @@ class PlotCurve:
 
 
 @dataclasses.dataclass
-class PlotBasicGraph:
+class BasicGraph:
     info: PlotGraphInfo
     xlim: Point = _point_field
     ylim: Point = _point_field
@@ -789,7 +790,7 @@ class PlotBasicGraph:
         region_name: str,
         graph_name: str,
         graph_info: Optional[PlotGraphInfo] = None,
-    ) -> PlotBasicGraph:
+    ) -> BasicGraph:
         if graph_info is None:
             graph_info = tao.plot_graph(f"{region_name}.{graph_name}")
             assert graph_info is not None
@@ -1014,7 +1015,7 @@ class LatticeLayoutElement:
 
 
 @dataclasses.dataclass
-class PlotLatticeLayoutGraph:
+class LatticeLayoutGraph:
     graph_info: PlotGraphInfo
     elements: List[LatticeLayoutElement]
     xlim: Point
@@ -1029,13 +1030,8 @@ class PlotLatticeLayoutGraph:
             _, ax = plt.subplots()
         assert ax is not None
 
-        twin_ax = ax.twinx()
-
-        ax.set_axis_off()
-        twin_ax.set_axis_off()
-
-        ax.set_navigate(False)
-        twin_ax.set_navigate(True)
+        # ax.set_axis_off()
+        # ax.set_navigate(False)
         ax.axhline(
             y=0,
             xmin=1.1 * self.graph_info["x_min"],
@@ -1051,8 +1047,9 @@ class PlotLatticeLayoutGraph:
         y_max = self.y_max
         ax.plot([0, 0], [-1.7 * y_max, 1.3 * y_max], alpha=0)
 
-        ax.set_xlim(_fix_limits(self.xlim))
-        ax.set_ylim(_fix_limits(self.ylim))
+        # ax.set_xlim(_fix_limits(self.xlim))
+        # ax.set_ylim(_fix_limits(self.ylim))
+        ax.autoscale_view(tight=True)
 
     @property
     def y_max(self) -> float:
@@ -1068,7 +1065,7 @@ class PlotLatticeLayoutGraph:
         graph_name: str = "g",
         branch: Optional[int] = None,
         graph_info: Optional[PlotGraphInfo] = None,
-    ) -> PlotLatticeLayoutGraph:
+    ) -> LatticeLayoutGraph:
         if graph_info is None:
             graph_info = tao.plot_graph(f"{region_name}.{graph_name}")
             assert graph_info is not None
@@ -1546,10 +1543,10 @@ def _sbend_intersection_to_patch(
     sin_end = np.sin(angle_end + rel_angle_end)
     cos_end = np.cos(angle_end + rel_angle_end)
 
-    c1 = [x1 - off1 * sin_start, y1 + off1 * cos_start]
-    c2 = [x2 - off1 * sin_end, y2 + off1 * cos_end]
-    c3 = [x1 + off2 * sin_start, y1 - off2 * cos_start]
-    c4 = [x2 + off2 * sin_end, y2 - off2 * cos_end]
+    c1 = (x1 - off1 * sin_start, y1 + off1 * cos_start)
+    c2 = (x2 - off1 * sin_end, y2 + off1 * cos_end)
+    c3 = (x1 + off2 * sin_start, y1 - off2 * cos_start)
+    c4 = (x2 + off2 * sin_end, y2 - off2 * cos_end)
     # corners of sbend
 
     outer_radius = np.sqrt(
@@ -1567,24 +1564,24 @@ def _sbend_intersection_to_patch(
 
     mid_angle = (angle_start + angle_end) / 2
 
-    top = [
+    top = (
         intersection[0] - outer_radius * np.sin(mid_angle),
         intersection[1] + outer_radius * np.cos(mid_angle),
-    ]
-    bottom = [
+    )
+    bottom = (
         intersection[0] - inner_radius * np.sin(mid_angle),
         intersection[1] + inner_radius * np.cos(mid_angle),
-    ]
+    )
     # midpoints of top and bottom arcs in an sbend
 
-    top_cp = [
+    top_cp = (
         2 * (top[0]) - 0.5 * (c1[0]) - 0.5 * (c2[0]),
         2 * (top[1]) - 0.5 * (c1[1]) - 0.5 * (c2[1]),
-    ]
-    bottom_cp = [
+    )
+    bottom_cp = (
         2 * (bottom[0]) - 0.5 * (c3[0]) - 0.5 * (c4[0]),
         2 * (bottom[1]) - 0.5 * (c3[1]) - 0.5 * (c4[1]),
-    ]
+    )
     # corresponding control points for a quadratic Bezier curve that passes through the corners and arc midpoint
 
     verts = [c1, top_cp, c2, c4, bottom_cp, c3, c1]
@@ -1924,6 +1921,8 @@ class FloorPlanElement:
             )
             lines.extend(sbend_lines or [])
             patches.extend(sbend_patches or [])
+        elif shape:
+            raise ValueError(f"unhandled shape: {shape}")
 
         if label_name and color and np.sin(((angle_end + angle_start) / 2)) > 0:
             annotations.append(
@@ -2039,10 +2038,12 @@ class BuildingWalls:
                         f"No graph_info shape defined for building_wall segment "
                         f"{building_wall_types[curve_name]}"
                     )
-                    continue
+                    color = "black"
+                else:
+                    color = elem_to_color[building_wall_types[curve_name]]
 
-                color = elem_to_color[building_wall_types[curve_name]]
-                if radii[idx_k] == 0:  # draw building wall line
+                if radii[idx_k] == 0:
+                    # draw building wall line
                     lines.append(
                         PlotCurveLine(
                             xs=[xs[idx_k], xs[idx_m]],
@@ -2051,7 +2052,8 @@ class BuildingWalls:
                         )
                     )
 
-                else:  # draw building wall arc
+                else:
+                    # draw building wall arc
                     patches.append(
                         _building_wall_to_arc(
                             mx=xs[idx_m],
@@ -2191,15 +2193,18 @@ class FloorPlanGraph:
         if self.floor_orbits is not None:
             self.floor_orbits.plot(ax)
 
-        if not self.show_axes:
-            ax.set_axis_off()
+        # if not self.show_axes:
+        #     ax.set_axis_off()
 
         ax.set_title(self.title)
         ax.set_xlabel(self.xlabel)
         ax.set_ylabel(self.ylabel)
         ax.grid(self.draw_grid, which="major", axis="both")
-        ax.set_xlim(_fix_limits(self.xlim))
-        ax.set_ylim(_fix_limits(self.ylim))
+        # ax.set_xlim(_fix_limits(self.xlim, pad_factor=0.0))
+        # ax.set_ylim(_fix_limits(self.ylim, pad_factor=0.0))
+        # ax.set_xlim(_fix_limits(self.xlim, pad_factor=0.5))
+        # ax.set_ylim(_fix_limits(self.ylim, pad_factor=0.5))
+        # ax.autoscale_view(tight=False)
         ax.set_axisbelow(True)
         return ax
 
@@ -2231,13 +2236,13 @@ def make_graph(
             graph_info=graph_info,
         )
     if graph_type == "lat_layout":
-        return PlotLatticeLayoutGraph.from_tao(
+        return LatticeLayoutGraph.from_tao(
             tao,
             region_name=region_name,
             graph_name=graph_name,
             graph_info=graph_info,
         )
-    return PlotBasicGraph.from_tao(
+    return BasicGraph.from_tao(
         tao,
         region_name=region_name,
         graph_name=graph_name,
@@ -2245,12 +2250,15 @@ def make_graph(
     )
 
 
+AnyGraph = Union[BasicGraph, LatticeLayoutGraph, FloorPlanGraph]
+
+
 def plot_graph(
     tao: Tao,
     region_name: str,
     graph_name: str,
     ax: Optional[matplotlib.axes.Axes] = None,
-):
+) -> Tuple[matplotlib.axes.Axes, AnyGraph]:
     graph = make_graph(tao, region_name, graph_name)
 
     if ax is None:
@@ -2258,24 +2266,34 @@ def plot_graph(
         assert ax is not None
 
     graph.plot(ax)
+    # if isinstance(graph, (LatticeLayoutGraph, FloorPlanGraph)):
+    #     # TODO remove me
+    #     import rich
+    #
+    #     rich.print(graph)
+    #     plt.show()
     return ax, graph
 
 
-def plot_region(tao: Tao, region_name: str):
+def plot_region(tao: Tao, region_name: str) -> List[Tuple[matplotlib.axes.Axes, AnyGraph]]:
     fig = plt.figure()
 
     graph_names = get_graphs_in_region(tao, region_name=region_name)
 
     if not len(graph_names):
-        return
+        return []
 
     # gs = fig.add_gridspec(nrows=number_graphs, ncols=1, height_ratios=graph_heights)
     gs = fig.subplots(nrows=len(graph_names), ncols=1, sharex=True, squeeze=False)
 
+    graphs = []
     for ax, graph_name in zip(gs[:, 0], graph_names):
-        plot_graph(
-            tao=tao,
-            region_name=region_name,
-            graph_name=graph_name,
-            ax=ax,
+        graphs.append(
+            plot_graph(
+                tao=tao,
+                region_name=region_name,
+                graph_name=graph_name,
+                ax=ax,
+            )
         )
+    return graphs
