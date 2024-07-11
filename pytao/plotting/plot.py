@@ -192,6 +192,20 @@ PlotHistogramInfo = TypedDict(
     },
 )
 
+PlotLatLayoutInfo = TypedDict(
+    "PlotLatLayoutInfo",
+    {
+        "index": int,
+        "ele_s_start": float,
+        "ele_s": float,
+        "line_width": float,
+        "shape": str,
+        "y1": float,
+        "y2": float,
+        "color": str,
+        "label_name": str,
+    },
+)
 
 Point = Tuple[float, float]
 
@@ -219,6 +233,28 @@ def _should_use_symbol_color(symbol_type: str, fill_pattern: str) -> bool:
 
 
 @dataclasses.dataclass
+class PlotAnnotation:
+    x: float
+    y: float
+    text: str
+    horizontalalignment: str = "left"
+    verticalalignment: str = "baseline"
+    clip_on: bool = False
+    color: str = "black"
+
+    def plot(self, ax: matplotlib.axes.Axes):
+        return ax.text(
+            x=self.x,
+            y=self.y,
+            s=self.text,
+            horizontalalignment=self.horizontalalignment,
+            verticalalignment=self.verticalalignment,
+            clip_on=self.clip_on,
+            color=self.color,
+        )
+
+
+@dataclasses.dataclass
 class PlotCurveLine:
     xs: List[float]
     ys: List[float]
@@ -227,7 +263,6 @@ class PlotCurveLine:
     linewidth: float
 
     def plot(self, ax: matplotlib.axes.Axes):
-        print("plot lines", self.xs)
         return ax.plot(
             self.xs,
             self.ys,
@@ -340,7 +375,23 @@ class PlotPatchRectangle(PlotPatchBase):
 
 @dataclasses.dataclass
 class PlotPatchArc(PlotPatchBase):
-    pass
+    xy: Point = _point_field
+    width: float = 0.0
+    height: float = 0.0
+    angle: float = 0.0
+    theta1: float = 0.0
+    theta2: float = 360.0
+
+    def to_mpl(self) -> matplotlib.patches.Arc:
+        return matplotlib.patches.Arc(
+            xy=self.xy,
+            width=self.width,
+            height=self.height,
+            angle=self.angle,
+            theta1=self.theta1,
+            theta2=self.theta2,
+            **self._patch_args,
+        )
 
 
 @dataclasses.dataclass
@@ -350,7 +401,19 @@ class PlotPatchCircle(PlotPatchBase):
 
 @dataclasses.dataclass
 class PlotPatchEllipse(PlotPatchBase):
-    pass
+    xy: Point = _point_field
+    width: float = 0.0
+    height: float = 0.0
+    angle: float = 0.0
+
+    def to_mpl(self) -> matplotlib.patches.Ellipse:
+        return matplotlib.patches.Ellipse(
+            xy=self.xy,
+            width=self.width,
+            height=self.height,
+            angle=self.angle,
+            **self._patch_args,
+        )
 
 
 PlotPatch = Union[
@@ -664,11 +727,273 @@ class PlotBasicGraph:
         return ax
 
 
+@dataclasses.dataclass
+class LatticeLayoutElement:
+    info: PlotLatLayoutInfo
+    patches: List[PlotPatch]
+    lines: List[List[Point]]
+    annotations: List[PlotAnnotation]
+    color: str
+    width: float
+
+    def plot(self, ax: matplotlib.axes.Axes):
+        ax.add_collection(
+            matplotlib.collections.LineCollection(
+                self.lines,
+                colors=self.color,
+                linewidths=self.width,
+            )
+        )
+        for patch in self.patches:
+            patch.plot(ax)
+        for annotation in self.annotations:
+            annotation.plot(ax)
+
+    @classmethod
+    def from_info(cls, graph_info: PlotGraphInfo, info: PlotLatLayoutInfo, y2_floor: float):
+        s1 = info["ele_s_start"]
+        s2 = info["ele_s"]
+        y1 = info["y1"]
+        y2 = -info["y2"]  # Note negative sign.
+        width = info["line_width"]
+        color = info["color"]
+        shape = info["shape"]
+        name = info["label_name"]
+
+        patches = []
+        lines = []
+        annotations = []
+
+        # Normal case where element is not wrapped around ends of lattice.
+        if s2 - s1 > 0:
+            # Draw box element
+            box_patch = PlotPatchRectangle(
+                xy=(s1, y1),
+                width=s2 - s1,
+                height=y2 - y1,
+                linewidth=width,
+                color=color,
+                fill=False,
+            )
+            if shape == "box":
+                patches.append(box_patch)
+            elif shape == "xbox":
+                patches.append(box_patch)
+                lines.extend([[(s1, y1), (s2, y2)], [(s1, y2), (s2, y1)]])
+            elif shape == "x":
+                lines.extend([[(s1, y1), (s2, y2)], [(s1, y2), (s2, y1)]])
+            elif shape == "bow_tie":
+                lines.extend(
+                    [
+                        [(s1, y1), (s2, y2)],
+                        [(s1, y2), (s2, y1)],
+                        [(s1, y1), (s1, y2)],
+                        [(s2, y1), (s2, y2)],
+                    ]
+                )
+            elif shape == "rbow_tie":
+                lines.extend(
+                    [
+                        [(s1, y1), (s2, y2)],
+                        [(s1, y2), (s2, y1)],
+                        [(s1, y1), (s2, y1)],
+                        [(s1, y2), (s2, y2)],
+                    ]
+                )
+            elif shape == "diamond":
+                s_mid = (s1 + s2) / 2
+                lines.extend(
+                    [
+                        [(s1, 0), (s_mid, y1)],
+                        [(s1, 0), (s_mid, y2)],
+                        [(s2, 0), (s_mid, y1)],
+                        [(s2, 0), (s_mid, y2)],
+                    ]
+                )
+            elif shape == "circle":
+                s_mid = (s1 + s2) / 2
+                patches.append(
+                    PlotPatchEllipse(
+                        xy=(s_mid, 0),
+                        width=y1 - y2,
+                        height=y1 - y2,
+                        linewidth=width,
+                        color=color,
+                        fill=False,
+                    )
+                )
+
+            # Draw element name
+            annotations.append(
+                PlotAnnotation(
+                    x=(s1 + s2) / 2,
+                    y=1.1 * y2_floor,
+                    text=name,
+                    horizontalalignment="center",
+                    verticalalignment="top",
+                    clip_on=True,
+                    color=color,
+                )
+            )
+
+        else:
+            # Case where element is wrapped round the lattice ends.
+            s_min = graph_info["x_min"]
+            s_max = graph_info["x_max"]
+
+            for xs, ys in _get_wrapped_shape_coords(
+                shape=shape,
+                s1=s1,
+                s2=s2,
+                y1=y1,
+                y2=y2,
+                s_min=s_min,
+                s_max=s_max,
+            ):
+                lines.append(list(zip(xs, ys)))
+
+            # Draw wrapped element name
+            annotations.append(
+                PlotAnnotation(
+                    x=s_max,
+                    y=1.1 * y2_floor,
+                    text=name,
+                    horizontalalignment="right",
+                    verticalalignment="top",
+                    clip_on=True,
+                    color=color,
+                )
+            )
+            annotations.append(
+                PlotAnnotation(
+                    x=s_min,
+                    y=1.1 * y2_floor,
+                    text=name,
+                    horizontalalignment="left",
+                    verticalalignment="top",
+                    clip_on=True,
+                    color=color,
+                )
+            )
+        return cls(
+            info=info,
+            patches=patches,
+            lines=lines,
+            color=color,
+            width=width,
+            annotations=annotations,
+        )
+
+
+@dataclasses.dataclass
+class PlotLatticeLayoutGraph:
+    graph_info: PlotGraphInfo
+    elements: List[LatticeLayoutElement]
+    xlim: Point
+    ylim: Point
+    border_xlim: Point
+    universe: int
+    branch: int
+    y2_floor: float
+
+    def plot(self, ax: Optional[matplotlib.axes.Axes] = None):
+        if ax is None:
+            _, ax = plt.subplots()
+        assert ax is not None
+
+        twin_ax = ax.twinx()
+
+        ax.set_axis_off()
+        twin_ax.set_axis_off()
+
+        ax.set_navigate(False)
+        twin_ax.set_navigate(True)
+        ax.axhline(
+            y=0,
+            xmin=1.1 * self.graph_info["x_min"],
+            xmax=1.1 * self.graph_info["x_max"],
+            color="Black",
+        )
+
+        for elem in self.elements:
+            elem.plot(ax)
+
+        # Invisible line to give the lat layout enough vertical space.
+        # Without this, the tops and bottoms of shapes could be cut off
+        y_max = self.y_max
+        ax.plot([0, 0], [-1.7 * y_max, 1.3 * y_max], alpha=0)
+
+    @property
+    def y_max(self) -> float:
+        ele_y1s = [elem.info["y1"] for elem in self.elements]
+        ele_y2s = [elem.info["y2"] for elem in self.elements]
+        return max(max(ele_y1s), max(ele_y2s))
+
+    @classmethod
+    def from_tao(
+        cls,
+        tao: Tao,
+        region_name: str = "lat_layout",
+        graph_name: str = "g",
+        branch: Optional[int] = None,
+        graph_info: Optional[PlotGraphInfo] = None,
+    ) -> PlotLatticeLayoutGraph:
+        if graph_info is None:
+            graph_info = tao.plot_graph(f"{region_name}.{graph_name}")
+            assert graph_info is not None
+
+        graph_type = graph_info["graph^type"]
+        if graph_type != "lat_layout":
+            raise ValueError(f"Incorrect graph type: {graph_type} for {cls.__name__}")
+
+        universe = 1 if graph_info["ix_universe"] == -1 else graph_info["ix_universe"]
+        branch = graph_info["-1^ix_branch"]
+        try:
+            all_elem_info = tao.plot_lat_layout(ix_uni=universe, ix_branch=branch)
+        except RuntimeError as ex:
+            if branch != -1:
+                raise
+
+            logger.warning(
+                f"Lat layout failed for universe={universe} branch={branch}; trying branch 0"
+            )
+            try:
+                all_elem_info = tao.plot_lat_layout(ix_uni=universe, ix_branch=0)
+            except RuntimeError:
+                print(f"Failed to plot layout: {ex}")
+                raise
+
+        all_elem_info = cast(List[PlotLatLayoutInfo], all_elem_info)
+
+        ele_y2s = [info["y2"] for info in all_elem_info]
+        y2_floor = -max(ele_y2s)  # Note negative sign
+
+        elements = [
+            LatticeLayoutElement.from_info(
+                graph_info=graph_info,
+                info=info,
+                y2_floor=y2_floor,
+            )
+            for info in all_elem_info
+        ]
+
+        return cls(
+            graph_info=graph_info,
+            xlim=(graph_info["x_min"], graph_info["x_max"]),
+            ylim=(graph_info["y_min"], graph_info["y_max"]),
+            border_xlim=(1.1 * graph_info["x_min"], 1.1 * graph_info["x_max"]),
+            universe=universe,
+            branch=branch,
+            y2_floor=y2_floor,
+            elements=elements,
+        )
+
+
 def plot_normal_graph(
     tao: Tao,
     region_name: str,
     graph_name: str,
-    graph_info: Optional[dict] = None,
+    graph_info: Optional[PlotGraphInfo] = None,
     ax: Optional[matplotlib.axes.Axes] = None,
 ) -> PlotBasicGraph:
     result_graph = PlotBasicGraph.from_tao(
@@ -693,282 +1018,74 @@ def _get_wrapped_shape_coords(
 ):
     """Case where element is wrapped round the lattice ends."""
     if shape == "box":
-        yield [s1, s_max], [y1, y1]
-        yield [s1, s_max], [y2, y2]
-        yield [s_min, s2], [y1, y1]
-        yield [s_min, s2], [y2, y2]
-        yield [s1, s1], [y1, y2]
-        yield [s2, s2], [y1, y2]
+        return [
+            ([s1, s_max], [y1, y1]),
+            ([s1, s_max], [y2, y2]),
+            ([s_min, s2], [y1, y1]),
+            ([s_min, s2], [y2, y2]),
+            ([s1, s1], [y1, y2]),
+            ([s2, s2], [y1, y2]),
+        ]
 
-    elif shape == "xbox":
-        yield [s1, s_max], [y1, y1]
-        yield [s1, s_max], [y2, y2]
-        yield [s1, s_max], [y1, 0]
-        yield [s1, s_max], [y2, 0]
-        yield [s_min, s2], [y1, y1]
-        yield [s_min, s2], [y2, y2]
-        yield [s_min, s2], [0, y1]
-        yield [s_min, s2], [0, y2]
-        yield [s1, s1], [y1, y2]
-        yield [s2, s2], [y1, y2]
+    if shape == "xbox":
+        return [
+            ([s1, s_max], [y1, y1]),
+            ([s1, s_max], [y2, y2]),
+            ([s1, s_max], [y1, 0]),
+            ([s1, s_max], [y2, 0]),
+            ([s_min, s2], [y1, y1]),
+            ([s_min, s2], [y2, y2]),
+            ([s_min, s2], [0, y1]),
+            ([s_min, s2], [0, y2]),
+            ([s1, s1], [y1, y2]),
+            ([s2, s2], [y1, y2]),
+        ]
 
-    elif shape == "x":
-        yield [s1, s_max], [y1, 0]
-        yield [s1, s_max], [y2, 0]
-        yield [s_min, s2], [0, y1]
-        yield [s_min, s2], [0, y2]
+    if shape == "x":
+        return [
+            ([s1, s_max], [y1, 0]),
+            ([s1, s_max], [y2, 0]),
+            ([s_min, s2], [0, y1]),
+            ([s_min, s2], [0, y2]),
+        ]
 
-    elif shape == "bow_tie":
-        yield [s1, s_max], [y1, y1]
-        yield [s1, s_max], [y2, y2]
-        yield [s1, s_max], [y1, 0]
-        yield [s1, s_max], [y2, 0]
-        yield [s_min, s2], [y1, y1]
-        yield [s_min, s2], [y2, y2]
-        yield [s_min, s2], [0, y1]
-        yield [s_min, s2], [0, y2]
+    if shape == "bow_tie":
+        return [
+            ([s1, s_max], [y1, y1]),
+            ([s1, s_max], [y2, y2]),
+            ([s1, s_max], [y1, 0]),
+            ([s1, s_max], [y2, 0]),
+            ([s_min, s2], [y1, y1]),
+            ([s_min, s2], [y2, y2]),
+            ([s_min, s2], [0, y1]),
+            ([s_min, s2], [0, y2]),
+        ]
 
-    elif shape == "diamond":
-        yield [s1, s_max], [0, y1]
-        yield [s1, s_max], [0, y2]
-        yield [s_min, s2], [y1, 0]
-        yield [s_min, s2], [y2, 0]
+    if shape == "diamond":
+        return [
+            ([s1, s_max], [0, y1]),
+            ([s1, s_max], [0, y2]),
+            ([s_min, s2], [y1, 0]),
+            ([s_min, s2], [y2, 0]),
+        ]
+
+    logger.warning("Unsupported shape: {shape}")
+    return []
 
 
 def plot_lat_layout(
     tao: Tao,
     region_name: str,
     graph_name: str,
-    graph_info: Optional[dict] = None,
+    graph_info: Optional[PlotGraphInfo] = None,
     ax: Optional[matplotlib.axes.Axes] = None,
 ):
-    if graph_info is None:
-        graph_info = tao.plot_graph(f"{region_name}.{graph_name}")
-        assert graph_info is not None
-
-    if ax is None:
-        _, ax = plt.subplots()
-        assert ax is not None
-
-    # List of parameter strings from tao command python plot_graph
-    layout_info = tao.plot_graph("lat_layout.g")
-
-    # Makes lat layout only have horizontal axis for panning and zooming
-    twin_ax = ax.axes.twinx()
-    plt.xlim(graph_info["x_min"], graph_info["x_max"])
-    plt.ylim(
-        layout_info["y_min"],
-        layout_info["y_max"],
+    graph = PlotLatticeLayoutGraph.from_tao(
+        tao,
+        region_name=region_name,
+        graph_name=graph_name,
     )
-    twin_ax.set_navigate(True)
-    ax.axis("off")
-    twin_ax.axis("off")
-
-    # Sets axis limits and creates second axis to allow x panning and zooming
-    ax.axes.set_navigate(False)
-    ax.axhline(
-        y=0,
-        xmin=1.1 * layout_info["x_min"],
-        xmax=1.1 * layout_info["x_max"],
-        color="Black",
-    )
-
-    # Lat layout branch and universe information
-    if layout_info["ix_universe"] != -1:
-        universe = layout_info["ix_universe"]
-    else:
-        universe = 1
-    branch = layout_info["-1^ix_branch"]
-
-    # List of strings containing information about each element
-    try:
-        all_elem_info = tao.plot_lat_layout(ix_uni=universe, ix_branch=branch)
-    except RuntimeError as ex:
-        if branch != -1:
-            raise
-
-        logger.warning(
-            f"Lat layout failed for universe={universe} branch={branch}; trying branch 0"
-        )
-        try:
-            all_elem_info = tao.plot_lat_layout(ix_uni=universe, ix_branch=0)
-        except RuntimeError:
-            print(f"Failed to plot layout: {ex}")
-            raise
-
-    # Plotting line segments one-by-one can be slow if there are thousands of lattice elements.
-    # So keep a list of line segments and plot all at once at the end.
-
-    ele_y1s = [elem_info["y1"] for elem_info in all_elem_info]
-    ele_y2s = [elem_info["y2"] for elem_info in all_elem_info]
-
-    y_max = max(max(ele_y1s), max(ele_y2s))
-    y2_floor = -max(ele_y2s)  # Note negative sign
-    lines = []
-    widths = []
-    colors = []
-
-    for elem_info in all_elem_info:
-        s1 = elem_info["ele_s_start"]
-        s2 = elem_info["ele_s"]
-        y1 = elem_info["y1"]
-        y2 = -elem_info["y2"]  # Note negative sign.
-        wid = elem_info["line_width"]
-        color = elem_info["color"]
-        shape = elem_info["shape"]
-        name = elem_info["label_name"]
-
-        # Normal case where element is not wrapped around ends of lattice.
-        if s2 - s1 > 0:
-            # Draw box element
-            if shape == "box":
-                ax.add_patch(
-                    matplotlib.patches.Rectangle(
-                        (s1, y1),
-                        s2 - s1,
-                        y2 - y1,
-                        lw=wid,
-                        color=color,
-                        fill=False,
-                    )
-                )
-
-            # Draw xbox element
-            elif shape == "xbox":
-                ax.add_patch(
-                    matplotlib.patches.Rectangle(
-                        (s1, y1),
-                        s2 - s1,
-                        y2 - y1,
-                        lw=wid,
-                        color=color,
-                        fill=False,
-                    )
-                )
-                lines.extend([[(s1, y1), (s2, y2)], [(s1, y2), (s2, y1)]])
-                colors.extend([color, color])
-                widths.extend([wid, wid])
-
-            # Draw x element
-            elif shape == "x":
-                lines.extend([[(s1, y1), (s2, y2)], [(s1, y2), (s2, y1)]])
-                colors.extend([color, color])
-                widths.extend([wid, wid])
-
-            # Draw bow_tie element
-            elif shape == "bow_tie":
-                lines.extend(
-                    [
-                        [(s1, y1), (s2, y2)],
-                        [(s1, y2), (s2, y1)],
-                        [(s1, y1), (s1, y2)],
-                        [(s2, y1), (s2, y2)],
-                    ]
-                )
-                colors.extend([color, color, color, color])
-                widths.extend([wid, wid, wid, wid])
-
-            # Draw rbow_tie element
-            elif shape == "rbow_tie":
-                lines.extend(
-                    [
-                        [(s1, y1), (s2, y2)],
-                        [(s1, y2), (s2, y1)],
-                        [(s1, y1), (s2, y1)],
-                        [(s1, y2), (s2, y2)],
-                    ]
-                )
-                colors.extend([color, color, color, color])
-                widths.extend([wid, wid, wid, wid])
-
-            # Draw diamond element
-            elif shape == "diamond":
-                s_mid = (s1 + s2) / 2
-                lines.extend(
-                    [
-                        [(s1, 0), (s_mid, y1)],
-                        [(s1, 0), (s_mid, y2)],
-                        [(s2, 0), (s_mid, y1)],
-                        [(s2, 0), (s_mid, y2)],
-                    ]
-                )
-                colors.extend([color, color, color, color])
-                widths.extend([wid, wid, wid, wid])
-
-            # Draw circle element
-            elif shape == "circle":
-                s_mid = (s1 + s2) / 2
-                ax.add_patch(
-                    matplotlib.patches.Ellipse(
-                        (s_mid, 0),
-                        y1 - y2,
-                        y1 - y2,
-                        lw=wid,
-                        color=color,
-                        fill=False,
-                    )
-                )
-
-            # Draw element name
-            ax.text(
-                (s1 + s2) / 2,
-                1.1 * y2_floor,
-                name,
-                ha="center",
-                va="top",
-                clip_on=True,
-                color=color,
-            )
-
-        else:
-            # Case where element is wrapped round the lattice ends.
-            try:
-                s_min = layout_info["x_min"]
-                s_max = layout_info["x_max"]
-            except KeyError:
-                logger.exception("Missing xmin/xmax")
-                continue
-
-            # Draw wrapped box element
-            for xs, ys in _get_wrapped_shape_coords(
-                shape=shape,
-                s1=s1,
-                s2=s2,
-                y1=y1,
-                y2=y2,
-                s_min=s_min,
-                s_max=s_max,
-            ):
-                ax.plot(xs, ys, lw=wid, color=color)
-
-            # Draw wrapped element name
-            ax.text(
-                s_max,
-                1.1 * y2_floor,
-                name,
-                ha="right",
-                va="top",
-                clip_on=True,
-                color=color,
-            )
-            ax.text(
-                s_min,
-                1.1 * y2_floor,
-                name,
-                ha="left",
-                va="top",
-                clip_on=True,
-                color=color,
-            )
-
-    # Draw all line segments
-    ax.add_collection(
-        matplotlib.collections.LineCollection(lines, colors=colors, linewidths=widths)
-    )
-
-    # Invisible line to give the lat layout enough vertical space.
-    # Without this, the tops and bottoms of shapes could be cut off
-    ax.plot([0, 0], [-1.7 * y_max, 1.3 * y_max], lw=wid, color=color, alpha=0)
+    graph.plot(ax=ax)
 
 
 def _building_wall_to_arc(
@@ -1191,7 +1308,7 @@ def _circle_to_patch(
     return matplotlib.patches.Circle(
         (x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2),
         off1,
-        lw=line_width,
+        linewidth=line_width,
         color=color,
         fill=False,
     )
@@ -1215,7 +1332,7 @@ def _box_to_patch(
         ),
         np.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2),
         off1 + off2,
-        lw=line_width,
+        linewidth=line_width,
         color=color,
         fill=False,
         angle=math.degrees(angle_start),
@@ -1243,7 +1360,7 @@ def _draw_x_lines(
             y1 - off2 * np.cos(angle_start),
             y2 + off1 * np.cos(angle_start),
         ],
-        lw=line_width,
+        linewidth=line_width,
         color=color,
     )
     ax.plot(
@@ -1255,7 +1372,7 @@ def _draw_x_lines(
             y1 + off1 * np.cos(angle_start),
             y2 - off2 * np.cos(angle_start),
         ],
-        lw=line_width,
+        linewidth=line_width,
         color=color,
     )
 
@@ -1284,7 +1401,7 @@ def _draw_sbend_box(
             y1 + off1 * np.cos(angle_start - rel_angle_start),
             y1 - off2 * np.cos(angle_start - rel_angle_start),
         ],
-        lw=line_width,
+        linewidth=line_width,
         color=color,
     )
     ax.plot(
@@ -1296,7 +1413,7 @@ def _draw_sbend_box(
             y2 + off1 * np.cos(angle_end + rel_angle_end),
             y2 - off2 * np.cos(angle_end + rel_angle_end),
         ],
-        lw=line_width,
+        linewidth=line_width,
         color=color,
     )
 
@@ -1367,7 +1484,7 @@ def _draw_sbend(
                 y1 + off1 * np.cos(angle_start - rel_angle_start),
                 y2 + off1 * np.cos(angle_end + rel_angle_end),
             ],
-            lw=line_width,
+            linewidth=line_width,
             color=color,
         )
         ax.plot(
@@ -1379,7 +1496,7 @@ def _draw_sbend(
                 y1 - off2 * np.cos(angle_start - rel_angle_start),
                 y2 - off2 * np.cos(angle_end + rel_angle_end),
             ],
-            lw=line_width,
+            linewidth=line_width,
             color=color,
         )
 
@@ -1444,7 +1561,7 @@ def _draw_sbend(
                 * 2,
                 theta1=a1,
                 theta2=a2,
-                lw=line_width,
+                linewidth=line_width,
                 color=color,
             )
         )
@@ -1465,7 +1582,7 @@ def _draw_sbend(
                 * 2,
                 theta1=a3,
                 theta2=a4,
-                lw=line_width,
+                linewidth=line_width,
                 color=color,
             )
         )
@@ -1580,7 +1697,7 @@ def _draw_bow_tie(
             y1 - off2 * np.cos(angle_start),
             y2 + off1 * np.cos(angle_start),
         ],
-        lw=line_width,
+        linewidth=line_width,
         color=color,
     )
     ax.plot(
@@ -1592,7 +1709,7 @@ def _draw_bow_tie(
             y1 + off1 * np.cos(angle_start),
             y2 - off2 * np.cos(angle_start),
         ],
-        lw=line_width,
+        linewidth=line_width,
         color=color,
     )
     ax.plot(
@@ -1604,7 +1721,7 @@ def _draw_bow_tie(
             y1 + off1 * np.cos(angle_start),
             y2 + off1 * np.cos(angle_start),
         ],
-        lw=line_width,
+        linewidth=line_width,
         color=color,
     )
     ax.plot(
@@ -1616,7 +1733,7 @@ def _draw_bow_tie(
             y1 - off2 * np.cos(angle_start),
             y2 - off2 * np.cos(angle_start),
         ],
-        lw=line_width,
+        linewidth=line_width,
         color=color,
     )
 
@@ -1636,25 +1753,25 @@ def _draw_diamond(
     ax.plot(
         [x1, x1 + (x2 - x1) / 2 - off1 * np.sin(angle_start)],
         [y1, y1 + (y2 - y1) / 2 + off1 * np.cos(angle_start)],
-        lw=line_width,
+        linewidth=line_width,
         color=color,
     )
     ax.plot(
         [x1 + (x2 - x1) / 2 - off1 * np.sin(angle_start), x2],
         [y1 + (y2 - y1) / 2 + off1 * np.cos(angle_start), y2],
-        lw=line_width,
+        linewidth=line_width,
         color=color,
     )
     ax.plot(
         [x1, x1 + (x2 - x1) / 2 + off2 * np.sin(angle_start)],
         [y1, y1 + (y2 - y1) / 2 - off2 * np.cos(angle_start)],
-        lw=line_width,
+        linewidth=line_width,
         color=color,
     )
     ax.plot(
         [x1 + (x2 - x1) / 2 + off2 * np.sin(angle_start), x2],
         [y1 + (y2 - y1) / 2 - off2 * np.cos(angle_start), y2],
-        lw=line_width,
+        linewidth=line_width,
         color=color,
     )
 
@@ -1697,7 +1814,7 @@ def plot_floor_plan_element(
 
     if off1 == 0 and off2 == 0 and ele_key != "sbend" and color:
         # draw line element
-        ax.plot([x1, x2], [y1, y2], lw=line_width, color=color)
+        ax.plot([x1, x2], [y1, y2], linewidth=line_width, color=color)
 
     elif shape == "box" and ele_key != "sbend" and color:
         ax.add_patch(
@@ -1821,8 +1938,8 @@ def plot_floor_plan_element(
             x1 + (x2 - x1) / 2 - 1.3 * off1 * np.sin(angle_start),
             y1 + (y2 - y1) / 2 + 1.3 * off1 * np.cos(angle_start),
             label_name,
-            ha="right",
-            va="center",
+            horizontalalignment="right",
+            verticalalignment="center",
             color="black",
             rotation=-90 + math.degrees((angle_end + angle_start) / 2),
             clip_on=True,
@@ -1834,8 +1951,8 @@ def plot_floor_plan_element(
             x1 + (x2 - x1) / 2 - 1.3 * off1 * np.sin(angle_start),
             y1 + (y2 - y1) / 2 + 1.3 * off1 * np.cos(angle_start),
             label_name,
-            ha="left",
-            va="center",
+            horizontalalignment="left",
+            verticalalignment="center",
             color="black",
             rotation=90 + math.degrees((angle_end + angle_start) / 2),
             clip_on=True,
