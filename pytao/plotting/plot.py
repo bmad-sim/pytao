@@ -1,66 +1,446 @@
-import math
+from __future__ import annotations
 import logging
-from typing import Optional
-import numpy as np
-import matplotlib.pyplot as plt
+import math
+from typing import List, Optional, Tuple, TypedDict, Union, cast
+
 import matplotlib.axes
 import matplotlib.collections
 import matplotlib.patches
 import matplotlib.path
-
+import matplotlib.pyplot as plt
+import numpy as np
 from pytao import Tao
 
 from . import pgplot, util
 
+import pydantic.dataclasses as dataclasses
+from pydantic.dataclasses import Field
 
 logger = logging.getLogger(__name__)
 
 
-def plot_normal_graph(
-    tao: Tao,
-    region_name: str,
-    graph_name: str,
-    graph_info: Optional[dict] = None,
-    ax: Optional[matplotlib.axes.Axes] = None,
-):
-    # Graph "region.graph" full name, EG: "r13.g" or "top.x"
-    graph_full_name = f"{region_name}.{graph_name}"
+class NoCurveDataError(Exception):
+    pass
 
-    if graph_info is None:
-        graph_info = tao.plot_graph(f"{region_name}.{graph_name}")
-        assert graph_info is not None
 
-    if ax is None:
-        _, ax = plt.subplots()
-        assert ax is not None
+WaveParams = TypedDict(
+    "WaveParams",
+    {
+        "ix_a1": float,
+        "ix_a2": float,
+        "ix_b1": float,
+        "ix_b2": float,
+    },
+)
 
-    # List of curve names
-    all_curve_names = [graph_info[f"curve[{i + 1}]"] for i in range(graph_info["num_curves"])]
+PlotCurveLineInfo = TypedDict(
+    "PlotCurveLineInfo",
+    {
+        "width": int,
+        "color": str,
+        "line^pattern": str,
+    },
+)
 
-    # List of curve parameters.
-    curve_infos = [tao.plot_curve(graph_full_name + "." + i) for i in all_curve_names]
+PlotCurveSymbolInfo = TypedDict(
+    "PlotCurveSymbolInfo",
+    {
+        "symbol^type": str,
+        "color": str,
+        "height": float,
+        "fill_pattern": str,
+        "line_width": int,
+    },
+)
+PlotCurveInfo = TypedDict(
+    "PlotCurveInfo",
+    {
+        "name": str,
+        "data_source": str,
+        "data_type_x": str,
+        "data_type": str,
+        "component": str,
+        "ele_ref_name": str,
+        "legend_text": str,
+        "message_text": str,
+        "why_invalid": str,
+        "y_axis_scale_factor": float,
+        "ix_universe": int,
+        "symbol_every": int,
+        "-1^ix_branch": int,
+        "ix_ele_ref": int,
+        "ix_ele_ref_track": int,
+        "-1^ix_bunch": int,
+        "use_y2": bool,
+        "draw_line": bool,
+        "draw_symbols": bool,
+        "draw_symbol_index": bool,
+        "draw_error_bars": bool,
+        "smooth_line_calc": bool,
+        "z_color_is_on": bool,
+        "z_color_min": float,
+        "z_color_max": float,
+        "z_color_autoscale": bool,
+        "z_color_data_type": str,
+        "valid": bool,
+        "line": PlotCurveLineInfo,
+        "symbol": PlotCurveSymbolInfo,
+        "symbol_line_width": int,
+    },
+)
 
-    histogram_infos = [tao.plot_histogram(f"{graph_full_name}.{i}") for i in all_curve_names]
 
-    # Plot Data
+PlotGraphInfo = TypedDict(
+    "PlotGraphInfo",
+    {
+        # "curve[1..N]": str,
+        "num_curves": int,
+        "name": str,
+        "graph^type": str,
+        "title": str,
+        "title_suffix": str,
+        "why_invalid": str,
+        "x_axis_scale_factor": float,
+        "symbol_size_scale": float,
+        "-1^ix_branch": int,
+        "ix_universe": int,
+        "clip": bool,
+        "is_valid": bool,
+        "y2_mirrors_y": bool,
+        "limited": bool,
+        "draw_axes": bool,
+        "draw_curve_legend": bool,
+        "draw_grid": bool,
+        "draw_only_good_user_data_or_vars": bool,
+        "floor_plan_view": str,
+        "floor_plan_rotation": float,
+        "floor_plan_flip_label_side": bool,
+        "floor_plan_size_is_absolute": bool,
+        "floor_plan_draw_building_wall": bool,
+        "floor_plan_draw_only_first_pass": bool,
+        "floor_plan_correct_distortion": bool,
+        "floor_plan_orbit_scale": float,
+        "floor_plan_orbit_color": str,
+        "floor_plan_orbit_lattice": str,
+        "floor_plan_orbit_width": int,
+        "floor_plan_orbit_pattern": str,
+        "x_label": str,
+        "x_label_color": str,
+        "x_label_offset": float,
+        "x_max": float,
+        "x_min": float,
+        "x_axis^type": str,
+        "x_bounds": str,
+        "x_number_offset": float,
+        "x_major_div_nominal": int,
+        "x_minor_div": int,
+        "x_minor_div_max": int,
+        "x_draw_label": bool,
+        "x_draw_numbers": bool,
+        "x_tick_side": int,
+        "x_number_side": int,
+        "x_major_tick_len": float,
+        "x_minor_tick_len": float,
+        "y_label": str,
+        "y_label_color": str,
+        "y_label_offset": float,
+        "y_max": float,
+        "y_min": float,
+        "y_axis^type": str,
+        "y_bounds": str,
+        "y_number_offset": float,
+        "y_major_div_nominal": int,
+        "y_minor_div": int,
+        "y_minor_div_max": int,
+        "y_draw_label": bool,
+        "y_draw_numbers": bool,
+        "y_tick_side": int,
+        "y_number_side": int,
+        "y_major_tick_len": float,
+        "y_minor_tick_len": float,
+        "y2_label": str,
+        "y2_label_color": str,
+        "y2_label_offset": float,
+        "y2_max": float,
+        "y2_min": float,
+        "y2_axis^type": str,
+        "y2_bounds": str,
+        "y2_number_offset": float,
+        "y2_major_div_nominal": int,
+        "y2_minor_div": int,
+        "y2_minor_div_max": int,
+        "y2_draw_label": bool,
+        "y2_draw_numbers": bool,
+        "y2_tick_side": int,
+        "y2_number_side": int,
+        "y2_major_tick_len": float,
+        "y2_minor_tick_len": float,
+    },
+)
 
-    # List of data needed to plot line and symbol graphs
-    # Includes points, and line and symbol information for each curve
-    line_list = []
-    for i, curve_info in enumerate(curve_infos):
-        curve_name = curve_info["name"]
+
+PlotHistogramInfo = TypedDict(
+    "PlotHistogramInfo",
+    {
+        "density_normalized": bool,
+        "weight_by_charge": bool,
+        "minimum": float,
+        "maximum": float,
+        "width": float,
+        "center": float,
+        "number": float,
+    },
+)
+
+
+Point = Tuple[float, float]
+
+
+def print_info(d):
+    print({key: type(value).__name__ for key, value in d.items()})
+    for key, value in d.items():
+        if isinstance(value, dict):
+            print(key, "->")
+            print_info(value)
+
+
+def _should_use_symbol_color(symbol_type: str, fill_pattern: str) -> bool:
+    if (
+        symbol_type in ("dot", "1")
+        or symbol_type.endswith("filled")
+        or symbol_type.startswith("-")
+    ):
+        return True
+
+    if pgplot.fills[fill_pattern] == "solid":
+        return True
+
+    return False
+
+
+@dataclasses.dataclass
+class PlotCurveLine:
+    xs: List[float]
+    ys: List[float]
+    color: str
+    linestyle: str
+    linewidth: float
+
+    def plot(self, ax: matplotlib.axes.Axes):
+        print("plot lines", self.xs)
+        return ax.plot(
+            self.xs,
+            self.ys,
+            color=self.color,
+            linestyle=self.linestyle,
+            linewidth=self.linewidth,
+        )
+
+
+@dataclasses.dataclass
+class PlotCurveSymbols:
+    xs: List[float]
+    ys: List[float]
+    color: str
+    markerfacecolor: str
+    markersize: float
+    marker: str
+    markeredgewidth: float
+    linewidth: float = 0
+
+    def plot(self, ax: matplotlib.axes.Axes):
+        return ax.plot(
+            self.xs,
+            self.ys,
+            color=self.color,
+            markerfacecolor=self.markerfacecolor,
+            markersize=self.markersize,
+            marker=self.marker,
+            markeredgewidth=self.markeredgewidth,
+            linewidth=self.linewidth,
+        )
+
+
+@dataclasses.dataclass
+class PlotHistogram:
+    xs: List[float]
+    bins: float
+    weights: List[float]
+    histtype: str
+    color: str
+
+    def plot(self, ax: matplotlib.axes.Axes) -> None:
+        return ax.hist(
+            self.xs,
+            bins=self.bins,
+            weights=self.weights,
+            histtype=self.histtype,
+            color=self.color,
+        )
+
+
+@dataclasses.dataclass
+class PlotPatchBase:
+    edgecolor: Optional[str] = None
+    facecolor: Optional[str] = None
+    color: Optional[str] = None
+    linewidth: Optional[float] = None
+    linestyle: Optional[str] = None
+    antialiased: Optional[bool] = None
+    hatch: Optional[str] = None
+    fill: bool = True
+    capstyle: Optional[str] = None
+    joinstyle: Optional[str] = None
+
+    @property
+    def _patch_args(self):
+        return {
+            "edgecolor": self.edgecolor,
+            "facecolor": self.facecolor,
+            "color": self.color,
+            "linewidth": self.linewidth,
+            "linestyle": self.linestyle,
+            "antialiased": self.antialiased,
+            "hatch": self.hatch,
+            "fill": self.fill,
+            "capstyle": self.capstyle,
+            "joinstyle": self.joinstyle,
+        }
+
+    def to_mpl(self):
+        raise NotImplementedError(type(self))
+
+    def plot(self, ax: matplotlib.axes.Axes):
+        mpl = self.to_mpl()
+        ax.add_patch(mpl)
+        return mpl
+
+
+_point_field = Field(default_factory=lambda: (0.0, 0.0))
+
+
+@dataclasses.dataclass
+class PlotPatchRectangle(PlotPatchBase):
+    xy: Point = _point_field
+    width: float = 0.0
+    height: float = 0.0
+    angle: float = 0.0
+    rotation_point: str = "xy"
+
+    def to_mpl(self) -> matplotlib.patches.Rectangle:
+        return matplotlib.patches.Rectangle(
+            xy=self.xy,
+            width=self.width,
+            height=self.height,
+            angle=self.angle,
+            rotation_point=self.rotation_point,
+            **self._patch_args,
+        )
+
+
+@dataclasses.dataclass
+class PlotPatchArc(PlotPatchBase):
+    pass
+
+
+@dataclasses.dataclass
+class PlotPatchCircle(PlotPatchBase):
+    pass
+
+
+@dataclasses.dataclass
+class PlotPatchEllipse(PlotPatchBase):
+    pass
+
+
+PlotPatch = Union[
+    PlotPatchRectangle,
+    PlotPatchArc,
+    PlotPatchCircle,
+    PlotPatchEllipse,
+]
+
+
+@dataclasses.dataclass
+class PlotCurve:
+    info: PlotCurveInfo
+    line: Optional[PlotCurveLine]
+    symbol: Optional[PlotCurveSymbols]
+    histogram: Optional[PlotHistogram] = None
+    patches: Optional[List[PlotPatch]] = None
+
+    def plot(self, ax: matplotlib.axes.Axes) -> None:
+        if self.line is not None:
+            self.line.plot(ax)
+        if self.symbol is not None:
+            self.symbol.plot(ax)
+        if self.histogram is not None:
+            self.histogram.plot(ax)
+        for patch in self.patches or []:
+            patch.plot(ax)
+
+    @property
+    def legend_label(self) -> str:
+        legend_text = pgplot.mpl_string(self.info["legend_text"])
+        if legend_text:
+            return legend_text
+
+        data_type = pgplot.mpl_string(self.info["data_type"])
+        return data_type if data_type == "physical_aperture" else ""
+
+    @classmethod
+    def from_tao(
+        cls,
+        tao: Tao,
+        region_name: str,
+        graph_name: str,
+        curve_name: str,
+        graph_type: Optional[str] = None,
+    ) -> PlotCurve:
+        full_name = f"{region_name}.{graph_name}.{curve_name}"
+        curve_info = cast(PlotCurveInfo, tao.plot_curve(full_name))
         points = [
             (line["x"], line["y"])
-            for line in tao.plot_line(region_name, graph_name, curve_name)
+            for line in tao.plot_line(region_name, graph_name, curve_name) or []
         ]
         try:
-            symbols = [
+            symbol_points = [
                 (sym["x_symb"], sym["y_symb"])
                 for sym in tao.plot_symbol(region_name, graph_name, curve_name, x_or_y="")
+                or []
             ]
         except RuntimeError:
-            symbols = []
+            symbol_points = []
 
+        if graph_type is None:
+            graph_info = cast(PlotGraphInfo, tao.plot_graph(f"{region_name}.{graph_name}"))
+            graph_type = graph_info["graph^type"]
+
+        if graph_type == "histogram":
+            histogram_info = cast(PlotHistogramInfo, tao.plot_histogram(full_name))
+        else:
+            histogram_info = None
+
+        wave_params = cast(WaveParams, tao.wave("params"))
+        return cls.from_info(
+            graph_type=graph_type,
+            curve_info=curve_info,
+            points=points,
+            symbol_points=symbol_points,
+            histogram_info=histogram_info,
+            wave_params=wave_params,
+        )
+
+    @classmethod
+    def from_info(
+        cls,
+        graph_type: str,
+        curve_info: PlotCurveInfo,
+        points: List[Point],
+        symbol_points: List[Point],
+        histogram_info: Optional[PlotHistogramInfo] = None,
+        wave_params: Optional[WaveParams] = None,
+    ) -> PlotCurve:
         line_color = pgplot.mpl_color(curve_info["line"]["color"])
         # TODO: line^pattern typo?
         line_style = pgplot.styles[curve_info["line"]["line^pattern"].lower()]
@@ -73,20 +453,15 @@ def plot_normal_graph(
         # TODO: symbol^type typo?
         symbol_info = curve_info["symbol"]
         symbol_type = symbol_info["symbol^type"]
-        if (
-            symbol_type in ("dot", "1")
-            or symbol_type.endswith("filled")
-            or symbol_type.startswith("-")
-        ):  # determine if symbol should be filled
-            marker_color = curve_info["symbol"]["color"]
-        elif pgplot.fills[symbol_info["fill_pattern"]] == "solid":
-            marker_color = curve_info["symbol"]["color"]
+        if _should_use_symbol_color(
+            symbol_type=symbol_type,
+            fill_pattern=symbol_info["fill_pattern"],
+        ):
+            marker_color = symbol_info["color"]
         else:
             marker_color = "none"
 
-        # marker_size
         if curve_info["draw_symbols"] and pgplot.symbols[symbol_type]:
-            # symbol size if drawn
             marker_size = curve_info["symbol"]["height"]
         else:
             marker_size = 0
@@ -98,8 +473,8 @@ def plot_normal_graph(
 
         xpoints = [p[0] for p in points]
         ypoints = [p[1] for p in points]
-        symbol_xs = [p[0] for p in symbols]
-        symbol_ys = [p[1] for p in symbols]
+        symbol_xs = [p[0] for p in symbol_points]
+        symbol_ys = [p[1] for p in symbol_points]
         if symbol_ys:
             y_max = max(
                 0.5 * max(max(ypoints), max(symbol_ys)),
@@ -113,191 +488,198 @@ def plot_normal_graph(
             y_max = max(ypoints)
             y_min = min(ypoints)
         else:
-            logger.error("No points found, make sure data is properly initialized")
-            return
+            raise NoCurveDataError("No points found, make sure data is properly initialized")
         # boundaries for wave analysis rectangles
 
-        graph_type = graph_info["graph^type"]
-        if graph_type in {"data", "wave.0", "wave.a", "wave.b"}:
-            line_list.append(
-                ax.plot(
-                    xpoints,
-                    ypoints,
-                    color=line_color,
-                    linestyle=line_style,
-                    linewidth=line_width / 2,
-                )
+        if xpoints:
+            curve_line = PlotCurveLine(
+                xs=xpoints,
+                ys=ypoints,
+                color=line_color,
+                linestyle=line_style,
+                linewidth=line_width / 2,
             )
-            ax.plot(
-                symbol_xs,
-                symbol_ys,
+        else:
+            curve_line = None
+
+        if symbol_xs:
+            curve_symbols = PlotCurveSymbols(
+                xs=symbol_xs,
+                ys=symbol_ys,
                 color=symbol_color,
                 linewidth=0,
                 markerfacecolor=marker_color,
                 markersize=marker_size / 2,
                 marker=marker,
-                mew=symbol_line_width / 2,
+                markeredgewidth=symbol_line_width / 2,
+            )
+        else:
+            curve_symbols = None
+
+        if graph_type in {"data", "dynamic_aperture", "phase_space"}:
+            return cls(
+                info=curve_info,
+                line=curve_line,
+                symbol=curve_symbols,
             )
 
+        if graph_type in {"wave.0", "wave.a", "wave.b"}:
             # Wave region boundaries
-            if graph_type != "data":  # wave analysis rectangles
-                wave = tao.wave("params")
-                a1, a2 = wave["ix_a1"], wave["ix_a2"]
-                b1, b2 = wave["ix_b1"], wave["ix_b2"]
-
+            # wave analysis rectangles
+            if wave_params is None:
+                raise ValueError(f"wave_params required for graph type: {graph_type}")
             if symbol_color in {"blue", "navy", "cyan", "green", "purple"}:
                 wave_color = "orange"
             else:
                 wave_color = "blue"
-            # wave analysis rectangle color
 
+            patches = []
             if graph_type in {"wave.0", "wave.a"}:
-                ax.add_patch(
-                    matplotlib.patches.Rectangle(
-                        (a1, y_min),
-                        a2 - a1,
-                        y_max - y_min,
+                a1, a2 = wave_params["ix_a1"], wave_params["ix_a2"]
+                patches.append(
+                    PlotPatchRectangle(
+                        xy=(a1, y_min),
+                        width=a2 - a1,
+                        height=y_max - y_min,
                         fill=False,
                         color=wave_color,
                     )
                 )
-            elif graph_type in {"wave.0", "wave.b"}:
-                ax.add_patch(
-                    matplotlib.patches.Rectangle(
-                        (b1, y_min),
-                        b2 - b1,
-                        y_max - y_min,
+
+            if graph_type in {"wave.0", "wave.b"}:
+                b1, b2 = wave_params["ix_b1"], wave_params["ix_b2"]
+                patches.append(
+                    PlotPatchRectangle(
+                        xy=(b1, y_min),
+                        width=b2 - b1,
+                        height=y_max - y_min,
                         fill=False,
                         color=wave_color,
                     )
                 )
-        # line and symbol graphs
 
-        elif graph_type == "dynamic_aperture":
-            line_list.append(
-                ax.plot(
-                    xpoints,
-                    ypoints,
-                    color=line_color,
-                    linestyle=line_style,
-                    linewidth=line_width / 2,
-                )
+            return cls(
+                info=curve_info,
+                line=curve_line,
+                symbol=curve_symbols,
+                patches=patches,
             )
-            ax.plot(
-                symbol_xs,
-                symbol_ys,
-                color=symbol_color,
-                linewidth=0,
-                markerfacecolor=marker_color,
-                markersize=marker_size / 2,
-                marker=marker,
-                mew=symbol_line_width / 2,
-            )
-        # dynamic aperture graphs
 
-        elif graph_type == "phase_space":
-            if xpoints:
-                line_list.append(
-                    ax.plot(
-                        xpoints,
-                        ypoints,
-                        color=line_color,
-                        linestyle=line_style,
-                        linewidth=line_width / 2,
-                    )
-                )
-                ax.plot(
-                    symbol_xs,
-                    symbol_ys,
-                    color=symbol_color,
-                    linewidth=0,
-                    markerfacecolor=marker_color,
-                    markersize=marker_size / 2,
-                    marker=marker,
-                    mew=symbol_line_width / 2,
-                )
-            else:
-                line_list.append(
-                    ax.plot(
-                        symbol_xs,
-                        symbol_ys,
-                        color=symbol_color,
-                        linewidth=0,
-                        markerfacecolor=marker_color,
-                        markersize=marker_size / 2,
-                        marker=marker,
-                        mew=symbol_line_width / 2,
-                    )
-                )
-        # phase space graphs
-
-        elif graph_type == "histogram":
-            line_list.append(
-                ax.hist(
-                    xpoints,
-                    bins=int(histogram_infos[i]["number"]),
+        if graph_type == "histogram":
+            assert histogram_info is not None
+            return cls(
+                info=curve_info,
+                line=None,
+                symbol=None,
+                histogram=PlotHistogram(
+                    xs=xpoints,
+                    bins=histogram_info["number"],
                     weights=ypoints,
                     histtype="step",
                     color=symbol_color,
-                )
+                ),
             )
-        # histogram
 
-    graph_type = graph_info["graph^type"]
-    if graph_type == "key_table":
-        raise NotImplementedError("key table is not available in the GUI")
+        raise NotImplementedError(f"graph_type: {graph_type}")
 
-    if graph_type in {"lat_layout", "floor_plan"} or not graph_info["draw_axes"]:
-        # hides axes if draw_axes is turned off
-        plt.axis("off")
 
-    if graph_info["why_invalid"]:
-        raise ValueError(
-            graph_info["why_invalid"] + ", make sure graph is properly initialized"
+@dataclasses.dataclass
+class PlotBasicGraph:
+    info: PlotGraphInfo
+    xlim: Point = _point_field
+    ylim: Point = _point_field
+    xlabel: str = ""
+    ylabel: str = ""
+    title: str = ""
+    show_axes: bool = True
+    draw_grid: bool = True
+    draw_legend: bool = True
+    curves: List[PlotCurve] = Field(default_factory=list)
+
+    @classmethod
+    def from_tao(
+        cls,
+        tao: Tao,
+        region_name: str,
+        graph_name: str,
+        graph_info: Optional[PlotGraphInfo] = None,
+    ) -> PlotBasicGraph:
+        if graph_info is None:
+            graph_info = tao.plot_graph(f"{region_name}.{graph_name}")
+            assert graph_info is not None
+
+        graph_type = graph_info["graph^type"]
+        if graph_type == "key_table":
+            raise NotImplementedError("Key table graphs")
+
+        if graph_type == "lat_layout":
+            raise ValueError()
+        if graph_type == "floor_plan":
+            raise ValueError()
+        if graph_info["why_invalid"]:
+            raise ValueError(f"Graph not valid: {graph_info['why_invalid']}")
+
+        all_curve_names = [
+            graph_info[f"curve[{i + 1}]"] for i in range(graph_info["num_curves"])
+        ]
+        curves = [
+            PlotCurve.from_tao(tao, region_name, graph_name, curve_name)
+            for curve_name in all_curve_names
+        ]
+
+        return cls(
+            info=graph_info,
+            curves=curves,
+            show_axes=graph_info["draw_axes"],
+            title=pgplot.mpl_string("{title} {title_suffix}".format(**graph_info)),
+            xlabel=pgplot.mpl_string(graph_info["x_label"]),
+            ylabel=pgplot.mpl_string(graph_info["y_label"]),
+            draw_grid=graph_info["draw_grid"],
+            xlim=(graph_info["x_min"], graph_info["x_max"]),
+            ylim=(graph_info["y_min"], graph_info["y_max"]),
+            draw_legend=graph_info["draw_curve_legend"],
         )
 
-    title, title_suffix = graph_info["title"], graph_info["title_suffix"]
-    plt.title(pgplot.mpl_string(f"{title} {title_suffix}"))
-    # plot title
+    def plot(self, ax: Optional[matplotlib.axes.Axes] = None):
+        if ax is None:
+            _, ax = plt.subplots()
+            assert ax is not None
 
-    legend_items = []  # legends for each graph
-    labels = []  # labels in each legend
-    try:
-        for idx, curve_info in enumerate(curve_infos):
-            legend_items.append(line_list[idx][0])
-            legend_text = pgplot.mpl_string(curve_info["legend_text"])
-            data_type = pgplot.mpl_string(curve_info["data_type"])
-            if legend_text:
-                labels.append(legend_text)
-            elif data_type == "physical_aperture":
-                labels.append(pgplot.mpl_string(curve_info["data_type"]))
-            else:
-                labels.append("")
-        # list of curves to be added to a legend and list of labels for each curve in the legend
-    except IndexError:
-        raise NotImplementedError("unknown graph type")
+        for curve in self.curves:
+            curve.plot(ax)
 
-    if (
-        (graph_info["draw_curve_legend"] and labels != [""])
-        and graph_info["graph^type"] != "lat_layout"
-        and graph_info["graph^type"] != "floor_plan"
-    ):
-        ax.legend(legend_items, labels)
-    # plot legend
+        # if self.draw_legend:
+        #     ax.legend(legend_items, labels)
 
-    plt.xlabel(pgplot.mpl_string(graph_info["x_label"]))
-    plt.ylabel(pgplot.mpl_string(graph_info["y_label"]))
-    # plot axis labels
+        if not self.show_axes:
+            ax.set_axis_off()
 
-    ax.grid(graph_info["draw_grid"], which="major", axis="both")
-    # plot grid
+        ax.set_title(self.title)
+        ax.set_xlabel(self.xlabel)
+        ax.set_ylabel(self.ylabel)
+        ax.grid(self.draw_grid, which="major", axis="both")
+        ax.set_xlim(self.xlim)
+        ax.set_ylim(self.ylim)
+        ax.set_axisbelow(True)
+        return ax
 
-    plt.xlim(graph_info["x_min"], graph_info["x_max"])
-    plt.ylim(graph_info["y_min"], graph_info["y_max"])
-    # set axis limits
 
-    ax.set_axisbelow(True)
-    # place graphs over grid lines
+def plot_normal_graph(
+    tao: Tao,
+    region_name: str,
+    graph_name: str,
+    graph_info: Optional[dict] = None,
+    ax: Optional[matplotlib.axes.Axes] = None,
+) -> PlotBasicGraph:
+    result_graph = PlotBasicGraph.from_tao(
+        tao,
+        region_name=region_name,
+        graph_name=graph_name,
+        graph_info=graph_info,
+    )
+
+    result_graph.plot(ax)
+    return result_graph
 
 
 def _get_wrapped_shape_coords(

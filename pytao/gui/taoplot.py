@@ -763,7 +763,7 @@ class taoplot:
                 )
 
             # List of parameter strings from tao command python plot_graph
-            layInfo = pipe.cmd_in("python plot_graph lat_layout.g", no_warn=True).splitlines()
+            layInfo = pipe.cmd_in("python plot_graph layout.g", no_warn=True).splitlines()
 
             # Tao_parameter object names from python plot_graph
             # Dictionary of tao_parameter name string keys to the corresponding tao_parameter object
