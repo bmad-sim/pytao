@@ -300,6 +300,59 @@ def plot_normal_graph(
     # place graphs over grid lines
 
 
+def _get_wrapped_shape_coords(
+    shape: str,
+    s1: float,
+    s2: float,
+    y1: float,
+    y2: float,
+    s_min: float,
+    s_max: float,
+):
+    """Case where element is wrapped round the lattice ends."""
+    if shape == "box":
+        yield [s1, s_max], [y1, y1]
+        yield [s1, s_max], [y2, y2]
+        yield [s_min, s2], [y1, y1]
+        yield [s_min, s2], [y2, y2]
+        yield [s1, s1], [y1, y2]
+        yield [s2, s2], [y1, y2]
+
+    elif shape == "xbox":
+        yield [s1, s_max], [y1, y1]
+        yield [s1, s_max], [y2, y2]
+        yield [s1, s_max], [y1, 0]
+        yield [s1, s_max], [y2, 0]
+        yield [s_min, s2], [y1, y1]
+        yield [s_min, s2], [y2, y2]
+        yield [s_min, s2], [0, y1]
+        yield [s_min, s2], [0, y2]
+        yield [s1, s1], [y1, y2]
+        yield [s2, s2], [y1, y2]
+
+    elif shape == "x":
+        yield [s1, s_max], [y1, 0]
+        yield [s1, s_max], [y2, 0]
+        yield [s_min, s2], [0, y1]
+        yield [s_min, s2], [0, y2]
+
+    elif shape == "bow_tie":
+        yield [s1, s_max], [y1, y1]
+        yield [s1, s_max], [y2, y2]
+        yield [s1, s_max], [y1, 0]
+        yield [s1, s_max], [y2, 0]
+        yield [s_min, s2], [y1, y1]
+        yield [s_min, s2], [y2, y2]
+        yield [s_min, s2], [0, y1]
+        yield [s_min, s2], [0, y2]
+
+    elif shape == "diamond":
+        yield [s1, s_max], [0, y1]
+        yield [s1, s_max], [0, y2]
+        yield [s_min, s2], [y1, 0]
+        yield [s_min, s2], [y2, 0]
+
+
 def plot_lat_layout(
     tao: Tao,
     region_name: str,
@@ -485,8 +538,8 @@ def plot_lat_layout(
                 color=color,
             )
 
-        # Case where element is wrapped round the lattice ends.
         else:
+            # Case where element is wrapped round the lattice ends.
             try:
                 s_min = layout_info["x_min"]
                 s_max = layout_info["x_max"]
@@ -495,51 +548,16 @@ def plot_lat_layout(
                 continue
 
             # Draw wrapped box element
-            if shape == "box":
-                ax.plot([s1, s_max], [y1, y1], lw=wid, color=color)
-                ax.plot([s1, s_max], [y2, y2], lw=wid, color=color)
-                ax.plot([s_min, s2], [y1, y1], lw=wid, color=color)
-                ax.plot([s_min, s2], [y2, y2], lw=wid, color=color)
-                ax.plot([s1, s1], [y1, y2], lw=wid, color=color)
-                ax.plot([s2, s2], [y1, y2], lw=wid, color=color)
-
-            # Draw wrapped xbox element
-            elif shape == "xbox":
-                ax.plot([s1, s_max], [y1, y1], lw=wid, color=color)
-                ax.plot([s1, s_max], [y2, y2], lw=wid, color=color)
-                ax.plot([s1, s_max], [y1, 0], lw=wid, color=color)
-                ax.plot([s1, s_max], [y2, 0], lw=wid, color=color)
-                ax.plot([s_min, s2], [y1, y1], lw=wid, color=color)
-                ax.plot([s_min, s2], [y2, y2], lw=wid, color=color)
-                ax.plot([s_min, s2], [0, y1], lw=wid, color=color)
-                ax.plot([s_min, s2], [0, y2], lw=wid, color=color)
-                ax.plot([s1, s1], [y1, y2], lw=wid, color=color)
-                ax.plot([s2, s2], [y1, y2], lw=wid, color=color)
-
-            # Draw wrapped x element
-            elif shape == "x":
-                ax.plot([s1, s_max], [y1, 0], lw=wid, color=color)
-                ax.plot([s1, s_max], [y2, 0], lw=wid, color=color)
-                ax.plot([s_min, s2], [0, y1], lw=wid, color=color)
-                ax.plot([s_min, s2], [0, y2], lw=wid, color=color)
-
-            # Draw wrapped bow tie element
-            elif shape == "bow_tie":
-                ax.plot([s1, s_max], [y1, y1], lw=wid, color=color)
-                ax.plot([s1, s_max], [y2, y2], lw=wid, color=color)
-                ax.plot([s1, s_max], [y1, 0], lw=wid, color=color)
-                ax.plot([s1, s_max], [y2, 0], lw=wid, color=color)
-                ax.plot([s_min, s2], [y1, y1], lw=wid, color=color)
-                ax.plot([s_min, s2], [y2, y2], lw=wid, color=color)
-                ax.plot([s_min, s2], [0, y1], lw=wid, color=color)
-                ax.plot([s_min, s2], [0, y2], lw=wid, color=color)
-
-            # Draw wrapped diamond element
-            elif shape == "diamond":
-                ax.plot([s1, s_max], [0, y1], lw=wid, color=color)
-                ax.plot([s1, s_max], [0, y2], lw=wid, color=color)
-                ax.plot([s_min, s2], [y1, 0], lw=wid, color=color)
-                ax.plot([s_min, s2], [y2, 0], lw=wid, color=color)
+            for xs, ys in _get_wrapped_shape_coords(
+                shape=shape,
+                s1=s1,
+                s2=s2,
+                y1=y1,
+                y2=y2,
+                s_min=s_min,
+                s_max=s_max,
+            ):
+                ax.plot(xs, ys, lw=wid, color=color)
 
             # Draw wrapped element name
             ax.text(
