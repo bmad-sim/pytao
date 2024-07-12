@@ -9,7 +9,11 @@ import rich
 
 from .conftest import new_tao, test_artifacts
 from .. import Tao
-from ..plotting.plot import GraphInvalidError, get_graphs_in_region, plot_graph, plot_region
+from ..plotting.plot import (
+    plot_graph,
+    plot_region,
+    plot_all_visible,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -37,11 +41,13 @@ def _plot_show_to_savefig(
     def savefig():
         nonlocal index
         test_artifacts.mkdir(exist_ok=True)
-        name = re.sub(r"[/\\]", "_", request.node.name)
-        filename = test_artifacts / f"{name}_{index}.png"
-        print(f"Saving figure (_plot_show_to_savefig fixture) to {filename}")
-        plt.savefig(filename)
-        index += 1
+        for fignum in plt.get_fignums():
+            plt.figure(fignum)
+            name = re.sub(r"[/\\]", "_", request.node.name)
+            filename = test_artifacts / f"{name}_{index}.png"
+            print(f"Saving figure (_plot_show_to_savefig fixture) to {filename}")
+            plt.savefig(filename)
+            index += 1
         plt.close("all")
 
     monkeypatch.setattr(plt, "show", savefig)
@@ -81,7 +87,6 @@ def test_plot_data(tao_cls):
         "-init $ACC_ROOT_DIR/bmad-doc/tao_examples/cesr/tao.init",
         plotting=True,
     ) as tao:
-        # init += " -noplot -external_plotting"
         plot_region(tao, "top")
         plt.show()
 
@@ -98,14 +103,5 @@ def test_plot_data(tao_cls):
 
 def test_plot_all_visible(init_filename: pathlib.Path):
     with new_tao(Tao, f"-init {init_filename}", plotting=True) as tao:
-        visible_plots = [plt for plt in tao.plot_list("r") if plt["visible"]]
-        for plot in visible_plots:
-            for graph_name in get_graphs_in_region(tao, plot["region"]):
-                try:
-                    _ax, _graph = plot_graph(tao, plot["region"], graph_name)
-                except GraphInvalidError as ex:
-                    # tao-reported; it's probably not our fault
-                    logger.warning(f"Invalid graph error: {ex}")
-                    continue
-
-                plt.show()  # TODO uncomment
+        plot_all_visible(tao)
+        plt.show()

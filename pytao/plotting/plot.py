@@ -284,14 +284,6 @@ FloorPlanElementInfo = TypedDict(
 Point = Tuple[float, float]
 
 
-def print_info(d):
-    print({key: type(value).__name__ for key, value in d.items()})
-    for key, value in d.items():
-        if isinstance(value, dict):
-            print(key, "->")
-            print_info(value)
-
-
 def _should_use_symbol_color(symbol_type: str, fill_pattern: str) -> bool:
     if (
         symbol_type in ("dot", "1")
@@ -581,14 +573,19 @@ class PlotCurve:
         region_name: str,
         graph_name: str,
         curve_name: str,
+        *,
         graph_type: Optional[str] = None,
     ) -> PlotCurve:
         full_name = f"{region_name}.{graph_name}.{curve_name}"
         curve_info = cast(PlotCurveInfo, tao.plot_curve(full_name))
-        points = [
-            (line["x"], line["y"])
-            for line in tao.plot_line(region_name, graph_name, curve_name) or []
-        ]
+        try:
+            points = [
+                (line["x"], line["y"])
+                for line in tao.plot_line(region_name, graph_name, curve_name) or []
+            ]
+        except RuntimeError:
+            points = []
+
         try:
             symbol_points = [
                 (sym["x_symb"], sym["y_symb"])
@@ -599,7 +596,7 @@ class PlotCurve:
             symbol_points = []
 
         if graph_type is None:
-            graph_info = cast(PlotGraphInfo, tao.plot_graph(f"{region_name}.{graph_name}"))
+            graph_info = get_plot_graph_info(tao, region_name, graph_name)
             graph_type = graph_info["graph^type"]
 
         if graph_type == "histogram":
@@ -661,7 +658,7 @@ class PlotCurve:
         ypoints = [p[1] for p in points]
         symbol_xs = [p[0] for p in symbol_points]
         symbol_ys = [p[1] for p in symbol_points]
-        if symbol_ys:
+        if ypoints and symbol_ys:
             y_max = max(
                 0.5 * max(max(ypoints), max(symbol_ys)),
                 2 * max(max(ypoints), max(symbol_ys)),
@@ -670,6 +667,9 @@ class PlotCurve:
                 0.5 * min(min(ypoints), min(symbol_ys)),
                 2 * min(min(ypoints), min(symbol_ys)),
             )
+        elif symbol_ys:
+            y_max = max(symbol_ys)
+            y_min = min(symbol_ys)
         elif ypoints:
             y_max = max(ypoints)
             y_min = min(ypoints)
@@ -788,13 +788,13 @@ class BasicGraph:
         tao: Tao,
         region_name: str,
         graph_name: str,
-        graph_info: Optional[PlotGraphInfo] = None,
+        *,
+        info: Optional[PlotGraphInfo] = None,
     ) -> BasicGraph:
-        if graph_info is None:
-            graph_info = tao.plot_graph(f"{region_name}.{graph_name}")
-            assert graph_info is not None
+        if info is None:
+            info = get_plot_graph_info(tao, region_name, graph_name)
 
-        graph_type = graph_info["graph^type"]
+        graph_type = info["graph^type"]
         if graph_type == "key_table":
             raise NotImplementedError("Key table graphs")
 
@@ -802,12 +802,10 @@ class BasicGraph:
             raise ValueError()
         if graph_type == "floor_plan":
             raise ValueError()
-        if graph_info["why_invalid"]:
-            raise GraphInvalidError(f"Graph not valid: {graph_info['why_invalid']}")
+        if info["why_invalid"]:
+            raise GraphInvalidError(f"Graph not valid: {info['why_invalid']}")
 
-        all_curve_names = [
-            graph_info[f"curve[{i + 1}]"] for i in range(graph_info["num_curves"])
-        ]
+        all_curve_names = [info[f"curve[{idx}]"] for idx in range(1, info["num_curves"] + 1)]
         curves = []
         for curve_name in all_curve_names:
             try:
@@ -818,16 +816,16 @@ class BasicGraph:
                 curves.append(curve)
 
         return cls(
-            info=graph_info,
+            info=info,
             curves=curves,
-            show_axes=graph_info["draw_axes"],
-            title=pgplot.mpl_string("{title} {title_suffix}".format(**graph_info)),
-            xlabel=pgplot.mpl_string(graph_info["x_label"]),
-            ylabel=pgplot.mpl_string(graph_info["y_label"]),
-            draw_grid=graph_info["draw_grid"],
-            xlim=(graph_info["x_min"], graph_info["x_max"]),
-            ylim=(graph_info["y_min"], graph_info["y_max"]),
-            draw_legend=graph_info["draw_curve_legend"],
+            show_axes=info["draw_axes"],
+            title=pgplot.mpl_string("{title} {title_suffix}".format(**info)),
+            xlabel=pgplot.mpl_string(info["x_label"]),
+            ylabel=pgplot.mpl_string(info["y_label"]),
+            draw_grid=info["draw_grid"],
+            xlim=(info["x_min"], info["x_max"]),
+            ylim=(info["y_min"], info["y_max"]),
+            draw_legend=info["draw_curve_legend"],
         )
 
     def plot(self, ax: Optional[matplotlib.axes.Axes] = None):
@@ -1016,7 +1014,7 @@ class LatticeLayoutElement:
 
 @dataclasses.dataclass
 class LatticeLayoutGraph:
-    graph_info: PlotGraphInfo
+    info: PlotGraphInfo
     elements: List[LatticeLayoutElement]
     xlim: Point
     ylim: Point
@@ -1034,8 +1032,8 @@ class LatticeLayoutGraph:
         # ax.set_navigate(False)
         ax.axhline(
             y=0,
-            xmin=1.1 * self.graph_info["x_min"],
-            xmax=1.1 * self.graph_info["x_max"],
+            xmin=1.1 * self.info["x_min"],
+            xmax=1.1 * self.info["x_max"],
             color="Black",
         )
 
@@ -1063,19 +1061,19 @@ class LatticeLayoutGraph:
         tao: Tao,
         region_name: str = "lat_layout",
         graph_name: str = "g",
+        *,
         branch: Optional[int] = None,
-        graph_info: Optional[PlotGraphInfo] = None,
+        info: Optional[PlotGraphInfo] = None,
     ) -> LatticeLayoutGraph:
-        if graph_info is None:
-            graph_info = tao.plot_graph(f"{region_name}.{graph_name}")
-            assert graph_info is not None
+        if info is None:
+            info = get_plot_graph_info(tao, region_name, graph_name)
 
-        graph_type = graph_info["graph^type"]
+        graph_type = info["graph^type"]
         if graph_type != "lat_layout":
             raise ValueError(f"Incorrect graph type: {graph_type} for {cls.__name__}")
 
-        universe = 1 if graph_info["ix_universe"] == -1 else graph_info["ix_universe"]
-        branch = graph_info["-1^ix_branch"]
+        universe = 1 if info["ix_universe"] == -1 else info["ix_universe"]
+        branch = info["-1^ix_branch"]
         try:
             all_elem_info = tao.plot_lat_layout(ix_uni=universe, ix_branch=branch)
         except RuntimeError as ex:
@@ -1088,28 +1086,28 @@ class LatticeLayoutGraph:
             try:
                 all_elem_info = tao.plot_lat_layout(ix_uni=universe, ix_branch=0)
             except RuntimeError:
-                print(f"Failed to plot layout: {ex}")
+                logger.error(f"Failed to plot layout: {ex}")
                 raise
 
         all_elem_info = cast(List[PlotLatLayoutInfo], all_elem_info)
 
-        ele_y2s = [info["y2"] for info in all_elem_info]
+        ele_y2s = [elem["y2"] for elem in all_elem_info]
         y2_floor = -max(ele_y2s)  # Note negative sign
 
         elements = [
             LatticeLayoutElement.from_info(
-                graph_info=graph_info,
-                info=info,
+                graph_info=info,
+                info=elem,
                 y2_floor=y2_floor,
             )
-            for info in all_elem_info
+            for elem in all_elem_info
         ]
 
         return cls(
-            graph_info=graph_info,
-            xlim=(graph_info["x_min"], graph_info["x_max"]),
-            ylim=(graph_info["y_min"], graph_info["y_max"]),
-            border_xlim=(1.1 * graph_info["x_min"], 1.1 * graph_info["x_max"]),
+            info=info,
+            xlim=(info["x_min"], info["x_max"]),
+            ylim=(info["y_min"], info["y_max"]),
+            border_xlim=(1.1 * info["x_min"], 1.1 * info["x_max"]),
             universe=universe,
             branch=branch,
             y2_floor=y2_floor,
@@ -2129,20 +2127,20 @@ class FloorPlanGraph:
         tao: Tao,
         region_name: str,
         graph_name: str,
-        graph_info: Optional[PlotGraphInfo] = None,
+        *,
+        info: Optional[PlotGraphInfo] = None,
     ) -> FloorPlanGraph:
         full_name = f"{region_name}.{graph_name}"
-        if graph_info is None:
-            graph_info = tao.plot_graph(full_name)
-            assert graph_info is not None
+        if info is None:
+            info = get_plot_graph_info(tao, region_name, graph_name)
 
-        graph_type = graph_info["graph^type"]
+        graph_type = info["graph^type"]
         if graph_type != "floor_plan":
             raise ValueError(f"Incorrect graph type: {graph_type} for {cls.__name__}")
 
         elem_infos = cast(
             List[FloorPlanElementInfo],
-            tao.floor_plan(f"{region_name}.{graph_name}"),
+            tao.floor_plan(full_name),
         )
         elements = [FloorPlanElement.from_info(info) for info in elem_infos]
         elem_to_color = {
@@ -2159,26 +2157,26 @@ class FloorPlanGraph:
             elem_to_color=elem_to_color,
         )
         floor_orbits = None
-        if float(graph_info["floor_plan_orbit_scale"]) != 0:
+        if float(info["floor_plan_orbit_scale"]) != 0:
             floor_orbits = FloorOrbits.from_tao(
                 tao,
                 region_name=region_name,
                 graph_name=graph_name,
-                color=graph_info["floor_plan_orbit_color"].lower(),
+                color=info["floor_plan_orbit_color"].lower(),
             )
 
         return cls(
-            info=graph_info,
+            info=info,
             elements=elements,
             building_walls=building_walls,
             floor_orbits=floor_orbits,
-            title=pgplot.mpl_string("{title} {title_suffix}".format(**graph_info)),
-            xlabel=pgplot.mpl_string(graph_info["x_label"]),
-            ylabel=pgplot.mpl_string(graph_info["y_label"]),
-            draw_grid=graph_info["draw_grid"],
-            xlim=(graph_info["x_min"], graph_info["x_max"]),
-            ylim=(graph_info["y_min"], graph_info["y_max"]),
-            draw_legend=graph_info["draw_curve_legend"],
+            title=pgplot.mpl_string("{title} {title_suffix}".format(**info)),
+            xlabel=pgplot.mpl_string(info["x_label"]),
+            ylabel=pgplot.mpl_string(info["y_label"]),
+            draw_grid=info["draw_grid"],
+            xlim=(info["x_min"], info["x_max"]),
+            ylim=(info["y_min"], info["y_max"]),
+            draw_legend=info["draw_curve_legend"],
         )
 
     def plot(self, ax: Optional[matplotlib.axes.Axes] = None):
@@ -2215,7 +2213,7 @@ def get_graphs_in_region(tao: Tao, region_name: str):
     if "num_graphs" not in plot1_info:
         raise RuntimeError("Plotting disabled?")
 
-    return [plot1_info[f"graph[{i + 1}]"] for i in range(plot1_info["num_graphs"])]
+    return [plot1_info[f"graph[{idx}]"] for idx in range(1, plot1_info["num_graphs"] + 1)]
 
 
 def make_graph(
@@ -2223,7 +2221,7 @@ def make_graph(
     region_name: str,
     graph_name: str,
 ):
-    graph_info = cast(PlotGraphInfo, tao.plot_graph(f"{region_name}.{graph_name}"))
+    graph_info = get_plot_graph_info(tao, region_name, graph_name)
     graph_type = graph_info["graph^type"]
 
     logger.debug(f"Creating graph {region_name}.{graph_name} ({graph_type})")
@@ -2233,39 +2231,70 @@ def make_graph(
             tao=tao,
             region_name=region_name,
             graph_name=graph_name,
-            graph_info=graph_info,
+            info=graph_info,
         )
     if graph_type == "lat_layout":
         return LatticeLayoutGraph.from_tao(
             tao,
             region_name=region_name,
             graph_name=graph_name,
-            graph_info=graph_info,
+            info=graph_info,
         )
     return BasicGraph.from_tao(
         tao,
         region_name=region_name,
         graph_name=graph_name,
-        graph_info=graph_info,
+        info=graph_info,
     )
 
 
 AnyGraph = Union[BasicGraph, LatticeLayoutGraph, FloorPlanGraph]
 
 
-def plot_graph(
+def plot_layout(
     tao: Tao,
-    region_name: str,
-    graph_name: str,
+    region_name: str = "layout",
+    graph_name: str = "g",
+    *,
     ax: Optional[matplotlib.axes.Axes] = None,
-) -> Tuple[matplotlib.axes.Axes, AnyGraph]:
-    graph = make_graph(tao, region_name, graph_name)
-
+) -> Tuple[matplotlib.axes.Axes, LatticeLayoutGraph]:
     if ax is None:
         _, ax = plt.subplots()
         assert ax is not None
 
+    graph = LatticeLayoutGraph.from_tao(tao, region_name, graph_name)
     graph.plot(ax)
+    return ax, graph
+
+
+def plot_graph(
+    tao: Tao,
+    region_name: str,
+    graph_name: str,
+    *,
+    ax: Optional[matplotlib.axes.Axes] = None,
+    layout_ax: Optional[matplotlib.axes.Axes] = None,
+    include_layout: bool = True,
+) -> Tuple[matplotlib.axes.Axes, AnyGraph]:
+    graph = make_graph(tao, region_name, graph_name)
+    if ax is None:
+        if should_include_layout(tao, region_name, graph_name):
+            _, (ax, layout_ax) = plt.subplots(
+                nrows=2,
+                ncols=1,
+                sharex=True,
+                height_ratios=[1, 0.5],
+            )
+        else:
+            _, ax = plt.subplots()
+
+    assert ax is not None
+
+    graph.plot(ax)
+
+    if include_layout and layout_ax is not None:
+        plot_layout(tao, ax=layout_ax)
+
     # if isinstance(graph, (LatticeLayoutGraph, FloorPlanGraph)):
     #     # TODO remove me
     #     import rich
@@ -2275,7 +2304,41 @@ def plot_graph(
     return ax, graph
 
 
-def plot_region(tao: Tao, region_name: str) -> List[Tuple[matplotlib.axes.Axes, AnyGraph]]:
+def get_plot_graph_info(tao: Tao, region_name: str, graph_name: str) -> PlotGraphInfo:
+    return cast(PlotGraphInfo, tao.plot_graph(f"{region_name}.{graph_name}"))
+
+
+def should_include_layout(
+    tao: Tao,
+    region_name: str,
+    graph_name: Optional[str] = None,
+) -> bool:
+    if graph_name is not None:
+        graph_names = [graph_name]
+    else:
+        graph_names = get_graphs_in_region(tao, region_name=region_name)
+
+    if not len(graph_names):
+        return False
+
+    for graph_name in graph_names:
+        graph_info = get_plot_graph_info(tao, region_name, graph_name)
+
+        # TODO: pytao gui checks for x_axis^type == "s"; is there a better way here?
+        if graph_info["x_label"] == "s [m]" and graph_info["graph^type"] not in {
+            "lat_layout",
+            "floor_plan",
+        }:
+            return True
+    return False
+
+
+def plot_region(
+    tao: Tao,
+    region_name: str,
+    include_layout: bool = True,
+    skip_invalid_graphs: bool = True,
+) -> List[Tuple[matplotlib.axes.Axes, AnyGraph]]:
     fig = plt.figure()
 
     graph_names = get_graphs_in_region(tao, region_name=region_name)
@@ -2283,17 +2346,58 @@ def plot_region(tao: Tao, region_name: str) -> List[Tuple[matplotlib.axes.Axes, 
     if not len(graph_names):
         return []
 
-    # gs = fig.add_gridspec(nrows=number_graphs, ncols=1, height_ratios=graph_heights)
-    gs = fig.subplots(nrows=len(graph_names), ncols=1, sharex=True, squeeze=False)
+    num_graphs = len(graph_names)
+    height_ratios = [1.0] * num_graphs
+    if include_layout and should_include_layout(tao, region_name):
+        num_graphs += 1
+        height_ratios.append(0.5)
+    else:
+        include_layout = False
+
+    gs = fig.subplots(
+        nrows=num_graphs,
+        ncols=1,
+        sharex=True,
+        squeeze=False,
+        height_ratios=height_ratios,
+    )
 
     graphs = []
     for ax, graph_name in zip(gs[:, 0], graph_names):
-        graphs.append(
-            plot_graph(
+        try:
+            graph = plot_graph(
                 tao=tao,
                 region_name=region_name,
                 graph_name=graph_name,
                 ax=ax,
             )
-        )
+        except GraphInvalidError as ex:
+            if not skip_invalid_graphs:
+                raise
+            # tao-reported; it's probably not our fault
+            logger.warning(f"Invalid graph error: {ex}")
+            continue
+
+        graphs.append(graph)
+
+    if include_layout:
+        layout_ax = gs[-1, 0]
+        plot_layout(tao, ax=layout_ax)
+
     return graphs
+
+
+def get_visible_regions(
+    tao: Tao,
+) -> List[str]:
+    return [info["region"] for info in tao.plot_list("r") if info["visible"]]
+
+
+def plot_all_visible(
+    tao: Tao,
+    include_layout: bool = True,
+) -> List[Tuple[matplotlib.axes.Axes, AnyGraph]]:
+    res = []
+    for region in get_visible_regions(tao):
+        res.extend(plot_region(tao, region, include_layout=include_layout))
+    return res
