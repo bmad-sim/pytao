@@ -1,7 +1,8 @@
 from __future__ import annotations
+
 import logging
 import math
-from typing import Dict, List, Literal, Optional, Tuple, TypedDict, Union, cast
+from typing import Dict, List, Literal, Optional, Tuple, Union, cast
 
 import matplotlib.axes
 import matplotlib.collections
@@ -9,14 +10,12 @@ import matplotlib.patches
 import matplotlib.path
 import matplotlib.pyplot as plt
 import numpy as np
-from pytao import Tao
-
-from . import pgplot, util
-
 import pydantic.dataclasses as dataclasses
 from pydantic.dataclasses import Field
+from pytao import Tao
+from typing_extensions import NotRequired, TypedDict
 
-from typing_extensions import NotRequired
+from . import pgplot, util
 
 logger = logging.getLogger(__name__)
 
