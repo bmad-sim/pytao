@@ -249,6 +249,17 @@ class PlotPatchCircle(PlotPatchBase):
 
 
 @dataclasses.dataclass
+class PlotPatchPolygon(PlotPatchBase):
+    vertices: List[Point] = Field(default_factory=list)
+
+    def to_mpl(self) -> matplotlib.patches.Polygon:
+        return matplotlib.patches.Polygon(
+            xy=self.vertices,
+            **self._patch_args,
+        )
+
+
+@dataclasses.dataclass
 class PlotPatchEllipse(PlotPatchBase):
     xy: Point = _point_field
     width: float = 0.0
@@ -303,8 +314,16 @@ PlotPatch = Union[
     PlotPatchArc,
     PlotPatchCircle,
     PlotPatchEllipse,
+    PlotPatchPolygon,
     PlotPatchCustom,
 ]
+
+
+@dataclasses.dataclass
+class PlotBase:
+    info: PlotGraphInfo
+    region_name: str
+    graph_name: str
 
 
 @dataclasses.dataclass
@@ -538,8 +557,7 @@ class PlotCurve:
 
 
 @dataclasses.dataclass
-class BasicGraph:
-    info: PlotGraphInfo
+class BasicGraph(PlotBase):
     xlim: Point = _point_field
     ylim: Point = _point_field
     xlabel: str = ""
@@ -585,6 +603,8 @@ class BasicGraph:
 
         return cls(
             info=info,
+            region_name=region_name,
+            graph_name=graph_name,
             curves=curves,
             show_axes=info["draw_axes"],
             title=pgplot.mpl_string("{title} {title_suffix}".format(**info)),
@@ -658,6 +678,11 @@ class LatticeLayoutElement:
         lines = []
         annotations = []
 
+        if ":" in shape:
+            _shape_prefix, shape = shape.split(":", 1)
+        else:
+            _shape_prefix, shape = "", shape
+
         # Normal case where element is not wrapped around ends of lattice.
         if s2 - s1 > 0:
             # Draw box element
@@ -669,6 +694,9 @@ class LatticeLayoutElement:
                 color=color,
                 fill=False,
             )
+            s_mid = (s1 + s2) / 2
+            y_mid = (y1 + y2) / 2
+
             if shape == "box":
                 patches.append(box_patch)
             elif shape == "xbox":
@@ -695,7 +723,6 @@ class LatticeLayoutElement:
                     ]
                 )
             elif shape == "diamond":
-                s_mid = (s1 + s2) / 2
                 lines.extend(
                     [
                         [(s1, 0), (s_mid, y1)],
@@ -705,7 +732,6 @@ class LatticeLayoutElement:
                     ]
                 )
             elif shape == "circle":
-                s_mid = (s1 + s2) / 2
                 patches.append(
                     PlotPatchEllipse(
                         xy=(s_mid, 0),
@@ -716,6 +742,60 @@ class LatticeLayoutElement:
                         fill=False,
                     )
                 )
+            elif shape == "u_triangle":
+                patches.append(
+                    PlotPatchPolygon(
+                        vertices=[
+                            (s1, y2),
+                            (s2, y2),
+                            (s_mid, y1),
+                        ],
+                        linewidth=width,
+                        color=color,
+                        fill=False,
+                    )
+                )
+            elif shape == "d_triangle":
+                patches.append(
+                    PlotPatchPolygon(
+                        vertices=[
+                            (s1, y1),
+                            (s2, y1),
+                            (s_mid, y2),
+                        ],
+                        linewidth=width,
+                        color=color,
+                        fill=False,
+                    )
+                )
+            elif shape == "l_triangle":
+                patches.append(
+                    PlotPatchPolygon(
+                        vertices=[
+                            (s1, y_mid),
+                            (s2, y2),
+                            (s2, y1),
+                        ],
+                        linewidth=width,
+                        color=color,
+                        fill=False,
+                    )
+                )
+            elif shape == "r_triangle":
+                patches.append(
+                    PlotPatchPolygon(
+                        vertices=[
+                            (s1, y1),
+                            (s1, y2),
+                            (s2, y_mid),
+                        ],
+                        linewidth=width,
+                        color=color,
+                        fill=False,
+                    )
+                )
+            else:
+                raise NotImplementedError(shape)
 
             annotations.append(
                 PlotAnnotation(
@@ -781,8 +861,7 @@ class LatticeLayoutElement:
 
 
 @dataclasses.dataclass
-class LatticeLayoutGraph:
-    info: PlotGraphInfo
+class LatticeLayoutGraph(PlotBase):
     elements: List[LatticeLayoutElement]
     xlim: Point
     ylim: Point
@@ -876,6 +955,8 @@ class LatticeLayoutGraph:
 
         return cls(
             info=info,
+            region_name=region_name,
+            graph_name=graph_name,
             xlim=(info["x_min"], info["x_max"]),
             ylim=(info["y_min"], info["y_max"]),
             border_xlim=(1.1 * info["x_min"], 1.1 * info["x_max"]),
@@ -1837,8 +1918,7 @@ class FloorOrbits:
 
 
 @dataclasses.dataclass
-class FloorPlanGraph:
-    info: PlotGraphInfo
+class FloorPlanGraph(PlotBase):
     building_walls: BuildingWalls
     floor_orbits: Optional[FloorOrbits]
     elements: List[FloorPlanElement] = Field(default_factory=list)
@@ -1897,6 +1977,8 @@ class FloorPlanGraph:
 
         return cls(
             info=info,
+            region_name=region_name,
+            graph_name=graph_name,
             elements=elements,
             building_walls=building_walls,
             floor_orbits=floor_orbits,
