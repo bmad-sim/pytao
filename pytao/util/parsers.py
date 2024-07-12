@@ -1381,3 +1381,20 @@ def parse_lat_list(lines, cmd=""):
     list of str
     """
     return lines
+
+
+def parse_place_buffer(lines, cmd=""):
+    """
+    Parse place_buffer results.
+
+    Returns
+    -------
+    list of dict
+    """
+    return _parse_by_keys_to_types(
+        lines,
+        {
+            "region": str,
+            "graph": str,
+        },
+    )
