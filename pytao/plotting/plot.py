@@ -10,6 +10,7 @@ import matplotlib.patches
 import matplotlib.path
 import matplotlib.pyplot as plt
 import numpy as np
+
 import pydantic.dataclasses as dataclasses
 from pydantic.dataclasses import Field
 from pytao import Tao
@@ -322,10 +323,12 @@ PlotPatch = Union[
 
 
 @dataclasses.dataclass
-class PlotBase:
+class GraphBase:
     info: PlotGraphInfo
     region_name: str
     graph_name: str
+    xlim: Point = _point_field
+    ylim: Point = _point_field
 
 
 @dataclasses.dataclass
@@ -566,7 +569,7 @@ class PlotCurve:
 
 
 @dataclasses.dataclass
-class BasicGraph(PlotBase):
+class BasicGraph(GraphBase):
     xlim: Point = _point_field
     ylim: Point = _point_field
     xlabel: str = ""
@@ -865,14 +868,14 @@ class LatticeLayoutElement:
 
 
 @dataclasses.dataclass
-class LatticeLayoutGraph(PlotBase):
-    elements: List[LatticeLayoutElement]
-    xlim: Point
-    ylim: Point
-    border_xlim: Point
-    universe: int
-    branch: int
-    y2_floor: float
+class LatticeLayoutGraph(GraphBase):
+    elements: List[LatticeLayoutElement] = Field(default_factory=list)
+    xlim: Point = _point_field
+    ylim: Point = _point_field
+    border_xlim: Point = _point_field
+    universe: int = 0
+    branch: int = 0
+    y2_floor: float = 0
 
     def plot(self, ax: Optional[matplotlib.axes.Axes] = None):
         if ax is None:
@@ -899,6 +902,7 @@ class LatticeLayoutGraph(PlotBase):
         # ax.set_xlim(_fix_limits(self.xlim))
         # ax.set_ylim(_fix_limits(self.ylim))
         ax.autoscale_view(tight=True)
+        return ax
 
     @property
     def y_max(self) -> float:
@@ -1799,9 +1803,9 @@ class FloorPlanElement:
 
 @dataclasses.dataclass
 class BuildingWalls:
-    building_wall_graph: List[BuildingWallGraphInfo]
-    lines: List[PlotCurveLine]
-    patches: List[PlotPatch]
+    building_wall_graph: List[BuildingWallGraphInfo] = Field(default_factory=list)
+    lines: List[PlotCurveLine] = Field(default_factory=list)
+    patches: List[PlotPatch] = Field(default_factory=list)
 
     def plot(self, ax: matplotlib.axes.Axes):
         for line in self.lines:
@@ -1922,12 +1926,10 @@ class FloorOrbits:
 
 
 @dataclasses.dataclass
-class FloorPlanGraph(PlotBase):
-    building_walls: BuildingWalls
-    floor_orbits: Optional[FloorOrbits]
+class FloorPlanGraph(GraphBase):
+    building_walls: BuildingWalls = Field(default_factory=BuildingWalls)
+    floor_orbits: Optional[FloorOrbits] = None
     elements: List[FloorPlanElement] = Field(default_factory=list)
-    xlim: Point = _point_field
-    ylim: Point = _point_field
     xlabel: str = ""
     ylabel: str = ""
     title: str = ""
@@ -2065,9 +2067,6 @@ def make_graph(
         graph_name=graph_name,
         info=graph_info,
     )
-
-
-AnyGraph = Union[BasicGraph, LatticeLayoutGraph, FloorPlanGraph]
 
 
 def plot_layout(
@@ -2251,3 +2250,78 @@ def plot_all_requested(
         tao.cmd(f"place -no_buffer {region} {graph}")
         res.extend(plot_region(tao, region, include_layout=include_layout))
     return res
+
+
+AnyGraph = Union[BasicGraph, LatticeLayoutGraph, FloorPlanGraph]
+
+
+class GraphManager:
+    tao: Tao
+    to_place: Dict[str, str]
+    regions: Dict[str, AnyGraph]
+
+    def __init__(self, tao: Tao) -> None:
+        self.tao = tao
+        self.to_place = {}
+        self.regions = {}
+
+    def update_place_buffer(self):
+        for item in self.tao.place_buffer():
+            region = item["region"]
+            graph = item["graph"]
+            if graph == "none":
+                if region == "*":
+                    self.to_place.clear()
+                else:
+                    self.to_place.pop(region, None)
+            else:
+                self.to_place[region] = graph
+
+    def plot_all_requested(self, *, ignore_invalid: bool = True):
+        self.update_place_buffer()
+        result = {}
+        for region, graph_name in self.to_place.items():
+            try:
+                result[graph_name] = self.place(region, graph_name)
+            except GraphInvalidError:
+                if ignore_invalid:
+                    continue
+                raise
+
+        self.to_place.clear()
+        self.regions.update(result)
+        return result
+
+    def place(self, region_name: str, graph_name: str) -> AnyGraph:
+        self.tao.cmd(f"place -no_buffer {region_name} {graph_name}")
+
+        in_region = get_graphs_in_region(self.tao, region_name)
+
+        # TODO: can there be more than one graph in a region?
+        # graphs seem to replace the last one in the region.
+        assert len(in_region) == 1
+
+        graph = make_graph(self.tao, region_name, in_region[0])
+        self.regions[region_name] = graph
+        return graph
+
+    def clear(self, region_name: str):
+        try:
+            self.tao.cmd(f"place -no_buffer {region_name} none")
+        except RuntimeError as ex:
+            logger.warning(f"Region clear failed: {ex}")
+        self.regions.pop(region_name, None)
+
+    def clear_all(self):
+        self.tao.cmd("place -no_buffer * none")
+        self.regions.clear()
+
+
+class MatplotlibGraphManager(GraphManager):
+    def plot(
+        self,
+        region_name: str,
+        ax: Optional[matplotlib.axes.Axes] = None,
+    ) -> matplotlib.axes.Axes:
+        # TODO doesn't include layout
+        return self.regions[region_name].plot(ax=ax)

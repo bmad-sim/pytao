@@ -10,6 +10,7 @@ import rich
 from .conftest import new_tao, test_artifacts
 from .. import Tao
 from ..plotting.plot import (
+    MatplotlibGraphManager,
     plot_all_requested,
     plot_all_visible,
     plot_graph,
@@ -111,3 +112,22 @@ def test_plot_all_requested(init_filename: pathlib.Path):
     with new_tao(Tao, f"-init {init_filename}", plotting=plotting) as tao:
         plot_all_requested(tao)
         plt.show()
+
+
+def test_plot_manager(init_filename: pathlib.Path):
+    # Floor orbit tries to set a plot setting on initialization which doesn't work
+    # with external plotting.  Enable plotting for it as a workaround.
+    plotting = init_filename.name == "tao.init_floor_orbit"
+    with new_tao(Tao, f"-init {init_filename}", plotting=plotting) as tao:
+        manager = MatplotlibGraphManager(tao)
+        if not plotting:
+            assert len(manager.plot_all_requested())
+        for region in manager.regions:
+            manager.plot(region)
+        plt.show()
+
+        for region in list(manager.regions):
+            manager.clear(region)
+        assert not manager.regions
+        manager.clear_all()
+        assert not manager.regions
