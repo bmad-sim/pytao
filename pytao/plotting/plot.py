@@ -590,13 +590,9 @@ class BasicGraph(PlotBase):
             info = get_plot_graph_info(tao, region_name, graph_name)
 
         graph_type = info["graph^type"]
-        if graph_type == "key_table":
-            raise NotImplementedError("Key table graphs")
+        if graph_type in {"lat_layout", "floor_plan", "key_table"}:
+            raise ValueError(f"Incorrect graph type: {graph_type} for {cls.__name__}")
 
-        if graph_type == "lat_layout":
-            raise ValueError()
-        if graph_type == "floor_plan":
-            raise ValueError()
         if info["why_invalid"]:
             raise GraphInvalidError(f"Graph not valid: {info['why_invalid']}")
 
@@ -2018,10 +2014,10 @@ class FloorPlanGraph(PlotBase):
         ax.set_xlabel(self.xlabel)
         ax.set_ylabel(self.ylabel)
         ax.grid(self.draw_grid, which="major", axis="both")
-        # ax.set_xlim(_fix_limits(self.xlim, pad_factor=0.0))
-        # ax.set_ylim(_fix_limits(self.ylim, pad_factor=0.0))
-        # ax.set_xlim(_fix_limits(self.xlim, pad_factor=0.5))
-        # ax.set_ylim(_fix_limits(self.ylim, pad_factor=0.5))
+        ax.set_xlim(_fix_limits(self.xlim))
+        ax.set_ylim(_fix_limits(self.ylim))
+        ax.set_xlim(_fix_limits(self.xlim))
+        ax.set_ylim(_fix_limits(self.ylim))
         # ax.autoscale_view(tight=False)
         ax.set_axisbelow(True)
         return ax
@@ -2060,6 +2056,9 @@ def make_graph(
             graph_name=graph_name,
             info=graph_info,
         )
+    if graph_type == "key_table":
+        raise NotImplementedError("Key table graphs")
+
     return BasicGraph.from_tao(
         tao,
         region_name=region_name,
@@ -2231,5 +2230,24 @@ def plot_all_visible(
 ) -> List[Tuple[matplotlib.axes.Axes, AnyGraph]]:
     res = []
     for region in get_visible_regions(tao):
+        res.extend(plot_region(tao, region, include_layout=include_layout))
+    return res
+
+
+def plot_all_requested(
+    tao: Tao,
+    include_layout: bool = True,
+) -> List[Tuple[matplotlib.axes.Axes, AnyGraph]]:
+    """
+    Plot all user-requested plots (i.e., those in the "place buffer")
+
+    See section 13.3 of the Tao manual for further details.
+    """
+    res = []
+
+    for item in tao.place_buffer():
+        region = item["region"]
+        graph = item["graph"]
+        tao.cmd(f"place -no_buffer {region} {graph}")
         res.extend(plot_region(tao, region, include_layout=include_layout))
     return res
