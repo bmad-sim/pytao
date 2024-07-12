@@ -24,6 +24,10 @@ class GraphInvalidError(Exception):
     pass
 
 
+class NoLayoutError(Exception):
+    pass
+
+
 class NoCurveDataError(Exception):
     pass
 
@@ -318,7 +322,7 @@ class PlotAnnotation:
             horizontalalignment=self.horizontalalignment,
             verticalalignment=self.verticalalignment,
             clip_on=self.clip_on,
-            color=self.color,
+            color=pgplot.mpl_color(self.color),
             rotation=self.rotation,
             rotation_mode=self.rotation_mode,
         )
@@ -336,7 +340,7 @@ class PlotCurveLine:
         return ax.plot(
             self.xs,
             self.ys,
-            color=self.color,
+            color=pgplot.mpl_color(self.color),
             linestyle=self.linestyle,
             linewidth=self.linewidth,
         )
@@ -357,7 +361,7 @@ class PlotCurveSymbols:
         return ax.plot(
             self.xs,
             self.ys,
-            color=self.color,
+            color=pgplot.mpl_color(self.color),
             markerfacecolor=self.markerfacecolor,
             markersize=self.markersize,
             marker=self.marker,
@@ -369,18 +373,18 @@ class PlotCurveSymbols:
 @dataclasses.dataclass
 class PlotHistogram:
     xs: List[float]
-    bins: float
+    bins: List[float]
     weights: List[float]
     histtype: str
     color: str
 
-    def plot(self, ax: matplotlib.axes.Axes) -> None:
+    def plot(self, ax: matplotlib.axes.Axes):
         return ax.hist(
             self.xs,
             bins=self.bins,
             weights=self.weights,
             histtype=self.histtype,
-            color=self.color,
+            color=pgplot.mpl_color(self.color),
         )
 
 
@@ -403,7 +407,7 @@ class PlotPatchBase:
         return {
             "edgecolor": self.edgecolor,
             "facecolor": self.facecolor,
-            "color": self.color,
+            "color": pgplot.mpl_color(self.color),
             "linewidth": self.linewidth,
             "linestyle": self.linestyle,
             "antialiased": self.antialiased,
@@ -866,7 +870,7 @@ class LatticeLayoutElement:
         ax.add_collection(
             matplotlib.collections.LineCollection(
                 self.lines,
-                colors=self.color,
+                colors=pgplot.mpl_color(self.color),
                 linewidths=self.width,
             )
         )
@@ -1066,7 +1070,10 @@ class LatticeLayoutGraph:
         info: Optional[PlotGraphInfo] = None,
     ) -> LatticeLayoutGraph:
         if info is None:
-            info = get_plot_graph_info(tao, region_name, graph_name)
+            try:
+                info = get_plot_graph_info(tao, region_name, graph_name)
+            except RuntimeError:
+                raise NoLayoutError(f"No layout named {region_name}.{graph_name}") from None
 
         graph_type = info["graph^type"]
         if graph_type != "lat_layout":
@@ -1919,6 +1926,21 @@ class FloorPlanElement:
             )
             lines.extend(sbend_lines or [])
             patches.extend(sbend_patches or [])
+        elif shape in {"asym_var:box", "var:box"}:
+            # TODO this is incorrect
+            patches.append(
+                _box_to_patch(
+                    x1=x1,
+                    x2=x2,
+                    y1=y1,
+                    y2=y2,
+                    off1=off1,
+                    off2=off2,
+                    line_width=line_width,
+                    color=color,
+                    angle_start=angle_start,
+                )
+            )
         elif shape:
             raise ValueError(f"unhandled shape: {shape}")
 
@@ -2293,7 +2315,10 @@ def plot_graph(
     graph.plot(ax)
 
     if include_layout and layout_ax is not None:
-        plot_layout(tao, ax=layout_ax)
+        try:
+            plot_layout(tao, ax=layout_ax)
+        except NoLayoutError:
+            pass
 
     # if isinstance(graph, (LatticeLayoutGraph, FloorPlanGraph)):
     #     # TODO remove me
@@ -2325,11 +2350,17 @@ def should_include_layout(
         graph_info = get_plot_graph_info(tao, region_name, graph_name)
 
         # TODO: pytao gui checks for x_axis^type == "s"; is there a better way here?
-        if graph_info["x_label"] == "s [m]" and graph_info["graph^type"] not in {
+        if graph_info["x_label"] in {"s [m]", "s (m)"} and graph_info["graph^type"] not in {
             "lat_layout",
             "floor_plan",
         }:
-            return True
+            try:
+                get_plot_graph_info(tao, "layout", "g")
+            except RuntimeError:
+                # Sometimes there's no layout defined...
+                return False
+            else:
+                return True
     return False
 
 
@@ -2382,7 +2413,10 @@ def plot_region(
 
     if include_layout:
         layout_ax = gs[-1, 0]
-        plot_layout(tao, ax=layout_ax)
+        try:
+            plot_layout(tao, ax=layout_ax)
+        except NoLayoutError:
+            pass
 
     return graphs
 
