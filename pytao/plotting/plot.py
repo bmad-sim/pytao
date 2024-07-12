@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 import math
-from typing import Dict, List, Literal, Optional, Tuple, Union, cast
+from typing import Dict, List, Literal, Optional, Sequence, Tuple, Union, cast
 
 import matplotlib.axes
 import matplotlib.collections
@@ -13,9 +13,20 @@ import numpy as np
 import pydantic.dataclasses as dataclasses
 from pydantic.dataclasses import Field
 from pytao import Tao
-from typing_extensions import NotRequired, TypedDict
 
 from . import pgplot, util
+from .types import (
+    BuildingWallGraphInfo,
+    BuildingWallInfo,
+    FloorOrbitInfo,
+    FloorPlanElementInfo,
+    PlotCurveInfo,
+    PlotGraphInfo,
+    PlotHistogramInfo,
+    PlotLatLayoutInfo,
+    Point,
+    WaveParams,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -39,253 +50,6 @@ def _fix_limits(lim: Point, pad_factor: float = 0.0) -> Point:
         # with very small limits
         return (-0.001, 0.001)
     return (low - abs(low * pad_factor), high + abs(high * pad_factor))
-
-
-FloorOrbitInfo = TypedDict(
-    "FloorOrbitInfo",
-    {
-        "branch_index": int,
-        "index": int,
-        "ele_key": str,
-        "axis": str,
-        "orbits": List[float],
-    },
-)
-BuildingWallGraphInfo = TypedDict(
-    "BuildingWallGraphInfo",
-    {
-        "index": int,
-        "point": int,
-        "offset_x": float,
-        "offset_y": float,
-        "radius": float,
-    },
-)
-
-BuildingWallInfo = TypedDict(
-    "BuildingWallInfo",
-    {
-        "index": int,
-        "z": float,
-        "x": float,
-        "radius": float,
-        "z_center": float,
-        "x_center": float,
-    },
-)
-
-WaveParams = TypedDict(
-    "WaveParams",
-    {
-        "ix_a1": float,
-        "ix_a2": float,
-        "ix_b1": float,
-        "ix_b2": float,
-    },
-)
-
-PlotCurveLineInfo = TypedDict(
-    "PlotCurveLineInfo",
-    {
-        "color": str,
-        "line^pattern": str,
-        "width": int,
-    },
-)
-
-PlotCurveSymbolInfo = TypedDict(
-    "PlotCurveSymbolInfo",
-    {
-        "color": str,
-        "fill_pattern": str,
-        "height": float,
-        "line_width": int,
-        "symbol^type": str,
-    },
-)
-PlotCurveInfo = TypedDict(
-    "PlotCurveInfo",
-    {
-        "-1^ix_branch": int,
-        "-1^ix_bunch": int,
-        "component": str,
-        "data_source": str,
-        "data_type": str,
-        "data_type_x": str,
-        "draw_error_bars": bool,
-        "draw_line": bool,
-        "draw_symbol_index": bool,
-        "draw_symbols": bool,
-        "ele_ref_name": str,
-        "ix_ele_ref": int,
-        "ix_ele_ref_track": int,
-        "ix_universe": int,
-        "legend_text": str,
-        "line": PlotCurveLineInfo,
-        "message_text": str,
-        "name": str,
-        "smooth_line_calc": bool,
-        "symbol": PlotCurveSymbolInfo,
-        "symbol_every": int,
-        "symbol_line_width": int,
-        "use_y2": bool,
-        "valid": bool,
-        "why_invalid": str,
-        "y_axis_scale_factor": float,
-        "z_color_autoscale": bool,
-        "z_color_data_type": str,
-        "z_color_is_on": bool,
-        "z_color_max": float,
-        "z_color_min": float,
-    },
-)
-
-
-PlotGraphInfo = TypedDict(
-    "PlotGraphInfo",
-    {
-        "-1^ix_branch": int,
-        "clip": bool,
-        "draw_axes": bool,
-        "draw_curve_legend": bool,
-        "draw_grid": bool,
-        "draw_only_good_user_data_or_vars": bool,
-        "floor_plan_correct_distortion": bool,
-        "floor_plan_draw_building_wall": bool,
-        "floor_plan_draw_only_first_pass": bool,
-        "floor_plan_flip_label_side": bool,
-        "floor_plan_orbit_color": str,
-        "floor_plan_orbit_lattice": str,
-        "floor_plan_orbit_pattern": str,
-        "floor_plan_orbit_scale": float,
-        "floor_plan_orbit_width": int,
-        "floor_plan_rotation": float,
-        "floor_plan_size_is_absolute": bool,
-        "floor_plan_view": str,
-        "graph^type": str,
-        "is_valid": bool,
-        "ix_universe": int,
-        "limited": bool,
-        "name": str,
-        "num_curves": int,
-        "symbol_size_scale": float,
-        "title": str,
-        "title_suffix": str,
-        "why_invalid": str,
-        "x_axis^type": str,
-        "x_axis_scale_factor": float,
-        "x_bounds": str,
-        "x_draw_label": bool,
-        "x_draw_numbers": bool,
-        "x_label": str,
-        "x_label_color": str,
-        "x_label_offset": float,
-        "x_major_div_nominal": int,
-        "x_major_tick_len": float,
-        "x_max": float,
-        "x_min": float,
-        "x_minor_div": int,
-        "x_minor_div_max": int,
-        "x_minor_tick_len": float,
-        "x_number_offset": float,
-        "x_number_side": int,
-        "x_tick_side": int,
-        "y2_axis^type": str,
-        "y2_bounds": str,
-        "y2_draw_label": bool,
-        "y2_draw_numbers": bool,
-        "y2_label": str,
-        "y2_label_color": str,
-        "y2_label_offset": float,
-        "y2_major_div_nominal": int,
-        "y2_major_tick_len": float,
-        "y2_max": float,
-        "y2_min": float,
-        "y2_minor_div": int,
-        "y2_minor_div_max": int,
-        "y2_minor_tick_len": float,
-        "y2_mirrors_y": bool,
-        "y2_number_offset": float,
-        "y2_number_side": int,
-        "y2_tick_side": int,
-        "y_axis^type": str,
-        "y_bounds": str,
-        "y_draw_label": bool,
-        "y_draw_numbers": bool,
-        "y_label": str,
-        "y_label_color": str,
-        "y_label_offset": float,
-        "y_major_div_nominal": int,
-        "y_major_tick_len": float,
-        "y_max": float,
-        "y_min": float,
-        "y_minor_div": int,
-        "y_minor_div_max": int,
-        "y_minor_tick_len": float,
-        "y_number_offset": float,
-        "y_number_side": int,
-        "y_tick_side": int,
-        # "curve[1..N]": str,
-    },
-)
-
-
-PlotHistogramInfo = TypedDict(
-    "PlotHistogramInfo",
-    {
-        "center": float,
-        "density_normalized": bool,
-        "maximum": float,
-        "minimum": float,
-        "number": float,
-        "weight_by_charge": bool,
-        "width": float,
-    },
-)
-
-PlotLatLayoutInfo = TypedDict(
-    "PlotLatLayoutInfo",
-    {
-        "color": str,
-        "ele_s": float,
-        "ele_s_start": float,
-        "index": int,
-        "label_name": str,
-        "line_width": float,
-        "shape": str,
-        "y1": float,
-        "y2": float,
-    },
-)
-
-FloorPlanElementInfo = TypedDict(
-    "FloorPlanElementInfo",
-    {
-        "branch_index": int,
-        "color": str,
-        "ele_key": str,
-        "end1_r1": float,
-        "end1_r2": float,
-        "end1_theta": float,
-        "end2_r1": float,
-        "end2_r2": float,
-        "end2_theta": float,
-        "index": int,
-        "label_name": str,
-        "line_width": float,
-        "shape": str,
-        "y1": float,
-        "y2": float,
-        # Only for sbend
-        "ele_l": NotRequired[float],
-        "ele_angle": NotRequired[float],
-        "ele_e1": NotRequired[float],
-        "ele_e": NotRequired[float],
-    },
-)
-
-
-Point = Tuple[float, float]
 
 
 def _should_use_symbol_color(symbol_type: str, fill_pattern: str) -> bool:
@@ -373,9 +137,9 @@ class PlotCurveSymbols:
 @dataclasses.dataclass
 class PlotHistogram:
     xs: List[float]
-    bins: List[float]
+    bins: Union[int, Sequence[float], str, None]
     weights: List[float]
-    histtype: str
+    histtype: Literal["bar", "barstacked", "step", "stepfilled"]
     color: str
 
     def plot(self, ax: matplotlib.axes.Axes):
@@ -407,7 +171,7 @@ class PlotPatchBase:
         return {
             "edgecolor": self.edgecolor,
             "facecolor": self.facecolor,
-            "color": pgplot.mpl_color(self.color),
+            "color": pgplot.mpl_color(self.color or "black"),
             "linewidth": self.linewidth,
             "linestyle": self.linestyle,
             "antialiased": self.antialiased,
@@ -436,7 +200,7 @@ class PlotPatchRectangle(PlotPatchBase):
     width: float = 0.0
     height: float = 0.0
     angle: float = 0.0
-    rotation_point: str = "xy"
+    rotation_point: Union[Literal["xy", "center"], Point] = "xy"
 
     def to_mpl(self) -> matplotlib.patches.Rectangle:
         return matplotlib.patches.Rectangle(
@@ -763,7 +527,7 @@ class PlotCurve:
                 symbol=None,
                 histogram=PlotHistogram(
                     xs=xpoints,
-                    bins=histogram_info["number"],
+                    bins=int(histogram_info["number"]),
                     weights=ypoints,
                     histtype="step",
                     color=symbol_color,
@@ -1277,10 +1041,7 @@ def _box_to_patch(
     angle_start: float,
 ):
     return PlotPatchRectangle(
-        xy=(
-            x1 + off2 * np.sin(angle_start),
-            y1 - off2 * np.cos(angle_start),
-        ),
+        xy=(x1 + off2 * np.sin(angle_start), y1 - off2 * np.cos(angle_start)),
         width=np.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2),
         height=off1 + off2,
         linewidth=line_width,
@@ -1303,26 +1064,14 @@ def _create_x_lines(
 ) -> List[PlotCurveLine]:
     return [
         PlotCurveLine(
-            xs=[
-                x1 + off2 * np.sin(angle_start),
-                x2 - off1 * np.sin(angle_start),
-            ],
-            ys=[
-                y1 - off2 * np.cos(angle_start),
-                y2 + off1 * np.cos(angle_start),
-            ],
+            xs=[x1 + off2 * np.sin(angle_start), x2 - off1 * np.sin(angle_start)],
+            ys=[y1 - off2 * np.cos(angle_start), y2 + off1 * np.cos(angle_start)],
             linewidth=line_width,
             color=color,
         ),
         PlotCurveLine(
-            xs=[
-                x1 - off1 * np.sin(angle_start),
-                x2 + off2 * np.sin(angle_start),
-            ],
-            ys=[
-                y1 + off1 * np.cos(angle_start),
-                y2 - off2 * np.cos(angle_start),
-            ],
+            xs=[x1 - off1 * np.sin(angle_start), x2 + off2 * np.sin(angle_start)],
+            ys=[y1 + off1 * np.cos(angle_start), y2 - off2 * np.cos(angle_start)],
             linewidth=line_width,
             color=color,
         ),
@@ -1469,7 +1218,7 @@ def _create_sbend(
 
     rel_sin = np.sin(angle_start - rel_angle_start)
     rel_cos = np.cos(angle_start - rel_angle_start)
-    patches = [
+    patches: List[PlotPatch] = [
         PlotPatchArc(
             xy=(intersection[0], intersection[1]),
             width=(
@@ -1620,50 +1369,26 @@ def _create_bow_tie(
 ):
     return [
         PlotCurveLine(
-            [
-                x1 + off2 * np.sin(angle_start),
-                x2 - off1 * np.sin(angle_start),
-            ],
-            [
-                y1 - off2 * np.cos(angle_start),
-                y2 + off1 * np.cos(angle_start),
-            ],
+            [x1 + off2 * np.sin(angle_start), x2 - off1 * np.sin(angle_start)],
+            [y1 - off2 * np.cos(angle_start), y2 + off1 * np.cos(angle_start)],
             linewidth=line_width,
             color=color,
         ),
         PlotCurveLine(
-            [
-                x1 - off1 * np.sin(angle_start),
-                x2 + off2 * np.sin(angle_start),
-            ],
-            [
-                y1 + off1 * np.cos(angle_start),
-                y2 - off2 * np.cos(angle_start),
-            ],
+            [x1 - off1 * np.sin(angle_start), x2 + off2 * np.sin(angle_start)],
+            [y1 + off1 * np.cos(angle_start), y2 - off2 * np.cos(angle_start)],
             linewidth=line_width,
             color=color,
         ),
         PlotCurveLine(
-            [
-                x1 - off1 * np.sin(angle_start),
-                x2 - off1 * np.sin(angle_start),
-            ],
-            [
-                y1 + off1 * np.cos(angle_start),
-                y2 + off1 * np.cos(angle_start),
-            ],
+            [x1 - off1 * np.sin(angle_start), x2 - off1 * np.sin(angle_start)],
+            [y1 + off1 * np.cos(angle_start), y2 + off1 * np.cos(angle_start)],
             linewidth=line_width,
             color=color,
         ),
         PlotCurveLine(
-            [
-                x1 + off2 * np.sin(angle_start),
-                x2 + off2 * np.sin(angle_start),
-            ],
-            [
-                y1 - off2 * np.cos(angle_start),
-                y2 - off2 * np.cos(angle_start),
-            ],
+            [x1 + off2 * np.sin(angle_start), x2 + off2 * np.sin(angle_start)],
+            [y1 - off2 * np.cos(angle_start), y2 - off2 * np.cos(angle_start)],
             linewidth=line_width,
             color=color,
         ),
@@ -1944,31 +1669,24 @@ class FloorPlanElement:
         elif shape:
             raise ValueError(f"unhandled shape: {shape}")
 
-        if label_name and color and np.sin(((angle_end + angle_start) / 2)) > 0:
-            annotations.append(
-                PlotAnnotation(
-                    x=x1 + (x2 - x1) / 2 - 1.3 * off1 * np.sin(angle_start),
-                    y=y1 + (y2 - y1) / 2 + 1.3 * off1 * np.cos(angle_start),
-                    text=label_name,
-                    horizontalalignment="right",
-                    verticalalignment="center",
-                    color="black",
-                    clip_on=True,
-                    rotation=-90 + math.degrees((angle_end + angle_start) / 2),
-                    rotation_mode="anchor",
-                )
-            )
+        if label_name and color:
+            annotation_angle = math.degrees((angle_end + angle_start) / 2)
+            if np.sin(((angle_end + angle_start) / 2)) > 0:
+                annotation_angle += -90
+                align = "right"
+            else:
+                annotation_angle += 90
+                align = "left"
 
-        elif label_name and color and np.sin(((angle_end + angle_start) / 2)) <= 0:
             annotations.append(
                 PlotAnnotation(
                     x=x1 + (x2 - x1) / 2 - 1.3 * off1 * np.sin(angle_start),
                     y=y1 + (y2 - y1) / 2 + 1.3 * off1 * np.cos(angle_start),
                     text=label_name,
-                    horizontalalignment="left",
+                    horizontalalignment=align,
                     verticalalignment="center",
                     color="black",
-                    rotation=90 + math.degrees((angle_end + angle_start) / 2),
+                    rotation=annotation_angle,
                     clip_on=True,
                     rotation_mode="anchor",
                 )
@@ -2339,9 +2057,9 @@ def should_include_layout(
     graph_name: Optional[str] = None,
 ) -> bool:
     if graph_name is not None:
-        graph_names = [graph_name]
+        graph_names: List[str] = [graph_name]
     else:
-        graph_names = get_graphs_in_region(tao, region_name=region_name)
+        graph_names: List[str] = get_graphs_in_region(tao, region_name=region_name)
 
     if not len(graph_names):
         return False
