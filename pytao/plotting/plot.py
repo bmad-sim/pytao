@@ -9,6 +9,7 @@ import matplotlib.collections
 import matplotlib.patches
 import matplotlib.path
 import matplotlib.pyplot as plt
+from matplotlib.ticker import AutoMinorLocator
 import numpy as np
 
 import pydantic.dataclasses as dataclasses
@@ -329,6 +330,43 @@ class GraphBase:
     graph_name: str
     xlim: Point = _point_field
     ylim: Point = _point_field
+    xlabel: str = ""
+    ylabel: str = ""
+    title: str = ""
+    show_axes: bool = True
+    draw_grid: bool = True
+    draw_legend: bool = True
+
+    def _setup_axis(self, ax: matplotlib.axes.Axes):
+        if not self.show_axes:
+            ax.set_axis_off()
+
+        ax.set_title(self.title)
+        ax.set_xlabel(self.xlabel)
+        ax.set_ylabel(self.ylabel)
+        ax.set_xlim(_fix_limits(self.xlim))
+        ax.set_ylim(_fix_limits(self.ylim))
+        ax.set_axisbelow(True)
+        if self.draw_grid:
+            ax.grid(self.draw_grid, which="major", axis="both")
+            ax.xaxis.set_minor_locator(AutoMinorLocator())
+            ax.tick_params(which="minor", length=4, color="black")
+            ax.yaxis.set_minor_locator(AutoMinorLocator())
+            ax.tick_params(which="minor", length=4, color="black")
+            ax.set_xticks(
+                np.linspace(
+                    ax.get_xlim()[0],
+                    ax.get_xlim()[1],
+                    self.info["x_major_div_nominal"] - 1,
+                )
+            )
+            # ax.set_yticks(
+            #     np.linspace(
+            #         ax.get_ylim()[0],
+            #         ax.get_ylim()[1],
+            #         self.info["y_major_div_nominal"] - 1,
+            #     )
+            # )
 
 
 @dataclasses.dataclass
@@ -570,14 +608,6 @@ class PlotCurve:
 
 @dataclasses.dataclass
 class BasicGraph(GraphBase):
-    xlim: Point = _point_field
-    ylim: Point = _point_field
-    xlabel: str = ""
-    ylabel: str = ""
-    title: str = ""
-    show_axes: bool = True
-    draw_grid: bool = True
-    draw_legend: bool = True
     curves: List[PlotCurve] = Field(default_factory=list)
 
     @classmethod
@@ -630,21 +660,13 @@ class BasicGraph(GraphBase):
             assert ax is not None
 
         for curve in self.curves:
+            assert not curve.info["use_y2"], "TODO: y2 support"
             curve.plot(ax)
 
         if self.draw_legend and any(curve.legend_label for curve in self.curves):
             ax.legend()
 
-        if not self.show_axes:
-            ax.set_axis_off()
-
-        ax.set_title(self.title)
-        ax.set_xlabel(self.xlabel)
-        ax.set_ylabel(self.ylabel)
-        ax.grid(self.draw_grid, which="major", axis="both")
-        ax.set_xlim(_fix_limits(self.xlim))
-        ax.set_ylim(_fix_limits(self.ylim))
-        ax.set_axisbelow(True)
+        self._setup_axis(ax)
         return ax
 
 
@@ -870,8 +892,6 @@ class LatticeLayoutElement:
 @dataclasses.dataclass
 class LatticeLayoutGraph(GraphBase):
     elements: List[LatticeLayoutElement] = Field(default_factory=list)
-    xlim: Point = _point_field
-    ylim: Point = _point_field
     border_xlim: Point = _point_field
     universe: int = 0
     branch: int = 0
@@ -899,9 +919,8 @@ class LatticeLayoutGraph(GraphBase):
         y_max = self.y_max
         ax.plot([0, 0], [-1.7 * y_max, 1.3 * y_max], alpha=0)
 
-        # ax.set_xlim(_fix_limits(self.xlim))
-        # ax.set_ylim(_fix_limits(self.ylim))
-        ax.autoscale_view(tight=True)
+        # ax.autoscale_view(tight=True)
+        self._setup_axis(ax)
         return ax
 
     @property
@@ -1930,12 +1949,6 @@ class FloorPlanGraph(GraphBase):
     building_walls: BuildingWalls = Field(default_factory=BuildingWalls)
     floor_orbits: Optional[FloorOrbits] = None
     elements: List[FloorPlanElement] = Field(default_factory=list)
-    xlabel: str = ""
-    ylabel: str = ""
-    title: str = ""
-    show_axes: bool = False
-    draw_grid: bool = False
-    draw_legend: bool = False
 
     @classmethod
     def from_tao(
@@ -2009,19 +2022,7 @@ class FloorPlanGraph(GraphBase):
         if self.floor_orbits is not None:
             self.floor_orbits.plot(ax)
 
-        # if not self.show_axes:
-        #     ax.set_axis_off()
-
-        ax.set_title(self.title)
-        ax.set_xlabel(self.xlabel)
-        ax.set_ylabel(self.ylabel)
-        ax.grid(self.draw_grid, which="major", axis="both")
-        ax.set_xlim(_fix_limits(self.xlim))
-        ax.set_ylim(_fix_limits(self.ylim))
-        ax.set_xlim(_fix_limits(self.xlim))
-        ax.set_ylim(_fix_limits(self.ylim))
-        # ax.autoscale_view(tight=False)
-        ax.set_axisbelow(True)
+        self._setup_axis(ax)
         return ax
 
 
