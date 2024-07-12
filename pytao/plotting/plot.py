@@ -100,13 +100,14 @@ class PlotCurveLine:
     linestyle: str = "solid"
     linewidth: float = 1.0
 
-    def plot(self, ax: matplotlib.axes.Axes):
+    def plot(self, ax: matplotlib.axes.Axes, label: Optional[str] = None):
         return ax.plot(
             self.xs,
             self.ys,
             color=pgplot.mpl_color(self.color),
             linestyle=self.linestyle,
             linewidth=self.linewidth,
+            label=label,
         )
 
 
@@ -121,7 +122,7 @@ class PlotCurveSymbols:
     markeredgewidth: float
     linewidth: float = 0
 
-    def plot(self, ax: matplotlib.axes.Axes):
+    def plot(self, ax: matplotlib.axes.Axes, label: Optional[str] = None):
         return ax.plot(
             self.xs,
             self.ys,
@@ -131,6 +132,7 @@ class PlotCurveSymbols:
             marker=self.marker,
             markeredgewidth=self.markeredgewidth,
             linewidth=self.linewidth,
+            label=label,
         )
 
 
@@ -334,15 +336,22 @@ class PlotCurve:
     histogram: Optional[PlotHistogram] = None
     patches: Optional[List[PlotPatch]] = None
 
-    def plot(self, ax: matplotlib.axes.Axes) -> None:
+    def plot(self, ax: matplotlib.axes.Axes):
+        res = []
         if self.line is not None:
-            self.line.plot(ax)
+            res.append(self.line.plot(ax, label=self.legend_label))
         if self.symbol is not None:
-            self.symbol.plot(ax)
+            res.append(
+                self.symbol.plot(
+                    ax,
+                    label=self.legend_label if self.line is None else None,
+                )
+            )
         if self.histogram is not None:
-            self.histogram.plot(ax)
+            res.append(self.histogram.plot(ax))
         for patch in self.patches or []:
-            patch.plot(ax)
+            res.append(patch.plot(ax))
+        return res
 
     @property
     def legend_label(self) -> str:
@@ -624,9 +633,8 @@ class BasicGraph(PlotBase):
         for curve in self.curves:
             curve.plot(ax)
 
-        # TODO
-        # if self.draw_legend:
-        #     ax.legend(legend_items, labels)
+        if self.draw_legend:
+            ax.legend()
 
         if not self.show_axes:
             ax.set_axis_off()
