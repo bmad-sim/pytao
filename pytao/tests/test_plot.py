@@ -11,6 +11,7 @@ from .conftest import new_tao, test_artifacts
 from .. import Tao
 from ..plotting.plot import (
     MatplotlibGraphManager,
+    make_graph,
     plot_all_requested,
     plot_all_visible,
     plot_graph,
@@ -82,7 +83,8 @@ def test_plot_floor_layout(tao_cls):
         plt.show()
 
         tao.cmd("place -no_buffer r12 floor_plan")
-        _, graph = plot_graph(tao, "r12", "g")
+        graph = make_graph(tao, "r12", "g")
+        plot_graph(tao, graph)
         plt.show()
         rich.print(graph)
 
@@ -121,9 +123,9 @@ def test_plot_manager(init_filename: pathlib.Path):
     with new_tao(Tao, f"-init {init_filename}", plotting=plotting) as tao:
         manager = MatplotlibGraphManager(tao)
         if not plotting:
-            assert len(manager.plot_all_requested())
+            assert len(manager.place_all_requested())
         for region in manager.regions:
-            manager.plot(region)
+            manager.plot_region(region)
         plt.show()
 
         for region in list(manager.regions):

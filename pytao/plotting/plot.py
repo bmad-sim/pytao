@@ -632,7 +632,7 @@ class BasicGraph(GraphBase):
         for curve in self.curves:
             curve.plot(ax)
 
-        if self.draw_legend:
+        if self.draw_legend and any(curve.legend_label for curve in self.curves):
             ax.legend()
 
         if not self.show_axes:
@@ -2087,16 +2087,14 @@ def plot_layout(
 
 def plot_graph(
     tao: Tao,
-    region_name: str,
-    graph_name: str,
+    graph: AnyGraph,
     *,
     ax: Optional[matplotlib.axes.Axes] = None,
     layout_ax: Optional[matplotlib.axes.Axes] = None,
     include_layout: bool = True,
-) -> Tuple[matplotlib.axes.Axes, AnyGraph]:
-    graph = make_graph(tao, region_name, graph_name)
+) -> matplotlib.axes.Axes:
     if ax is None:
-        if should_include_layout(tao, region_name, graph_name):
+        if should_include_layout(tao, graph.region_name, graph.graph_name):
             _, (ax, layout_ax) = plt.subplots(
                 nrows=2,
                 ncols=1,
@@ -2122,7 +2120,7 @@ def plot_graph(
     #
     #     rich.print(graph)
     #     plt.show()
-    return ax, graph
+    return graph
 
 
 def get_plot_graph_info(tao: Tao, region_name: str, graph_name: str) -> PlotGraphInfo:
@@ -2192,12 +2190,8 @@ def plot_region(
     graphs = []
     for ax, graph_name in zip(gs[:, 0], graph_names):
         try:
-            graph = plot_graph(
-                tao=tao,
-                region_name=region_name,
-                graph_name=graph_name,
-                ax=ax,
-            )
+            graph = make_graph(tao, region_name, graph_name)
+            plot_graph(tao=tao, graph=graph, ax=ax)
         except GraphInvalidError as ex:
             if not skip_invalid_graphs:
                 raise
@@ -2258,12 +2252,13 @@ AnyGraph = Union[BasicGraph, LatticeLayoutGraph, FloorPlanGraph]
 class GraphManager:
     tao: Tao
     to_place: Dict[str, str]
-    regions: Dict[str, AnyGraph]
+    regions: Dict[str, Dict[str, AnyGraph]]
 
     def __init__(self, tao: Tao) -> None:
         self.tao = tao
         self.to_place = {}
         self.regions = {}
+        self.update_place_buffer()
 
     def update_place_buffer(self):
         for item in self.tao.place_buffer():
@@ -2277,7 +2272,7 @@ class GraphManager:
             else:
                 self.to_place[region] = graph
 
-    def plot_all_requested(self, *, ignore_invalid: bool = True):
+    def place_all_requested(self, *, ignore_invalid: bool = True):
         self.update_place_buffer()
         result = {}
         for region, graph_name in self.to_place.items():
@@ -2292,18 +2287,17 @@ class GraphManager:
         self.regions.update(result)
         return result
 
-    def place(self, region_name: str, graph_name: str) -> AnyGraph:
+    def _update_region(self, region_name: str):
+        region = self.regions.setdefault(region_name, {})
+
+        for graph_name in get_graphs_in_region(self.tao, region_name):
+            graph = make_graph(self.tao, region_name, graph_name)
+            region[graph_name] = graph
+
+    def place(self, region_name: str, graph_name: str) -> Dict[str, AnyGraph]:
         self.tao.cmd(f"place -no_buffer {region_name} {graph_name}")
-
-        in_region = get_graphs_in_region(self.tao, region_name)
-
-        # TODO: can there be more than one graph in a region?
-        # graphs seem to replace the last one in the region.
-        assert len(in_region) == 1
-
-        graph = make_graph(self.tao, region_name, in_region[0])
-        self.regions[region_name] = graph
-        return graph
+        self._update_region(region_name)
+        return self.regions[region_name]
 
     def clear(self, region_name: str):
         try:
@@ -2321,7 +2315,49 @@ class MatplotlibGraphManager(GraphManager):
     def plot(
         self,
         region_name: str,
+        graph_name: str,
+        include_layout: bool = True,
         ax: Optional[matplotlib.axes.Axes] = None,
+        layout_ax: Optional[matplotlib.axes.Axes] = None,
     ) -> matplotlib.axes.Axes:
+        logger.debug(f"Plotting {region_name}.{graph_name}")
         # TODO doesn't include layout
-        return self.regions[region_name].plot(ax=ax)
+        return plot_graph(
+            self.tao,
+            self.regions[region_name][graph_name],
+            include_layout=include_layout,
+            ax=ax,
+            layout_ax=layout_ax,
+        )
+
+    def plot_region(
+        self,
+        region_name: str,
+        include_layout: bool = True,
+        ax: Optional[matplotlib.axes.Axes] = None,
+    ) -> Dict[str, matplotlib.axes.Axes]:
+        # TODO doesn't include layout
+        if region_name in self.to_place:
+            self.place_all_requested()
+
+        res = {}
+        for graph_name in self.regions[region_name]:
+            res[f"{region_name}.{graph_name}"] = self.plot(
+                region_name=region_name,
+                graph_name=graph_name,
+                ax=ax,
+                include_layout=include_layout,
+            )
+        return res
+
+    def plot_all(
+        self,
+        include_layout: bool = True,
+    ) -> Dict[str, matplotlib.axes.Axes]:
+        self.place_all_requested()
+        # TODO doesn't include layout
+
+        res = {}
+        for region_name, region in self.regions.items():
+            res.update(self.plot_region(region_name, include_layout=include_layout))
+        return res
