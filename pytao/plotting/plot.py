@@ -967,8 +967,8 @@ class LatticeLayoutElement:
 
         else:
             # Case where element is wrapped round the lattice ends.
-            s_min = graph_info["x_min"]
-            s_max = graph_info["x_max"]
+            s_min = max((graph_info["x_min"], s1 + (s1 + s2) / 2.0))
+            s_max = min((graph_info["x_max"], s1 - (s1 + s2) / 2.0))
 
             for xs, ys in _get_wrapped_shape_coords(
                 shape=shape,
@@ -1004,6 +1004,7 @@ class LatticeLayoutElement:
                     color=color,
                 )
             )
+
         return cls(
             info=info,
             patches=patches,
