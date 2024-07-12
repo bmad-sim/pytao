@@ -1507,6 +1507,11 @@ class FloorPlanElement:
         patches: List[PlotPatch] = []
         annotations: List[PlotAnnotation] = []
 
+        if ":" in shape:
+            _shape_prefix, shape = shape.split(":", 1)
+        else:
+            _shape_prefix, shape = "", shape
+
         if ele_key == "drift" or ele_key == "kicker":
             # draw drift element
             lines.append(PlotCurveLine(xs=[x1, x2], ys=[y1, y2], color="black"))
@@ -1651,21 +1656,6 @@ class FloorPlanElement:
             )
             lines.extend(sbend_lines or [])
             patches.extend(sbend_patches or [])
-        elif shape in {"asym_var:box", "var:box"}:
-            # TODO this is incorrect
-            patches.append(
-                _box_to_patch(
-                    x1=x1,
-                    x2=x2,
-                    y1=y1,
-                    y2=y2,
-                    off1=off1,
-                    off2=off2,
-                    line_width=line_width,
-                    color=color,
-                    angle_start=angle_start,
-                )
-            )
         elif shape:
             raise ValueError(f"unhandled shape: {shape}")
 
