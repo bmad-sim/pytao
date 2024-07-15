@@ -1090,9 +1090,10 @@ def parse_plot_lat_layout(lines, cmd=""):
     return _parse_by_keys_to_types(
         lines,
         {
-            "index": int,
+            "ix_branch": int,
+            "ix_ele": int,
             "ele_s_start": float,
-            "ele_s": float,
+            "ele_s_end": float,
             "line_width": float,
             "shape": str,
             "y1": float,
