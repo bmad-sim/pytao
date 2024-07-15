@@ -219,9 +219,9 @@ PlotLatLayoutInfo = TypedDict(
     "PlotLatLayoutInfo",
     {
         "color": str,
-        "ele_s": float,
+        "ele_s_end": float,
         "ele_s_start": float,
-        "index": int,
+        "ix_ele": int,
         "label_name": str,
         "line_width": float,
         "shape": str,

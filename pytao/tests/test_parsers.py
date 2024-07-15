@@ -205,6 +205,7 @@ def test_floor_plan_1(tao_cls):
         tao_cls,
         "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
     ) as tao:
+        tao.cmd("place -no_buffer r13.g floor_plan")
         res = tao.floor_plan(graph="r13.g")
     assert "branch_index" in res[0]
 

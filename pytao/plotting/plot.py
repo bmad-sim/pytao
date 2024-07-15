@@ -695,7 +695,7 @@ class LatticeLayoutElement:
     @classmethod
     def from_info(cls, graph_info: PlotGraphInfo, info: PlotLatLayoutInfo, y2_floor: float):
         s1 = info["ele_s_start"]
-        s2 = info["ele_s"]
+        s2 = info["ele_s_end"]
         y1 = info["y1"]
         y2 = -info["y2"]  # Note negative sign.
         width = info["line_width"]
