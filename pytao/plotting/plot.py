@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import math
+import typing
 from typing import Dict, List, Literal, Optional, Sequence, Tuple, Union, cast
 
 import matplotlib.axes
@@ -14,7 +15,6 @@ import numpy as np
 
 import pydantic.dataclasses as dataclasses
 from pydantic.dataclasses import Field
-from pytao import Tao
 
 from . import pgplot, util
 from .types import (
@@ -29,6 +29,10 @@ from .types import (
     Point,
     WaveParams,
 )
+
+
+if typing.TYPE_CHECKING:
+    from .. import Tao
 
 logger = logging.getLogger(__name__)
 
@@ -337,6 +341,14 @@ class GraphBase:
     draw_grid: bool = True
     draw_legend: bool = True
 
+    def update(self, manager: GraphManager, *, error_on_new_type: bool = True):
+        graph = manager.update_graph(self.region_name, self.graph_name)
+        if error_on_new_type and not isinstance(graph, type(self)):
+            raise ValueError(
+                f"Graph type changed from {type(self).__name__} to {type(graph).__name__}"
+            )
+        return graph
+
     def _setup_axis(self, ax: matplotlib.axes.Axes):
         if not self.show_axes:
             ax.set_axis_off()
@@ -609,6 +621,32 @@ class PlotCurve:
 @dataclasses.dataclass
 class BasicGraph(GraphBase):
     curves: List[PlotCurve] = Field(default_factory=list)
+
+    def clamp_x_range(self, x0: Optional[float], x1: Optional[float]) -> Tuple[float, float]:
+        if x0 is None:
+            x0 = self.get_x_range()[0]
+        if x1 is None:
+            x1 = self.get_x_range()[1]
+
+        if self.is_s_plot:
+            # Don't go to negative 's' values
+            x0 = max((0.0, x0))
+        return (x0, x1)
+
+    @property
+    def is_s_plot(self) -> bool:
+        # TODO: pytao gui checks for x_axis^type == "s" but this seems different
+        # now; is there a better way here?
+        return self.info["x_label"].lower().replace(" ", "") in {"s[m]", "s(m)"}
+
+    def get_x_range(self) -> Tuple[float, float]:
+        return (self.info["x_min"], self.info["x_max"])
+
+    def get_num_points(self) -> int:
+        for curve in self.curves:
+            if curve.line is not None:
+                return len(curve.line.xs)
+        return 401  # per the docs, this is the default for n_curve_points
 
     @classmethod
     def from_tao(
@@ -2288,16 +2326,20 @@ class GraphManager:
         self.regions.update(result)
         return result
 
-    def _update_region(self, region_name: str):
-        region = self.regions.setdefault(region_name, {})
+    def update_graph(self, region_name: str, graph_name: str):
+        graph = make_graph(self.tao, region_name, graph_name)
 
+        region = self.regions.setdefault(region_name, {})
+        region[graph_name] = graph
+        return graph
+
+    def update_region(self, region_name: str):
         for graph_name in get_graphs_in_region(self.tao, region_name):
-            graph = make_graph(self.tao, region_name, graph_name)
-            region[graph_name] = graph
+            self.update_graph(region_name, graph_name)
 
     def place(self, region_name: str, graph_name: str) -> Dict[str, AnyGraph]:
         self.tao.cmd(f"place -no_buffer {region_name} {graph_name}")
-        self._update_region(region_name)
+        self.update_region(region_name)
         return self.regions[region_name]
 
     def clear(self, region_name: str):
@@ -2322,7 +2364,6 @@ class MatplotlibGraphManager(GraphManager):
         layout_ax: Optional[matplotlib.axes.Axes] = None,
     ) -> matplotlib.axes.Axes:
         logger.debug(f"Plotting {region_name}.{graph_name}")
-        # TODO doesn't include layout
         return plot_graph(
             self.tao,
             self.regions[region_name][graph_name],
@@ -2337,7 +2378,6 @@ class MatplotlibGraphManager(GraphManager):
         include_layout: bool = True,
         ax: Optional[matplotlib.axes.Axes] = None,
     ) -> Dict[str, matplotlib.axes.Axes]:
-        # TODO doesn't include layout
         if region_name in self.to_place:
             self.place_all_requested()
 
@@ -2356,9 +2396,8 @@ class MatplotlibGraphManager(GraphManager):
         include_layout: bool = True,
     ) -> Dict[str, matplotlib.axes.Axes]:
         self.place_all_requested()
-        # TODO doesn't include layout
 
         res = {}
-        for region_name, region in self.regions.items():
+        for region_name in self.regions:
             res.update(self.plot_region(region_name, include_layout=include_layout))
         return res
