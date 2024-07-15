@@ -51,10 +51,12 @@ def tao_cls(request: pytest.FixtureRequest):
 
 
 @contextlib.contextmanager
-def new_tao(tao_cls, init, plotting: bool = False):
+def new_tao(tao_cls, init, plot: bool = False, external_plotting: bool = True):
     init = os.path.expandvars(init)
-    if not plotting:
-        init = " ".join((init, "-noplot", "-external_plotting"))
+    if external_plotting:
+        init = " ".join((init, "-external_plotting"))
+    if not plot:
+        init = " ".join((init, "-noplot"))
     tao = tao_cls(init)
     yield tao
     if hasattr(tao, "close_subprocess"):

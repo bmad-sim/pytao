@@ -256,7 +256,7 @@ for method, metadata in cmds_from_tao.items():
         args.append("verbose=True")
         test_code = f"""
 with ensure_successful_parsing(caplog):
-    with new_tao(tao_cls, '{test_meta['init']}') as tao:
+    with new_tao(tao_cls, '{test_meta['init']}', external_plotting=False) as tao:
         tao.{clean_method}({', '.join(args)})
         """
         method_template = f"""
