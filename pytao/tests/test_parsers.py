@@ -262,7 +262,7 @@ def test_plot_lat_layout_1(tao_cls):
     with new_tao(
         tao_cls, "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init"
     ) as tao:
-        assert "index" in tao.plot_lat_layout(ix_uni="1", ix_branch="0")[0]
+        assert "ix_ele" in tao.plot_lat_layout(ix_uni="1", ix_branch="0")[0]
 
 
 def test_plot_line_1(tao_cls):
