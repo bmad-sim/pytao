@@ -27,6 +27,7 @@ from bokeh.models.sources import ColumnDataSource
 from bokeh.plotting import figure
 from typing_extensions import NotRequired, TypedDict
 
+from . import pgplot
 from .plot import (
     AnyGraph,
     BasicGraph,
@@ -221,7 +222,7 @@ def _draw_layout_element(
         fig.text(
             [annotation.x],
             [annotation.y],
-            text=[annotation.text],
+            text=[pgplot.mathjax_string(annotation.text)],
             angle=math.radians(annotation.rotation),
             color=elem.color,
             text_align="right",  # annotation.horizontalalignment,
@@ -282,9 +283,9 @@ class BokehLatticeGraph(BokehGraphBase[LatticeLayoutGraph]):
     ) -> figure:
         graph = self.graph
         fig = figure(
-            title=graph.title,
-            x_axis_label=graph.xlabel,
-            y_axis_label=graph.ylabel,
+            title=pgplot.mathjax_string(graph.title),
+            x_axis_label=pgplot.mathjax_string(graph.xlabel),
+            y_axis_label=pgplot.mathjax_string(graph.ylabel),
             toolbar_location=toolbar_location,
             tools=tools,
             aspect_ratio=self.aspect_ratio,
@@ -368,9 +369,9 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
     ) -> figure:
         graph = self.graph
         fig = figure(
-            title=graph.title,
-            x_axis_label=graph.xlabel,
-            y_axis_label=graph.ylabel,
+            title=pgplot.mathjax_string(graph.title),
+            x_axis_label=pgplot.mathjax_string(graph.xlabel),
+            y_axis_label=pgplot.mathjax_string(graph.ylabel),
             toolbar_location=toolbar_location,
             tools=tools,
             sizing_mode=sizing_mode,

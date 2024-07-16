@@ -88,7 +88,7 @@ class PlotAnnotation:
         return ax.text(
             x=self.x,
             y=self.y,
-            s=self.text,
+            s=pgplot.mpl_string(self.text),
             horizontalalignment=self.horizontalalignment,
             verticalalignment=self.verticalalignment,
             clip_on=self.clip_on,
@@ -353,9 +353,9 @@ class GraphBase:
         if not self.show_axes:
             ax.set_axis_off()
 
-        ax.set_title(self.title)
-        ax.set_xlabel(self.xlabel)
-        ax.set_ylabel(self.ylabel)
+        ax.set_title(pgplot.mpl_string(self.title))
+        ax.set_xlabel(pgplot.mpl_string(self.xlabel))
+        ax.set_ylabel(pgplot.mpl_string(self.ylabel))
         ax.set_xlim(_fix_limits(self.xlim))
         ax.set_ylim(_fix_limits(self.ylim))
         ax.set_axisbelow(True)
@@ -392,12 +392,12 @@ class PlotCurve:
     def plot(self, ax: matplotlib.axes.Axes):
         res = []
         if self.line is not None:
-            res.append(self.line.plot(ax, label=self.legend_label))
+            res.append(self.line.plot(ax, label=pgplot.mpl_string(self.legend_label)))
         if self.symbol is not None:
             res.append(
                 self.symbol.plot(
                     ax,
-                    label=self.legend_label if self.line is None else None,
+                    label=pgplot.mpl_string(self.legend_label) if self.line is None else None,
                 )
             )
         if self.histogram is not None:
@@ -408,11 +408,11 @@ class PlotCurve:
 
     @property
     def legend_label(self) -> str:
-        legend_text = pgplot.mpl_string(self.info["legend_text"])
+        legend_text = self.info["legend_text"]
         if legend_text:
             return legend_text
 
-        data_type = pgplot.mpl_string(self.info["data_type"])
+        data_type = self.info["data_type"]
         return data_type if data_type == "physical_aperture" else ""
 
     @classmethod
@@ -683,9 +683,9 @@ class BasicGraph(GraphBase):
             graph_name=graph_name,
             curves=curves,
             show_axes=info["draw_axes"],
-            title=pgplot.mpl_string("{title} {title_suffix}".format(**info)),
-            xlabel=pgplot.mpl_string(info["x_label"]),
-            ylabel=pgplot.mpl_string(info["y_label"]),
+            title="{title} {title_suffix}".format(**info),
+            xlabel=info["x_label"],
+            ylabel=info["y_label"],
             draw_grid=info["draw_grid"],
             xlim=(info["x_min"], info["x_max"]),
             ylim=(info["y_min"], info["y_max"]),
@@ -2048,9 +2048,9 @@ class FloorPlanGraph(GraphBase):
             elements=elements,
             building_walls=building_walls,
             floor_orbits=floor_orbits,
-            title=pgplot.mpl_string("{title} {title_suffix}".format(**info)),
-            xlabel=pgplot.mpl_string(info["x_label"]),
-            ylabel=pgplot.mpl_string(info["y_label"]),
+            title="{title} {title_suffix}".format(**info),
+            xlabel=info["x_label"],
+            ylabel=info["y_label"],
             draw_grid=info["draw_grid"],
             xlim=(info["x_min"], info["x_max"]),
             ylim=(info["y_min"], info["y_max"]),

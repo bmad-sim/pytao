@@ -17,73 +17,73 @@ def mpl_color(pgplot_color: str) -> str:
 
 
 _pgplot_to_mpl_chars = [
-    (" ", "\\ "),
-    ("%", "\\%"),
-    ("\\\\(2265)", "\\partial"),
-    ("\\\\ga", "\\alpha"),
-    ("\\\\gb", "\\beta"),
-    ("\\\\gg", "\\gamma"),
-    ("\\\\gd", "\\delta"),
-    ("\\\\ge", "\\epsilon"),
-    ("\\\\gz", "\\zeta"),
-    ("\\\\gy", "\\eta"),
-    ("\\\\gh", "\\theta"),
-    ("\\\\gi", "\\iota"),
-    ("\\\\gk", "\\kappa"),
-    ("\\\\gl", "\\lambda"),
-    ("\\\\gm", "\\mu"),
-    ("\\\\gn", "\\nu"),
-    ("\\\\gc", "\\xi"),
-    ("\\\\go", "\\omicron"),
-    ("\\\\gp", "\\pi"),
-    ("\\\\gr", "\\rho"),
-    ("\\\\gs", "\\sigma"),
-    ("\\\\gt", "\\tau"),
-    ("\\\\gu", "\\upsilon"),
-    ("\\\\gf", "\\phi"),
-    ("\\\\gx", "\\chi"),
-    ("\\\\gq", "\\psi"),
-    ("\\\\gw", "\\omega"),
-    ("\\\\gA", "A"),
-    ("\\\\gB", "B"),
-    ("\\\\gG", "\\Gamma"),
-    ("\\\\gD", "\\Delta"),
-    ("\\\\gE", "E"),
-    ("\\\\gZ", "Z"),
-    ("\\\\gY", "H"),
-    ("\\\\gH", "\\Theta"),
-    ("\\\\gI", "I"),
-    ("\\\\gK", "\\Kappa"),
-    ("\\\\gL", "\\Lambda"),
-    ("\\\\gM", "M"),
-    ("\\\\gN", "N"),
-    ("\\\\gC", "\\Xi"),
-    ("\\\\gO", "O"),
-    ("\\\\gP", "\\Pi"),
-    ("\\\\gR", "P"),
-    ("\\\\gS", "\\Sigma"),
-    ("\\\\gT", "T"),
-    ("\\\\gU", "\\Upsilon"),
-    ("\\\\gF", "\\Phi"),
-    ("\\\\gX", "X"),
-    ("\\\\gQ", "\\Psi"),
-    ("\\\\gW", "\\Omega"),
-    ("\\\\fn", ""),
+    (" ", r"\ "),
+    ("%", r"\%"),
+    (r"\\(2265)", r"\partial"),
+    (r"\\ga", r"\alpha"),
+    (r"\\gb", r"\beta"),
+    (r"\\gg", r"\gamma"),
+    (r"\\gd", r"\delta"),
+    (r"\\ge", r"\epsilon"),
+    (r"\\gz", r"\zeta"),
+    (r"\\gy", r"\eta"),
+    (r"\\gh", r"\theta"),
+    (r"\\gi", r"\iota"),
+    (r"\\gk", r"\kappa"),
+    (r"\\gl", r"\lambda"),
+    (r"\\gm", r"\mu"),
+    (r"\\gn", r"\nu"),
+    (r"\\gc", r"\xi"),
+    (r"\\go", r"\omicron"),
+    (r"\\gp", r"\pi"),
+    (r"\\gr", r"\rho"),
+    (r"\\gs", r"\sigma"),
+    (r"\\gt", r"\tau"),
+    (r"\\gu", r"\upsilon"),
+    (r"\\gf", r"\phi"),
+    (r"\\gx", r"\chi"),
+    (r"\\gq", r"\psi"),
+    (r"\\gw", r"\omega"),
+    (r"\\gA", "A"),
+    (r"\\gB", "B"),
+    (r"\\gG", r"\Gamma"),
+    (r"\\gD", r"\Delta"),
+    (r"\\gE", "E"),
+    (r"\\gZ", "Z"),
+    (r"\\gY", "H"),
+    (r"\\gH", r"\Theta"),
+    (r"\\gI", "I"),
+    (r"\\gK", r"\Kappa"),
+    (r"\\gL", r"\Lambda"),
+    (r"\\gM", "M"),
+    (r"\\gN", "N"),
+    (r"\\gC", r"\Xi"),
+    (r"\\gO", "O"),
+    (r"\\gP", r"\Pi"),
+    (r"\\gR", "P"),
+    (r"\\gS", r"\Sigma"),
+    (r"\\gT", "T"),
+    (r"\\gU", r"\Upsilon"),
+    (r"\\gF", r"\Phi"),
+    (r"\\gX", "X"),
+    (r"\\gQ", r"\Psi"),
+    (r"\\gW", r"\Omega"),
+    (r"\\fn", ""),
 ]
 
 
 def mpl_string(value: str) -> str:
-    """Takes string with pgplot characters and returns string with characters replaced with matplotlib equivalent.
-    Raises NotImplementedError if an unknown pgplot character is used."""
-    if "\\" not in value:
+    """Takes string with pgplot characters and returns string with characters replaced with matplotlib equivalent."""
+    backslash = "\\"
+    if backslash not in value:
         return value
 
-    value = value.replace("\\", "\\\\")
+    value = value.replace(backslash, r"\\")
 
     result = f"${value}$"
-    while "\\\\d" in result and "\\\\u" in result:
-        d_pos = result.find("\\\\d")
-        u_pos = result.find("\\\\u")
+    while r"\\d" in result and r"\\u" in result:
+        d_pos = result.find(r"\\d")
+        u_pos = result.find(r"\\u")
         if d_pos < u_pos:
             sx = result[d_pos : u_pos + 3]
             result = result.replace(sx, "_" + sx[3:-3])
@@ -98,6 +98,17 @@ def mpl_string(value: str) -> str:
         logger.debug(f"Unknown pgplot character in string: {result}")
 
     return result
+
+
+def mathjax_string(value: str) -> str:
+    """
+    Takes string with pgplot characters and returns string with characters replaced with MathJax equivalent.
+    """
+    res = mpl_string(value)
+    if res.startswith("$") and res.endswith("$"):
+        print(f"${res}$")
+        return f"${res}$"
+    return res
 
 
 styles = {
