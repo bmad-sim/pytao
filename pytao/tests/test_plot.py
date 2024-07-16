@@ -1,5 +1,4 @@
 import logging
-import os
 import pytest
 import re
 import matplotlib.pyplot as plt
@@ -17,19 +16,6 @@ from ..plotting.plot import (
 )
 
 logger = logging.getLogger(__name__)
-
-init_files = list(
-    pathlib.Path(os.path.expandvars("$ACC_ROOT_DIR/regression_tests/python_test/")).glob(
-        "tao.init*"
-    )
-)
-
-
-@pytest.fixture(params=init_files, ids=[fn.name for fn in init_files])
-def init_filename(
-    request: pytest.FixtureRequest,
-) -> pathlib.Path:
-    return request.param
 
 
 @pytest.fixture(autouse=True, scope="function")

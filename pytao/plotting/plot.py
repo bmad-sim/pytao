@@ -1443,12 +1443,13 @@ def _sbend_intersection_to_patch(
     sin_end = np.sin(angle_end + rel_angle_end)
     cos_end = np.cos(angle_end + rel_angle_end)
 
+    # corners of sbend
     c1 = (x1 - off1 * sin_start, y1 + off1 * cos_start)
     c2 = (x2 - off1 * sin_end, y2 + off1 * cos_end)
     c3 = (x1 + off2 * sin_start, y1 - off2 * cos_start)
     c4 = (x2 + off2 * sin_end, y2 - off2 * cos_end)
-    # corners of sbend
 
+    # radii of sbend arc edges
     outer_radius = np.sqrt(
         (x1 - off1 * sin_start - intersection[0]) ** 2
         + (y1 + off1 * cos_start - intersection[1]) ** 2
@@ -1460,8 +1461,8 @@ def _sbend_intersection_to_patch(
     if angle_start <= angle_end:
         outer_radius *= -1
         inner_radius *= -1
-    # radii of sbend arc edges
 
+    # midpoints of top and bottom arcs in an sbend
     mid_angle = (angle_start + angle_end) / 2
 
     top = (
@@ -1472,8 +1473,9 @@ def _sbend_intersection_to_patch(
         intersection[0] - inner_radius * np.sin(mid_angle),
         intersection[1] + inner_radius * np.cos(mid_angle),
     )
-    # midpoints of top and bottom arcs in an sbend
 
+    # corresponding control points for a quadratic Bezier curve that
+    # passes through the corners and arc midpoint
     top_cp = (
         2 * (top[0]) - 0.5 * (c1[0]) - 0.5 * (c2[0]),
         2 * (top[1]) - 0.5 * (c1[1]) - 0.5 * (c2[1]),
@@ -1482,7 +1484,6 @@ def _sbend_intersection_to_patch(
         2 * (bottom[0]) - 0.5 * (c3[0]) - 0.5 * (c4[0]),
         2 * (bottom[1]) - 0.5 * (c3[1]) - 0.5 * (c4[1]),
     )
-    # corresponding control points for a quadratic Bezier curve that passes through the corners and arc midpoint
 
     verts = [c1, top_cp, c2, c4, bottom_cp, c3, c1]
     codes: List[CustomPathCommand] = [
@@ -2153,13 +2154,7 @@ def plot_graph(
         except NoLayoutError:
             pass
 
-    # if isinstance(graph, (LatticeLayoutGraph, FloorPlanGraph)):
-    #     # TODO remove me
-    #     import rich
-    #
-    #     rich.print(graph)
-    #     plt.show()
-    return graph
+    return ax
 
 
 def get_plot_graph_info(tao: Tao, region_name: str, graph_name: str) -> PlotGraphInfo:
@@ -2310,9 +2305,11 @@ class GraphManager:
                     self.to_place.pop(region, None)
             else:
                 self.to_place[region] = graph
+        return self.to_place
 
     def place_all_requested(self, *, ignore_invalid: bool = True):
         self.update_place_buffer()
+
         result = {}
         for region, graph_name in self.to_place.items():
             try:
@@ -2322,13 +2319,14 @@ class GraphManager:
                     continue
                 raise
 
+            self.regions.setdefault(region, {})
+            self.regions[graph_name] = result[graph_name]
+
         self.to_place.clear()
-        self.regions.update(result)
         return result
 
     def update_graph(self, region_name: str, graph_name: str):
         graph = make_graph(self.tao, region_name, graph_name)
-
         region = self.regions.setdefault(region_name, {})
         region[graph_name] = graph
         return graph
@@ -2362,7 +2360,11 @@ class MatplotlibGraphManager(GraphManager):
         include_layout: bool = True,
         ax: Optional[matplotlib.axes.Axes] = None,
         layout_ax: Optional[matplotlib.axes.Axes] = None,
+        place: bool = True,
     ) -> matplotlib.axes.Axes:
+        if place:
+            self.place_all_requested()
+
         logger.debug(f"Plotting {region_name}.{graph_name}")
         return plot_graph(
             self.tao,
@@ -2377,27 +2379,35 @@ class MatplotlibGraphManager(GraphManager):
         region_name: str,
         include_layout: bool = True,
         ax: Optional[matplotlib.axes.Axes] = None,
+        place: bool = True,
     ) -> Dict[str, matplotlib.axes.Axes]:
-        if region_name in self.to_place:
+        if place:
             self.place_all_requested()
 
         res = {}
         for graph_name in self.regions[region_name]:
-            res[f"{region_name}.{graph_name}"] = self.plot(
+            res[graph_name] = self.plot(
                 region_name=region_name,
                 graph_name=graph_name,
                 ax=ax,
                 include_layout=include_layout,
+                place=False,
             )
         return res
 
     def plot_all(
         self,
         include_layout: bool = True,
+        place: bool = True,
     ) -> Dict[str, matplotlib.axes.Axes]:
-        self.place_all_requested()
+        if place:
+            self.place_all_requested()
 
         res = {}
         for region_name in self.regions:
-            res.update(self.plot_region(region_name, include_layout=include_layout))
+            res[region_name] = self.plot_region(
+                region_name,
+                include_layout=include_layout,
+                place=False,
+            )
         return res

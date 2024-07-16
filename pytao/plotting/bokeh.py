@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import logging
+import math
 import typing
-from typing import List, Optional, cast
+from typing import Callable, Dict, List, Optional, Union, cast
 
+from bokeh.core.enums import SizingModeType
 import bokeh.events
 import bokeh.models
 import bokeh.plotting
@@ -13,7 +15,7 @@ from bokeh.document.callbacks import EventCallback
 from bokeh.layouts import column
 from bokeh.models.sources import ColumnDataSource
 from bokeh.plotting import figure
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import NotRequired, TypedDict, override
 
 from .plot import (
     BasicGraph,
@@ -80,17 +82,22 @@ def _plot_curve(fig: figure, curve: PlotCurve, source: CurveData) -> None:
 
     if "symbol" in source and curve.symbol is not None:
         fig.scatter(
-            "symbol_x",
-            "symbol_y",
+            "x",
+            "y",
             source=source["symbol"],
             fill_color=curve.symbol.color,
         )
+
+
+def _plot_custom_patch(fig: figure, patch: PlotPatchCustom):
+    raise NotImplementedError("plot custom patch")
 
 
 def _create_layout_figure(
     graph: LatticeLayoutGraph,
     tools: str = "pan,wheel_zoom,box_zoom,save,reset,help,hover,crosshair",
     toolbar_location: str = "above",
+    sizing_mode: SizingModeType = "inherit",
 ) -> figure:
     fig = figure(
         title=graph.title,
@@ -98,26 +105,29 @@ def _create_layout_figure(
         y_axis_label=graph.ylabel,
         toolbar_location=toolbar_location,
         tools=tools,
+        aspect_ratio=3.0,  # w/h
+        sizing_mode=sizing_mode,
     )
     for elem in graph.elements:
         for patch in elem.patches:
             if isinstance(patch, PlotPatchRectangle):
                 points = patch.to_mpl().get_corners()
-                fig.line(
+                fig.patch(
                     [p[0] for p in points],
                     [p[1] for p in points],
                     line_width=elem.width,
                     color=elem.color,
+                    fill_alpha=int(patch.fill),
                 )
             elif isinstance(patch, PlotPatchArc):
                 fig.arc(
                     x=[patch.xy[0]],
                     y=[patch.xy[1]],
-                    radii=[patch.radius],
                     start_angle=[patch.theta1],
                     end_angle=[patch.theta2],
                     line_width=elem.width,
                     color=elem.color,
+                    fill_alpha=int(patch.fill),
                 )
             elif isinstance(patch, PlotPatchCircle):
                 fig.circle(
@@ -126,6 +136,7 @@ def _create_layout_figure(
                     radii=[patch.radius],
                     line_width=elem.width,
                     color=elem.color,
+                    fill_alpha=int(patch.fill),
                 )
             elif isinstance(patch, PlotPatchEllipse):
                 fig.ellipse(
@@ -133,19 +144,21 @@ def _create_layout_figure(
                     y=[patch.xy[1]],
                     width=[patch.width],
                     height=[patch.height],
-                    angle=[patch.angle],
+                    angle=[math.radians(patch.angle)],
                     line_width=elem.width,
                     color=elem.color,
+                    fill_alpha=int(patch.fill),
                 )
             elif isinstance(patch, PlotPatchPolygon):
-                fig.line(
+                fig.patch(
                     [p[0] for p in patch.vertices],
                     [p[1] for p in patch.vertices],
                     line_width=elem.width,
                     color=elem.color,
+                    fill_alpha=int(patch.fill),
                 )
             elif isinstance(patch, PlotPatchCustom):
-                pass
+                _plot_custom_patch(fig, patch)
             else:
                 raise NotImplementedError(f"{type(patch).__name__}")
         for line_points in elem.lines:
@@ -160,8 +173,10 @@ def _create_layout_figure(
                 [annotation.x],
                 [annotation.y],
                 text=[annotation.text],
-                angle=annotation.rotation,
+                angle=math.radians(annotation.rotation),
                 color=elem.color,
+                text_align="right",  # annotation.horizontalalignment,
+                text_baseline=annotation.verticalalignment,
             )
     return fig
 
@@ -171,9 +186,12 @@ class BokehLatticeGraph:
         self.graph = graph
         self.manager = manager
 
+    def create_figure(self, sizing_mode: SizingModeType = "inherit") -> figure:
+        return _create_layout_figure(self.graph, sizing_mode=sizing_mode)
+
     def create_app(self):
         def bokeh_app(doc):
-            fig = _create_layout_figure(self.graph)
+            fig = self.create_figure()
             doc.add_root(fig)
             return bokeh_app
 
@@ -187,6 +205,7 @@ def _create_basic_figure(
     curve_data: Optional[GraphData] = None,
     tools: str = "pan,wheel_zoom,box_zoom,save,reset,help,hover,crosshair",
     toolbar_location: str = "above",
+    sizing_mode: SizingModeType = "inherit",
 ) -> figure:
     if curve_data is None:
         curve_data = _get_graph_data(graph)
@@ -197,6 +216,7 @@ def _create_basic_figure(
         y_axis_label=graph.ylabel,
         toolbar_location=toolbar_location,
         tools=tools,
+        sizing_mode=sizing_mode,
     )
     for curve, source in zip(graph.curves, curve_data):
         _plot_curve(fig, curve, source)
@@ -239,10 +259,16 @@ class BokehBasicGraph:
                 assert "symbol" in orig_data
                 orig_data["symbol"].data = dict(symbol.data)
 
+    def create_figure(self, sizing_mode: SizingModeType = "inherit") -> figure:
+        return _create_basic_figure(
+            self.graph,
+            curve_data=self.curve_data,
+            sizing_mode=sizing_mode,
+        )
+
     def create_app(self):
         def bokeh_app(doc):
-            fig = _create_basic_figure(self.graph, curve_data=self.curve_data)
-
+            fig = self.create_figure()
             num_points = bokeh.models.Slider(
                 title="Points",
                 start=10,
@@ -275,6 +301,9 @@ class BokehBasicGraph:
     __call__ = create_app
 
 
+AnyBokehGraph = Union[BokehBasicGraph, BokehLatticeGraph]
+
+
 class BokehGraphManager(GraphManager):
     def plot(
         self,
@@ -282,41 +311,79 @@ class BokehGraphManager(GraphManager):
         graph_name: str,
         *,
         include_layout: bool = True,
-        show: bool = True,
-    ):
+        place: bool = True,
+        show: bool = False,
+    ) -> AnyBokehGraph:
+        if place:
+            self.place_all_requested()
+
         logger.debug(f"Plotting {region_name}.{graph_name}")
         graph = self.regions[region_name][graph_name]
         if isinstance(graph, BasicGraph):
-            bgraph = BokehBasicGraph(self, graph).create_app()
-            return bokeh.plotting.show(bgraph) if show else bgraph
+            return BokehBasicGraph(self, graph)
         if isinstance(graph, LatticeLayoutGraph):
-            bgraph = BokehLatticeGraph(self, graph).create_app()
-            return bokeh.plotting.show(bgraph) if show else bgraph
+            return BokehLatticeGraph(self, graph)
+        raise NotImplementedError(type(graph).__name__)
 
     def plot_region(
         self,
         region_name: str,
+        *,
         include_layout: bool = True,
-    ):
-        if region_name in self.to_place:
+        place: bool = True,
+        show: bool = False,
+    ) -> Dict[str, AnyBokehGraph]:
+        if place:
             self.place_all_requested()
 
         res = {}
         for graph_name in self.regions[region_name]:
-            res[f"{region_name}.{graph_name}"] = self.plot(
+            res[graph_name] = self.plot(
                 region_name=region_name,
                 graph_name=graph_name,
                 include_layout=include_layout,
+                place=False,
             )
         return res
 
     def plot_all(
         self,
         include_layout: bool = True,
-    ):
-        self.place_all_requested()
+        *,
+        place: bool = True,
+        show: bool = False,
+    ) -> Dict[str, Dict[str, AnyBokehGraph]]:
+        if place:
+            self.place_all_requested()
 
         res = {}
         for region_name in self.regions:
-            res.update(self.plot_region(region_name, include_layout=include_layout))
+            res[region_name] = self.plot_region(
+                region_name,
+                include_layout=include_layout,
+                place=False,
+                show=show,
+            )
         return res
+
+
+class NotebookGraphManager(BokehGraphManager):
+    @override
+    def plot(
+        self,
+        region_name: str,
+        graph_name: str,
+        *,
+        include_layout: bool = True,
+        show: bool = True,
+        place: bool = True,
+    ) -> Union[AnyBokehGraph, Callable]:
+        bgraph = super().plot(
+            region_name,
+            graph_name,
+            include_layout=include_layout,
+            place=place,
+        )
+        if not show:
+            return bgraph
+        return bokeh.plotting.show(bgraph.create_app())

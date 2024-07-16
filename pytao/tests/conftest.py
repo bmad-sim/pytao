@@ -42,6 +42,20 @@ def ensure_successful_parsing(caplog):
             pytest.fail(error.message)
 
 
+init_files = list(
+    pathlib.Path(os.path.expandvars("$ACC_ROOT_DIR/regression_tests/python_test/")).glob(
+        "tao.init*"
+    )
+)
+
+
+@pytest.fixture(params=init_files, ids=[fn.name for fn in init_files])
+def init_filename(
+    request: pytest.FixtureRequest,
+) -> pathlib.Path:
+    return request.param
+
+
 @pytest.fixture(
     params=[Tao, SubprocessTao],
     ids=["Tao", "SubprocessTao"],
