@@ -935,6 +935,10 @@ class LatticeLayoutGraph(GraphBase):
     branch: int = 0
     y2_floor: float = 0
 
+    @property
+    def is_s_plot(self) -> bool:
+        return True
+
     def plot(self, ax: Optional[matplotlib.axes.Axes] = None):
         if ax is None:
             _, ax = plt.subplots()
@@ -1989,6 +1993,10 @@ class FloorPlanGraph(GraphBase):
     floor_orbits: Optional[FloorOrbits] = None
     elements: List[FloorPlanElement] = Field(default_factory=list)
 
+    @property
+    def is_s_plot(self) -> bool:
+        return False
+
     @classmethod
     def from_tao(
         cls,
@@ -2313,14 +2321,12 @@ class GraphManager:
         result = {}
         for region, graph_name in self.to_place.items():
             try:
+                # place() updates self.regions for us
                 result[graph_name] = self.place(region, graph_name)
             except GraphInvalidError:
                 if ignore_invalid:
                     continue
                 raise
-
-            self.regions.setdefault(region, {})
-            self.regions[graph_name] = result[graph_name]
 
         self.to_place.clear()
         return result

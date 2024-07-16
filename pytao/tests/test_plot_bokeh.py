@@ -1,19 +1,23 @@
 import logging
-import pytest
-import re
 import pathlib
+import re
+from typing import List
 
-from ..plotting.bokeh import BokehGraphManager
+import pytest
+from bokeh.plotting import column, output_file, save
 
-from .conftest import new_tao, test_artifacts
 from .. import Tao
+from ..plotting.bokeh import (
+    BGraphAndFigure,
+    BokehGraphManager,
+    share_common_x_axes,
+)
+from .conftest import new_tao, test_artifacts
 
 logger = logging.getLogger(__name__)
 
 
 def test_bokeh_manager(request: pytest.FixtureRequest, init_filename: pathlib.Path):
-    from bokeh.plotting import output_file, save, column
-
     if init_filename.name in {"tao.init_wall", "tao.init_photon"}:
         pytest.skip(reason="bmad crash on 20240715.0 (TODO)")
 
@@ -29,11 +33,18 @@ def test_bokeh_manager(request: pytest.FixtureRequest, init_filename: pathlib.Pa
             assert len(manager.place_all_requested())
 
         output_file(test_artifacts / f"{filename_base}.html")
-        figures = []
-        for region in manager.regions:
-            for name, graph in manager.plot_region(region).items():
-                figures.append(graph.create_figure())
-        save(column(figures, sizing_mode="scale_width"))
+        items: List[BGraphAndFigure] = []
+
+        for region_name, region in manager.plot_all().items():
+            for name, bgraph in region.items():
+                fig = bgraph.create_figure()
+                fig.title.text = (
+                    f"{fig.title.text} ({region_name}.{name} of {request.node.name})"
+                )
+                items.append(BGraphAndFigure(bgraph=bgraph, fig=fig))
+
+        share_common_x_axes(items)
+        save(column([item.fig for item in items], sizing_mode="fixed"))
 
         for region in list(manager.regions):
             manager.clear(region)
