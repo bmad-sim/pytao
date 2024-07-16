@@ -2,18 +2,31 @@ from __future__ import annotations
 
 import logging
 import typing
-from typing import List, Optional
+from typing import List, Optional, cast
+
+import bokeh.events
+import bokeh.models
+import bokeh.plotting
 
 # from bokeh.colors import named
-import bokeh.events
-import bokeh.plotting
+from bokeh.document.callbacks import EventCallback
 from bokeh.layouts import column
-from bokeh.models import Slider
 from bokeh.models.sources import ColumnDataSource
 from bokeh.plotting import figure
 from typing_extensions import NotRequired, TypedDict
 
-from .plot import BasicGraph, GraphManager, PlotCurve
+from .plot import (
+    BasicGraph,
+    GraphManager,
+    LatticeLayoutGraph,
+    PlotCurve,
+    PlotPatchRectangle,
+    PlotPatchArc,
+    PlotPatchCircle,
+    PlotPatchEllipse,
+    PlotPatchPolygon,
+    PlotPatchCustom,
+)
 
 if typing.TYPE_CHECKING:
     from .. import Tao
@@ -74,7 +87,107 @@ def _plot_curve(fig: figure, curve: PlotCurve, source: CurveData) -> None:
         )
 
 
-def _create_figure(graph: BasicGraph, curve_data: Optional[GraphData] = None) -> figure:
+def _create_layout_figure(
+    graph: LatticeLayoutGraph,
+    tools: str = "pan,wheel_zoom,box_zoom,save,reset,help,hover,crosshair",
+    toolbar_location: str = "above",
+) -> figure:
+    fig = figure(
+        title=graph.title,
+        x_axis_label=graph.xlabel,
+        y_axis_label=graph.ylabel,
+        toolbar_location=toolbar_location,
+        tools=tools,
+    )
+    for elem in graph.elements:
+        for patch in elem.patches:
+            if isinstance(patch, PlotPatchRectangle):
+                points = patch.to_mpl().get_corners()
+                fig.line(
+                    [p[0] for p in points],
+                    [p[1] for p in points],
+                    line_width=elem.width,
+                    color=elem.color,
+                )
+            elif isinstance(patch, PlotPatchArc):
+                fig.arc(
+                    x=[patch.xy[0]],
+                    y=[patch.xy[1]],
+                    radii=[patch.radius],
+                    start_angle=[patch.theta1],
+                    end_angle=[patch.theta2],
+                    line_width=elem.width,
+                    color=elem.color,
+                )
+            elif isinstance(patch, PlotPatchCircle):
+                fig.circle(
+                    x=[patch.xy[0]],
+                    y=[patch.xy[1]],
+                    radii=[patch.radius],
+                    line_width=elem.width,
+                    color=elem.color,
+                )
+            elif isinstance(patch, PlotPatchEllipse):
+                fig.ellipse(
+                    x=[patch.xy[0]],
+                    y=[patch.xy[1]],
+                    width=[patch.width],
+                    height=[patch.height],
+                    angle=[patch.angle],
+                    line_width=elem.width,
+                    color=elem.color,
+                )
+            elif isinstance(patch, PlotPatchPolygon):
+                fig.line(
+                    [p[0] for p in patch.vertices],
+                    [p[1] for p in patch.vertices],
+                    line_width=elem.width,
+                    color=elem.color,
+                )
+            elif isinstance(patch, PlotPatchCustom):
+                pass
+            else:
+                raise NotImplementedError(f"{type(patch).__name__}")
+        for line_points in elem.lines:
+            fig.line(
+                x=[pt[0] for pt in line_points],
+                y=[pt[1] for pt in line_points],
+                line_width=elem.width,
+                color=elem.color,
+            )
+        for annotation in elem.annotations:
+            fig.text(
+                [annotation.x],
+                [annotation.y],
+                text=[annotation.text],
+                angle=annotation.rotation,
+                color=elem.color,
+            )
+    return fig
+
+
+class BokehLatticeGraph:
+    def __init__(self, manager: GraphManager, graph: LatticeLayoutGraph) -> None:
+        self.graph = graph
+        self.manager = manager
+
+    def create_app(self):
+        def bokeh_app(doc):
+            fig = _create_layout_figure(self.graph)
+            doc.add_root(fig)
+            return bokeh_app
+
+        return bokeh_app
+
+    __call__ = create_app
+
+
+def _create_basic_figure(
+    graph: BasicGraph,
+    curve_data: Optional[GraphData] = None,
+    tools: str = "pan,wheel_zoom,box_zoom,save,reset,help,hover,crosshair",
+    toolbar_location: str = "above",
+) -> figure:
     if curve_data is None:
         curve_data = _get_graph_data(graph)
 
@@ -82,6 +195,8 @@ def _create_figure(graph: BasicGraph, curve_data: Optional[GraphData] = None) ->
         title=graph.title,
         x_axis_label=graph.xlabel,
         y_axis_label=graph.ylabel,
+        toolbar_location=toolbar_location,
+        tools=tools,
     )
     for curve, source in zip(graph.curves, curve_data):
         _plot_curve(fig, curve, source)
@@ -126,9 +241,9 @@ class BokehBasicGraph:
 
     def create_app(self):
         def bokeh_app(doc):
-            fig = _create_figure(self.graph, curve_data=self.curve_data)
+            fig = _create_basic_figure(self.graph, curve_data=self.curve_data)
 
-            num_points = Slider(
+            num_points = bokeh.models.Slider(
                 title="Points",
                 start=10,
                 end=10_000,
@@ -151,7 +266,7 @@ class BokehBasicGraph:
                     logger.exception("Failed to update number of points")
 
             num_points.on_change("value", num_points_changed)
-            fig.on_event(bokeh.events.RangesUpdate, ranges_update)
+            fig.on_event(bokeh.events.RangesUpdate, cast(EventCallback, ranges_update))
             doc.add_root(column(num_points, fig))
             return bokeh_app
 
@@ -173,6 +288,9 @@ class BokehGraphManager(GraphManager):
         graph = self.regions[region_name][graph_name]
         if isinstance(graph, BasicGraph):
             bgraph = BokehBasicGraph(self, graph).create_app()
+            return bokeh.plotting.show(bgraph) if show else bgraph
+        if isinstance(graph, LatticeLayoutGraph):
+            bgraph = BokehLatticeGraph(self, graph).create_app()
             return bokeh.plotting.show(bgraph) if show else bgraph
 
     def plot_region(
