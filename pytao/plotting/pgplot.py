@@ -106,7 +106,7 @@ def mathjax_string(value: str) -> str:
     """
     res = mpl_string(value)
     if res.startswith("$") and res.endswith("$"):
-        print(f"${res}$")
+        # MathJAX strings are $$ ... $$ instead of just $ ... $
         return f"${res}$"
     return res
 

@@ -246,10 +246,10 @@ class BokehGraphBase(Generic[TGraph]):
         self,
         manager: GraphManager,
         graph: TGraph,
-        sizing_mode: SizingModeType = "inherit",
-        width: int = 900,
-        height: int = 200,
-        aspect_ratio: float = 4.5,  # w/h
+        sizing_mode: SizingModeType,
+        width: int,
+        height: int,
+        aspect_ratio: float,  # w/h
     ) -> None:
         self.graph = graph
         self.manager = manager
@@ -275,6 +275,24 @@ class BokehGraphBase(Generic[TGraph]):
 
 class BokehLatticeGraph(BokehGraphBase[LatticeLayoutGraph]):
     graph: LatticeLayoutGraph
+
+    def __init__(
+        self,
+        manager: GraphManager,
+        graph: LatticeLayoutGraph,
+        sizing_mode: SizingModeType = "inherit",
+        width: int = 900,
+        height: int = 200,
+        aspect_ratio: float = 4.5,  # w/h
+    ) -> None:
+        super().__init__(
+            manager=manager,
+            graph=graph,
+            sizing_mode=sizing_mode,
+            width=width,
+            height=height,
+            aspect_ratio=aspect_ratio,
+        )
 
     def create_figure(
         self,
@@ -453,7 +471,6 @@ class BokehGraphManager(GraphManager):
         region_name: str,
         graph_name: str,
         *,
-        include_layout: bool = True,
         place: bool = True,
         show: bool = False,
     ) -> AnyBokehGraph:
@@ -472,7 +489,6 @@ class BokehGraphManager(GraphManager):
         self,
         region_name: str,
         *,
-        include_layout: bool = True,
         place: bool = True,
         show: bool = False,
         share_x: Optional[bool] = None,
@@ -485,7 +501,6 @@ class BokehGraphManager(GraphManager):
             res[graph_name] = self.plot(
                 region_name=region_name,
                 graph_name=graph_name,
-                include_layout=include_layout,
                 place=False,
             )
 
@@ -493,7 +508,6 @@ class BokehGraphManager(GraphManager):
 
     def plot_all(
         self,
-        include_layout: bool = True,
         *,
         place: bool = True,
         show: bool = False,
@@ -506,7 +520,6 @@ class BokehGraphManager(GraphManager):
         for region_name in self.regions:
             res[region_name] = self.plot_region(
                 region_name,
-                include_layout=include_layout,
                 place=False,
                 show=show,
             )
@@ -535,26 +548,32 @@ class NotebookGraphManager(BokehGraphManager):
                 self.plot(
                     region_name,
                     graph_name,
-                    include_layout=include_layout,
                     place=place,
                 )
             ]
         elif region_name:
             region = self.plot_region(
                 region_name,
-                include_layout=include_layout,
                 place=place,
             )
             bgraphs = list(region.values())
         else:
             by_region = self.plot_all(
-                include_layout=include_layout,
                 place=place,
             )
             bgraphs = [graph for region in by_region.values() for graph in region.values()]
 
         if not bgraphs:
             return None
+
+        if (
+            include_layout
+            and not any(isinstance(bgraph, BokehLatticeGraph) for bgraph in bgraphs)
+            and any(bgraph.graph.is_s_plot for bgraph in bgraphs)
+            and "layout" in self.regions
+            and "g" in self.regions["layout"]
+        ):
+            bgraphs.append(self.plot("layout", "g"))
 
         for bgraph in bgraphs:
             if sizing_mode is not None:
