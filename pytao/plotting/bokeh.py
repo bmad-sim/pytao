@@ -18,12 +18,12 @@ from typing import (
 
 from bokeh.core.enums import SizingModeType
 import bokeh.events
+import bokeh.layouts
 import bokeh.models
 import bokeh.models.tools
 import bokeh.plotting
 
 from bokeh.document.callbacks import EventCallback
-from bokeh.layouts import column
 from bokeh.models.sources import ColumnDataSource
 from bokeh.plotting import figure
 from typing_extensions import NotRequired, TypedDict
@@ -498,8 +498,9 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
 
     def create_app_figure(self) -> Tuple[figure, List[bokeh.models.UIElement]]:
         fig = self.create_figure()
+        update_button = bokeh.models.Button(label="Update")  # , icon="reload")
         num_points = bokeh.models.Slider(
-            title="Points",
+            title="Data Points",
             start=10,
             end=10_000,
             step=1_000,
@@ -524,8 +525,9 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
                 logger.exception("Failed to update number of points")
 
         num_points.on_change("value", num_points_changed)
+        update_button.on_click(self.update_plot)
         fig.on_event(bokeh.events.RangesUpdate, cast(EventCallback, ranges_update))
-        return fig, [column(num_points, fig)]
+        return fig, [bokeh.layouts.column(bokeh.layouts.row(update_button, num_points), fig)]
 
 
 AnyBokehGraph = Union[BokehBasicGraph, BokehLatticeGraph]
@@ -556,7 +558,7 @@ class CompositeApp:
             share_common_x_axes(items)
         elif self.share_x:
             share_x_axes([item.fig for item in items])
-        return column(models)
+        return bokeh.layouts.column(models)
 
     def create_app(self):
         def bokeh_app(doc):
