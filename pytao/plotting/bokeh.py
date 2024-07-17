@@ -10,6 +10,7 @@ from typing import (
     NamedTuple,
     Optional,
     Tuple,
+    Type,
     TypeVar,
     Union,
     cast,
@@ -18,7 +19,7 @@ from typing import (
 from bokeh.core.enums import SizingModeType
 import bokeh.events
 import bokeh.models
-from bokeh.models.tools import HoverTool
+import bokeh.models.tools
 import bokeh.plotting
 
 from bokeh.document.callbacks import EventCallback
@@ -96,7 +97,36 @@ class BGraphAndFigure(NamedTuple):
     fig: figure
 
 
-def share_common_x_axes(graphs: List[BGraphAndFigure]) -> List[List[BGraphAndFigure]]:
+T_Tool = TypeVar("T_Tool", bound=bokeh.models.tools.Tool)
+
+
+def get_tool_from_figure(fig: figure, tool_cls: Type[T_Tool]) -> Optional[T_Tool]:
+    tools = [tool for tool in fig.tools if isinstance(tool, tool_cls)]
+    return tools[0] if tools else None
+
+
+def link_crosshairs(figs: List[figure]):
+    first, *rest = figs
+    crosshair = get_tool_from_figure(first, bokeh.models.tools.CrosshairTool)
+    if crosshair is None:
+        return
+
+    if crosshair.overlay == "auto":
+        crosshair.overlay = (
+            bokeh.models.tools.Span(dimension="width", line_dash="dotted", line_width=1),
+            bokeh.models.tools.Span(dimension="height", line_dash="dotted", line_width=1),
+        )
+
+    for fig in rest:
+        other_crosshair = get_tool_from_figure(fig, bokeh.models.tools.CrosshairTool)
+        if other_crosshair:
+            other_crosshair.overlay = crosshair.overlay
+
+
+def share_common_x_axes(
+    graphs: List[BGraphAndFigure],
+    crosshairs: bool = True,
+) -> List[List[BGraphAndFigure]]:
     res: List[List[BGraphAndFigure]] = []
 
     s_plots = []
@@ -118,7 +148,10 @@ def share_common_x_axes(graphs: List[BGraphAndFigure]) -> List[List[BGraphAndFig
             res.append(sharing_set)
 
     for sharing_set in res:
-        share_x_axes([item.fig for item in sharing_set])
+        figs = [item.fig for item in sharing_set]
+        share_x_axes(figs)
+        if crosshairs:
+            link_crosshairs(figs)
 
     return res
 
@@ -352,7 +385,7 @@ class BokehLatticeGraph(BokehGraphBase[LatticeLayoutGraph]):
             height=self.height,
         )
         if add_named_hover_tool:
-            hover = HoverTool(
+            hover = bokeh.models.tools.HoverTool(
                 tooltips=[
                     ("name", "@name"),
                     ("s start [m]", "@s_start"),
@@ -605,7 +638,7 @@ class NotebookGraphManager(BokehGraphManager):
         sizing_mode: Optional[SizingModeType] = None,
         width: Optional[int] = None,
         height: Optional[int] = None,
-        share_x: Optional[bool] = True,
+        share_x: Optional[bool] = None,
     ):
         if graph_name and not region_name:
             raise ValueError("Must specify region_name if graph_name is specified")
