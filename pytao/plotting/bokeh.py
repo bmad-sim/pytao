@@ -154,6 +154,7 @@ def _plot_custom_patch(fig: figure, patch: PlotPatchCustom):
 def _draw_layout_element(
     fig: figure,
     elem: LatticeLayoutElement,
+    skip_labels: bool = True,
 ):
     base_data = {
         "s_start": [elem.info["ele_s_start"]],
@@ -246,6 +247,8 @@ def _draw_layout_element(
         )
 
     for annotation in elem.annotations:
+        if annotation.text == elem.info["label_name"] and skip_labels:
+            continue
         source = ColumnDataSource(
             data={
                 "x": [annotation.x],
@@ -317,8 +320,8 @@ class BokehLatticeGraph(BokehGraphBase[LatticeLayoutGraph]):
         graph: LatticeLayoutGraph,
         sizing_mode: SizingModeType = "inherit",
         width: int = 900,
-        height: int = 200,
-        aspect_ratio: float = 4.5,  # w/h
+        height: int = 300,
+        aspect_ratio: float = 3.0,  # w/h
     ) -> None:
         super().__init__(
             manager=manager,
@@ -334,12 +337,13 @@ class BokehLatticeGraph(BokehGraphBase[LatticeLayoutGraph]):
         tools: str = "pan,wheel_zoom,box_zoom,save,reset,help,crosshair",
         toolbar_location: str = "above",
         add_named_hover_tool: bool = True,
+        set_xaxis_ticks: bool = True,
     ) -> figure:
         graph = self.graph
         fig = figure(
             title=pgplot.mathjax_string(graph.title),
             x_axis_label=pgplot.mathjax_string(graph.xlabel),
-            y_axis_label=pgplot.mathjax_string(graph.ylabel),
+            # y_axis_label=pgplot.mathjax_string(graph.ylabel),
             toolbar_location=toolbar_location,
             tools=tools,
             aspect_ratio=self.aspect_ratio,
@@ -358,8 +362,18 @@ class BokehLatticeGraph(BokehGraphBase[LatticeLayoutGraph]):
 
             fig.add_tools(hover)
 
+        fig.xaxis.ticker = bokeh.models.FixedTicker(
+            ticks=[elem.info["ele_s_start"] for elem in graph.elements],
+            minor_ticks=[elem.info["ele_s_end"] for elem in graph.elements],
+        )
+        fig.xaxis.major_label_overrides = {
+            elem.info["ele_s_start"]: elem.info["label_name"] for elem in graph.elements
+        }
+        fig.xaxis.major_label_orientation = math.pi / 4
+        fig.yaxis.ticker = []
+        fig.yaxis.visible = False
         for elem in graph.elements:
-            _draw_layout_element(fig, elem)
+            _draw_layout_element(fig, elem, skip_labels=set_xaxis_ticks)
 
         if self.x_range is not None:
             fig.x_range = self.x_range

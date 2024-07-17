@@ -946,12 +946,7 @@ class LatticeLayoutGraph(GraphBase):
 
         # ax.set_axis_off()
         # ax.set_navigate(False)
-        ax.axhline(
-            y=0,
-            xmin=1.1 * self.info["x_min"],
-            xmax=1.1 * self.info["x_max"],
-            color="Black",
-        )
+        ax.axhline(y=0, color="Black", linewidth=1)
 
         for elem in self.elements:
             elem.plot(ax)
@@ -960,6 +955,8 @@ class LatticeLayoutGraph(GraphBase):
         # Without this, the tops and bottoms of shapes could be cut off
         y_max = self.y_max
         ax.plot([0, 0], [-1.7 * y_max, 1.3 * y_max], alpha=0)
+
+        ax.yaxis.set_visible(False)
 
         # ax.autoscale_view(tight=True)
         self._setup_axis(ax)
