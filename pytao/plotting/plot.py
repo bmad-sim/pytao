@@ -10,6 +10,7 @@ import matplotlib.collections
 import matplotlib.patches
 import matplotlib.path
 import matplotlib.pyplot as plt
+import matplotlib.text
 from matplotlib.ticker import AutoMinorLocator
 import numpy as np
 
@@ -85,16 +86,16 @@ class PlotAnnotation:
     rotation_mode: str = "default"
 
     def plot(self, ax: matplotlib.axes.Axes):
-        return ax.text(
-            x=self.x,
-            y=self.y,
-            s=pgplot.mpl_string(self.text),
+        return ax.annotate(
+            xy=(self.x, self.y),
+            text=pgplot.mpl_string(self.text),
             horizontalalignment=self.horizontalalignment,
             verticalalignment=self.verticalalignment,
             clip_on=self.clip_on,
             color=pgplot.mpl_color(self.color),
             rotation=self.rotation,
             rotation_mode=self.rotation_mode,
+            fontsize=8,
         )
 
 
@@ -349,7 +350,7 @@ class GraphBase:
             )
         return graph
 
-    def _setup_axis(self, ax: matplotlib.axes.Axes):
+    def _setup_axis(self, ax: matplotlib.axes.Axes, xticks: bool = True, yticks: bool = True):
         if not self.show_axes:
             ax.set_axis_off()
 
@@ -359,12 +360,13 @@ class GraphBase:
         ax.set_xlim(_fix_limits(self.xlim))
         ax.set_ylim(_fix_limits(self.ylim))
         ax.set_axisbelow(True)
+
         if self.draw_grid:
             ax.grid(self.draw_grid, which="major", axis="both")
+
+        if xticks:
             ax.xaxis.set_minor_locator(AutoMinorLocator())
-            ax.tick_params(which="minor", length=4, color="black")
-            ax.yaxis.set_minor_locator(AutoMinorLocator())
-            ax.tick_params(which="minor", length=4, color="black")
+            ax.tick_params(axis="x", which="minor", length=4, color="black")
             ax.set_xticks(
                 np.linspace(
                     ax.get_xlim()[0],
@@ -372,6 +374,10 @@ class GraphBase:
                     self.info["x_major_div_nominal"] - 1,
                 )
             )
+
+        if yticks:
+            ax.yaxis.set_minor_locator(AutoMinorLocator())
+            ax.tick_params(axis="y", which="minor", length=4, color="black")
             # ax.set_yticks(
             #     np.linspace(
             #         ax.get_ylim()[0],
@@ -864,18 +870,19 @@ class LatticeLayoutElement:
             else:
                 raise NotImplementedError(shape)
 
-            annotations.append(
-                PlotAnnotation(
-                    x=(s1 + s2) / 2,
-                    y=1.1 * y2_floor,
-                    text=name,
-                    horizontalalignment="center",
-                    verticalalignment="top",
-                    clip_on=True,
-                    color=color,
-                    rotation=90,
+            if name:
+                annotations.append(
+                    PlotAnnotation(
+                        x=(s1 + s2) / 2,
+                        y=1.1 * y2_floor,
+                        text=name,
+                        horizontalalignment="center",
+                        verticalalignment="top",
+                        clip_on=False,
+                        color=color,
+                        rotation=90,
+                    )
                 )
-            )
 
         else:
             # Case where element is wrapped round the lattice ends.
@@ -944,8 +951,6 @@ class LatticeLayoutGraph(GraphBase):
             _, ax = plt.subplots()
         assert ax is not None
 
-        # ax.set_axis_off()
-        # ax.set_navigate(False)
         ax.axhline(y=0, color="Black", linewidth=1)
 
         for elem in self.elements:
@@ -953,13 +958,16 @@ class LatticeLayoutGraph(GraphBase):
 
         # Invisible line to give the lat layout enough vertical space.
         # Without this, the tops and bottoms of shapes could be cut off
-        y_max = self.y_max
-        ax.plot([0, 0], [-1.7 * y_max, 1.3 * y_max], alpha=0)
+        # y_max = self.y_max
+        # ax.plot([0, 0], [-1.7 * y_max, 1.3 * y_max], alpha=0)
 
         ax.yaxis.set_visible(False)
 
-        # ax.autoscale_view(tight=True)
         self._setup_axis(ax)
+        # ax.set_xticks([elem.info["ele_s_start"] for elem in self.elements])
+        # ax.set_xticklabels([elem.info["label_name"] for elem in self.elements], rotation=90)
+        ax.grid(visible=False)
+        ax.set_ylim(-2, 1)
         return ax
 
     @property
@@ -996,7 +1004,7 @@ class LatticeLayoutGraph(GraphBase):
             if branch != -1:
                 raise
 
-            logger.warning(
+            logger.debug(
                 f"Lat layout failed for universe={universe} branch={branch}; trying branch 0"
             )
             try:
@@ -2137,6 +2145,8 @@ def plot_graph(
     ax: Optional[matplotlib.axes.Axes] = None,
     layout_ax: Optional[matplotlib.axes.Axes] = None,
     include_layout: bool = True,
+    width: int = 10,
+    height: int = 10,
 ) -> matplotlib.axes.Axes:
     if ax is None:
         if should_include_layout(tao, graph.region_name, graph.graph_name):
@@ -2145,9 +2155,10 @@ def plot_graph(
                 ncols=1,
                 sharex=True,
                 height_ratios=[1, 0.5],
+                figsize=(width, height),
             )
         else:
-            _, ax = plt.subplots()
+            _, ax = plt.subplots(figsize=(width, height))
 
     assert ax is not None
 
@@ -2364,6 +2375,8 @@ class MatplotlibGraphManager(GraphManager):
         ax: Optional[matplotlib.axes.Axes] = None,
         layout_ax: Optional[matplotlib.axes.Axes] = None,
         place: bool = True,
+        width: int = 10,
+        height: int = 10,
     ) -> matplotlib.axes.Axes:
         if place:
             self.place_all_requested()
@@ -2375,6 +2388,8 @@ class MatplotlibGraphManager(GraphManager):
             include_layout=include_layout,
             ax=ax,
             layout_ax=layout_ax,
+            width=width,
+            height=height,
         )
 
     def plot_region(
@@ -2383,6 +2398,8 @@ class MatplotlibGraphManager(GraphManager):
         include_layout: bool = True,
         ax: Optional[matplotlib.axes.Axes] = None,
         place: bool = True,
+        width: int = 10,
+        height: int = 10,
     ) -> Dict[str, matplotlib.axes.Axes]:
         if place:
             self.place_all_requested()
@@ -2395,6 +2412,8 @@ class MatplotlibGraphManager(GraphManager):
                 ax=ax,
                 include_layout=include_layout,
                 place=False,
+                width=width,
+                height=height,
             )
         return res
 
