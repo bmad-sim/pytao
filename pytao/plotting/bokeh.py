@@ -259,7 +259,7 @@ class BokehGraphBase(Generic[TGraph]):
         self.aspect_ratio = aspect_ratio
         self.x_range = None
 
-    def create_app_figure(self) -> Tuple[figure, List[bokeh.models.Model]]:
+    def create_app_figure(self) -> Tuple[figure, List[bokeh.models.UIElement]]:
         raise NotImplementedError()
 
     def create_app(self):
@@ -319,7 +319,7 @@ class BokehLatticeGraph(BokehGraphBase[LatticeLayoutGraph]):
 
         return fig
 
-    def create_app_figure(self) -> Tuple[figure, List[bokeh.models.Model]]:
+    def create_app_figure(self) -> Tuple[figure, List[bokeh.models.UIElement]]:
         fig = self.create_figure()
         return fig, [fig]
 
@@ -402,7 +402,7 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
             _plot_curve(fig, curve, source)
         return fig
 
-    def create_app_figure(self) -> Tuple[figure, List[bokeh.models.Model]]:
+    def create_app_figure(self) -> Tuple[figure, List[bokeh.models.UIElement]]:
         fig = self.create_figure()
         num_points = bokeh.models.Slider(
             title="Points",
@@ -445,22 +445,28 @@ class CompositeApp:
         self.bgraphs = bgraphs
         self.share_x = share_x
 
+    def create_ui(self):
+        items: List[BGraphAndFigure] = []
+        models: List[bokeh.models.UIElement] = []
+        for bgraph in self.bgraphs:
+            primary_figure, fig_models = bgraph.create_app_figure()
+            items.append(BGraphAndFigure(bgraph, primary_figure))
+            models.extend(fig_models)
+
+        for item in items:
+            # NOTE: this value is somewhat arbitrary; it helps align the X axes
+            # between consecutive plots
+            item.fig.min_border_left = 80
+
+        if self.share_x is None:
+            share_common_x_axes(items)
+        elif self.share_x:
+            share_x_axes([item.fig for item in items])
+        return column(models)
+
     def create_app(self):
         def bokeh_app(doc):
-            items: List[BGraphAndFigure] = []
-            models: List[bokeh.models.Model] = []
-            for bgraph in self.bgraphs:
-                primary_figure, fig_models = bgraph.create_app_figure()
-                items.append(BGraphAndFigure(bgraph, primary_figure))
-                models.extend(fig_models)
-
-            if self.share_x is None:
-                share_common_x_axes(items)
-            elif self.share_x:
-                share_x_axes([item.fig for item in items])
-
-            for model in models:
-                doc.add_root(model)
+            doc.add_root(self.create_ui())
 
         return bokeh_app
 
