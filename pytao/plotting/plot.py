@@ -50,6 +50,10 @@ class NoCurveDataError(Exception):
     pass
 
 
+class LayoutGraphNotFoundError(Exception):
+    pass
+
+
 class UnsupportedGraphError(NotImplementedError):
     pass
 
@@ -2095,13 +2099,15 @@ def make_graph(
     tao: Tao,
     region_name: str,
     graph_name: str,
-):
+) -> AnyGraph:
     graph_info = get_plot_graph_info(tao, region_name, graph_name)
     graph_type = graph_info["graph^type"]
 
     logger.debug(f"Creating graph {region_name}.{graph_name} ({graph_type})")
 
     if graph_type == "floor_plan":
+        # TODO uncomment; waiting on bmad release
+        raise UnsupportedGraphError(graph_type)
         return FloorPlanGraph.from_tao(
             tao=tao,
             region_name=region_name,
@@ -2126,18 +2132,34 @@ def make_graph(
     )
 
 
+def find_layout(tao: Tao) -> LatticeLayoutGraph:
+    for region_name in get_visible_regions(tao):
+        for graph_name in get_graphs_in_region(tao, region_name):
+            try:
+                graph = make_graph(tao, region_name, graph_name)
+            except UnsupportedGraphError:
+                continue
+            if isinstance(graph, LatticeLayoutGraph):
+                return graph
+    raise LayoutGraphNotFoundError()
+
+
 def plot_layout(
     tao: Tao,
-    region_name: str = "layout",
-    graph_name: str = "g",
+    region_name: Optional[str] = None,
+    graph_name: Optional[str] = None,
     *,
     ax: Optional[matplotlib.axes.Axes] = None,
 ) -> Tuple[matplotlib.axes.Axes, LatticeLayoutGraph]:
+    if not region_name or not graph_name:
+        graph = find_layout(tao)
+    else:
+        graph = LatticeLayoutGraph.from_tao(tao, region_name, graph_name)
+
     if ax is None:
         _, ax = plt.subplots()
         assert ax is not None
 
-    graph = LatticeLayoutGraph.from_tao(tao, region_name, graph_name)
     graph.plot(ax)
     return ax, graph
 
@@ -2314,6 +2336,15 @@ class GraphManager:
         self.regions = {}
         self.update_place_buffer()
 
+    @property
+    def lattice_layout_graph(self) -> LatticeLayoutGraph:
+        self.place_all_requested()
+        for region in self.regions.values():
+            for graph in region.values():
+                if isinstance(graph, LatticeLayoutGraph):
+                    return graph
+        raise LayoutGraphNotFoundError()
+
     def update_place_buffer(self):
         for item in self.tao.place_buffer():
             region = item["region"]
@@ -2446,3 +2477,19 @@ class MatplotlibGraphManager(GraphManager):
                 place=False,
             )
         return res
+
+    def show(
+        self,
+        region_name: Optional[str] = None,
+        graph_name: Optional[str] = None,
+        *,
+        include_layout: bool = True,
+        place: bool = True,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
+        share_x: Optional[bool] = None,
+    ):
+        # This way is simpler - make it like the bokeh backend
+        raise NotImplementedError("TODO")
+
+    __call__ = show

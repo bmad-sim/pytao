@@ -35,6 +35,7 @@ from .plot import (
     GraphManager,
     LatticeLayoutElement,
     LatticeLayoutGraph,
+    LayoutGraphNotFoundError,
     PlotCurve,
     PlotPatchRectangle,
     PlotPatchArc,
@@ -344,7 +345,7 @@ class BokehGraphBase(Generic[TGraph]):
     __call__ = create_app
 
 
-class BokehLatticeGraph(BokehGraphBase[LatticeLayoutGraph]):
+class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
     graph: LatticeLayoutGraph
 
     def __init__(
@@ -530,7 +531,7 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
         return fig, [bokeh.layouts.column(bokeh.layouts.row(update_button, num_points), fig)]
 
 
-AnyBokehGraph = Union[BokehBasicGraph, BokehLatticeGraph]
+AnyBokehGraph = Union[BokehBasicGraph, BokehLatticeLayoutGraph]
 
 
 class CompositeApp:
@@ -584,7 +585,7 @@ class BokehGraphManager(GraphManager):
         if isinstance(graph, BasicGraph):
             return BokehBasicGraph(self, graph)
         if isinstance(graph, LatticeLayoutGraph):
-            return BokehLatticeGraph(self, graph)
+            return BokehLatticeLayoutGraph(self, graph)
         raise NotImplementedError(type(graph).__name__)
 
     def plot_region(
@@ -640,6 +641,7 @@ class NotebookGraphManager(BokehGraphManager):
         sizing_mode: Optional[SizingModeType] = None,
         width: Optional[int] = None,
         height: Optional[int] = None,
+        layout_height: Optional[int] = None,
         share_x: Optional[bool] = None,
     ):
         if graph_name and not region_name:
@@ -670,20 +672,28 @@ class NotebookGraphManager(BokehGraphManager):
 
         if (
             include_layout
-            and not any(isinstance(bgraph, BokehLatticeGraph) for bgraph in bgraphs)
+            and not any(isinstance(bgraph, BokehLatticeLayoutGraph) for bgraph in bgraphs)
             and any(bgraph.graph.is_s_plot for bgraph in bgraphs)
-            and "layout" in self.regions
-            and "g" in self.regions["layout"]
         ):
-            bgraphs.append(self.plot("layout", "g"))
+            try:
+                layout_graph = self.lattice_layout_graph
+            except LayoutGraphNotFoundError:
+                logger.warning("Could not find lattice layout to include")
+            else:
+                bgraphs.append(self.plot(layout_graph.region_name, layout_graph.graph_name))
 
         for bgraph in bgraphs:
+            is_layout = isinstance(bgraph, BokehLatticeLayoutGraph)
             if sizing_mode is not None:
                 bgraph.sizing_mode = sizing_mode
             if width is not None:
                 bgraph.width = width
-            if height is not None:
-                bgraph.height = height
+            if is_layout:
+                if layout_height is not None:
+                    bgraph.height = layout_height
+            else:
+                if height is not None:
+                    bgraph.height = height
 
         if len(bgraphs) == 1:
             (app,) = bgraphs
