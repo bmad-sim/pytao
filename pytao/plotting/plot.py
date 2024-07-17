@@ -50,6 +50,10 @@ class NoCurveDataError(Exception):
     pass
 
 
+class UnsupportedGraphError(NotImplementedError):
+    pass
+
+
 def _fix_limits(lim: Point, pad_factor: float = 0.0) -> Point:
     low, high = lim
     if np.isclose(low, 0.0) and np.isclose(high, 0.0):
@@ -2112,7 +2116,7 @@ def make_graph(
             info=graph_info,
         )
     if graph_type == "key_table":
-        raise NotImplementedError("Key table graphs")
+        raise UnsupportedGraphError(graph_type)
 
     return BasicGraph.from_tao(
         tao,
@@ -2340,7 +2344,12 @@ class GraphManager:
         return result
 
     def update_graph(self, region_name: str, graph_name: str):
-        graph = make_graph(self.tao, region_name, graph_name)
+        try:
+            graph = make_graph(self.tao, region_name, graph_name)
+        except UnsupportedGraphError as ex:
+            logger.error(f"Unsupported graph type. Graph: {region_name}.{graph_name} {ex}")
+            return None
+
         region = self.regions.setdefault(region_name, {})
         region[graph_name] = graph
         return graph
@@ -2352,7 +2361,7 @@ class GraphManager:
     def place(self, region_name: str, graph_name: str) -> Dict[str, AnyGraph]:
         self.tao.cmd(f"place -no_buffer {region_name} {graph_name}")
         self.update_region(region_name)
-        return self.regions[region_name]
+        return self.regions.get(region_name, {})
 
     def clear(self, region_name: str):
         try:
@@ -2405,16 +2414,20 @@ class MatplotlibGraphManager(GraphManager):
             self.place_all_requested()
 
         res = {}
-        for graph_name in self.regions[region_name]:
-            res[graph_name] = self.plot(
-                region_name=region_name,
-                graph_name=graph_name,
-                ax=ax,
-                include_layout=include_layout,
-                place=False,
-                width=width,
-                height=height,
-            )
+        for graph_name in self.regions.get(region_name, {}):
+            try:
+                res[graph_name] = self.plot(
+                    region_name=region_name,
+                    graph_name=graph_name,
+                    ax=ax,
+                    include_layout=include_layout,
+                    place=False,
+                    width=width,
+                    height=height,
+                )
+            except UnsupportedGraphError:
+                continue
+
         return res
 
     def plot_all(

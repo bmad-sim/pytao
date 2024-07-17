@@ -1,3 +1,4 @@
+from . import hershey_fonts
 import logging
 
 logger = logging.getLogger(__name__)
@@ -19,7 +20,6 @@ def mpl_color(pgplot_color: str) -> str:
 _pgplot_to_mpl_chars = [
     (" ", r"\ "),
     ("%", r"\%"),
-    (r"\\(2265)", r"\partial"),
     (r"\\ga", r"\alpha"),
     (r"\\gb", r"\beta"),
     (r"\\gg", r"\gamma"),
@@ -69,6 +69,7 @@ _pgplot_to_mpl_chars = [
     (r"\\gQ", r"\Psi"),
     (r"\\gW", r"\Omega"),
     (r"\\fn", ""),
+    *hershey_fonts.string_to_unicode,
 ]
 
 
@@ -94,7 +95,7 @@ def mpl_string(value: str) -> str:
     for from_, to in _pgplot_to_mpl_chars:
         result = result.replace(from_, to)
 
-    if "\\\\" in result:
+    if r"\\" in result:
         logger.debug(f"Unknown pgplot character in string: {result}")
 
     return result
