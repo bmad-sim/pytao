@@ -18,9 +18,9 @@ from typing import (
 from bokeh.core.enums import SizingModeType
 import bokeh.events
 import bokeh.models
+from bokeh.models.tools import HoverTool
 import bokeh.plotting
 
-# from bokeh.colors import named
 from bokeh.document.callbacks import EventCallback
 from bokeh.layouts import column
 from bokeh.models.sources import ColumnDataSource
@@ -29,7 +29,6 @@ from typing_extensions import NotRequired, TypedDict
 
 from . import pgplot
 from .plot import (
-    AnyGraph,
     BasicGraph,
     GraphBase,
     GraphManager,
@@ -84,14 +83,6 @@ def _get_graph_data(graph) -> List[CurveData]:
     return [_get_curve_data(curve) for curve in graph.curves]
 
 
-def should_share_x_axes(graphs: List[AnyGraph]):
-    if all(graph.is_s_plot for graph in graphs):
-        return True
-
-    x_labels = list(graph.x_axis_label for graph in graphs)
-    return len(set(x_labels)) == 1
-
-
 def share_x_axes(figs: List[figure]):
     if not figs:
         return
@@ -133,6 +124,7 @@ def share_common_x_axes(graphs: List[BGraphAndFigure]) -> List[List[BGraphAndFig
 
 
 def _plot_curve(fig: figure, curve: PlotCurve, source: CurveData) -> None:
+    name = pgplot.mathjax_string(curve.info["name"])
     if "line" in source and curve.line is not None:
         fig.line(
             "x",
@@ -140,6 +132,8 @@ def _plot_curve(fig: figure, curve: PlotCurve, source: CurveData) -> None:
             line_width=curve.line.linewidth,
             source=source["line"],
             color=curve.line.color,
+            name=name,
+            legend_label=name,
         )
 
     if "symbol" in source and curve.symbol is not None:
@@ -148,6 +142,8 @@ def _plot_curve(fig: figure, curve: PlotCurve, source: CurveData) -> None:
             "y",
             source=source["symbol"],
             fill_color=curve.symbol.color,
+            name=name,
+            legend_label=None if "line" in source else name,
         )
 
 
@@ -159,74 +155,112 @@ def _draw_layout_element(
     fig: figure,
     elem: LatticeLayoutElement,
 ):
+    data = {
+        "s_start": [elem.info["ele_s_start"]],
+        "s_end": [elem.info["ele_s_end"]],
+        "name": [elem.info["label_name"]],
+        "color": [elem.color],
+    }
+    all_lines: List[Tuple[List[float], List[float]]] = []
     for patch in elem.patches:
+        source = ColumnDataSource(data=dict(data))
         if isinstance(patch, PlotPatchRectangle):
             points = patch.to_mpl().get_corners()
-            fig.patch(
-                [p[0] for p in points],
-                [p[1] for p in points],
-                line_width=elem.width,
-                color=elem.color,
-                fill_alpha=int(patch.fill),
+            all_lines.append(
+                (
+                    points[:, 0].tolist() + [points[0, 0]],
+                    points[:, 1].tolist() + [points[0, 1]],
+                )
+            )
+        elif isinstance(patch, PlotPatchPolygon):
+            all_lines.append(
+                (
+                    [p[0] for p in patch.vertices + patch.vertices[:1]],
+                    [p[1] for p in patch.vertices + patch.vertices[:1]],
+                )
             )
         elif isinstance(patch, PlotPatchArc):
+            source.data["x"], source.data["y"] = [patch.xy[0]], [patch.xy[1]]
             fig.arc(
-                x=[patch.xy[0]],
-                y=[patch.xy[1]],
+                x="x",
+                y="y",
                 start_angle=[patch.theta1],
                 end_angle=[patch.theta2],
                 line_width=elem.width,
-                color=elem.color,
                 fill_alpha=int(patch.fill),
+                source=source,
             )
         elif isinstance(patch, PlotPatchCircle):
+            source.data["x"], source.data["y"] = [patch.xy[0]], [patch.xy[1]]
             fig.circle(
-                x=[patch.xy[0]],
-                y=[patch.xy[1]],
+                x="x",
+                y="y",
                 radii=[patch.radius],
                 line_width=elem.width,
-                color=elem.color,
                 fill_alpha=int(patch.fill),
+                source=source,
             )
         elif isinstance(patch, PlotPatchEllipse):
+            source.data["x"], source.data["y"] = [patch.xy[0]], [patch.xy[1]]
             fig.ellipse(
-                x=[patch.xy[0]],
-                y=[patch.xy[1]],
+                x="x",
+                y="y",
                 width=[patch.width],
                 height=[patch.height],
                 angle=[math.radians(patch.angle)],
                 line_width=elem.width,
-                color=elem.color,
                 fill_alpha=int(patch.fill),
-            )
-        elif isinstance(patch, PlotPatchPolygon):
-            fig.patch(
-                [p[0] for p in patch.vertices],
-                [p[1] for p in patch.vertices],
-                line_width=elem.width,
-                color=elem.color,
-                fill_alpha=int(patch.fill),
+                source=source,
             )
         elif isinstance(patch, PlotPatchCustom):
             _plot_custom_patch(fig, patch)
         else:
             raise NotImplementedError(f"{type(patch).__name__}")
-    for line_points in elem.lines:
-        fig.line(
-            x=[pt[0] for pt in line_points],
-            y=[pt[1] for pt in line_points],
+
+    if elem.lines:
+        for line_points in elem.lines:
+            all_lines.append(
+                (
+                    [pt[0] for pt in line_points],
+                    [pt[1] for pt in line_points],
+                )
+            )
+
+    if all_lines:
+        source = ColumnDataSource(
+            data={
+                "xs": [line[0] for line in all_lines],
+                "ys": [line[1] for line in all_lines],
+                "s_start": data["s_start"] * len(all_lines),
+                "s_end": data["s_end"] * len(all_lines),
+                "name": data["name"] * len(all_lines),
+                "color": data["color"] * len(all_lines),
+            }
+        )
+        fig.multi_line(
+            xs="xs",
+            ys="ys",
             line_width=elem.width,
             color=elem.color,
+            source=source,
         )
+
     for annotation in elem.annotations:
+        source = ColumnDataSource(
+            data={
+                "x": [annotation.x],
+                "y": [annotation.y],
+                **data,
+            }
+        )
         fig.text(
-            [annotation.x],
-            [annotation.y],
+            "x",
+            "y",
             text=[pgplot.mathjax_string(annotation.text)],
             angle=math.radians(annotation.rotation),
-            color=elem.color,
             text_align="right",  # annotation.horizontalalignment,
             text_baseline=annotation.verticalalignment,
+            source=source,
         )
 
 
@@ -296,8 +330,9 @@ class BokehLatticeGraph(BokehGraphBase[LatticeLayoutGraph]):
 
     def create_figure(
         self,
-        tools: str = "pan,wheel_zoom,box_zoom,save,reset,help,hover,crosshair",
+        tools: str = "pan,wheel_zoom,box_zoom,save,reset,help,crosshair",
         toolbar_location: str = "above",
+        add_named_hover_tool: bool = True,
     ) -> figure:
         graph = self.graph
         fig = figure(
@@ -311,6 +346,17 @@ class BokehLatticeGraph(BokehGraphBase[LatticeLayoutGraph]):
             width=self.width,
             height=self.height,
         )
+        if add_named_hover_tool:
+            hover = HoverTool(
+                tooltips=[
+                    ("name", "@name"),
+                    ("s start [m]", "@s_start"),
+                    ("s end [m]", "@s_end"),
+                ]
+            )
+
+            fig.add_tools(hover)
+
         for elem in graph.elements:
             _draw_layout_element(fig, elem)
 
