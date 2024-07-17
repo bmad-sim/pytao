@@ -155,7 +155,7 @@ def _draw_layout_element(
     fig: figure,
     elem: LatticeLayoutElement,
 ):
-    data = {
+    base_data = {
         "s_start": [elem.info["ele_s_start"]],
         "s_end": [elem.info["ele_s_end"]],
         "name": [elem.info["label_name"]],
@@ -163,7 +163,7 @@ def _draw_layout_element(
     }
     all_lines: List[Tuple[List[float], List[float]]] = []
     for patch in elem.patches:
-        source = ColumnDataSource(data=dict(data))
+        source = ColumnDataSource(data=dict(base_data))
         if isinstance(patch, PlotPatchRectangle):
             points = patch.to_mpl().get_corners()
             all_lines.append(
@@ -231,10 +231,10 @@ def _draw_layout_element(
             data={
                 "xs": [line[0] for line in all_lines],
                 "ys": [line[1] for line in all_lines],
-                "s_start": data["s_start"] * len(all_lines),
-                "s_end": data["s_end"] * len(all_lines),
-                "name": data["name"] * len(all_lines),
-                "color": data["color"] * len(all_lines),
+                "s_start": base_data["s_start"] * len(all_lines),
+                "s_end": base_data["s_end"] * len(all_lines),
+                "name": base_data["name"] * len(all_lines),
+                "color": base_data["color"] * len(all_lines),
             }
         )
         fig.multi_line(
@@ -250,16 +250,17 @@ def _draw_layout_element(
             data={
                 "x": [annotation.x],
                 "y": [annotation.y],
-                **data,
+                "text": [pgplot.mathjax_string(annotation.text)],
+                **base_data,
             }
         )
         fig.text(
             "x",
             "y",
-            text=[pgplot.mathjax_string(annotation.text)],
             angle=math.radians(annotation.rotation),
             text_align="right",  # annotation.horizontalalignment,
             text_baseline=annotation.verticalalignment,
+            color=elem.color,
             source=source,
         )
 
