@@ -170,10 +170,18 @@ def share_common_x_axes(
 def _plot_curve_symbols(
     fig: figure,
     symbol: PlotCurveSymbols,
-    source: ColumnDataSource,
     name: str,
+    source: Optional[ColumnDataSource] = None,
     legend_label: Optional[str] = None,
 ):
+    source = ColumnDataSource(
+        data={
+            "x": symbol.xs,
+            "y": symbol.ys,
+            **(source.data if source else {}),
+        },
+    )
+
     if legend_label is not None:
         # Can't pass legend_label unless it's set to non-None
         kw = {"legend_label": legend_label}
@@ -540,6 +548,10 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
 
             fig.add_tools(hover)
 
+        box_zoom = get_tool_from_figure(fig, bokeh.models.tools.BoxZoomTool)
+        if box_zoom is not None:
+            box_zoom.match_aspect = True
+
         fig.xaxis.ticker = bokeh.models.FixedTicker(
             ticks=[elem.info["ele_s_start"] for elem in graph.elements],
             minor_ticks=[elem.info["ele_s_end"] for elem in graph.elements],
@@ -683,9 +695,9 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         manager: GraphManager,
         graph: FloorPlanGraph,
         sizing_mode: SizingModeType = "inherit",
-        width: int = 900,
+        width: int = 600,
         height: int = 600,
-        aspect_ratio: float = 1.5,  # w/h
+        aspect_ratio: float = 1.0,  # w/h
     ) -> None:
         super().__init__(
             manager=manager,
@@ -724,13 +736,17 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         if self.x_range is not None:
             fig.x_range = self.x_range
 
+        box_zoom = get_tool_from_figure(fig, bokeh.models.tools.BoxZoomTool)
+        if box_zoom is not None:
+            box_zoom.match_aspect = True
+
         for line in self.graph.building_walls.lines:
             _plot_curve_line(fig, line)
         for patch in self.graph.building_walls.patches:
             _plot_patch(fig, patch)
         orbits = self.graph.floor_orbits
         if orbits is not None:
-            _plot_curve_line(fig, orbits.line)
+            _plot_curve_symbols(fig, orbits.curve, name="floor_orbits")
         for elem in self.graph.elements:
             source = ColumnDataSource()
             for line in elem.lines:
