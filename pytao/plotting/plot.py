@@ -1116,12 +1116,13 @@ def _get_wrapped_shape_coords(
 
 
 def _building_wall_to_arc(
-    mx,
-    my,
-    kx,
-    ky,
-    k_radii,
+    mx: float,
+    my: float,
+    kx: float,
+    ky: float,
+    k_radii: float,
     color: str,
+    linewidth: float,
 ):
     (c0x, c0y), (c1x, c1y) = util.circle_intersection(
         mx,
@@ -1171,6 +1172,7 @@ def _building_wall_to_arc(
         theta1=t1,
         theta2=t2,
         color=color,
+        linewidth=linewidth,
     )
 
 
@@ -1876,6 +1878,17 @@ class FloorPlanElement:
         # coordinates of corners of a floor plan element for clickable region
 
 
+def sort_building_wall_graph_info(
+    info: List[BuildingWallGraphInfo],
+) -> Dict[int, Dict[int, BuildingWallGraphInfo]]:
+    res = {}
+    for item in info:
+        index = item["index"]
+        point = item["point"]
+        res.setdefault(index, {})[point] = item
+    return res
+
+
 @dataclasses.dataclass
 class BuildingWalls:
     building_wall_graph: List[BuildingWallGraphInfo] = Field(default_factory=list)
@@ -1893,54 +1906,28 @@ class BuildingWalls:
         cls,
         building_wall_graph: List[BuildingWallGraphInfo],
         wall_list: List[BuildingWallInfo],
-        elem_to_color: Dict[str, str],
     ) -> BuildingWalls:
-        building_wall_curves = set(graph["index"] for graph in building_wall_graph)
-        building_wall_types = {wall["index"]: wall["name"] for wall in wall_list}
+        walls = sort_building_wall_graph_info(building_wall_graph)
+        wall_info_by_index = {info["index"]: info for info in wall_list}
         lines = []
         patches = []
-        for curve_name in sorted(building_wall_curves):
-            points = []  # index of point in curve
-            xs = []  # list of point x coordinates
-            ys = []  # list of point y coordinates
-            radii = []  # straight line if element has 0 or missing radius
-            for bwg in building_wall_graph:
-                if curve_name == bwg["index"]:
-                    points.append(bwg["point"])
-                    xs.append(bwg["offset_x"])
-                    ys.append(bwg["offset_y"])
-                    radii.append(bwg["radius"])
-
-            for k in range(max(points), 1, -1):
-                idx_k = points.index(k)
-                idx_m = points.index(k - 1)  # adjacent point to connect to
-                if building_wall_types[curve_name] not in elem_to_color:
-                    # (original todo message included)
-                    # TODO: This is a temporary fix to deal with building wall
-                    # segments that don't have an associated graph_info shape
-                    # Currently this will fail to match to wild cards in the
-                    # shape name (e.g. building_wall::* should match to every
-                    # building wall segment, but currently it matches to none).
-                    # A more sophisticated way of getting the graph_info shape
-                    # settings for building walls will be required in the
-                    # future, either through a python command in tao or with a
-                    # method on the python to match wild cards to wall segment
-                    # names
-                    logger.warning(
-                        f"No graph_info shape defined for building_wall segment "
-                        f"{building_wall_types[curve_name]}"
-                    )
-                    color = "black"
-                else:
-                    color = elem_to_color[building_wall_types[curve_name]]
-
-                if radii[idx_k] == 0:
+        for wall_idx, wall in walls.items():
+            wall_points = list(reversed(wall.values()))
+            wall_info = wall_info_by_index[wall_idx]
+            color = wall_info["color"]
+            line_width = wall_info["line_width"]
+            for point, next_point in zip(wall_points, wall_points[1:]):
+                radius = point["radius"]
+                p0x, p0y = point["offset_x"], point["offset_y"]
+                p1x, p1y = next_point["offset_x"], next_point["offset_y"]
+                if np.isclose(radius, 0.0):
                     # draw building wall line
                     lines.append(
                         PlotCurveLine(
-                            xs=[xs[idx_k], xs[idx_m]],
-                            ys=[ys[idx_k], ys[idx_m]],
+                            xs=[p0x, p1x],
+                            ys=[p0y, p1y],
                             color=color,
+                            linewidth=line_width,
                         )
                     )
 
@@ -1948,12 +1935,13 @@ class BuildingWalls:
                     # draw building wall arc
                     patches.append(
                         _building_wall_to_arc(
-                            mx=xs[idx_m],
-                            my=ys[idx_m],
-                            kx=xs[idx_k],
-                            ky=ys[idx_k],
-                            k_radii=radii[idx_k],
+                            mx=p1x,
+                            my=p1y,
+                            kx=p0x,
+                            ky=p0y,
+                            k_radii=radius,
                             color=color,
+                            linewidth=line_width,
                         )
                     )
 
@@ -2031,19 +2019,13 @@ class FloorPlanGraph(GraphBase):
             List[FloorPlanElementInfo],
             tao.floor_plan(full_name),
         )
-        elements = [FloorPlanElement.from_info(info) for info in elem_infos]
-        elem_to_color = {
-            elem["ele_id"].split(":")[0]: pgplot.mpl_color(elem["color"])
-            for elem in tao.shape_list("floor_plan")
-        }
-
+        elements = [FloorPlanElement.from_info(fpe_info) for fpe_info in elem_infos]
         building_walls = BuildingWalls.from_info(
             building_wall_graph=cast(
                 List[BuildingWallGraphInfo],
                 tao.building_wall_graph(full_name),
             ),
             wall_list=cast(List[BuildingWallInfo], tao.building_wall_list()),
-            elem_to_color=elem_to_color,
         )
         floor_orbits = None
         if float(info["floor_plan_orbit_scale"]) != 0:
