@@ -5,9 +5,6 @@ Provides windows for viewing and editing plots in tao
 import tkinter as tk
 from tkinter import messagebox, ttk
 
-import matplotlib
-
-matplotlib.use("TkAgg")
 from matplotlib.backend_bases import key_press_handler
 from matplotlib.backends._backend_tk import FigureManagerTk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
