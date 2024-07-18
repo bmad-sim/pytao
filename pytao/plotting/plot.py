@@ -75,7 +75,7 @@ def _should_use_symbol_color(symbol_type: str, fill_pattern: str) -> bool:
     ):
         return True
 
-    if pgplot.fills[fill_pattern] == "solid":
+    if pgplot.fills[fill_pattern] == "full":
         return True
 
     return False
@@ -2106,8 +2106,6 @@ def make_graph(
     logger.debug(f"Creating graph {region_name}.{graph_name} ({graph_type})")
 
     if graph_type == "floor_plan":
-        # TODO uncomment; waiting on bmad release
-        raise UnsupportedGraphError(graph_type)
         return FloorPlanGraph.from_tao(
             tao=tao,
             region_name=region_name,
@@ -2388,6 +2386,10 @@ class GraphManager:
     def update_region(self, region_name: str):
         for graph_name in get_graphs_in_region(self.tao, region_name):
             self.update_graph(region_name, graph_name)
+
+    def update(self):
+        for region_name in get_visible_regions(self.tao):
+            self.update_region(region_name)
 
     def place(self, region_name: str, graph_name: str) -> Dict[str, AnyGraph]:
         self.tao.cmd(f"place -no_buffer {region_name} {graph_name}")

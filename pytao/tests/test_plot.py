@@ -40,7 +40,6 @@ def _plot_show_to_savefig(
     monkeypatch.setattr(plt, "show", savefig)
 
 
-@pytest.mark.skip(reason="bmad crash on 20240715.0 (TODO)")
 def test_plot_floor_plan(tao_cls):
     with new_tao(
         tao_cls,
@@ -104,9 +103,6 @@ def test_plot_all_requested(init_filename: pathlib.Path):
 
 
 def test_plot_manager(init_filename: pathlib.Path):
-    if init_filename.name in {"tao.init_wall", "tao.init_photon"}:
-        pytest.skip(reason="bmad crash on 20240715.0 (TODO)")
-
     # Floor orbit tries to set a plot setting on initialization which doesn't work
     # with external plotting.  Enable plotting for it as a workaround.
     external_plotting = init_filename.name != "tao.init_floor_orbit"
