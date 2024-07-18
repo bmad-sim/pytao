@@ -1124,13 +1124,7 @@ def _building_wall_to_arc(
     color: str,
     linewidth: float,
 ):
-    (c0x, c0y), (c1x, c1y) = util.circle_intersection(
-        mx,
-        my,
-        kx,
-        ky,
-        abs(k_radii),
-    )
+    (c0x, c0y), (c1x, c1y) = util.circle_intersection(mx, my, kx, ky, abs(k_radii))
     # radius and endpoints specify 2 possible circle centers for arcs
     mpx = (mx + kx) / 2
     mpy = (my + ky) / 2
@@ -1616,6 +1610,10 @@ class FloorPlanElement:
             patch.plot(ax)
         for annotation in self.annotations:
             annotation.plot(ax)
+
+    @property
+    def name(self) -> str:
+        return self.info["label_name"]
 
     @classmethod
     def from_info(cls, info: FloorPlanElementInfo):

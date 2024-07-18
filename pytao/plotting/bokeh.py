@@ -22,6 +22,7 @@ import bokeh.layouts
 import bokeh.models
 import bokeh.models.tools
 import bokeh.plotting
+import numpy as np
 
 from bokeh.document.callbacks import EventCallback
 from bokeh.models.sources import ColumnDataSource
@@ -31,12 +32,17 @@ from typing_extensions import NotRequired, TypedDict
 from . import pgplot
 from .plot import (
     BasicGraph,
+    FloorPlanGraph,
     GraphBase,
     GraphManager,
     LatticeLayoutElement,
     LatticeLayoutGraph,
     LayoutGraphNotFoundError,
+    PlotAnnotation,
     PlotCurve,
+    PlotCurveLine,
+    PlotCurveSymbols,
+    PlotPatch,
     PlotPatchRectangle,
     PlotPatchArc,
     PlotPatchCircle,
@@ -157,32 +163,221 @@ def share_common_x_axes(
     return res
 
 
+def _plot_curve_symbols(
+    fig: figure,
+    symbol: PlotCurveSymbols,
+    source: ColumnDataSource,
+    name: str,
+    legend_label: Optional[str] = None,
+):
+    if legend_label is not None:
+        # Can't pass legend_label unless it's set to non-None
+        kw = {"legend_label": legend_label}
+    else:
+        kw = {}
+    return fig.scatter(
+        "x",
+        "y",
+        source=source,
+        fill_color=symbol.color,
+        name=name,
+        **kw,
+    )
+
+
+def _plot_curve_line(
+    fig: figure,
+    line: PlotCurveLine,
+    name: Optional[str] = None,
+    source: Optional[ColumnDataSource] = None,
+):
+    source = ColumnDataSource(
+        data={
+            "x": line.xs,
+            "y": line.ys,
+            **(source.data if source else {}),
+        },
+    )
+
+    if name is not None:
+        # Can't pass legend_label unless it's set to non-None
+        kw = {"legend_label": name}
+    else:
+        kw = {}
+    return fig.line(
+        "x",
+        "y",
+        line_width=line.linewidth,
+        source=source,
+        color=line.color,
+        name=name,
+        **kw,
+    )
+
+
 def _plot_curve(fig: figure, curve: PlotCurve, source: CurveData) -> None:
     name = pgplot.mathjax_string(curve.info["name"])
     if "line" in source and curve.line is not None:
-        fig.line(
-            "x",
-            "y",
-            line_width=curve.line.linewidth,
-            source=source["line"],
-            color=curve.line.color,
-            name=name,
-            legend_label=name,
-        )
+        _plot_curve_line(fig=fig, line=curve.line, name=name, source=source["line"])
 
     if "symbol" in source and curve.symbol is not None:
-        fig.scatter(
-            "x",
-            "y",
+        legend = None if "line" in source else name
+        _plot_curve_symbols(
+            fig=fig,
+            symbol=curve.symbol,
             source=source["symbol"],
-            fill_color=curve.symbol.color,
             name=name,
-            legend_label=None if "line" in source else name,
+            legend_label=legend,
         )
+
+
+def _plot_patch_arc(
+    fig: figure,
+    patch: PlotPatchArc,
+    source: Optional[ColumnDataSource] = None,
+    linewidth: Optional[float] = None,
+):
+    if source is None:
+        source = ColumnDataSource(data={})
+    if not np.isclose(patch.width, patch.height):
+        logger.warning(
+            "Arcs only support circular arcs for now (w=%f h=%f)",
+            patch.width,
+            patch.height,
+        )
+
+    source.data.update(
+        {
+            "x": [patch.xy[0]],
+            "y": [patch.xy[1]],
+            "radius": [patch.width / 2],
+            "start_angle": [math.radians(patch.theta1)],
+            "end_angle": [math.radians(patch.theta2)],
+            # NOTE: debugging with aspect ratios...
+            # "x": [0],
+            # "y": [0],
+            # "radius": [1],  # patch.width / 2],
+            # "start_angle": [0],
+            # "end_angle": [math.radians(345)],
+        }
+    )
+    return fig.arc(
+        x="x",
+        y="y",
+        radius="radius",
+        start_angle="start_angle",
+        end_angle="end_angle",
+        line_width=linewidth if linewidth is not None else patch.linewidth,
+        source=source,
+    )
 
 
 def _plot_custom_patch(fig: figure, patch: PlotPatchCustom):
     raise NotImplementedError("plot custom patch")
+
+
+def _patch_rect_to_points(patch: PlotPatchRectangle) -> Tuple[List[float], List[float]]:
+    points = patch.to_mpl().get_corners()
+    return (
+        points[:, 0].tolist() + [points[0, 0]],
+        points[:, 1].tolist() + [points[0, 1]],
+    )
+
+
+def _draw_annotation(
+    fig: figure,
+    annotation: PlotAnnotation,
+    base_data: Optional[dict] = None,
+    color: str = "black,",
+):
+    source = ColumnDataSource(
+        data={
+            "x": [annotation.x],
+            "y": [annotation.y],
+            "text": [pgplot.mathjax_string(annotation.text)],
+            **(base_data or {}),
+        }
+    )
+    return fig.text(
+        "x",
+        "y",
+        angle=math.radians(annotation.rotation),
+        text_align="right",  # annotation.horizontalalignment,
+        text_baseline=annotation.verticalalignment,
+        color=color,
+        source=source,
+    )
+
+
+def _draw_limit_border(
+    fig: figure,
+    xlim: Tuple[float, float],
+    ylim: Tuple[float, float],
+    alpha: float = 1.0,
+):
+    width = xlim[1] - xlim[0]
+    height = ylim[1] - ylim[0]
+    xcenter = xlim[0] + width / 2.0
+    ycenter = ylim[0] + height / 2.0
+    rect = PlotPatchRectangle(xy=(xcenter, ycenter), width=width, height=height, alpha=alpha)
+    px, py = _patch_rect_to_points(rect)
+
+    return fig.line(px, py, alpha=alpha)
+
+
+def _plot_patch(
+    fig: figure,
+    patch: PlotPatch,
+    line_width: Optional[float] = None,
+    source: Optional[ColumnDataSource] = None,
+):
+    source = ColumnDataSource(
+        data={
+            **(source.data if source else {}),
+        },
+    )
+    line_width = line_width if line_width is not None else patch.linewidth
+    if isinstance(patch, (PlotPatchRectangle, PlotPatchPolygon)):
+        if isinstance(patch, PlotPatchRectangle):
+            source.data["xs"], source.data["ys"] = _patch_rect_to_points(patch)
+        else:
+            source.data["xs"] = [p[0] for p in patch.vertices + patch.vertices[:1]]
+            source.data["ys"] = [p[1] for p in patch.vertices + patch.vertices[:1]]
+        return fig.line(
+            xs="xs",
+            ys="ys",
+            line_width=line_width,
+            color=patch.color,
+            source=source,
+        )
+    if isinstance(patch, PlotPatchArc):
+        return _plot_patch_arc(fig, patch, source=source, linewidth=line_width)
+
+    if isinstance(patch, PlotPatchCircle):
+        source.data["x"], source.data["y"] = [patch.xy[0]], [patch.xy[1]]
+        return fig.circle(
+            x="x",
+            y="y",
+            radii=[patch.radius],
+            line_width=line_width,
+            fill_alpha=int(patch.fill),
+            source=source,
+        )
+    if isinstance(patch, PlotPatchEllipse):
+        source.data["x"], source.data["y"] = [patch.xy[0]], [patch.xy[1]]
+        return fig.ellipse(
+            x="x",
+            y="y",
+            width=[patch.width],
+            height=[patch.height],
+            angle=[math.radians(patch.angle)],
+            line_width=line_width,
+            fill_alpha=int(patch.fill),
+            source=source,
+        )
+    if isinstance(patch, PlotPatchCustom):
+        return _plot_custom_patch(fig, patch)
+    raise NotImplementedError(f"{type(patch).__name__}")
 
 
 def _draw_layout_element(
@@ -200,13 +395,7 @@ def _draw_layout_element(
     for patch in elem.patches:
         source = ColumnDataSource(data=dict(base_data))
         if isinstance(patch, PlotPatchRectangle):
-            points = patch.to_mpl().get_corners()
-            all_lines.append(
-                (
-                    points[:, 0].tolist() + [points[0, 0]],
-                    points[:, 1].tolist() + [points[0, 1]],
-                )
-            )
+            all_lines.append(_patch_rect_to_points(patch))
         elif isinstance(patch, PlotPatchPolygon):
             all_lines.append(
                 (
@@ -214,43 +403,8 @@ def _draw_layout_element(
                     [p[1] for p in patch.vertices + patch.vertices[:1]],
                 )
             )
-        elif isinstance(patch, PlotPatchArc):
-            source.data["x"], source.data["y"] = [patch.xy[0]], [patch.xy[1]]
-            fig.arc(
-                x="x",
-                y="y",
-                start_angle=[patch.theta1],
-                end_angle=[patch.theta2],
-                line_width=elem.width,
-                fill_alpha=int(patch.fill),
-                source=source,
-            )
-        elif isinstance(patch, PlotPatchCircle):
-            source.data["x"], source.data["y"] = [patch.xy[0]], [patch.xy[1]]
-            fig.circle(
-                x="x",
-                y="y",
-                radii=[patch.radius],
-                line_width=elem.width,
-                fill_alpha=int(patch.fill),
-                source=source,
-            )
-        elif isinstance(patch, PlotPatchEllipse):
-            source.data["x"], source.data["y"] = [patch.xy[0]], [patch.xy[1]]
-            fig.ellipse(
-                x="x",
-                y="y",
-                width=[patch.width],
-                height=[patch.height],
-                angle=[math.radians(patch.angle)],
-                line_width=elem.width,
-                fill_alpha=int(patch.fill),
-                source=source,
-            )
-        elif isinstance(patch, PlotPatchCustom):
-            _plot_custom_patch(fig, patch)
         else:
-            raise NotImplementedError(f"{type(patch).__name__}")
+            _plot_patch(fig, patch, line_width=elem.width, source=source)
 
     if elem.lines:
         for line_points in elem.lines:
@@ -283,23 +437,7 @@ def _draw_layout_element(
     for annotation in elem.annotations:
         if annotation.text == elem.info["label_name"] and skip_labels:
             continue
-        source = ColumnDataSource(
-            data={
-                "x": [annotation.x],
-                "y": [annotation.y],
-                "text": [pgplot.mathjax_string(annotation.text)],
-                **base_data,
-            }
-        )
-        fig.text(
-            "x",
-            "y",
-            angle=math.radians(annotation.rotation),
-            text_align="right",  # annotation.horizontalalignment,
-            text_baseline=annotation.verticalalignment,
-            color=elem.color,
-            source=source,
-        )
+        _draw_annotation(fig, annotation, color=elem.color, base_data=base_data)
 
 
 TGraph = TypeVar("TGraph", bound=GraphBase)
@@ -531,7 +669,86 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
         return fig, [bokeh.layouts.column(bokeh.layouts.row(update_button, num_points), fig)]
 
 
-AnyBokehGraph = Union[BokehBasicGraph, BokehLatticeLayoutGraph]
+class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
+    graph: FloorPlanGraph
+
+    def __init__(
+        self,
+        manager: GraphManager,
+        graph: FloorPlanGraph,
+        sizing_mode: SizingModeType = "inherit",
+        width: int = 900,
+        height: int = 600,
+        aspect_ratio: float = 1.5,  # w/h
+    ) -> None:
+        super().__init__(
+            manager=manager,
+            graph=graph,
+            sizing_mode=sizing_mode,
+            width=width,
+            height=height,
+            aspect_ratio=aspect_ratio,
+        )
+
+    @property
+    def tao(self) -> Tao:
+        return self.manager.tao
+
+    def create_figure(
+        self,
+        tools: str = "pan,wheel_zoom,box_zoom,save,reset,help,hover,crosshair",
+        toolbar_location: str = "above",
+        sizing_mode: SizingModeType = "inherit",
+    ) -> figure:
+        graph = self.graph
+        fig = figure(
+            title=pgplot.mathjax_string(graph.title),
+            x_axis_label=pgplot.mathjax_string(graph.xlabel),
+            y_axis_label=pgplot.mathjax_string(graph.ylabel),
+            toolbar_location=toolbar_location,
+            tools=tools,
+            sizing_mode=sizing_mode,
+            width=self.width,
+            height=self.height,
+            # This is vitally important for glyphs to render properly.
+            # Compare how a circle centered at (0, 0) with a radius 1
+            # looks with/without this setting
+            match_aspect=True,
+        )
+        if self.x_range is not None:
+            fig.x_range = self.x_range
+
+        for line in self.graph.building_walls.lines:
+            _plot_curve_line(fig, line)
+        for patch in self.graph.building_walls.patches:
+            _plot_patch(fig, patch)
+        orbits = self.graph.floor_orbits
+        if orbits is not None:
+            _plot_curve_line(fig, orbits.line)
+        for elem in self.graph.elements:
+            source = ColumnDataSource()
+            for line in elem.lines:
+                _plot_curve_line(fig, line, source=source)
+            for patch in elem.patches:
+                _plot_patch(fig, patch, line_width=elem.info["line_width"], source=source)
+            for annotation in elem.annotations:
+                _draw_annotation(
+                    fig,
+                    annotation,
+                    color=elem.info["color"],
+                    base_data={"name": elem.info["label_name"]},
+                )
+
+        _draw_limit_border(fig, graph.xlim, graph.ylim, alpha=0.1)
+
+        return fig
+
+    def create_app_figure(self) -> Tuple[figure, List[bokeh.models.UIElement]]:
+        fig = self.create_figure()
+        return fig, [fig]
+
+
+AnyBokehGraph = Union[BokehBasicGraph, BokehLatticeLayoutGraph, BokehFloorPlanGraph]
 
 
 class CompositeApp:
@@ -586,6 +803,8 @@ class BokehGraphManager(GraphManager):
             return BokehBasicGraph(self, graph)
         if isinstance(graph, LatticeLayoutGraph):
             return BokehLatticeLayoutGraph(self, graph)
+        if isinstance(graph, FloorPlanGraph):
+            return BokehFloorPlanGraph(self, graph)
         raise NotImplementedError(type(graph).__name__)
 
     def plot_region(
