@@ -49,7 +49,7 @@ from .plot import (
     PlotPatchCircle,
     PlotPatchEllipse,
     PlotPatchPolygon,
-    PlotPatchCustom,
+    PlotPatchSbend,
 )
 
 if typing.TYPE_CHECKING:
@@ -284,9 +284,14 @@ def _plot_patch_arc(
     )
 
 
-def _plot_custom_patch(fig: figure, patch: PlotPatchCustom):
-    # raise NotImplementedError("plot custom patch")
-    return
+def _plot_sbend_patch(fig: figure, patch: PlotPatchSbend):
+    ((s1x0, s1y0), (s1cx0, s1cy0), (s1x1, s1y1)) = patch.spline1
+    ((s2x0, s2y0), (s2cx0, s2cy0), (s2x1, s2y1)) = patch.spline2
+    fig.bezier(x0=s1x0, y0=s1y0, cx0=s1cx0, cy0=s1cy0, x1=s1x1, y1=s1y1)
+    fig.line(x=[s1x1, s2x0], y=[s1y1, s2y0])
+
+    fig.bezier(x0=s2x0, y0=s2y0, cx0=s2cx0, cy0=s2cy0, x1=s2x1, y1=s2y1)
+    fig.line(x=[s2x1, s1x0], y=[s2y1, s1y0])
 
 
 def _patch_rect_to_points(patch: PlotPatchRectangle) -> Tuple[List[float], List[float]]:
@@ -388,8 +393,8 @@ def _plot_patch(
             fill_alpha=int(patch.fill),
             source=source,
         )
-    if isinstance(patch, PlotPatchCustom):
-        return _plot_custom_patch(fig, patch)
+    if isinstance(patch, PlotPatchSbend):
+        return _plot_sbend_patch(fig, patch)
     raise NotImplementedError(f"{type(patch).__name__}")
 
 

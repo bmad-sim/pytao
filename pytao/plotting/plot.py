@@ -294,37 +294,35 @@ class PlotPatchEllipse(PlotPatchBase):
         )
 
 
-CustomPathCommand = Literal[
-    "STOP",
-    "MOVETO",
-    "LINETO",
-    "CURVE3",
-    "CURVE4",
-    "CLOSEPOLY",
-]
-
-_command_to_mpl_path = {
-    "STOP": matplotlib.path.Path.STOP,
-    "MOVETO": matplotlib.path.Path.MOVETO,
-    "LINETO": matplotlib.path.Path.LINETO,
-    "CURVE3": matplotlib.path.Path.CURVE3,
-    "CURVE4": matplotlib.path.Path.CURVE4,
-    "CLOSEPOLY": matplotlib.path.Path.CLOSEPOLY,
-}
-
-
 @dataclasses.dataclass
-class PlotPatchCustom(PlotPatchBase):
-    commands: List[CustomPathCommand] = Field(default_factory=list)
-    vertices: List[Point] = Field(default_factory=list)
-
-    @property
-    def mpl_path_codes(self):
-        return [_command_to_mpl_path[cmd] for cmd in self.commands]
+class PlotPatchSbend(PlotPatchBase):
+    spline1: Tuple[Point, Point, Point] = Field(default_factory=tuple)
+    spline2: Tuple[Point, Point, Point] = Field(default_factory=tuple)
 
     def to_mpl(self) -> matplotlib.patches.PathPatch:
-        path = matplotlib.path.Path(self.vertices, self.mpl_path_codes)
-        return matplotlib.patches.PathPatch(path, facecolor="green", alpha=0.5)
+        codes = [
+            matplotlib.path.Path.MOVETO,
+            matplotlib.path.Path.CURVE3,
+            matplotlib.path.Path.CURVE3,
+            matplotlib.path.Path.LINETO,
+            matplotlib.path.Path.CURVE3,
+            matplotlib.path.Path.CURVE3,
+            matplotlib.path.Path.CLOSEPOLY,
+        ]
+        vertices = [
+            self.spline1[0],
+            self.spline1[1],
+            self.spline1[2],
+            self.spline2[0],
+            self.spline2[1],
+            self.spline2[2],
+            self.spline1[0],
+        ]
+        return matplotlib.patches.PathPatch(
+            matplotlib.path.Path(vertices, codes),
+            facecolor="green",
+            alpha=0.5,
+        )
 
 
 PlotPatch = Union[
@@ -333,7 +331,7 @@ PlotPatch = Union[
     PlotPatchCircle,
     PlotPatchEllipse,
     PlotPatchPolygon,
-    PlotPatchCustom,
+    PlotPatchSbend,
 ]
 
 
@@ -1500,19 +1498,9 @@ def _sbend_intersection_to_patch(
         2 * (bottom[1]) - 0.5 * (c3[1]) - 0.5 * (c4[1]),
     )
 
-    verts = [c1, top_cp, c2, c4, bottom_cp, c3, c1]
-    codes: List[CustomPathCommand] = [
-        "MOVETO",
-        "CURVE3",
-        "CURVE3",
-        "LINETO",
-        "CURVE3",
-        "CURVE3",
-        "CLOSEPOLY",
-    ]
-    return PlotPatchCustom(
-        vertices=verts,
-        commands=codes,
+    return PlotPatchSbend(
+        spline1=(c1, top_cp, c2),
+        spline2=(c4, bottom_cp, c3),
         facecolor="green",
         alpha=0.5,
     )
