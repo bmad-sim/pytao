@@ -34,9 +34,11 @@ def test_building_wall_list_2(tao_cls):
 
 def test_building_wall_graph_1(tao_cls):
     with new_tao(
-        tao_cls, "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall"
+        tao_cls,
+        "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall",
     ) as tao:
-        assert set(tao.building_wall_graph(graph="floor_plan.g")[0].keys()) == {
+        tao.cmd("place -no_buffer r11 floor_plan")
+        assert set(tao.building_wall_graph(graph="r11.g")[0].keys()) == {
             "index",
             "point",
             "offset_x",
@@ -212,8 +214,13 @@ def test_floor_plan_1(tao_cls):
 
 def test_floor_orbit_1(tao_cls):
     with new_tao(
-        tao_cls, "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_floor_orbit"
+        tao_cls,
+        "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_floor_orbit",
+        plot=True,
+        external_plotting=False,
     ) as tao:
+        tao.cmd("place -no_buffer r33 orbit")
+        tao.cmd("set graph r33 floor_plan%orbit_scale = 1")
         res = tao.floor_orbit(graph="r33.g")
     assert isinstance(res, list)
     assert isinstance(res[0], dict)
