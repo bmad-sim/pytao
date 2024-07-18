@@ -17,6 +17,7 @@ from typing import (
 )
 
 from bokeh.core.enums import SizingModeType
+import bokeh.colors.named
 import bokeh.events
 import bokeh.layouts
 import bokeh.models
@@ -56,8 +57,11 @@ if typing.TYPE_CHECKING:
 
 
 logger = logging.getLogger(__name__)
-# def bokeh_color(qp_color):
-#     return getattr(qp_color.lower(), "black")
+
+
+def bokeh_color(color):
+    color = color.lower().replace("_", "")
+    return getattr(bokeh.colors.named, color, "black")
 
 
 class CurveData(TypedDict):
@@ -179,7 +183,7 @@ def _plot_curve_symbols(
         "x",
         "y",
         source=source,
-        fill_color=symbol.color,
+        fill_color=bokeh_color(symbol.color),
         name=name,
         **kw,
     )
@@ -209,7 +213,7 @@ def _plot_curve_line(
         "y",
         line_width=line.linewidth,
         source=source,
-        color=line.color,
+        color=bokeh_color(line.color),
         name=name,
         **kw,
     )
@@ -273,7 +277,8 @@ def _plot_patch_arc(
 
 
 def _plot_custom_patch(fig: figure, patch: PlotPatchCustom):
-    raise NotImplementedError("plot custom patch")
+    # raise NotImplementedError("plot custom patch")
+    return
 
 
 def _patch_rect_to_points(patch: PlotPatchRectangle) -> Tuple[List[float], List[float]]:
@@ -344,10 +349,10 @@ def _plot_patch(
             source.data["xs"] = [p[0] for p in patch.vertices + patch.vertices[:1]]
             source.data["ys"] = [p[1] for p in patch.vertices + patch.vertices[:1]]
         return fig.line(
-            xs="xs",
-            ys="ys",
+            x="xs",
+            y="ys",
             line_width=line_width,
-            color=patch.color,
+            color=bokeh_color(patch.color),
             source=source,
         )
     if isinstance(patch, PlotPatchArc):
@@ -385,11 +390,12 @@ def _draw_layout_element(
     elem: LatticeLayoutElement,
     skip_labels: bool = True,
 ):
+    color = bokeh_color(elem.color)
     base_data = {
         "s_start": [elem.info["ele_s_start"]],
         "s_end": [elem.info["ele_s_end"]],
         "name": [elem.info["label_name"]],
-        "color": [elem.color],
+        "color": [color],
     }
     all_lines: List[Tuple[List[float], List[float]]] = []
     for patch in elem.patches:
@@ -430,14 +436,14 @@ def _draw_layout_element(
             xs="xs",
             ys="ys",
             line_width=elem.width,
-            color=elem.color,
+            color=color,
             source=source,
         )
 
     for annotation in elem.annotations:
         if annotation.text == elem.info["label_name"] and skip_labels:
             continue
-        _draw_annotation(fig, annotation, color=elem.color, base_data=base_data)
+        _draw_annotation(fig, annotation, color=color, base_data=base_data)
 
 
 TGraph = TypeVar("TGraph", bound=GraphBase)
@@ -735,7 +741,7 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
                 _draw_annotation(
                     fig,
                     annotation,
-                    color=elem.info["color"],
+                    color=bokeh_color(elem.info["color"]),
                     base_data={"name": elem.info["label_name"]},
                 )
 

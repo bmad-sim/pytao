@@ -27,6 +27,7 @@ from .types import (
     PlotGraphInfo,
     PlotHistogramInfo,
     PlotLatLayoutInfo,
+    PlotPage,
     Point,
     WaveParams,
 )
@@ -373,15 +374,18 @@ class GraphBase:
             ax.grid(self.draw_grid, which="major", axis="both")
 
         if xticks:
-            ax.xaxis.set_minor_locator(AutoMinorLocator())
-            ax.tick_params(axis="x", which="minor", length=4, color="black")
-            ax.set_xticks(
-                np.linspace(
-                    ax.get_xlim()[0],
-                    ax.get_xlim()[1],
-                    self.info["x_major_div_nominal"] - 1,
+            if self.info["x_minor_div"] > 0:
+                ax.xaxis.set_minor_locator(AutoMinorLocator(self.info["x_minor_div"]))
+                ax.tick_params(axis="x", which="minor", length=4, color="black")
+
+            if self.info["x_major_div_nominal"] > 2:
+                ax.set_xticks(
+                    np.linspace(
+                        ax.get_xlim()[0],
+                        ax.get_xlim()[1],
+                        self.info["x_major_div_nominal"] - 1,
+                    )
                 )
-            )
 
         if yticks:
             ax.yaxis.set_minor_locator(AutoMinorLocator())
@@ -766,7 +770,6 @@ class LatticeLayoutElement:
 
         # Normal case where element is not wrapped around ends of lattice.
         if s2 - s1 > 0:
-            # Draw box element
             box_patch = PlotPatchRectangle(
                 xy=(s1, y1),
                 width=s2 - s1,
@@ -908,7 +911,6 @@ class LatticeLayoutElement:
             ):
                 lines.append(list(zip(xs, ys)))
 
-            # Draw wrapped element name
             annotations.append(
                 PlotAnnotation(
                     x=s_max,
@@ -1616,7 +1618,11 @@ class FloorPlanElement:
         return self.info["label_name"]
 
     @classmethod
-    def from_info(cls, info: FloorPlanElementInfo):
+    def from_info(
+        cls,
+        info: FloorPlanElementInfo,
+        plot_page: PlotPage,
+    ):
         # Handle some renaming and reduce dictionary key usage
         return cls._from_info(
             info,
@@ -1631,8 +1637,8 @@ class FloorPlanElement:
             angle_end=info["end2_theta"],
             line_width=info["line_width"],
             shape=info["shape"],
-            off1=info["y1"],
-            off2=info["y2"],
+            off1=info["y1"] * plot_page["floor_plan_shape_scale"],
+            off2=info["y2"] * plot_page["floor_plan_shape_scale"],
             color=info["color"],
             label_name=info["label_name"],
             # ele_l=info["ele_l"],
@@ -1677,11 +1683,9 @@ class FloorPlanElement:
             _shape_prefix, shape = "", shape
 
         if ele_key == "drift" or ele_key == "kicker":
-            # draw drift element
             lines.append(PlotCurveLine(xs=[x1, x2], ys=[y1, y2], color="black"))
 
         if off1 == 0 and off2 == 0 and ele_key != "sbend" and color:
-            # draw line element
             lines.append(
                 PlotCurveLine(xs=[x1, x2], ys=[y1, y2], linewidth=line_width, color=color)
             )
@@ -1787,7 +1791,6 @@ class FloorPlanElement:
             )
 
         elif shape == "box" and ele_key == "sbend" and color:
-            # draws straight sbend edges
             lines.extend(
                 _create_sbend_box(
                     x1=x1,
@@ -1919,7 +1922,6 @@ class BuildingWalls:
                 p0x, p0y = point["offset_x"], point["offset_y"]
                 p1x, p1y = next_point["offset_x"], next_point["offset_y"]
                 if np.isclose(radius, 0.0):
-                    # draw building wall line
                     lines.append(
                         PlotCurveLine(
                             xs=[p0x, p1x],
@@ -1930,7 +1932,6 @@ class BuildingWalls:
                     )
 
                 else:
-                    # draw building wall arc
                     patches.append(
                         _building_wall_to_arc(
                             mx=p1x,
@@ -1950,7 +1951,7 @@ class BuildingWalls:
 @dataclasses.dataclass
 class FloorOrbits:
     info: List[FloorOrbitInfo]
-    line: PlotCurveLine
+    curve: PlotCurveSymbols
 
     @classmethod
     def from_tao(
@@ -1975,15 +1976,19 @@ class FloorOrbits:
 
         return cls(
             info=floor_orbit_info,
-            line=PlotCurveLine(
+            curve=PlotCurveSymbols(
                 xs=xs,
                 ys=ys,
                 color=color,
+                markerfacecolor=color,
+                markersize=1,
+                marker="o",
+                markeredgewidth=1,
             ),
         )
 
     def plot(self, ax: matplotlib.axes.Axes):
-        self.line.plot(ax)
+        self.curve.plot(ax)
 
 
 @dataclasses.dataclass
@@ -2004,10 +2009,13 @@ class FloorPlanGraph(GraphBase):
         graph_name: str,
         *,
         info: Optional[PlotGraphInfo] = None,
+        plot_page: Optional[PlotPage] = None,
     ) -> FloorPlanGraph:
         full_name = f"{region_name}.{graph_name}"
         if info is None:
             info = get_plot_graph_info(tao, region_name, graph_name)
+        if plot_page is None:
+            plot_page = cast(PlotPage, tao.plot_page())
 
         graph_type = info["graph^type"]
         if graph_type != "floor_plan":
@@ -2017,7 +2025,7 @@ class FloorPlanGraph(GraphBase):
             List[FloorPlanElementInfo],
             tao.floor_plan(full_name),
         )
-        elements = [FloorPlanElement.from_info(fpe_info) for fpe_info in elem_infos]
+        elements = [FloorPlanElement.from_info(fpe_info, plot_page) for fpe_info in elem_infos]
         building_walls = BuildingWalls.from_info(
             building_wall_graph=cast(
                 List[BuildingWallGraphInfo],
@@ -2062,7 +2070,7 @@ class FloorPlanGraph(GraphBase):
         if self.floor_orbits is not None:
             self.floor_orbits.plot(ax)
 
-        self._setup_axis(ax)
+        self._setup_axis(ax, xticks=False, yticks=False)
         return ax
 
 

@@ -256,5 +256,39 @@ FloorPlanElementInfo = TypedDict(
     },
 )
 
+PlotPage = TypedDict(
+    "PlotPage",
+    {
+        "title_string": str,
+        "title__x": float,
+        "title_y": float,
+        "title_units": str,
+        "title_justify": str,
+        "subtitle_string": str,
+        "subtitle__x": float,
+        "subtitle_y": float,
+        "subtitle_units": str,
+        "subtitle_justify": str,
+        "size": list,
+        "n_curve_pts": int,
+        "border": list,
+        "text_height": float,
+        "main_title_text_scale": float,
+        "graph_title_text_scale": float,
+        "axis_number_text_scale": float,
+        "axis_label_text_scale": float,
+        "key_table_text_scale": float,
+        "legend_text_scale": float,
+        "floor_plan_shape_scale": float,
+        "floor_plan_text_scale": float,
+        "lat_layout_shape_scale": float,
+        "lat_layout_text_scale": float,
+        "delete_overlapping_plots": str,
+        "draw_graph_title_suffix": str,
+        "curve_legend_line_len": float,
+        "curve_legend_text_offset": float,
+    },
+)
+
 
 Point = Tuple[float, float]

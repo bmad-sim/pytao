@@ -1,3 +1,4 @@
+import ast
 import logging
 from typing import Dict, List, Optional
 
@@ -1399,3 +1400,50 @@ def parse_place_buffer(lines, cmd=""):
             "graph": str,
         },
     )
+
+
+def parse_show_plot_page(lines, cmd=""):
+    """
+    Parse 'show plot_page' output.
+
+    Returns
+    -------
+    list of dict
+    """
+
+    def literal_eval(value: str):
+        try:
+            return ast.literal_eval(value)
+        except (ValueError, SyntaxError):
+            return value
+
+    result = {}
+    for line in lines:
+        line = line.strip()
+        if not line or "=" not in line:
+            continue
+
+        variable, value = line.split("=", 1)
+        variable = variable.strip().lstrip("%")
+        value = value.rsplit("!")[0].strip()
+        if value.startswith('"') or not value:
+            value = value.strip('"')
+        elif value in {"TF"}:
+            value = {"T": True, "F": False}[value]
+        else:
+            value = [literal_eval(part) for part in value.split()]
+
+            if "," in variable and "%" in variable:
+                prefix = variable[: variable.index("%")]
+                suffixes = [
+                    suffix.strip() for suffix in variable[variable.index("%") :].split(",")
+                ]
+                result.update(
+                    {f"{prefix}%{suffix}": val for suffix, val in zip(suffixes, value)}
+                )
+                continue
+            if len(value) == 1:
+                (value,) = value
+
+        result[variable] = value
+    return {key.replace("%", "_"): value for key, value in result.items()}

@@ -133,3 +133,8 @@ class Tao(TaoCore):
         dat["species"] = species.lower()
 
         return dat
+
+    def plot_page(self):
+        """Get plot page parameters."""
+        cmd = "show plot_page"
+        return _pytao_parsers.parse_show_plot_page(self.cmd(cmd), cmd=cmd)
