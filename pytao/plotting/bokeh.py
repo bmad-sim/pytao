@@ -826,10 +826,10 @@ class BokehGraphManager(GraphManager):
         place: bool = True,
     ) -> AnyBokehGraph:
         if place:
-            self.place_all_requested()
+            self.place()
 
         logger.debug(f"Plotting {region_name}.{graph_name}")
-        graph = super().get_plot(region_name, graph_name)
+        graph = super().get_plot(region_name, graph_name, place=False)
         if isinstance(graph, BasicGraph):
             return BokehBasicGraph(self, graph)
         if isinstance(graph, LatticeLayoutGraph):
@@ -846,7 +846,7 @@ class BokehGraphManager(GraphManager):
         place: bool = True,
     ) -> Dict[str, AnyBokehGraph]:
         if place:
-            self.place_all_requested()
+            self.place()
 
         res: Dict[str, AnyBokehGraph] = {}
         for graph_name in self.regions[region_name]:
@@ -865,14 +865,11 @@ class BokehGraphManager(GraphManager):
         place: bool = True,
     ) -> Dict[str, Dict[str, AnyBokehGraph]]:
         if place:
-            self.place_all_requested()
+            self.place()
 
         res: Dict[str, Dict[str, AnyBokehGraph]] = {}
         for region_name in self.regions:
-            res[region_name] = self.get_region(
-                region_name,
-                place=False,
-            )
+            res[region_name] = self.get_region(region_name, place=False)
 
         return res
 
@@ -927,12 +924,12 @@ class BokehGraphManager(GraphManager):
             raise ValueError("Must specify region_name if graph_name is specified")
 
         if place:
-            self.place_all_requested()
+            self.place()
 
         if region_name and graph_name:
-            bgraphs = [self.get_plot(region_name, graph_name)]
+            bgraphs = [self.get_plot(region_name, graph_name, place=False)]
         elif region_name:
-            region = self.get_region(region_name)
+            region = self.get_region(region_name, place=False)
             bgraphs = list(region.values())
         else:
             by_region = self.get_all()
@@ -947,12 +944,16 @@ class BokehGraphManager(GraphManager):
             and any(bgraph.graph.is_s_plot for bgraph in bgraphs)
         ):
             try:
-                layout_graph = self.lattice_layout_graph
+                layout_graph = self.get_lattice_layout_graph(place=False)
             except LayoutGraphNotFoundError:
                 logger.warning("Could not find lattice layout to include")
             else:
                 bgraphs.append(
-                    self.get_plot(layout_graph.region_name, layout_graph.graph_name)
+                    self.get_plot(
+                        layout_graph.region_name,
+                        layout_graph.graph_name,
+                        place=False,
+                    )
                 )
 
         for bgraph in bgraphs:
@@ -971,6 +972,24 @@ class BokehGraphManager(GraphManager):
 
 
 class NotebookGraphManager(BokehGraphManager):
+    def plot_regions(
+        self,
+        regions: List[str],
+        *,
+        share_x: Optional[bool] = None,
+        **kwargs,
+    ):
+        bgraphs = []
+        for region in regions:
+            bgraphs.extend(super().plot(region, **kwargs))
+
+        if len(bgraphs) == 1:
+            (app,) = bgraphs
+        else:
+            app = CompositeApp(bgraphs, share_x=share_x)
+
+        return bokeh.plotting.show(app.create_app())
+
     @override
     def plot(
         self,

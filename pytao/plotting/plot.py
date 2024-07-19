@@ -2311,14 +2311,18 @@ class GraphManager:
         self.regions = {}
         self.update_place_buffer()
 
-    @property
-    def lattice_layout_graph(self) -> LatticeLayoutGraph:
-        self.place_all_requested()
+    def get_lattice_layout_graph(self, *, place: bool = False) -> LatticeLayoutGraph:
+        if place:
+            self.place()
         for region in self.regions.values():
             for graph in region.values():
                 if isinstance(graph, LatticeLayoutGraph):
                     return graph
         raise LayoutGraphNotFoundError()
+
+    @property
+    def lattice_layout_graph(self) -> LatticeLayoutGraph:
+        return self.get_lattice_layout_graph(place=True)
 
     def update_place_buffer(self):
         for item in self.tao.place_buffer():
@@ -2333,20 +2337,41 @@ class GraphManager:
                 self.to_place[region] = graph
         return self.to_place
 
-    def place_all_requested(self, *, ignore_invalid: bool = True):
+    def place(
+        self,
+        region_name: Optional[str] = None,
+        graph_name: Optional[str] = None,
+        *,
+        ignore_invalid: bool = True,
+        show: bool = True,
+    ):
         self.update_place_buffer()
 
+        if region_name and graph_name:
+            to_place = [(region_name, graph_name)]
+        else:
+            to_place = list(self.to_place.items())
+            self.to_place.clear()
+
         result = {}
-        for region, graph_name in self.to_place.items():
+        for region_name, graph_name in to_place:
+            self.tao.cmd(f"place -no_buffer {region_name} {graph_name}")
+
+        regions = sorted(set(region_name for region_name, _ in to_place))
+
+        for region_name in regions:
             try:
-                # place() updates self.regions for us
-                result[graph_name] = self.place(region, graph_name, show=False)
+                self.update_region(region_name)
             except GraphInvalidError:
                 if ignore_invalid:
                     continue
                 raise
 
-        self.to_place.clear()
+            result[region_name] = list(self.regions[region_name])
+
+        if show and hasattr(self, "plot_regions"):  # TODO
+            self.plot_regions(list(result), place=False)
+
         return result
 
     def update_graph(self, region_name: str, graph_name: str):
@@ -2362,26 +2387,14 @@ class GraphManager:
 
     def update_region(self, region_name: str):
         self.regions.setdefault(region_name, {}).clear()
-        for graph_name in get_graphs_in_region(self.tao, region_name):
+        graph_names = get_graphs_in_region(self.tao, region_name)
+        for graph_name in graph_names:
             self.update_graph(region_name, graph_name)
+        return graph_names
 
     def update(self):
         for region_name in get_visible_regions(self.tao):
             self.update_region(region_name)
-
-    def place(
-        self,
-        region_name: str,
-        graph_name: str,
-        *,
-        show: bool = True,
-    ) -> Dict[str, AnyGraph]:
-        self.tao.cmd(f"place -no_buffer {region_name} {graph_name}")
-        self.update_region(region_name)
-        region = self.regions.get(region_name, {})
-        if show and type(self) is not GraphManager:
-            self.plot(region_name, graph_name)
-        return region
 
     def clear(self, region_name: str = "*"):
         try:
@@ -2400,13 +2413,13 @@ class GraphManager:
 
     def get_plot(self, region_name: str, graph_name: str, *, place: bool = True) -> AnyGraph:
         if place:
-            self.place_all_requested()
+            self.place()
 
         return self.regions[region_name][graph_name]
 
     def get_region(self, region_name: str, *, place: bool = True):
         if place:
-            self.place_all_requested()
+            self.place()
 
         res = {}
         for graph_name in self.regions.get(region_name, {}):
@@ -2423,7 +2436,7 @@ class GraphManager:
 
     def get_all(self, *, place: bool = True):
         if place:
-            self.place_all_requested()
+            self.place()
 
         res = {}
         for region_name in self.regions:
@@ -2448,6 +2461,14 @@ class GraphManager:
 class MatplotlibGraphManager(GraphManager):
     _key_: ClassVar[str] = "mpl"
 
+    def plot_regions(
+        self,
+        regions: List[str],
+        **kwargs,
+    ):
+        for region in regions:
+            self.plot(region, **kwargs)
+
     @override
     def plot(
         self,
@@ -2465,7 +2486,7 @@ class MatplotlibGraphManager(GraphManager):
         ylim: Optional[Tuple[float, float]] = None,
     ):
         if place:
-            self.place_all_requested()
+            self.place()
 
         if graph_name and not region_name:
             raise ValueError("Must specify region_name if graph_name is specified")
@@ -2473,7 +2494,7 @@ class MatplotlibGraphManager(GraphManager):
         if region_name and graph_name:
             graphs = [self.regions[region_name][graph_name]]
         elif region_name:
-            region = self.get_region(region_name)
+            region = self.get_region(region_name, place=False)
             graphs = list(region.values())
         else:
             by_region = self.get_all()
@@ -2488,12 +2509,16 @@ class MatplotlibGraphManager(GraphManager):
             and any(graph.is_s_plot for graph in graphs)
         ):
             try:
-                layout_graph = self.lattice_layout_graph
+                layout_graph = self.get_lattice_layout_graph(place=False)
             except LayoutGraphNotFoundError:
                 logger.warning("Could not find lattice layout to include")
                 layout_graph = None
             else:
-                layout_graph = self.get_plot(layout_graph.region_name, layout_graph.graph_name)
+                layout_graph = self.get_plot(
+                    layout_graph.region_name,
+                    layout_graph.graph_name,
+                    place=False,
+                )
                 graphs.append(layout_graph)
 
             _, gs = plt.subplots(
