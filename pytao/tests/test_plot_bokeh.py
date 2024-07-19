@@ -1,7 +1,6 @@
 import logging
 import pathlib
 import re
-from typing import List
 
 import pytest
 from bokeh.plotting import column, output_file, save
@@ -18,9 +17,6 @@ logger = logging.getLogger(__name__)
 
 
 def test_bokeh_manager(request: pytest.FixtureRequest, init_filename: pathlib.Path):
-    if init_filename.name in {"tao.init_wall", "tao.init_photon"}:
-        pytest.skip(reason="bmad crash on 20240715.0 (TODO)")
-
     name = re.sub(r"[/\\]", "_", request.node.name)
     filename_base = f"bokeh_{name}"
 
@@ -33,15 +29,15 @@ def test_bokeh_manager(request: pytest.FixtureRequest, init_filename: pathlib.Pa
             assert len(manager.place_all_requested())
 
         output_file(test_artifacts / f"{filename_base}.html")
-        items: List[BGraphAndFigure] = []
 
-        for region_name, region in manager.plot_all().items():
-            for name, bgraph in region.items():
-                fig = bgraph.create_figure()
-                fig.title.text = (
-                    f"{fig.title.text} ({region_name}.{name} of {request.node.name})"
-                )
-                items.append(BGraphAndFigure(bgraph=bgraph, fig=fig))
+        bgraphs = list(manager.show())
+        items = [
+            BGraphAndFigure(bgraph=bgraph, fig=bgraph.create_figure()) for bgraph in bgraphs
+        ]
+        for item in items:
+            fig = item.fig
+            graph = item.bgraph.graph
+            fig.title.text = f"{fig.title.text} ({graph.region_name}.{graph.graph_name} of {request.node.name})"
 
         share_common_x_axes(items)
         save(column([item.fig for item in items], sizing_mode="fixed"))

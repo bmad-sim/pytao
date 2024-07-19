@@ -28,7 +28,7 @@ import numpy as np
 from bokeh.document.callbacks import EventCallback
 from bokeh.models.sources import ColumnDataSource
 from bokeh.plotting import figure
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import NotRequired, TypedDict, override
 
 from . import pgplot
 from .plot import (
@@ -373,10 +373,11 @@ def _plot_patch(
 
     if isinstance(patch, PlotPatchCircle):
         source.data["x"], source.data["y"] = [patch.xy[0]], [patch.xy[1]]
+        source.data["radii"] = [patch.radius]
         return fig.circle(
             x="x",
             y="y",
-            radii=[patch.radius],
+            radius="radii",
             line_width=line_width,
             fill_alpha=int(patch.fill),
             source=source,
@@ -763,7 +764,7 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
                     fig,
                     annotation,
                     color=bokeh_color(elem.info["color"]),
-                    base_data={"name": elem.info["label_name"]},
+                    base_data={"name": [elem.info["label_name"]]},
                 )
 
         _draw_limit_border(fig, graph.xlim, graph.ylim, alpha=0.1)
@@ -813,19 +814,19 @@ class CompositeApp:
 
 
 class BokehGraphManager(GraphManager):
-    def plot(
+    @override
+    def make(
         self,
         region_name: str,
         graph_name: str,
         *,
         place: bool = True,
-        show: bool = False,
     ) -> AnyBokehGraph:
         if place:
             self.place_all_requested()
 
         logger.debug(f"Plotting {region_name}.{graph_name}")
-        graph = self.regions[region_name][graph_name]
+        graph = super().make(region_name, graph_name)
         if isinstance(graph, BasicGraph):
             return BokehBasicGraph(self, graph)
         if isinstance(graph, LatticeLayoutGraph):
@@ -834,20 +835,19 @@ class BokehGraphManager(GraphManager):
             return BokehFloorPlanGraph(self, graph)
         raise NotImplementedError(type(graph).__name__)
 
-    def plot_region(
+    @override
+    def make_region(
         self,
         region_name: str,
         *,
         place: bool = True,
-        show: bool = False,
-        share_x: Optional[bool] = None,
     ) -> Dict[str, AnyBokehGraph]:
         if place:
             self.place_all_requested()
 
         res: Dict[str, AnyBokehGraph] = {}
         for graph_name in self.regions[region_name]:
-            res[graph_name] = self.plot(
+            res[graph_name] = self.make(
                 region_name=region_name,
                 graph_name=graph_name,
                 place=False,
@@ -855,28 +855,24 @@ class BokehGraphManager(GraphManager):
 
         return res
 
-    def plot_all(
+    @override
+    def make_all(
         self,
         *,
         place: bool = True,
-        show: bool = False,
-        share_x: Optional[bool] = None,
     ) -> Dict[str, Dict[str, AnyBokehGraph]]:
         if place:
             self.place_all_requested()
 
         res: Dict[str, Dict[str, AnyBokehGraph]] = {}
         for region_name in self.regions:
-            res[region_name] = self.plot_region(
+            res[region_name] = self.make_region(
                 region_name,
                 place=False,
-                show=show,
             )
 
         return res
 
-
-class NotebookGraphManager(BokehGraphManager):
     def show(
         self,
         region_name: Optional[str] = None,
@@ -888,33 +884,24 @@ class NotebookGraphManager(BokehGraphManager):
         width: Optional[int] = None,
         height: Optional[int] = None,
         layout_height: Optional[int] = None,
-        share_x: Optional[bool] = None,
     ):
         if graph_name and not region_name:
             raise ValueError("Must specify region_name if graph_name is specified")
 
+        if place:
+            self.place_all_requested()
+
         if region_name and graph_name:
-            bgraphs = [
-                self.plot(
-                    region_name,
-                    graph_name,
-                    place=place,
-                )
-            ]
+            bgraphs = [self.make(region_name, graph_name)]
         elif region_name:
-            region = self.plot_region(
-                region_name,
-                place=place,
-            )
+            region = self.make_region(region_name)
             bgraphs = list(region.values())
         else:
-            by_region = self.plot_all(
-                place=place,
-            )
+            by_region = self.make_all()
             bgraphs = [graph for region in by_region.values() for graph in region.values()]
 
         if not bgraphs:
-            return None
+            return []
 
         if (
             include_layout
@@ -926,7 +913,7 @@ class NotebookGraphManager(BokehGraphManager):
             except LayoutGraphNotFoundError:
                 logger.warning("Could not find lattice layout to include")
             else:
-                bgraphs.append(self.plot(layout_graph.region_name, layout_graph.graph_name))
+                bgraphs.append(self.make(layout_graph.region_name, layout_graph.graph_name))
 
         for bgraph in bgraphs:
             is_layout = isinstance(bgraph, BokehLatticeLayoutGraph)
@@ -940,6 +927,34 @@ class NotebookGraphManager(BokehGraphManager):
             else:
                 if height is not None:
                     bgraph.height = height
+        return bgraphs
+
+
+class NotebookGraphManager(BokehGraphManager):
+    @override
+    def show(
+        self,
+        region_name: Optional[str] = None,
+        graph_name: Optional[str] = None,
+        *,
+        include_layout: bool = True,
+        place: bool = True,
+        sizing_mode: Optional[SizingModeType] = None,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
+        layout_height: Optional[int] = None,
+        share_x: Optional[bool] = None,
+    ):
+        bgraphs = super().show(
+            region_name=region_name,
+            graph_name=graph_name,
+            include_layout=include_layout,
+            place=place,
+            sizing_mode=sizing_mode,
+            width=width,
+            height=height,
+            layout_height=layout_height,
+        )
 
         if len(bgraphs) == 1:
             (app,) = bgraphs

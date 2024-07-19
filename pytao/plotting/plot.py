@@ -2372,90 +2372,58 @@ class GraphManager:
         self.update_region(region_name)
         return self.regions.get(region_name, {})
 
-    def clear(self, region_name: str):
+    def clear(self, region_name: str = "*"):
         try:
             self.tao.cmd(f"place -no_buffer {region_name} none")
         except RuntimeError as ex:
             logger.warning(f"Region clear failed: {ex}")
-        self.regions.pop(region_name, None)
+
+        if region_name == "*":
+            self.regions.clear()
+        else:
+            self.regions.pop(region_name, None)
 
     def clear_all(self):
         self.tao.cmd("place -no_buffer * none")
         self.regions.clear()
 
-
-class MatplotlibGraphManager(GraphManager):
-    def plot(
-        self,
-        region_name: str,
-        graph_name: str,
-        include_layout: bool = True,
-        ax: Optional[matplotlib.axes.Axes] = None,
-        layout_ax: Optional[matplotlib.axes.Axes] = None,
-        place: bool = True,
-        width: int = 10,
-        height: int = 10,
-    ) -> matplotlib.axes.Axes:
+    def make(self, region_name: str, graph_name: str, *, place: bool = True) -> AnyGraph:
         if place:
             self.place_all_requested()
 
-        logger.debug(f"Plotting {region_name}.{graph_name}")
-        return plot_graph(
-            self.tao,
-            self.regions[region_name][graph_name],
-            include_layout=include_layout,
-            ax=ax,
-            layout_ax=layout_ax,
-            width=width,
-            height=height,
-        )
+        return self.regions[region_name][graph_name]
 
-    def plot_region(
-        self,
-        region_name: str,
-        include_layout: bool = True,
-        ax: Optional[matplotlib.axes.Axes] = None,
-        place: bool = True,
-        width: int = 10,
-        height: int = 10,
-    ) -> Dict[str, matplotlib.axes.Axes]:
+    def make_region(self, region_name: str, *, place: bool = True):
         if place:
             self.place_all_requested()
 
         res = {}
         for graph_name in self.regions.get(region_name, {}):
             try:
-                res[graph_name] = self.plot(
+                res[graph_name] = self.make(
                     region_name=region_name,
                     graph_name=graph_name,
-                    ax=ax,
-                    include_layout=include_layout,
                     place=False,
-                    width=width,
-                    height=height,
                 )
             except UnsupportedGraphError:
                 continue
 
         return res
 
-    def plot_all(
-        self,
-        include_layout: bool = True,
-        place: bool = True,
-    ) -> Dict[str, matplotlib.axes.Axes]:
+    def make_all(self, *, place: bool = True):
         if place:
             self.place_all_requested()
 
         res = {}
         for region_name in self.regions:
-            res[region_name] = self.plot_region(
+            res[region_name] = self.make_region(
                 region_name,
-                include_layout=include_layout,
                 place=False,
             )
         return res
 
+
+class MatplotlibGraphManager(GraphManager):
     def show(
         self,
         region_name: Optional[str] = None,
@@ -2463,11 +2431,65 @@ class MatplotlibGraphManager(GraphManager):
         *,
         include_layout: bool = True,
         place: bool = True,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        share_x: Optional[bool] = None,
+        width: int = 6,
+        height: int = 6,
+        figsize: Optional[Tuple[int, int]] = None,
+        share_x: bool = True,
     ):
-        # This way is simpler - make it like the bokeh backend
-        raise NotImplementedError("TODO")
+        if place:
+            self.place_all_requested()
+
+        if graph_name and not region_name:
+            raise ValueError("Must specify region_name if graph_name is specified")
+
+        if region_name and graph_name:
+            graphs = [self.regions[region_name][graph_name]]
+        elif region_name:
+            region = self.make_region(region_name)
+            graphs = list(region.values())
+        else:
+            by_region = self.make_all()
+            graphs = [graph for region in by_region.values() for graph in region.values()]
+
+        if figsize is None:
+            figsize = (width, height)
+
+        if (
+            include_layout
+            and not any(isinstance(graph, LatticeLayoutGraph) for graph in graphs)
+            and any(graph.is_s_plot for graph in graphs)
+        ):
+            try:
+                layout_graph = self.lattice_layout_graph
+            except LayoutGraphNotFoundError:
+                logger.warning("Could not find lattice layout to include")
+                layout_graph = None
+            else:
+                layout_graph = self.make(layout_graph.region_name, layout_graph.graph_name)
+                graphs.append(layout_graph)
+
+            _, gs = plt.subplots(
+                nrows=len(graphs),
+                ncols=1,
+                sharex=share_x,
+                height_ratios=[1] * (len(graphs) - 1) + [0.5],
+                figsize=figsize,
+                squeeze=False,
+            )
+        else:
+            _, gs = plt.subplots(
+                nrows=len(graphs),
+                ncols=1,
+                sharex=share_x,
+                figsize=figsize,
+                squeeze=False,
+            )
+
+        for ax, graph in zip(gs[:, 0], graphs):
+            try:
+                graph.plot(ax)
+            except UnsupportedGraphError:
+                continue
+        return gs
 
     __call__ = show

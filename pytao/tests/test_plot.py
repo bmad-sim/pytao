@@ -111,7 +111,7 @@ def test_plot_manager(init_filename: pathlib.Path):
         if external_plotting:
             assert len(manager.place_all_requested())
         for region in manager.regions:
-            manager.plot_region(region)
+            manager.show(region)
         plt.show()
 
         for region in list(manager.regions):
