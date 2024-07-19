@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import functools
 import logging
 import math
 import typing
 from typing import (
+    ClassVar,
     Dict,
     Generic,
     List,
@@ -16,7 +18,6 @@ from typing import (
     cast,
 )
 
-from bokeh.core.enums import SizingModeType
 import bokeh.colors.named
 import bokeh.events
 import bokeh.layouts
@@ -24,13 +25,13 @@ import bokeh.models
 import bokeh.models.tools
 import bokeh.plotting
 import numpy as np
-
+from bokeh.core.enums import SizingModeType
 from bokeh.document.callbacks import EventCallback
 from bokeh.models.sources import ColumnDataSource
 from bokeh.plotting import figure
 from typing_extensions import NotRequired, TypedDict, override
 
-from . import pgplot
+from . import pgplot, util
 from .plot import (
     BasicGraph,
     FloorPlanGraph,
@@ -44,11 +45,11 @@ from .plot import (
     PlotCurveLine,
     PlotCurveSymbols,
     PlotPatch,
-    PlotPatchRectangle,
     PlotPatchArc,
     PlotPatchCircle,
     PlotPatchEllipse,
     PlotPatchPolygon,
+    PlotPatchRectangle,
     PlotPatchSbend,
 )
 
@@ -814,8 +815,10 @@ class CompositeApp:
 
 
 class BokehGraphManager(GraphManager):
+    _key_: ClassVar[str] = "bokeh"
+
     @override
-    def make(
+    def get_plot(
         self,
         region_name: str,
         graph_name: str,
@@ -826,7 +829,7 @@ class BokehGraphManager(GraphManager):
             self.place_all_requested()
 
         logger.debug(f"Plotting {region_name}.{graph_name}")
-        graph = super().make(region_name, graph_name)
+        graph = super().get_plot(region_name, graph_name)
         if isinstance(graph, BasicGraph):
             return BokehBasicGraph(self, graph)
         if isinstance(graph, LatticeLayoutGraph):
@@ -836,7 +839,7 @@ class BokehGraphManager(GraphManager):
         raise NotImplementedError(type(graph).__name__)
 
     @override
-    def make_region(
+    def get_region(
         self,
         region_name: str,
         *,
@@ -847,7 +850,7 @@ class BokehGraphManager(GraphManager):
 
         res: Dict[str, AnyBokehGraph] = {}
         for graph_name in self.regions[region_name]:
-            res[graph_name] = self.make(
+            res[graph_name] = self.get_plot(
                 region_name=region_name,
                 graph_name=graph_name,
                 place=False,
@@ -856,7 +859,7 @@ class BokehGraphManager(GraphManager):
         return res
 
     @override
-    def make_all(
+    def get_all(
         self,
         *,
         place: bool = True,
@@ -866,14 +869,15 @@ class BokehGraphManager(GraphManager):
 
         res: Dict[str, Dict[str, AnyBokehGraph]] = {}
         for region_name in self.regions:
-            res[region_name] = self.make_region(
+            res[region_name] = self.get_region(
                 region_name,
                 place=False,
             )
 
         return res
 
-    def show(
+    @override
+    def plot(
         self,
         region_name: Optional[str] = None,
         graph_name: Optional[str] = None,
@@ -884,7 +888,41 @@ class BokehGraphManager(GraphManager):
         width: Optional[int] = None,
         height: Optional[int] = None,
         layout_height: Optional[int] = None,
+        share_x: Optional[bool] = None,
     ):
+        """
+        Plot a graph, region, or all placed graphs.
+
+        To plot a specific graph, specify `region_name` and `graph_name`.
+        To plot a specific region, specify `region_name`.
+        To plot all placed graphs, specify neither.
+
+        Parameters
+        ----------
+        region_name : str, optional
+            Graph region name.
+        graph_name : str, optional
+            Graph name.
+        include_layout : bool
+            Include a layout plot at the bottom, if not already placed and if
+            appropriate (i.e., another plot uses longitudinal coordinates on
+            the x-axis).
+        place : bool
+            Place all requested plots prior to continuing.
+        sizing_mode : Optional[SizingModeType]
+            Set the sizing mode for all graphs.  Default is configured on a
+            per-graph basis, typically "inherit".
+        width : int, optional
+            Width of each plot.
+        height : int, optional
+            Height of each plot.
+        layout_height : int, optional
+            Height of the layout plot.
+
+        Returns
+        -------
+        list
+        """
         if graph_name and not region_name:
             raise ValueError("Must specify region_name if graph_name is specified")
 
@@ -892,12 +930,12 @@ class BokehGraphManager(GraphManager):
             self.place_all_requested()
 
         if region_name and graph_name:
-            bgraphs = [self.make(region_name, graph_name)]
+            bgraphs = [self.get_plot(region_name, graph_name)]
         elif region_name:
-            region = self.make_region(region_name)
+            region = self.get_region(region_name)
             bgraphs = list(region.values())
         else:
-            by_region = self.make_all()
+            by_region = self.get_all()
             bgraphs = [graph for region in by_region.values() for graph in region.values()]
 
         if not bgraphs:
@@ -913,7 +951,9 @@ class BokehGraphManager(GraphManager):
             except LayoutGraphNotFoundError:
                 logger.warning("Could not find lattice layout to include")
             else:
-                bgraphs.append(self.make(layout_graph.region_name, layout_graph.graph_name))
+                bgraphs.append(
+                    self.get_plot(layout_graph.region_name, layout_graph.graph_name)
+                )
 
         for bgraph in bgraphs:
             is_layout = isinstance(bgraph, BokehLatticeLayoutGraph)
@@ -932,7 +972,7 @@ class BokehGraphManager(GraphManager):
 
 class NotebookGraphManager(BokehGraphManager):
     @override
-    def show(
+    def plot(
         self,
         region_name: Optional[str] = None,
         graph_name: Optional[str] = None,
@@ -945,7 +985,7 @@ class NotebookGraphManager(BokehGraphManager):
         layout_height: Optional[int] = None,
         share_x: Optional[bool] = None,
     ):
-        bgraphs = super().show(
+        bgraphs = super().plot(
             region_name=region_name,
             graph_name=graph_name,
             include_layout=include_layout,
@@ -963,4 +1003,30 @@ class NotebookGraphManager(BokehGraphManager):
 
         return bokeh.plotting.show(app.create_app())
 
-    __call__ = show
+    __call__ = plot
+
+
+@functools.cache
+def select_graph_manager_class():
+    if util.is_jupyter():
+        initialize_jupyter()
+        return NotebookGraphManager
+    return BokehGraphManager
+
+
+def initialize_jupyter():
+    # Is this public bokeh API? An attempt at forward-compatibility
+    try:
+        from bokeh.io.state import curstate
+    except ImportError:
+        pass
+    else:
+        state = curstate()
+        if getattr(state, "notebook", False):
+            # Jupyter already initialized
+            logger.debug("Bokeh output_notebook already called; not re-initializing")
+            return
+
+    from bokeh.plotting import output_notebook
+
+    output_notebook()

@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import math
 import typing
-from typing import Dict, List, Literal, Optional, Sequence, Tuple, Union, cast
+from typing import ClassVar, Dict, List, Literal, Optional, Sequence, Tuple, Union, cast
 
 import matplotlib.axes
 import matplotlib.collections
@@ -11,11 +11,11 @@ import matplotlib.patches
 import matplotlib.path
 import matplotlib.pyplot as plt
 import matplotlib.text
-from matplotlib.ticker import AutoMinorLocator
 import numpy as np
-
 import pydantic.dataclasses as dataclasses
+from matplotlib.ticker import AutoMinorLocator
 from pydantic.dataclasses import Field
+from typing_extensions import override
 
 from . import pgplot, util
 from .types import (
@@ -31,7 +31,6 @@ from .types import (
     Point,
     WaveParams,
 )
-
 
 if typing.TYPE_CHECKING:
     from .. import Tao
@@ -2300,6 +2299,8 @@ AnyGraph = Union[BasicGraph, LatticeLayoutGraph, FloorPlanGraph]
 
 
 class GraphManager:
+    _key_: ClassVar[str] = "GraphManager"
+
     tao: Tao
     to_place: Dict[str, str]
     regions: Dict[str, Dict[str, AnyGraph]]
@@ -2339,7 +2340,7 @@ class GraphManager:
         for region, graph_name in self.to_place.items():
             try:
                 # place() updates self.regions for us
-                result[graph_name] = self.place(region, graph_name)
+                result[graph_name] = self.place(region, graph_name, show=False)
             except GraphInvalidError:
                 if ignore_invalid:
                     continue
@@ -2360,6 +2361,7 @@ class GraphManager:
         return graph
 
     def update_region(self, region_name: str):
+        self.regions.setdefault(region_name, {}).clear()
         for graph_name in get_graphs_in_region(self.tao, region_name):
             self.update_graph(region_name, graph_name)
 
@@ -2367,10 +2369,19 @@ class GraphManager:
         for region_name in get_visible_regions(self.tao):
             self.update_region(region_name)
 
-    def place(self, region_name: str, graph_name: str) -> Dict[str, AnyGraph]:
+    def place(
+        self,
+        region_name: str,
+        graph_name: str,
+        *,
+        show: bool = True,
+    ) -> Dict[str, AnyGraph]:
         self.tao.cmd(f"place -no_buffer {region_name} {graph_name}")
         self.update_region(region_name)
-        return self.regions.get(region_name, {})
+        region = self.regions.get(region_name, {})
+        if show and type(self) is not GraphManager:
+            self.plot(region_name, graph_name)
+        return region
 
     def clear(self, region_name: str = "*"):
         try:
@@ -2387,20 +2398,20 @@ class GraphManager:
         self.tao.cmd("place -no_buffer * none")
         self.regions.clear()
 
-    def make(self, region_name: str, graph_name: str, *, place: bool = True) -> AnyGraph:
+    def get_plot(self, region_name: str, graph_name: str, *, place: bool = True) -> AnyGraph:
         if place:
             self.place_all_requested()
 
         return self.regions[region_name][graph_name]
 
-    def make_region(self, region_name: str, *, place: bool = True):
+    def get_region(self, region_name: str, *, place: bool = True):
         if place:
             self.place_all_requested()
 
         res = {}
         for graph_name in self.regions.get(region_name, {}):
             try:
-                res[graph_name] = self.make(
+                res[graph_name] = self.get_plot(
                     region_name=region_name,
                     graph_name=graph_name,
                     place=False,
@@ -2410,21 +2421,35 @@ class GraphManager:
 
         return res
 
-    def make_all(self, *, place: bool = True):
+    def get_all(self, *, place: bool = True):
         if place:
             self.place_all_requested()
 
         res = {}
         for region_name in self.regions:
-            res[region_name] = self.make_region(
+            res[region_name] = self.get_region(
                 region_name,
                 place=False,
             )
         return res
 
+    def plot(
+        self,
+        region_name: Optional[str] = None,
+        graph_name: Optional[str] = None,
+        *,
+        include_layout: bool = True,
+        place: bool = True,
+        **kwargs,
+    ):
+        raise NotImplementedError()
+
 
 class MatplotlibGraphManager(GraphManager):
-    def show(
+    _key_: ClassVar[str] = "mpl"
+
+    @override
+    def plot(
         self,
         region_name: Optional[str] = None,
         graph_name: Optional[str] = None,
@@ -2433,8 +2458,11 @@ class MatplotlibGraphManager(GraphManager):
         place: bool = True,
         width: int = 6,
         height: int = 6,
+        layout_height: float = 0.5,
         figsize: Optional[Tuple[int, int]] = None,
         share_x: bool = True,
+        xlim: Optional[Tuple[float, float]] = None,
+        ylim: Optional[Tuple[float, float]] = None,
     ):
         if place:
             self.place_all_requested()
@@ -2445,10 +2473,10 @@ class MatplotlibGraphManager(GraphManager):
         if region_name and graph_name:
             graphs = [self.regions[region_name][graph_name]]
         elif region_name:
-            region = self.make_region(region_name)
+            region = self.get_region(region_name)
             graphs = list(region.values())
         else:
-            by_region = self.make_all()
+            by_region = self.get_all()
             graphs = [graph for region in by_region.values() for graph in region.values()]
 
         if figsize is None:
@@ -2465,14 +2493,14 @@ class MatplotlibGraphManager(GraphManager):
                 logger.warning("Could not find lattice layout to include")
                 layout_graph = None
             else:
-                layout_graph = self.make(layout_graph.region_name, layout_graph.graph_name)
+                layout_graph = self.get_plot(layout_graph.region_name, layout_graph.graph_name)
                 graphs.append(layout_graph)
 
             _, gs = plt.subplots(
                 nrows=len(graphs),
                 ncols=1,
                 sharex=share_x,
-                height_ratios=[1] * (len(graphs) - 1) + [0.5],
+                height_ratios=[1] * (len(graphs) - 1) + [layout_height],
                 figsize=figsize,
                 squeeze=False,
             )
@@ -2490,6 +2518,12 @@ class MatplotlibGraphManager(GraphManager):
                 graph.plot(ax)
             except UnsupportedGraphError:
                 continue
+
+            if xlim is not None:
+                ax.set_xlim(xlim)
+            if not isinstance(graph, LatticeLayoutGraph) and ylim is not None:
+                ax.set_ylim(ylim)
+
         return gs
 
-    __call__ = show
+    __call__ = plot

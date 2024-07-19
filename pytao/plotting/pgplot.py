@@ -1,5 +1,6 @@
-from . import hershey_fonts
 import logging
+
+from . import hershey_fonts
 
 logger = logging.getLogger(__name__)
 

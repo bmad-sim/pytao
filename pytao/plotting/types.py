@@ -1,6 +1,6 @@
 from typing import List, Tuple
-from typing_extensions import NotRequired, TypedDict
 
+from typing_extensions import NotRequired, TypedDict
 
 FloorOrbitInfo = TypedDict(
     "FloorOrbitInfo",

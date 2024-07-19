@@ -77,6 +77,7 @@ class TaoCore:
         except Exception:
             pass
 
+        self._graph_managers = {}
         if init:
             self.init(init)
 

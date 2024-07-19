@@ -1,8 +1,16 @@
-import numpy as np
+from __future__ import annotations
+import functools
+import logging
+import sys
 from typing import Tuple
 
+import numpy as np
 
-class NoIntersectionError(Exception): ...
+logger = logging.getLogger(__name__)
+
+
+class NoIntersectionError(Exception):
+    pass
 
 
 def circle_intersection(
@@ -50,3 +58,47 @@ def intersect(L1: Line, L2: Line) -> Intersection:
     x = Dx / D
     y = Dy / D
     return x, y
+
+
+@functools.cache
+def is_jupyter() -> bool:
+    """
+    Determine if we're in a Jupyter notebook session.
+
+    This works by way of interacting with IPython display and seeing what
+    choice it makes regarding reprs.
+
+    Returns
+    -------
+    bool
+    """
+    if "IPython" not in sys.modules or "IPython.display" not in sys.modules:
+        return False
+
+    from IPython.display import display
+
+    class ReprCheck:
+        def _repr_html_(self) -> str:
+            self.mode = "jupyter"
+            logger.info("Detected Jupyter. Using the notebook graph backend.")
+            return "<!-- Detected Jupyter. -->"
+
+        def __repr__(self) -> str:
+            self.mode = "console"
+            return ""
+
+    check = ReprCheck()
+    display(check)
+    return check.mode == "jupyter"
+
+
+@functools.cache
+def select_graph_manager_class():
+    from .plot import MatplotlibGraphManager
+
+    if not is_jupyter():
+        return MatplotlibGraphManager
+
+    from .bokeh import select_graph_manager_class as select_bokeh_class
+
+    return select_bokeh_class()
