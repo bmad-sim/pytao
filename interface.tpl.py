@@ -15,6 +15,8 @@ logger = logging.getLogger(__name__)
 
 
 class Tao(TaoCore):
+    plot_backend: Optional[str] = None
+
     def __execute(
         self,
         cmd: str,
@@ -232,7 +234,7 @@ class Tao(TaoCore):
             `plot` method directly.
         """
         if backend is None:
-            backend = select_graph_manager_class()._key_
+            backend = self.plot_backend or select_graph_manager_class()._key_
 
         if backend not in {"mpl", "bokeh"}:
             raise ValueError(f"Unsupported backend: {backend}")

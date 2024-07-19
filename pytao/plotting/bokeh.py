@@ -175,12 +175,14 @@ def _plot_curve_symbols(
     source: Optional[ColumnDataSource] = None,
     legend_label: Optional[str] = None,
 ):
-    source = ColumnDataSource(
-        data={
+    if source is None:
+        source = ColumnDataSource(data={})
+
+    source.data.update(
+        {
             "x": symbol.xs,
             "y": symbol.ys,
-            **(source.data if source else {}),
-        },
+        }
     )
 
     if legend_label is not None:
@@ -204,14 +206,15 @@ def _plot_curve_line(
     name: Optional[str] = None,
     source: Optional[ColumnDataSource] = None,
 ):
-    source = ColumnDataSource(
-        data={
+    if source is None:
+        source = ColumnDataSource(data={})
+
+    source.data.update(
+        {
             "x": line.xs,
             "y": line.ys,
-            **(source.data if source else {}),
-        },
+        }
     )
-
     if name is not None:
         # Can't pass legend_label unless it's set to non-None
         kw = {"legend_label": name}
@@ -306,15 +309,17 @@ def _patch_rect_to_points(patch: PlotPatchRectangle) -> Tuple[List[float], List[
 def _draw_annotation(
     fig: figure,
     annotation: PlotAnnotation,
-    base_data: Optional[dict] = None,
     color: str = "black,",
+    source: Optional[ColumnDataSource] = None,
 ):
-    source = ColumnDataSource(
-        data={
+    if source is None:
+        source = ColumnDataSource()
+
+    source.data.update(
+        {
             "x": [annotation.x],
             "y": [annotation.y],
             "text": [pgplot.mathjax_string(annotation.text)],
-            **(base_data or {}),
         }
     )
     return fig.text(
@@ -350,11 +355,9 @@ def _plot_patch(
     line_width: Optional[float] = None,
     source: Optional[ColumnDataSource] = None,
 ):
-    source = ColumnDataSource(
-        data={
-            **(source.data if source else {}),
-        },
-    )
+    if source is None:
+        source = ColumnDataSource()
+
     line_width = line_width if line_width is not None else patch.linewidth
     if isinstance(patch, (PlotPatchRectangle, PlotPatchPolygon)):
         if isinstance(patch, PlotPatchRectangle):
@@ -458,7 +461,12 @@ def _draw_layout_element(
     for annotation in elem.annotations:
         if annotation.text == elem.info["label_name"] and skip_labels:
             continue
-        _draw_annotation(fig, annotation, color=color, base_data=base_data)
+        _draw_annotation(
+            fig,
+            annotation,
+            color=color,
+            source=ColumnDataSource(data=dict(base_data)),
+        )
 
 
 TGraph = TypeVar("TGraph", bound=GraphBase)
@@ -613,7 +621,16 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
     def tao(self) -> Tao:
         return self.manager.tao
 
-    def update_plot(self) -> None:
+    def _disable_widgets(self, widgets: List[bokeh.models.Widget]) -> None:
+        for widget in widgets:
+            if hasattr(widget, "disabled"):
+                widget.disabled = True
+            if hasattr(widget, "title"):
+                widget.text = "(plot type changed; disabled)"
+
+    def update_plot(
+        self, fig: figure, *, widgets: Optional[List[bokeh.models.Widget]] = None
+    ) -> None:
         try:
             self.tao.cmd("set global lattice_calc_on = F")
             self.tao.cmd(f"set plot {self.graph.region_name} n_curve_pts = {self.num_points}")
@@ -625,7 +642,21 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
 
         logger.debug(f"x={self.view_x_range} points={self.num_points}")
 
-        updated = self.graph.update(self.manager)
+        try:
+            updated = self.graph.update(self.manager)
+            if updated is None:
+                raise ValueError("update() returned None")
+        except Exception:
+            logger.exception("Failed to update graph")
+            self._disable_widgets(widgets or [])
+            return
+
+        # In case the user mistakenly reuses the same plot region, ensure
+        # that at least our axis labels are consistent.
+        fig.title.text = pgplot.mathjax_string(updated.title)
+        fig.xaxis.axis_label = pgplot.mathjax_string(updated.xlabel)
+        fig.yaxis.axis_label = pgplot.mathjax_string(updated.ylabel)
+
         for orig_data, new_data in zip(self.curve_data, _get_graph_data(updated)):
             line = new_data.get("line", None)
             if line is not None:
@@ -663,7 +694,7 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
     def create_app_figure(self) -> Tuple[figure, List[bokeh.models.UIElement]]:
         fig = self.create_figure()
         update_button = bokeh.models.Button(label="Update")  # , icon="reload")
-        num_points = bokeh.models.Slider(
+        num_points_slider = bokeh.models.Slider(
             title="Data Points",
             start=10,
             end=10_000,
@@ -671,27 +702,32 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
             value=401,
         )
 
+        def update_plot():
+            self.update_plot(fig, widgets=[update_button, num_points_slider])
+
         def ranges_update(event: bokeh.events.RangesUpdate) -> None:
             new_xrange = self.graph.clamp_x_range(event.x0, event.x1)
             if new_xrange != self.view_x_range:
                 self.view_x_range = new_xrange
 
             try:
-                self.update_plot()
+                update_plot()
             except Exception:
                 logger.exception("Failed to update number ranges")
 
         def num_points_changed(_attr, _old, num_points: int):
             self.num_points = num_points
             try:
-                self.update_plot()
+                update_plot()
             except Exception:
                 logger.exception("Failed to update number of points")
 
-        num_points.on_change("value", num_points_changed)
-        update_button.on_click(self.update_plot)
+        num_points_slider.on_change("value", num_points_changed)
+        update_button.on_click(update_plot)
         fig.on_event(bokeh.events.RangesUpdate, cast(EventCallback, ranges_update))
-        return fig, [bokeh.layouts.column(bokeh.layouts.row(update_button, num_points), fig)]
+        return fig, [
+            bokeh.layouts.column(bokeh.layouts.row(update_button, num_points_slider), fig)
+        ]
 
 
 class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
@@ -765,7 +801,7 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
                     fig,
                     annotation,
                     color=bokeh_color(elem.info["color"]),
-                    base_data={"name": [elem.info["label_name"]]},
+                    source=ColumnDataSource(data={"name": [elem.info["label_name"]]}),
                 )
 
         _draw_limit_border(fig, graph.xlim, graph.ylim, alpha=0.1)
@@ -825,11 +861,8 @@ class BokehGraphManager(GraphManager):
         *,
         place: bool = True,
     ) -> AnyBokehGraph:
-        if place:
-            self.place()
-
         logger.debug(f"Plotting {region_name}.{graph_name}")
-        graph = super().get_plot(region_name, graph_name, place=False)
+        graph = super().get_plot(region_name, graph_name, place=place)
         if isinstance(graph, BasicGraph):
             return BokehBasicGraph(self, graph)
         if isinstance(graph, LatticeLayoutGraph):
@@ -846,7 +879,7 @@ class BokehGraphManager(GraphManager):
         place: bool = True,
     ) -> Dict[str, AnyBokehGraph]:
         if place:
-            self.place()
+            self.place(show=False)
 
         res: Dict[str, AnyBokehGraph] = {}
         for graph_name in self.regions[region_name]:
@@ -865,7 +898,7 @@ class BokehGraphManager(GraphManager):
         place: bool = True,
     ) -> Dict[str, Dict[str, AnyBokehGraph]]:
         if place:
-            self.place()
+            self.place(show=False)
 
         res: Dict[str, Dict[str, AnyBokehGraph]] = {}
         for region_name in self.regions:
@@ -924,10 +957,17 @@ class BokehGraphManager(GraphManager):
             raise ValueError("Must specify region_name if graph_name is specified")
 
         if place:
-            self.place()
+            self.place(show=False)
 
         if region_name and graph_name:
-            bgraphs = [self.get_plot(region_name, graph_name, place=False)]
+            try:
+                bgraphs = [self.get_plot(region_name, graph_name, place=False)]
+            except KeyError:
+                placed = self.place(region_name, graph_name, show=False)
+                bgraphs = [
+                    self.get_plot(region_name, graph_name, place=False)
+                    for graph_name in placed[region_name]
+                ]
         elif region_name:
             region = self.get_region(region_name, place=False)
             bgraphs = list(region.values())

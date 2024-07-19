@@ -2313,7 +2313,7 @@ class GraphManager:
 
     def get_lattice_layout_graph(self, *, place: bool = False) -> LatticeLayoutGraph:
         if place:
-            self.place()
+            self.place(show=False)
         for region in self.regions.values():
             for graph in region.values():
                 if isinstance(graph, LatticeLayoutGraph):
@@ -2413,13 +2413,13 @@ class GraphManager:
 
     def get_plot(self, region_name: str, graph_name: str, *, place: bool = True) -> AnyGraph:
         if place:
-            self.place()
+            self.place(show=False)
 
         return self.regions[region_name][graph_name]
 
     def get_region(self, region_name: str, *, place: bool = True):
         if place:
-            self.place()
+            self.place(show=False)
 
         res = {}
         for graph_name in self.regions.get(region_name, {}):
@@ -2436,7 +2436,7 @@ class GraphManager:
 
     def get_all(self, *, place: bool = True):
         if place:
-            self.place()
+            self.place(show=False)
 
         res = {}
         for region_name in self.regions:
@@ -2486,13 +2486,18 @@ class MatplotlibGraphManager(GraphManager):
         ylim: Optional[Tuple[float, float]] = None,
     ):
         if place:
-            self.place()
+            self.place(show=False)
 
         if graph_name and not region_name:
             raise ValueError("Must specify region_name if graph_name is specified")
 
         if region_name and graph_name:
-            graphs = [self.regions[region_name][graph_name]]
+            try:
+                graphs = [self.get_plot(region_name, graph_name, place=False)]
+                print("get_plot", len(graphs))
+            except KeyError:
+                self.place(region_name, graph_name, show=False)
+                graphs = list(self.regions[region_name].values())
         elif region_name:
             region = self.get_region(region_name, place=False)
             graphs = list(region.values())
