@@ -587,7 +587,10 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
 
         return fig
 
-    def create_app_figure(self) -> Tuple[figure, List[bokeh.models.UIElement]]:
+    def create_app_figure(
+        self,
+        include_variables: bool = False,
+    ) -> Tuple[figure, List[bokeh.models.UIElement]]:
         fig = self.create_figure()
         return fig, [fig]
 
@@ -606,6 +609,7 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
         width: int = 900,
         height: int = 600,
         aspect_ratio: float = 1.5,  # w/h
+        variables: Optional[List[Variable]] = None,
     ) -> None:
         super().__init__(
             manager=manager,
@@ -618,6 +622,7 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
         self.curve_data = _get_graph_data(graph)
         self.num_points = graph.get_num_points()
         self.view_x_range = graph.get_x_range()
+        self.variables = variables
 
     @property
     def tao(self) -> Tao:
@@ -693,7 +698,10 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
             _plot_curve(fig, curve, source)
         return fig
 
-    def create_app_figure(self) -> Tuple[figure, List[bokeh.models.UIElement]]:
+    def create_app_figure(
+        self,
+        include_variables: bool = True,
+    ) -> Tuple[figure, List[bokeh.models.UIElement]]:
         fig = self.create_figure()
         update_button = bokeh.models.Button(label="Update")  # , icon="reload")
         num_points_slider = bokeh.models.Slider(
@@ -727,9 +735,17 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
         num_points_slider.on_change("value", num_points_changed)
         update_button.on_click(update_plot)
         fig.on_event(bokeh.events.RangesUpdate, cast(EventCallback, ranges_update))
-        return fig, [
+
+        models: List[bokeh.models.UIElement] = [
             bokeh.layouts.column(bokeh.layouts.row(update_button, num_points_slider), fig)
         ]
+
+        if include_variables and self.variables:
+            spinners = _handle_variables(
+                self.tao, self.variables, [BGraphAndFigure(bgraph=self, fig=fig)]
+            )
+            models.insert(0, bokeh.layouts.row(spinners))
+        return fig, models
 
 
 class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
@@ -810,7 +826,10 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
 
         return fig
 
-    def create_app_figure(self) -> Tuple[figure, List[bokeh.models.UIElement]]:
+    def create_app_figure(
+        self,
+        include_variables: bool = False,
+    ) -> Tuple[figure, List[bokeh.models.UIElement]]:
         fig = self.create_figure()
         return fig, [fig]
 
@@ -843,7 +862,7 @@ class CompositeApp:
         items: List[BGraphAndFigure] = []
         models: List[bokeh.models.UIElement] = []
         for bgraph in self.bgraphs:
-            primary_figure, fig_models = bgraph.create_app_figure()
+            primary_figure, fig_models = bgraph.create_app_figure(include_variables=False)
             items.append(BGraphAndFigure(bgraph, primary_figure))
             models.extend(fig_models)
 
@@ -857,20 +876,8 @@ class CompositeApp:
         elif self.share_x:
             share_x_axes([item.fig for item in items])
 
-        def variable_updated(attr: str, old: float, new: float, *, var: Variable):
-            print("set", var.name, new)
-            var.set_value(self.tao, new)
-            for item in items:
-                print("update plot", item.bgraph.graph.region_name)
-                if isinstance(item.bgraph, BokehBasicGraph):
-                    item.bgraph.update_plot(item.fig)
-
         if self.variables:
-            spinners = []
-            for var in self.variables:
-                spinner = var.create_spinner()
-                spinners.append(spinner)
-                spinner.on_change("value", functools.partial(variable_updated, var=var))
+            spinners = _handle_variables(self.tao, self.variables, items)
             models.insert(0, bokeh.layouts.row(spinners))
 
         return bokeh.layouts.column(models)
@@ -929,6 +936,25 @@ class Variable:
             for var_info in tao.var_general()
             for idx in range(var_info["lbound"], var_info["ubound"] + 1)
         ]
+
+
+def _handle_variables(
+    tao: Tao,
+    variables: List[Variable],
+    bgraphs: List[BGraphAndFigure],
+) -> List[bokeh.models.UIElement]:
+    def variable_updated(attr: str, old: float, new: float, *, var: Variable):
+        var.set_value(tao, new)
+        for item in bgraphs:
+            if isinstance(item.bgraph, BokehBasicGraph):
+                item.bgraph.update_plot(item.fig)
+
+    spinners = []
+    for var in variables:
+        spinner = var.create_spinner()
+        spinners.append(spinner)
+        spinner.on_change("value", functools.partial(variable_updated, var=var))
+    return spinners
 
 
 class BokehGraphManager(GraphManager):
@@ -1144,8 +1170,10 @@ class NotebookGraphManager(BokehGraphManager):
             return None
 
         variables = Variable.from_tao_all(self.tao) if vars else None
-        if len(bgraphs) == 1 and not variables:
+        if len(bgraphs) == 1:
             (app,) = bgraphs
+            if isinstance(app, BokehBasicGraph):
+                app.variables = variables
         else:
             app = CompositeApp(self.tao, bgraphs, share_x=share_x, variables=variables)
 
