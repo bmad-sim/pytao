@@ -291,4 +291,45 @@ PlotPage = TypedDict(
 )
 
 
+FloatVariableInfo = TypedDict(
+    "FloatVariableInfo",
+    {
+        "model_value": float,
+        "base_value": float,
+        "ele_name": str,
+        "attrib_name": str,
+        "ix_v1": int,
+        "ix_var": int,
+        "ix_dvar": int,
+        "ix_attrib": int,
+        "ix_key_table": int,
+        "design_value": float,
+        "scratch_value": float,
+        "old_value": float,
+        "meas_value": float,
+        "ref_value": float,
+        "correction_value": float,
+        "high_lim": float,
+        "low_lim": float,
+        "step": float,
+        "weight": float,
+        "delta_merit": float,
+        "merit": float,
+        "dmerit_dvar": float,
+        "key_val0": float,
+        "key_delta": float,
+        "s": float,
+        "var^merit_type": str,
+        "exists": bool,
+        "good_var": bool,
+        "good_user": bool,
+        "good_opt": bool,
+        "good_plot": bool,
+        "useit_opt": bool,
+        "useit_plot": bool,
+        "key_bound": bool,
+    },
+)
+
+
 Point = Tuple[float, float]

@@ -22,13 +22,14 @@ import bokeh.colors.named
 import bokeh.events
 import bokeh.layouts
 import bokeh.models
-import bokeh.models.tools
+from bokeh.models.widgets.inputs import Spinner
 import bokeh.plotting
 import numpy as np
 from bokeh.core.enums import SizingModeType
 from bokeh.document.callbacks import EventCallback
 from bokeh.models.sources import ColumnDataSource
 from bokeh.plotting import figure
+from pydantic.dataclasses import dataclass
 from typing_extensions import NotRequired, TypedDict, override
 
 from . import pgplot, util
@@ -52,6 +53,7 @@ from .plot import (
     PlotPatchRectangle,
     PlotPatchSbend,
 )
+from .types import FloatVariableInfo
 
 if typing.TYPE_CHECKING:
     from .. import Tao
@@ -109,7 +111,7 @@ class BGraphAndFigure(NamedTuple):
     fig: figure
 
 
-T_Tool = TypeVar("T_Tool", bound=bokeh.models.tools.Tool)
+T_Tool = TypeVar("T_Tool", bound=bokeh.models.Tool)
 
 
 def get_tool_from_figure(fig: figure, tool_cls: Type[T_Tool]) -> Optional[T_Tool]:
@@ -119,18 +121,18 @@ def get_tool_from_figure(fig: figure, tool_cls: Type[T_Tool]) -> Optional[T_Tool
 
 def link_crosshairs(figs: List[figure]):
     first, *rest = figs
-    crosshair = get_tool_from_figure(first, bokeh.models.tools.CrosshairTool)
+    crosshair = get_tool_from_figure(first, bokeh.models.CrosshairTool)
     if crosshair is None:
         return
 
     if crosshair.overlay == "auto":
         crosshair.overlay = (
-            bokeh.models.tools.Span(dimension="width", line_dash="dotted", line_width=1),
-            bokeh.models.tools.Span(dimension="height", line_dash="dotted", line_width=1),
+            bokeh.models.Span(dimension="width", line_dash="dotted", line_width=1),
+            bokeh.models.Span(dimension="height", line_dash="dotted", line_width=1),
         )
 
     for fig in rest:
-        other_crosshair = get_tool_from_figure(fig, bokeh.models.tools.CrosshairTool)
+        other_crosshair = get_tool_from_figure(fig, bokeh.models.CrosshairTool)
         if other_crosshair:
             other_crosshair.overlay = crosshair.overlay
 
@@ -553,7 +555,7 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
             height=self.height,
         )
         if add_named_hover_tool:
-            hover = bokeh.models.tools.HoverTool(
+            hover = bokeh.models.HoverTool(
                 tooltips=[
                     ("name", "@name"),
                     ("s start [m]", "@s_start"),
@@ -563,7 +565,7 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
 
             fig.add_tools(hover)
 
-        box_zoom = get_tool_from_figure(fig, bokeh.models.tools.BoxZoomTool)
+        box_zoom = get_tool_from_figure(fig, bokeh.models.BoxZoomTool)
         if box_zoom is not None:
             box_zoom.match_aspect = True
 
@@ -779,7 +781,7 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         if self.x_range is not None:
             fig.x_range = self.x_range
 
-        box_zoom = get_tool_from_figure(fig, bokeh.models.tools.BoxZoomTool)
+        box_zoom = get_tool_from_figure(fig, bokeh.models.BoxZoomTool)
         if box_zoom is not None:
             box_zoom.match_aspect = True
 
@@ -817,14 +819,27 @@ AnyBokehGraph = Union[BokehBasicGraph, BokehLatticeLayoutGraph, BokehFloorPlanGr
 
 
 class CompositeApp:
+    tao: Tao
     bgraphs: List[AnyBokehGraph]
     share_x: Optional[bool]
+    variables: List[Variable]
 
-    def __init__(self, bgraphs: List[AnyBokehGraph], share_x: Optional[bool] = None) -> None:
+    def __init__(
+        self,
+        tao: Tao,
+        bgraphs: List[AnyBokehGraph],
+        share_x: Optional[bool] = None,
+        variables: Optional[List[Variable]] = None,
+    ) -> None:
+        self.tao = tao
         self.bgraphs = bgraphs
         self.share_x = share_x
+        self.variables = variables or []
 
     def create_ui(self):
+        if not self.bgraphs:
+            return
+
         items: List[BGraphAndFigure] = []
         models: List[bokeh.models.UIElement] = []
         for bgraph in self.bgraphs:
@@ -841,6 +856,23 @@ class CompositeApp:
             share_common_x_axes(items)
         elif self.share_x:
             share_x_axes([item.fig for item in items])
+
+        def variable_updated(attr: str, old: float, new: float, *, var: Variable):
+            print("set", var.name, new)
+            var.set_value(self.tao, new)
+            for item in items:
+                print("update plot", item.bgraph.graph.region_name)
+                if isinstance(item.bgraph, BokehBasicGraph):
+                    item.bgraph.update_plot(item.fig)
+
+        if self.variables:
+            spinners = []
+            for var in self.variables:
+                spinner = var.create_spinner()
+                spinners.append(spinner)
+                spinner.on_change("value", functools.partial(variable_updated, var=var))
+            models.insert(0, bokeh.layouts.row(spinners))
+
         return bokeh.layouts.column(models)
 
     def create_app(self):
@@ -848,6 +880,55 @@ class CompositeApp:
             doc.add_root(self.create_ui())
 
         return bokeh_app
+
+
+@dataclass
+class Variable:
+    name: str
+    value: float
+    step: float
+    info: FloatVariableInfo
+    parameter: str = "model"
+
+    def update_info(self, tao: Tao) -> FloatVariableInfo:
+        self.info = cast(FloatVariableInfo, tao.var(self.name))
+        return self.info
+
+    def set_value(self, tao: Tao, value: float):
+        self.value = value
+        tao.cmd(f"set var {self.name}|{self.parameter} = {self.value}")
+
+    def create_spinner(self) -> bokeh.models.Spinner:
+        return Spinner(
+            title=self.name,
+            value=self.value,
+            step=self.step,
+            low=self.info["low_lim"],
+            high=self.info["high_lim"],
+        )
+
+    @classmethod
+    def from_tao(cls, tao: Tao, name: str, *, parameter: str = "model") -> Variable:
+        info = cast(FloatVariableInfo, tao.var(name))
+        return Variable(
+            name=name,
+            info=info,
+            step=info["key_delta"],
+            value=info[f"{parameter}_value"],
+            parameter=parameter,
+        )
+
+    @classmethod
+    def from_tao_all(cls, tao: Tao, *, parameter: str = "model") -> List[Variable]:
+        return [
+            cls.from_tao(
+                tao=tao,
+                name=f'{var_info["name"]}[{idx}]',
+                parameter=parameter,
+            )
+            for var_info in tao.var_general()
+            for idx in range(var_info["lbound"], var_info["ubound"] + 1)
+        ]
 
 
 class BokehGraphManager(GraphManager):
@@ -1029,7 +1110,7 @@ class NotebookGraphManager(BokehGraphManager):
         if len(bgraphs) == 1:
             (app,) = bgraphs
         else:
-            app = CompositeApp(bgraphs, share_x=share_x)
+            app = CompositeApp(self.tao, bgraphs, share_x=share_x)
 
         return bokeh.plotting.show(app.create_app())
 
@@ -1046,6 +1127,7 @@ class NotebookGraphManager(BokehGraphManager):
         height: Optional[int] = None,
         layout_height: Optional[int] = None,
         share_x: Optional[bool] = None,
+        vars: bool = False,
     ):
         bgraphs = super().plot(
             region_name=region_name,
@@ -1061,10 +1143,11 @@ class NotebookGraphManager(BokehGraphManager):
         if not bgraphs:
             return None
 
-        if len(bgraphs) == 1:
+        variables = Variable.from_tao_all(self.tao) if vars else None
+        if len(bgraphs) == 1 and not variables:
             (app,) = bgraphs
         else:
-            app = CompositeApp(bgraphs, share_x=share_x)
+            app = CompositeApp(self.tao, bgraphs, share_x=share_x, variables=variables)
 
         return bokeh.plotting.show(app.create_app())
 
