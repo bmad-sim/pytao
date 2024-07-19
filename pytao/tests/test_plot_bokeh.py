@@ -26,11 +26,11 @@ def test_bokeh_manager(request: pytest.FixtureRequest, init_filename: pathlib.Pa
     with new_tao(Tao, f"-init {init_filename}", external_plotting=external_plotting) as tao:
         manager = BokehGraphManager(tao)
         if external_plotting:
-            assert len(manager.place_all_requested())
+            assert len(manager.place())
 
         output_file(test_artifacts / f"{filename_base}.html")
 
-        bgraphs = list(manager.show())
+        bgraphs = list(manager.plot())
         items = [
             BGraphAndFigure(bgraph=bgraph, fig=bgraph.create_figure()) for bgraph in bgraphs
         ]

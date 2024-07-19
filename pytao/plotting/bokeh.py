@@ -983,6 +983,9 @@ class NotebookGraphManager(BokehGraphManager):
         for region in regions:
             bgraphs.extend(super().plot(region, **kwargs))
 
+        if not bgraphs:
+            return None
+
         if len(bgraphs) == 1:
             (app,) = bgraphs
         else:
@@ -1014,6 +1017,9 @@ class NotebookGraphManager(BokehGraphManager):
             height=height,
             layout_height=layout_height,
         )
+
+        if not bgraphs:
+            return None
 
         if len(bgraphs) == 1:
             (app,) = bgraphs

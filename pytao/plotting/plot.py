@@ -2500,6 +2500,9 @@ class MatplotlibGraphManager(GraphManager):
             by_region = self.get_all()
             graphs = [graph for region in by_region.values() for graph in region.values()]
 
+        if not graphs:
+            return None
+
         if figsize is None:
             figsize = (width, height)
 
