@@ -818,11 +818,10 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         if orbits is not None:
             _plot_curve_symbols(fig, orbits.curve, name="floor_orbits")
         for elem in self.graph.elements:
-            source = ColumnDataSource()
             for line in elem.lines:
-                _plot_curve_line(fig, line, source=source)
+                _plot_curve_line(fig, line)
             for patch in elem.patches:
-                _plot_patch(fig, patch, line_width=elem.info["line_width"], source=source)
+                _plot_patch(fig, patch, line_width=elem.info["line_width"])
             for annotation in elem.annotations:
                 _draw_annotation(
                     fig,
