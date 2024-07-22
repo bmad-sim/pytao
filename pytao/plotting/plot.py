@@ -144,7 +144,7 @@ class PlotCurveSymbols:
             color=pgplot.mpl_color(self.color),
             markerfacecolor=self.markerfacecolor,
             markersize=self.markersize,
-            marker=self.marker,
+            marker=pgplot.symbols.get(self.marker, "."),
             markeredgewidth=self.markeredgewidth,
             linewidth=self.linewidth,
             label=label,
@@ -513,9 +513,6 @@ class PlotCurve:
         else:
             marker_size = 0
 
-        # marker
-        marker = pgplot.symbols.get(symbol_type, ".")
-        # symbol_line_width
         symbol_line_width = curve_info["symbol"]["line_width"]
 
         xpoints = [p[0] for p in points]
@@ -539,7 +536,6 @@ class PlotCurve:
             y_min = min(ypoints)
         else:
             raise NoCurveDataError("No points found, make sure data is properly initialized")
-        # boundaries for wave analysis rectangles
 
         if xpoints:
             curve_line = PlotCurveLine(
@@ -560,7 +556,7 @@ class PlotCurve:
                 linewidth=0,
                 markerfacecolor=marker_color,
                 markersize=marker_size / 2,
-                marker=marker,
+                marker=symbol_type,
                 markeredgewidth=symbol_line_width / 2,
             )
         else:
@@ -688,7 +684,7 @@ class BasicGraph(GraphBase):
             try:
                 curve = PlotCurve.from_tao(tao, region_name, graph_name, curve_name)
             except NoCurveDataError:
-                logger.exception("No curve data?")
+                logger.warning(f"No curve data {region_name}.{graph_name}.{curve_name}")
             else:
                 curves.append(curve)
 
@@ -1969,7 +1965,7 @@ class FloorOrbits:
                 color=color,
                 markerfacecolor=color,
                 markersize=1,
-                marker="o",
+                marker="circle_filled",
                 markeredgewidth=1,
             ),
         )
@@ -2154,10 +2150,10 @@ def plot_graph(
                 ncols=1,
                 sharex=True,
                 height_ratios=[1, 0.5],
-                figsize=(width, height),
+                figsize=(width, height) if width and height else None,
             )
         else:
-            _, ax = plt.subplots(figsize=(width, height))
+            _, ax = plt.subplots(figsize=(width, height) if width and height else None)
 
     assert ax is not None
 
@@ -2508,7 +2504,7 @@ class MatplotlibGraphManager(GraphManager):
         if not graphs:
             return None
 
-        if figsize is None:
+        if figsize is None and width and height:
             figsize = (width, height)
 
         if (

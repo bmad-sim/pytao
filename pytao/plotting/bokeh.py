@@ -176,6 +176,10 @@ def _plot_curve_symbols(
     source: Optional[ColumnDataSource] = None,
     legend_label: Optional[str] = None,
 ):
+    marker = pgplot.bokeh_symbols.get(symbol.marker, "dot")
+    if not marker:
+        return
+
     if source is None:
         source = ColumnDataSource(data={})
 
@@ -196,6 +200,7 @@ def _plot_curve_symbols(
         "y",
         source=source,
         fill_color=bokeh_color(symbol.color),
+        marker=marker,
         name=name,
         **kw,
     )
