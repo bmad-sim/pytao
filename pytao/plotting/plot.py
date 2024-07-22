@@ -950,8 +950,7 @@ class LatticeLayoutGraph(GraphBase):
 
         # Invisible line to give the lat layout enough vertical space.
         # Without this, the tops and bottoms of shapes could be cut off
-        # y_max = self.y_max
-        # ax.plot([0, 0], [-1.7 * y_max, 1.3 * y_max], alpha=0)
+        # ax.plot([0, 0], [-1.7 * self.y_max, 1.3 * self.y_max], alpha=0)
 
         ax.yaxis.set_visible(False)
 
@@ -959,7 +958,6 @@ class LatticeLayoutGraph(GraphBase):
         # ax.set_xticks([elem.info["ele_s_start"] for elem in self.elements])
         # ax.set_xticklabels([elem.info["label_name"] for elem in self.elements], rotation=90)
         ax.grid(visible=False)
-        ax.set_ylim(-2, 1)
         return ax
 
     @property
