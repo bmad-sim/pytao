@@ -778,36 +778,25 @@ class LatticeLayoutElement:
                 patches.append(box_patch)
             elif shape == "xbox":
                 patches.append(box_patch)
-                lines.extend([[(s1, y1), (s2, y2)], [(s1, y2), (s2, y1)]])
+                lines.extend(
+                    [
+                        [(s1, y1), (s2, y2)],
+                        [(s1, y2), (s2, y1)],
+                    ]
+                )
             elif shape == "x":
-                lines.extend([[(s1, y1), (s2, y2)], [(s1, y2), (s2, y1)]])
+                lines.extend(
+                    [
+                        [(s1, y1), (s2, y2)],
+                        [(s1, y2), (s2, y1)],
+                    ]
+                )
             elif shape == "bow_tie":
-                lines.extend(
-                    [
-                        [(s1, y1), (s2, y2)],
-                        [(s1, y2), (s2, y1)],
-                        [(s1, y1), (s1, y2)],
-                        [(s2, y1), (s2, y2)],
-                    ]
-                )
+                lines.append([(s1, y1), (s2, y2), (s2, y1), (s1, y2), (s1, y1)])
             elif shape == "rbow_tie":
-                lines.extend(
-                    [
-                        [(s1, y1), (s2, y2)],
-                        [(s1, y2), (s2, y1)],
-                        [(s1, y1), (s2, y1)],
-                        [(s1, y2), (s2, y2)],
-                    ]
-                )
+                lines.append([(s1, y1), (s2, y2), (s1, y2), (s2, y1), (s1, y1)])
             elif shape == "diamond":
-                lines.extend(
-                    [
-                        [(s1, 0), (s_mid, y1)],
-                        [(s1, 0), (s_mid, y2)],
-                        [(s2, 0), (s_mid, y1)],
-                        [(s2, 0), (s_mid, y2)],
-                    ]
-                )
+                lines.append([(s1, 0), (s_mid, y1), (s2, 0), (s_mid, y2), (s1, 0)])
             elif shape == "circle":
                 patches.append(
                     PlotPatchEllipse(
@@ -1511,33 +1500,17 @@ def _create_bow_tie(
     line_width: float,
     color: str,
     angle_start: float,
-):
-    return [
-        PlotCurveLine(
-            [x1 + off2 * np.sin(angle_start), x2 - off1 * np.sin(angle_start)],
-            [y1 - off2 * np.cos(angle_start), y2 + off1 * np.cos(angle_start)],
-            linewidth=line_width,
-            color=color,
-        ),
-        PlotCurveLine(
-            [x1 - off1 * np.sin(angle_start), x2 + off2 * np.sin(angle_start)],
-            [y1 + off1 * np.cos(angle_start), y2 - off2 * np.cos(angle_start)],
-            linewidth=line_width,
-            color=color,
-        ),
-        PlotCurveLine(
-            [x1 - off1 * np.sin(angle_start), x2 - off1 * np.sin(angle_start)],
-            [y1 + off1 * np.cos(angle_start), y2 + off1 * np.cos(angle_start)],
-            linewidth=line_width,
-            color=color,
-        ),
-        PlotCurveLine(
-            [x1 + off2 * np.sin(angle_start), x2 + off2 * np.sin(angle_start)],
-            [y1 - off2 * np.cos(angle_start), y2 - off2 * np.cos(angle_start)],
-            linewidth=line_width,
-            color=color,
-        ),
-    ]
+) -> PlotCurveLine:
+    l1x = [x1 + off2 * np.sin(angle_start), x2 - off1 * np.sin(angle_start)]
+    l1y = [y1 - off2 * np.cos(angle_start), y2 + off1 * np.cos(angle_start)]
+    l2x = [x1 - off1 * np.sin(angle_start), x2 + off2 * np.sin(angle_start)]
+    l2y = [y1 + off1 * np.cos(angle_start), y2 - off2 * np.cos(angle_start)]
+    return PlotCurveLine(
+        [l1x[0], l1x[1], l2x[0], l2x[1], l1x[0]],
+        [l1y[0], l1y[1], l2y[0], l2y[1], l1y[0]],
+        linewidth=line_width,
+        color=color,
+    )
 
 
 def _create_diamond(
@@ -1551,32 +1524,16 @@ def _create_diamond(
     color: str,
     angle_start: float,
 ):
-    return [
-        PlotCurveLine(
-            [x1, x1 + (x2 - x1) / 2 - off1 * np.sin(angle_start)],
-            [y1, y1 + (y2 - y1) / 2 + off1 * np.cos(angle_start)],
-            linewidth=line_width,
-            color=color,
-        ),
-        PlotCurveLine(
-            [x1 + (x2 - x1) / 2 - off1 * np.sin(angle_start), x2],
-            [y1 + (y2 - y1) / 2 + off1 * np.cos(angle_start), y2],
-            linewidth=line_width,
-            color=color,
-        ),
-        PlotCurveLine(
-            [x1, x1 + (x2 - x1) / 2 + off2 * np.sin(angle_start)],
-            [y1, y1 + (y2 - y1) / 2 - off2 * np.cos(angle_start)],
-            linewidth=line_width,
-            color=color,
-        ),
-        PlotCurveLine(
-            [x1 + (x2 - x1) / 2 + off2 * np.sin(angle_start), x2],
-            [y1 + (y2 - y1) / 2 - off2 * np.cos(angle_start), y2],
-            linewidth=line_width,
-            color=color,
-        ),
-    ]
+    l1x1 = x1 + (x2 - x1) / 2 - off1 * np.sin(angle_start)
+    l1y1 = y1 + (y2 - y1) / 2 + off1 * np.cos(angle_start)
+    l2x1 = x1 + (x2 - x1) / 2 + off2 * np.sin(angle_start)
+    l2y1 = y1 + (y2 - y1) / 2 - off2 * np.cos(angle_start)
+    return PlotCurveLine(
+        [x1, l1x1, x2, l2x1, x1],
+        [y1, l1y1, y2, l2y1, y1],
+        linewidth=line_width,
+        color=color,
+    )
 
 
 @dataclasses.dataclass
@@ -1732,7 +1689,7 @@ class FloorPlanElement:
             )
 
         elif shape == "bow_tie" and ele_key != "sbend" and color:
-            lines.extend(
+            lines.append(
                 _create_bow_tie(
                     x1=x1,
                     x2=x2,
@@ -1746,7 +1703,7 @@ class FloorPlanElement:
                 )
             )
         elif shape == "diamond" and ele_key != "sbend" and color:
-            lines.extend(
+            lines.append(
                 _create_diamond(
                     x1=x1,
                     x2=x2,
@@ -2503,7 +2460,6 @@ class MatplotlibGraphManager(GraphManager):
         if region_name and graph_name:
             try:
                 graphs = [self.get_plot(region_name, graph_name, place=False)]
-                print("get_plot", len(graphs))
             except KeyError:
                 self.place(region_name, graph_name, show=False)
                 graphs = list(self.regions[region_name].values())
