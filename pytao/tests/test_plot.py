@@ -8,10 +8,10 @@ from .conftest import new_tao, test_artifacts
 from .. import Tao
 from ..plotting.plot import (
     MatplotlibGraphManager,
-    # make_graph,
+    make_graph,
     plot_all_requested,
     plot_all_visible,
-    # plot_graph,
+    plot_graph,
     plot_region,
 )
 
@@ -66,12 +66,10 @@ def test_plot_floor_layout(tao_cls):
         plot_region(tao, "layout")
         plt.show()
 
-        # TODO uncomment; bmad crash 20240715
-        # tao.cmd("place -no_buffer r12 floor_plan")
-        # graph = make_graph(tao, "r12", "g")
-        # plot_graph(tao, graph)
-        # plt.show()
-        # rich.print(graph)
+        tao.cmd("place -no_buffer r12 floor_plan")
+        graph = make_graph(tao, "r12", "g")
+        plot_graph(tao, graph)
+        plt.show()
 
 
 def test_plot_data(tao_cls):
@@ -82,11 +80,10 @@ def test_plot_data(tao_cls):
         plot_all_requested(tao)
         plt.show()
 
-        # TODO uncomment; tao crash
-        # tao.cmd("place -no_buffer bottom floor_plan")
-        # # rich.print(plot_region(tao, "bottom"))
-        # plot_region(tao, "bottom")
-        # plt.show()
+        tao.cmd("place -no_buffer bottom floor_plan")
+        # rich.print(plot_region(tao, "bottom"))
+        plot_region(tao, "bottom")
+        plt.show()
 
         tao.cmd("place -no_buffer bottom lat_layout")
         plot_region(tao, "bottom")
