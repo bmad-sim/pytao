@@ -22,7 +22,6 @@ import bokeh.colors.named
 import bokeh.events
 import bokeh.layouts
 import bokeh.models
-from bokeh.models.widgets.inputs import Spinner
 import bokeh.plotting
 import numpy as np
 from bokeh.core.enums import SizingModeType
@@ -741,10 +740,15 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
         ]
 
         if include_variables and self.variables:
+            status_label = bokeh.models.PreText()
             spinners = _handle_variables(
-                self.tao, self.variables, [BGraphAndFigure(bgraph=self, fig=fig)]
+                self.tao,
+                self.variables,
+                status_label,
+                [BGraphAndFigure(bgraph=self, fig=fig)],
             )
             models.insert(0, bokeh.layouts.row(spinners))
+            models.insert(1, bokeh.layouts.row([status_label]))
         return fig, models
 
 
@@ -877,8 +881,10 @@ class CompositeApp:
             share_x_axes([item.fig for item in items])
 
         if self.variables:
-            spinners = _handle_variables(self.tao, self.variables, items)
+            status_label = bokeh.models.PreText()
+            spinners = _handle_variables(self.tao, self.variables, status_label, items)
             models.insert(0, bokeh.layouts.row(spinners))
+            models.insert(1, bokeh.layouts.row([status_label]))
 
         return bokeh.layouts.column(models)
 
@@ -906,7 +912,7 @@ class Variable:
         tao.cmd(f"set var {self.name}|{self.parameter} = {self.value}")
 
     def create_spinner(self) -> bokeh.models.Spinner:
-        return Spinner(
+        return bokeh.models.Spinner(
             title=self.name,
             value=self.value,
             step=self.step,
@@ -920,7 +926,7 @@ class Variable:
         return Variable(
             name=name,
             info=info,
-            step=info["key_delta"],
+            step=info["key_delta"] or 0.01,
             value=info[f"{parameter}_value"],
             parameter=parameter,
         )
@@ -938,13 +944,35 @@ class Variable:
         ]
 
 
+def _clean_tao_exception_for_user(text: str, command: str) -> str:
+    def clean_line(line: str) -> str:
+        # "[ERROR | 2024-JUL-22 09:20:20] tao_set_invalid:"
+        if line.startswith("[") and line.endswith(f"{command}:"):
+            return line.split(f"{command}:", 1)[1]
+        return line
+
+    text = text.replace("ERROR detected: ", "\n")
+    lines = [clean_line(line.rstrip()) for line in text.splitlines()]
+    return "\n".join(line for line in lines if line.strip())
+
+
 def _handle_variables(
     tao: Tao,
     variables: List[Variable],
+    status_label: bokeh.models.PreText,
     bgraphs: List[BGraphAndFigure],
 ) -> List[bokeh.models.UIElement]:
     def variable_updated(attr: str, old: float, new: float, *, var: Variable):
-        var.set_value(tao, new)
+        try:
+            var.set_value(tao, new)
+        except RuntimeError as ex:
+            status_label.text = _clean_tao_exception_for_user(
+                str(ex),
+                command="tao_set_invalid",
+            )
+        else:
+            status_label.text = ""
+
         for item in bgraphs:
             if isinstance(item.bgraph, BokehBasicGraph):
                 item.bgraph.update_plot(item.fig)
