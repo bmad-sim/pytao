@@ -640,7 +640,10 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
                 widget.text = "(plot type changed; disabled)"
 
     def update_plot(
-        self, fig: figure, *, widgets: Optional[List[bokeh.models.Widget]] = None
+        self,
+        fig: figure,
+        *,
+        widgets: Optional[List[bokeh.models.Widget]] = None,
     ) -> None:
         try:
             self.tao.cmd("set global lattice_calc_on = F")
@@ -839,7 +842,24 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         include_variables: bool = False,
     ) -> Tuple[figure, List[bokeh.models.UIElement]]:
         fig = self.create_figure()
-        return fig, [fig]
+
+        controls = []
+        try:
+            (orbits,) = fig.select("floor_orbits")
+        except ValueError:
+            pass
+        else:
+            orbits.visible = False
+            show_orbits_toggle = bokeh.models.Toggle(label="Show orbits", active=False)
+
+            def orbits_toggled(_attr, _old, show):
+                orbits.visible = show
+
+            show_orbits_toggle.on_change("active", orbits_toggled)
+            controls.append(show_orbits_toggle)
+
+        controls_row = [bokeh.layouts.row(controls)] if controls else []
+        return fig, [bokeh.layouts.column([*controls_row, fig])]
 
 
 AnyBokehGraph = Union[BokehBasicGraph, BokehLatticeLayoutGraph, BokehFloorPlanGraph]
