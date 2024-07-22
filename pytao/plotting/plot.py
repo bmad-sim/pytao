@@ -2316,9 +2316,22 @@ class GraphManager:
                     return graph
         raise LayoutGraphNotFoundError()
 
+    def get_floor_plan_graph(self, *, place: bool = False) -> FloorPlanGraph:
+        if place:
+            self.place(show=False)
+        for region in self.regions.values():
+            for graph in region.values():
+                if isinstance(graph, FloorPlanGraph):
+                    return graph
+        raise LayoutGraphNotFoundError()
+
     @property
     def lattice_layout_graph(self) -> LatticeLayoutGraph:
         return self.get_lattice_layout_graph(place=True)
+
+    @property
+    def floor_plan_graph(self) -> FloorPlanGraph:
+        return self.get_floor_plan_graph(place=True)
 
     def update_place_buffer(self):
         for item in self.tao.place_buffer():
