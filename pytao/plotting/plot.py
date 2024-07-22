@@ -1219,6 +1219,36 @@ def _create_x_lines(
     ]
 
 
+def _create_x_box(
+    x1: float,
+    x2: float,
+    y1: float,
+    y2: float,
+    off1: float,
+    off2: float,
+    line_width: float,
+    color: str,
+    angle_start: float,
+) -> PlotCurveLine:
+    px0 = x1 + off2 * np.sin(angle_start)
+    py0 = y1 - off2 * np.cos(angle_start)
+
+    px1 = x2 - off1 * np.sin(angle_start)
+    py1 = y2 + off1 * np.cos(angle_start)
+
+    px2 = x1 - off1 * np.sin(angle_start)
+    py2 = y1 + off1 * np.cos(angle_start)
+
+    px3 = x2 + off2 * np.sin(angle_start)
+    py3 = y2 - off2 * np.cos(angle_start)
+    return PlotCurveLine(
+        xs=[px0, px1, px2, px3, px0, px2, px3, px1],
+        ys=[py0, py1, py2, py3, py0, py2, py3, py1],
+        linewidth=line_width,
+        color=color,
+    )
+
+
 def _create_sbend_box(
     x1: float,
     x2: float,
@@ -1644,21 +1674,8 @@ class FloorPlanElement:
             )
 
         elif shape == "xbox" and ele_key != "sbend" and color:
-            patches.append(
-                _box_to_patch(
-                    x1=x1,
-                    x2=x2,
-                    y1=y1,
-                    y2=y2,
-                    off1=off1,
-                    off2=off2,
-                    line_width=line_width,
-                    color=color,
-                    angle_start=angle_start,
-                )
-            )
-            lines.extend(
-                _create_x_lines(
+            lines.append(
+                _create_x_box(
                     x1=x1,
                     x2=x2,
                     y1=y1,
