@@ -249,4 +249,5 @@ class Tao(TaoCore):
             height=height,
             layout_height=layout_height,
             share_x=share_x,
+            **kwargs,
         )
