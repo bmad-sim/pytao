@@ -17,7 +17,9 @@ from matplotlib.ticker import AutoMinorLocator
 from pydantic.dataclasses import Field
 from typing_extensions import override
 
+
 from . import pgplot, util
+from .fields import LatticeLayoutField
 from .types import (
     BuildingWallGraphInfo,
     BuildingWallInfo,
@@ -933,10 +935,45 @@ class LatticeLayoutGraph(GraphBase):
     universe: int = 0
     branch: int = 0
     y2_floor: float = 0
+    fields: List[LatticeLayoutField] = Field(default_factory=list)
+    show_fields: bool = False
+
+    def update_fields(self, tao: Tao) -> List[LatticeLayoutField]:
+        field_elems = [
+            elem
+            for elem in self.elements
+            if elem.info["label_name"]
+            and tao.ele_head(elem.info["label_name"])["key"] in {"Quadrupole"}
+        ]
+        fields = [
+            LatticeLayoutField.from_tao(tao, ele_id=elem.info["label_name"])
+            for elem in field_elems
+        ]
+        self.fields = fields
+        return fields
 
     @property
     def is_s_plot(self) -> bool:
         return True
+
+    def plot_fields(self, ax: Optional[matplotlib.axes.Axes] = None):
+        if ax is None:
+            _, ax = plt.subplots()
+        assert ax is not None
+
+        field_data = [field.by for field in self.fields]
+        min_field = np.min(field_data or [0])
+        max_field = np.max(field_data or [1])
+        for field in self.fields:
+            ax.pcolormesh(
+                np.asarray(field.s),
+                np.asarray(field.x) * 1e3,
+                np.asarray(field.by),
+                vmin=min_field,
+                vmax=max_field,
+                cmap="PRGn_r",
+            )
+        return ax
 
     def plot(self, ax: Optional[matplotlib.axes.Axes] = None):
         if ax is None:
@@ -944,6 +981,12 @@ class LatticeLayoutGraph(GraphBase):
         assert ax is not None
 
         ax.axhline(y=0, color="Black", linewidth=1)
+
+        if self.show_fields:
+            self.plot_fields(ax)
+            # ax.colorbar(label="B1_GRADIENT (T/m)")
+            # plt.xlabel(r"$s$ (m)")
+            # plt.ylabel(r"$x$ (mm)")
 
         for elem in self.elements:
             elem.plot(ax)
@@ -2343,8 +2386,9 @@ class GraphManager:
         for region_name in regions:
             try:
                 self.update_region(region_name)
-            except GraphInvalidError:
+            except GraphInvalidError as ex:
                 if ignore_invalid:
+                    logger.warning(f"Invalid graph in region {region_name}: {ex}")
                     continue
                 raise
 
@@ -2456,6 +2500,7 @@ class MatplotlibGraphManager(GraphManager):
         region_name: Optional[str] = None,
         graph_name: Optional[str] = None,
         *,
+        show_fields: bool = False,
         include_layout: bool = True,
         place: bool = True,
         width: int = 6,
@@ -2477,7 +2522,7 @@ class MatplotlibGraphManager(GraphManager):
                 graphs = [self.get_plot(region_name, graph_name, place=False)]
             except KeyError:
                 self.place(region_name, graph_name, show=False)
-                graphs = list(self.regions[region_name].values())
+                graphs = list(self.regions.get(region_name, {}).values())
         elif region_name:
             region = self.get_region(region_name, place=False)
             graphs = list(region.values())
@@ -2526,6 +2571,16 @@ class MatplotlibGraphManager(GraphManager):
                 squeeze=False,
             )
 
+        if include_layout:
+            try:
+                layout_graph = self.get_lattice_layout_graph(place=False)
+            except LayoutGraphNotFoundError:
+                pass
+            else:
+                layout_graph.show_fields = True
+                if show_fields and not layout_graph.fields:
+                    layout_graph.update_fields(tao=self.tao)
+
         for ax, graph in zip(gs[:, 0], graphs):
             try:
                 graph.plot(ax)
@@ -2534,8 +2589,10 @@ class MatplotlibGraphManager(GraphManager):
 
             if xlim is not None:
                 ax.set_xlim(xlim)
-            if not isinstance(graph, LatticeLayoutGraph) and ylim is not None:
-                ax.set_ylim(ylim)
+
+            if ylim is not None:
+                if not isinstance(graph, LatticeLayoutGraph) or len(graphs) == 1:
+                    ax.set_ylim(ylim)
 
         return gs
 

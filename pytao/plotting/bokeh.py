@@ -31,6 +31,8 @@ from bokeh.plotting import figure
 from pydantic.dataclasses import dataclass
 from typing_extensions import NotRequired, TypedDict, override
 
+from pytao.plotting.fields import LatticeLayoutField
+
 from . import pgplot, util
 from .plot import (
     BasicGraph,
@@ -475,6 +477,44 @@ def _draw_layout_element(
         )
 
 
+def _fields_to_data_source(
+    fields: List[LatticeLayoutField],
+):
+    return ColumnDataSource(
+        data={
+            "ele_id": [field.ele_id for field in fields],
+            "by": [np.asarray(field.by).T for field in fields],
+            "x": [np.min(field.s) for field in fields],
+            "dw": [np.max(field.s) - np.min(field.s) for field in fields],
+            "dh": [15.0 for _ in fields],
+        }
+    )
+
+
+def _draw_fields(
+    fig: figure,
+    fields: List[LatticeLayoutField],
+    palette: str = "Magma256",
+):
+    source = _fields_to_data_source(fields)
+    cmap = bokeh.models.LinearColorMapper(
+        palette="Magma256",
+        low=np.min(source.data["by"]),
+        high=np.max(source.data["by"]),
+    )
+
+    fig.image(
+        image="by",
+        x="x",
+        y=-1,
+        dw="dw",
+        dh="dh",
+        color_mapper=cmap,
+        source=source,
+        name="field_images",
+    )
+
+
 TGraph = TypeVar("TGraph", bound=GraphBase)
 
 
@@ -520,6 +560,7 @@ class BokehGraphBase(Generic[TGraph]):
 
 class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
     graph: LatticeLayoutGraph
+    show_fields: bool
 
     def __init__(
         self,
@@ -529,6 +570,7 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
         width: int = 900,
         height: int = 300,
         aspect_ratio: float = 3.0,  # w/h
+        show_fields: bool = False,
     ) -> None:
         super().__init__(
             manager=manager,
@@ -538,13 +580,37 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
             height=height,
             aspect_ratio=aspect_ratio,
         )
+        self.show_fields = show_fields
+
+    def update_plot(
+        self,
+        fig: figure,
+        *,
+        widgets: Optional[List[bokeh.models.Widget]] = None,
+        tao: Optional[Tao] = None,
+    ) -> None:
+        if tao is None:
+            return
+
+        have_fields = len(self.graph.fields)
+        # graph = make_graph(tao, self.graph.region_name, self.graph.graph_name)
+        # assert isinstance(graph, LatticeLayoutGraph)
+        # self.graph = graph
+
+        if not have_fields:
+            return
+
+        self.graph.update_fields(tao)
+        field_images_glyph = fig.select("field_images")
+        field_images = field_images_glyph.data_source
+        updated_source = _fields_to_data_source(self.graph.fields)
+        field_images.data = dict(updated_source.data)
 
     def create_figure(
         self,
         tools: str = "pan,wheel_zoom,box_zoom,save,reset,help,crosshair",
         toolbar_location: str = "above",
         add_named_hover_tool: bool = True,
-        set_xaxis_ticks: bool = True,
     ) -> figure:
         graph = self.graph
         fig = figure(
@@ -583,12 +649,16 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
         fig.xaxis.major_label_orientation = math.pi / 4
         fig.yaxis.ticker = []
         fig.yaxis.visible = False
-        for elem in graph.elements:
-            _draw_layout_element(fig, elem, skip_labels=set_xaxis_ticks)
+
+        if self.graph.show_fields:
+            if not self.graph.fields:
+                self.graph.update_fields(self.manager.tao)
+            _draw_fields(fig, self.graph.fields)
+        for elem in self.graph.elements:
+            _draw_layout_element(fig, elem, skip_labels=True)
 
         if self.x_range is not None:
             fig.x_range = self.x_range
-
         return fig
 
     def create_app_figure(
@@ -644,6 +714,7 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
         fig: figure,
         *,
         widgets: Optional[List[bokeh.models.Widget]] = None,
+        tao: Optional[Tao] = None,
     ) -> None:
         try:
             self.tao.cmd("set global lattice_calc_on = F")
@@ -998,8 +1069,8 @@ def _handle_variables(
             status_label.text = ""
 
         for item in bgraphs:
-            if isinstance(item.bgraph, BokehBasicGraph):
-                item.bgraph.update_plot(item.fig)
+            if isinstance(item.bgraph, (BokehBasicGraph, BokehLatticeLayoutGraph)):
+                item.bgraph.update_plot(item.fig, tao=tao)
 
     spinners = []
     for var in variables:
@@ -1078,6 +1149,7 @@ class BokehGraphManager(GraphManager):
         height: Optional[int] = None,
         layout_height: Optional[int] = None,
         share_x: Optional[bool] = None,
+        show_fields: bool = False,
     ):
         """
         Plot a graph, region, or all placed graphs.
@@ -1125,7 +1197,7 @@ class BokehGraphManager(GraphManager):
                 placed = self.place(region_name, graph_name, show=False)
                 bgraphs = [
                     self.get_plot(region_name, graph_name, place=False)
-                    for graph_name in placed[region_name]
+                    for graph_name in placed.get(region_name, [])
                 ]
         elif region_name:
             region = self.get_region(region_name, place=False)
@@ -1154,6 +1226,16 @@ class BokehGraphManager(GraphManager):
                         place=False,
                     )
                 )
+
+        if include_layout:
+            try:
+                layout_graph = self.get_lattice_layout_graph(place=False)
+            except LayoutGraphNotFoundError:
+                pass
+            else:
+                layout_graph.show_fields = show_fields
+                if show_fields and not layout_graph.fields:
+                    layout_graph.update_fields(tao=self.tao)
 
         for bgraph in bgraphs:
             is_layout = isinstance(bgraph, BokehLatticeLayoutGraph)
@@ -1206,6 +1288,8 @@ class NotebookGraphManager(BokehGraphManager):
         layout_height: Optional[int] = None,
         share_x: Optional[bool] = None,
         vars: bool = False,
+        show_fields: bool = False,
+        notebook_handle: bool = False,
     ):
         bgraphs = super().plot(
             region_name=region_name,
@@ -1216,6 +1300,7 @@ class NotebookGraphManager(BokehGraphManager):
             width=width,
             height=height,
             layout_height=layout_height,
+            show_fields=show_fields,
         )
 
         if not bgraphs:
@@ -1229,7 +1314,10 @@ class NotebookGraphManager(BokehGraphManager):
         else:
             app = CompositeApp(self.tao, bgraphs, share_x=share_x, variables=variables)
 
-        return bokeh.plotting.show(app.create_app())
+        return bokeh.plotting.show(
+            app.create_app(),
+            notebook_handle=notebook_handle,
+        )
 
     __call__ = plot
 
