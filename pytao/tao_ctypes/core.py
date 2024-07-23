@@ -4,6 +4,7 @@ import os
 import shutil
 import tempfile
 import textwrap
+from typing import List
 
 import numpy as np
 
@@ -34,9 +35,12 @@ class TaoCore:
     tao.init("command line args here...")
     """
 
+    # Expand variables in `init` strings.
+    expand_vars: bool = True
+
     # ---------------------------------------------
 
-    def __init__(self, init="", so_lib=""):
+    def __init__(self, init="", so_lib="", *, expand_vars: bool = True):
         # TL/DR; Leave this import out of the global scope.
         #
         # Make it lazy import to avoid cyclical dependency.
@@ -77,7 +81,6 @@ class TaoCore:
         except Exception:
             pass
 
-        self._graph_managers = {}
         if init:
             self.init(init)
 
@@ -104,10 +107,22 @@ class TaoCore:
         """
         self.so_lib.tao_c_out_io_buffer_reset()
 
+    def _preprocess_command(self, command: str) -> str:
+        if not self.expand_vars:
+            return command
+
+        cmd_orig = command
+        processed = os.path.expandvars(command)
+        if cmd_orig != processed:
+            logger.debug(f"Variable substitution {cmd_orig!r}: {processed!r}")
+        return processed
+
     # ---------------------------------------------
     # Init Tao
 
-    def init(self, cmd):
+    def init(self, cmd: str) -> List[str]:
+        cmd = self._preprocess_command(cmd)
+
         if not tao_ctypes.initialized:
             logger.debug(f"Initializing Tao with: {cmd}")
             err = self.so_lib.tao_c_init_tao(cmd.encode("utf-8"))
@@ -116,9 +131,9 @@ class TaoCore:
                 raise ValueError(f"Unable to init Tao with: {cmd!r}. Tao output: {message}")
             tao_ctypes.initialized = True
             return self.get_output()
-        else:
-            # Reinit
-            return self.cmd(f"reinit tao -clear {cmd}", raises=True)
+
+        # Reinit
+        return self.cmd(f"reinit tao -clear {cmd}", raises=True)
 
     # ---------------------------------------------
     # Send a command to Tao and return the output
