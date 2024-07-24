@@ -2206,7 +2206,7 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
                 if isinstance(graph, self._lattice_layout_graph_type):
                     return graph
 
-        (graph,) = self.place("lat_layout", show=False)
+        (graph,) = self.place("lat_layout")
         assert isinstance(graph, self._lattice_layout_graph_type)
         return graph
 
@@ -2215,7 +2215,7 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
             for graph in region:
                 if isinstance(graph, self._floor_plan_graph_type):
                     return graph
-        (graph,) = self.place("floor_plan", show=False)
+        (graph,) = self.place("floor_plan")
         assert isinstance(graph, self._floor_plan_graph_type)
         return graph
 
@@ -2298,7 +2298,6 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
         *,
         region_name: Optional[str] = None,
         ignore_invalid: bool = True,
-        show: bool = True,
     ) -> List[T_GraphType]:
         if region_name is None:
             region_name = self.get_region_for_graph(graph_name)
@@ -2306,8 +2305,6 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
 
         logger.debug(f"Placing {graph_name} in {region_name}")
         self.tao.cmd(f"place -no_buffer {region_name} {graph_name}")
-        # if show and hasattr(self, "plot_regions"):  # TODO
-        #     self.plot_regions(list(result))
         return self.update_region(
             region_name=region_name,
             graph_name=graph_name,
@@ -2367,7 +2364,7 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
                 return self.update_region(region_name=region_name, graph_name=graph_name)
             return self.regions[region_name]
 
-        return self.place(graph_name=graph_name, region_name=region_name, show=False)
+        return self.place(graph_name=graph_name, region_name=region_name)
 
     def make_graph(
         self,
@@ -2463,9 +2460,10 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
 
         Returns
         -------
-        None
+        matplotlib.Figure
             To gain access to the resulting plot objects, use the backend's
             `plot` method directly.
+        array of matplotlib.Axes
         """
         graphs = self.prepare_graphs_by_name(
             graph_name=graph_name,
@@ -2487,7 +2485,7 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
             layout_graph = self.get_lattice_layout_graph()
             graphs.append(layout_graph)
 
-            _, gs = plt.subplots(
+            fig, gs = plt.subplots(
                 nrows=len(graphs),
                 ncols=1,
                 sharex=share_x,
@@ -2496,7 +2494,7 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
                 squeeze=False,
             )
         else:
-            _, gs = plt.subplots(
+            fig, gs = plt.subplots(
                 nrows=len(graphs),
                 ncols=1,
                 sharex=share_x,
@@ -2523,6 +2521,6 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
                 if not isinstance(graph, LatticeLayoutGraph) or len(graphs) == 1:
                     ax.set_ylim(ylim)
 
-        return gs
+        return fig, gs
 
     __call__ = plot
