@@ -6,11 +6,7 @@ import pytest
 from bokeh.plotting import column, output_file, save
 
 from .. import Tao
-from ..plotting.bokeh import (
-    BGraphAndFigure,
-    BokehGraphManager,
-    share_common_x_axes,
-)
+from ..plotting.bokeh import BGraphAndFigure, share_common_x_axes
 from .conftest import new_tao, test_artifacts
 
 logger = logging.getLogger(__name__)
@@ -21,12 +17,11 @@ def test_bokeh_manager(request: pytest.FixtureRequest, init_filename: pathlib.Pa
     filename_base = f"bokeh_{name}"
 
     # Floor orbit tries to set a plot setting on initialization which doesn't work
-    # with external plotting.  Enable plotting for it as a workaround.
-    external_plotting = init_filename.name != "tao.init_floor_orbit"
-    with new_tao(Tao, f"-init {init_filename}", external_plotting=external_plotting) as tao:
-        manager = BokehGraphManager(tao)
-        if external_plotting:
-            assert len(manager.place_all())
+    # with external plotting.
+    nostartup = init_filename.name == "tao.init_floor_orbit"
+    with new_tao(Tao, f"-init {init_filename}", nostartup=nostartup) as tao:
+        manager = tao.bokeh
+        assert len(manager.place_all())
 
         output_file(test_artifacts / f"{filename_base}.html")
 

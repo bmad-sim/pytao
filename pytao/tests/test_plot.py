@@ -1,21 +1,53 @@
+import contextlib
 import logging
+from typing_extensions import Literal
 import pytest
 import re
 import matplotlib.pyplot as plt
 import pathlib
 
-from .conftest import new_tao, test_artifacts
+from typing import Type, Union
+
+from pytao.interface_commands import AnyPath
+from pytao.subproc import SubprocessTao
+
+from .conftest import test_artifacts
 from .. import Tao
-from ..plotting.plot import (
-    MatplotlibGraphManager,
-    make_graph,
-    plot_all_requested,
-    plot_all_visible,
-    plot_graph,
-    plot_region,
-)
 
 logger = logging.getLogger(__name__)
+
+
+AnyTao = Union[Tao, SubprocessTao]
+BackendName = Literal["mpl", "bokeh"]
+
+
+@pytest.fixture(params=["bokeh", "mpl"])
+def plot_backend(
+    request: pytest.FixtureRequest,
+) -> BackendName:
+    return request.param
+
+
+@contextlib.contextmanager
+def new_tao(
+    tao_cls: Type[AnyTao],
+    init_file: AnyPath,
+    plot: Literal["mpl", "bokeh"],
+    **kwargs,
+):
+    tao = tao_cls(init_file=init_file, plot=plot, **kwargs)
+    yield tao
+    if isinstance(tao, SubprocessTao):
+        print("Closing tao subprocess")
+        tao.close_subprocess()
+
+    if plot == "mpl":
+        plt.show()
+
+
+@pytest.fixture
+def nostartup(init_filename: pathlib.Path) -> bool:
+    return init_filename.name == "tao.init_floor_orbit"
 
 
 @pytest.fixture(autouse=True, scope="function")
@@ -40,75 +72,67 @@ def _plot_show_to_savefig(
     monkeypatch.setattr(plt, "show", savefig)
 
 
-def test_plot_floor_plan(tao_cls):
+def test_plot_floor_plan(tao_cls: Type[AnyTao], plot_backend: BackendName):
     with new_tao(
         tao_cls,
-        "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall",
+        "$ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall",
+        plot=plot_backend,
     ) as tao:
-        plot_all_requested(tao)
-        # plot_region(tao, "floor_plan")
-        # plt.show()
+        tao.plot("floor_plan")
 
 
-def test_plot_floor_layout(tao_cls):
+def test_plot_floor_layout(tao_cls: Type[AnyTao], plot_backend: BackendName):
     with new_tao(
         tao_cls,
-        "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_floor_orbit",
-        # Floor orbit tries to set a plot setting on initialization which doesn't work
-        # with external plotting.  Enable plotting for it as a workaround.
-        external_plotting=False,
+        "$ACC_ROOT_DIR/regression_tests/python_test/tao.init_floor_orbit",
+        plot=plot_backend,
+        nostartup=True,
     ) as tao:
-        # plot_all_requested(tao)
-        plot_all_visible(tao)
-        plot_region(tao, "r33")
-        plt.show()
+        tao.plot("alpha")
+        tao.plot("beta")
+        tao.plot("lat_layout")
 
-        plot_region(tao, "layout")
-        plt.show()
-
-        tao.cmd("place -no_buffer r12 floor_plan")
-        graph = make_graph(tao, "r12", "g")
-        plot_graph(tao, graph)
-        plt.show()
+        tao.cmd("set plot_page%floor_plan_shape_scale = 0.01")
+        tao.plot("floor_plan", region_name="r33")
+        tao.cmd("set graph r33 floor_plan%orbit_scale = 1")
+        tao.plot("floor_plan", region_name="r33", ylim=(-0.3, 0.1))
 
 
-def test_plot_data(tao_cls):
+def test_plot_data(tao_cls: Type[AnyTao], plot_backend: BackendName):
     with new_tao(
         tao_cls,
-        "-init $ACC_ROOT_DIR/bmad-doc/tao_examples/cesr/tao.init",
+        "$ACC_ROOT_DIR/bmad-doc/tao_examples/cesr/tao.init",
+        plot=plot_backend,
     ) as tao:
-        plot_all_requested(tao)
-        plt.show()
-
-        tao.cmd("place -no_buffer bottom floor_plan")
-        # rich.print(plot_region(tao, "bottom"))
-        plot_region(tao, "bottom")
-        plt.show()
-
-        tao.cmd("place -no_buffer bottom lat_layout")
-        plot_region(tao, "bottom")
-        plt.show()
+        tao.plot_manager.place_all()
+        tao.plot("floor_plan")
+        tao.plot("lat_layout")
 
 
-def test_plot_all_requested(init_filename: pathlib.Path):
-    # Floor orbit tries to set a plot setting on initialization which doesn't work
-    # with external plotting.  Enable plotting for it as a workaround.
-    external_plotting = init_filename.name != "tao.init_floor_orbit"
-    with new_tao(Tao, f"-init {init_filename}", external_plotting=external_plotting) as tao:
-        plot_all_requested(tao)
-        plt.show()
+def test_plot_all_requested(
+    init_filename: pathlib.Path,
+    tao_cls: Type[AnyTao],
+    plot_backend: BackendName,
+    nostartup: bool,
+):
+    with new_tao(
+        tao_cls,
+        init_filename,
+        plot=plot_backend,
+        nostartup=nostartup,
+    ) as tao:
+        tao.plot_manager.place_all()
 
 
-def test_plot_manager(init_filename: pathlib.Path):
-    # Floor orbit tries to set a plot setting on initialization which doesn't work
-    # with external plotting.  Enable plotting for it as a workaround.
-    external_plotting = init_filename.name != "tao.init_floor_orbit"
-    with new_tao(Tao, f"-init {init_filename}", external_plotting=external_plotting) as tao:
-        manager = MatplotlibGraphManager(tao)
-        if external_plotting:
-            assert len(manager.place_all())
+def test_plot_manager(
+    init_filename: pathlib.Path,
+    nostartup: bool,
+    plot_backend: BackendName,
+):
+    with new_tao(Tao, init_filename, plot=plot_backend, nostartup=nostartup) as tao:
+        manager = tao.plot_manager
+        assert len(manager.place_all())
         manager.plot_regions(list(manager.regions))
-        plt.show()
 
         for region in list(manager.regions):
             manager.clear(region)

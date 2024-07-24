@@ -2145,73 +2145,6 @@ def make_graph(
     )
 
 
-def find_layout(tao: Tao) -> LatticeLayoutGraph:
-    for region_name in get_visible_regions(tao):
-        for graph_name in get_plots_in_region(tao, region_name):
-            try:
-                graph = make_graph(tao, region_name, graph_name)
-            except UnsupportedGraphError:
-                continue
-            if isinstance(graph, LatticeLayoutGraph):
-                return graph
-    raise LayoutGraphNotFoundError()
-
-
-def plot_layout(
-    tao: Tao,
-    region_name: Optional[str] = None,
-    graph_name: Optional[str] = None,
-    *,
-    ax: Optional[matplotlib.axes.Axes] = None,
-) -> Tuple[matplotlib.axes.Axes, LatticeLayoutGraph]:
-    if not region_name or not graph_name:
-        graph = find_layout(tao)
-    else:
-        graph = LatticeLayoutGraph.from_tao(tao, region_name, graph_name)
-
-    if ax is None:
-        _, ax = plt.subplots()
-        assert ax is not None
-
-    graph.plot(ax)
-    return ax, graph
-
-
-def plot_graph(
-    tao: Tao,
-    graph: AnyGraph,
-    *,
-    ax: Optional[matplotlib.axes.Axes] = None,
-    layout_ax: Optional[matplotlib.axes.Axes] = None,
-    include_layout: bool = True,
-    width: int = 10,
-    height: int = 10,
-) -> matplotlib.axes.Axes:
-    if ax is None:
-        if should_include_layout(tao, graph.region_name, graph.graph_name):
-            _, (ax, layout_ax) = plt.subplots(
-                nrows=2,
-                ncols=1,
-                sharex=True,
-                height_ratios=[1, 0.5],
-                figsize=(width, height) if width and height else None,
-            )
-        else:
-            _, ax = plt.subplots(figsize=(width, height) if width and height else None)
-
-    assert ax is not None
-
-    graph.plot(ax)
-
-    if include_layout and layout_ax is not None:
-        try:
-            plot_layout(tao, ax=layout_ax)
-        except NoLayoutError:
-            pass
-
-    return ax
-
-
 def get_plot_graph_info(tao: Tao, region_name: str, graph_name: str) -> PlotGraphInfo:
     return cast(PlotGraphInfo, tao.plot_graph(f"{region_name}.{graph_name}"))
 
@@ -2247,92 +2180,10 @@ def should_include_layout(
     return False
 
 
-def plot_region(
-    tao: Tao,
-    region_name: str,
-    include_layout: bool = True,
-    skip_invalid_graphs: bool = True,
-) -> List[Tuple[matplotlib.axes.Axes, AnyGraph]]:
-    fig = plt.figure()
-
-    graph_names = get_plots_in_region(tao, region_name=region_name)
-
-    if not len(graph_names):
-        return []
-
-    num_graphs = len(graph_names)
-    height_ratios = [1.0] * num_graphs
-    if include_layout and should_include_layout(tao, region_name):
-        num_graphs += 1
-        height_ratios.append(0.5)
-    else:
-        include_layout = False
-
-    gs = fig.subplots(
-        nrows=num_graphs,
-        ncols=1,
-        sharex=True,
-        squeeze=False,
-        height_ratios=height_ratios,
-    )
-
-    graphs = []
-    for ax, graph_name in zip(gs[:, 0], graph_names):
-        try:
-            graph = make_graph(tao, region_name, graph_name)
-            plot_graph(tao=tao, graph=graph, ax=ax)
-        except GraphInvalidError as ex:
-            if not skip_invalid_graphs:
-                raise
-            # tao-reported; it's probably not our fault
-            logger.warning(f"Invalid graph error: {ex}")
-            continue
-
-        graphs.append(graph)
-
-    if include_layout:
-        layout_ax = gs[-1, 0]
-        try:
-            plot_layout(tao, ax=layout_ax)
-        except NoLayoutError:
-            pass
-
-    return graphs
-
-
 def get_visible_regions(
     tao: Tao,
 ) -> List[str]:
     return [info["region"] for info in tao.plot_list("r") if info["visible"]]
-
-
-def plot_all_visible(
-    tao: Tao,
-    include_layout: bool = True,
-) -> List[Tuple[matplotlib.axes.Axes, AnyGraph]]:
-    res = []
-    for region in get_visible_regions(tao):
-        res.extend(plot_region(tao, region, include_layout=include_layout))
-    return res
-
-
-def plot_all_requested(
-    tao: Tao,
-    include_layout: bool = True,
-) -> List[Tuple[matplotlib.axes.Axes, AnyGraph]]:
-    """
-    Plot all user-requested plots (i.e., those in the "place buffer")
-
-    See section 13.3 of the Tao manual for further details.
-    """
-    res = []
-
-    for item in tao.place_buffer():
-        region = item["region"]
-        graph = item["graph"]
-        tao.cmd(f"place -no_buffer {region} {graph}")
-        res.extend(plot_region(tao, region, include_layout=include_layout))
-    return res
 
 
 def find_unused_plot_region(tao: Tao, skip: Set[str]) -> str:
@@ -2353,18 +2204,34 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
     _key_: ClassVar[str] = "GraphManager"
 
     tao: Tao
-    to_place: Dict[str, str]
     regions: Dict[str, List[T_GraphType]]
+    _to_place: Dict[str, str]
     _graph_name_to_regions: Dict[str, Set[str]]
     _lattice_layout_graph_type: Type[T_LatticeLayoutGraph]
     _floor_plan_graph_type: Type[T_FloorPlanGraph]
 
     def __init__(self, tao: Tao) -> None:
         self.tao = tao
-        self.to_place = {}
         self.regions = {}
+        self._to_place = {}
         self._graph_name_to_regions = {}
-        self.update_place_buffer()
+
+    def _update_place_buffer(self):
+        for item in self.tao.place_buffer():
+            region = item["region"]
+            graph = item["graph"]
+            if graph == "none":
+                if region == "*":
+                    self._to_place.clear()
+                else:
+                    self._to_place.pop(region, None)
+            else:
+                self._to_place[region] = graph
+
+    @property
+    def to_place(self) -> Dict[str, str]:
+        self._update_place_buffer()
+        return self._to_place
 
     def get_lattice_layout_graph(self) -> T_LatticeLayoutGraph:
         for region in self.regions.values():
@@ -2393,19 +2260,6 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
     def floor_plan_graph(self) -> T_FloorPlanGraph:
         return self.get_floor_plan_graph()
 
-    def update_place_buffer(self):
-        for item in self.tao.place_buffer():
-            region = item["region"]
-            graph = item["graph"]
-            if graph == "none":
-                if region == "*":
-                    self.to_place.clear()
-                else:
-                    self.to_place.pop(region, None)
-            else:
-                self.to_place[region] = graph
-        return self.to_place
-
     def get_region_for_graph(self, graph_name: str) -> str:
         for region_name, to_place in self.to_place.items():
             if to_place == graph_name:
@@ -2429,7 +2283,6 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
         ignore_invalid: bool = True,
         show: bool = True,
     ) -> Dict[str, List[T_GraphType]]:
-        self.update_place_buffer()
         to_place = list(self.to_place.items())
         self.to_place.clear()
 
@@ -2483,8 +2336,6 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
         ignore_invalid: bool = True,
         show: bool = True,
     ) -> List[T_GraphType]:
-        self.update_place_buffer()
-
         if region_name is None:
             region_name = self.get_region_for_graph(graph_name)
             logger.debug(f"Picked {region_name} for {graph_name}")
@@ -2549,7 +2400,7 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
         **kwargs,
     ):
         res = []
-        for graph_name, graph_regions in self._graph_name_to_regions.items():
+        for graph_name, graph_regions in list(self._graph_name_to_regions.items()):
             for region_name in graph_regions:
                 if region_name in regions:
                     res.append(self.plot(graph_name, region_name=region_name, **kwargs))
@@ -2711,14 +2562,10 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
             )
 
         if include_layout:
-            try:
-                layout_graph = self.get_lattice_layout_graph()
-            except LayoutGraphNotFoundError:
-                pass
-            else:
-                layout_graph.show_fields = True
-                if show_fields and not layout_graph.fields:
-                    layout_graph.update_fields(tao=self.tao)
+            layout_graph = self.get_lattice_layout_graph()
+            layout_graph.show_fields = True
+            if show_fields and not layout_graph.fields:
+                layout_graph.update_fields(tao=self.tao)
 
         for ax, graph in zip(gs[:, 0], graphs):
             try:

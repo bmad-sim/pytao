@@ -1,6 +1,8 @@
+from __future__ import annotations
 import logging
 import pathlib
 import numpy as np
+import typing
 
 from typing import Optional, List, Tuple, Union
 
@@ -11,6 +13,10 @@ from .util.command import make_tao_init
 from .util.parameters import tao_parameter_dict
 from .util import parsers as _pytao_parsers
 from .plotting.util import select_graph_manager_class
+
+if typing.TYPE_CHECKING:
+    from .plotting.bokeh import BokehGraphManager, NotebookGraphManager  # noqa: F401
+    from .plotting.plot import MatplotlibGraphManager
 
 
 logger = logging.getLogger(__name__)
@@ -96,7 +102,7 @@ class Tao(TaoCore):
         Define variables for plotting and optimization
     """
 
-    plot_backend: Optional[str]
+    plot_backend_name: Optional[str]
     _use_pytao_plotting: bool
     _graph_managers: dict
 
@@ -173,9 +179,9 @@ class Tao(TaoCore):
 
         self._use_pytao_plotting = plot in {"mpl", "bokeh", True}
         if plot is not None and self._use_pytao_plotting:
-            self.plot_backend = plot
+            self.plot_backend_name = plot
         else:
-            self.plot_backend = None
+            self.plot_backend_name = None
 
         self._graph_managers = {}
         super().__init__(init=init, so_lib=so_lib, expand_vars=expand_vars)
@@ -343,6 +349,20 @@ class Tao(TaoCore):
         """Get a matplotlib graph manager."""
         return self._get_graph_manager_by_key("bokeh")
 
+    @property
+    def plot_manager(
+        self,
+    ) -> Union[BokehGraphManager, NotebookGraphManager, MatplotlibGraphManager]:
+        """
+        The currently-configured plot graph manager.
+
+        This can be configured at initialization time by specifying
+        `plot="mpl"`, for example.
+        This may also be reconfigured by changing the attribute
+        `plot_backend_name`.
+        """
+        return self._get_graph_manager_by_key(self.plot_backend_name or "mpl")
+
     def plot(
         self,
         graph_name: Optional[str] = None,
@@ -407,7 +427,7 @@ class Tao(TaoCore):
             `plot` method directly.
         """
         if backend is None:
-            backend = self.plot_backend or select_graph_manager_class()._key_
+            backend = self.plot_backend_name or select_graph_manager_class()._key_
 
         if backend not in {"mpl", "bokeh"}:
             raise ValueError(f"Unsupported backend: {backend}")

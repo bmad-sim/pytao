@@ -10,6 +10,7 @@ import typing
 import numpy as np
 
 from .interface_commands import Tao
+from .util.command import make_tao_init
 
 logger = logging.getLogger(__name__)
 
@@ -270,6 +271,10 @@ class SubprocessTao(Tao):
 
     def init(self, cmd):
         """Initialize Tao with the given `cmd`."""
+        if self._use_pytao_plotting:
+            cmd = make_tao_init(cmd, noplot=True, external_plotting=True)
+
+        cmd = self._preprocess_command(cmd)
         return self._pipe.send_receive("init", cmd, raises=True)
 
     def cmd(self, cmd, raises=True):

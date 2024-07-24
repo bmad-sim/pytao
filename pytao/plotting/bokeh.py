@@ -1122,6 +1122,8 @@ class BokehGraphManager(
         share_x: Optional[bool] = None,
         show_fields: bool = False,
         reuse: bool = True,
+        xlim: Optional[Tuple[float, float]] = None,
+        ylim: Optional[Tuple[float, float]] = None,
     ):
         """
         Plot a graph, region, or all placed graphs with Bokeh.
@@ -1225,6 +1227,8 @@ class NotebookGraphManager(BokehGraphManager):
         share_x: Optional[bool] = None,
         vars: bool = False,
         show_fields: bool = False,
+        xlim: Optional[Tuple[float, float]] = None,
+        ylim: Optional[Tuple[float, float]] = None,
         notebook_handle: bool = False,
         reuse: bool = True,
         update: bool = True,
@@ -1240,6 +1244,8 @@ class NotebookGraphManager(BokehGraphManager):
             show_fields=show_fields,
             reuse=reuse,
             update=update,
+            xlim=xlim,
+            ylim=ylim,
         )
 
         if not bgraphs:
