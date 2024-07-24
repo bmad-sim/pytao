@@ -349,9 +349,7 @@ def _draw_limit_border(
 ):
     width = xlim[1] - xlim[0]
     height = ylim[1] - ylim[0]
-    xcenter = xlim[0] + width / 2.0
-    ycenter = ylim[0] + height / 2.0
-    rect = PlotPatchRectangle(xy=(xcenter, ycenter), width=width, height=height, alpha=alpha)
+    rect = PlotPatchRectangle(xy=(xlim[0], ylim[0]), width=width, height=height, alpha=alpha)
     px, py = _patch_rect_to_points(rect)
 
     return fig.line(px, py, alpha=alpha)
@@ -1229,6 +1227,7 @@ class NotebookGraphManager(BokehGraphManager):
         show_fields: bool = False,
         notebook_handle: bool = False,
         reuse: bool = True,
+        update: bool = True,
     ):
         bgraphs = super().plot(
             region_name=region_name,
@@ -1240,6 +1239,7 @@ class NotebookGraphManager(BokehGraphManager):
             layout_height=layout_height,
             show_fields=show_fields,
             reuse=reuse,
+            update=update,
         )
 
         if not bgraphs:
