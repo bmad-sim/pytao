@@ -105,6 +105,7 @@ def test_plot_data(tao_cls: Type[AnyTao], plot_backend: BackendName):
         plot=plot_backend,
     ) as tao:
         tao.plot_manager.place_all()
+        tao.plot_manager.plot_regions(list(tao.plot_manager.regions))
         tao.plot("floor_plan")
         tao.plot("lat_layout")
 
@@ -122,6 +123,7 @@ def test_plot_all_requested(
         nostartup=nostartup,
     ) as tao:
         tao.plot_manager.place_all()
+        tao.plot_manager.plot_regions(list(tao.plot_manager.regions))
 
 
 def test_plot_manager(

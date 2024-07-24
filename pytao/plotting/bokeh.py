@@ -73,9 +73,6 @@ class CurveData(TypedDict):
     symbol: NotRequired[ColumnDataSource]
 
 
-GraphData = List[CurveData]
-
-
 def _get_curve_data(curve: PlotCurve) -> CurveData:
     data: CurveData = {}
     if curve.line is not None:
@@ -1118,7 +1115,6 @@ class BokehGraphManager(
         width: Optional[int] = None,
         height: Optional[int] = None,
         layout_height: Optional[int] = None,
-        place: bool = True,
         share_x: Optional[bool] = None,
         show_fields: bool = False,
         reuse: bool = True,
@@ -1199,8 +1195,12 @@ class NotebookGraphManager(BokehGraphManager):
         **kwargs,
     ):
         bgraphs = []
-        for region in regions:
-            bgraphs.extend(super().plot(region, **kwargs))
+        for graph_name, graph_regions in list(self._graph_name_to_regions.items()):
+            for region_name in graph_regions:
+                if region_name in regions:
+                    bgraphs.extend(
+                        super().plot(graph_name=graph_name, region_name=region_name, **kwargs)
+                    )
 
         if not bgraphs:
             return None
@@ -1219,7 +1219,6 @@ class NotebookGraphManager(BokehGraphManager):
         *,
         region_name: Optional[str] = None,
         include_layout: bool = True,
-        place: bool = True,
         sizing_mode: Optional[SizingModeType] = None,
         width: Optional[int] = None,
         height: Optional[int] = None,

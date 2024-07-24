@@ -66,10 +66,6 @@ class NoCurveDataError(Exception):
     pass
 
 
-class LayoutGraphNotFoundError(Exception):
-    pass
-
-
 class UnsupportedGraphError(NotImplementedError):
     pass
 
@@ -715,7 +711,7 @@ class BasicGraph(GraphBase):
             try:
                 curve = PlotCurve.from_tao(tao, region_name, graph_name, curve_name)
             except NoCurveDataError:
-                logger.warning(f"No curve data {region_name}.{graph_name}.{curve_name}")
+                logger.warning(f"No curve data for {region_name}.{graph_name}.{curve_name}")
             else:
                 curves.append(curve)
 
@@ -2149,43 +2145,6 @@ def get_plot_graph_info(tao: Tao, region_name: str, graph_name: str) -> PlotGrap
     return cast(PlotGraphInfo, tao.plot_graph(f"{region_name}.{graph_name}"))
 
 
-def should_include_layout(
-    tao: Tao,
-    region_name: str,
-    graph_name: Optional[str] = None,
-) -> bool:
-    if graph_name is not None:
-        graph_names: List[str] = [graph_name]
-    else:
-        graph_names: List[str] = get_plots_in_region(tao, region_name=region_name)
-
-    if not len(graph_names):
-        return False
-
-    for graph_name in graph_names:
-        graph_info = get_plot_graph_info(tao, region_name, graph_name)
-
-        # TODO: pytao gui checks for x_axis^type == "s"; is there a better way here?
-        if graph_info["x_label"] in {"s [m]", "s (m)"} and graph_info["graph^type"] not in {
-            "lat_layout",
-            "floor_plan",
-        }:
-            try:
-                get_plot_graph_info(tao, "layout", "g")
-            except RuntimeError:
-                # Sometimes there's no layout defined...
-                return False
-            else:
-                return True
-    return False
-
-
-def get_visible_regions(
-    tao: Tao,
-) -> List[str]:
-    return [info["region"] for info in tao.plot_list("r") if info["visible"]]
-
-
 def find_unused_plot_region(tao: Tao, skip: Set[str]) -> str:
     for info in tao.plot_list("r"):
         region_name = info["region"]
@@ -2281,7 +2240,6 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
         self,
         *,
         ignore_invalid: bool = True,
-        show: bool = True,
     ) -> Dict[str, List[T_GraphType]]:
         to_place = list(self.to_place.items())
         self.to_place.clear()
@@ -2295,8 +2253,6 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
                 ignore_invalid=ignore_invalid,
             )
 
-        if show and hasattr(self, "plot_regions"):
-            self.plot_regions(list(result))
         return result
 
     def update_region(
@@ -2404,7 +2360,6 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
             for region_name in graph_regions:
                 if region_name in regions:
                     res.append(self.plot(graph_name, region_name=region_name, **kwargs))
-                    break
         return res
 
     def prepare_graphs_by_name(
@@ -2440,7 +2395,6 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
         *,
         region_name: Optional[str] = None,
         include_layout: bool = True,
-        place: bool = True,
         update: bool = True,
         **kwargs,
     ):
@@ -2469,7 +2423,6 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
         region_name: Optional[str] = None,
         show_fields: bool = False,
         include_layout: bool = True,
-        place: bool = True,
         width: int = 6,
         height: int = 6,
         layout_height: float = 0.5,

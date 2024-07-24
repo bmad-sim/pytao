@@ -369,7 +369,6 @@ class Tao(TaoCore):
         *,
         region_name: Optional[str] = None,
         include_layout: bool = True,
-        place: bool = True,
         update: bool = True,
         width: Optional[int] = None,
         height: Optional[int] = None,
@@ -403,8 +402,6 @@ class Tao(TaoCore):
             Include a layout plot at the bottom, if not already placed and if
             appropriate (i.e., another plot uses longitudinal coordinates on
             the x-axis).
-        place : bool, default=True
-            Place all requested plots prior to continuing.
         update : bool, default=True
             Query Tao to update relevant graphs prior to plotting.
         width : int, optional
@@ -441,11 +438,20 @@ class Tao(TaoCore):
         if share_x is not None:
             kwargs["share_x"] = share_x
         manager = self._get_graph_manager_by_key(backend)
-        manager.plot(
-            region_name=region_name,
-            graph_name=graph_name,
-            include_layout=include_layout,
-            place=place,
-            update=update,
-            **kwargs,
-        )
+
+        if not graph_name:
+            manager.place_all()
+            manager.plot_regions(
+                list(manager.regions),
+                include_layout=include_layout,
+                update=update,
+                **kwargs,
+            )
+        else:
+            manager.plot(
+                region_name=region_name,
+                graph_name=graph_name,
+                include_layout=include_layout,
+                update=update,
+                **kwargs,
+            )
