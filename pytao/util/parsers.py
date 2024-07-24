@@ -1277,9 +1277,16 @@ def parse_spin_resonance(lines, cmd=""):
     -------
     dict
     """
+    # Two fixes:
+    #  1. INFO/notes may appear in output
+    #  2. n0 type is marked incorrectly
+    #       https://github.com/bmad-sim/bmad-ecosystem/issues/1077
     lines = [
-        line for line in lines if "[INFO]" not in line and "note: setting" not in line.lower()
+        line.replace("n0;REAL;F", "n0;REAL_ARR;F")
+        for line in lines
+        if "[INFO]" not in line and "note: setting" not in line.lower()
     ]
+
     return parse_tao_python_data(lines)
 
 
