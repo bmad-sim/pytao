@@ -26,11 +26,11 @@ def test_bokeh_manager(request: pytest.FixtureRequest, init_filename: pathlib.Pa
     with new_tao(Tao, f"-init {init_filename}", external_plotting=external_plotting) as tao:
         manager = BokehGraphManager(tao)
         if external_plotting:
-            assert len(manager.place())
+            assert len(manager.place_all())
 
         output_file(test_artifacts / f"{filename_base}.html")
 
-        bgraphs = list(manager.plot())
+        bgraphs = sum(manager.plot_regions(list(manager.regions)), [])
         items = [
             BGraphAndFigure(bgraph=bgraph, fig=bgraph.create_figure()) for bgraph in bgraphs
         ]
@@ -44,6 +44,6 @@ def test_bokeh_manager(request: pytest.FixtureRequest, init_filename: pathlib.Pa
 
         for region in list(manager.regions):
             manager.clear(region)
-        assert not manager.regions
-        manager.clear_all()
+        assert not any(region for region in manager.regions.values())
+        manager.clear()
         assert not manager.regions

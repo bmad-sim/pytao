@@ -107,12 +107,11 @@ def test_plot_manager(init_filename: pathlib.Path):
         manager = MatplotlibGraphManager(tao)
         if external_plotting:
             assert len(manager.place_all())
-        for region in manager.regions:
-            manager.plot(region)
+        manager.plot_regions(list(manager.regions))
         plt.show()
 
         for region in list(manager.regions):
             manager.clear(region)
-        assert not manager.regions
+        assert not any(region for region in manager.regions.values())
         manager.clear()
         assert not manager.regions

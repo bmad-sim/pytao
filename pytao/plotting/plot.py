@@ -2414,7 +2414,7 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
 
         if self._graph_name_to_regions.get(graph_name):
             logger.debug(
-                "Graph %s reusing an existing region",
+                "Graph %s reusing an existing region: %s",
                 graph_name,
                 self._graph_name_to_regions.get(graph_name),
             )
@@ -2543,6 +2543,19 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
     #         )
     #     return res
 
+    def plot_regions(
+        self,
+        regions: List[str],
+        **kwargs,
+    ):
+        res = []
+        for graph_name, graph_regions in self._graph_name_to_regions.items():
+            for region_name in graph_regions:
+                if region_name in regions:
+                    res.append(self.plot(graph_name, region_name=region_name, **kwargs))
+                    break
+        return res
+
     def prepare_graphs_by_name(
         self,
         graph_name: str,
@@ -2596,14 +2609,6 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
         # Matplotlib support is built-in here, so our graph classes (for better
         # or worse) are used directly with this backend
         return make_graph(self.tao, region_name, graph_name)
-
-    def plot_regions(
-        self,
-        regions: List[str],
-        **kwargs,
-    ):
-        for region in regions:
-            self.plot(region, **kwargs)
 
     @override
     def plot(
