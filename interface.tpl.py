@@ -171,7 +171,7 @@ class Tao(TaoCore):
             var_file=var_file,
         )
 
-        self._use_pytao_plotting = plot in {"mpl", "bokeh"}
+        self._use_pytao_plotting = plot in {"mpl", "bokeh", True}
         if plot is not None and self._use_pytao_plotting:
             self.plot_backend = plot
         else:
