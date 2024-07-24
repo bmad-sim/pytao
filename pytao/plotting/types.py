@@ -113,6 +113,22 @@ PlotCurveInfo = TypedDict(
 )
 
 
+PlotRegionInfo = TypedDict(
+    "PlotRegionInfo",
+    {
+        "num_graphs": int,
+        # "graph[1]": str,
+        "name": str,
+        "description": str,
+        "x_axis_type": str,
+        "autoscale_x": bool,
+        "autoscale_y": bool,
+        "autoscale_gang_x": bool,
+        "autoscale_gang_y": bool,
+        "n_curve_pts": int,
+    },
+)
+
 PlotGraphInfo = TypedDict(
     "PlotGraphInfo",
     {

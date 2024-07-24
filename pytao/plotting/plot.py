@@ -44,6 +44,7 @@ from .types import (
     PlotHistogramInfo,
     PlotLatLayoutInfo,
     PlotPage,
+    PlotRegionInfo,
     Point,
     WaveParams,
 )
@@ -349,6 +350,7 @@ PlotPatch = Union[
 @dataclasses.dataclass
 class GraphBase:
     info: PlotGraphInfo
+    region_info: PlotRegionInfo
     region_name: str
     graph_name: str
     xlim: Point = _point_field
@@ -673,8 +675,8 @@ class BasicGraph(GraphBase):
 
     @property
     def is_s_plot(self) -> bool:
-        # TODO: pytao gui checks for x_axis^type == "s" but this seems different
-        # now; is there a better way here?
+        if self.region_info["x_axis_type"] == "s":
+            return True
         return self.info["x_label"].lower().replace(" ", "") in {"s[m]", "s(m)"}
 
     def get_x_range(self) -> Tuple[float, float]:
@@ -697,6 +699,7 @@ class BasicGraph(GraphBase):
     ) -> BasicGraph:
         if info is None:
             info = get_plot_graph_info(tao, region_name, graph_name)
+        region_info = cast(PlotRegionInfo, tao.plot1(region_name))
 
         graph_type = info["graph^type"]
         if graph_type in {"lat_layout", "floor_plan", "key_table"}:
@@ -717,6 +720,7 @@ class BasicGraph(GraphBase):
 
         return cls(
             info=info,
+            region_info=region_info,
             region_name=region_name,
             graph_name=graph_name,
             curves=curves,
@@ -1049,6 +1053,7 @@ class LatticeLayoutGraph(GraphBase):
                 info = get_plot_graph_info(tao, region_name, graph_name)
             except RuntimeError:
                 raise NoLayoutError(f"No layout named {region_name}.{graph_name}") from None
+        region_info = cast(PlotRegionInfo, tao.plot1(region_name))
 
         graph_type = info["graph^type"]
         if graph_type != "lat_layout":
@@ -1087,6 +1092,7 @@ class LatticeLayoutGraph(GraphBase):
 
         return cls(
             info=info,
+            region_info=region_info,
             region_name=region_name,
             graph_name=graph_name,
             xlim=(info["x_min"], info["x_max"]),
@@ -2039,6 +2045,7 @@ class FloorPlanGraph(GraphBase):
             info = get_plot_graph_info(tao, region_name, graph_name)
         if plot_page is None:
             plot_page = cast(PlotPage, tao.plot_page())
+        region_info = cast(PlotRegionInfo, tao.plot1(region_name))
 
         graph_type = info["graph^type"]
         if graph_type != "floor_plan":
@@ -2067,6 +2074,7 @@ class FloorPlanGraph(GraphBase):
 
         return cls(
             info=info,
+            region_info=region_info,
             region_name=region_name,
             graph_name=graph_name,
             elements=elements,
