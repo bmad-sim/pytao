@@ -216,8 +216,7 @@ def test_floor_orbit_1(tao_cls):
     with new_tao(
         tao_cls,
         "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_floor_orbit",
-        plot=True,
-        external_plotting=False,
+        nostartup=True,
     ) as tao:
         tao.cmd("place -no_buffer r33 orbit")
         tao.cmd("set graph r33 floor_plan%orbit_scale = 1")
