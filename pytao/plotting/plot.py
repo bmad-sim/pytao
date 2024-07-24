@@ -3,7 +3,21 @@ from __future__ import annotations
 import logging
 import math
 import typing
-from typing import ClassVar, Dict, List, Literal, Optional, Sequence, Tuple, Union, cast
+from typing import (
+    ClassVar,
+    Dict,
+    Generic,
+    List,
+    Literal,
+    Optional,
+    Sequence,
+    Set,
+    Tuple,
+    Type,
+    TypeVar,
+    Union,
+    cast,
+)
 
 import matplotlib.axes
 import matplotlib.collections
@@ -351,12 +365,27 @@ class GraphBase:
     draw_legend: bool = True
 
     def update(self, manager: GraphManager, *, error_on_new_type: bool = True):
-        graph = manager.update_graph(self.region_name, self.graph_name)
-        if error_on_new_type and not isinstance(graph, type(self)):
-            raise ValueError(
-                f"Graph type changed from {type(self).__name__} to {type(graph).__name__}"
+        graphs = [
+            graph.get_graph_info()
+            for graph in manager.prepare_graphs_by_name(
+                region_name=self.region_name,
+                graph_name=self.graph_name,
+                update=True,
             )
-        return graph
+        ]
+        # TODO
+        for graph in graphs:
+            if graph.graph_name == self.graph_name:
+                if error_on_new_type and not isinstance(graph, type(self)):
+                    raise ValueError(
+                        f"Graph type changed from {type(self).__name__} to {type(graph).__name__}"
+                    )
+                return graph
+        raise RuntimeError("Plot not found after update?")
+
+    def get_graph_info(self):
+        # For wrapping compatibility; messy cleanup reminder
+        return self
 
     def _setup_axis(self, ax: matplotlib.axes.Axes, xticks: bool = True, yticks: bool = True):
         if not self.show_axes:
@@ -2072,7 +2101,7 @@ class FloorPlanGraph(GraphBase):
         return ax
 
 
-def get_graphs_in_region(tao: Tao, region_name: str):
+def get_plots_in_region(tao: Tao, region_name: str):
     plot1_info = tao.plot1(region_name)
 
     if "num_graphs" not in plot1_info:
@@ -2118,7 +2147,7 @@ def make_graph(
 
 def find_layout(tao: Tao) -> LatticeLayoutGraph:
     for region_name in get_visible_regions(tao):
-        for graph_name in get_graphs_in_region(tao, region_name):
+        for graph_name in get_plots_in_region(tao, region_name):
             try:
                 graph = make_graph(tao, region_name, graph_name)
             except UnsupportedGraphError:
@@ -2195,7 +2224,7 @@ def should_include_layout(
     if graph_name is not None:
         graph_names: List[str] = [graph_name]
     else:
-        graph_names: List[str] = get_graphs_in_region(tao, region_name=region_name)
+        graph_names: List[str] = get_plots_in_region(tao, region_name=region_name)
 
     if not len(graph_names):
         return False
@@ -2226,7 +2255,7 @@ def plot_region(
 ) -> List[Tuple[matplotlib.axes.Axes, AnyGraph]]:
     fig = plt.figure()
 
-    graph_names = get_graphs_in_region(tao, region_name=region_name)
+    graph_names = get_plots_in_region(tao, region_name=region_name)
 
     if not len(graph_names):
         return []
@@ -2306,47 +2335,63 @@ def plot_all_requested(
     return res
 
 
+def find_unused_plot_region(tao: Tao, skip: Set[str]) -> str:
+    for info in tao.plot_list("r"):
+        region_name = info["region"]
+        if region_name not in skip and not info["plot_name"]:
+            return region_name
+    raise ValueError("No more available plot regions")
+
+
 AnyGraph = Union[BasicGraph, LatticeLayoutGraph, FloorPlanGraph]
+T_GraphType = TypeVar("T_GraphType")
+T_LatticeLayoutGraph = TypeVar("T_LatticeLayoutGraph")
+T_FloorPlanGraph = TypeVar("T_FloorPlanGraph")
 
 
-class GraphManager:
+class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph]):
     _key_: ClassVar[str] = "GraphManager"
 
     tao: Tao
     to_place: Dict[str, str]
-    regions: Dict[str, Dict[str, AnyGraph]]
+    regions: Dict[str, List[T_GraphType]]
+    _graph_name_to_regions: Dict[str, Set[str]]
+    _lattice_layout_graph_type: Type[T_LatticeLayoutGraph]
+    _floor_plan_graph_type: Type[T_FloorPlanGraph]
 
     def __init__(self, tao: Tao) -> None:
         self.tao = tao
         self.to_place = {}
         self.regions = {}
+        self._graph_name_to_regions = {}
         self.update_place_buffer()
 
-    def get_lattice_layout_graph(self, *, place: bool = False) -> LatticeLayoutGraph:
-        if place:
-            self.place(show=False)
+    def get_lattice_layout_graph(self) -> T_LatticeLayoutGraph:
         for region in self.regions.values():
-            for graph in region.values():
-                if isinstance(graph, LatticeLayoutGraph):
+            for graph in region:
+                if isinstance(graph, self._lattice_layout_graph_type):
                     return graph
-        raise LayoutGraphNotFoundError()
 
-    def get_floor_plan_graph(self, *, place: bool = False) -> FloorPlanGraph:
-        if place:
-            self.place(show=False)
+        (graph,) = self.place("lat_layout", show=False)
+        assert isinstance(graph, self._lattice_layout_graph_type)
+        return graph
+
+    def get_floor_plan_graph(self) -> T_FloorPlanGraph:
         for region in self.regions.values():
-            for graph in region.values():
-                if isinstance(graph, FloorPlanGraph):
+            for graph in region:
+                if isinstance(graph, self._floor_plan_graph_type):
                     return graph
-        raise LayoutGraphNotFoundError()
+        (graph,) = self.place("floor_plan", show=False)
+        assert isinstance(graph, self._floor_plan_graph_type)
+        return graph
 
     @property
-    def lattice_layout_graph(self) -> LatticeLayoutGraph:
-        return self.get_lattice_layout_graph(place=True)
+    def lattice_layout_graph(self) -> T_LatticeLayoutGraph:
+        return self.get_lattice_layout_graph()
 
     @property
-    def floor_plan_graph(self) -> FloorPlanGraph:
-        return self.get_floor_plan_graph(place=True)
+    def floor_plan_graph(self) -> T_FloorPlanGraph:
+        return self.get_floor_plan_graph()
 
     def update_place_buffer(self):
         for item in self.tao.place_buffer():
@@ -2361,65 +2406,113 @@ class GraphManager:
                 self.to_place[region] = graph
         return self.to_place
 
-    def place(
+    def get_region_for_graph(self, graph_name: str) -> str:
+        for region_name, to_place in self.to_place.items():
+            if to_place == graph_name:
+                logger.debug("Graph %s found in region %s", graph_name, region_name)
+                return region_name
+
+        if self._graph_name_to_regions.get(graph_name):
+            logger.debug(
+                "Graph %s reusing an existing region",
+                graph_name,
+                self._graph_name_to_regions.get(graph_name),
+            )
+            return sorted(self._graph_name_to_regions[graph_name])[0]
+        region_name = find_unused_plot_region(self.tao, set(self.to_place))
+        logger.debug("New region for graph %s: %s", graph_name, region_name)
+        return region_name
+
+    def place_all(
         self,
-        region_name: Optional[str] = None,
-        graph_name: Optional[str] = None,
         *,
         ignore_invalid: bool = True,
         show: bool = True,
-    ):
+    ) -> Dict[str, List[T_GraphType]]:
         self.update_place_buffer()
+        to_place = list(self.to_place.items())
+        self.to_place.clear()
 
-        if region_name and graph_name:
-            to_place = [(region_name, graph_name)]
-        else:
-            to_place = list(self.to_place.items())
-            self.to_place.clear()
-
+        logger.debug("Placing all plots: %s", to_place)
         result = {}
         for region_name, graph_name in to_place:
-            self.tao.cmd(f"place -no_buffer {region_name} {graph_name}")
+            result[region_name] = self.place(
+                graph_name=graph_name,
+                region_name=region_name,
+                ignore_invalid=ignore_invalid,
+            )
 
-        regions = sorted(set(region_name for region_name, _ in to_place))
+        if show and hasattr(self, "plot_regions"):
+            self.plot_regions(list(result))
+        return result
 
-        for region_name in regions:
+    def update_region(
+        self,
+        region_name: str,
+        graph_name: str,
+        ignore_invalid: bool = True,
+    ) -> List[T_GraphType]:
+        self._clear_region(region_name)
+
+        result = []
+        plot_names = get_plots_in_region(self.tao, region_name)
+        for plot_name in plot_names:
             try:
-                self.update_region(region_name)
+                result.append(self.make_graph(region_name, plot_name))
             except GraphInvalidError as ex:
                 if ignore_invalid:
                     logger.warning(f"Invalid graph in region {region_name}: {ex}")
                     continue
                 raise
 
-            result[region_name] = list(self.regions[region_name])
-
-        if show and hasattr(self, "plot_regions"):  # TODO
-            self.plot_regions(list(result), place=False)
-
+        self.regions[region_name] = result
+        self._graph_name_to_regions.setdefault(graph_name, set()).add(region_name)
+        logger.debug(
+            "Updating region: %s graph: %s generated %d plots",
+            region_name,
+            graph_name,
+            len(result),
+        )
         return result
 
-    def update_graph(self, region_name: str, graph_name: str):
-        try:
-            graph = make_graph(self.tao, region_name, graph_name)
-        except UnsupportedGraphError as ex:
-            logger.error(f"Unsupported graph type. Graph: {region_name}.{graph_name} {ex}")
-            return None
+    def place(
+        self,
+        graph_name: str,
+        *,
+        region_name: Optional[str] = None,
+        ignore_invalid: bool = True,
+        show: bool = True,
+    ) -> List[T_GraphType]:
+        self.update_place_buffer()
 
-        region = self.regions.setdefault(region_name, {})
-        region[graph_name] = graph
-        return graph
+        if region_name is None:
+            region_name = self.get_region_for_graph(graph_name)
+            logger.debug(f"Picked {region_name} for {graph_name}")
 
-    def update_region(self, region_name: str):
-        self.regions.setdefault(region_name, {}).clear()
-        graph_names = get_graphs_in_region(self.tao, region_name)
-        for graph_name in graph_names:
-            self.update_graph(region_name, graph_name)
-        return graph_names
+        logger.debug(f"Placing {graph_name} in {region_name}")
+        self.tao.cmd(f"place -no_buffer {region_name} {graph_name}")
+        # if show and hasattr(self, "plot_regions"):  # TODO
+        #     self.plot_regions(list(result))
+        return self.update_region(
+            region_name=region_name,
+            graph_name=graph_name,
+            ignore_invalid=ignore_invalid,
+        )
 
-    def update(self):
-        for region_name in get_visible_regions(self.tao):
-            self.update_region(region_name)
+    def _clear_region(self, region_name: str):
+        if region_name == "*":
+            self.regions.clear()
+            logger.debug("Clearing all regions")
+            self._graph_name_to_regions.clear()
+            return
+
+        logger.debug("Clearing region %s", region_name)
+        if region_name in self.regions:
+            self.regions[region_name].clear()
+
+        for regions in self._graph_name_to_regions.values():
+            if region_name in regions:
+                regions.remove(region_name)
 
     def clear(self, region_name: str = "*"):
         try:
@@ -2427,64 +2520,82 @@ class GraphManager:
         except RuntimeError as ex:
             logger.warning(f"Region clear failed: {ex}")
 
-        if region_name == "*":
-            self.regions.clear()
-        else:
-            self.regions.pop(region_name, None)
+        self._clear_region(region_name)
 
-    def clear_all(self):
-        self.tao.cmd("place -no_buffer * none")
-        self.regions.clear()
+    # def get_region(self, region_name: str) -> Dict[str, T_GraphType]:
+    #     res = {}
+    #     for graph in self.regions.get(region_name, []):
+    #         try:
+    #             res[graph_name] = self.make_graph(
+    #                 region_name=region_name,
+    #                 graph_name=graph_name,
+    #             )
+    #         except UnsupportedGraphError:
+    #             continue
+    #
+    #     return res
+    #
+    # def get_all(self) -> Dict[str, Dict[str, T_GraphType]]:
+    #     res = {}
+    #     for region_name in self.regions:
+    #         res[region_name] = self.get_region(
+    #             region_name,
+    #         )
+    #     return res
 
-    def get_plot(self, region_name: str, graph_name: str, *, place: bool = True) -> AnyGraph:
-        if place:
-            self.place(show=False)
+    def prepare_graphs_by_name(
+        self,
+        graph_name: str,
+        region_name: Optional[str] = None,
+        update: bool = True,
+        reuse: bool = True,
+    ) -> List[T_GraphType]:
+        if graph_name and not region_name:
+            if reuse:
+                region_name = self.get_region_for_graph(graph_name)
+            else:
+                region_name = find_unused_plot_region(self.tao, skip=set(self.to_place))
 
-        return self.regions[region_name][graph_name]
+        if region_name in self.regions:
+            if update:
+                return self.update_region(region_name=region_name, graph_name=graph_name)
+            return self.regions[region_name]
 
-    def get_region(self, region_name: str, *, place: bool = True):
-        if place:
-            self.place(show=False)
+        return self.place(graph_name=graph_name, region_name=region_name, show=False)
 
-        res = {}
-        for graph_name in self.regions.get(region_name, {}):
-            try:
-                res[graph_name] = self.get_plot(
-                    region_name=region_name,
-                    graph_name=graph_name,
-                    place=False,
-                )
-            except UnsupportedGraphError:
-                continue
-
-        return res
-
-    def get_all(self, *, place: bool = True):
-        if place:
-            self.place(show=False)
-
-        res = {}
-        for region_name in self.regions:
-            res[region_name] = self.get_region(
-                region_name,
-                place=False,
-            )
-        return res
+    def make_graph(
+        self,
+        region_name: str,
+        graph_name: str,
+    ) -> T_GraphType:
+        raise NotImplementedError()
 
     def plot(
         self,
-        region_name: Optional[str] = None,
-        graph_name: Optional[str] = None,
+        graph_name: str,
         *,
+        region_name: Optional[str] = None,
         include_layout: bool = True,
         place: bool = True,
+        update: bool = True,
         **kwargs,
     ):
         raise NotImplementedError()
 
 
-class MatplotlibGraphManager(GraphManager):
+class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPlanGraph]):
     _key_: ClassVar[str] = "mpl"
+    _lattice_layout_graph_type = LatticeLayoutGraph
+    _floor_plan_graph_type = FloorPlanGraph
+
+    def make_graph(
+        self,
+        region_name: str,
+        graph_name: str,
+    ) -> AnyGraph:
+        # Matplotlib support is built-in here, so our graph classes (for better
+        # or worse) are used directly with this backend
+        return make_graph(self.tao, region_name, graph_name)
 
     def plot_regions(
         self,
@@ -2497,9 +2608,9 @@ class MatplotlibGraphManager(GraphManager):
     @override
     def plot(
         self,
-        region_name: Optional[str] = None,
-        graph_name: Optional[str] = None,
+        graph_name: str,
         *,
+        region_name: Optional[str] = None,
         show_fields: bool = False,
         include_layout: bool = True,
         place: bool = True,
@@ -2508,28 +2619,61 @@ class MatplotlibGraphManager(GraphManager):
         layout_height: float = 0.5,
         figsize: Optional[Tuple[int, int]] = None,
         share_x: bool = True,
+        update: bool = True,
         xlim: Optional[Tuple[float, float]] = None,
         ylim: Optional[Tuple[float, float]] = None,
     ):
-        if place:
-            self.place(show=False)
+        """
+        Plot a graph, region, or all placed graphs with Matplotlib.
 
-        if graph_name and not region_name:
-            raise ValueError("Must specify region_name if graph_name is specified")
+        To plot a specific graph, specify `graph_name` (optionally `region_name`).
+        To plot a specific region, specify `region_name`.
+        To plot all placed graphs, specify neither.
 
-        if region_name and graph_name:
-            try:
-                graphs = [self.get_plot(region_name, graph_name, place=False)]
-            except KeyError:
-                self.place(region_name, graph_name, show=False)
-                graphs = list(self.regions.get(region_name, {}).values())
-        elif region_name:
-            region = self.get_region(region_name, place=False)
-            graphs = list(region.values())
-        else:
-            by_region = self.get_all()
-            graphs = [graph for region in by_region.values() for graph in region.values()]
+        For full details on available parameters, see the specific backend's
+        graph manager. For example:
 
+        In [1]: tao.bokeh.plot?
+        In [2]: tao.matplotlib.plot?
+
+        Parameters
+        ----------
+        graph_name : str, optional
+            Graph name.
+        region_name : str, optional
+            Graph region name.
+        include_layout : bool, optional
+            Include a layout plot at the bottom, if not already placed and if
+            appropriate (i.e., another plot uses longitudinal coordinates on
+            the x-axis).
+        place : bool, default=True
+            Place all requested plots prior to continuing.
+        update : bool, default=True
+            Query Tao to update relevant graphs prior to plotting.
+        width : int, optional
+            Width of each plot.
+        height : int, optional
+            Height of each plot.
+        layout_height : int, optional
+            Height of the layout plot.
+        share_x : bool or None, default=None
+            Share x-axes where sensible (`None`) or force sharing x-axes (True)
+            for all plots.
+        backend : {"bokeh", "mpl"}, optional
+            The backend to use.  Auto-detects Jupyter and availability of bokeh
+            to select a backend.
+
+        Returns
+        -------
+        None
+            To gain access to the resulting plot objects, use the backend's
+            `plot` method directly.
+        """
+        graphs = self.prepare_graphs_by_name(
+            graph_name=graph_name,
+            region_name=region_name,
+            update=update,
+        )
         if not graphs:
             return None
 
@@ -2541,18 +2685,8 @@ class MatplotlibGraphManager(GraphManager):
             and not any(isinstance(graph, LatticeLayoutGraph) for graph in graphs)
             and any(graph.is_s_plot for graph in graphs)
         ):
-            try:
-                layout_graph = self.get_lattice_layout_graph(place=False)
-            except LayoutGraphNotFoundError:
-                logger.warning("Could not find lattice layout to include")
-                layout_graph = None
-            else:
-                layout_graph = self.get_plot(
-                    layout_graph.region_name,
-                    layout_graph.graph_name,
-                    place=False,
-                )
-                graphs.append(layout_graph)
+            layout_graph = self.get_lattice_layout_graph()
+            graphs.append(layout_graph)
 
             _, gs = plt.subplots(
                 nrows=len(graphs),
@@ -2573,7 +2707,7 @@ class MatplotlibGraphManager(GraphManager):
 
         if include_layout:
             try:
-                layout_graph = self.get_lattice_layout_graph(place=False)
+                layout_graph = self.get_lattice_layout_graph()
             except LayoutGraphNotFoundError:
                 pass
             else:

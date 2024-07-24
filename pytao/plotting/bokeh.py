@@ -41,7 +41,6 @@ from .plot import (
     GraphManager,
     LatticeLayoutElement,
     LatticeLayoutGraph,
-    LayoutGraphNotFoundError,
     PlotAnnotation,
     PlotCurve,
     PlotCurveLine,
@@ -53,6 +52,7 @@ from .plot import (
     PlotPatchPolygon,
     PlotPatchRectangle,
     PlotPatchSbend,
+    make_graph,
 )
 from .types import FloatVariableInfo
 
@@ -544,6 +544,9 @@ class BokehGraphBase(Generic[TGraph]):
         self.aspect_ratio = aspect_ratio
         self.x_range = None
 
+    def get_graph_info(self) -> TGraph:
+        return self.graph
+
     def create_app_figure(self) -> Tuple[figure, List[bokeh.models.UIElement]]:
         raise NotImplementedError()
 
@@ -559,6 +562,7 @@ class BokehGraphBase(Generic[TGraph]):
 
 
 class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
+    graph_type: ClassVar[str] = "lat_layout"
     graph: LatticeLayoutGraph
     show_fields: bool
 
@@ -670,6 +674,7 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
 
 
 class BokehBasicGraph(BokehGraphBase[BasicGraph]):
+    graph_type: ClassVar[str] = "basic"
     graph: BasicGraph
     curve_data: List[CurveData]
     num_points: int
@@ -707,7 +712,7 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
             if hasattr(widget, "disabled"):
                 widget.disabled = True
             if hasattr(widget, "title"):
-                widget.text = "(plot type changed; disabled)"
+                widget.title = "(plot type changed; disabled)"
 
     def update_plot(
         self,
@@ -832,6 +837,7 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
 
 
 class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
+    graph_type: ClassVar[str] = "floor_plan"
     graph: FloorPlanGraph
 
     def __init__(
@@ -1080,81 +1086,49 @@ def _handle_variables(
     return spinners
 
 
-class BokehGraphManager(GraphManager):
+class BokehGraphManager(
+    GraphManager[AnyBokehGraph, BokehLatticeLayoutGraph, BokehFloorPlanGraph]
+):
     _key_: ClassVar[str] = "bokeh"
+    _lattice_layout_graph_type = BokehLatticeLayoutGraph
+    _floor_plan_graph_type = BokehFloorPlanGraph
 
     @override
-    def get_plot(
+    def make_graph(
         self,
         region_name: str,
         graph_name: str,
-        *,
-        place: bool = True,
     ) -> AnyBokehGraph:
-        logger.debug(f"Plotting {region_name}.{graph_name}")
-        graph = super().get_plot(region_name, graph_name, place=place)
+        graph = make_graph(self.tao, region_name, graph_name)
         if isinstance(graph, BasicGraph):
             return BokehBasicGraph(self, graph)
-        if isinstance(graph, LatticeLayoutGraph):
+        elif isinstance(graph, LatticeLayoutGraph):
             return BokehLatticeLayoutGraph(self, graph)
-        if isinstance(graph, FloorPlanGraph):
+        elif isinstance(graph, FloorPlanGraph):
             return BokehFloorPlanGraph(self, graph)
         raise NotImplementedError(type(graph).__name__)
 
     @override
-    def get_region(
-        self,
-        region_name: str,
-        *,
-        place: bool = True,
-    ) -> Dict[str, AnyBokehGraph]:
-        if place:
-            self.place(show=False)
-
-        res: Dict[str, AnyBokehGraph] = {}
-        for graph_name in self.regions[region_name]:
-            res[graph_name] = self.get_plot(
-                region_name=region_name,
-                graph_name=graph_name,
-                place=False,
-            )
-
-        return res
-
-    @override
-    def get_all(
-        self,
-        *,
-        place: bool = True,
-    ) -> Dict[str, Dict[str, AnyBokehGraph]]:
-        if place:
-            self.place(show=False)
-
-        res: Dict[str, Dict[str, AnyBokehGraph]] = {}
-        for region_name in self.regions:
-            res[region_name] = self.get_region(region_name, place=False)
-
-        return res
-
-    @override
     def plot(
         self,
-        region_name: Optional[str] = None,
-        graph_name: Optional[str] = None,
+        graph_name: str,
         *,
+        region_name: Optional[str] = None,
         include_layout: bool = True,
-        place: bool = True,
+        update: bool = True,
         sizing_mode: Optional[SizingModeType] = None,
         width: Optional[int] = None,
         height: Optional[int] = None,
         layout_height: Optional[int] = None,
+        place: bool = True,
         share_x: Optional[bool] = None,
         show_fields: bool = False,
+        reuse: bool = True,
     ):
         """
-        Plot a graph, region, or all placed graphs.
+        Plot a graph, region, or all placed graphs with Bokeh.
 
-        To plot a specific graph, specify `region_name` and `graph_name`.
+        To plot a specific graph, specify `graph_name` (optionally `region_name`).
         To plot a specific region, specify `region_name`.
         To plot all placed graphs, specify neither.
 
@@ -1168,8 +1142,8 @@ class BokehGraphManager(GraphManager):
             Include a layout plot at the bottom, if not already placed and if
             appropriate (i.e., another plot uses longitudinal coordinates on
             the x-axis).
-        place : bool
-            Place all requested plots prior to continuing.
+        update : bool, default=True
+            Query Tao to update relevant graphs prior to plotting.
         sizing_mode : Optional[SizingModeType]
             Set the sizing mode for all graphs.  Default is configured on a
             per-graph basis, typically "inherit".
@@ -1184,58 +1158,18 @@ class BokehGraphManager(GraphManager):
         -------
         list
         """
-        if graph_name and not region_name:
-            raise ValueError("Must specify region_name if graph_name is specified")
-
-        if place:
-            self.place(show=False)
-
-        if region_name and graph_name:
-            try:
-                bgraphs = [self.get_plot(region_name, graph_name, place=False)]
-            except KeyError:
-                placed = self.place(region_name, graph_name, show=False)
-                bgraphs = [
-                    self.get_plot(region_name, graph_name, place=False)
-                    for graph_name in placed.get(region_name, [])
-                ]
-        elif region_name:
-            region = self.get_region(region_name, place=False)
-            bgraphs = list(region.values())
-        else:
-            by_region = self.get_all()
-            bgraphs = [graph for region in by_region.values() for graph in region.values()]
-
+        bgraphs = self.prepare_graphs_by_name(
+            graph_name=graph_name,
+            region_name=region_name,
+            update=update,
+            reuse=reuse,
+        )
         if not bgraphs:
             return []
 
-        if (
-            include_layout
-            and not any(isinstance(bgraph, BokehLatticeLayoutGraph) for bgraph in bgraphs)
-            and any(bgraph.graph.is_s_plot for bgraph in bgraphs)
-        ):
-            try:
-                layout_graph = self.get_lattice_layout_graph(place=False)
-            except LayoutGraphNotFoundError:
-                logger.warning("Could not find lattice layout to include")
-            else:
-                bgraphs.append(
-                    self.get_plot(
-                        layout_graph.region_name,
-                        layout_graph.graph_name,
-                        place=False,
-                    )
-                )
-
-        if include_layout:
-            try:
-                layout_graph = self.get_lattice_layout_graph(place=False)
-            except LayoutGraphNotFoundError:
-                pass
-            else:
-                layout_graph.show_fields = show_fields
-                if show_fields and not layout_graph.fields:
-                    layout_graph.update_fields(tao=self.tao)
+        if include_layout and any(bgraph.graph.is_s_plot for bgraph in bgraphs):
+            if not any(isinstance(bgraph, BokehLatticeLayoutGraph) for bgraph in bgraphs):
+                bgraphs.append(self.get_lattice_layout_graph())
 
         for bgraph in bgraphs:
             is_layout = isinstance(bgraph, BokehLatticeLayoutGraph)
@@ -1244,6 +1178,10 @@ class BokehGraphManager(GraphManager):
             if width is not None:
                 bgraph.width = width
             if is_layout:
+                bgraph.show_fields = show_fields
+                if show_fields and not bgraph.graph.fields:
+                    bgraph.graph.update_fields(tao=self.tao)
+
                 if layout_height is not None:
                     bgraph.height = layout_height
             else:
@@ -1277,9 +1215,9 @@ class NotebookGraphManager(BokehGraphManager):
     @override
     def plot(
         self,
-        region_name: Optional[str] = None,
-        graph_name: Optional[str] = None,
+        graph_name: str,
         *,
+        region_name: Optional[str] = None,
         include_layout: bool = True,
         place: bool = True,
         sizing_mode: Optional[SizingModeType] = None,
@@ -1290,17 +1228,18 @@ class NotebookGraphManager(BokehGraphManager):
         vars: bool = False,
         show_fields: bool = False,
         notebook_handle: bool = False,
+        reuse: bool = True,
     ):
         bgraphs = super().plot(
             region_name=region_name,
             graph_name=graph_name,
             include_layout=include_layout,
-            place=place,
             sizing_mode=sizing_mode,
             width=width,
             height=height,
             layout_height=layout_height,
             show_fields=show_fields,
+            reuse=reuse,
         )
 
         if not bgraphs:

@@ -106,7 +106,7 @@ def test_plot_manager(init_filename: pathlib.Path):
     with new_tao(Tao, f"-init {init_filename}", external_plotting=external_plotting) as tao:
         manager = MatplotlibGraphManager(tao)
         if external_plotting:
-            assert len(manager.place())
+            assert len(manager.place_all())
         for region in manager.regions:
             manager.plot(region)
         plt.show()
@@ -114,5 +114,5 @@ def test_plot_manager(init_filename: pathlib.Path):
         for region in list(manager.regions):
             manager.clear(region)
         assert not manager.regions
-        manager.clear_all()
+        manager.clear()
         assert not manager.regions

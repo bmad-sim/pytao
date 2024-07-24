@@ -171,8 +171,8 @@ class Tao(TaoCore):
             var_file=var_file,
         )
 
-        self._use_pytao_plotting = plot is not None
-        if plot is not None and plot in {"mpl", "bokeh"}:
+        self._use_pytao_plotting = plot in {"mpl", "bokeh"}
+        if plot is not None and self._use_pytao_plotting:
             self.plot_backend = plot
         else:
             self.plot_backend = None
@@ -345,11 +345,12 @@ class Tao(TaoCore):
 
     def plot(
         self,
-        region_name: Optional[str] = None,
         graph_name: Optional[str] = None,
         *,
+        region_name: Optional[str] = None,
         include_layout: bool = True,
         place: bool = True,
+        update: bool = True,
         width: Optional[int] = None,
         height: Optional[int] = None,
         layout_height: Optional[int] = None,
@@ -362,7 +363,7 @@ class Tao(TaoCore):
 
         Plot a graph, region, or all placed graphs.
 
-        To plot a specific graph, specify `region_name` and `graph_name`.
+        To plot a specific graph, specify `graph_name` (optionally `region_name`).
         To plot a specific region, specify `region_name`.
         To plot all placed graphs, specify neither.
 
@@ -374,16 +375,18 @@ class Tao(TaoCore):
 
         Parameters
         ----------
-        region_name : str, optional
-            Graph region name.
         graph_name : str, optional
             Graph name.
-        include_layout : bool
+        region_name : str, optional
+            Graph region name.
+        include_layout : bool, optional
             Include a layout plot at the bottom, if not already placed and if
             appropriate (i.e., another plot uses longitudinal coordinates on
             the x-axis).
-        place : bool
+        place : bool, default=True
             Place all requested plots prior to continuing.
+        update : bool, default=True
+            Query Tao to update relevant graphs prior to plotting.
         width : int, optional
             Width of each plot.
         height : int, optional
@@ -409,15 +412,20 @@ class Tao(TaoCore):
         if backend not in {"mpl", "bokeh"}:
             raise ValueError(f"Unsupported backend: {backend}")
 
+        if width is not None:
+            kwargs["width"] = width
+        if height is not None:
+            kwargs["height"] = height
+        if layout_height is not None:
+            kwargs["layout_height"] = layout_height
+        if share_x is not None:
+            kwargs["share_x"] = share_x
         manager = self._get_graph_manager_by_key(backend)
         manager.plot(
             region_name=region_name,
             graph_name=graph_name,
             include_layout=include_layout,
             place=place,
-            width=width,
-            height=height,
-            layout_height=layout_height,
-            share_x=share_x,
+            update=update,
             **kwargs,
         )
