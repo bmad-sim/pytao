@@ -2329,27 +2329,6 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
 
         self._clear_region(region_name)
 
-    # def get_region(self, region_name: str) -> Dict[str, T_GraphType]:
-    #     res = {}
-    #     for graph in self.regions.get(region_name, []):
-    #         try:
-    #             res[graph_name] = self.make_graph(
-    #                 region_name=region_name,
-    #                 graph_name=graph_name,
-    #             )
-    #         except UnsupportedGraphError:
-    #             continue
-    #
-    #     return res
-    #
-    # def get_all(self) -> Dict[str, Dict[str, T_GraphType]]:
-    #     res = {}
-    #     for region_name in self.regions:
-    #         res[region_name] = self.get_region(
-    #             region_name,
-    #         )
-    #     return res
-
     def plot_regions(
         self,
         regions: List[str],
@@ -2396,6 +2375,7 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
         region_name: Optional[str] = None,
         include_layout: bool = True,
         update: bool = True,
+        reuse: bool = True,
         **kwargs,
     ):
         raise NotImplementedError()
@@ -2429,6 +2409,7 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
         figsize: Optional[Tuple[int, int]] = None,
         share_x: bool = True,
         update: bool = True,
+        reuse: bool = True,
         xlim: Optional[Tuple[float, float]] = None,
         ylim: Optional[Tuple[float, float]] = None,
     ):
@@ -2482,6 +2463,7 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
             graph_name=graph_name,
             region_name=region_name,
             update=update,
+            reuse=reuse,
         )
         if not graphs:
             return None
