@@ -178,7 +178,7 @@ class Tao(TaoCore):
         )
 
         self._use_pytao_plotting = plot in {"mpl", "bokeh", True}
-        if plot is not None and self._use_pytao_plotting:
+        if plot in {"mpl", "bokeh"}:
             self.plot_backend_name = plot
         else:
             self.plot_backend_name = None
