@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import logging
 import math
+import pathlib
+import time
 import typing
 from typing import (
     ClassVar,
@@ -2417,12 +2419,12 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
         reuse: bool = True,
         xlim: Optional[Tuple[float, float]] = None,
         ylim: Optional[Tuple[float, float]] = None,
+        save: Union[bool, str, pathlib.Path, None] = None,
     ):
         """
-        Plot a graph, region, or all placed graphs with Matplotlib.
+        Plot a graph with Matplotlib.
 
         To plot a specific graph, specify `graph_name` (optionally `region_name`).
-        To plot a specific region, specify `region_name`.
         To plot all placed graphs, specify neither.
 
         For full details on available parameters, see the specific backend's
@@ -2433,7 +2435,7 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
 
         Parameters
         ----------
-        graph_name : str, optional
+        graph_name : str
             Graph name.
         region_name : str, optional
             Graph region name.
@@ -2441,8 +2443,6 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
             Include a layout plot at the bottom, if not already placed and if
             appropriate (i.e., another plot uses longitudinal coordinates on
             the x-axis).
-        place : bool, default=True
-            Place all requested plots prior to continuing.
         update : bool, default=True
             Query Tao to update relevant graphs prior to plotting.
         width : int, optional
@@ -2454,6 +2454,15 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
         share_x : bool or None, default=None
             Share x-axes where sensible (`None`) or force sharing x-axes (True)
             for all plots.
+        update : bool, default=True
+            Query Tao to update relevant graphs prior to plotting.
+        reuse : bool, default=True
+            If an existing plot of the given template type exists, reuse the
+            existing plot region rather than selecting a new empty region.
+        xlim : (float, float), optional
+            X axis limits.
+        ylim : (float, float), optional
+            Y axis limits.
 
         Returns
         -------
@@ -2517,6 +2526,13 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
             if ylim is not None:
                 if not isinstance(graph, LatticeLayoutGraph) or len(graphs) == 1:
                     ax.set_ylim(ylim)
+
+        if save:
+            title = graphs[0].title or f"plot-{time.time()}"
+            if save is True:
+                save = f"{title}.png"
+            logger.info(f"Saving plot to {save!r}")
+            fig.savefig(save)
 
         return fig, gs
 

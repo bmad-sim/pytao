@@ -3,6 +3,8 @@ from __future__ import annotations
 import functools
 import logging
 import math
+import pathlib
+import time
 import typing
 from typing import (
     ClassVar,
@@ -19,6 +21,7 @@ from typing import (
 )
 
 import bokeh.colors.named
+import bokeh.embed
 import bokeh.events
 import bokeh.layouts
 import bokeh.models
@@ -31,7 +34,8 @@ from bokeh.plotting import figure
 from pydantic.dataclasses import dataclass
 from typing_extensions import NotRequired, TypedDict, override
 
-from pytao.plotting.fields import LatticeLayoutField
+from ..interface_commands import AnyPath
+from .fields import LatticeLayoutField
 
 from . import pgplot, util
 from .plot import (
@@ -543,6 +547,28 @@ class BokehGraphBase(Generic[TGraph]):
     def get_graph_info(self) -> TGraph:
         return self.graph
 
+    def to_html(
+        self,
+        title: Optional[str] = None,
+    ) -> str:
+        return bokeh.embed.file_html(models=[self.create_figure()], title=title)
+
+    def save(
+        self,
+        filename: AnyPath,
+        title: Optional[str] = None,
+    ):
+        source = self.to_html(title=title)
+        with open(filename, "wt") as fp:
+            fp.write(source)
+
+    def create_figure(
+        self,
+        tools: str = "pan,wheel_zoom,box_zoom,save,reset,help,crosshair",
+        toolbar_location: str = "above",
+    ) -> figure:
+        raise NotImplementedError()
+
     def create_app_figure(self) -> Tuple[figure, List[bokeh.models.UIElement]]:
         raise NotImplementedError()
 
@@ -606,6 +632,7 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
         updated_source = _fields_to_data_source(self.graph.fields)
         field_images.data = dict(updated_source.data)
 
+    @override
     def create_figure(
         self,
         tools: str = "pan,wheel_zoom,box_zoom,save,reset,help,crosshair",
@@ -754,6 +781,7 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
                 assert "symbol" in orig_data
                 orig_data["symbol"].data = dict(symbol.data)
 
+    @override
     def create_figure(
         self,
         tools: str = "pan,wheel_zoom,box_zoom,save,reset,help,hover,crosshair",
@@ -858,6 +886,7 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
     def tao(self) -> Tao:
         return self.manager.tao
 
+    @override
     def create_figure(
         self,
         tools: str = "pan,wheel_zoom,box_zoom,save,reset,help,hover,crosshair",
@@ -955,6 +984,27 @@ class CompositeApp:
         self.bgraphs = bgraphs
         self.share_x = share_x
         self.variables = variables or []
+
+    def to_html(
+        self,
+        title: Optional[str] = None,
+    ) -> str:
+        items = [
+            BGraphAndFigure(fig=bgraph.create_figure(), bgraph=bgraph)
+            for bgraph in self.bgraphs
+        ]
+        figures = [item.fig for item in items]
+        share_common_x_axes(items)
+        return bokeh.embed.file_html(models=figures, title=title)
+
+    def save(
+        self,
+        filename: AnyPath,
+        title: Optional[str] = None,
+    ):
+        source = self.to_html(title=title)
+        with open(filename, "wt") as fp:
+            fp.write(source)
 
     def create_ui(self):
         if not self.bgraphs:
@@ -1121,13 +1171,13 @@ class BokehGraphManager(
         reuse: bool = True,
         xlim: Optional[Tuple[float, float]] = None,
         ylim: Optional[Tuple[float, float]] = None,
+        save: Union[bool, str, pathlib.Path, None] = None,
     ):
         """
-        Plot a graph, region, or all placed graphs with Bokeh.
+        Plot a graph or all placed graphs with Bokeh.
 
         To plot a specific graph, specify `graph_name` (optionally `region_name`).
-        To plot a specific region, specify `region_name`.
-        To plot all placed graphs, specify neither.
+        The default is to plot all placed graphs.
 
         Parameters
         ----------
@@ -1150,6 +1200,19 @@ class BokehGraphManager(
             Height of each plot.
         layout_height : int, optional
             Height of the layout plot.
+        share_x : bool or None, default=None
+            Share x-axes where sensible (`None`) or force sharing x-axes (True)
+            for all plots.
+        reuse : bool, default=True
+            If an existing plot of the given template type exists, reuse the
+            existing plot region rather than selecting a new empty region.
+        xlim : (float, float), optional
+            X axis limits.
+        ylim : (float, float), optional
+            Y axis limits.
+        save : str or bool, optional
+            Save the plot to a static HTML file with the given name.
+            If `True`, saves to a filename based on the plot title.
 
         Returns
         -------
@@ -1232,6 +1295,7 @@ class NotebookGraphManager(BokehGraphManager):
         notebook_handle: bool = False,
         reuse: bool = True,
         update: bool = True,
+        save: Union[bool, str, pathlib.Path, None] = None,
     ):
         bgraphs = super().plot(
             region_name=region_name,
@@ -1258,6 +1322,38 @@ class NotebookGraphManager(BokehGraphManager):
                 app.variables = variables
         else:
             app = CompositeApp(self.tao, bgraphs, share_x=share_x, variables=variables)
+
+        if save:
+            title = bgraphs[0].graph.title or f"plot-{time.time()}"
+            if save is True:
+                save = f"{title}.html"
+            if not pathlib.Path(save).suffix:
+                save = f"{save}.html"
+
+            logger.info(f"Saving plot to {save!r}")
+            app.save(save, title=title)
+            # NOTE/TODO: seems like we have to regenerate the bokeh glyphs
+            # or they may be considered as owned by more than one document.
+            # This is a workaround, but I assume there's a better way of
+            # going about this...
+            return self.plot(
+                graph_name=graph_name,
+                region_name=region_name,
+                include_layout=include_layout,
+                sizing_mode=sizing_mode,
+                width=width,
+                height=height,
+                layout_height=layout_height,
+                share_x=share_x,
+                vars=vars,
+                show_fields=show_fields,
+                xlim=xlim,
+                ylim=ylim,
+                notebook_handle=notebook_handle,
+                reuse=reuse,
+                update=update,
+                save=False,  # <-- important line
+            )
 
         return bokeh.plotting.show(
             app.create_app(),

@@ -375,6 +375,7 @@ class Tao(TaoCore):
         layout_height: Optional[int] = None,
         share_x: Optional[bool] = None,
         backend: Optional[str] = None,
+        reuse: bool = True,
         **kwargs,
     ) -> None:
         """
@@ -383,8 +384,7 @@ class Tao(TaoCore):
         Plot a graph, region, or all placed graphs.
 
         To plot a specific graph, specify `graph_name` (optionally `region_name`).
-        To plot a specific region, specify `region_name`.
-        To plot all placed graphs, specify neither.
+        The default is to plot all placed graphs.
 
         For full details on available parameters, see the specific backend's
         graph manager. For example:
@@ -394,10 +394,10 @@ class Tao(TaoCore):
 
         Parameters
         ----------
-        graph_name : str, optional
+        graph_name : str
             Graph name.
         region_name : str, optional
-            Graph region name.
+            Graph region name.  Chosen automatically if not specified.
         include_layout : bool, optional
             Include a layout plot at the bottom, if not already placed and if
             appropriate (i.e., another plot uses longitudinal coordinates on
@@ -413,6 +413,15 @@ class Tao(TaoCore):
         share_x : bool or None, default=None
             Share x-axes where sensible (`None`) or force sharing x-axes (True)
             for all plots.
+        save : pathlib.Path or str, optional
+            Save the plot to the given filename.
+        xlim : (float, float), optional
+            X axis limits.
+        ylim : (float, float), optional
+            Y axis limits.
+        reuse : bool, default=True
+            If an existing plot of the given template type exists, reuse the
+            existing plot region rather than selecting a new empty region.
         backend : {"bokeh", "mpl"}, optional
             The backend to use.  Auto-detects Jupyter and availability of bokeh
             to select a backend.
@@ -445,6 +454,7 @@ class Tao(TaoCore):
                 list(manager.regions),
                 include_layout=include_layout,
                 update=update,
+                reuse=reuse,
                 **kwargs,
             )
         else:
@@ -453,5 +463,6 @@ class Tao(TaoCore):
                 graph_name=graph_name,
                 include_layout=include_layout,
                 update=update,
+                reuse=reuse,
                 **kwargs,
             )
