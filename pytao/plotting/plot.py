@@ -2454,9 +2454,6 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
         share_x : bool or None, default=None
             Share x-axes where sensible (`None`) or force sharing x-axes (True)
             for all plots.
-        backend : {"bokeh", "mpl"}, optional
-            The backend to use.  Auto-detects Jupyter and availability of bokeh
-            to select a backend.
 
         Returns
         -------

@@ -200,6 +200,7 @@ def _plot_curve_symbols(
         source=source,
         fill_color=bokeh_color(symbol.color),
         marker=marker,
+        size=symbol.markersize * 4,
         name=name,
         **kw,
     )
