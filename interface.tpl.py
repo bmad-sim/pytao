@@ -111,7 +111,7 @@ class Tao(TaoCore):
         init: str = "",
         so_lib: str = "",
         *,
-        expand_vars: bool = True,
+        expand_vars: bool = False,
         plot: Union[str, bool] = "tao",
         beam_file: Optional[AnyPath] = None,
         beam_init_position_file: Optional[AnyPath] = None,

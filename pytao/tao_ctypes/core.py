@@ -40,7 +40,7 @@ class TaoCore:
 
     # ---------------------------------------------
 
-    def __init__(self, init="", so_lib="", *, expand_vars: bool = True):
+    def __init__(self, init="", so_lib="", *, expand_vars: bool = False):
         # TL/DR; Leave this import out of the global scope.
         #
         # Make it lazy import to avoid cyclical dependency.
