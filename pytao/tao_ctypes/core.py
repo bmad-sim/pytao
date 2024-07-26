@@ -51,6 +51,8 @@ class TaoCore:
         # we try to autogenerate it will complain about the broken
         # interface_commands file.
 
+        self.expand_vars = expand_vars
+
         # Library needs to be set.
         self.so_lib_file = None
         if so_lib == "":
