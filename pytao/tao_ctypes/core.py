@@ -35,12 +35,9 @@ class TaoCore:
     tao.init("command line args here...")
     """
 
-    # Expand variables in `init` strings.
-    expand_vars: bool = True
-
     # ---------------------------------------------
 
-    def __init__(self, init="", so_lib="", *, expand_vars: bool = False):
+    def __init__(self, init="", so_lib=""):
         # TL/DR; Leave this import out of the global scope.
         #
         # Make it lazy import to avoid cyclical dependency.
@@ -50,8 +47,6 @@ class TaoCore:
         # If by any chance the interface_commands.py is broken and
         # we try to autogenerate it will complain about the broken
         # interface_commands file.
-
-        self.expand_vars = expand_vars
 
         # Library needs to be set.
         self.so_lib_file = None
@@ -110,9 +105,6 @@ class TaoCore:
         self.so_lib.tao_c_out_io_buffer_reset()
 
     def _preprocess_command(self, command: str) -> str:
-        if not self.expand_vars:
-            return command
-
         cmd_orig = command
         processed = os.path.expandvars(command)
         if cmd_orig != processed:
