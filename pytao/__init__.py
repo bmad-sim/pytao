@@ -8,6 +8,7 @@ in the util package.
 
 from .interface_commands import Tao
 from .subproc import SubprocessTao
+from .startup import TaoStartup
 from .tao_ctypes import TaoModel, run_tao
 from .tao_ctypes.evaluate import evaluate_tao
 from .tao_interface import tao_interface
@@ -22,6 +23,7 @@ __all__ = [
     "tao_io",
     "TaoModel",
     "Tao",
+    "TaoStartup",
     "run_tao",
     "evaluate_tao",
     "tao_interface",

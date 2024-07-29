@@ -8,9 +8,9 @@ from typing import List
 
 import numpy as np
 
-from pytao import tao_ctypes
-from pytao.tao_ctypes.tools import full_path
-from pytao.tao_ctypes.util import error_in_lines
+from .. import tao_ctypes
+from .tools import full_path
+from .util import error_in_lines
 from ..util.parameters import tao_parameter_dict
 
 logger = logging.getLogger(__name__)

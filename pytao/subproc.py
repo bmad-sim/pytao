@@ -269,6 +269,12 @@ class SubprocessTao(Tao):
     def close_subprocess(self):
         self._pipe.close()
 
+    def __del__(self) -> None:
+        try:
+            self.close_subprocess()
+        except Exception:
+            pass
+
     def init(self, cmd):
         """Initialize Tao with the given `cmd`."""
         if self._use_pytao_plotting:

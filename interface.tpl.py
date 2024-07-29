@@ -6,7 +6,6 @@ import typing
 
 from typing import Optional, List, Tuple, Union
 
-
 from .tao_ctypes.core import TaoCore
 from .tao_ctypes.util import parse_tao_python_data
 from .util.command import make_tao_init
@@ -43,61 +42,61 @@ class Tao(TaoCore):
         If "mpl", the pytao matplotlib plotting backend will be selected.
         If "bokeh", the pytao Bokeh plotting backend will be selected.
 
-    beam_file: AnyPath, default=None
+    beam_file : str or pathlib.Path, default=None
         File containing the tao_beam_init namelist.
-    beam_init_position_file: pathlib.Path or str, default=None
+    beam_init_position_file : pathlib.Path or str, default=None
         File containing initial particle positions.
-    building_wall_file: AnyPath, default=None
+    building_wall_file : str or pathlib.Path, default=None
         Define the building tunnel wall
-    command: str, optional
+    command : str, optional
         Commands to run after startup file commands
-    data_file: AnyPath, default=None
+    data_file : str or pathlib.Path, default=None
         Define data for plotting and optimization
-    debug: bool, default=False
+    debug : bool, default=False
         Debug mode for Wizards
-    disable_smooth_line_calc: bool, default=False
+    disable_smooth_line_calc : bool, default=False
         Disable the smooth line calc used in plotting
-    external_plotting: bool, default=False
+    external_plotting : bool, default=False
         Tells Tao that plotting is done externally to Tao.
-    geometry: "wxh" or (width, height) tuple, optional
+    geometry : "wxh" or (width, height) tuple, optional
         Plot window geometry (pixels)
-    hook_init_file:  pathlib.Path or str, default=None
+    hook_init_file :  pathlib.Path or str, default=None
         Init file for hook routines (Default = tao_hook.init)
-    init_file: AnyPath, default=None
+    init_file : str or pathlib.Path, default=None
         Tao init file
-    lattice_file: AnyPath, default=None
+    lattice_file : str or pathlib.Path, default=None
         Bmad lattice file
-    log_startup: bool, default=False
+    log_startup : bool, default=False
         Write startup debugging info
-    no_stopping: bool, default=False
-        For debugging: Prevents Tao from exiting on errors
-    noinit: bool, default=False
+    no_stopping : bool, default=False
+        For debugging : Prevents Tao from exiting on errors
+    noinit : bool, default=False
         Do not use Tao init file.
-    noplot: bool, default=False
+    noplot : bool, default=False
         Do not open a plotting window
-    nostartup: bool, default=False
+    nostartup : bool, default=False
         Do not open a startup command file
-    no_rad_int: bool, default=False
+    no_rad_int : bool, default=False
         Do not do any radiation integrals calculations.
-    plot_file: AnyPath, default=None
+    plot_file : str or pathlib.Path, default=None
         Plotting initialization file
-    prompt_color: str, optional
+    prompt_color : str, optional
         Set color of prompt string. Default is blue.
-    reverse: bool, default=False
+    reverse : bool, default=False
         Reverse lattice element order?
-    rf_on: bool, default=False
+    rf_on : bool, default=False
         Use "--rf_on" to turn off RF (default is now RF on)
-    quiet: bool, default=False
+    quiet : bool, default=False
         Suppress terminal output when running a command file?
-    slice_lattice: str, optional
+    slice_lattice : str, optional
         Discards elements from lattice that are not in the list
-    start_branch_at: str, optional
+    start_branch_at : str, optional
         Start lattice branch at element.
-    startup_file: AnyPath, default=None
+    startup_file : str or pathlib.Path, default=None
         Commands to run after parsing Tao init file
-    symbol_import: bool, default=False
+    symbol_import : bool, default=False
         Import symbols defined in lattice files(s)?
-    var_file: AnyPath, default=None
+    var_file : str or pathlib.Path, default=None
         Define variables for plotting and optimization
     """
 

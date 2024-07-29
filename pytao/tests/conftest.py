@@ -1,12 +1,12 @@
-import matplotlib
 import contextlib
 import logging
 import os
 import pathlib
 
+import matplotlib
 import pytest
 
-from .. import SubprocessTao, Tao
+from .. import SubprocessTao, Tao, TaoStartup
 
 matplotlib.use("Agg")
 
@@ -64,11 +64,25 @@ def init_filename(
     return request.param
 
 
-@pytest.fixture(params=example_init_files, ids=[fn.parts[-2] for fn in example_init_files])
-def example_init_filename(
+@pytest.fixture(params=init_files, ids=[f"regression_tests-{fn.name}" for fn in init_files])
+def tao_regression_test(
     request: pytest.FixtureRequest,
-) -> pathlib.Path:
-    example_name = request.param.parts[-2]
+) -> TaoStartup:
+    init_file = request.param
+    nostartup = init_file.name == "tao.init_floor_orbit"
+    return TaoStartup(
+        init_file=request.param,
+        nostartup=nostartup,
+        metadata={"name": init_file.name},
+    )
+
+
+@pytest.fixture(params=example_init_files, ids=[fn.parts[-2] for fn in example_init_files])
+def tao_example(
+    request: pytest.FixtureRequest,
+) -> TaoStartup:
+    init_file = request.param
+    example_name = init_file.parts[-2]
     if example_name == "multi_turn_orbit":
         pytest.skip(
             "Multi-turn orbit example fails with: CANNOT SCALE GRAPH multi_turn.x SINCE NO DATA IS WITHIN THE GRAPH X-AXIS RANGE. "
@@ -80,16 +94,17 @@ def example_init_filename(
         )
     if example_name == "x_axis_param_plot":
         pytest.skip("'x_axis_param_plot' example fails saying no data is in range")
-    return request.param
 
-
-@pytest.fixture
-def example_nostartup(example_init_filename: pathlib.Path) -> bool:
-    return example_init_filename.parts[-1] in {
+    nostartup = example_name in {
         # "multi_turn_orbit",
         "custom_tao_with_measured_data",
         "x_axis_param_plot",
     }
+    return TaoStartup(
+        init_file=request.param,
+        nostartup=nostartup,
+        metadata={"name": example_name},
+    )
 
 
 @pytest.fixture(
@@ -108,7 +123,7 @@ def new_tao(
     external_plotting: bool = True,
     **kwargs,
 ):
-    init = os.path.expandvars(init)
+    # init = os.path.expandvars(init)
     if external_plotting:
         init = " ".join((init, "-external_plotting"))
     if not plot:
