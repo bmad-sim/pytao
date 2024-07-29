@@ -775,146 +775,102 @@ class LatticeLayoutElement:
             annotation.plot(ax)
 
     @classmethod
-    def from_info(cls, graph_info: PlotGraphInfo, info: PlotLatLayoutInfo, y2_floor: float):
-        s1 = info["ele_s_start"]
-        s2 = info["ele_s_end"]
-        y1 = info["y1"]
-        y2 = -info["y2"]  # Note negative sign.
-        width = info["line_width"]
-        color = info["color"]
-        shape = info["shape"]
-        name = info["label_name"]
-
-        patches = []
-        lines = []
-        annotations = []
-
-        if ":" in shape:
-            _shape_prefix, shape = shape.split(":", 1)
+    def regular_shape(
+        cls,
+        s1: float,
+        s2: float,
+        y1: float,
+        y2: float,
+        width: float,
+        color: str,
+        shape: str,
+        name: str,
+        y2_floor: float,
+    ) -> Tuple[List[PlotPatch], List[List[Point]], List[PlotAnnotation]]:
+        assert s2 > s1
+        patches: List[PlotPatch] = []
+        lines: List[List[Point]] = []
+        if name:
+            annotations = [
+                PlotAnnotation(
+                    x=(s1 + s2) / 2,
+                    y=1.1 * y2_floor,
+                    text=name,
+                    horizontalalignment="center",
+                    verticalalignment="top",
+                    clip_on=False,
+                    color=color,
+                    rotation=90,
+                )
+            ]
         else:
-            _shape_prefix, shape = "", shape
+            annotations = []
 
-        # Normal case where element is not wrapped around ends of lattice.
-        if s2 - s1 > 0:
-            box_patch = PlotPatchRectangle(
-                xy=(s1, y1),
-                width=s2 - s1,
-                height=y2 - y1,
-                linewidth=width,
-                color=color,
-                fill=False,
-            )
-            s_mid = (s1 + s2) / 2
-            y_mid = (y1 + y2) / 2
+        patch_kwargs = {
+            "linewidth": width,
+            "color": color,
+            "fill": False,
+        }
+        box_patch = PlotPatchRectangle(
+            xy=(s1, y1), width=s2 - s1, height=y2 - y1, **patch_kwargs
+        )
+        s_mid = (s1 + s2) / 2
+        y_mid = (y1 + y2) / 2
 
-            if shape == "box":
-                patches.append(box_patch)
-            elif shape == "xbox":
-                patches.append(box_patch)
-                lines.extend(
-                    [
-                        [(s1, y1), (s2, y2)],
-                        [(s1, y2), (s2, y1)],
-                    ]
-                )
-            elif shape == "x":
-                lines.extend(
-                    [
-                        [(s1, y1), (s2, y2)],
-                        [(s1, y2), (s2, y1)],
-                    ]
-                )
-            elif shape == "bow_tie":
-                lines.append([(s1, y1), (s2, y2), (s2, y1), (s1, y2), (s1, y1)])
-            elif shape == "rbow_tie":
-                lines.append([(s1, y1), (s2, y2), (s1, y2), (s2, y1), (s1, y1)])
-            elif shape == "diamond":
-                lines.append([(s1, 0), (s_mid, y1), (s2, 0), (s_mid, y2), (s1, 0)])
-            elif shape == "circle":
-                patches.append(
-                    PlotPatchEllipse(
-                        xy=(s_mid, 0),
-                        width=y1 - y2,
-                        height=y1 - y2,
-                        linewidth=width,
-                        color=color,
-                        fill=False,
-                    )
-                )
-            elif shape == "u_triangle":
-                patches.append(
-                    PlotPatchPolygon(
-                        vertices=[
-                            (s1, y2),
-                            (s2, y2),
-                            (s_mid, y1),
-                        ],
-                        linewidth=width,
-                        color=color,
-                        fill=False,
-                    )
-                )
+        if shape == "box":
+            patches = [box_patch]
+        elif shape == "xbox":
+            patches = [box_patch]
+            lines = [[(s1, y1), (s2, y2)], [(s1, y2), (s2, y1)]]
+        elif shape == "x":
+            lines = [[(s1, y1), (s2, y2)], [(s1, y2), (s2, y1)]]
+        elif shape == "bow_tie":
+            lines = [[(s1, y1), (s2, y2), (s2, y1), (s1, y2), (s1, y1)]]
+        elif shape == "rbow_tie":
+            lines = [[(s1, y1), (s2, y2), (s1, y2), (s2, y1), (s1, y1)]]
+        elif shape == "diamond":
+            lines = [[(s1, 0), (s_mid, y1), (s2, 0), (s_mid, y2), (s1, 0)]]
+        elif shape == "circle":
+            patches = [
+                PlotPatchEllipse(xy=(s_mid, 0), width=y1 - y2, height=y1 - y2, **patch_kwargs)
+            ]
+        else:
+            if shape == "u_triangle":
+                vertices = [(s1, y2), (s2, y2), (s_mid, y1)]
             elif shape == "d_triangle":
-                patches.append(
-                    PlotPatchPolygon(
-                        vertices=[
-                            (s1, y1),
-                            (s2, y1),
-                            (s_mid, y2),
-                        ],
-                        linewidth=width,
-                        color=color,
-                        fill=False,
-                    )
-                )
+                vertices = [(s1, y1), (s2, y1), (s_mid, y2)]
             elif shape == "l_triangle":
-                patches.append(
-                    PlotPatchPolygon(
-                        vertices=[
-                            (s1, y_mid),
-                            (s2, y2),
-                            (s2, y1),
-                        ],
-                        linewidth=width,
-                        color=color,
-                        fill=False,
-                    )
-                )
+                vertices = [(s1, y_mid), (s2, y2), (s2, y1)]
             elif shape == "r_triangle":
-                patches.append(
-                    PlotPatchPolygon(
-                        vertices=[
-                            (s1, y1),
-                            (s1, y2),
-                            (s2, y_mid),
-                        ],
-                        linewidth=width,
-                        color=color,
-                        fill=False,
-                    )
-                )
+                vertices = [(s1, y1), (s1, y2), (s2, y_mid)]
             else:
                 raise NotImplementedError(shape)
 
-            if name:
-                annotations.append(
-                    PlotAnnotation(
-                        x=(s1 + s2) / 2,
-                        y=1.1 * y2_floor,
-                        text=name,
-                        horizontalalignment="center",
-                        verticalalignment="top",
-                        clip_on=False,
-                        color=color,
-                        rotation=90,
-                    )
-                )
+            patches = [PlotPatchPolygon(vertices=vertices, **patch_kwargs)]
 
-        else:
-            # Case where element is wrapped round the lattice ends.
-            s_min = max((graph_info["x_min"], s1 + (s1 + s2) / 2.0))
-            s_max = min((graph_info["x_max"], s1 - (s1 + s2) / 2.0))
+        return patches, lines, annotations
 
+    @classmethod
+    def wrapped_shape(
+        cls,
+        s1: float,
+        s2: float,
+        y1: float,
+        y2: float,
+        color: str,
+        shape: str,
+        name: str,
+        x_min: float,
+        x_max: float,
+        y2_floor: float,
+    ):
+        assert s1 >= s2
+        # Case where element is wrapped round the lattice ends.
+        s_min = max((x_min, s1 + (s1 + s2) / 2.0))
+        s_max = min((x_max, s1 - (s1 + s2) / 2.0))
+
+        lines = list(
+            list(zip(xs, ys))
             for xs, ys in _get_wrapped_shape_coords(
                 shape=shape,
                 s1=s1,
@@ -923,30 +879,81 @@ class LatticeLayoutElement:
                 y2=y2,
                 s_min=s_min,
                 s_max=s_max,
-            ):
-                lines.append(list(zip(xs, ys)))
-
-            annotations.append(
-                PlotAnnotation(
-                    x=s_max,
-                    y=1.1 * y2_floor,
-                    text=name,
-                    horizontalalignment="right",
-                    verticalalignment="top",
-                    clip_on=True,
-                    color=color,
-                )
             )
-            annotations.append(
-                PlotAnnotation(
-                    x=s_min,
-                    y=1.1 * y2_floor,
-                    text=name,
-                    horizontalalignment="left",
-                    verticalalignment="top",
-                    clip_on=True,
-                    color=color,
-                )
+        )
+
+        annotations = [
+            PlotAnnotation(
+                x=s_max,
+                y=1.1 * y2_floor,
+                text=name,
+                horizontalalignment="right",
+                verticalalignment="top",
+                clip_on=True,
+                color=color,
+            ),
+            PlotAnnotation(
+                x=s_min,
+                y=1.1 * y2_floor,
+                text=name,
+                horizontalalignment="left",
+                verticalalignment="top",
+                clip_on=True,
+                color=color,
+            ),
+        ]
+
+        return lines, annotations
+
+    @classmethod
+    def from_info(
+        cls,
+        graph_info: PlotGraphInfo,
+        info: PlotLatLayoutInfo,
+        y2_floor: float,
+        plot_page: PlotPage,
+    ):
+        s1 = info["ele_s_start"]
+        s2 = info["ele_s_end"]
+        y1 = info["y1"] * plot_page["lat_layout_shape_scale"]
+        y2 = -info["y2"] * plot_page["lat_layout_shape_scale"]  # Note negative sign.
+        width = info["line_width"]
+        color = info["color"]
+        shape = info["shape"]
+        name = info["label_name"]
+
+        if ":" in shape:
+            _shape_prefix, shape = shape.split(":", 1)
+        else:
+            _shape_prefix, shape = "", shape
+
+        # Normal case where element is not wrapped around ends of lattice.
+        if s2 > s1:
+            patches, lines, annotations = cls.regular_shape(
+                s1=s1,
+                s2=s2,
+                y1=y1,
+                y2=y2,
+                width=width,
+                color=color,
+                shape=shape,
+                name=name,
+                y2_floor=y2_floor,
+            )
+
+        else:
+            patches = []
+            lines, annotations = cls.wrapped_shape(
+                s1=s1,
+                s2=s2,
+                y1=y1,
+                y2=y2,
+                color=color,
+                shape=shape,
+                name=name,
+                x_min=graph_info["x_min"],
+                x_max=graph_info["x_max"],
+                y2_floor=y2_floor,
             )
 
         return cls(
@@ -1049,12 +1056,17 @@ class LatticeLayoutGraph(GraphBase):
         *,
         branch: Optional[int] = None,
         info: Optional[PlotGraphInfo] = None,
+        plot_page: Optional[PlotPage] = None,
     ) -> LatticeLayoutGraph:
         if info is None:
             try:
                 info = get_plot_graph_info(tao, region_name, graph_name)
             except RuntimeError:
                 raise NoLayoutError(f"No layout named {region_name}.{graph_name}") from None
+
+        if plot_page is None:
+            plot_page = cast(PlotPage, tao.plot_page())
+
         region_info = cast(PlotRegionInfo, tao.plot1(region_name))
 
         graph_type = info["graph^type"]
@@ -1088,6 +1100,7 @@ class LatticeLayoutGraph(GraphBase):
                 graph_info=info,
                 info=elem,
                 y2_floor=y2_floor,
+                plot_page=plot_page,
             )
             for elem in all_elem_info
         ]
@@ -1665,8 +1678,24 @@ class FloorPlanElement:
     def from_info(
         cls,
         info: FloorPlanElementInfo,
+        graph_info: PlotGraphInfo,
         plot_page: PlotPage,
     ):
+        is_absolute = graph_info["floor_plan_size_is_absolute"]
+        floor_plan_shape_scale = plot_page["floor_plan_shape_scale"]
+        if is_absolute or floor_plan_shape_scale == 1.0:
+            # plot_page floor_plan_size_is_absolute=False means coordinates are
+            # in units of points (72 DPI and as such 72 points per "inch" of
+            # screen real estate).
+            # This is not always set manually or correctly.
+            # Let's assume (for now) that the default shape scale of 1.0 is
+            # incorrect and that DPI units are to be assumed...
+            scale = 1 / 72.0
+        else:
+            # Otherwise, we have an actual scale that the user configured to map
+            # sizes to physical units.
+            scale = floor_plan_shape_scale
+
         # Handle some renaming and reduce dictionary key usage
         return cls._from_info(
             info,
@@ -1681,8 +1710,8 @@ class FloorPlanElement:
             angle_end=info["end2_theta"],
             line_width=info["line_width"],
             shape=info["shape"],
-            off1=info["y1"] * plot_page["floor_plan_shape_scale"],
-            off2=info["y2"] * plot_page["floor_plan_shape_scale"],
+            off1=info["y1"] * scale,
+            off2=info["y2"] * scale,
             color=info["color"],
             label_name=info["label_name"],
             # ele_l=info["ele_l"],
@@ -2057,7 +2086,14 @@ class FloorPlanGraph(GraphBase):
             List[FloorPlanElementInfo],
             tao.floor_plan(full_name),
         )
-        elements = [FloorPlanElement.from_info(fpe_info, plot_page) for fpe_info in elem_infos]
+        elements = [
+            FloorPlanElement.from_info(
+                info=fpe_info,
+                graph_info=info,
+                plot_page=plot_page,
+            )
+            for fpe_info in elem_infos
+        ]
         building_walls = BuildingWalls.from_info(
             building_wall_graph=cast(
                 List[BuildingWallGraphInfo],

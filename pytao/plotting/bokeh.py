@@ -1021,6 +1021,8 @@ class CompositeApp:
             # NOTE: this value is somewhat arbitrary; it helps align the X axes
             # between consecutive plots
             item.fig.min_border_left = 80
+        # if isinstance(items[-1], BokehLatticeLayoutGraph):
+        #     items[-1].fig.min_border_bottom = 80
 
         if self.share_x is None:
             share_common_x_axes(items)
