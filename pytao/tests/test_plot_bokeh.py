@@ -17,6 +17,7 @@ def test_bokeh_manager(
 ):
     name = re.sub(r"[/\\]", "_", request.node.name)
     filename_base = f"bokeh_{name}"
+    tao_regression_test.plot = "bokeh"
     with tao_regression_test.run_context(use_subprocess=True) as tao:
         manager = tao.bokeh
         assert len(manager.place_all())
