@@ -2294,6 +2294,7 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
         self,
         *,
         ignore_invalid: bool = True,
+        ignore_unsupported: bool = True,
     ) -> Dict[str, List[T_GraphType]]:
         to_place = list(self.to_place.items())
         self.to_place.clear()
@@ -2301,11 +2302,15 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
         logger.debug("Placing all plots: %s", to_place)
         result = {}
         for region_name, graph_name in to_place:
-            result[region_name] = self.place(
-                graph_name=graph_name,
-                region_name=region_name,
-                ignore_invalid=ignore_invalid,
-            )
+            try:
+                result[region_name] = self.place(
+                    graph_name=graph_name,
+                    region_name=region_name,
+                    ignore_invalid=ignore_invalid,
+                )
+            except UnsupportedGraphError:
+                if not ignore_unsupported:
+                    raise
 
         return result
 
