@@ -42,46 +42,16 @@ def ensure_successful_parsing(caplog):
             pytest.fail(error.message)
 
 
-init_files = list(
-    pathlib.Path(os.path.expandvars("$ACC_ROOT_DIR/regression_tests/python_test/")).glob(
-        "tao.init*"
-    )
-)
-
-
+regression_test_root = pathlib.Path("$ACC_ROOT_DIR/regression_tests/python_test/")
+example_root = pathlib.Path("$ACC_ROOT_DIR/bmad-doc/tao_examples")
+init_files = list(pathlib.Path(os.path.expandvars(regression_test_root)).glob("tao.init*"))
 example_init_files = list(
-    path
-    for path in pathlib.Path(os.path.expandvars("$ACC_ROOT_DIR/bmad-doc/tao_examples")).glob(
-        "*/tao.init"
-    )
+    path for path in pathlib.Path(os.path.expandvars(example_root)).glob("*/tao.init")
 )
 
 
-@pytest.fixture(params=init_files, ids=[f"regression_tests-{fn.name}" for fn in init_files])
-def init_filename(
-    request: pytest.FixtureRequest,
-) -> pathlib.Path:
-    return request.param
-
-
-@pytest.fixture(params=init_files, ids=[f"regression_tests-{fn.name}" for fn in init_files])
-def tao_regression_test(
-    request: pytest.FixtureRequest,
-) -> TaoStartup:
-    init_file = request.param
-    nostartup = init_file.name == "tao.init_floor_orbit"
-    return TaoStartup(
-        init_file=request.param,
-        nostartup=nostartup,
-        metadata={"name": init_file.name},
-    )
-
-
-@pytest.fixture(params=example_init_files, ids=[fn.parts[-2] for fn in example_init_files])
-def tao_example(
-    request: pytest.FixtureRequest,
-) -> TaoStartup:
-    init_file = request.param
+def get_example(name: str) -> TaoStartup:
+    init_file = example_root / name / "tao.init"
     example_name = init_file.parts[-2]
     if example_name == "multi_turn_orbit":
         pytest.skip(
@@ -101,10 +71,41 @@ def tao_example(
         "x_axis_param_plot",
     }
     return TaoStartup(
-        init_file=request.param,
+        init_file=init_file,
         nostartup=nostartup,
         metadata={"name": example_name},
     )
+
+
+def get_regression_test(name: str) -> TaoStartup:
+    init_file = regression_test_root / name
+    nostartup = init_file.name == "tao.init_floor_orbit"
+    return TaoStartup(
+        init_file=init_file,
+        nostartup=nostartup,
+        metadata={"name": init_file.name},
+    )
+
+
+@pytest.fixture(params=init_files, ids=[f"regression_tests-{fn.name}" for fn in init_files])
+def init_filename(
+    request: pytest.FixtureRequest,
+) -> pathlib.Path:
+    return request.param
+
+
+@pytest.fixture(params=init_files, ids=[f"regression_tests-{fn.name}" for fn in init_files])
+def tao_regression_test(
+    request: pytest.FixtureRequest,
+) -> TaoStartup:
+    return get_regression_test(request.param.name)
+
+
+@pytest.fixture(params=example_init_files, ids=[fn.parts[-2] for fn in example_init_files])
+def tao_example(
+    request: pytest.FixtureRequest,
+) -> TaoStartup:
+    return get_example(request.param.name)
 
 
 @pytest.fixture(

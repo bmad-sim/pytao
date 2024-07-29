@@ -7,7 +7,8 @@ import pytest
 from typing_extensions import Literal
 
 from .. import SubprocessTao, Tao, TaoStartup
-from .conftest import test_artifacts
+from ..plotting.curves import TaoCurveSettings
+from .conftest import get_example, get_regression_test, test_artifacts
 
 logger = logging.getLogger(__name__)
 
@@ -57,19 +58,17 @@ def _plot_show_to_savefig(
 
 
 def test_plot_floor_plan(use_subprocess: bool, plot_backend: BackendName):
-    with TaoStartup(
-        init_file="$ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall",
-        plot=plot_backend,
-    ).run_context(use_subprocess=use_subprocess) as tao:
+    startup = get_regression_test("tao.init_wall")
+    startup.plot = plot_backend
+    with startup.run_context(use_subprocess=use_subprocess) as tao:
         tao.plot("floor_plan")
 
 
 def test_plot_floor_layout(use_subprocess: bool, plot_backend: BackendName):
-    with TaoStartup(
-        init_file="$ACC_ROOT_DIR/regression_tests/python_test/tao.init_floor_orbit",
-        plot=plot_backend,
-        nostartup=True,
-    ).run_context(use_subprocess=use_subprocess) as tao:
+    startup = get_regression_test("tao.init_floor_orbit")
+    startup.plot = plot_backend
+    startup.nostartup = True
+    with startup.run_context(use_subprocess=use_subprocess) as tao:
         tao.plot("alpha")
         tao.plot("beta")
         tao.plot("lat_layout")
@@ -81,10 +80,9 @@ def test_plot_floor_layout(use_subprocess: bool, plot_backend: BackendName):
 
 
 def test_plot_data(use_subprocess: bool, plot_backend: BackendName):
-    with TaoStartup(
-        init_file="$ACC_ROOT_DIR/bmad-doc/tao_examples/cesr/tao.init",
-        plot=plot_backend,
-    ).run_context(use_subprocess=use_subprocess) as tao:
+    startup = get_example("cesr")
+    startup.plot = plot_backend
+    with startup.run_context(use_subprocess=use_subprocess) as tao:
         tao.plot_manager.place_all()
         tao.plot_manager.plot_regions(list(tao.plot_manager.regions))
         tao.plot("floor_plan")
@@ -118,3 +116,22 @@ def test_plot_manager(
         assert not any(region for region in manager.regions.values())
         manager.clear()
         assert not manager.regions
+
+
+def test_plot_curve(plot_backend: BackendName):
+    example = get_example("erl")
+    example.plot = plot_backend
+    with example.run_context(use_subprocess=True) as tao:
+        manager = tao.plot_manager
+        manager.plot(
+            "zphase",
+            curves={
+                1: TaoCurveSettings(
+                    ele_ref_name=r"linac.beg\1",
+                    draw_line=True,
+                    draw_symbols=True,
+                    draw_symbol_index=True,
+                ),
+            },
+            save=test_artifacts / f"test_plot_curve-{plot_backend}",
+        )

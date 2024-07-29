@@ -1,4 +1,5 @@
 import logging
+import re
 
 from . import hershey_fonts
 
@@ -93,8 +94,14 @@ def mpl_string(value: str) -> str:
             sx = result[u_pos : d_pos + 3]
             result = result.replace(sx, "^" + sx[3:-3])
 
+    # TODO this is far from performant, but this is unlikely to be called
+    # frequently so I'm leaving it for now
     for from_, to in _pgplot_to_mpl_chars:
         result = result.replace(from_, to)
+
+    # Replace any instances of \1 with non-LaTeX equivalents, as these can be
+    # used in component names.
+    result = re.sub(r"\\\\(\d+)", r"$ \\\1 $", result)
 
     if r"\\" in result:
         logger.debug(f"Unknown pgplot character in string: {result}")

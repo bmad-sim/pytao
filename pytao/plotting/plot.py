@@ -33,8 +33,8 @@ from matplotlib.ticker import AutoMinorLocator
 from pydantic.dataclasses import Field
 from typing_extensions import override
 
-
 from . import pgplot, util
+from .curves import TaoCurveSettings
 from .fields import LatticeLayoutField
 from .types import (
     BuildingWallGraphInfo,
@@ -370,7 +370,6 @@ class GraphBase:
             for graph in manager.prepare_graphs_by_name(
                 region_name=self.region_name,
                 graph_name=self.graph_name,
-                update=True,
             )
         ]
         # TODO
@@ -1702,6 +1701,9 @@ class FloorPlanElement:
             # Otherwise, we have an actual scale that the user configured to map
             # sizes to physical units.
             scale = floor_plan_shape_scale
+            # TODO: back to scale=1.0 after this commit makes it into a bmad tag:
+            # https://github.com/bmad-sim/bmad-ecosystem/commit/4d698389c727961f06f39f67ed408bfb0620de2f#diff-724ece0d6b708163834035ed2d28cf86c4d787945405b624c1f8d7155111d39a
+            # scale = 1.0
 
         # Handle some renaming and reduce dictionary key usage
         return cls._from_info(
@@ -2343,6 +2345,19 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
         )
         return result
 
+    def _place(
+        self,
+        graph_name: str,
+        region_name: Optional[str] = None,
+    ) -> str:
+        if region_name is None:
+            region_name = self.get_region_for_graph(graph_name)
+            logger.debug(f"Picked {region_name} for {graph_name}")
+
+        logger.debug(f"Placing {graph_name} in {region_name}")
+        self.tao.cmd(f"place -no_buffer {region_name} {graph_name}")
+        return region_name
+
     def place(
         self,
         graph_name: str,
@@ -2350,12 +2365,7 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
         region_name: Optional[str] = None,
         ignore_invalid: bool = True,
     ) -> List[T_GraphType]:
-        if region_name is None:
-            region_name = self.get_region_for_graph(graph_name)
-            logger.debug(f"Picked {region_name} for {graph_name}")
-
-        logger.debug(f"Placing {graph_name} in {region_name}")
-        self.tao.cmd(f"place -no_buffer {region_name} {graph_name}")
+        region_name = self._place(graph_name, region_name)
         return self.update_region(
             region_name=region_name,
             graph_name=graph_name,
@@ -2410,21 +2420,45 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
         self,
         graph_name: str,
         region_name: Optional[str] = None,
-        update: bool = True,
         reuse: bool = True,
+        curves: Optional[Dict[int, TaoCurveSettings]] = None,
     ) -> List[T_GraphType]:
-        if graph_name and not region_name:
+        if not region_name:
             if reuse:
                 region_name = self.get_region_for_graph(graph_name)
             else:
                 region_name = find_unused_plot_region(self.tao, skip=set(self.to_place))
 
-        if region_name in self.regions:
-            if update:
-                return self.update_region(region_name=region_name, graph_name=graph_name)
-            return self.regions[region_name]
+        if region_name not in self.regions:
+            self._place(graph_name=graph_name, region_name=region_name)
 
-        return self.place(graph_name=graph_name, region_name=region_name)
+        if curves:
+            self.configure_curves(region_name, curves or {})
+
+        return self.update_region(
+            region_name=region_name,
+            graph_name=graph_name,
+        )
+
+    def configure_curves(
+        self,
+        region_name: str,
+        settings: Dict[int, TaoCurveSettings],
+        *,
+        graph_name: Optional[str] = None,
+    ):
+        if not graph_name:
+            for plot_name in get_plots_in_region(self.tao, region_name):
+                self.configure_curves(region_name, settings=settings, graph_name=plot_name)
+            return
+
+        for curve_idx, curve in settings.items():
+            for command in curve.get_commands(
+                region_name,
+                graph_name,
+                curve_index=curve_idx,
+            ):
+                self.tao.cmd(command)
 
     def make_graph(
         self,
@@ -2439,7 +2473,6 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
         *,
         region_name: Optional[str] = None,
         include_layout: bool = True,
-        update: bool = True,
         reuse: bool = True,
         **kwargs,
     ):
@@ -2473,23 +2506,17 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
         layout_height: float = 0.5,
         figsize: Optional[Tuple[int, int]] = None,
         share_x: bool = True,
-        update: bool = True,
         reuse: bool = True,
         xlim: Optional[Tuple[float, float]] = None,
         ylim: Optional[Tuple[float, float]] = None,
         save: Union[bool, str, pathlib.Path, None] = None,
+        curves: Optional[Dict[int, TaoCurveSettings]] = None,
     ):
         """
         Plot a graph with Matplotlib.
 
         To plot a specific graph, specify `graph_name` (optionally `region_name`).
-        To plot all placed graphs, specify neither.
-
-        For full details on available parameters, see the specific backend's
-        graph manager. For example:
-
-        In [1]: tao.bokeh.plot?
-        In [2]: tao.matplotlib.plot?
+        The default is to plot all placed graphs.
 
         Parameters
         ----------
@@ -2501,8 +2528,6 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
             Include a layout plot at the bottom, if not already placed and if
             appropriate (i.e., another plot uses longitudinal coordinates on
             the x-axis).
-        update : bool, default=True
-            Query Tao to update relevant graphs prior to plotting.
         width : int, optional
             Width of each plot.
         height : int, optional
@@ -2512,8 +2537,6 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
         share_x : bool or None, default=None
             Share x-axes where sensible (`None`) or force sharing x-axes (True)
             for all plots.
-        update : bool, default=True
-            Query Tao to update relevant graphs prior to plotting.
         reuse : bool, default=True
             If an existing plot of the given template type exists, reuse the
             existing plot region rather than selecting a new empty region.
@@ -2532,8 +2555,8 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
         graphs = self.prepare_graphs_by_name(
             graph_name=graph_name,
             region_name=region_name,
-            update=update,
             reuse=reuse,
+            curves=curves,
         )
         if not graphs:
             return None

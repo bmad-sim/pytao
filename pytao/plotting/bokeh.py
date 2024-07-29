@@ -23,6 +23,7 @@ from typing import (
 import bokeh.colors.named
 import bokeh.embed
 import bokeh.events
+import bokeh.io
 import bokeh.layouts
 import bokeh.models
 import bokeh.plotting
@@ -36,6 +37,7 @@ from typing_extensions import NotRequired, TypedDict, override
 
 from ..interface_commands import AnyPath
 from .fields import LatticeLayoutField
+from .curves import TaoCurveSettings
 
 from . import pgplot, util
 from .plot import (
@@ -1176,7 +1178,6 @@ class BokehGraphManager(
         *,
         region_name: Optional[str] = None,
         include_layout: bool = True,
-        update: bool = True,
         sizing_mode: Optional[SizingModeType] = None,
         width: Optional[int] = None,
         height: Optional[int] = None,
@@ -1187,6 +1188,7 @@ class BokehGraphManager(
         xlim: Optional[Tuple[float, float]] = None,
         ylim: Optional[Tuple[float, float]] = None,
         save: Union[bool, str, pathlib.Path, None] = None,
+        curves: Optional[Dict[int, TaoCurveSettings]] = None,
     ):
         """
         Plot a graph or all placed graphs with Bokeh.
@@ -1236,8 +1238,8 @@ class BokehGraphManager(
         bgraphs = self.prepare_graphs_by_name(
             graph_name=graph_name,
             region_name=region_name,
-            update=update,
             reuse=reuse,
+            curves=curves,
         )
         if not bgraphs:
             return []
@@ -1267,6 +1269,21 @@ class BokehGraphManager(
             else:
                 if height is not None:
                     bgraph.height = height
+
+        if save:
+            title = bgraphs[0].graph.title or f"plot-{time.time()}"
+            if save is True:
+                save = f"{title}.html"
+            if not pathlib.Path(save).suffix:
+                save = f"{save}.html"
+
+            logger.info(f"Saving plot to {save!r}")
+            bokeh.io.save(
+                bokeh.layouts.column([bgraph.create_figure() for bgraph in bgraphs]),
+                filename=save,
+                title=title,
+            )
+
         return bgraphs
 
 
@@ -1316,8 +1333,8 @@ class NotebookGraphManager(BokehGraphManager):
         ylim: Optional[Tuple[float, float]] = None,
         notebook_handle: bool = False,
         reuse: bool = True,
-        update: bool = True,
         save: Union[bool, str, pathlib.Path, None] = None,
+        curves: Optional[Dict[int, TaoCurveSettings]] = None,
     ):
         bgraphs = super().plot(
             region_name=region_name,
@@ -1329,9 +1346,9 @@ class NotebookGraphManager(BokehGraphManager):
             layout_height=layout_height,
             show_fields=show_fields,
             reuse=reuse,
-            update=update,
             xlim=xlim,
             ylim=ylim,
+            curves=curves,
         )
 
         if not bgraphs:
@@ -1373,7 +1390,7 @@ class NotebookGraphManager(BokehGraphManager):
                 ylim=ylim,
                 notebook_handle=notebook_handle,
                 reuse=reuse,
-                update=update,
+                curves=curves,
                 save=False,  # <-- important line
             )
 
