@@ -662,6 +662,7 @@ class PlotCurve:
 
 @dataclasses.dataclass
 class BasicGraph(GraphBase):
+    graph_type: ClassVar[str] = "basic"
     curves: List[PlotCurve] = Field(default_factory=list)
 
     def clamp_x_range(self, x0: Optional[float], x1: Optional[float]) -> Tuple[float, float]:
@@ -864,8 +865,13 @@ class LatticeLayoutElement:
         x_max: float,
         y2_floor: float,
     ):
+        """
+        Element is wrapped around the lattice ends, and s1 >= s2.
+
+        `$ACC_ROOT_DIR/regression_tests/python_test/tao.init_wake` shows off
+        this functionality.
+        """
         assert s1 >= s2
-        # Case where element is wrapped round the lattice ends.
         s_min = max((x_min, s1 + (s1 + s2) / 2.0))
         s_max = min((x_max, s1 - (s1 + s2) / 2.0))
 
@@ -968,6 +974,7 @@ class LatticeLayoutElement:
 
 @dataclasses.dataclass
 class LatticeLayoutGraph(GraphBase):
+    graph_type: ClassVar[str] = "lat_layout"
     elements: List[LatticeLayoutElement] = Field(default_factory=list)
     border_xlim: Point = _point_field
     universe: int = 0
@@ -1182,7 +1189,7 @@ def _get_wrapped_shape_coords(
             ([s_min, s2], [y2, 0]),
         ]
 
-    logger.warning("Unsupported shape: {shape}")
+    logger.warning(f"Unsupported wrapped shape: {shape}")
     return []
 
 
@@ -2053,6 +2060,7 @@ class FloorOrbits:
 
 @dataclasses.dataclass
 class FloorPlanGraph(GraphBase):
+    graph_type: ClassVar[str] = "floor_plan"
     building_walls: BuildingWalls = Field(default_factory=BuildingWalls)
     floor_orbits: Optional[FloorOrbits] = None
     elements: List[FloorPlanElement] = Field(default_factory=list)
@@ -2375,13 +2383,22 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
     def plot_regions(
         self,
         regions: List[str],
+        include_layout: bool = True,
         **kwargs,
     ):
         res = []
         for graph_name, graph_regions in list(self._graph_name_to_regions.items()):
             for region_name in graph_regions:
                 if region_name in regions:
-                    res.append(self.plot(graph_name, region_name=region_name, **kwargs))
+                    res.append(
+                        self.plot(
+                            graph_name,
+                            region_name=region_name,
+                            include_layout=False,
+                            **kwargs,
+                        )
+                    )
+
         return res
 
     def prepare_graphs_by_name(

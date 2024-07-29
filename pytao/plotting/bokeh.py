@@ -121,6 +121,19 @@ def get_tool_from_figure(fig: figure, tool_cls: Type[T_Tool]) -> Optional[T_Tool
     return tools[0] if tools else None
 
 
+def move_layout_to_bottom(bgraphs: List[AnyBokehGraph]) -> List[AnyBokehGraph]:
+    result = []
+    layout = None
+    for bgraph in bgraphs:
+        if isinstance(bgraph, BokehLatticeLayoutGraph):
+            layout = bgraph
+        else:
+            result.append(bgraph)
+    if layout is not None:
+        result.append(layout)
+    return result
+
+
 def link_crosshairs(figs: List[figure]):
     first, *rest = figs
     crosshair = get_tool_from_figure(first, bokeh.models.CrosshairTool)
@@ -1229,9 +1242,14 @@ class BokehGraphManager(
         if not bgraphs:
             return []
 
-        if include_layout and any(bgraph.graph.is_s_plot for bgraph in bgraphs):
-            if not any(isinstance(bgraph, BokehLatticeLayoutGraph) for bgraph in bgraphs):
-                bgraphs.append(self.get_lattice_layout_graph())
+        if (
+            include_layout
+            and any(bgraph.graph.is_s_plot for bgraph in bgraphs)
+            and not any(isinstance(bgraph, BokehLatticeLayoutGraph) for bgraph in bgraphs)
+        ):
+            bgraphs.append(self.get_lattice_layout_graph())
+
+        bgraphs = move_layout_to_bottom(bgraphs)
 
         for bgraph in bgraphs:
             is_layout = isinstance(bgraph, BokehLatticeLayoutGraph)
@@ -1267,6 +1285,8 @@ class NotebookGraphManager(BokehGraphManager):
                     bgraphs.extend(
                         super().plot(graph_name=graph_name, region_name=region_name, **kwargs)
                     )
+
+        bgraphs = move_layout_to_bottom(bgraphs)
 
         if not bgraphs:
             return None
