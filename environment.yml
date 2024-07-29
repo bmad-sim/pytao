@@ -12,6 +12,7 @@ dependencies:
   - numpy
   - h5py
   - pexpect
+  - pydantic >=2
   - pip
   - pip:
       # Install pytao from here.
