@@ -980,7 +980,6 @@ class LatticeLayoutGraph(GraphBase):
     branch: int = 0
     y2_floor: float = 0
     fields: List[LatticeLayoutField] = Field(default_factory=list)
-    show_fields: bool = False
 
     def update_fields(self, tao: Tao) -> List[LatticeLayoutField]:
         field_elems = [
@@ -1025,12 +1024,6 @@ class LatticeLayoutGraph(GraphBase):
         assert ax is not None
 
         ax.axhline(y=0, color="Black", linewidth=1)
-
-        if self.show_fields:
-            self.plot_fields(ax)
-            # ax.colorbar(label="B1_GRADIENT (T/m)")
-            # plt.xlabel(r"$s$ (m)")
-            # plt.ylabel(r"$x$ (mm)")
 
         for elem in self.elements:
             elem.plot(ax)
@@ -2499,7 +2492,6 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
         graph_name: str,
         *,
         region_name: Optional[str] = None,
-        show_fields: bool = False,
         include_layout: bool = True,
         width: int = 6,
         height: int = 6,
@@ -2591,9 +2583,6 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
 
         if include_layout:
             layout_graph = self.get_lattice_layout_graph()
-            layout_graph.show_fields = True
-            if show_fields and not layout_graph.fields:
-                layout_graph.update_fields(tao=self.tao)
 
         for ax, graph in zip(gs[:, 0], graphs):
             try:

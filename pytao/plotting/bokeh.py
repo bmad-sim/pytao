@@ -601,7 +601,6 @@ class BokehGraphBase(Generic[TGraph]):
 class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
     graph_type: ClassVar[str] = "lat_layout"
     graph: LatticeLayoutGraph
-    show_fields: bool
 
     def __init__(
         self,
@@ -611,7 +610,6 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
         width: int = 900,
         height: int = 300,
         aspect_ratio: float = 3.0,  # w/h
-        show_fields: bool = False,
     ) -> None:
         super().__init__(
             manager=manager,
@@ -621,7 +619,6 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
             height=height,
             aspect_ratio=aspect_ratio,
         )
-        self.show_fields = show_fields
 
     def update_plot(
         self,
@@ -632,20 +629,6 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
     ) -> None:
         if tao is None:
             return
-
-        have_fields = len(self.graph.fields)
-        # graph = make_graph(tao, self.graph.region_name, self.graph.graph_name)
-        # assert isinstance(graph, LatticeLayoutGraph)
-        # self.graph = graph
-
-        if not have_fields:
-            return
-
-        self.graph.update_fields(tao)
-        field_images_glyph = fig.select("field_images")
-        field_images = field_images_glyph.data_source
-        updated_source = _fields_to_data_source(self.graph.fields)
-        field_images.data = dict(updated_source.data)
 
     @override
     def create_figure(
@@ -692,10 +675,6 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
         fig.yaxis.ticker = []
         fig.yaxis.visible = False
 
-        if self.graph.show_fields:
-            if not self.graph.fields:
-                self.graph.update_fields(self.manager.tao)
-            _draw_fields(fig, self.graph.fields)
         for elem in self.graph.elements:
             _draw_layout_element(fig, elem, skip_labels=True)
 
@@ -1183,7 +1162,6 @@ class BokehGraphManager(
         height: Optional[int] = None,
         layout_height: Optional[int] = None,
         share_x: Optional[bool] = None,
-        show_fields: bool = False,
         reuse: bool = True,
         xlim: Optional[Tuple[float, float]] = None,
         ylim: Optional[Tuple[float, float]] = None,
@@ -1260,10 +1238,6 @@ class BokehGraphManager(
             if width is not None:
                 bgraph.width = width
             if is_layout:
-                bgraph.show_fields = show_fields
-                if show_fields and not bgraph.graph.fields:
-                    bgraph.graph.update_fields(tao=self.tao)
-
                 if layout_height is not None:
                     bgraph.height = layout_height
             else:
@@ -1328,7 +1302,6 @@ class NotebookGraphManager(BokehGraphManager):
         layout_height: Optional[int] = None,
         share_x: Optional[bool] = None,
         vars: bool = False,
-        show_fields: bool = False,
         xlim: Optional[Tuple[float, float]] = None,
         ylim: Optional[Tuple[float, float]] = None,
         notebook_handle: bool = False,
@@ -1344,7 +1317,6 @@ class NotebookGraphManager(BokehGraphManager):
             width=width,
             height=height,
             layout_height=layout_height,
-            show_fields=show_fields,
             reuse=reuse,
             xlim=xlim,
             ylim=ylim,
@@ -1385,7 +1357,6 @@ class NotebookGraphManager(BokehGraphManager):
                 layout_height=layout_height,
                 share_x=share_x,
                 vars=vars,
-                show_fields=show_fields,
                 xlim=xlim,
                 ylim=ylim,
                 notebook_handle=notebook_handle,
