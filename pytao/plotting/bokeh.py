@@ -27,6 +27,7 @@ import bokeh.io
 import bokeh.layouts
 import bokeh.models
 import bokeh.plotting
+import bokeh.resources
 import numpy as np
 from bokeh.core.enums import SizingModeType
 from bokeh.document.callbacks import EventCallback
@@ -541,6 +542,7 @@ class BokehGraphBase(Generic[TGraph]):
     height: int
     aspect_ratio: float
     x_range: Optional[bokeh.models.Range]
+    y_range: Optional[bokeh.models.Range]
 
     def __init__(
         self,
@@ -558,6 +560,7 @@ class BokehGraphBase(Generic[TGraph]):
         self.height = height
         self.aspect_ratio = aspect_ratio
         self.x_range = None
+        self.y_range = None
 
     def get_graph_info(self) -> TGraph:
         return self.graph
@@ -680,6 +683,8 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
 
         if self.x_range is not None:
             fig.x_range = self.x_range
+        if self.y_range is not None:
+            fig.y_range = self.y_range
         return fig
 
     def create_app_figure(
@@ -795,6 +800,8 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
         )
         if self.x_range is not None:
             fig.x_range = self.x_range
+        if self.y_range is not None:
+            fig.y_range = self.y_range
         for curve, source in zip(graph.curves, self.curve_data):
             _plot_curve(fig, curve, source)
         return fig
@@ -904,6 +911,8 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         )
         if self.x_range is not None:
             fig.x_range = self.x_range
+        if self.y_range is not None:
+            fig.y_range = self.y_range
 
         box_zoom = get_tool_from_figure(fig, bokeh.models.BoxZoomTool)
         if box_zoom is not None:
@@ -961,11 +970,32 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
 AnyBokehGraph = Union[BokehBasicGraph, BokehLatticeLayoutGraph, BokehFloorPlanGraph]
 
 
+def _grid_models(models, grid: Tuple[int, int]) -> List[bokeh.models.UIElement]:
+    nrows, ncols = grid
+    rows = []
+    remaining = list(models)
+    for _row in range(nrows):
+        row = []
+        for _col in range(ncols):
+            if not remaining:
+                break
+
+            model = remaining.pop(0)
+            row.append(model)
+
+        if row:
+            rows.append(row)
+    return rows
+
+
 class CompositeApp:
     tao: Tao
     bgraphs: List[AnyBokehGraph]
     share_x: Optional[bool]
     variables: List[Variable]
+    grid: Optional[Tuple[int, int]]
+    width: int
+    height: int
 
     def __init__(
         self,
@@ -973,11 +1003,17 @@ class CompositeApp:
         bgraphs: List[AnyBokehGraph],
         share_x: Optional[bool] = None,
         variables: Optional[List[Variable]] = None,
+        grid: Optional[Tuple[int, int]] = None,
+        width: int = 900,
+        height: int = 900,
     ) -> None:
         self.tao = tao
         self.bgraphs = bgraphs
         self.share_x = share_x
         self.variables = variables or []
+        self.grid = grid
+        self.width = width
+        self.height = height
 
     def to_html(
         self,
@@ -1029,7 +1065,13 @@ class CompositeApp:
             models.insert(0, bokeh.layouts.row(spinners))
             models.insert(1, bokeh.layouts.row([status_label]))
 
-        return bokeh.layouts.column(models)
+        if not self.grid:
+            return bokeh.layouts.column(models)
+        return bokeh.layouts.layout(
+            children=_grid_models(models, self.grid),
+            width=self.width,
+            height=self.height,
+        )
 
     def create_app(self):
         def bokeh_app(doc):
@@ -1150,6 +1192,91 @@ class BokehGraphManager(
             return BokehFloorPlanGraph(self, graph)
         raise NotImplementedError(type(graph).__name__)
 
+    def plot_grid(
+        self,
+        graph_names: List[str],
+        grid: Tuple[int, int],
+        *,
+        curves: Optional[List[Dict[int, TaoCurveSettings]]] = None,
+        include_layout: bool = False,
+        share_x: bool = True,
+        width: int = 800,
+        height: int = 800,
+        reuse: bool = True,
+        save: Union[bool, str, pathlib.Path, None] = None,
+    ):
+        if len(set(graph_names)) < len(graph_names):
+            # Don't reuse existing regions if we place the same template more
+            # than once
+            reuse = False
+
+        if not curves:
+            curves = [None] * len(graph_names)
+
+        bgraphs = sum(
+            (
+                self.prepare_graphs_by_name(
+                    graph_name=graph_name,
+                    reuse=reuse,
+                    curves=graph_curves,
+                )
+                for graph_name, graph_curves in zip(graph_names, curves or [])
+            ),
+            [],
+        )
+
+        items = [
+            BGraphAndFigure(fig=bgraph.create_figure(), bgraph=bgraph) for bgraph in bgraphs
+        ]
+
+        nrows, ncols = grid
+        if not bgraphs:
+            return None, None
+
+        rows = []
+        remaining = list(items)
+        for _row in range(nrows):
+            row_widgets = []
+            for _col in range(ncols):
+                if not remaining:
+                    break
+
+                item = remaining.pop(0)
+                row_widgets.append(item.fig)
+
+            if row_widgets:
+                rows.append(bokeh.layouts.row(row_widgets))
+
+        if include_layout and (nrows * ncols) > len(graph_names):
+            lattice_layout = self.get_lattice_layout_graph()
+            layout_items = [
+                BGraphAndFigure(fig=lattice_layout.create_figure(), bgraph=lattice_layout)
+                for _ in range(ncols)
+            ]
+            items.extend(layout_items)
+            rows.append(bokeh.layouts.row([item.fig for item in layout_items]))
+
+        layout = bokeh.layouts.column(rows)
+
+        if share_x:
+            share_common_x_axes(items)
+
+        if save:
+            title = bgraphs[0].graph.title or f"plot-{time.time()}"
+            if save is True:
+                save = f"{title}.html"
+            if not pathlib.Path(save).suffix:
+                save = f"{save}.html"
+
+            logger.info(f"Saving plot to {save!r}")
+            bokeh.io.save(
+                layout,
+                filename=save,
+                title=title,
+                resources=bokeh.resources.CDN,
+            )
+        return items, layout
+
     @override
     def plot(
         self,
@@ -1237,6 +1364,10 @@ class BokehGraphManager(
                 bgraph.sizing_mode = sizing_mode
             if width is not None:
                 bgraph.width = width
+            if xlim is not None:
+                bgraph.x_range = bokeh.models.Range1d(*xlim)
+            if ylim is not None:
+                bgraph.y_range = bokeh.models.Range1d(*ylim)
             if is_layout:
                 if layout_height is not None:
                     bgraph.height = layout_height
@@ -1252,11 +1383,8 @@ class BokehGraphManager(
                 save = f"{save}.html"
 
             logger.info(f"Saving plot to {save!r}")
-            bokeh.io.save(
-                bokeh.layouts.column([bgraph.create_figure() for bgraph in bgraphs]),
-                filename=save,
-                title=title,
-            )
+            app = CompositeApp(tao=self.tao, bgraphs=bgraphs, share_x=share_x)
+            app.save(save, title=title)
 
         return bgraphs
 
@@ -1289,6 +1417,44 @@ class NotebookGraphManager(BokehGraphManager):
 
         return bokeh.plotting.show(app.create_app())
 
+    def plot_grid(
+        self,
+        graph_names: List[str],
+        grid: Tuple[int, int],
+        *,
+        curves: Optional[List[Dict[int, TaoCurveSettings]]] = None,
+        include_layout: bool = False,
+        share_x: bool = True,
+        width: int = 6,
+        height: int = 6,
+        reuse: bool = True,
+        save: Union[bool, str, pathlib.Path, None] = None,
+    ):
+        items, _layout = super().plot_grid(
+            graph_names=graph_names,
+            grid=grid,
+            curves=curves,
+            include_layout=include_layout,
+            share_x=share_x,
+            width=width,
+            height=height,
+            reuse=reuse,
+            save=save,
+        )
+        if not items:
+            return
+        app = CompositeApp(
+            tao=self.tao,
+            bgraphs=[item.bgraph for item in items],
+            share_x=share_x,
+            variables=None,
+            grid=grid,
+            # width=width,
+            # height=height,
+        )
+
+        return bokeh.plotting.show(app.create_app())
+
     @override
     def plot(
         self,
@@ -1309,6 +1475,27 @@ class NotebookGraphManager(BokehGraphManager):
         save: Union[bool, str, pathlib.Path, None] = None,
         curves: Optional[Dict[int, TaoCurveSettings]] = None,
     ):
+        if save:
+            # NOTE/TODO: seems like we have to regenerate the bokeh glyphs
+            # or they may be considered as owned by more than one document.
+            # This is a workaround, but I assume there's a better way of
+            # going about this...
+            super().plot(
+                region_name=region_name,
+                graph_name=graph_name,
+                include_layout=include_layout,
+                sizing_mode=sizing_mode,
+                width=width,
+                height=height,
+                layout_height=layout_height,
+                reuse=reuse,
+                xlim=xlim,
+                ylim=ylim,
+                curves=curves,
+                share_x=share_x,
+                save=save,
+            )
+
         bgraphs = super().plot(
             region_name=region_name,
             graph_name=graph_name,
@@ -1321,6 +1508,7 @@ class NotebookGraphManager(BokehGraphManager):
             xlim=xlim,
             ylim=ylim,
             curves=curves,
+            save=False,  # <-- important
         )
 
         if not bgraphs:
@@ -1333,37 +1521,6 @@ class NotebookGraphManager(BokehGraphManager):
                 app.variables = variables
         else:
             app = CompositeApp(self.tao, bgraphs, share_x=share_x, variables=variables)
-
-        if save:
-            title = bgraphs[0].graph.title or f"plot-{time.time()}"
-            if save is True:
-                save = f"{title}.html"
-            if not pathlib.Path(save).suffix:
-                save = f"{save}.html"
-
-            logger.info(f"Saving plot to {save!r}")
-            app.save(save, title=title)
-            # NOTE/TODO: seems like we have to regenerate the bokeh glyphs
-            # or they may be considered as owned by more than one document.
-            # This is a workaround, but I assume there's a better way of
-            # going about this...
-            return self.plot(
-                graph_name=graph_name,
-                region_name=region_name,
-                include_layout=include_layout,
-                sizing_mode=sizing_mode,
-                width=width,
-                height=height,
-                layout_height=layout_height,
-                share_x=share_x,
-                vars=vars,
-                xlim=xlim,
-                ylim=ylim,
-                notebook_handle=notebook_handle,
-                reuse=reuse,
-                curves=curves,
-                save=False,  # <-- important line
-            )
 
         return bokeh.plotting.show(
             app.create_app(),

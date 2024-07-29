@@ -135,3 +135,44 @@ def test_plot_curve(plot_backend: BackendName):
             },
             save=test_artifacts / f"test_plot_curve-{plot_backend}",
         )
+
+
+def test_plot_grid(plot_backend: BackendName):
+    example = get_example("erl")
+    example.plot = plot_backend
+    with example.run_context(use_subprocess=True) as tao:
+        manager = tao.plot_manager
+        manager.plot_grid(
+            graph_names=["zphase", "zphase", "zphase", "zphase2"],
+            grid=(2, 2),
+            curves=[
+                {1: TaoCurveSettings(ele_ref_name=r"linac.beg\1")},
+                {1: TaoCurveSettings(ele_ref_name=r"linac.end\1")},
+                {1: TaoCurveSettings(ele_ref_name=r"linac.beg\2")},
+                {1: TaoCurveSettings(ele_ref_name=r"linac.end\2")},
+            ],
+            figsize=(10, 10),
+            share_x=False,
+            save=test_artifacts / f"test_plot_grid-{plot_backend}",
+        )
+
+
+def test_plot_grid_with_layout(plot_backend: BackendName):
+    example = get_example("erl")
+    example.plot = plot_backend
+    with example.run_context(use_subprocess=True) as tao:
+        manager = tao.plot_manager
+        manager.plot_grid(
+            graph_names=["zphase", "zphase", "zphase", "zphase2"],
+            grid=(3, 2),
+            include_layout=True,
+            curves=[
+                {1: TaoCurveSettings(ele_ref_name=r"linac.beg\1")},
+                {1: TaoCurveSettings(ele_ref_name=r"linac.end\1")},
+                {1: TaoCurveSettings(ele_ref_name=r"linac.beg\2")},
+                {1: TaoCurveSettings(ele_ref_name=r"linac.end\2")},
+            ],
+            figsize=(10, 10),
+            share_x=False,
+            save=test_artifacts / f"test_plot_grid_with_layout-{plot_backend}",
+        )

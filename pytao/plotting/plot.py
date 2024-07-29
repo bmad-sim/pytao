@@ -2486,6 +2486,82 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
         # or worse) are used directly with this backend
         return make_graph(self.tao, region_name, graph_name)
 
+    def plot_grid(
+        self,
+        graph_names: List[str],
+        grid: Tuple[int, int],
+        *,
+        curves: Optional[List[Dict[int, TaoCurveSettings]]] = None,
+        include_layout: bool = False,
+        figsize: Optional[Tuple[int, int]] = None,
+        share_x: Union[bool, Literal["row", "col", "all"]] = "col",
+        width: int = 6,
+        height: int = 6,
+        reuse: bool = True,
+        save: Union[bool, str, pathlib.Path, None] = None,
+    ):
+        if len(set(graph_names)) < len(graph_names):
+            # Don't reuse existing regions if we place the same template more
+            # than once
+            reuse = False
+
+        if not curves:
+            curves = [None] * len(graph_names)
+
+        graphs = sum(
+            (
+                self.prepare_graphs_by_name(
+                    graph_name=graph_name,
+                    reuse=reuse,
+                    curves=graph_curves,
+                )
+                for graph_name, graph_curves in zip(graph_names, curves or [])
+            ),
+            [],
+        )
+
+        nrows, ncols = grid
+        if not graphs:
+            return None
+
+        if figsize is None and width and height:
+            figsize = (width, height)
+
+        fig, gs = plt.subplots(
+            nrows=nrows,
+            ncols=ncols,
+            sharex=share_x,
+            figsize=figsize,
+            squeeze=False,
+        )
+
+        remaining = list(graphs)
+        for row in range(nrows):
+            for col in range(ncols):
+                if not remaining:
+                    break
+
+                graph = remaining.pop(0)
+                ax = gs[row, col]
+                try:
+                    graph.plot(ax)
+                except UnsupportedGraphError:
+                    continue
+
+        if include_layout and (nrows * ncols) > len(graph_names):
+            layout_graph = self.get_lattice_layout_graph()
+            for col in range(ncols):
+                layout_graph.plot(gs[-1, col])
+
+        if save:
+            title = graphs[0].title or f"plot-{time.time()}"
+            if save is True:
+                save = f"{title}.png"
+            logger.info(f"Saving plot to {save!r}")
+            fig.savefig(save)
+
+        return fig, gs
+
     @override
     def plot(
         self,
