@@ -1209,6 +1209,7 @@ class BokehGraphManager(
         share_x: bool = True,
         width: Optional[int] = None,
         height: Optional[int] = None,
+        figsize: Optional[Tuple[int, int]] = None,
         layout_height: Optional[int] = None,
         xlim: Optional[List[Optional[Tuple[float, float]]]] = None,
         ylim: Optional[List[Optional[Tuple[float, float]]]] = None,
@@ -1272,8 +1273,10 @@ class BokehGraphManager(
                 for _ in range(ncols)
             ]
             items.extend(layout_items)
-            # rows.append([item.fig for item in layout_items])
-            rows.insert(0, [item.fig for item in layout_items])
+            rows.append([item.fig for item in layout_items])
+
+        if figsize is not None:
+            width, height = figsize
 
         layout = bokeh.layouts.column(
             [bokeh.layouts.row(row) for row in rows],
@@ -1424,6 +1427,7 @@ class NotebookGraphManager(BokehGraphManager):
         share_x: Optional[bool] = None,
         **kwargs,
     ):
+        # TODO consider removing 'plot_regions'
         bgraphs = []
         for graph_name, graph_regions in list(self._graph_name_to_regions.items()):
             for region_name in graph_regions:

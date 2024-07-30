@@ -151,7 +151,6 @@ def test_plot_grid(plot_backend: BackendName):
                 {1: TaoCurveSettings(ele_ref_name=r"linac.beg\2")},
                 {1: TaoCurveSettings(ele_ref_name=r"linac.end\2")},
             ],
-            figsize=(10, 10),
             share_x=False,
             save=test_artifacts / f"test_plot_grid-{plot_backend}",
         )
@@ -172,7 +171,7 @@ def test_plot_grid_with_layout(plot_backend: BackendName):
                 {1: TaoCurveSettings(ele_ref_name=r"linac.beg\2")},
                 {1: TaoCurveSettings(ele_ref_name=r"linac.end\2")},
             ],
-            figsize=(10, 10),
+            # figsize=(10, 10),
             share_x=False,
             save=test_artifacts / f"test_plot_grid_with_layout-{plot_backend}",
         )

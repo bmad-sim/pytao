@@ -187,6 +187,8 @@ class TaoStartup:
         try:
             yield tao
         finally:
+            from .subproc import SubprocessTao
+
             if isinstance(tao, SubprocessTao):
                 tao.close_subprocess()
 
