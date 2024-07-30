@@ -596,7 +596,7 @@ class BokehGraphBase(Generic[TGraph]):
     def create_app_figure(self) -> Tuple[figure, List[bokeh.models.UIElement]]:
         raise NotImplementedError()
 
-    def create_app(self):
+    def create_full_app(self):
         def bokeh_app(doc):
             _primary_figure, models = self.create_app_figure()
             for model in models:
@@ -604,7 +604,7 @@ class BokehGraphBase(Generic[TGraph]):
 
         return bokeh_app
 
-    __call__ = create_app
+    __call__ = create_full_app
 
 
 class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
@@ -995,6 +995,17 @@ def _grid_models(models, grid: Tuple[int, int]) -> List[bokeh.models.UIElement]:
 
 
 class CompositeApp:
+    """
+    A composite Bokeh application made up of 2+ graphs.
+
+    This can be used to:
+    * Generate a static HTML page without Python widgets
+    * Generate a Notebook (or standalone) application with Python widgets
+
+    Interactive widgets will use the `Tao` object to adjust variables during
+    callbacks resulting from user interaction.
+    """
+
     tao: Tao
     bgraphs: List[AnyBokehGraph]
     share_x: Optional[bool]
@@ -1080,7 +1091,7 @@ class CompositeApp:
             height=self.height,
         )
 
-    def create_app(self):
+    def create_full_app(self):
         def bokeh_app(doc):
             doc.add_root(self.create_ui())
 
@@ -1446,7 +1457,7 @@ class NotebookGraphManager(BokehGraphManager):
         else:
             app = CompositeApp(self.tao, bgraphs, share_x=share_x)
 
-        return bokeh.plotting.show(app.create_app())
+        return bokeh.plotting.show(app.create_full_app())
 
     def plot_grid(
         self,
@@ -1477,6 +1488,10 @@ class NotebookGraphManager(BokehGraphManager):
         )
         if not items:
             return
+
+        if include_layout:
+            grid = (grid[0] + 1, grid[1])
+
         app = CompositeApp(
             tao=self.tao,
             bgraphs=[item.bgraph for item in items],
@@ -1487,7 +1502,7 @@ class NotebookGraphManager(BokehGraphManager):
             height=height,
         )
 
-        return bokeh.plotting.show(app.create_app())
+        return bokeh.plotting.show(app.create_full_app())
 
     @override
     def plot(
@@ -1557,7 +1572,7 @@ class NotebookGraphManager(BokehGraphManager):
             app = CompositeApp(self.tao, bgraphs, share_x=share_x, variables=variables)
 
         return bokeh.plotting.show(
-            app.create_app(),
+            app.create_full_app(),
             notebook_handle=notebook_handle,
         )
 
