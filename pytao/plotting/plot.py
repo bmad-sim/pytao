@@ -2491,15 +2491,61 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
         graph_names: List[str],
         grid: Tuple[int, int],
         *,
-        curves: Optional[List[Dict[int, TaoCurveSettings]]] = None,
         include_layout: bool = False,
         figsize: Optional[Tuple[int, int]] = None,
         share_x: Union[bool, Literal["row", "col", "all"]] = "col",
+        layout_height: float = 0.5,
         width: int = 6,
         height: int = 6,
+        xlim: Optional[List[Optional[Tuple[float, float]]]] = None,
+        ylim: Optional[List[Optional[Tuple[float, float]]]] = None,
         reuse: bool = True,
+        curves: Optional[List[Dict[int, TaoCurveSettings]]] = None,
         save: Union[bool, str, pathlib.Path, None] = None,
     ):
+        """
+        Plot graphs on a grid with Matplotlib.
+
+        Parameters
+        ----------
+        graph_names : list of str
+            Graph names.
+        grid : (nrows, ncols), optional
+            Grid the provided graphs into this many rows and columns.
+        include_layout : bool, default=False
+            Include a layout plot at the bottom of each column.
+        width : int, optional
+            Width of the whole plot.
+        height : int, optional
+            Height of the whole plot.
+        layout_height : int, optional
+            Height of the layout plot.
+        share_x : bool or None, default=None
+            Share x-axes where sensible (`None`) or force sharing x-axes (True)
+            for all plots.
+        reuse : bool, default=True
+            If an existing plot of the given template type exists, reuse the
+            existing plot region rather than selecting a new empty region.
+        xlim : list of (float, float), optional
+            X axis limits for each graph.
+        ylim : list of (float, float), optional
+            Y axis limits for each graph.
+        curves : list of Dict[int, TaoCurveSettings], optional
+            One dictionary per graph, with each dictionary mapping the curve
+            index to curve settings. These settings will be applied to the
+            placed graphs prior to plotting.
+        save : pathlib.Path or str, optional
+            Save the plot to the given filename.
+
+        Returns
+        -------
+        matplotlib.Figure
+            To gain access to the resulting plot objects, use the backend's
+            `plot` method directly.
+        GridSpec
+            Grid specification of the plotted axes.  To access a specific Axes
+            element, use `gs[row, col]`.
+        """
         if len(set(graph_names)) < len(graph_names):
             # Don't reuse existing regions if we place the same template more
             # than once
@@ -2507,6 +2553,12 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
 
         if not curves:
             curves = [None] * len(graph_names)
+
+        nrows, ncols = grid
+        height_ratios = None
+
+        if figsize is None and width and height:
+            figsize = (width, height)
 
         graphs = sum(
             (
@@ -2520,12 +2572,14 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
             [],
         )
 
-        nrows, ncols = grid
         if not graphs:
             return None
 
-        if figsize is None and width and height:
-            figsize = (width, height)
+        if include_layout:
+            if (nrows * ncols) <= len(graph_names):
+                # Add a row for the layout
+                nrows += 1
+            height_ratios = [1] * (nrows - 1) + [layout_height]
 
         fig, gs = plt.subplots(
             nrows=nrows,
@@ -2533,20 +2587,30 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
             sharex=share_x,
             figsize=figsize,
             squeeze=False,
+            height_ratios=height_ratios,
         )
 
-        remaining = list(graphs)
-        for row in range(nrows):
-            for col in range(ncols):
-                if not remaining:
-                    break
+        xlim = xlim or [None]
+        if len(xlim) < len(graphs):
+            xlim.extend([xlim[-1]] * (len(graphs) - len(xlim)))
 
-                graph = remaining.pop(0)
-                ax = gs[row, col]
-                try:
-                    graph.plot(ax)
-                except UnsupportedGraphError:
-                    continue
+        ylim = ylim or [None]
+        if len(ylim) < len(graphs):
+            ylim.extend([ylim[-1]] * (len(graphs) - len(ylim)))
+
+        rows_cols = [(row, col) for row in range(nrows) for col in range(ncols)]
+
+        for graph, xl, yl, (row, col) in zip(graphs, xlim, ylim, rows_cols):
+            ax = gs[row, col]
+            try:
+                graph.plot(ax)
+            except UnsupportedGraphError:
+                continue
+
+            if xl is not None:
+                ax.set_xlim(*xl)
+            if yl is not None:
+                ax.set_ylim(*yl)
 
         if include_layout and (nrows * ncols) > len(graph_names):
             layout_graph = self.get_lattice_layout_graph()
@@ -2612,13 +2676,20 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
             X axis limits.
         ylim : (float, float), optional
             Y axis limits.
+        save : pathlib.Path or str, optional
+            Save the plot to the given filename.
+        curves : Dict[int, TaoCurveSettings], optional
+            Dictionary of curve index to curve settings. These settings will be
+            applied to the placed graph prior to plotting.
 
         Returns
         -------
         matplotlib.Figure
             To gain access to the resulting plot objects, use the backend's
             `plot` method directly.
-        array of matplotlib.Axes
+        GridSpec
+            Grid specification of the plotted axes.  To access a specific Axes
+            element, use `gs[row, col]`.
         """
         graphs = self.prepare_graphs_by_name(
             graph_name=graph_name,

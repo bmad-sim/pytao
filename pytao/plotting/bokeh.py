@@ -80,6 +80,12 @@ class CurveData(TypedDict):
     symbol: NotRequired[ColumnDataSource]
 
 
+class Defaults:
+    graph_size: Tuple[int, int] = (600, 400)
+    lattice_layout_size: Tuple[int, int] = (600, 150)
+    floor_plan_size: Tuple[int, int] = (600, 600)
+
+
 def _get_curve_data(curve: PlotCurve) -> CurveData:
     data: CurveData = {}
     if curve.line is not None:
@@ -610,16 +616,16 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
         manager: GraphManager,
         graph: LatticeLayoutGraph,
         sizing_mode: SizingModeType = "inherit",
-        width: int = 900,
-        height: int = 300,
-        aspect_ratio: float = 3.0,  # w/h
+        width: Optional[int] = None,
+        height: Optional[int] = None,
+        aspect_ratio: float = 4.0,  # w/h
     ) -> None:
         super().__init__(
             manager=manager,
             graph=graph,
             sizing_mode=sizing_mode,
-            width=width,
-            height=height,
+            width=width or Defaults.lattice_layout_size[0],
+            height=height or Defaults.lattice_layout_size[1],
             aspect_ratio=aspect_ratio,
         )
 
@@ -707,8 +713,8 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
         manager: GraphManager,
         graph: BasicGraph,
         sizing_mode: SizingModeType = "inherit",
-        width: int = 900,
-        height: int = 600,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
         aspect_ratio: float = 1.5,  # w/h
         variables: Optional[List[Variable]] = None,
     ) -> None:
@@ -716,8 +722,8 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
             manager=manager,
             graph=graph,
             sizing_mode=sizing_mode,
-            width=width,
-            height=height,
+            width=width or Defaults.graph_size[0],
+            height=height or Defaults.graph_size[1],
             aspect_ratio=aspect_ratio,
         )
         self.curve_data = _get_graph_data(graph)
@@ -870,16 +876,16 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         manager: GraphManager,
         graph: FloorPlanGraph,
         sizing_mode: SizingModeType = "inherit",
-        width: int = 600,
-        height: int = 600,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
         aspect_ratio: float = 1.0,  # w/h
     ) -> None:
         super().__init__(
             manager=manager,
             graph=graph,
             sizing_mode=sizing_mode,
-            width=width,
-            height=height,
+            width=width or Defaults.floor_plan_size[0],
+            height=height or Defaults.floor_plan_size[1],
             aspect_ratio=aspect_ratio,
         )
 
@@ -994,8 +1000,8 @@ class CompositeApp:
     share_x: Optional[bool]
     variables: List[Variable]
     grid: Optional[Tuple[int, int]]
-    width: int
-    height: int
+    width: Optional[int]
+    height: Optional[int]
 
     def __init__(
         self,
@@ -1004,8 +1010,8 @@ class CompositeApp:
         share_x: Optional[bool] = None,
         variables: Optional[List[Variable]] = None,
         grid: Optional[Tuple[int, int]] = None,
-        width: int = 900,
-        height: int = 900,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
     ) -> None:
         self.tao = tao
         self.bgraphs = bgraphs
@@ -1201,8 +1207,11 @@ class BokehGraphManager(
         curves: Optional[List[Dict[int, TaoCurveSettings]]] = None,
         include_layout: bool = False,
         share_x: bool = True,
-        width: int = 800,
-        height: int = 800,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
+        layout_height: Optional[int] = None,
+        xlim: Optional[List[Optional[Tuple[float, float]]]] = None,
+        ylim: Optional[List[Optional[Tuple[float, float]]]] = None,
         reuse: bool = True,
         save: Union[bool, str, pathlib.Path, None] = None,
     ):
@@ -1226,38 +1235,51 @@ class BokehGraphManager(
             [],
         )
 
-        items = [
-            BGraphAndFigure(fig=bgraph.create_figure(), bgraph=bgraph) for bgraph in bgraphs
-        ]
-
         nrows, ncols = grid
         if not bgraphs:
             return None, None
 
-        rows = []
-        remaining = list(items)
-        for _row in range(nrows):
-            row_widgets = []
-            for _col in range(ncols):
-                if not remaining:
-                    break
+        xlim = xlim or [None]
+        if len(xlim) < len(bgraphs):
+            xlim.extend([xlim[-1]] * (len(bgraphs) - len(xlim)))
 
-                item = remaining.pop(0)
-                row_widgets.append(item.fig)
+        ylim = ylim or [None]
+        if len(ylim) < len(bgraphs):
+            ylim.extend([ylim[-1]] * (len(bgraphs) - len(ylim)))
 
-            if row_widgets:
-                rows.append(bokeh.layouts.row(row_widgets))
+        rows = [[] for _ in range(nrows)]
+        rows_cols = [(row, col) for row in range(nrows) for col in range(ncols)]
+        items = []
 
-        if include_layout and (nrows * ncols) > len(graph_names):
+        for bgraph, xl, yl, (row, _col) in zip(bgraphs, xlim, ylim, rows_cols):
+            if xl is not None:
+                bgraph.x_range = bokeh.models.Range1d(*xl)
+            if yl is not None:
+                bgraph.y_range = bokeh.models.Range1d(*yl)
+
+            fig = bgraph.create_figure()
+            rows[row].append(fig)
+
+            item = BGraphAndFigure(fig=fig, bgraph=bgraph)
+            items.append(item)
+
+        if include_layout:
             lattice_layout = self.get_lattice_layout_graph()
+            if layout_height is not None:
+                lattice_layout.height = layout_height
             layout_items = [
                 BGraphAndFigure(fig=lattice_layout.create_figure(), bgraph=lattice_layout)
                 for _ in range(ncols)
             ]
             items.extend(layout_items)
-            rows.append(bokeh.layouts.row([item.fig for item in layout_items]))
+            # rows.append([item.fig for item in layout_items])
+            rows.insert(0, [item.fig for item in layout_items])
 
-        layout = bokeh.layouts.column(rows)
+        layout = bokeh.layouts.column(
+            [bokeh.layouts.row(row) for row in rows],
+            width=width,
+            height=height,
+        )
 
         if share_x:
             share_common_x_axes(items)
@@ -1390,6 +1412,10 @@ class BokehGraphManager(
         return bgraphs
 
 
+def _not_none_kwargs(**kwargs):
+    return {key: value for key, value in kwargs.items() if value is not None}
+
+
 class NotebookGraphManager(BokehGraphManager):
     def plot_regions(
         self,
@@ -1426,8 +1452,11 @@ class NotebookGraphManager(BokehGraphManager):
         curves: Optional[List[Dict[int, TaoCurveSettings]]] = None,
         include_layout: bool = False,
         share_x: bool = True,
-        width: int = 6,
-        height: int = 6,
+        layout_height: Optional[int] = None,
+        xlim: Optional[List[Optional[Tuple[float, float]]]] = None,
+        ylim: Optional[List[Optional[Tuple[float, float]]]] = None,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
         reuse: bool = True,
         save: Union[bool, str, pathlib.Path, None] = None,
     ):
@@ -1450,8 +1479,8 @@ class NotebookGraphManager(BokehGraphManager):
             share_x=share_x,
             variables=None,
             grid=grid,
-            # width=width,
-            # height=height,
+            width=width,
+            height=height,
         )
 
         return bokeh.plotting.show(app.create_app())

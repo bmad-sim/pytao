@@ -6,7 +6,7 @@ import pathlib
 import numpy as np
 import typing
 
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import override
 
 from .tao_ctypes.core import TaoCore
@@ -598,23 +598,23 @@ class Tao(TaoCore):
 
     def plot(
         self,
-        graph_name: Optional[str] = None,
+        graph_name: Optional[Union[str, List[str]]] = None,
         *,
         region_name: Optional[str] = None,
         include_layout: bool = True,
-        update: bool = True,
         width: Optional[int] = None,
         height: Optional[int] = None,
         layout_height: Optional[int] = None,
         share_x: Optional[bool] = None,
         backend: Optional[str] = None,
         reuse: bool = True,
+        grid: Optional[Tuple[int, int]] = None,
         **kwargs,
     ) -> None:
         """
         Make a plot with the provided backend.
 
-        Plot a graph, region, or all placed graphs.
+        Plot a graph, or all placed graphs.
 
         To plot a specific graph, specify `graph_name` (optionally `region_name`).
         The default is to plot all placed graphs.
@@ -627,8 +627,8 @@ class Tao(TaoCore):
 
         Parameters
         ----------
-        graph_name : str
-            Graph name.
+        graph_name : str or list[str]
+            Graph name or names.
         region_name : str, optional
             Graph region name.  Chosen automatically if not specified.
         include_layout : bool, optional
@@ -653,6 +653,10 @@ class Tao(TaoCore):
         reuse : bool, default=True
             If an existing plot of the given template type exists, reuse the
             existing plot region rather than selecting a new empty region.
+        grid : (nrows, ncols), optional
+            If multiple graph names are specified, the plots will be placed
+            in a grid according to this parameter.  The default is to have
+            stacked plots if this parameter is unspecified.
         backend : {"bokeh", "mpl"}, optional
             The backend to use.  Auto-detects Jupyter and availability of bokeh
             to select a backend.
@@ -681,14 +685,24 @@ class Tao(TaoCore):
 
         if not graph_name:
             manager.place_all()
-            manager.plot_regions(
+            self.last_plot = manager.plot_regions(
                 list(manager.regions),
                 include_layout=include_layout,
                 reuse=reuse,
                 **kwargs,
             )
+        elif not isinstance(graph_name, str):
+            graph_names = list(graph_name)
+            grid = grid or (len(graph_names), 1)
+            self.last_plot = manager.plot_grid(
+                graph_names=graph_names,
+                grid=grid,
+                reuse=reuse,
+                include_layout=include_layout,
+                **kwargs,
+            )
         else:
-            manager.plot(
+            self.last_plot = manager.plot(
                 region_name=region_name,
                 graph_name=graph_name,
                 include_layout=include_layout,
