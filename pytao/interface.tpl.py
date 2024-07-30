@@ -1,10 +1,13 @@
 from __future__ import annotations
+import contextlib
+import dataclasses
 import logging
 import pathlib
 import numpy as np
 import typing
 
-from typing import Optional, List, Tuple, Union
+from typing import Any, Dict, Optional, Tuple, Union
+from typing_extensions import override
 
 from .tao_ctypes.core import TaoCore
 from .tao_ctypes.util import parse_tao_python_data
@@ -17,9 +20,175 @@ if typing.TYPE_CHECKING:
     from .plotting.bokeh import BokehGraphManager, NotebookGraphManager  # noqa: F401
     from .plotting.plot import MatplotlibGraphManager
 
+    from .subproc import SubprocessTao
+
+    AnyTao = Union["Tao", SubprocessTao]
+
 
 logger = logging.getLogger(__name__)
 AnyPath = Union[pathlib.Path, str]
+
+
+@dataclasses.dataclass
+class TaoStartup:
+    """
+    All Tao startup settings.
+
+    Attributes
+    ----------
+    init : str, optional
+        Initialization string for Tao.  Same as the tao command-line, including
+        "-init" and such.  Shell variables in `init` strings will be expanded
+        by Tao.  For example, an `init` string containing `$HOME` would be
+        replaced by your home directory.
+    so_lib : str, optional
+        Path to the Tao shared library.  Auto-detected if not specified.
+    plot : str, bool, optional
+        Use pytao's plotting mechanism with matplotlib or bokeh, if available.
+        If `True`, pytao will pick an appropriate plotting backend.
+        If `False` or "tao", Tao plotting will be used. (Default)
+        If "mpl", the pytao matplotlib plotting backend will be selected.
+        If "bokeh", the pytao Bokeh plotting backend will be selected.
+    beam_file : str or pathlib.Path, default=None
+        File containing the tao_beam_init namelist.
+    beam_init_position_file : pathlib.Path or str, default=None
+        File containing initial particle positions.
+    building_wall_file : str or pathlib.Path, default=None
+        Define the building tunnel wall
+    command : str, optional
+        Commands to run after startup file commands
+    data_file : str or pathlib.Path, default=None
+        Define data for plotting and optimization
+    debug : bool, default=False
+        Debug mode for Wizards
+    disable_smooth_line_calc : bool, default=False
+        Disable the smooth line calc used in plotting
+    external_plotting : bool, default=False
+        Tells Tao that plotting is done externally to Tao.
+    geometry : "wxh" or (width, height) tuple, optional
+        Plot window geometry (pixels)
+    hook_init_file :  pathlib.Path or str, default=None
+        Init file for hook routines (Default = tao_hook.init)
+    init_file : str or pathlib.Path, default=None
+        Tao init file
+    lattice_file : str or pathlib.Path, default=None
+        Bmad lattice file
+    log_startup : bool, default=False
+        Write startup debugging info
+    no_stopping : bool, default=False
+        For debugging : Prevents Tao from exiting on errors
+    noinit : bool, default=False
+        Do not use Tao init file.
+    noplot : bool, default=False
+        Do not open a plotting window
+    nostartup : bool, default=False
+        Do not open a startup command file
+    no_rad_int : bool, default=False
+        Do not do any radiation integrals calculations.
+    plot_file : str or pathlib.Path, default=None
+        Plotting initialization file
+    prompt_color : str, optional
+        Set color of prompt string. Default is blue.
+    reverse : bool, default=False
+        Reverse lattice element order?
+    rf_on : bool, default=False
+        Use "--rf_on" to turn off RF (default is now RF on)
+    quiet : bool, default=False
+        Suppress terminal output when running a command file?
+    slice_lattice : str, optional
+        Discards elements from lattice that are not in the list
+    start_branch_at : str, optional
+        Start lattice branch at element.
+    startup_file : str or pathlib.Path, default=None
+        Commands to run after parsing Tao init file
+    symbol_import : bool, default=False
+        Import symbols defined in lattice files(s)?
+    var_file : str or pathlib.Path, default=None
+        Define variables for plotting and optimization
+    """
+
+    init: str = ""
+    so_lib: str = ""
+
+    _: dataclasses.KW_ONLY
+    metadata: Dict[str, Any] = dataclasses.field(default_factory=dict)
+    plot: Union[str, bool] = "tao"
+    beam_file: Optional[AnyPath] = None
+    beam_init_position_file: Optional[AnyPath] = None
+    building_wall_file: Optional[AnyPath] = None
+    command: str = ""
+    data_file: Optional[AnyPath] = None
+    debug: bool = False
+    disable_smooth_line_calc: bool = False
+    external_plotting: bool = False
+    geometry: Union[str, Tuple[float, float]] = ""
+    hook_init_file: Optional[AnyPath] = None
+    init_file: Optional[AnyPath] = None
+    lattice_file: Optional[AnyPath] = None
+    log_startup: bool = False
+    no_stopping: bool = False
+    noinit: bool = False
+    noplot: bool = False
+    nostartup: bool = False
+    no_rad_int: bool = False
+    plot_file: Optional[AnyPath] = None
+    prompt_color: str = ""
+    reverse: bool = False
+    rf_on: bool = False
+    quiet: bool = False
+    slice_lattice: str = ""
+    start_branch_at: str = ""
+    startup_file: Optional[AnyPath] = None
+    symbol_import: bool = False
+    var_file: Optional[AnyPath] = None
+
+    @property
+    def run_parameters(self) -> Dict[str, Any]:
+        """Parameters used to initialize Tao or make a new Tao instance."""
+        params = {
+            key: value
+            for key, value in dataclasses.asdict(self).items()
+            if value != getattr(type(self), key, None)
+        }
+        params.setdefault("init", "")
+        params.pop("metadata")
+        return params
+
+    @property
+    def tao_init(self) -> str:
+        """Tao.init() command string."""
+        params = self.run_parameters
+        # For tao.init(), we throw away Tao class-specific things:
+        params.pop("so_lib", None)
+        params.pop("plot", None)
+        return make_tao_init(**params)
+
+    def run(self, use_subprocess: bool = False) -> AnyTao:
+        """Create a new Tao instance and run it using these settings."""
+        params = self.run_parameters
+        if use_subprocess:
+            from .subproc import SubprocessTao
+
+            return SubprocessTao(**params)
+        return Tao(**params)
+
+    @contextlib.contextmanager
+    def run_context(self, use_subprocess: bool = False):
+        """
+        Create a new Tao instance and run it using these settings in a context manager.
+
+        Yields
+        ------
+        Tao
+            Tao instance.
+        """
+        tao = self.run(use_subprocess=use_subprocess)
+
+        try:
+            yield tao
+        finally:
+            if isinstance(tao, SubprocessTao):
+                tao.close_subprocess()
 
 
 class Tao(TaoCore):
@@ -101,7 +270,6 @@ class Tao(TaoCore):
     """
 
     plot_backend_name: Optional[str]
-    _use_pytao_plotting: bool
     _graph_managers: dict
 
     def __init__(
@@ -139,11 +307,12 @@ class Tao(TaoCore):
         symbol_import: bool = False,
         var_file: Optional[AnyPath] = None,
     ):
-        if plot == "tao":
-            plot = False
-
-        init = make_tao_init(
-            init,
+        self.plot_backend_name = None
+        self._graph_managers = {}
+        super().__init__(init="", so_lib=so_lib)
+        self.init(
+            cmd=init,
+            plot=plot,
             beam_file=beam_file,
             beam_init_position_file=beam_init_position_file,
             building_wall_file=building_wall_file,
@@ -174,21 +343,88 @@ class Tao(TaoCore):
             var_file=var_file,
         )
 
-        self._use_pytao_plotting = plot in {"mpl", "bokeh", True}
+    @override
+    def init(
+        self,
+        cmd: str = "",
+        *,
+        plot: Union[str, bool] = "tao",
+        beam_file: Optional[AnyPath] = None,
+        beam_init_position_file: Optional[AnyPath] = None,
+        building_wall_file: Optional[AnyPath] = None,
+        command: str = "",
+        data_file: Optional[AnyPath] = None,
+        debug: bool = False,
+        disable_smooth_line_calc: bool = False,
+        external_plotting: bool = False,
+        geometry: Union[str, Tuple[float, float]] = "",
+        hook_init_file: Optional[AnyPath] = None,
+        init_file: Optional[AnyPath] = None,
+        lattice_file: Optional[AnyPath] = None,
+        log_startup: bool = False,
+        no_stopping: bool = False,
+        noinit: bool = False,
+        noplot: bool = False,
+        nostartup: bool = False,
+        no_rad_int: bool = False,
+        plot_file: Optional[AnyPath] = None,
+        prompt_color: str = "",
+        reverse: bool = False,
+        rf_on: bool = False,
+        quiet: bool = False,
+        slice_lattice: str = "",
+        start_branch_at: str = "",
+        startup_file: Optional[AnyPath] = None,
+        symbol_import: bool = False,
+        var_file: Optional[AnyPath] = None,
+    ) -> None:
+        """(Re-)Initialize Tao with the given command."""
         if plot in {"mpl", "bokeh"}:
             self.plot_backend_name = plot
         else:
             self.plot_backend_name = None
 
-        self._graph_managers = {}
-        super().__init__(init=init, so_lib=so_lib)
+        use_pytao_plotting = plot in {"mpl", "bokeh", True}
 
-    def init(self, cmd: str) -> List[str]:
-        """(Re-)Initialize Tao with the given command."""
-        if self._use_pytao_plotting:
-            cmd = make_tao_init(cmd, noplot=True, external_plotting=True)
+        self.init_settings = TaoStartup(
+            init=cmd,
+            plot=plot,
+            beam_file=beam_file,
+            beam_init_position_file=beam_init_position_file,
+            building_wall_file=building_wall_file,
+            command=command,
+            data_file=data_file,
+            debug=debug,
+            disable_smooth_line_calc=disable_smooth_line_calc,
+            external_plotting=use_pytao_plotting or external_plotting,
+            geometry=geometry,
+            hook_init_file=hook_init_file,
+            init_file=init_file,
+            lattice_file=lattice_file,
+            log_startup=log_startup,
+            no_stopping=no_stopping,
+            noinit=noinit,
+            noplot=use_pytao_plotting or noplot,
+            nostartup=nostartup,
+            no_rad_int=no_rad_int,
+            plot_file=plot_file,
+            prompt_color=prompt_color,
+            reverse=reverse,
+            rf_on=rf_on,
+            quiet=quiet,
+            slice_lattice=slice_lattice,
+            start_branch_at=start_branch_at,
+            startup_file=startup_file,
+            symbol_import=symbol_import,
+            var_file=var_file,
+        )
 
-        return super().init(cmd)
+        init_cmd = self.init_settings.tao_init
+        if "-init" in init_cmd or "-lat" in init_cmd:
+            self._init(self.init_settings)
+
+    def _init(self, startup: TaoStartup):
+        return super().init(startup.tao_init)
 
     def __execute(
         self,

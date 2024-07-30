@@ -104,19 +104,10 @@ class TaoCore:
         """
         self.so_lib.tao_c_out_io_buffer_reset()
 
-    def _preprocess_command(self, command: str) -> str:
-        cmd_orig = command
-        processed = os.path.expandvars(command)
-        if cmd_orig != processed:
-            logger.debug(f"Variable substitution {cmd_orig!r}: {processed!r}")
-        return processed
-
     # ---------------------------------------------
     # Init Tao
 
     def init(self, cmd: str) -> List[str]:
-        cmd = self._preprocess_command(cmd)
-
         if not tao_ctypes.initialized:
             logger.debug(f"Initializing Tao with: {cmd}")
             err = self.so_lib.tao_c_init_tao(cmd.encode("utf-8"))

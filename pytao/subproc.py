@@ -1,3 +1,4 @@
+from __future__ import annotations
 import ctypes
 import logging
 import os
@@ -9,8 +10,7 @@ import typing
 
 import numpy as np
 
-from .interface_commands import Tao
-from .util.command import make_tao_init
+from .interface_commands import Tao, TaoStartup
 
 logger = logging.getLogger(__name__)
 
@@ -275,13 +275,8 @@ class SubprocessTao(Tao):
         except Exception:
             pass
 
-    def init(self, cmd):
-        """Initialize Tao with the given `cmd`."""
-        if self._use_pytao_plotting:
-            cmd = make_tao_init(cmd, noplot=True, external_plotting=True)
-
-        cmd = self._preprocess_command(cmd)
-        return self._pipe.send_receive("init", cmd, raises=True)
+    def _init(self, startup: TaoStartup):
+        return self._pipe.send_receive("init", startup.tao_init, raises=True)
 
     def cmd(self, cmd, raises=True):
         """Runs a command, and returns the output."""

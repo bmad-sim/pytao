@@ -1066,7 +1066,8 @@ class CompositeApp:
             models.insert(1, bokeh.layouts.row([status_label]))
 
         if not self.grid:
-            return bokeh.layouts.column(models)
+            return bokeh.layouts.column(models, width=self.width, height=self.height)
+
         return bokeh.layouts.layout(
             children=_grid_models(models, self.grid),
             width=self.width,

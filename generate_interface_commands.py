@@ -19,7 +19,7 @@ print(f"Reading JSON from: {f_name}")
 with open(f_name, "r") as f:
     cmds_from_tao = json.load(f)
 
-with open("interface.tpl.py", "r") as f:
+with open("pytao/interface.tpl.py", "r") as f:
     interface_tpl_py = f.read()
 
 
