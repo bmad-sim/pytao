@@ -729,6 +729,7 @@ class Tao(TaoCore):
         radius: float = 0.015,
         num_points: int = 100,
         backend: Optional[str] = None,
+        **kwargs,
     ):
         """
         Plot field information for a given element.
@@ -754,4 +755,5 @@ class Tao(TaoCore):
             colormap=colormap,
             radius=radius,
             num_points=num_points,
+            **kwargs,
         )

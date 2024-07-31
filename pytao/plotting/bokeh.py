@@ -515,6 +515,7 @@ def _draw_layout_element(
 
 def _fields_to_data_source(
     fields: List[ElementField],
+    x_scale: float = 1e3,
 ):
     return ColumnDataSource(
         data={
@@ -531,8 +532,9 @@ def _draw_fields(
     fig: figure,
     fields: List[ElementField],
     palette: str = "Magma256",
+    x_scale: float = 1e3,
 ):
-    source = _fields_to_data_source(fields)
+    source = _fields_to_data_source(fields, x_scale=x_scale)
     cmap = bokeh.models.LinearColorMapper(
         palette="Magma256",
         low=np.min(source.data["by"]),
@@ -1540,6 +1542,9 @@ class BokehGraphManager(
         colormap: Optional[str] = None,
         radius: float = 0.015,
         num_points: int = 100,
+        x_scale: float = 1e3,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
     ):
         """
         Plot field information for a given element.
@@ -1555,10 +1560,17 @@ class BokehGraphManager(
             Radius.
         num_points : int, default=100
             Number of data points.
+        width : int, optional
+        height : int, optional
         """
         field = ElementField.from_tao(self.tao, ele_id, num_points=num_points, radius=radius)
         fig = figure(title=f"Field of {ele_id}")
-        _draw_fields(fig, [field], palette=colormap or "Magma256")
+        _draw_fields(fig, [field], palette=colormap or "Magma256", x_scale=x_scale)
+
+        if width is not None:
+            fig.width = width
+        if height is not None:
+            fig.height = height
         return fig
 
 
@@ -1665,6 +1677,8 @@ class NotebookGraphManager(BokehGraphManager):
         colormap: Optional[str] = None,
         radius: float = 0.015,
         num_points: int = 100,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
     ):
         """
         Plot field information for a given element.
@@ -1680,12 +1694,16 @@ class NotebookGraphManager(BokehGraphManager):
             Radius.
         num_points : int, default=100
             Number of data points.
+        width : int, optional
+        height : int, optional
         """
         fig = super().plot_field(
             ele_id,
             colormap=colormap,
             radius=radius,
             num_points=num_points,
+            width=width,
+            height=height,
         )
         return bokeh.plotting.show(fig, notebook_handle=True)
 

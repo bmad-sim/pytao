@@ -24,6 +24,7 @@ from typing import (
 )
 
 import matplotlib.axes
+import matplotlib.cm
 import matplotlib.collections
 import matplotlib.patches
 import matplotlib.path
@@ -2804,6 +2805,10 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
         colormap: Optional[str] = None,
         radius: float = 0.015,
         num_points: int = 100,
+        figsize: Optional[Tuple[int, int]] = None,
+        width: int = 4,
+        height: int = 4,
+        x_scale: float = 1e3,
         ax: Optional[matplotlib.axes.Axes] = None,
     ) -> matplotlib.axes.Axes:
         """
@@ -2823,17 +2828,28 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
         ax : matplotlib.axes.Axes, optional
             The axes to place the plot in.
         """
+        user_specified_axis = ax is not None
+
+        if figsize is None and width and height:
+            figsize = (width, height)
+
         if ax is None:
-            _, ax = plt.subplots()
-            assert ax is not None
+            _, ax = plt.subplots(figsize=(width, height))
+        assert ax is not None
+
+        colormap = colormap or "PRGn_r"
 
         field = ElementField.from_tao(self.tao, ele_id, num_points=num_points, radius=radius)
-        ax.pcolormesh(
+        mesh = ax.pcolormesh(
             np.asarray(field.s),
-            np.asarray(field.x) * 1e3,
+            np.asarray(field.x) * x_scale,
             np.asarray(field.by),
             # vmin=min_field,
             # vmax=max_field,
-            cmap=colormap or "PRGn_r",
+            cmap=colormap,
         )
+        if not user_specified_axis:
+            fig = ax.figure
+            if fig is not None:
+                fig.colorbar(mesh)
         return ax
