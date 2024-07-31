@@ -2238,6 +2238,7 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
 
     @property
     def to_place(self) -> Dict[str, str]:
+        """Graphs to place - region name to graph name."""
         self._update_place_buffer()
         return self._to_place
 
@@ -2314,6 +2315,7 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
         region_name: str,
         graph_name: str,
         ignore_invalid: bool = True,
+        ignore_unsupported: bool = True,
     ) -> List[T_GraphType]:
         self._clear_region(region_name)
 
@@ -2322,6 +2324,11 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
         for plot_name in plot_names:
             try:
                 result.append(self.make_graph(region_name, plot_name))
+            except UnsupportedGraphError as ex:
+                if ignore_unsupported:
+                    logger.debug(f"Unsupported graph in region {region_name}: {ex}")
+                    continue
+                raise
             except GraphInvalidError as ex:
                 if ignore_invalid:
                     logger.warning(f"Invalid graph in region {region_name}: {ex}")
@@ -2415,6 +2422,8 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
         region_name: Optional[str] = None,
         reuse: bool = True,
         curves: Optional[Dict[int, TaoCurveSettings]] = None,
+        ignore_unsupported: bool = True,
+        ignore_invalid: bool = True,
     ) -> List[T_GraphType]:
         if not region_name:
             if reuse:
@@ -2431,6 +2440,8 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
         return self.update_region(
             region_name=region_name,
             graph_name=graph_name,
+            ignore_unsupported=ignore_unsupported,
+            ignore_invalid=ignore_invalid,
         )
 
     def configure_curves(

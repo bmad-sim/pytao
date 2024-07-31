@@ -105,7 +105,7 @@ def tao_regression_test(
 def tao_example(
     request: pytest.FixtureRequest,
 ) -> TaoStartup:
-    return get_example(request.param.name)
+    return get_example(request.param.parts[-2])
 
 
 @pytest.fixture(

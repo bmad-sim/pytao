@@ -59,24 +59,14 @@ def test_bokeh_examples(
         if example_name == "erl":
             tao.cmd("place r11 zphase")
 
-        assert len(manager.place_all())
+        names = [name for name in manager.to_place.values()]
+        assert len(names)
 
-        output_file(test_artifacts / f"{filename_base}.html")
-
-        bgraphs = sum(manager.plot_regions(list(manager.regions)), [])
-        items = [
-            BGraphAndFigure(bgraph=bgraph, fig=bgraph.create_figure()) for bgraph in bgraphs
-        ]
-        for item in items:
-            fig = item.fig
-            graph = item.bgraph.graph
+        app = manager.plot_grid(names, grid=(len(names), 1), include_layout=True)
+        assert len(app.bgraphs)
+        for pair in app.pairs:
+            fig = pair.fig
+            graph = pair.bgraph.graph
             fig.title.text = f"{fig.title.text} ({graph.region_name}.{graph.graph_name} of {request.node.name})"
 
-        share_common_x_axes(items)
-        save(column([item.fig for item in items], sizing_mode="fixed"))
-
-        for region in list(manager.regions):
-            manager.clear(region)
-        assert not any(region for region in manager.regions.values())
-        manager.clear()
-        assert not manager.regions
+        app.save(test_artifacts / f"{filename_base}.html")

@@ -162,31 +162,31 @@ def link_crosshairs(figs: List[figure]):
 
 
 def share_common_x_axes(
-    graphs: List[BGraphAndFigure],
+    pairs: List[BGraphAndFigure],
     crosshairs: bool = True,
 ) -> List[List[BGraphAndFigure]]:
     res: List[List[BGraphAndFigure]] = []
 
     s_plots = []
-    for item in graphs:
-        if item.bgraph.graph.is_s_plot:
-            s_plots.append(item)
+    for pair in pairs:
+        if pair.bgraph.graph.is_s_plot:
+            s_plots.append(pair)
 
     if s_plots:
         res.append(s_plots)
 
     by_xlabel: Dict[str, List[BGraphAndFigure]] = {}
-    for item in graphs:
-        if item in s_plots:
+    for pair in pairs:
+        if pair in s_plots:
             continue
-        by_xlabel.setdefault(item.bgraph.graph.xlabel, []).append(item)
+        by_xlabel.setdefault(pair.bgraph.graph.xlabel, []).append(pair)
 
     for sharing_set in by_xlabel.values():
         if len(sharing_set) > 1:
             res.append(sharing_set)
 
     for sharing_set in res:
-        figs = [item.fig for item in sharing_set]
+        figs = [pair.fig for pair in sharing_set]
         share_x_axes(figs)
         if crosshairs:
             link_crosshairs(figs)
@@ -590,16 +590,23 @@ class BokehGraphBase(Generic[TGraph]):
         self,
         tools: str = "pan,wheel_zoom,box_zoom,save,reset,help,crosshair",
         toolbar_location: str = "above",
+        **kwargs,
     ) -> figure:
         raise NotImplementedError()
 
-    def create_app_figure(self) -> Tuple[figure, List[bokeh.models.UIElement]]:
+    def create_widgets(
+        self,
+        fig: figure,
+        *,
+        include_variables: bool = False,
+    ) -> List[bokeh.models.UIElement]:
         raise NotImplementedError()
 
     def create_full_app(self):
         def bokeh_app(doc):
-            _primary_figure, models = self.create_app_figure()
-            for model in models:
+            primary_figure = self.create_figure()
+            doc.add_root(primary_figure)
+            for model in self.create_widgets():
                 doc.add_root(model)
 
         return bokeh_app
@@ -693,12 +700,14 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
             fig.y_range = self.y_range
         return fig
 
-    def create_app_figure(
+    @override
+    def create_widgets(
         self,
+        fig: figure,
+        *,
         include_variables: bool = False,
-    ) -> Tuple[figure, List[bokeh.models.UIElement]]:
-        fig = self.create_figure()
-        return fig, [fig]
+    ) -> List[bokeh.models.UIElement]:
+        return []
 
 
 class BokehBasicGraph(BokehGraphBase[BasicGraph]):
@@ -812,11 +821,13 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
             _plot_curve(fig, curve, source)
         return fig
 
-    def create_app_figure(
+    @override
+    def create_widgets(
         self,
-        include_variables: bool = True,
-    ) -> Tuple[figure, List[bokeh.models.UIElement]]:
-        fig = self.create_figure()
+        fig: figure,
+        *,
+        include_variables: bool = False,
+    ) -> List[bokeh.models.UIElement]:
         update_button = bokeh.models.Button(label="Update")  # , icon="reload")
         num_points_slider = bokeh.models.Slider(
             title="Data Points",
@@ -864,7 +875,7 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
             )
             models.insert(0, bokeh.layouts.row(spinners))
             models.insert(1, bokeh.layouts.row([status_label]))
-        return fig, models
+        return models
 
 
 class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
@@ -945,15 +956,15 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
                 )
 
         _draw_limit_border(fig, graph.xlim, graph.ylim, alpha=0.1)
-
         return fig
 
-    def create_app_figure(
+    @override
+    def create_widgets(
         self,
+        fig: figure,
+        *,
         include_variables: bool = False,
-    ) -> Tuple[figure, List[bokeh.models.UIElement]]:
-        fig = self.create_figure()
-
+    ) -> List[bokeh.models.UIElement]:
         controls = []
         try:
             (orbits,) = fig.select("floor_orbits")
@@ -970,33 +981,19 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
             controls.append(show_orbits_toggle)
 
         controls_row = [bokeh.layouts.row(controls)] if controls else []
-        return fig, [bokeh.layouts.column([*controls_row, fig])]
+        return [bokeh.layouts.column([*controls_row, fig])]
 
 
 AnyBokehGraph = Union[BokehBasicGraph, BokehLatticeLayoutGraph, BokehFloorPlanGraph]
 
 
-def _grid_models(models, grid: Tuple[int, int]) -> List[bokeh.models.UIElement]:
-    nrows, ncols = grid
-    rows = []
-    remaining = list(models)
-    for _row in range(nrows):
-        row = []
-        for _col in range(ncols):
-            if not remaining:
-                break
-
-            model = remaining.pop(0)
-            row.append(model)
-
-        if row:
-            rows.append(row)
-    return rows
+OptionalLimit = Optional[Tuple[float, float]]
+CurveIndexToCurve = Dict[int, TaoCurveSettings]
 
 
-class CompositeApp:
+class BokehApp:
     """
-    A composite Bokeh application made up of 2+ graphs.
+    A composite Bokeh application made up of 1 or more graphs.
 
     This can be used to:
     * Generate a static HTML page without Python widgets
@@ -1006,87 +1003,194 @@ class CompositeApp:
     callbacks resulting from user interaction.
     """
 
-    tao: Tao
+    manager: Union[BokehGraphManager, NotebookGraphManager]
     bgraphs: List[AnyBokehGraph]
     share_x: Optional[bool]
     variables: List[Variable]
-    grid: Optional[Tuple[int, int]]
+    grid: Tuple[int, int]
+    graph_width: Optional[int]
+    graph_height: Optional[int]
     width: Optional[int]
     height: Optional[int]
+    include_layout: bool
+    layout_height: Optional[int]
+    xlim: List[OptionalLimit]
+    ylim: List[OptionalLimit]
+    figures: List[figure]
+    graph_sizing_mode: Optional[SizingModeType]
 
     def __init__(
         self,
-        tao: Tao,
+        manager: Union[BokehGraphManager, NotebookGraphManager],
         bgraphs: List[AnyBokehGraph],
         share_x: Optional[bool] = None,
-        variables: Optional[List[Variable]] = None,
+        include_variables: bool = False,
         grid: Optional[Tuple[int, int]] = None,
         width: Optional[int] = None,
         height: Optional[int] = None,
+        include_layout: bool = False,
+        graph_width: Optional[int] = None,
+        graph_height: Optional[int] = None,
+        graph_sizing_mode: Optional[SizingModeType] = None,
+        layout_height: Optional[int] = None,
+        xlim: Optional[List[OptionalLimit]] = None,
+        ylim: Optional[List[OptionalLimit]] = None,
     ) -> None:
-        self.tao = tao
-        self.bgraphs = bgraphs
+        assert len(bgraphs)
+
+        xlim = list(xlim or [None])
+        if len(xlim) < len(bgraphs):
+            xlim.extend([xlim[-1]] * (len(bgraphs) - len(xlim)))
+
+        ylim = list(ylim or [None])
+        if len(ylim) < len(bgraphs):
+            ylim.extend([ylim[-1]] * (len(bgraphs) - len(ylim)))
+
+        if len(bgraphs) == 1 and isinstance(bgraphs[0], BokehLatticeLayoutGraph):
+            include_layout = False
+
+        if not grid:
+            grid = (len(bgraphs), 1)
+
+        if include_layout:
+            grid = (grid[0] + 1, grid[1])
+
+        if include_variables:
+            variables = Variable.from_tao_all(manager.tao)
+        else:
+            variables = []
+
+        self.manager = manager
         self.share_x = share_x
-        self.variables = variables or []
+        self.variables = variables
         self.grid = grid
         self.width = width
         self.height = height
+        self.graph_width = graph_width
+        self.graph_height = graph_height
+        self.graph_sizing_mode = graph_sizing_mode
+        self.include_layout = include_layout
+        self.layout_height = layout_height
+        self.xlim = xlim
+        self.ylim = ylim
+        self.create_figures(bgraphs)
+
+    def create_figures(self, bgraphs: List[AnyBokehGraph]):
+        self.bgraphs = bgraphs
+        self.figures = [bgraph.create_figure() for bgraph in bgraphs]
+        self.pairs = [
+            BGraphAndFigure(bgraph=bgraph, fig=fig)
+            for bgraph, fig in zip(bgraphs, self.figures)
+        ]
+        if len(self.figures) <= 1:
+            return
+
+        if self.share_x is None:
+            share_common_x_axes(self.pairs)
+        elif self.share_x:
+            share_x_axes(self.figures)
 
     def to_html(
         self,
         title: Optional[str] = None,
     ) -> str:
-        items = [
-            BGraphAndFigure(fig=bgraph.create_figure(), bgraph=bgraph)
-            for bgraph in self.bgraphs
-        ]
-        figures = [item.fig for item in items]
-        share_common_x_axes(items)
-        return bokeh.embed.file_html(models=figures, title=title)
+        layout = bokeh.layouts.layout(
+            children=self._grid_figures(),
+            width=self.width,
+            height=self.height,
+        )
+        return bokeh.embed.file_html(models=layout, title=title)
 
     def save(
         self,
-        filename: AnyPath,
+        filename: AnyPath = "",
+        *,
         title: Optional[str] = None,
-    ):
+    ) -> Optional[pathlib.Path]:
+        if not self.bgraphs:
+            return
+
+        title = self.bgraphs[0].graph.title or f"plot-{time.time()}"
+        if not filename:
+            filename = f"{title}.html"
+        if not pathlib.Path(filename).suffix:
+            filename = f"{filename}.html"
         source = self.to_html(title=title)
         with open(filename, "wt") as fp:
             fp.write(source)
+        return pathlib.Path(filename)
+
+    def _grid_figures(self) -> List[List[figure]]:
+        nrows, ncols = self.grid
+        rows = [[] for _ in range(nrows)]
+        rows_cols = [(row, col) for row in range(nrows) for col in range(ncols)]
+
+        for pair, xl, yl, (row, _col) in zip(self.pairs, self.xlim, self.ylim, rows_cols):
+            fig = pair.fig
+            bgraph = pair.bgraph
+            if xl is not None:
+                fig.x_range = bokeh.models.Range1d(*xl)
+            if yl is not None:
+                fig.y_range = bokeh.models.Range1d(*yl)
+
+            is_layout = isinstance(bgraph, BokehLatticeLayoutGraph)
+            if self.graph_sizing_mode is not None:
+                fig.sizing_mode = self.graph_sizing_mode
+            if self.graph_width is not None:
+                fig.width = self.graph_width
+            if is_layout:
+                if self.layout_height is not None:
+                    fig.height = self.layout_height
+            else:
+                if self.graph_height is not None:
+                    fig.height = self.graph_height
+
+            rows[row].append(fig)
+        return [row for row in rows if row]
+
+    @property
+    def nrows(self) -> int:
+        return self.grid[0]
+
+    @property
+    def ncols(self) -> int:
+        return self.grid[1]
 
     def create_ui(self):
         if not self.bgraphs:
             return
 
-        items: List[BGraphAndFigure] = []
-        models: List[bokeh.models.UIElement] = []
-        for bgraph in self.bgraphs:
-            primary_figure, fig_models = bgraph.create_app_figure(include_variables=False)
-            items.append(BGraphAndFigure(bgraph, primary_figure))
-            models.extend(fig_models)
-
-        for item in items:
-            # NOTE: this value is somewhat arbitrary; it helps align the X axes
-            # between consecutive plots
-            item.fig.min_border_left = 80
-        # if isinstance(items[-1], BokehLatticeLayoutGraph):
-        #     items[-1].fig.min_border_bottom = 80
-
-        if self.share_x is None:
-            share_common_x_axes(items)
-        elif self.share_x:
-            share_x_axes([item.fig for item in items])
-
+        variable_models: List[bokeh.layouts.UIElement] = []
         if self.variables:
             status_label = bokeh.models.PreText()
-            spinners = _handle_variables(self.tao, self.variables, status_label, items)
-            models.insert(0, bokeh.layouts.row(spinners))
-            models.insert(1, bokeh.layouts.row([status_label]))
+            spinners = _handle_variables(
+                tao=self.manager.tao,
+                variables=self.variables,
+                status_label=status_label,
+                pairs=self.pairs,
+            )
+            variable_models.insert(0, bokeh.layouts.row(spinners))
+            variable_models.insert(1, bokeh.layouts.row([status_label]))
 
-        if not self.grid:
-            return bokeh.layouts.column(models, width=self.width, height=self.height)
+        rows = self._grid_figures()
+        if self.include_layout:
+            lattice_layout = self.manager.get_lattice_layout_graph()
+            if self.layout_height is not None:
+                lattice_layout.height = self.layout_height
+            layout_figs = [lattice_layout.create_figure() for _ in range(self.ncols)]
+            rows.append(layout_figs)
+
+            for fig in layout_figs:
+                fig.min_border_bottom = 40
+
+        for row in rows:
+            for fig in row:
+                # NOTE: this value is somewhat arbitrary; it helps align the X axes
+                # between consecutive plots
+                fig.min_border_left = 80
 
         return bokeh.layouts.layout(
-            children=_grid_models(models, self.grid),
+            children=variable_models + cast(List[bokeh.layouts.UIElement], rows),
             width=self.width,
             height=self.height,
         )
@@ -1163,7 +1267,7 @@ def _handle_variables(
     tao: Tao,
     variables: List[Variable],
     status_label: bokeh.models.PreText,
-    bgraphs: List[BGraphAndFigure],
+    pairs: List[BGraphAndFigure],
 ) -> List[bokeh.models.UIElement]:
     def variable_updated(attr: str, old: float, new: float, *, var: Variable):
         try:
@@ -1176,9 +1280,9 @@ def _handle_variables(
         else:
             status_label.text = ""
 
-        for item in bgraphs:
-            if isinstance(item.bgraph, (BokehBasicGraph, BokehLatticeLayoutGraph)):
-                item.bgraph.update_plot(item.fig, tao=tao)
+        for pair in pairs:
+            if isinstance(pair.bgraph, (BokehBasicGraph, BokehLatticeLayoutGraph)):
+                pair.bgraph.update_plot(pair.fig, tao=tao)
 
     spinners = []
     for var in variables:
@@ -1215,9 +1319,9 @@ class BokehGraphManager(
         graph_names: List[str],
         grid: Tuple[int, int],
         *,
-        curves: Optional[List[Dict[int, TaoCurveSettings]]] = None,
+        curves: Optional[List[Optional[CurveIndexToCurve]]] = None,
         include_layout: bool = False,
-        share_x: bool = True,
+        share_x: Optional[bool] = None,
         width: Optional[int] = None,
         height: Optional[int] = None,
         figsize: Optional[Tuple[int, int]] = None,
@@ -1226,7 +1330,7 @@ class BokehGraphManager(
         ylim: Optional[List[Optional[Tuple[float, float]]]] = None,
         reuse: bool = True,
         save: Union[bool, str, pathlib.Path, None] = None,
-    ):
+    ) -> BokehApp:
         if len(set(graph_names)) < len(graph_names):
             # Don't reuse existing regions if we place the same template more
             # than once
@@ -1234,6 +1338,9 @@ class BokehGraphManager(
 
         if not curves:
             curves = [None] * len(graph_names)
+        elif len(curves) < len(graph_names):
+            assert len(curves)
+            curves = list(curves) + [None] * (len(graph_names) - len(curves))
 
         bgraphs = sum(
             (
@@ -1247,72 +1354,32 @@ class BokehGraphManager(
             [],
         )
 
-        nrows, ncols = grid
         if not bgraphs:
-            return None, None
-
-        xlim = xlim or [None]
-        if len(xlim) < len(bgraphs):
-            xlim.extend([xlim[-1]] * (len(bgraphs) - len(xlim)))
-
-        ylim = ylim or [None]
-        if len(ylim) < len(bgraphs):
-            ylim.extend([ylim[-1]] * (len(bgraphs) - len(ylim)))
-
-        rows = [[] for _ in range(nrows)]
-        rows_cols = [(row, col) for row in range(nrows) for col in range(ncols)]
-        items = []
-
-        for bgraph, xl, yl, (row, _col) in zip(bgraphs, xlim, ylim, rows_cols):
-            if xl is not None:
-                bgraph.x_range = bokeh.models.Range1d(*xl)
-            if yl is not None:
-                bgraph.y_range = bokeh.models.Range1d(*yl)
-
-            fig = bgraph.create_figure()
-            rows[row].append(fig)
-
-            item = BGraphAndFigure(fig=fig, bgraph=bgraph)
-            items.append(item)
-
-        if include_layout:
-            lattice_layout = self.get_lattice_layout_graph()
-            if layout_height is not None:
-                lattice_layout.height = layout_height
-            layout_items = [
-                BGraphAndFigure(fig=lattice_layout.create_figure(), bgraph=lattice_layout)
-                for _ in range(ncols)
-            ]
-            items.extend(layout_items)
-            rows.append([item.fig for item in layout_items])
+            raise ValueError(f"No supported plots from these templates: {graph_names}")
 
         if figsize is not None:
             width, height = figsize
 
-        layout = bokeh.layouts.column(
-            [bokeh.layouts.row(row) for row in rows],
+        app = BokehApp(
+            manager=self,
+            bgraphs=bgraphs,
+            share_x=share_x,
+            include_variables=False,
+            grid=grid,
             width=width,
             height=height,
+            include_layout=include_layout,
+            xlim=xlim,
+            ylim=ylim,
+            layout_height=layout_height,
         )
 
-        if share_x:
-            share_common_x_axes(items)
-
         if save:
-            title = bgraphs[0].graph.title or f"plot-{time.time()}"
             if save is True:
-                save = f"{title}.html"
-            if not pathlib.Path(save).suffix:
-                save = f"{save}.html"
-
-            logger.info(f"Saving plot to {save!r}")
-            bokeh.io.save(
-                layout,
-                filename=save,
-                title=title,
-                resources=bokeh.resources.CDN,
-            )
-        return items, layout
+                save = None
+            filename = app.save(save)
+            logger.info(f"Saving plot to {filename!r}")
+        return app
 
     @override
     def plot(
@@ -1384,53 +1451,30 @@ class BokehGraphManager(
             curves=curves,
         )
         if not bgraphs:
-            return []
+            return None
 
-        if (
-            include_layout
-            and any(bgraph.graph.is_s_plot for bgraph in bgraphs)
-            and not any(isinstance(bgraph, BokehLatticeLayoutGraph) for bgraph in bgraphs)
-        ):
-            bgraphs.append(self.get_lattice_layout_graph())
-
-        bgraphs = move_layout_to_bottom(bgraphs)
-
-        for bgraph in bgraphs:
-            is_layout = isinstance(bgraph, BokehLatticeLayoutGraph)
-            if sizing_mode is not None:
-                bgraph.sizing_mode = sizing_mode
-            if width is not None:
-                bgraph.width = width
-            if xlim is not None:
-                bgraph.x_range = bokeh.models.Range1d(*xlim)
-            if ylim is not None:
-                bgraph.y_range = bokeh.models.Range1d(*ylim)
-            if is_layout:
-                if layout_height is not None:
-                    bgraph.height = layout_height
-            else:
-                if height is not None:
-                    bgraph.height = height
+        app = BokehApp(
+            manager=self,
+            bgraphs=bgraphs,
+            share_x=share_x,
+            include_variables=False,
+            grid=None,
+            graph_width=width,
+            graph_height=height,
+            include_layout=include_layout,
+        )
 
         if save:
-            title = bgraphs[0].graph.title or f"plot-{time.time()}"
             if save is True:
-                save = f"{title}.html"
-            if not pathlib.Path(save).suffix:
-                save = f"{save}.html"
+                save = ""
+            filename = app.save(save)
+            logger.info(f"Saving plot to {filename!r}")
 
-            logger.info(f"Saving plot to {save!r}")
-            app = CompositeApp(tao=self.tao, bgraphs=bgraphs, share_x=share_x)
-            app.save(save, title=title)
-
-        return bgraphs
-
-
-def _not_none_kwargs(**kwargs):
-    return {key: value for key, value in kwargs.items() if value is not None}
+        return app
 
 
 class NotebookGraphManager(BokehGraphManager):
+    @override
     def plot_regions(
         self,
         regions: List[str],
@@ -1452,13 +1496,10 @@ class NotebookGraphManager(BokehGraphManager):
         if not bgraphs:
             return None
 
-        if len(bgraphs) == 1:
-            (app,) = bgraphs
-        else:
-            app = CompositeApp(self.tao, bgraphs, share_x=share_x)
-
+        app = BokehApp(self, bgraphs, share_x=share_x)
         return bokeh.plotting.show(app.create_full_app())
 
+    @override
     def plot_grid(
         self,
         graph_names: List[str],
@@ -1475,33 +1516,27 @@ class NotebookGraphManager(BokehGraphManager):
         reuse: bool = True,
         save: Union[bool, str, pathlib.Path, None] = None,
     ):
-        items, _layout = super().plot_grid(
-            graph_names=graph_names,
-            grid=grid,
-            curves=curves,
-            include_layout=include_layout,
-            share_x=share_x,
-            width=width,
-            height=height,
-            reuse=reuse,
-            save=save,
-        )
-        if not items:
-            return
+        kwargs = {
+            "graph_names": graph_names,
+            "grid": grid,
+            "curves": curves,
+            "include_layout": include_layout,
+            "share_x": share_x,
+            "width": width,
+            "height": height,
+            "reuse": reuse,
+            "xlim": xlim,
+            "ylim": ylim,
+            "layout_height": layout_height,
+        }
+        if save:
+            # NOTE/TODO: seems like we have to regenerate the bokeh glyphs
+            # or they may be considered as owned by more than one document.
+            # This is a workaround, but I assume there's a better way of
+            # going about this...
+            app = super().plot_grid(**kwargs, save=save)
 
-        if include_layout:
-            grid = (grid[0] + 1, grid[1])
-
-        app = CompositeApp(
-            tao=self.tao,
-            bgraphs=[item.bgraph for item in items],
-            share_x=share_x,
-            variables=None,
-            grid=grid,
-            width=width,
-            height=height,
-        )
-
+        app = super().plot_grid(**kwargs, save=False)
         return bokeh.plotting.show(app.create_full_app())
 
     @override
@@ -1524,52 +1559,33 @@ class NotebookGraphManager(BokehGraphManager):
         save: Union[bool, str, pathlib.Path, None] = None,
         curves: Optional[Dict[int, TaoCurveSettings]] = None,
     ):
+        kwargs = {
+            "region_name": region_name,
+            "graph_name": graph_name,
+            "include_layout": include_layout,
+            "sizing_mode": sizing_mode,
+            "width": width,
+            "height": height,
+            "layout_height": layout_height,
+            "reuse": reuse,
+            "xlim": xlim,
+            "ylim": ylim,
+            "curves": curves,
+            "share_x": share_x,
+        }
         if save:
             # NOTE/TODO: seems like we have to regenerate the bokeh glyphs
             # or they may be considered as owned by more than one document.
             # This is a workaround, but I assume there's a better way of
             # going about this...
-            super().plot(
-                region_name=region_name,
-                graph_name=graph_name,
-                include_layout=include_layout,
-                sizing_mode=sizing_mode,
-                width=width,
-                height=height,
-                layout_height=layout_height,
-                reuse=reuse,
-                xlim=xlim,
-                ylim=ylim,
-                curves=curves,
-                share_x=share_x,
-                save=save,
-            )
+            app = super().plot(**kwargs, save=save)
 
-        bgraphs = super().plot(
-            region_name=region_name,
-            graph_name=graph_name,
-            include_layout=include_layout,
-            sizing_mode=sizing_mode,
-            width=width,
-            height=height,
-            layout_height=layout_height,
-            reuse=reuse,
-            xlim=xlim,
-            ylim=ylim,
-            curves=curves,
-            save=False,  # <-- important
-        )
+        app = super().plot(**kwargs, save=False)
+        if not app:
+            return
 
-        if not bgraphs:
-            return None
-
-        variables = Variable.from_tao_all(self.tao) if vars else None
-        if len(bgraphs) == 1:
-            (app,) = bgraphs
-            if isinstance(app, BokehBasicGraph):
-                app.variables = variables
-        else:
-            app = CompositeApp(self.tao, bgraphs, share_x=share_x, variables=variables)
+        if vars:
+            app.variables = Variable.from_tao_all(self.tao)
 
         return bokeh.plotting.show(
             app.create_full_app(),
