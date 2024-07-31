@@ -6,7 +6,7 @@ dependencies:
   - python >=3.9
   - openPMD-beamphysics
   - numpydoc
-  - bmad >=20240718
+  - bmad >=20240730
   - bokeh
   - jupyterlab>3
   - ipywidgets

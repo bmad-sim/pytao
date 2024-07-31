@@ -7,7 +7,7 @@ dependencies:
   - ipykernel
   - ipywidgets
   - jupyterlab
-  - bmad >=20240718
+  - bmad >=20240730
   - openPMD-beamphysics
   - numpy
   - h5py

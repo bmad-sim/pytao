@@ -1,5 +1,6 @@
 from __future__ import annotations
 import contextlib
+import datetime
 import logging
 import pathlib
 import numpy as np
@@ -273,6 +274,7 @@ class Tao(TaoCore):
 
     plot_backend_name: Optional[str]
     _graph_managers: dict
+    _min_tao_version = datetime.datetime(2024, 7, 26)
 
     def __init__(
         self,
@@ -311,6 +313,7 @@ class Tao(TaoCore):
     ):
         self.plot_backend_name = None
         self._graph_managers = {}
+        self._tao_version_checked = False
         super().__init__(init="", so_lib=so_lib)
         self.init(
             cmd=init,
@@ -424,6 +427,25 @@ class Tao(TaoCore):
         init_cmd = self.init_settings.tao_init
         if "-init" in init_cmd or "-lat" in init_cmd:
             self._init(self.init_settings)
+            if not self._tao_version_checked:
+                self._tao_version_checked = True
+                self._check_tao_version()
+
+    def _check_tao_version(self):
+        version = self.version()
+        if version is None:
+            # Don't continue to warn about failing to parse the version
+            self._tao_version = datetime.datetime.now()
+            return
+
+        self._tao_version = version
+        if self._tao_version.date() < self._min_tao_version.date():
+            logger.warning(
+                f"Installed Tao version is lower than pytao's recommended and tested version. "
+                f"\n   You have Tao version: {version.date()}"
+                f"\n   Recommended version:  {self._min_tao_version.date()}"
+                f"\nSome features may not work as expected.  Please upgrade bmad."
+            )
 
     def _init(self, startup: TaoStartup):
         return super().init(startup.tao_init)
@@ -550,6 +572,11 @@ class Tao(TaoCore):
         dat["species"] = species.lower()
 
         return dat
+
+    def version(self):
+        """Get the date-coded version."""
+        cmd = "show version"
+        return _pytao_parsers.parse_show_version(self.cmd(cmd), cmd=cmd)
 
     def plot_page(self):
         """Get plot page parameters."""

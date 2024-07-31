@@ -35,8 +35,6 @@ class TaoCore:
     tao.init("command line args here...")
     """
 
-    # ---------------------------------------------
-
     def __init__(self, init="", so_lib=""):
         # TL/DR; Leave this import out of the global scope.
         #

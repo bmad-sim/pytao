@@ -1,4 +1,5 @@
 import ast
+import datetime
 import logging
 from typing import Dict, List, Optional
 
@@ -1454,3 +1455,18 @@ def parse_show_plot_page(lines, cmd=""):
 
         result[variable] = value
     return {key.replace("%", "_"): value for key, value in result.items()}
+
+
+def parse_show_version(lines, cmd=""):
+    """
+    Parse 'show version' output.
+
+    Returns
+    -------
+    datetime.datetime or None
+    """
+    try:
+        return datetime.datetime.strptime("".join(lines).strip(), "Date: %Y/%m/%d %H:%M:%S")
+    except ValueError:
+        logger.warning("Failed to parse version output: %s", lines)
+        return None

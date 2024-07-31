@@ -1694,12 +1694,7 @@ class FloorPlanElement:
             # incorrect and that DPI units are to be assumed...
             scale = 1 / 72.0
         else:
-            # Otherwise, we have an actual scale that the user configured to map
-            # sizes to physical units.
-            scale = floor_plan_shape_scale
-            # TODO: back to scale=1.0 after this commit makes it into a bmad tag:
-            # https://github.com/bmad-sim/bmad-ecosystem/commit/4d698389c727961f06f39f67ed408bfb0620de2f#diff-724ece0d6b708163834035ed2d28cf86c4d787945405b624c1f8d7155111d39a
-            # scale = 1.0
+            scale = 1.0
 
         # Handle some renaming and reduce dictionary key usage
         return cls._from_info(
