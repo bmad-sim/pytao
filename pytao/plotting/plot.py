@@ -5,7 +5,9 @@ import math
 import pathlib
 import time
 import typing
+from abc import ABC, abstractmethod
 from typing import (
+    Any,
     ClassVar,
     Dict,
     Generic,
@@ -28,11 +30,10 @@ import matplotlib.path
 import matplotlib.pyplot as plt
 import matplotlib.text
 import numpy as np
-from pydantic import ConfigDict
 import pydantic.dataclasses as dataclasses
 from matplotlib.ticker import AutoMinorLocator
+from pydantic import ConfigDict
 from pydantic.dataclasses import Field
-from typing_extensions import override
 
 from . import pgplot, util
 from .curves import TaoCurveSettings
@@ -2230,7 +2231,7 @@ T_LatticeLayoutGraph = TypeVar("T_LatticeLayoutGraph")
 T_FloorPlanGraph = TypeVar("T_FloorPlanGraph")
 
 
-class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph]):
+class GraphManager(ABC, Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph]):
     _key_: ClassVar[str] = "GraphManager"
 
     tao: Tao
@@ -2478,13 +2479,15 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
             **kwargs,
         )
 
+    @abstractmethod
     def make_graph(
         self,
         region_name: str,
         graph_name: str,
     ) -> T_GraphType:
-        raise NotImplementedError()
+        pass
 
+    @abstractmethod
     def plot(
         self,
         graph_name: str,
@@ -2492,10 +2495,10 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
         region_name: Optional[str] = None,
         include_layout: bool = True,
         reuse: bool = True,
-        **kwargs,
-    ):
-        raise NotImplementedError()
+    ) -> Any:
+        pass
 
+    @abstractmethod
     def plot_grid(
         self,
         graph_names: List[str],
@@ -2504,9 +2507,8 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
         include_layout: bool = False,
         reuse: bool = True,
         curves: Optional[List[Dict[int, TaoCurveSettings]]] = None,
-        **kwargs,
-    ):
-        raise NotImplementedError()
+    ) -> Any:
+        pass
 
 
 class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPlanGraph]):
@@ -2514,16 +2516,11 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
     _lattice_layout_graph_type = LatticeLayoutGraph
     _floor_plan_graph_type = FloorPlanGraph
 
-    def make_graph(
-        self,
-        region_name: str,
-        graph_name: str,
-    ) -> AnyGraph:
+    def make_graph(self, region_name: str, graph_name: str) -> AnyGraph:
         # Matplotlib support is built-in here, so our graph classes (for better
         # or worse) are used directly with this backend
         return make_graph(self.tao, region_name, graph_name)
 
-    @override
     def plot_grid(
         self,
         graph_names: List[str],
@@ -2531,6 +2528,7 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
         *,
         include_layout: bool = False,
         figsize: Optional[Tuple[int, int]] = None,
+        tight_layout: bool = True,
         share_x: Union[bool, Literal["row", "col", "all"]] = "col",
         layout_height: float = 0.5,
         width: int = 6,
@@ -2552,6 +2550,11 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
             Grid the provided graphs into this many rows and columns.
         include_layout : bool, default=False
             Include a layout plot at the bottom of each column.
+        tight_layout : bool, default=True
+            Apply a tight layout with matplotlib.
+        figsize : (int, int), optional
+            Figure size. Alternative to specifying `width` and `height`
+            separately.  This takes precedence over `width` and `height`.
         width : int, optional
             Width of the whole plot.
         height : int, optional
@@ -2655,6 +2658,9 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
             for col in range(ncols):
                 layout_graph.plot(gs[-1, col])
 
+        if tight_layout:
+            fig.tight_layout()
+
         if save:
             title = graphs[0].title or f"plot-{time.time()}"
             if save is True:
@@ -2664,13 +2670,13 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
 
         return fig, gs
 
-    @override
     def plot(
         self,
         graph_name: str,
         *,
         region_name: Optional[str] = None,
         include_layout: bool = True,
+        tight_layout: bool = True,
         width: int = 6,
         height: int = 6,
         layout_height: float = 0.5,
@@ -2698,6 +2704,11 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
             Include a layout plot at the bottom, if not already placed and if
             appropriate (i.e., another plot uses longitudinal coordinates on
             the x-axis).
+        tight_layout : bool, default=True
+            Apply a tight layout with matplotlib.
+        figsize : (int, int), optional
+            Figure size. Alternative to specifying `width` and `height`
+            separately.  This takes precedence over `width` and `height`.
         width : int, optional
             Width of each plot.
         height : int, optional
@@ -2781,6 +2792,9 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
             if ylim is not None:
                 if not isinstance(graph, LatticeLayoutGraph) or len(graphs) == 1:
                     ax.set_ylim(ylim)
+
+        if tight_layout:
+            fig.tight_layout()
 
         if save:
             title = graphs[0].title or f"plot-{time.time()}"

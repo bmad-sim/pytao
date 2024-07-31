@@ -6,6 +6,7 @@ import math
 import pathlib
 import time
 import typing
+from abc import ABC, abstractmethod
 from typing import (
     ClassVar,
     Dict,
@@ -34,13 +35,12 @@ from bokeh.document.callbacks import EventCallback
 from bokeh.models.sources import ColumnDataSource
 from bokeh.plotting import figure
 from pydantic.dataclasses import dataclass
-from typing_extensions import NotRequired, TypedDict, override
+from typing_extensions import NotRequired, TypedDict
 
 from ..interface_commands import AnyPath
-from .fields import LatticeLayoutField
-from .curves import TaoCurveSettings
-
 from . import pgplot, util
+from .curves import TaoCurveSettings
+from .fields import LatticeLayoutField
 from .plot import (
     BasicGraph,
     FloorPlanGraph,
@@ -540,7 +540,7 @@ def _draw_fields(
 TGraph = TypeVar("TGraph", bound=GraphBase)
 
 
-class BokehGraphBase(Generic[TGraph]):
+class BokehGraphBase(ABC, Generic[TGraph]):
     manager: GraphManager
     graph: TGraph
     sizing_mode: SizingModeType
@@ -586,14 +586,27 @@ class BokehGraphBase(Generic[TGraph]):
         with open(filename, "wt") as fp:
             fp.write(source)
 
+    def create_full_app(self):
+        def bokeh_app(doc):
+            primary_figure = self.create_figure()
+            doc.add_root(primary_figure)
+            for model in self.create_widgets(primary_figure):
+                doc.add_root(model)
+
+        return bokeh_app
+
+    __call__ = create_full_app
+
+    @abstractmethod
     def create_figure(
         self,
+        *,
         tools: str = "pan,wheel_zoom,box_zoom,save,reset,help,crosshair",
         toolbar_location: str = "above",
-        **kwargs,
     ) -> figure:
         raise NotImplementedError()
 
+    @abstractmethod
     def create_widgets(
         self,
         fig: figure,
@@ -601,17 +614,6 @@ class BokehGraphBase(Generic[TGraph]):
         include_variables: bool = False,
     ) -> List[bokeh.models.UIElement]:
         raise NotImplementedError()
-
-    def create_full_app(self):
-        def bokeh_app(doc):
-            primary_figure = self.create_figure()
-            doc.add_root(primary_figure)
-            for model in self.create_widgets():
-                doc.add_root(model)
-
-        return bokeh_app
-
-    __call__ = create_full_app
 
 
 class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
@@ -646,9 +648,9 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
         if tao is None:
             return
 
-    @override
     def create_figure(
         self,
+        *,
         tools: str = "pan,wheel_zoom,box_zoom,save,reset,help,crosshair",
         toolbar_location: str = "above",
         add_named_hover_tool: bool = True,
@@ -700,7 +702,6 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
             fig.y_range = self.y_range
         return fig
 
-    @override
     def create_widgets(
         self,
         fig: figure,
@@ -795,9 +796,9 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
                 assert "symbol" in orig_data
                 orig_data["symbol"].data = dict(symbol.data)
 
-    @override
     def create_figure(
         self,
+        *,
         tools: str = "pan,wheel_zoom,box_zoom,save,reset,help,hover,crosshair",
         toolbar_location: str = "above",
         sizing_mode: SizingModeType = "inherit",
@@ -821,7 +822,6 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
             _plot_curve(fig, curve, source)
         return fig
 
-    @override
     def create_widgets(
         self,
         fig: figure,
@@ -904,9 +904,9 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
     def tao(self) -> Tao:
         return self.manager.tao
 
-    @override
     def create_figure(
         self,
+        *,
         tools: str = "pan,wheel_zoom,box_zoom,save,reset,help,hover,crosshair",
         toolbar_location: str = "above",
         sizing_mode: SizingModeType = "inherit",
@@ -958,7 +958,6 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         _draw_limit_border(fig, graph.xlim, graph.ylim, alpha=0.1)
         return fig
 
-    @override
     def create_widgets(
         self,
         fig: figure,
@@ -1075,7 +1074,7 @@ class BokehApp:
         self.ylim = ylim
         self.create_figures(bgraphs)
 
-    def create_figures(self, bgraphs: List[AnyBokehGraph]):
+    def create_figures(self, bgraphs: List[AnyBokehGraph]) -> None:
         self.bgraphs = bgraphs
         self.figures = [bgraph.create_figure() for bgraph in bgraphs]
         self.pairs = [
@@ -1299,12 +1298,7 @@ class BokehGraphManager(
     _lattice_layout_graph_type = BokehLatticeLayoutGraph
     _floor_plan_graph_type = BokehFloorPlanGraph
 
-    @override
-    def make_graph(
-        self,
-        region_name: str,
-        graph_name: str,
-    ) -> AnyBokehGraph:
+    def make_graph(self, region_name: str, graph_name: str) -> AnyBokehGraph:
         graph = make_graph(self.tao, region_name, graph_name)
         if isinstance(graph, BasicGraph):
             return BokehBasicGraph(self, graph)
@@ -1326,8 +1320,8 @@ class BokehGraphManager(
         height: Optional[int] = None,
         figsize: Optional[Tuple[int, int]] = None,
         layout_height: Optional[int] = None,
-        xlim: Optional[List[Optional[Tuple[float, float]]]] = None,
-        ylim: Optional[List[Optional[Tuple[float, float]]]] = None,
+        xlim: Optional[List[OptionalLimit]] = None,
+        ylim: Optional[List[OptionalLimit]] = None,
         reuse: bool = True,
         save: Union[bool, str, pathlib.Path, None] = None,
     ) -> BokehApp:
@@ -1337,7 +1331,7 @@ class BokehGraphManager(
             reuse = False
 
         if not curves:
-            curves = [None] * len(graph_names)
+            curves: List[Optional[CurveIndexToCurve]] = [None] * len(graph_names)
         elif len(curves) < len(graph_names):
             assert len(curves)
             curves = list(curves) + [None] * (len(graph_names) - len(curves))
@@ -1376,12 +1370,11 @@ class BokehGraphManager(
 
         if save:
             if save is True:
-                save = None
+                save = ""
             filename = app.save(save)
             logger.info(f"Saving plot to {filename!r}")
         return app
 
-    @override
     def plot(
         self,
         graph_name: str,
@@ -1462,6 +1455,10 @@ class BokehGraphManager(
             graph_width=width,
             graph_height=height,
             include_layout=include_layout,
+            sizing_mode=sizing_mode,
+            layout_height=layout_height,
+            xlim=xlim,
+            ylim=ylim,
         )
 
         if save:
@@ -1474,7 +1471,6 @@ class BokehGraphManager(
 
 
 class NotebookGraphManager(BokehGraphManager):
-    @override
     def plot_grid(
         self,
         graph_names: List[str],
@@ -1512,9 +1508,9 @@ class NotebookGraphManager(BokehGraphManager):
             app = super().plot_grid(**kwargs, save=save)
 
         app = super().plot_grid(**kwargs, save=False)
-        return bokeh.plotting.show(app.create_full_app())
+        bokeh.plotting.show(app.create_full_app())
+        return app
 
-    @override
     def plot(
         self,
         graph_name: str,
@@ -1562,10 +1558,11 @@ class NotebookGraphManager(BokehGraphManager):
         if vars:
             app.variables = Variable.from_tao_all(self.tao)
 
-        return bokeh.plotting.show(
+        bokeh.plotting.show(
             app.create_full_app(),
             notebook_handle=notebook_handle,
         )
+        return app
 
     __call__ = plot
 
