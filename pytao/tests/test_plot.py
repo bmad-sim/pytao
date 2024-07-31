@@ -4,31 +4,15 @@ from typing import Union
 
 import matplotlib.pyplot as plt
 import pytest
-from typing_extensions import Literal
 
 from .. import SubprocessTao, Tao, TaoStartup
 from ..plotting.curves import TaoCurveSettings
-from .conftest import get_example, get_regression_test, test_artifacts
+from .conftest import get_example, get_regression_test, test_artifacts, BackendName
 
 logger = logging.getLogger(__name__)
 
 
 AnyTao = Union[Tao, SubprocessTao]
-BackendName = Literal["mpl", "bokeh"]
-
-
-@pytest.fixture(params=["bokeh", "mpl"])
-def plot_backend(
-    request: pytest.FixtureRequest,
-) -> BackendName:
-    return request.param
-
-
-@pytest.fixture(params=[False, True], ids=["Tao", "SubprocessTao"])
-def use_subprocess(
-    request: pytest.FixtureRequest,
-) -> bool:
-    return request.param
 
 
 @pytest.fixture(autouse=True, scope="function")

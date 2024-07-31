@@ -2009,7 +2009,6 @@ class BuildingWalls:
                         )
                     )
 
-        # plot floor plan building walls
         return cls(building_wall_graph=building_wall_graph, lines=lines, patches=patches)
 
 
@@ -2919,6 +2918,7 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
         height: int = 4,
         x_scale: float = 1e3,
         ax: Optional[matplotlib.axes.Axes] = None,
+        save: Union[bool, str, pathlib.Path, None] = None,
     ) -> matplotlib.axes.Axes:
         """
         Plot field information for a given element.
@@ -2936,6 +2936,8 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
             Number of data points.
         ax : matplotlib.axes.Axes, optional
             The axes to place the plot in.
+        save : pathlib.Path or str, optional
+            Save the plot to the given filename.
         """
         user_specified_axis = ax is not None
 
@@ -2957,8 +2959,17 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
             # vmax=max_field,
             cmap=colormap,
         )
-        if not user_specified_axis:
-            fig = ax.figure
-            if fig is not None:
+        fig = ax.figure
+        if fig is not None:
+            if not user_specified_axis:
                 fig.colorbar(mesh)
+
+            if save:
+                if save is True:
+                    save = f"{ele_id}_field.png"
+                if not pathlib.Path(save).suffix:
+                    save = f"{save}.png"
+                logger.info(f"Saving plot to {save!r}")
+                fig.savefig(save)
+
         return ax

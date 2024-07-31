@@ -529,31 +529,6 @@ def _fields_to_data_source(
     )
 
 
-def _draw_fields(
-    fig: figure,
-    fields: List[ElementField],
-    palette: Optional[str] = None,
-    x_scale: float = 1e3,
-):
-    source = _fields_to_data_source(fields, x_scale=x_scale)
-    cmap = bokeh.models.LinearColorMapper(
-        palette=palette or Defaults.palette,
-        low=np.min(source.data["by"]),
-        high=np.max(source.data["by"]),
-    )
-
-    fig.image(
-        image="by",
-        x="x",
-        y=-1,
-        dw="dw",
-        dh="dh",
-        color_mapper=cmap,
-        source=source,
-        name="field_images",
-    )
-
-
 TGraph = TypeVar("TGraph", bound=GraphBase)
 
 
@@ -1589,6 +1564,7 @@ class BokehGraphManager(
         x_scale: float = 1e3,
         width: Optional[int] = None,
         height: Optional[int] = None,
+        save: Union[bool, str, pathlib.Path, None] = None,
     ):
         """
         Plot field information for a given element.
@@ -1606,15 +1582,47 @@ class BokehGraphManager(
             Number of data points.
         width : int, optional
         height : int, optional
+        save : pathlib.Path or str, optional
+            Save the plot to the given filename.
         """
         field = ElementField.from_tao(self.tao, ele_id, num_points=num_points, radius=radius)
         fig = figure(title=f"Field of {ele_id}")
-        _draw_fields(fig, [field], palette=colormap or Defaults.palette, x_scale=x_scale)
+
+        palette = colormap or Defaults.palette
+
+        source = _fields_to_data_source([field], x_scale=x_scale)
+        cmap = bokeh.models.LinearColorMapper(
+            palette=palette or Defaults.palette,
+            low=np.min(source.data["by"]),
+            high=np.max(source.data["by"]),
+        )
+
+        fig.image(
+            image="by",
+            x="x",
+            y=-1,
+            dw="dw",
+            dh="dh",
+            color_mapper=cmap,
+            source=source,
+            name="field_images",
+        )
+        color_bar = bokeh.models.ColorBar(color_mapper=cmap, location=(0, 0))
+        fig.add_layout(color_bar, "right")
 
         if width is not None:
             fig.width = width
         if height is not None:
             fig.height = height
+
+        if save:
+            if save is True:
+                save = f"{ele_id}_field.html"
+            if not pathlib.Path(save).suffix:
+                save = f"{save}.html"
+            filename = bokeh.io.save(fig, filename=save)
+            logger.info(f"Saving plot to {filename!r}")
+
         return fig
 
 
@@ -1812,6 +1820,7 @@ class NotebookGraphManager(BokehGraphManager):
         width: Optional[int] = None,
         height: Optional[int] = None,
         x_scale: float = 1e3,
+        save: Union[bool, str, pathlib.Path, None] = None,
     ):
         """
         Plot field information for a given element.
@@ -1829,6 +1838,8 @@ class NotebookGraphManager(BokehGraphManager):
             Number of data points.
         width : int, optional
         height : int, optional
+        save : pathlib.Path or str, optional
+            Save the plot to the given filename.
         """
         fig = super().plot_field(
             ele_id,
@@ -1837,8 +1848,10 @@ class NotebookGraphManager(BokehGraphManager):
             num_points=num_points,
             width=width,
             height=height,
+            save=save,
         )
         bokeh.plotting.show(fig, notebook_handle=True)
+
         return fig
 
 

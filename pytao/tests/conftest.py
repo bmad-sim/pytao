@@ -5,6 +5,7 @@ import pathlib
 
 import matplotlib
 import pytest
+from typing_extensions import Literal
 
 from .. import SubprocessTao, Tao, TaoStartup
 
@@ -134,3 +135,20 @@ def new_tao(
     if hasattr(tao, "close_subprocess"):
         print("Closing tao subprocess")
         tao.close_subprocess()
+
+
+BackendName = Literal["mpl", "bokeh"]
+
+
+@pytest.fixture(params=["bokeh", "mpl"])
+def plot_backend(
+    request: pytest.FixtureRequest,
+) -> BackendName:
+    return request.param
+
+
+@pytest.fixture(params=[False, True], ids=["Tao", "SubprocessTao"])
+def use_subprocess(
+    request: pytest.FixtureRequest,
+) -> bool:
+    return request.param
