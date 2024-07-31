@@ -2212,6 +2212,10 @@ T_FloorPlanGraph = TypeVar("T_FloorPlanGraph")
 
 
 class GraphManager(ABC, Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph]):
+    """
+    Graph backend manager base class.
+    """
+
     _key_: ClassVar[str] = "GraphManager"
 
     tao: Tao
@@ -2245,7 +2249,9 @@ class GraphManager(ABC, Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGr
         self._update_place_buffer()
         return self._to_place
 
-    def get_lattice_layout_graph(self) -> T_LatticeLayoutGraph:
+    @property
+    def lattice_layout_graph(self) -> T_LatticeLayoutGraph:
+        """The lattice layout graph.  Placed if not already available."""
         for region in self.regions.values():
             for graph in region:
                 if isinstance(graph, self._lattice_layout_graph_type):
@@ -2255,7 +2261,9 @@ class GraphManager(ABC, Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGr
         assert isinstance(graph, self._lattice_layout_graph_type)
         return graph
 
-    def get_floor_plan_graph(self) -> T_FloorPlanGraph:
+    @property
+    def floor_plan_graph(self) -> T_FloorPlanGraph:
+        """The floor plan graph. Placed if not already available."""
         for region in self.regions.values():
             for graph in region:
                 if isinstance(graph, self._floor_plan_graph_type):
@@ -2264,15 +2272,8 @@ class GraphManager(ABC, Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGr
         assert isinstance(graph, self._floor_plan_graph_type)
         return graph
 
-    @property
-    def lattice_layout_graph(self) -> T_LatticeLayoutGraph:
-        return self.get_lattice_layout_graph()
-
-    @property
-    def floor_plan_graph(self) -> T_FloorPlanGraph:
-        return self.get_floor_plan_graph()
-
     def get_region_for_graph(self, graph_name: str) -> str:
+        """Get a region for placing the graph."""
         for region_name, to_place in self.to_place.items():
             if to_place == graph_name:
                 logger.debug("Graph %s found in region %s", graph_name, region_name)
@@ -2295,6 +2296,23 @@ class GraphManager(ABC, Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGr
         ignore_invalid: bool = True,
         ignore_unsupported: bool = True,
     ) -> Dict[str, List[T_GraphType]]:
+        """
+        Place all graphs in the place buffer.
+
+        Side effect: clears `to_place`.
+
+        Parameters
+        ----------
+        ignore_invalid : bool
+            Ignore graphs marked as invalid by bmad.
+        ignore_unsupported : bool
+            Ignore unsupported graph types (e.g., key tables).
+
+        Returns
+        -------
+        Dict[str, List[T_GraphType]]
+            Region to list of graphs, depending on the backend type.
+        """
         to_place = list(self.to_place.items())
         self.to_place.clear()
 
@@ -2320,6 +2338,25 @@ class GraphManager(ABC, Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGr
         ignore_invalid: bool = True,
         ignore_unsupported: bool = True,
     ) -> List[T_GraphType]:
+        """
+        Update a specific region.
+
+        Parameters
+        ----------
+        region_name : str, optional
+            The region name to place it.  Determined automatically if unspecified.
+        graph_name : str
+            The graph template name.
+        ignore_invalid : bool
+            Ignore graphs marked as invalid by bmad.
+        ignore_unsupported : bool
+            Ignore unsupported graph types (e.g., key tables).
+
+        Returns
+        -------
+        list of graphs
+            The type of each graph is backend-dependent.
+        """
         self._clear_region(region_name)
 
         result = []
@@ -2368,6 +2405,23 @@ class GraphManager(ABC, Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGr
         region_name: Optional[str] = None,
         ignore_invalid: bool = True,
     ) -> List[T_GraphType]:
+        """
+        Place `graph_name` in `region_name`.
+
+        Parameters
+        ----------
+        graph_name : str
+            The graph template name.
+        region_name : str, optional
+            The region name to place it.  Determined automatically if unspecified.
+        ignore_invalid : bool
+            Ignore graphs marked as invalid by bmad.
+
+        Returns
+        -------
+        list of graphs
+            The type of each graph is backend-dependent.
+        """
         region_name = self._place(graph_name, region_name)
         return self.update_region(
             region_name=region_name,
@@ -2391,6 +2445,14 @@ class GraphManager(ABC, Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGr
                 regions.remove(region_name)
 
     def clear(self, region_name: str = "*"):
+        """
+        Clear a single region or all regions.
+
+        Parameters
+        ----------
+        region_name : str, optional
+            Defaults to '*', which is all regions.
+        """
         try:
             self.tao.cmd(f"place -no_buffer {region_name} none")
         except RuntimeError as ex:
@@ -2407,6 +2469,29 @@ class GraphManager(ABC, Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGr
         ignore_unsupported: bool = True,
         ignore_invalid: bool = True,
     ) -> List[T_GraphType]:
+        """
+        Prepare a graph for plotting.
+
+        Parameters
+        ----------
+        graph_name : str
+            The graph template name.
+        region_name : str, optional
+            The region name to place it.  Determined automatically if unspecified.
+        reuse : bool
+            If an existing plot of the same template exists, reuse its region.
+        curves : Dict[int, TaoCurveSettings], optional
+            Curve settings.
+        ignore_unsupported : bool
+            Ignore unsupported graph types (e.g., key tables).
+        ignore_invalid : bool
+            Ignore graphs marked as invalid by bmad.
+
+        Returns
+        -------
+        list of graphs
+            The type of each graph is backend-dependent.
+        """
         if not region_name:
             if reuse:
                 region_name = self.get_region_for_graph(graph_name)
@@ -2433,6 +2518,19 @@ class GraphManager(ABC, Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGr
         *,
         graph_name: Optional[str] = None,
     ):
+        """
+        Configure curves in a region.
+
+        Parameters
+        ----------
+        region_name : str
+            Already-placed region name.
+        settings : Dict[int, TaoCurveSettings]
+            Per-curve settings, keyed by integer curve index (starting at 1).
+        graph_name : str, optional
+            The graph name, if available.  If unspecified, settings will be
+            applied to all plots in the region.
+        """
         if not graph_name:
             for plot_name in get_plots_in_region(self.tao, region_name):
                 self.configure_curves(region_name, settings=settings, graph_name=plot_name)
@@ -2449,6 +2547,18 @@ class GraphManager(ABC, Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGr
     def plot_all(
         self, grid: Optional[Tuple[int, int]] = None, include_layout: bool = False, **kwargs
     ):
+        """
+        Plot all "placed" graphs.
+
+        Parameters
+        ----------
+        grid : Tuple[int, int], optional
+            Grid plots into this shape - (rows, cols).
+        include_layout : bool, default=False
+            Include a layout plot.
+        **kwargs
+            Keyword arguments are passed to `.plot_grid()`.
+        """
         graph_names = list(self.to_place.values())
         if not grid:
             grid = (len(graph_names), 1)
@@ -2503,6 +2613,8 @@ class GraphManager(ABC, Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGr
 
 
 class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPlanGraph]):
+    """Matplotlib backend graph manager."""
+
     _key_: ClassVar[str] = "mpl"
     _lattice_layout_graph_type = LatticeLayoutGraph
     _floor_plan_graph_type = FloorPlanGraph
@@ -2645,7 +2757,7 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
                 ax.set_ylim(*yl)
 
         if include_layout and (nrows * ncols) > len(graph_names):
-            layout_graph = self.get_lattice_layout_graph()
+            layout_graph = self.lattice_layout_graph
             for col in range(ncols):
                 layout_graph.plot(gs[-1, col])
 
@@ -2682,13 +2794,10 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
         """
         Plot a graph with Matplotlib.
 
-        To plot a specific graph, specify `graph_name` (optionally `region_name`).
-        The default is to plot all placed graphs.
-
         Parameters
         ----------
         graph_name : str
-            Graph name.
+            Graph template name.
         region_name : str, optional
             Graph region name.
         include_layout : bool, optional
@@ -2748,7 +2857,7 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
             and not any(isinstance(graph, LatticeLayoutGraph) for graph in graphs)
             and any(graph.is_s_plot for graph in graphs)
         ):
-            layout_graph = self.get_lattice_layout_graph()
+            layout_graph = self.lattice_layout_graph
             graphs.append(layout_graph)
 
             fig, gs = plt.subplots(
@@ -2769,7 +2878,7 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
             )
 
         if include_layout:
-            layout_graph = self.get_lattice_layout_graph()
+            layout_graph = self.lattice_layout_graph
 
         for ax, graph in zip(gs[:, 0], graphs):
             try:

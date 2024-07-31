@@ -740,7 +740,7 @@ class Tao(TaoCore):
             Element ID.
         colormap : str, optional
             Colormap for the plot.
-            Matplotlib defaults to "PRGn_r", and bokeh defaults to "".
+            Matplotlib defaults to "PRGn_r", and bokeh defaults to "Magma256".
         radius : float, default=0.015
             Radius.
         num_points : int, default=100

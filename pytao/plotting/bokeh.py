@@ -84,6 +84,7 @@ class Defaults:
     graph_size: Tuple[int, int] = (600, 400)
     lattice_layout_size: Tuple[int, int] = (600, 150)
     floor_plan_size: Tuple[int, int] = (600, 600)
+    palette: str = "Magma256"
 
     @classmethod
     def get_size_for_class(
@@ -531,12 +532,12 @@ def _fields_to_data_source(
 def _draw_fields(
     fig: figure,
     fields: List[ElementField],
-    palette: str = "Magma256",
+    palette: Optional[str] = None,
     x_scale: float = 1e3,
 ):
     source = _fields_to_data_source(fields, x_scale=x_scale)
     cmap = bokeh.models.LinearColorMapper(
-        palette="Magma256",
+        palette=palette or Defaults.palette,
         low=np.min(source.data["by"]),
         high=np.max(source.data["by"]),
     )
@@ -1235,7 +1236,7 @@ class BokehApp:
 
         rows = self._grid_figures()
         if self.include_layout:
-            lattice_layout = self.manager.get_lattice_layout_graph()
+            lattice_layout = self.manager.lattice_layout_graph
             lattice_layout.width, lattice_layout.height = Defaults.get_size_for_class(
                 type(lattice_layout),
                 user_width=self.graph_width,
@@ -1360,6 +1361,8 @@ def _handle_variables(
 class BokehGraphManager(
     GraphManager[AnyBokehGraph, BokehLatticeLayoutGraph, BokehFloorPlanGraph]
 ):
+    """Bokeh backend graph manager - for non-Jupyter contexts."""
+
     _key_: ClassVar[str] = "bokeh"
     _lattice_layout_graph_type = BokehLatticeLayoutGraph
     _floor_plan_graph_type = BokehFloorPlanGraph
@@ -1379,7 +1382,6 @@ class BokehGraphManager(
         graph_names: List[str],
         grid: Tuple[int, int],
         *,
-        curves: Optional[List[Optional[CurveIndexToCurve]]] = None,
         include_layout: bool = False,
         share_x: Optional[bool] = None,
         width: Optional[int] = None,
@@ -1389,15 +1391,57 @@ class BokehGraphManager(
         xlim: Optional[List[OptionalLimit]] = None,
         ylim: Optional[List[OptionalLimit]] = None,
         reuse: bool = True,
+        curves: Optional[List[Optional[CurveIndexToCurve]]] = None,
         save: Union[bool, str, pathlib.Path, None] = None,
     ) -> BokehApp:
+        """
+        Plot graphs on a grid with Bokeh.
+
+        Parameters
+        ----------
+        graph_names : list of str
+            Graph names.
+        grid : (nrows, ncols), optional
+            Grid the provided graphs into this many rows and columns.
+        include_layout : bool, default=False
+            Include a layout plot at the bottom of each column.
+        share_x : bool or None, default=None
+            Share x-axes where sensible (`None`) or force sharing x-axes (True)
+            for all plots.
+        figsize : (int, int), optional
+            Figure size. Alternative to specifying `width` and `height`
+            separately.  This takes precedence over `width` and `height`.
+        width : int, optional
+            Width of the whole plot.
+        height : int, optional
+            Height of the whole plot.
+        layout_height : int, optional
+            Height of the layout plot.
+        xlim : list of (float, float), optional
+            X axis limits for each graph.
+        ylim : list of (float, float), optional
+            Y axis limits for each graph.
+        reuse : bool, default=True
+            If an existing plot of the given template type exists, reuse the
+            existing plot region rather than selecting a new empty region.
+        curves : list of Dict[int, TaoCurveSettings], optional
+            One dictionary per graph, with each dictionary mapping the curve
+            index to curve settings. These settings will be applied to the
+            placed graphs prior to plotting.
+        save : pathlib.Path or str, optional
+            Save the plot to the given filename.
+
+        Returns
+        -------
+        BokehApp
+        """
         if len(set(graph_names)) < len(graph_names):
             # Don't reuse existing regions if we place the same template more
             # than once
             reuse = False
 
         if not curves:
-            curves: List[Optional[CurveIndexToCurve]] = [None] * len(graph_names)
+            curves = [None] * len(graph_names)
         elif len(curves) < len(graph_names):
             assert len(curves)
             curves = list(curves) + [None] * (len(graph_names) - len(curves))
@@ -1459,17 +1503,14 @@ class BokehGraphManager(
         curves: Optional[Dict[int, TaoCurveSettings]] = None,
     ):
         """
-        Plot a graph or all placed graphs with Bokeh.
-
-        To plot a specific graph, specify `graph_name` (optionally `region_name`).
-        The default is to plot all placed graphs.
+        Plot a graph with Bokeh.
 
         Parameters
         ----------
+        graph_name : str
+            Graph template name.
         region_name : str, optional
             Graph region name.
-        graph_name : str, optional
-            Graph name.
         include_layout : bool
             Include a layout plot at the bottom, if not already placed and if
             appropriate (i.e., another plot uses longitudinal coordinates on
@@ -1495,13 +1536,16 @@ class BokehGraphManager(
             X axis limits.
         ylim : (float, float), optional
             Y axis limits.
+        curves : Dict[int, TaoCurveSettings], optional
+            Dictionary of curve index to curve settings. These settings will be
+            applied to the placed graph prior to plotting.
         save : str or bool, optional
             Save the plot to a static HTML file with the given name.
             If `True`, saves to a filename based on the plot title.
 
         Returns
         -------
-        list
+        BokehApp
         """
         bgraphs = self.prepare_graphs_by_name(
             graph_name=graph_name,
@@ -1565,7 +1609,7 @@ class BokehGraphManager(
         """
         field = ElementField.from_tao(self.tao, ele_id, num_points=num_points, radius=radius)
         fig = figure(title=f"Field of {ele_id}")
-        _draw_fields(fig, [field], palette=colormap or "Magma256", x_scale=x_scale)
+        _draw_fields(fig, [field], palette=colormap or Defaults.palette, x_scale=x_scale)
 
         if width is not None:
             fig.width = width
@@ -1575,6 +1619,8 @@ class BokehGraphManager(
 
 
 class NotebookGraphManager(BokehGraphManager):
+    """Jupyter notebook Bokeh backend graph manager."""
+
     def plot_grid(
         self,
         graph_names: List[str],
@@ -1591,6 +1637,47 @@ class NotebookGraphManager(BokehGraphManager):
         reuse: bool = True,
         save: Union[bool, str, pathlib.Path, None] = None,
     ):
+        """
+        Plot graphs on a grid with Bokeh.
+
+        Parameters
+        ----------
+        graph_names : list of str
+            Graph names.
+        grid : (nrows, ncols), optional
+            Grid the provided graphs into this many rows and columns.
+        include_layout : bool, default=False
+            Include a layout plot at the bottom of each column.
+        share_x : bool or None, default=None
+            Share x-axes where sensible (`None`) or force sharing x-axes (True)
+            for all plots.
+        figsize : (int, int), optional
+            Figure size. Alternative to specifying `width` and `height`
+            separately.  This takes precedence over `width` and `height`.
+        width : int, optional
+            Width of the whole plot.
+        height : int, optional
+            Height of the whole plot.
+        layout_height : int, optional
+            Height of the layout plot.
+        xlim : list of (float, float), optional
+            X axis limits for each graph.
+        ylim : list of (float, float), optional
+            Y axis limits for each graph.
+        reuse : bool, default=True
+            If an existing plot of the given template type exists, reuse the
+            existing plot region rather than selecting a new empty region.
+        curves : list of Dict[int, TaoCurveSettings], optional
+            One dictionary per graph, with each dictionary mapping the curve
+            index to curve settings. These settings will be applied to the
+            placed graphs prior to plotting.
+        save : pathlib.Path or str, optional
+            Save the plot to the given filename.
+
+        Returns
+        -------
+        BokehApp
+        """
         kwargs = {
             "graph_names": graph_names,
             "grid": grid,
@@ -1634,6 +1721,51 @@ class NotebookGraphManager(BokehGraphManager):
         save: Union[bool, str, pathlib.Path, None] = None,
         curves: Optional[Dict[int, TaoCurveSettings]] = None,
     ):
+        """
+        Plot a graph with Bokeh.
+
+        Parameters
+        ----------
+        graph_name : str
+            Graph template name.
+        region_name : str, optional
+            Graph region name.
+        include_layout : bool
+            Include a layout plot at the bottom, if not already placed and if
+            appropriate (i.e., another plot uses longitudinal coordinates on
+            the x-axis).
+        update : bool, default=True
+            Query Tao to update relevant graphs prior to plotting.
+        sizing_mode : Optional[SizingModeType]
+            Set the sizing mode for all graphs.  Default is configured on a
+            per-graph basis, typically "inherit".
+        width : int, optional
+            Width of each plot.
+        height : int, optional
+            Height of each plot.
+        layout_height : int, optional
+            Height of the layout plot.
+        share_x : bool or None, default=None
+            Share x-axes where sensible (`None`) or force sharing x-axes (True)
+            for all plots.
+        reuse : bool, default=True
+            If an existing plot of the given template type exists, reuse the
+            existing plot region rather than selecting a new empty region.
+        xlim : (float, float), optional
+            X axis limits.
+        ylim : (float, float), optional
+            Y axis limits.
+        curves : Dict[int, TaoCurveSettings], optional
+            Dictionary of curve index to curve settings. These settings will be
+            applied to the placed graph prior to plotting.
+        save : str or bool, optional
+            Save the plot to a static HTML file with the given name.
+            If `True`, saves to a filename based on the plot title.
+
+        Returns
+        -------
+        BokehApp
+        """
         kwargs = {
             "region_name": region_name,
             "graph_name": graph_name,
@@ -1679,6 +1811,7 @@ class NotebookGraphManager(BokehGraphManager):
         num_points: int = 100,
         width: Optional[int] = None,
         height: Optional[int] = None,
+        x_scale: float = 1e3,
     ):
         """
         Plot field information for a given element.
@@ -1705,7 +1838,8 @@ class NotebookGraphManager(BokehGraphManager):
             width=width,
             height=height,
         )
-        return bokeh.plotting.show(fig, notebook_handle=True)
+        bokeh.plotting.show(fig, notebook_handle=True)
+        return fig
 
 
 @functools.cache
