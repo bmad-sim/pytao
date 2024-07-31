@@ -213,7 +213,7 @@ PlotGraphInfo = TypedDict(
         "y_number_offset": float,
         "y_number_side": int,
         "y_tick_side": int,
-        # "curve[1..N]": str,
+        # **{f"curve[{n}]": NotRequired[str] for n in range(1, 100)},
     },
 )
 
@@ -234,15 +234,16 @@ PlotHistogramInfo = TypedDict(
 PlotLatLayoutInfo = TypedDict(
     "PlotLatLayoutInfo",
     {
-        "color": str,
-        "ele_s_end": float,
-        "ele_s_start": float,
+        "ix_branch": int,
         "ix_ele": int,
-        "label_name": str,
+        "ele_s_start": float,
+        "ele_s_end": float,
         "line_width": float,
         "shape": str,
         "y1": float,
         "y2": float,
+        "color": str,
+        "label_name": str,
     },
 )
 

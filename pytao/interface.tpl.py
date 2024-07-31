@@ -1,11 +1,12 @@
 from __future__ import annotations
 import contextlib
-import dataclasses
 import logging
 import pathlib
 import numpy as np
 import typing
 
+from dataclasses import asdict
+from pydantic import ConfigDict, dataclasses
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import override
 
@@ -29,7 +30,7 @@ logger = logging.getLogger(__name__)
 AnyPath = Union[pathlib.Path, str]
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(config=ConfigDict(extra="forbid", validate_assignment=True))
 class TaoStartup:
     """
     All Tao startup settings.
@@ -107,11 +108,10 @@ class TaoStartup:
         Define variables for plotting and optimization
     """
 
-    init: str = ""
-    so_lib: str = ""
+    init: str = dataclasses.Field(default="", kw_only=False)
+    so_lib: str = dataclasses.Field(default="", kw_only=False)
 
-    _: dataclasses.KW_ONLY
-    metadata: Dict[str, Any] = dataclasses.field(default_factory=dict)
+    metadata: Dict[str, Any] = dataclasses.Field(default_factory=dict)
     plot: Union[str, bool] = "tao"
     beam_file: Optional[AnyPath] = None
     beam_init_position_file: Optional[AnyPath] = None
@@ -147,7 +147,7 @@ class TaoStartup:
         """Parameters used to initialize Tao or make a new Tao instance."""
         params = {
             key: value
-            for key, value in dataclasses.asdict(self).items()
+            for key, value in asdict(self).items()
             if value != getattr(type(self), key, None)
         }
         params.setdefault("init", "")

@@ -28,6 +28,7 @@ import matplotlib.path
 import matplotlib.pyplot as plt
 import matplotlib.text
 import numpy as np
+from pydantic import ConfigDict
 import pydantic.dataclasses as dataclasses
 from matplotlib.ticker import AutoMinorLocator
 from pydantic.dataclasses import Field
@@ -73,6 +74,13 @@ class UnsupportedGraphError(NotImplementedError):
     pass
 
 
+T = TypeVar("T")
+
+
+def _clean_pytao_output(dct: dict, typ: Type[T]) -> T:
+    return {key: dct.get(key, None) for key in typ.__required_keys__}
+
+
 def _fix_limits(lim: Point, pad_factor: float = 0.0) -> Point:
     low, high = lim
     if np.isclose(low, 0.0) and np.isclose(high, 0.0):
@@ -96,7 +104,15 @@ def _should_use_symbol_color(symbol_type: str, fill_pattern: str) -> bool:
     return False
 
 
-@dataclasses.dataclass
+# We don't want a single new key from bmad commands to break our implementation,
+# so in gneeral we should allow 'extra' keys:
+_dcls_config = ConfigDict()
+
+# However, for testing and development, this should be toggled on:
+# _dcls_config = ConfigDict(extra="forbid")
+
+
+@dataclasses.dataclass(config=_dcls_config)
 class PlotAnnotation:
     x: float
     y: float
@@ -122,7 +138,7 @@ class PlotAnnotation:
         )
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(config=_dcls_config)
 class PlotCurveLine:
     xs: List[float]
     ys: List[float]
@@ -141,7 +157,7 @@ class PlotCurveLine:
         )
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(config=_dcls_config)
 class PlotCurveSymbols:
     xs: List[float]
     ys: List[float]
@@ -166,7 +182,7 @@ class PlotCurveSymbols:
         )
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(config=_dcls_config)
 class PlotHistogram:
     xs: List[float]
     bins: Union[int, Sequence[float], str, None]
@@ -184,7 +200,7 @@ class PlotHistogram:
         )
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(config=_dcls_config)
 class PlotPatchBase:
     edgecolor: Optional[str] = None
     facecolor: Optional[str] = None
@@ -226,7 +242,7 @@ class PlotPatchBase:
 _point_field = Field(default_factory=lambda: (0.0, 0.0))
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(config=_dcls_config)
 class PlotPatchRectangle(PlotPatchBase):
     xy: Point = _point_field
     width: float = 0.0
@@ -245,7 +261,7 @@ class PlotPatchRectangle(PlotPatchBase):
         )
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(config=_dcls_config)
 class PlotPatchArc(PlotPatchBase):
     xy: Point = _point_field
     width: float = 0.0
@@ -267,7 +283,7 @@ class PlotPatchArc(PlotPatchBase):
         )
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(config=_dcls_config)
 class PlotPatchCircle(PlotPatchBase):
     xy: Point = _point_field
     radius: float = 0.0
@@ -280,7 +296,7 @@ class PlotPatchCircle(PlotPatchBase):
         )
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(config=_dcls_config)
 class PlotPatchPolygon(PlotPatchBase):
     vertices: List[Point] = Field(default_factory=list)
 
@@ -291,7 +307,7 @@ class PlotPatchPolygon(PlotPatchBase):
         )
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(config=_dcls_config)
 class PlotPatchEllipse(PlotPatchBase):
     xy: Point = _point_field
     width: float = 0.0
@@ -308,7 +324,7 @@ class PlotPatchEllipse(PlotPatchBase):
         )
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(config=_dcls_config)
 class PlotPatchSbend(PlotPatchBase):
     spline1: Tuple[Point, Point, Point] = Field(default_factory=tuple)
     spline2: Tuple[Point, Point, Point] = Field(default_factory=tuple)
@@ -349,7 +365,7 @@ PlotPatch = Union[
 ]
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(config=_dcls_config)
 class GraphBase:
     info: PlotGraphInfo
     region_info: PlotRegionInfo
@@ -426,7 +442,7 @@ class GraphBase:
             # )
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(config=_dcls_config)
 class PlotCurve:
     info: PlotCurveInfo
     line: Optional[PlotCurveLine]
@@ -659,7 +675,7 @@ class PlotCurve:
         raise NotImplementedError(f"graph_type: {graph_type}")
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(config=_dcls_config)
 class BasicGraph(GraphBase):
     graph_type: ClassVar[str] = "basic"
     curves: List[PlotCurve] = Field(default_factory=list)
@@ -701,7 +717,11 @@ class BasicGraph(GraphBase):
     ) -> BasicGraph:
         if info is None:
             info = get_plot_graph_info(tao, region_name, graph_name)
-        region_info = cast(PlotRegionInfo, tao.plot1(region_name))
+        else:
+            # We'll mutate it to remove curve names below to conform to PlotGraphInfo
+            info = info.copy()
+
+        region_info = _clean_pytao_output(tao.plot1(region_name), PlotRegionInfo)
 
         graph_type = info["graph^type"]
         if graph_type in {"lat_layout", "floor_plan", "key_table"}:
@@ -710,7 +730,9 @@ class BasicGraph(GraphBase):
         if info["why_invalid"]:
             raise GraphInvalidError(f"Graph not valid: {info['why_invalid']}")
 
-        all_curve_names = [info[f"curve[{idx}]"] for idx in range(1, info["num_curves"] + 1)]
+        curve_keys = [f"curve[{idx}]" for idx in range(1, info["num_curves"] + 1)]
+        all_curve_names: List[str] = [info.pop(key) for key in curve_keys]
+
         curves = []
         for curve_name in all_curve_names:
             try:
@@ -752,7 +774,7 @@ class BasicGraph(GraphBase):
         return ax
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(config=_dcls_config)
 class LatticeLayoutElement:
     info: PlotLatLayoutInfo
     patches: List[PlotPatch]
@@ -971,7 +993,7 @@ class LatticeLayoutElement:
         )
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(config=_dcls_config)
 class LatticeLayoutGraph(GraphBase):
     graph_type: ClassVar[str] = "lat_layout"
     elements: List[LatticeLayoutElement] = Field(default_factory=list)
@@ -1066,7 +1088,7 @@ class LatticeLayoutGraph(GraphBase):
         if plot_page is None:
             plot_page = cast(PlotPage, tao.plot_page())
 
-        region_info = cast(PlotRegionInfo, tao.plot1(region_name))
+        region_info = _clean_pytao_output(tao.plot1(region_name), PlotRegionInfo)
 
         graph_type = info["graph^type"]
         if graph_type != "lat_layout":
@@ -1652,7 +1674,7 @@ def _create_diamond(
     )
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(config=_dcls_config)
 class FloorPlanElement:
     branch_index: int
     index: int
@@ -1952,7 +1974,7 @@ def sort_building_wall_graph_info(
     return res
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(config=_dcls_config)
 class BuildingWalls:
     building_wall_graph: List[BuildingWallGraphInfo] = Field(default_factory=list)
     lines: List[PlotCurveLine] = Field(default_factory=list)
@@ -2010,7 +2032,7 @@ class BuildingWalls:
         return cls(building_wall_graph=building_wall_graph, lines=lines, patches=patches)
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(config=_dcls_config)
 class FloorOrbits:
     info: List[FloorOrbitInfo]
     curve: PlotCurveSymbols
@@ -2053,7 +2075,7 @@ class FloorOrbits:
         self.curve.plot(ax)
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(config=_dcls_config)
 class FloorPlanGraph(GraphBase):
     graph_type: ClassVar[str] = "floor_plan"
     building_walls: BuildingWalls = Field(default_factory=BuildingWalls)
@@ -2079,7 +2101,7 @@ class FloorPlanGraph(GraphBase):
             info = get_plot_graph_info(tao, region_name, graph_name)
         if plot_page is None:
             plot_page = cast(PlotPage, tao.plot_page())
-        region_info = cast(PlotRegionInfo, tao.plot1(region_name))
+        region_info = _clean_pytao_output(tao.plot1(region_name), PlotRegionInfo)
 
         graph_type = info["graph^type"]
         if graph_type != "floor_plan":
