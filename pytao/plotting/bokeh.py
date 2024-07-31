@@ -1475,31 +1475,6 @@ class BokehGraphManager(
 
 class NotebookGraphManager(BokehGraphManager):
     @override
-    def plot_regions(
-        self,
-        regions: List[str],
-        *,
-        share_x: Optional[bool] = None,
-        **kwargs,
-    ):
-        # TODO consider removing 'plot_regions'
-        bgraphs = []
-        for graph_name, graph_regions in list(self._graph_name_to_regions.items()):
-            for region_name in graph_regions:
-                if region_name in regions:
-                    bgraphs.extend(
-                        super().plot(graph_name=graph_name, region_name=region_name, **kwargs)
-                    )
-
-        bgraphs = move_layout_to_bottom(bgraphs)
-
-        if not bgraphs:
-            return None
-
-        app = BokehApp(self, bgraphs, share_x=share_x)
-        return bokeh.plotting.show(app.create_full_app())
-
-    @override
     def plot_grid(
         self,
         graph_names: List[str],

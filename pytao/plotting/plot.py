@@ -2395,27 +2395,6 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
 
         self._clear_region(region_name)
 
-    def plot_regions(
-        self,
-        regions: List[str],
-        include_layout: bool = True,
-        **kwargs,
-    ):
-        res = []
-        for graph_name, graph_regions in list(self._graph_name_to_regions.items()):
-            for region_name in graph_regions:
-                if region_name in regions:
-                    res.append(
-                        self.plot(
-                            graph_name,
-                            region_name=region_name,
-                            include_layout=False,
-                            **kwargs,
-                        )
-                    )
-
-        return res
-
     def prepare_graphs_by_name(
         self,
         graph_name: str,
@@ -2464,6 +2443,19 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
             ):
                 self.tao.cmd(command)
 
+    def plot_all(
+        self, grid: Optional[Tuple[int, int]] = None, include_layout: bool = False, **kwargs
+    ):
+        graph_names = list(self.to_place.values())
+        if not grid:
+            grid = (len(graph_names), 1)
+        return self.plot_grid(
+            graph_names,
+            grid=grid,
+            include_layout=include_layout,
+            **kwargs,
+        )
+
     def make_graph(
         self,
         region_name: str,
@@ -2478,6 +2470,18 @@ class GraphManager(Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGraph])
         region_name: Optional[str] = None,
         include_layout: bool = True,
         reuse: bool = True,
+        **kwargs,
+    ):
+        raise NotImplementedError()
+
+    def plot_grid(
+        self,
+        graph_names: List[str],
+        grid: Tuple[int, int],
+        *,
+        include_layout: bool = False,
+        reuse: bool = True,
+        curves: Optional[List[Dict[int, TaoCurveSettings]]] = None,
         **kwargs,
     ):
         raise NotImplementedError()
@@ -2497,6 +2501,7 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
         # or worse) are used directly with this backend
         return make_graph(self.tao, region_name, graph_name)
 
+    @override
     def plot_grid(
         self,
         graph_names: List[str],

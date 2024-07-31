@@ -83,8 +83,7 @@ def test_plot_data(use_subprocess: bool, plot_backend: BackendName):
     startup = get_example("cesr")
     startup.plot = plot_backend
     with startup.run_context(use_subprocess=use_subprocess) as tao:
-        tao.plot_manager.place_all()
-        tao.plot_manager.plot_regions(list(tao.plot_manager.regions))
+        tao.plot_manager.plot_all()
         tao.plot("floor_plan")
         tao.plot("lat_layout")
 
@@ -96,8 +95,7 @@ def test_plot_all_requested(
 ):
     tao_regression_test.plot = plot_backend
     with tao_regression_test.run_context(use_subprocess=use_subprocess) as tao:
-        tao.plot_manager.place_all()
-        tao.plot_manager.plot_regions(list(tao.plot_manager.regions))
+        tao.plot_manager.plot_all()
 
 
 def test_plot_manager(
@@ -108,8 +106,7 @@ def test_plot_manager(
     tao_regression_test.plot = plot_backend
     with tao_regression_test.run_context(use_subprocess=use_subprocess) as tao:
         manager = tao.plot_manager
-        assert len(manager.place_all())
-        manager.plot_regions(list(manager.regions))
+        manager.plot_all()
 
         for region in list(manager.regions):
             manager.clear(region)

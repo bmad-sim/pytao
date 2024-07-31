@@ -686,9 +686,7 @@ class Tao(TaoCore):
         manager = self._get_graph_manager_by_key(backend)
 
         if not graph_name:
-            manager.place_all()
-            self.last_plot = manager.plot_regions(
-                list(manager.regions),
+            self.last_plot = manager.plot_all(
                 include_layout=include_layout,
                 reuse=reuse,
                 **kwargs,
