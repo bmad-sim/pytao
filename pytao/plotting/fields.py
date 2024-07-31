@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-# import dataclasses
 from pydantic import dataclasses
 import typing
 import numpy as np
@@ -38,21 +37,19 @@ def get_field_grid(
 
 
 @dataclasses.dataclass
-class LatticeLayoutField:
+class ElementField:
     ele_id: str
     s: typing.List[typing.List[float]]
     x: typing.List[typing.List[float]]
     by: typing.List[typing.List[float]]
-    # colormap: str = "PRGn_r"
 
     @classmethod
     def from_tao(
         cls,
         tao: Tao,
         ele_id: str,
+        num_points: int = 100,
         radius: float = 0.015,
-        # colormap: str = "PRGn_r",
     ):
-        s, x, by = get_field_grid(tao, ele_id, radius=radius)
+        s, x, by = get_field_grid(tao, ele_id, radius=radius, num_points=num_points)
         return cls(ele_id=ele_id, s=s.tolist(), x=x.tolist(), by=by.tolist())
-        # colormap=colormap,

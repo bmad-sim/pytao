@@ -37,7 +37,7 @@ from pydantic.dataclasses import Field
 
 from . import pgplot, util
 from .curves import TaoCurveSettings
-from .fields import LatticeLayoutField
+from .fields import ElementField
 from .types import (
     BuildingWallGraphInfo,
     BuildingWallInfo,
@@ -381,14 +381,27 @@ class GraphBase:
     draw_grid: bool = True
     draw_legend: bool = True
 
-    def update(self, manager: GraphManager, *, error_on_new_type: bool = True):
-        graphs = [
-            graph.get_graph_info()
-            for graph in manager.prepare_graphs_by_name(
-                region_name=self.region_name,
-                graph_name=self.graph_name,
-            )
-        ]
+    def update(
+        self,
+        manager: GraphManager,
+        *,
+        error_on_new_type: bool = True,
+        raise_if_invalid: bool = False,
+    ):
+        try:
+            graphs = [
+                graph.get_graph_info()
+                for graph in manager.prepare_graphs_by_name(
+                    region_name=self.region_name,
+                    graph_name=self.graph_name,
+                    ignore_invalid=False,
+                )
+            ]
+        except GraphInvalidError:
+            if raise_if_invalid:
+                raise
+            return self
+
         # TODO
         for graph in graphs:
             if graph.graph_name == self.graph_name:
@@ -1002,44 +1015,10 @@ class LatticeLayoutGraph(GraphBase):
     universe: int = 0
     branch: int = 0
     y2_floor: float = 0
-    fields: List[LatticeLayoutField] = Field(default_factory=list)
-
-    def update_fields(self, tao: Tao) -> List[LatticeLayoutField]:
-        field_elems = [
-            elem
-            for elem in self.elements
-            if elem.info["label_name"]
-            and tao.ele_head(elem.info["label_name"])["key"] in {"Quadrupole"}
-        ]
-        fields = [
-            LatticeLayoutField.from_tao(tao, ele_id=elem.info["label_name"])
-            for elem in field_elems
-        ]
-        self.fields = fields
-        return fields
 
     @property
     def is_s_plot(self) -> bool:
         return True
-
-    def plot_fields(self, ax: Optional[matplotlib.axes.Axes] = None):
-        if ax is None:
-            _, ax = plt.subplots()
-        assert ax is not None
-
-        field_data = [field.by for field in self.fields]
-        min_field = np.min(field_data or [0])
-        max_field = np.max(field_data or [1])
-        for field in self.fields:
-            ax.pcolormesh(
-                np.asarray(field.s),
-                np.asarray(field.x) * 1e3,
-                np.asarray(field.by),
-                vmin=min_field,
-                vmax=max_field,
-                cmap="PRGn_r",
-            )
-        return ax
 
     def plot(self, ax: Optional[matplotlib.axes.Axes] = None):
         if ax is None:
@@ -2510,6 +2489,17 @@ class GraphManager(ABC, Generic[T_GraphType, T_LatticeLayoutGraph, T_FloorPlanGr
     ) -> Any:
         pass
 
+    @abstractmethod
+    def plot_field(
+        self,
+        ele_id: str,
+        *,
+        colormap: Optional[str] = None,
+        radius: float = 0.015,
+        num_points: int = 100,
+    ) -> Any:
+        pass
+
 
 class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPlanGraph]):
     _key_: ClassVar[str] = "mpl"
@@ -2806,3 +2796,44 @@ class MatplotlibGraphManager(GraphManager[AnyGraph, LatticeLayoutGraph, FloorPla
         return fig, gs
 
     __call__ = plot
+
+    def plot_field(
+        self,
+        ele_id: str,
+        *,
+        colormap: Optional[str] = None,
+        radius: float = 0.015,
+        num_points: int = 100,
+        ax: Optional[matplotlib.axes.Axes] = None,
+    ) -> matplotlib.axes.Axes:
+        """
+        Plot field information for a given element.
+
+        Parameters
+        ----------
+        ele_id : str
+            Element ID.
+        colormap : str, optional
+            Colormap for the plot.
+            Matplotlib defaults to "PRGn_r", and bokeh defaults to "".
+        radius : float, default=0.015
+            Radius.
+        num_points : int, default=100
+            Number of data points.
+        ax : matplotlib.axes.Axes, optional
+            The axes to place the plot in.
+        """
+        if ax is None:
+            _, ax = plt.subplots()
+            assert ax is not None
+
+        field = ElementField.from_tao(self.tao, ele_id, num_points=num_points, radius=radius)
+        ax.pcolormesh(
+            np.asarray(field.s),
+            np.asarray(field.x) * 1e3,
+            np.asarray(field.by),
+            # vmin=min_field,
+            # vmax=max_field,
+            cmap=colormap or "PRGn_r",
+        )
+        return ax

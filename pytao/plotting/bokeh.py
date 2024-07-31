@@ -40,7 +40,7 @@ from typing_extensions import NotRequired, TypedDict
 from ..interface_commands import AnyPath
 from . import pgplot, util
 from .curves import TaoCurveSettings
-from .fields import LatticeLayoutField
+from .fields import ElementField
 from .plot import (
     BasicGraph,
     FloorPlanGraph,
@@ -84,6 +84,20 @@ class Defaults:
     graph_size: Tuple[int, int] = (600, 400)
     lattice_layout_size: Tuple[int, int] = (600, 150)
     floor_plan_size: Tuple[int, int] = (600, 600)
+
+    @classmethod
+    def get_size_for_class(
+        cls,
+        typ: Type[AnyBokehGraph],
+        user_width: Optional[int] = None,
+        user_height: Optional[int] = None,
+    ) -> Tuple[int, int]:
+        default = {
+            BokehBasicGraph: cls.graph_size,
+            BokehLatticeLayoutGraph: cls.lattice_layout_size,
+            BokehFloorPlanGraph: cls.floor_plan_size,
+        }[typ]
+        return (user_width or default[0], user_height or default[1])
 
 
 def _get_curve_data(curve: PlotCurve) -> CurveData:
@@ -500,7 +514,7 @@ def _draw_layout_element(
 
 
 def _fields_to_data_source(
-    fields: List[LatticeLayoutField],
+    fields: List[ElementField],
 ):
     return ColumnDataSource(
         data={
@@ -515,7 +529,7 @@ def _fields_to_data_source(
 
 def _draw_fields(
     fig: figure,
-    fields: List[LatticeLayoutField],
+    fields: List[ElementField],
     palette: str = "Magma256",
 ):
     source = _fields_to_data_source(fields)
@@ -607,12 +621,7 @@ class BokehGraphBase(ABC, Generic[TGraph]):
         raise NotImplementedError()
 
     @abstractmethod
-    def create_widgets(
-        self,
-        fig: figure,
-        *,
-        include_variables: bool = False,
-    ) -> List[bokeh.models.UIElement]:
+    def create_widgets(self, fig: figure) -> List[bokeh.models.UIElement]:
         raise NotImplementedError()
 
 
@@ -702,12 +711,7 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
             fig.y_range = self.y_range
         return fig
 
-    def create_widgets(
-        self,
-        fig: figure,
-        *,
-        include_variables: bool = False,
-    ) -> List[bokeh.models.UIElement]:
+    def create_widgets(self, fig: figure) -> List[bokeh.models.UIElement]:
         return []
 
 
@@ -822,13 +826,8 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
             _plot_curve(fig, curve, source)
         return fig
 
-    def create_widgets(
-        self,
-        fig: figure,
-        *,
-        include_variables: bool = False,
-    ) -> List[bokeh.models.UIElement]:
-        update_button = bokeh.models.Button(label="Update")  # , icon="reload")
+    def create_widgets(self, fig: figure) -> List[bokeh.models.UIElement]:
+        update_button = bokeh.models.Button(label="Update")
         num_points_slider = bokeh.models.Slider(
             title="Data Points",
             start=10,
@@ -865,16 +864,6 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
             bokeh.layouts.column(bokeh.layouts.row(update_button, num_points_slider), fig)
         ]
 
-        if include_variables and self.variables:
-            status_label = bokeh.models.PreText()
-            spinners = _handle_variables(
-                self.tao,
-                self.variables,
-                status_label,
-                [BGraphAndFigure(bgraph=self, fig=fig)],
-            )
-            models.insert(0, bokeh.layouts.row(spinners))
-            models.insert(1, bokeh.layouts.row([status_label]))
         return models
 
 
@@ -958,12 +947,7 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         _draw_limit_border(fig, graph.xlim, graph.ylim, alpha=0.1)
         return fig
 
-    def create_widgets(
-        self,
-        fig: figure,
-        *,
-        include_variables: bool = False,
-    ) -> List[bokeh.models.UIElement]:
+    def create_widgets(self, fig: figure) -> List[bokeh.models.UIElement]:
         controls = []
         try:
             (orbits,) = fig.select("floor_orbits")
@@ -1133,16 +1117,18 @@ class BokehApp:
                 fig.y_range = bokeh.models.Range1d(*yl)
 
             is_layout = isinstance(bgraph, BokehLatticeLayoutGraph)
+
             if self.graph_sizing_mode is not None:
                 fig.sizing_mode = self.graph_sizing_mode
-            if self.graph_width is not None:
-                fig.width = self.graph_width
-            if is_layout:
-                if self.layout_height is not None:
-                    fig.height = self.layout_height
-            else:
-                if self.graph_height is not None:
-                    fig.height = self.graph_height
+
+            width, height = Defaults.get_size_for_class(
+                type(bgraph),
+                user_width=self.graph_width,
+                user_height=self.layout_height if is_layout else self.graph_height,
+            )
+
+            fig.width = width
+            fig.height = height
 
             rows[row].append(fig)
         return [row for row in rows if row]
@@ -1155,11 +1141,74 @@ class BokehApp:
     def ncols(self) -> int:
         return self.grid[1]
 
+    def _add_update_button(self):
+        update_button = bokeh.models.Button(label="Update")
+
+        def update_plot():
+            for pair in self.pairs:
+                bgraph = pair.bgraph
+                if not isinstance(bgraph, BokehBasicGraph):
+                    continue
+
+                try:
+                    bgraph.update_plot(pair.fig, widgets=[update_button])
+                except Exception:
+                    logger.exception("Failed to update number of points")
+
+        update_button.on_click(update_plot)
+        return update_button
+
+    def _add_num_points_slider(self):
+        num_points_slider = bokeh.models.Slider(
+            title="Data Points",
+            start=10,
+            end=10_000,
+            step=1_000,
+            value=401,
+        )
+
+        def num_points_changed(_attr, _old, num_points: int):
+            for pair in self.pairs:
+                bgraph = pair.bgraph
+                if not isinstance(bgraph, BokehBasicGraph):
+                    continue
+
+                bgraph.num_points = num_points
+                try:
+                    bgraph.update_plot(pair.fig, widgets=[num_points_slider])
+                except Exception:
+                    logger.exception("Failed to update number of points")
+
+        num_points_slider.on_change("value", num_points_changed)
+        return num_points_slider
+
+    def _monitor_range_updates(self):
+        def ranges_update(
+            bgraph: BokehBasicGraph, fig: figure, event: bokeh.events.RangesUpdate
+        ) -> None:
+            new_xrange = bgraph.graph.clamp_x_range(event.x0, event.x1)
+            if new_xrange != bgraph.view_x_range:
+                bgraph.view_x_range = new_xrange
+
+            try:
+                bgraph.update_plot(fig, widgets=[])
+            except Exception:
+                logger.exception("Failed to update number ranges")
+
+        for pair in self.pairs:
+            if not isinstance(pair.bgraph, BokehBasicGraph):
+                continue
+
+            pair.fig.on_event(
+                bokeh.events.RangesUpdate,
+                cast(EventCallback, functools.partial(ranges_update, pair.bgraph, pair.fig)),
+            )
+
     def create_ui(self):
         if not self.bgraphs:
             return
 
-        variable_models: List[bokeh.layouts.UIElement] = []
+        widget_models: List[bokeh.layouts.UIElement] = []
         if self.variables:
             status_label = bokeh.models.PreText()
             spinners = _handle_variables(
@@ -1168,14 +1217,29 @@ class BokehApp:
                 status_label=status_label,
                 pairs=self.pairs,
             )
-            variable_models.insert(0, bokeh.layouts.row(spinners))
-            variable_models.insert(1, bokeh.layouts.row([status_label]))
+            widget_models.insert(0, bokeh.layouts.row([status_label]))
+            per_row = 6
+            while spinners:
+                row = bokeh.layouts.row(spinners[-per_row:])
+                spinners = spinners[:-per_row]
+                widget_models.insert(0, row)
+
+        if any(isinstance(bgraph, BokehBasicGraph) for bgraph in self.bgraphs):
+            update_button = self._add_update_button()
+            num_points_slider = self._add_num_points_slider()
+            widget_models.insert(0, bokeh.layouts.row([update_button, num_points_slider]))
+
+            self._monitor_range_updates()
 
         rows = self._grid_figures()
         if self.include_layout:
             lattice_layout = self.manager.get_lattice_layout_graph()
-            if self.layout_height is not None:
-                lattice_layout.height = self.layout_height
+            lattice_layout.width, lattice_layout.height = Defaults.get_size_for_class(
+                type(lattice_layout),
+                user_width=self.graph_width,
+                user_height=self.layout_height,
+            )
+
             layout_figs = [lattice_layout.create_figure() for _ in range(self.ncols)]
             rows.append(layout_figs)
 
@@ -1189,7 +1253,7 @@ class BokehApp:
                 fig.min_border_left = 80
 
         return bokeh.layouts.layout(
-            children=variable_models + cast(List[bokeh.layouts.UIElement], rows),
+            children=widget_models + cast(List[bokeh.layouts.UIElement], rows),
             width=self.width,
             height=self.height,
         )
@@ -1455,10 +1519,10 @@ class BokehGraphManager(
             graph_width=width,
             graph_height=height,
             include_layout=include_layout,
-            sizing_mode=sizing_mode,
+            graph_sizing_mode=sizing_mode,
             layout_height=layout_height,
-            xlim=xlim,
-            ylim=ylim,
+            xlim=[xlim],
+            ylim=[ylim],
         )
 
         if save:
@@ -1468,6 +1532,34 @@ class BokehGraphManager(
             logger.info(f"Saving plot to {filename!r}")
 
         return app
+
+    def plot_field(
+        self,
+        ele_id: str,
+        *,
+        colormap: Optional[str] = None,
+        radius: float = 0.015,
+        num_points: int = 100,
+    ):
+        """
+        Plot field information for a given element.
+
+        Parameters
+        ----------
+        ele_id : str
+            Element ID.
+        colormap : str, optional
+            Colormap for the plot.
+            Matplotlib defaults to "PRGn_r", and bokeh defaults to "".
+        radius : float, default=0.015
+            Radius.
+        num_points : int, default=100
+            Number of data points.
+        """
+        field = ElementField.from_tao(self.tao, ele_id, num_points=num_points, radius=radius)
+        fig = figure(title=f"Field of {ele_id}")
+        _draw_fields(fig, [field], palette=colormap or "Magma256")
+        return fig
 
 
 class NotebookGraphManager(BokehGraphManager):
@@ -1565,6 +1657,37 @@ class NotebookGraphManager(BokehGraphManager):
         return app
 
     __call__ = plot
+
+    def plot_field(
+        self,
+        ele_id: str,
+        *,
+        colormap: Optional[str] = None,
+        radius: float = 0.015,
+        num_points: int = 100,
+    ):
+        """
+        Plot field information for a given element.
+
+        Parameters
+        ----------
+        ele_id : str
+            Element ID.
+        colormap : str, optional
+            Colormap for the plot.
+            Matplotlib defaults to "PRGn_r", and bokeh defaults to "".
+        radius : float, default=0.015
+            Radius.
+        num_points : int, default=100
+            Number of data points.
+        """
+        fig = super().plot_field(
+            ele_id,
+            colormap=colormap,
+            radius=radius,
+            num_points=num_points,
+        )
+        return bokeh.plotting.show(fig, notebook_handle=True)
 
 
 @functools.cache
