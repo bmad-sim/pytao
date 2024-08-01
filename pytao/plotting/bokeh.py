@@ -1010,6 +1010,8 @@ class BokehApp:
 
         if len(bgraphs) == 1 and isinstance(bgraphs[0], BokehLatticeLayoutGraph):
             include_layout = False
+        elif not any(graph.graph.is_s_plot for graph in bgraphs):
+            include_layout = False
 
         if not grid:
             grid = (len(bgraphs), 1)
@@ -1044,13 +1046,31 @@ class BokehApp:
             BGraphAndFigure(bgraph=bgraph, fig=fig)
             for bgraph, fig in zip(bgraphs, self.figures)
         ]
-        if len(self.figures) <= 1:
-            return
+
+        if not self.include_layout:
+            self.layout_pairs = []
+            if len(self.figures) <= 1:
+                return
+        else:
+            lattice_layout = self.manager.lattice_layout_graph
+            lattice_layout.width, lattice_layout.height = Defaults.get_size_for_class(
+                type(lattice_layout),
+                user_width=self.graph_width,
+                user_height=self.layout_height,
+            )
+
+            self.layout_pairs = [
+                BGraphAndFigure(
+                    fig=lattice_layout.create_figure(),
+                    bgraph=lattice_layout,
+                )
+                for _ in range(self.ncols)
+            ]
 
         if self.share_x is None:
-            share_common_x_axes(self.pairs)
+            share_common_x_axes(self.pairs + self.layout_pairs)
         elif self.share_x:
-            share_x_axes(self.figures)
+            share_x_axes(self.figures + [pair.fig for pair in self.layout_pairs])
 
     def to_html(
         self,
@@ -1110,6 +1130,7 @@ class BokehApp:
             fig.height = height
 
             rows[row].append(fig)
+
         return [row for row in rows if row]
 
     @property
@@ -1212,21 +1233,11 @@ class BokehApp:
 
         rows = self._grid_figures()
         if self.include_layout:
-            lattice_layout = self.manager.lattice_layout_graph
-            lattice_layout.width, lattice_layout.height = Defaults.get_size_for_class(
-                type(lattice_layout),
-                user_width=self.graph_width,
-                user_height=self.layout_height,
-            )
+            rows.append([pair.fig for pair in self.layout_pairs])
 
-            layout_figs: UIGridLayoutList = [
-                lattice_layout.create_figure() for _ in range(self.ncols)
-            ]
-            rows.append(layout_figs)
-
-            for fig in layout_figs:
-                if fig is not None:
-                    fig.min_border_bottom = 40
+            for pair in self.layout_pairs:
+                if pair.fig is not None:
+                    pair.fig.min_border_bottom = 40
 
         for row in rows:
             for fig in row:
