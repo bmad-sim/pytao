@@ -120,7 +120,7 @@ def tao_cls(request: pytest.FixtureRequest):
 @contextlib.contextmanager
 def new_tao(
     tao_cls,
-    init,
+    init: str = "",
     plot: bool = False,
     external_plotting: bool = True,
     **kwargs,

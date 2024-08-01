@@ -51,6 +51,8 @@ class TaoStartup:
         If `False` or "tao", Tao plotting will be used. (Default)
         If "mpl", the pytao matplotlib plotting backend will be selected.
         If "bokeh", the pytao Bokeh plotting backend will be selected.
+    metadata : dict[str, Any], optional
+        User-specified metadata about this startup.  Not passed to Tao.
     beam_file : str or pathlib.Path, default=None
         File containing the tao_beam_init namelist.
     beam_init_position_file : pathlib.Path or str, default=None
@@ -109,11 +111,17 @@ class TaoStartup:
         Define variables for plotting and optimization
     """
 
+    # General case 'init' string:
     init: str = dataclasses.Field(default="", kw_only=False)
+
+    # Tao ctypes-specific - shared library location.
     so_lib: str = dataclasses.Field(default="", kw_only=False)
 
+    # pytao specific
     metadata: Dict[str, Any] = dataclasses.Field(default_factory=dict)
     plot: Union[str, bool] = "tao"
+
+    # All remaining flags:
     beam_file: Optional[AnyPath] = None
     beam_init_position_file: Optional[AnyPath] = None
     building_wall_file: Optional[AnyPath] = None
@@ -146,10 +154,12 @@ class TaoStartup:
     @property
     def run_parameters(self) -> Dict[str, Any]:
         """Parameters used to initialize Tao or make a new Tao instance."""
+        # TODO: handle abbreviated/shortened keys from the user
+        init_parts = self.init.split()
         params = {
             key: value
             for key, value in asdict(self).items()
-            if value != getattr(type(self), key, None)
+            if value != getattr(type(self), key, None) and f"-{key}" not in init_parts
         }
         params.setdefault("init", "")
         params.pop("metadata")

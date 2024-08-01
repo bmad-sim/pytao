@@ -8,11 +8,15 @@ import sys
 import threading
 import typing
 
+from typing import Union
+
 import numpy as np
 
 from .interface_commands import Tao, TaoStartup
 
 logger = logging.getLogger(__name__)
+
+AnyTao = Union[Tao, "SubprocessTao"]
 
 
 class TaoDisconnectedError(Exception):
