@@ -435,11 +435,9 @@ class Tao(TaoCore):
         version = self.version()
         if version is None:
             # Don't continue to warn about failing to parse the version
-            self._tao_version = datetime.datetime.now()
             return
 
-        self._tao_version = version
-        if self._tao_version.date() < self._min_tao_version.date():
+        if version.date() < self._min_tao_version.date():
             logger.warning(
                 f"Installed Tao version is lower than pytao's recommended and tested version. "
                 f"\n   You have Tao version: {version.date()}"
@@ -573,7 +571,7 @@ class Tao(TaoCore):
 
         return dat
 
-    def version(self):
+    def version(self) -> Optional[datetime.datetime]:
         """Get the date-coded version."""
         cmd = "show version"
         return _pytao_parsers.parse_show_version(self.cmd(cmd), cmd=cmd)
