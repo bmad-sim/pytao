@@ -950,6 +950,7 @@ AnyBokehGraph = Union[BokehBasicGraph, BokehLatticeLayoutGraph, BokehFloorPlanGr
 
 OptionalLimit = Optional[Tuple[float, float]]
 CurveIndexToCurve = Dict[int, TaoCurveSettings]
+UIGridLayoutList = List[Optional[bokeh.models.UIElement]]
 
 
 class BokehApp:
@@ -1081,7 +1082,7 @@ class BokehApp:
             fp.write(source)
         return pathlib.Path(filename)
 
-    def _grid_figures(self) -> List[List[figure]]:
+    def _grid_figures(self) -> List[UIGridLayoutList]:
         nrows, ncols = self.grid
         rows = [[] for _ in range(nrows)]
         rows_cols = [(row, col) for row in range(nrows) for col in range(ncols)]
@@ -1218,23 +1219,31 @@ class BokehApp:
                 user_height=self.layout_height,
             )
 
-            layout_figs = [lattice_layout.create_figure() for _ in range(self.ncols)]
+            layout_figs: UIGridLayoutList = [
+                lattice_layout.create_figure() for _ in range(self.ncols)
+            ]
             rows.append(layout_figs)
 
             for fig in layout_figs:
-                fig.min_border_bottom = 40
+                if fig is not None:
+                    fig.min_border_bottom = 40
 
         for row in rows:
             for fig in row:
                 # NOTE: this value is somewhat arbitrary; it helps align the X axes
                 # between consecutive plots
-                fig.min_border_left = 80
+                if fig is not None:
+                    fig.min_border_left = 80
 
-        return bokeh.layouts.layout(
-            children=widget_models + cast(List[bokeh.layouts.UIElement], rows),
-            width=self.width,
-            height=self.height,
-        )
+        all_elems: List[bokeh.models.UIElement] = [
+            *widget_models,
+            bokeh.layouts.gridplot(
+                children=rows,
+                width=self.width,
+                height=self.height,
+            ),
+        ]
+        return bokeh.layouts.column(all_elems)
 
     def create_full_app(self):
         def bokeh_app(doc):
