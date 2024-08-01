@@ -42,6 +42,7 @@ from . import pgplot, util
 from .curves import TaoCurveSettings
 from .fields import ElementField
 from .plot import (
+    AnyGraph,
     BasicGraph,
     FloorPlanGraph,
     GraphBase,
@@ -59,7 +60,6 @@ from .plot import (
     PlotPatchPolygon,
     PlotPatchRectangle,
     PlotPatchSbend,
-    make_graph,
 )
 from .types import FloatVariableInfo
 
@@ -966,6 +966,7 @@ class BokehApp:
     """
 
     manager: Union[BokehGraphManager, NotebookGraphManager]
+    graphs: List[AnyGraph]
     bgraphs: List[AnyBokehGraph]
     share_x: Optional[bool]
     variables: List[Variable]
@@ -984,7 +985,7 @@ class BokehApp:
     def __init__(
         self,
         manager: Union[BokehGraphManager, NotebookGraphManager],
-        bgraphs: List[AnyBokehGraph],
+        graphs: List[AnyGraph],
         share_x: Optional[bool] = None,
         include_variables: bool = False,
         grid: Optional[Tuple[int, int]] = None,
@@ -998,23 +999,24 @@ class BokehApp:
         xlim: Optional[List[OptionalLimit]] = None,
         ylim: Optional[List[OptionalLimit]] = None,
     ) -> None:
-        assert len(bgraphs)
+        if not len(graphs):
+            raise ValueError("BokehApp requires 1 or more graph")
 
         xlim = list(xlim or [None])
-        if len(xlim) < len(bgraphs):
-            xlim.extend([xlim[-1]] * (len(bgraphs) - len(xlim)))
+        if len(xlim) < len(graphs):
+            xlim.extend([xlim[-1]] * (len(graphs) - len(xlim)))
 
         ylim = list(ylim or [None])
-        if len(ylim) < len(bgraphs):
-            ylim.extend([ylim[-1]] * (len(bgraphs) - len(ylim)))
+        if len(ylim) < len(graphs):
+            ylim.extend([ylim[-1]] * (len(graphs) - len(ylim)))
 
-        if len(bgraphs) == 1 and isinstance(bgraphs[0], BokehLatticeLayoutGraph):
+        if len(graphs) == 1 and isinstance(graphs[0], BokehLatticeLayoutGraph):
             include_layout = False
-        elif not any(graph.graph.is_s_plot for graph in bgraphs):
+        elif not any(graph.is_s_plot for graph in graphs):
             include_layout = False
 
         if not grid:
-            grid = (len(bgraphs), 1)
+            grid = (len(graphs), 1)
 
         if include_layout:
             grid = (grid[0] + 1, grid[1])
@@ -1025,6 +1027,7 @@ class BokehApp:
             variables = []
 
         self.manager = manager
+        self.graphs = graphs
         self.share_x = share_x
         self.variables = variables
         self.grid = grid
@@ -1037,14 +1040,17 @@ class BokehApp:
         self.layout_height = layout_height
         self.xlim = xlim
         self.ylim = ylim
-        self.create_figures(bgraphs)
+        self.bgraphs = []
+        self.figures = []
+        self.pairs = []
+        self.create_figures()
 
-    def create_figures(self, bgraphs: List[AnyBokehGraph]) -> None:
-        self.bgraphs = bgraphs
-        self.figures = [bgraph.create_figure() for bgraph in bgraphs]
+    def create_figures(self) -> None:
+        self.bgraphs = [self.manager.to_bokeh_graph(graph) for graph in self.graphs]
+        self.figures = [bgraph.create_figure() for bgraph in self.bgraphs]
         self.pairs = [
             BGraphAndFigure(bgraph=bgraph, fig=fig)
-            for bgraph, fig in zip(bgraphs, self.figures)
+            for bgraph, fig in zip(self.bgraphs, self.figures)
         ]
 
         if not self.include_layout:
@@ -1052,7 +1058,7 @@ class BokehApp:
             if len(self.figures) <= 1:
                 return
         else:
-            lattice_layout = self.manager.lattice_layout_graph
+            lattice_layout = self.manager.to_bokeh_graph(self.manager.lattice_layout_graph)
             lattice_layout.width, lattice_layout.height = Defaults.get_size_for_class(
                 type(lattice_layout),
                 user_width=self.graph_width,
@@ -1090,7 +1096,7 @@ class BokehApp:
         title: Optional[str] = None,
     ) -> Optional[pathlib.Path]:
         if not self.bgraphs:
-            return
+            self.create_figures()
 
         title = self.bgraphs[0].graph.title or f"plot-{time.time()}"
         if not filename:
@@ -1205,6 +1211,9 @@ class BokehApp:
             )
 
     def create_ui(self):
+        # Ensure we get a new set of data sources and figures for each app
+        self.create_figures()
+
         if not self.bgraphs:
             return
 
@@ -1353,17 +1362,25 @@ def _handle_variables(
     return spinners
 
 
-class BokehGraphManager(
-    GraphManager[AnyBokehGraph, BokehLatticeLayoutGraph, BokehFloorPlanGraph]
-):
+class BokehGraphManager(GraphManager):
     """Bokeh backend graph manager - for non-Jupyter contexts."""
 
     _key_: ClassVar[str] = "bokeh"
-    _lattice_layout_graph_type = BokehLatticeLayoutGraph
-    _floor_plan_graph_type = BokehFloorPlanGraph
 
-    def make_graph(self, region_name: str, graph_name: str) -> AnyBokehGraph:
-        graph = make_graph(self.tao, region_name, graph_name)
+    def to_bokeh_graph(self, graph: AnyGraph) -> AnyBokehGraph:
+        """
+        Create a Bokeh graph instance from the backend-agnostic AnyGraph version.
+
+        For example, `BasicGraph` becomes `BokehBasicGraph`.
+
+        Parameters
+        ----------
+        graph : AnyGraph
+
+        Returns
+        -------
+        AnyBokehGraph
+        """
         if isinstance(graph, BasicGraph):
             return BokehBasicGraph(self, graph)
         elif isinstance(graph, LatticeLayoutGraph):
@@ -1441,7 +1458,7 @@ class BokehGraphManager(
             assert len(curves)
             curves = list(curves) + [None] * (len(graph_names) - len(curves))
 
-        bgraphs = sum(
+        graphs = sum(
             (
                 self.prepare_graphs_by_name(
                     graph_name=graph_name,
@@ -1453,7 +1470,7 @@ class BokehGraphManager(
             [],
         )
 
-        if not bgraphs:
+        if not graphs:
             raise ValueError(f"No supported plots from these templates: {graph_names}")
 
         if figsize is not None:
@@ -1461,7 +1478,7 @@ class BokehGraphManager(
 
         app = BokehApp(
             manager=self,
-            bgraphs=bgraphs,
+            graphs=graphs,
             share_x=share_x,
             include_variables=False,
             grid=grid,
@@ -1542,18 +1559,18 @@ class BokehGraphManager(
         -------
         BokehApp
         """
-        bgraphs = self.prepare_graphs_by_name(
+        graphs = self.prepare_graphs_by_name(
             graph_name=graph_name,
             region_name=region_name,
             reuse=reuse,
             curves=curves,
         )
-        if not bgraphs:
+        if not graphs:
             return None
 
         app = BokehApp(
             manager=self,
-            bgraphs=bgraphs,
+            graphs=graphs,
             share_x=share_x,
             include_variables=False,
             grid=None,
@@ -1570,7 +1587,7 @@ class BokehGraphManager(
             if save is True:
                 save = ""
             filename = app.save(save)
-            logger.info(f"Saving plot to {filename!r}")
+            logger.warning(f"Saving plot to {filename!r}")
 
         return app
 
@@ -1654,7 +1671,7 @@ class NotebookGraphManager(BokehGraphManager):
         graph_names: List[str],
         grid: Tuple[int, int],
         *,
-        curves: Optional[List[Dict[int, TaoCurveSettings]]] = None,
+        curves: Optional[List[Optional[CurveIndexToCurve]]] = None,
         include_layout: bool = False,
         share_x: Optional[bool] = None,
         figsize: Optional[Tuple[int, int]] = None,
@@ -1707,28 +1724,21 @@ class NotebookGraphManager(BokehGraphManager):
         -------
         BokehApp
         """
-        kwargs = {
-            "graph_names": graph_names,
-            "grid": grid,
-            "curves": curves,
-            "include_layout": include_layout,
-            "share_x": share_x,
-            "figsize": figsize,
-            "width": width,
-            "height": height,
-            "reuse": reuse,
-            "xlim": xlim,
-            "ylim": ylim,
-            "layout_height": layout_height,
-        }
-        if save:
-            # NOTE/TODO: seems like we have to regenerate the bokeh glyphs
-            # or they may be considered as owned by more than one document.
-            # This is a workaround, but I assume there's a better way of
-            # going about this...
-            app = super().plot_grid(**kwargs, save=save)
-
-        app = super().plot_grid(**kwargs, save=False)
+        app = super().plot_grid(
+            graph_names=graph_names,
+            grid=grid,
+            curves=curves,
+            include_layout=include_layout,
+            share_x=share_x,
+            figsize=figsize,
+            width=width,
+            height=height,
+            reuse=reuse,
+            xlim=xlim,
+            ylim=ylim,
+            layout_height=layout_height,
+            save=save,
+        )
         bokeh.plotting.show(app.create_full_app())
         return app
 
@@ -1796,28 +1806,21 @@ class NotebookGraphManager(BokehGraphManager):
         -------
         BokehApp
         """
-        kwargs = {
-            "region_name": region_name,
-            "graph_name": graph_name,
-            "include_layout": include_layout,
-            "sizing_mode": sizing_mode,
-            "width": width,
-            "height": height,
-            "layout_height": layout_height,
-            "reuse": reuse,
-            "xlim": xlim,
-            "ylim": ylim,
-            "curves": curves,
-            "share_x": share_x,
-        }
-        if save:
-            # NOTE/TODO: seems like we have to regenerate the bokeh glyphs
-            # or they may be considered as owned by more than one document.
-            # This is a workaround, but I assume there's a better way of
-            # going about this...
-            app = super().plot(**kwargs, save=save)
-
-        app = super().plot(**kwargs, save=False)
+        app = super().plot(
+            region_name=region_name,
+            graph_name=graph_name,
+            include_layout=include_layout,
+            sizing_mode=sizing_mode,
+            width=width,
+            height=height,
+            layout_height=layout_height,
+            reuse=reuse,
+            xlim=xlim,
+            ylim=ylim,
+            curves=curves,
+            share_x=share_x,
+            save=save,
+        )
         if not app:
             return
 
