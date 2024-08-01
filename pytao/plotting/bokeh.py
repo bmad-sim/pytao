@@ -1040,23 +1040,17 @@ class BokehApp:
         self.layout_height = layout_height
         self.xlim = xlim
         self.ylim = ylim
-        self.bgraphs = []
-        self.figures = []
-        self.pairs = []
         self.create_figures()
 
-    def create_figures(self) -> None:
-        self.bgraphs = [self.manager.to_bokeh_graph(graph) for graph in self.graphs]
-        self.figures = [bgraph.create_figure() for bgraph in self.bgraphs]
-        self.pairs = [
-            BGraphAndFigure(bgraph=bgraph, fig=fig)
-            for bgraph, fig in zip(self.bgraphs, self.figures)
+    def create_figures(self) -> Tuple[List[BGraphAndFigure], List[BGraphAndFigure]]:
+        bgraphs = [self.manager.to_bokeh_graph(graph) for graph in self.graphs]
+        figures = [bgraph.create_figure() for bgraph in bgraphs]
+        pairs = [
+            BGraphAndFigure(bgraph=bgraph, fig=fig) for bgraph, fig in zip(bgraphs, figures)
         ]
 
         if not self.include_layout:
-            self.layout_pairs = []
-            if len(self.figures) <= 1:
-                return
+            layout_pairs = []
         else:
             lattice_layout = self.manager.to_bokeh_graph(self.manager.lattice_layout_graph)
             lattice_layout.width, lattice_layout.height = Defaults.get_size_for_class(
@@ -1065,7 +1059,7 @@ class BokehApp:
                 user_height=self.layout_height,
             )
 
-            self.layout_pairs = [
+            layout_pairs = [
                 BGraphAndFigure(
                     fig=lattice_layout.create_figure(),
                     bgraph=lattice_layout,
@@ -1073,17 +1067,22 @@ class BokehApp:
                 for _ in range(self.ncols)
             ]
 
-        if self.share_x is None:
-            share_common_x_axes(self.pairs + self.layout_pairs)
-        elif self.share_x:
-            share_x_axes(self.figures + [pair.fig for pair in self.layout_pairs])
+        if len(figures) > 1 or layout_pairs:
+            if self.share_x is None:
+                share_common_x_axes(pairs + layout_pairs)
+            elif self.share_x:
+                share_x_axes(self.figures + [pair.fig for pair in layout_pairs])
+
+        return pairs, layout_pairs
 
     def to_html(
         self,
+        pairs: List[BGraphAndFigure],
+        layout_pairs: List[BGraphAndFigure],
         title: Optional[str] = None,
     ) -> str:
         layout = bokeh.layouts.layout(
-            children=self._grid_figures(),
+            children=self._grid_figures(pairs, layout_pairs),
             width=self.width,
             height=self.height,
         )
@@ -1095,25 +1094,28 @@ class BokehApp:
         *,
         title: Optional[str] = None,
     ) -> Optional[pathlib.Path]:
-        if not self.bgraphs:
-            self.create_figures()
+        pairs, layout_pairs = self.create_figures()
 
-        title = self.bgraphs[0].graph.title or f"plot-{time.time()}"
+        title = pairs[0].bgraph.graph.title or f"plot-{time.time()}"
         if not filename:
             filename = f"{title}.html"
         if not pathlib.Path(filename).suffix:
             filename = f"{filename}.html"
-        source = self.to_html(title=title)
+        source = self.to_html(pairs, layout_pairs, title=title)
         with open(filename, "wt") as fp:
             fp.write(source)
         return pathlib.Path(filename)
 
-    def _grid_figures(self) -> List[UIGridLayoutList]:
+    def _grid_figures(
+        self,
+        pairs: List[BGraphAndFigure],
+        layout_pairs: List[BGraphAndFigure],
+    ) -> List[UIGridLayoutList]:
         nrows, ncols = self.grid
         rows = [[] for _ in range(nrows)]
         rows_cols = [(row, col) for row in range(nrows) for col in range(ncols)]
 
-        for pair, xl, yl, (row, _col) in zip(self.pairs, self.xlim, self.ylim, rows_cols):
+        for pair, xl, yl, (row, _col) in zip(pairs, self.xlim, self.ylim, rows_cols):
             fig = pair.fig
             bgraph = pair.bgraph
             if xl is not None:
@@ -1137,6 +1139,19 @@ class BokehApp:
 
             rows[row].append(fig)
 
+        rows.append([pair.fig for pair in layout_pairs])
+
+        for pair in layout_pairs:
+            if pair.fig is not None:
+                pair.fig.min_border_bottom = 40
+
+        for row in rows:
+            for fig in row:
+                # NOTE: this value is somewhat arbitrary; it helps align the X axes
+                # between consecutive plots
+                if fig is not None:
+                    fig.min_border_left = 80
+
         return [row for row in rows if row]
 
     @property
@@ -1147,11 +1162,11 @@ class BokehApp:
     def ncols(self) -> int:
         return self.grid[1]
 
-    def _add_update_button(self):
+    def _add_update_button(self, pairs: List[BGraphAndFigure]):
         update_button = bokeh.models.Button(label="Update")
 
         def update_plot():
-            for pair in self.pairs:
+            for pair in pairs:
                 bgraph = pair.bgraph
                 if not isinstance(bgraph, BokehBasicGraph):
                     continue
@@ -1164,7 +1179,7 @@ class BokehApp:
         update_button.on_click(update_plot)
         return update_button
 
-    def _add_num_points_slider(self):
+    def _add_num_points_slider(self, pairs: List[BGraphAndFigure]):
         num_points_slider = bokeh.models.Slider(
             title="Data Points",
             start=10,
@@ -1174,7 +1189,7 @@ class BokehApp:
         )
 
         def num_points_changed(_attr, _old, num_points: int):
-            for pair in self.pairs:
+            for pair in pairs:
                 bgraph = pair.bgraph
                 if not isinstance(bgraph, BokehBasicGraph):
                     continue
@@ -1188,7 +1203,7 @@ class BokehApp:
         num_points_slider.on_change("value", num_points_changed)
         return num_points_slider
 
-    def _monitor_range_updates(self):
+    def _monitor_range_updates(self, pairs: List[BGraphAndFigure]):
         def ranges_update(
             bgraph: BokehBasicGraph, fig: figure, event: bokeh.events.RangesUpdate
         ) -> None:
@@ -1201,7 +1216,7 @@ class BokehApp:
             except Exception:
                 logger.exception("Failed to update number ranges")
 
-        for pair in self.pairs:
+        for pair in pairs:
             if not isinstance(pair.bgraph, BokehBasicGraph):
                 continue
 
@@ -1212,9 +1227,9 @@ class BokehApp:
 
     def create_ui(self):
         # Ensure we get a new set of data sources and figures for each app
-        self.create_figures()
+        pairs, layout_pairs = self.create_figures()
 
-        if not self.bgraphs:
+        if not pairs:
             return
 
         widget_models: List[bokeh.layouts.UIElement] = []
@@ -1224,7 +1239,7 @@ class BokehApp:
                 tao=self.manager.tao,
                 variables=self.variables,
                 status_label=status_label,
-                pairs=self.pairs,
+                pairs=pairs,
             )
             widget_models.insert(0, bokeh.layouts.row([status_label]))
             per_row = 6
@@ -1233,27 +1248,14 @@ class BokehApp:
                 spinners = spinners[:-per_row]
                 widget_models.insert(0, row)
 
-        if any(isinstance(bgraph, BokehBasicGraph) for bgraph in self.bgraphs):
-            update_button = self._add_update_button()
-            num_points_slider = self._add_num_points_slider()
+        if any(isinstance(pair.bgraph, BokehBasicGraph) for pair in pairs):
+            update_button = self._add_update_button(pairs)
+            num_points_slider = self._add_num_points_slider(pairs)
             widget_models.insert(0, bokeh.layouts.row([update_button, num_points_slider]))
 
-            self._monitor_range_updates()
+            self._monitor_range_updates(pairs)
 
-        rows = self._grid_figures()
-        if self.include_layout:
-            rows.append([pair.fig for pair in self.layout_pairs])
-
-            for pair in self.layout_pairs:
-                if pair.fig is not None:
-                    pair.fig.min_border_bottom = 40
-
-        for row in rows:
-            for fig in row:
-                # NOTE: this value is somewhat arbitrary; it helps align the X axes
-                # between consecutive plots
-                if fig is not None:
-                    fig.min_border_left = 80
+        rows = self._grid_figures(pairs, layout_pairs)
 
         all_elems: List[bokeh.models.UIElement] = [
             *widget_models,
@@ -1587,7 +1589,7 @@ class BokehGraphManager(GraphManager):
             if save is True:
                 save = ""
             filename = app.save(save)
-            logger.warning(f"Saving plot to {filename!r}")
+            logger.info(f"Saving plot to {filename!r}")
 
         return app
 
