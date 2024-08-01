@@ -953,9 +953,55 @@ CurveIndexToCurve = Dict[int, TaoCurveSettings]
 UIGridLayoutList = List[Optional[bokeh.models.UIElement]]
 
 
-class BokehApp:
+class BokehAppState:
+    pairs: List[BGraphAndFigure]
+    layout_pairs: List[BGraphAndFigure]
+    grid: List[UIGridLayoutList]
+
+    def __init__(
+        self,
+        pairs: List[BGraphAndFigure],
+        layout_pairs: List[BGraphAndFigure],
+        grid: List[UIGridLayoutList],
+    ) -> None:
+        self.pairs = pairs
+        self.layout_pairs = layout_pairs
+        self.grid = grid
+
+    def to_html(
+        self,
+        title: Optional[str] = None,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
+    ) -> str:
+        layout = bokeh.layouts.gridplot(
+            children=self.grid,
+            width=width,
+            height=height,
+        )
+        return bokeh.embed.file_html(models=layout, title=title)
+
+    def save(
+        self,
+        title: Optional[str] = None,
+        filename: AnyPath = "",
+        width: Optional[int] = None,
+        height: Optional[int] = None,
+    ) -> Optional[pathlib.Path]:
+        title = title or self.pairs[0].bgraph.graph.title or f"plot-{time.time()}"
+        if not filename:
+            filename = f"{title}.html"
+        if not pathlib.Path(filename).suffix:
+            filename = f"{filename}.html"
+        source = self.to_html(title=title, width=width, height=height)
+        with open(filename, "wt") as fp:
+            fp.write(source)
+        return pathlib.Path(filename)
+
+
+class BokehAppCreator:
     """
-    A composite Bokeh application made up of 1 or more graphs.
+    A composite Bokeh application creator made up of 1 or more graphs.
 
     This can be used to:
     * Generate a static HTML page without Python widgets
@@ -1000,7 +1046,7 @@ class BokehApp:
         ylim: Optional[List[OptionalLimit]] = None,
     ) -> None:
         if not len(graphs):
-            raise ValueError("BokehApp requires 1 or more graph")
+            raise ValueError("BokehAppCreator requires 1 or more graph")
 
         xlim = list(xlim or [None])
         if len(xlim) < len(graphs):
@@ -1040,9 +1086,27 @@ class BokehApp:
         self.layout_height = layout_height
         self.xlim = xlim
         self.ylim = ylim
-        self.create_figures()
 
-    def create_figures(self) -> Tuple[List[BGraphAndFigure], List[BGraphAndFigure]]:
+    def create_state(self) -> BokehAppState:
+        """Create an independent application state based on the graph data."""
+        pairs, layout_pairs = self._create_figures()
+        grid = self._grid_figures(pairs, layout_pairs)
+        return BokehAppState(
+            pairs=pairs,
+            layout_pairs=layout_pairs,
+            grid=grid,
+        )
+
+    def save(
+        self,
+        filename: AnyPath = "",
+        *,
+        title: Optional[str] = None,
+    ) -> Optional[pathlib.Path]:
+        state = self.create_state()
+        state.save(filename=filename, title=title, width=self.width, height=self.height)
+
+    def _create_figures(self) -> Tuple[List[BGraphAndFigure], List[BGraphAndFigure]]:
         bgraphs = [self.manager.to_bokeh_graph(graph) for graph in self.graphs]
         figures = [bgraph.create_figure() for bgraph in bgraphs]
         pairs = [
@@ -1074,37 +1138,6 @@ class BokehApp:
                 share_x_axes(self.figures + [pair.fig for pair in layout_pairs])
 
         return pairs, layout_pairs
-
-    def to_html(
-        self,
-        pairs: List[BGraphAndFigure],
-        layout_pairs: List[BGraphAndFigure],
-        title: Optional[str] = None,
-    ) -> str:
-        layout = bokeh.layouts.layout(
-            children=self._grid_figures(pairs, layout_pairs),
-            width=self.width,
-            height=self.height,
-        )
-        return bokeh.embed.file_html(models=layout, title=title)
-
-    def save(
-        self,
-        filename: AnyPath = "",
-        *,
-        title: Optional[str] = None,
-    ) -> Optional[pathlib.Path]:
-        pairs, layout_pairs = self.create_figures()
-
-        title = pairs[0].bgraph.graph.title or f"plot-{time.time()}"
-        if not filename:
-            filename = f"{title}.html"
-        if not pathlib.Path(filename).suffix:
-            filename = f"{filename}.html"
-        source = self.to_html(pairs, layout_pairs, title=title)
-        with open(filename, "wt") as fp:
-            fp.write(source)
-        return pathlib.Path(filename)
 
     def _grid_figures(
         self,
@@ -1162,11 +1195,11 @@ class BokehApp:
     def ncols(self) -> int:
         return self.grid[1]
 
-    def _add_update_button(self, pairs: List[BGraphAndFigure]):
+    def _add_update_button(self, state: BokehAppState):
         update_button = bokeh.models.Button(label="Update")
 
         def update_plot():
-            for pair in pairs:
+            for pair in state.pairs:
                 bgraph = pair.bgraph
                 if not isinstance(bgraph, BokehBasicGraph):
                     continue
@@ -1179,7 +1212,7 @@ class BokehApp:
         update_button.on_click(update_plot)
         return update_button
 
-    def _add_num_points_slider(self, pairs: List[BGraphAndFigure]):
+    def _add_num_points_slider(self, state: BokehAppState):
         num_points_slider = bokeh.models.Slider(
             title="Data Points",
             start=10,
@@ -1189,7 +1222,7 @@ class BokehApp:
         )
 
         def num_points_changed(_attr, _old, num_points: int):
-            for pair in pairs:
+            for pair in state.pairs:
                 bgraph = pair.bgraph
                 if not isinstance(bgraph, BokehBasicGraph):
                     continue
@@ -1203,7 +1236,7 @@ class BokehApp:
         num_points_slider.on_change("value", num_points_changed)
         return num_points_slider
 
-    def _monitor_range_updates(self, pairs: List[BGraphAndFigure]):
+    def _monitor_range_updates(self, state: BokehAppState):
         def ranges_update(
             bgraph: BokehBasicGraph, fig: figure, event: bokeh.events.RangesUpdate
         ) -> None:
@@ -1216,7 +1249,7 @@ class BokehApp:
             except Exception:
                 logger.exception("Failed to update number ranges")
 
-        for pair in pairs:
+        for pair in state.pairs:
             if not isinstance(pair.bgraph, BokehBasicGraph):
                 continue
 
@@ -1225,11 +1258,11 @@ class BokehApp:
                 cast(EventCallback, functools.partial(ranges_update, pair.bgraph, pair.fig)),
             )
 
-    def create_ui(self):
+    def create_app_ui(self):
         # Ensure we get a new set of data sources and figures for each app
-        pairs, layout_pairs = self.create_figures()
+        state = self.create_state()
 
-        if not pairs:
+        if not state.pairs:
             return
 
         widget_models: List[bokeh.layouts.UIElement] = []
@@ -1239,7 +1272,7 @@ class BokehApp:
                 tao=self.manager.tao,
                 variables=self.variables,
                 status_label=status_label,
-                pairs=pairs,
+                pairs=state.pairs,
             )
             widget_models.insert(0, bokeh.layouts.row([status_label]))
             per_row = 6
@@ -1248,19 +1281,17 @@ class BokehApp:
                 spinners = spinners[:-per_row]
                 widget_models.insert(0, row)
 
-        if any(isinstance(pair.bgraph, BokehBasicGraph) for pair in pairs):
-            update_button = self._add_update_button(pairs)
-            num_points_slider = self._add_num_points_slider(pairs)
+        if any(isinstance(pair.bgraph, BokehBasicGraph) for pair in state.pairs):
+            update_button = self._add_update_button(state)
+            num_points_slider = self._add_num_points_slider(state)
             widget_models.insert(0, bokeh.layouts.row([update_button, num_points_slider]))
 
-            self._monitor_range_updates(pairs)
-
-        rows = self._grid_figures(pairs, layout_pairs)
+            self._monitor_range_updates(state)
 
         all_elems: List[bokeh.models.UIElement] = [
             *widget_models,
             bokeh.layouts.gridplot(
-                children=rows,
+                children=state.grid,
                 width=self.width,
                 height=self.height,
             ),
@@ -1269,7 +1300,7 @@ class BokehApp:
 
     def create_full_app(self):
         def bokeh_app(doc):
-            doc.add_root(self.create_ui())
+            doc.add_root(self.create_app_ui())
 
         return bokeh_app
 
@@ -1407,7 +1438,7 @@ class BokehGraphManager(GraphManager):
         reuse: bool = True,
         curves: Optional[List[Optional[CurveIndexToCurve]]] = None,
         save: Union[bool, str, pathlib.Path, None] = None,
-    ) -> BokehApp:
+    ) -> BokehAppCreator:
         """
         Plot graphs on a grid with Bokeh.
 
@@ -1447,7 +1478,7 @@ class BokehGraphManager(GraphManager):
 
         Returns
         -------
-        BokehApp
+        BokehAppCreator
         """
         if len(set(graph_names)) < len(graph_names):
             # Don't reuse existing regions if we place the same template more
@@ -1478,7 +1509,7 @@ class BokehGraphManager(GraphManager):
         if figsize is not None:
             width, height = figsize
 
-        app = BokehApp(
+        app = BokehAppCreator(
             manager=self,
             graphs=graphs,
             share_x=share_x,
@@ -1559,7 +1590,7 @@ class BokehGraphManager(GraphManager):
 
         Returns
         -------
-        BokehApp
+        BokehAppCreator
         """
         graphs = self.prepare_graphs_by_name(
             graph_name=graph_name,
@@ -1570,7 +1601,7 @@ class BokehGraphManager(GraphManager):
         if not graphs:
             return None
 
-        app = BokehApp(
+        app = BokehAppCreator(
             manager=self,
             graphs=graphs,
             share_x=share_x,
@@ -1724,7 +1755,7 @@ class NotebookGraphManager(BokehGraphManager):
 
         Returns
         -------
-        BokehApp
+        BokehAppCreator
         """
         app = super().plot_grid(
             graph_names=graph_names,
@@ -1806,7 +1837,7 @@ class NotebookGraphManager(BokehGraphManager):
 
         Returns
         -------
-        BokehApp
+        BokehAppCreator
         """
         app = super().plot(
             region_name=region_name,
