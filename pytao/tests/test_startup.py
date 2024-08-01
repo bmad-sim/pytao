@@ -43,3 +43,7 @@ def test_plotting() -> None:
         TaoStartup(plot="mpl", external_plotting=True, noplot=True).tao_init
         == "-external_plotting -noplot"
     )
+
+
+def test_init_override() -> None:
+    assert TaoStartup("-init_file foo", init_file="test").tao_init == "-init_file foo"

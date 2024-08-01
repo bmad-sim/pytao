@@ -2,6 +2,7 @@ import contextlib
 import logging
 import os
 import pathlib
+from typing import Generator, Type, TypeVar
 
 import matplotlib
 import pytest
@@ -117,14 +118,17 @@ def tao_cls(request: pytest.FixtureRequest):
     return request.param
 
 
+T = TypeVar("T", bound=Tao)
+
+
 @contextlib.contextmanager
 def new_tao(
-    tao_cls,
+    tao_cls: Type[T],
     init: str = "",
     plot: bool = False,
     external_plotting: bool = True,
     **kwargs,
-):
+) -> Generator[T, None, None]:
     # init = os.path.expandvars(init)
     if external_plotting:
         init = " ".join((init, "-external_plotting"))

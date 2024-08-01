@@ -152,7 +152,7 @@ class TaoStartup:
     var_file: Optional[AnyPath] = None
 
     @property
-    def run_parameters(self) -> Dict[str, Any]:
+    def tao_class_params(self) -> Dict[str, Any]:
         """Parameters used to initialize Tao or make a new Tao instance."""
         # TODO: handle abbreviated/shortened keys from the user
         init_parts = self.init.split()
@@ -161,7 +161,7 @@ class TaoStartup:
             for key, value in asdict(self).items()
             if value != getattr(type(self), key, None) and f"-{key}" not in init_parts
         }
-        params.setdefault("init", "")
+        params["init"] = self.init
         params.pop("metadata")
         return params
 
@@ -184,7 +184,7 @@ class TaoStartup:
     @property
     def tao_init(self) -> str:
         """Tao.init() command string."""
-        params = self.run_parameters
+        params = self.tao_class_params
         # For tao.init(), we throw away Tao class-specific things:
         params.pop("so_lib", None)
         params.pop("plot", None)
@@ -192,7 +192,7 @@ class TaoStartup:
 
     def run(self, use_subprocess: bool = False) -> AnyTao:
         """Create a new Tao instance and run it using these settings."""
-        params = self.run_parameters
+        params = self.tao_class_params
         if use_subprocess:
             from .subproc import SubprocessTao
 
