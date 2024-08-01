@@ -156,6 +156,22 @@ class TaoStartup:
         return params
 
     @property
+    def can_initialize(self) -> bool:
+        """
+        Can Tao be initialized with these settings?
+
+        Tao requires one or more of the following to be initialized:
+
+        * `-init_file` to specify the initialization file.
+        * `-lattice_file` to specify the lattice file.
+
+        These are commonly shortened to `-init` or `-lat`.  Tao accepts
+        shortened flags if they are not ambiguous.
+        """
+        tao_init_parts = self.tao_init.split()
+        return any(part.startswith(flag) for part in tao_init_parts for flag in {"-i", "-la"})
+
+    @property
     def tao_init(self) -> str:
         """Tao.init() command string."""
         params = self.run_parameters
@@ -424,8 +440,7 @@ class Tao(TaoCore):
             var_file=var_file,
         )
 
-        init_cmd = self.init_settings.tao_init
-        if "-init" in init_cmd or "-lat" in init_cmd:
+        if self.init_settings.can_initialize:
             self._init(self.init_settings)
             if not self._tao_version_checked:
                 self._tao_version_checked = True
