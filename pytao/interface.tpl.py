@@ -675,7 +675,6 @@ class Tao(TaoCore):
         layout_height: Optional[int] = None,
         share_x: Optional[bool] = None,
         backend: Optional[str] = None,
-        reuse: bool = True,
         grid: Optional[Tuple[int, int]] = None,
         **kwargs,
     ) -> None:
@@ -718,9 +717,6 @@ class Tao(TaoCore):
             X axis limits.
         ylim : (float, float), optional
             Y axis limits.
-        reuse : bool, default=True
-            If an existing plot of the given template type exists, reuse the
-            existing plot region rather than selecting a new empty region.
         grid : (nrows, ncols), optional
             If multiple graph names are specified, the plots will be placed
             in a grid according to this parameter.  The default is to have
@@ -749,7 +745,6 @@ class Tao(TaoCore):
         if not graph_name:
             self.last_plot = manager.plot_all(
                 include_layout=include_layout,
-                reuse=reuse,
                 **kwargs,
             )
         elif not isinstance(graph_name, str):
@@ -758,7 +753,6 @@ class Tao(TaoCore):
             self.last_plot = manager.plot_grid(
                 graph_names=graph_names,
                 grid=grid,
-                reuse=reuse,
                 include_layout=include_layout,
                 **kwargs,
             )
@@ -767,7 +761,6 @@ class Tao(TaoCore):
                 region_name=region_name,
                 graph_name=graph_name,
                 include_layout=include_layout,
-                reuse=reuse,
                 **kwargs,
             )
 

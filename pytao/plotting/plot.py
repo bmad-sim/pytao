@@ -75,6 +75,10 @@ class UnsupportedGraphError(NotImplementedError):
     pass
 
 
+class AllPlotRegionsInUseError(Exception):
+    pass
+
+
 T = TypeVar("T")
 
 
@@ -2195,7 +2199,8 @@ def find_unused_plot_region(tao: Tao, skip: Set[str]) -> str:
         region_name = info["region"]
         if region_name not in skip and not info["plot_name"]:
             return region_name
-    raise ValueError("No more available plot regions")
+
+    raise AllPlotRegionsInUseError("No more available plot regions.")
 
 
 AnyGraph = Union[BasicGraph, LatticeLayoutGraph, FloorPlanGraph]
@@ -2274,8 +2279,18 @@ class GraphManager(ABC):
                 self._graph_name_to_regions.get(graph_name),
             )
             return sorted(self._graph_name_to_regions[graph_name])[0]
-        region_name = find_unused_plot_region(self.tao, set(self.to_place))
-        logger.debug("New region for graph %s: %s", graph_name, region_name)
+
+        try:
+            region_name = find_unused_plot_region(self.tao, set(self.to_place))
+        except AllPlotRegionsInUseError:
+            region_name = list(self.regions)[0]
+            plots_in_region = list(graph.graph_name for graph in self.regions[region_name])
+            if plots_in_region:
+                logger.warning(
+                    f"All plot regions are in use; reusing plot region {region_name} which has graphs: {plots_in_region}"
+                )
+        else:
+            logger.debug("New region for graph %s: %s", graph_name, region_name)
         return region_name
 
     def place_all(
@@ -2452,7 +2467,6 @@ class GraphManager(ABC):
         self,
         graph_name: str,
         region_name: Optional[str] = None,
-        reuse: bool = True,
         curves: Optional[Dict[int, TaoCurveSettings]] = None,
         ignore_unsupported: bool = True,
         ignore_invalid: bool = True,
@@ -2466,8 +2480,6 @@ class GraphManager(ABC):
             The graph template name.
         region_name : str, optional
             The region name to place it.  Determined automatically if unspecified.
-        reuse : bool
-            If an existing plot of the same template exists, reuse its region.
         curves : Dict[int, TaoCurveSettings], optional
             Curve settings.
         ignore_unsupported : bool
@@ -2481,10 +2493,7 @@ class GraphManager(ABC):
             The type of each graph is backend-dependent.
         """
         if not region_name:
-            if reuse:
-                region_name = self.get_region_for_graph(graph_name)
-            else:
-                region_name = find_unused_plot_region(self.tao, skip=set(self.to_place))
+            region_name = self.get_region_for_graph(graph_name)
 
         if region_name not in self.regions:
             self._place(graph_name=graph_name, region_name=region_name)
@@ -2581,7 +2590,6 @@ class GraphManager(ABC):
         *,
         region_name: Optional[str] = None,
         include_layout: bool = True,
-        reuse: bool = True,
     ) -> Any:
         pass
 
@@ -2592,7 +2600,6 @@ class GraphManager(ABC):
         grid: Tuple[int, int],
         *,
         include_layout: bool = False,
-        reuse: bool = True,
         curves: Optional[List[Dict[int, TaoCurveSettings]]] = None,
     ) -> Any:
         pass
@@ -2628,7 +2635,6 @@ class MatplotlibGraphManager(GraphManager):
         height: int = 6,
         xlim: Optional[List[Optional[Tuple[float, float]]]] = None,
         ylim: Optional[List[Optional[Tuple[float, float]]]] = None,
-        reuse: bool = True,
         curves: Optional[List[Dict[int, TaoCurveSettings]]] = None,
         save: Union[bool, str, pathlib.Path, None] = None,
     ):
@@ -2657,9 +2663,6 @@ class MatplotlibGraphManager(GraphManager):
         share_x : bool or None, default=None
             Share x-axes where sensible (`None`) or force sharing x-axes (True)
             for all plots.
-        reuse : bool, default=True
-            If an existing plot of the given template type exists, reuse the
-            existing plot region rather than selecting a new empty region.
         xlim : list of (float, float), optional
             X axis limits for each graph.
         ylim : list of (float, float), optional
@@ -2680,10 +2683,6 @@ class MatplotlibGraphManager(GraphManager):
             Grid specification of the plotted axes.  To access a specific Axes
             element, use `gs[row, col]`.
         """
-        if len(set(graph_names)) < len(graph_names):
-            # Don't reuse existing regions if we place the same template more
-            # than once
-            reuse = False
 
         if not curves:
             curves = [None] * len(graph_names)
@@ -2698,7 +2697,6 @@ class MatplotlibGraphManager(GraphManager):
             (
                 self.prepare_graphs_by_name(
                     graph_name=graph_name,
-                    reuse=reuse,
                     curves=graph_curves,
                 )
                 for graph_name, graph_curves in zip(graph_names, curves or [])
@@ -2775,7 +2773,6 @@ class MatplotlibGraphManager(GraphManager):
         layout_height: float = 0.5,
         figsize: Optional[Tuple[int, int]] = None,
         share_x: bool = True,
-        reuse: bool = True,
         xlim: Optional[Tuple[float, float]] = None,
         ylim: Optional[Tuple[float, float]] = None,
         save: Union[bool, str, pathlib.Path, None] = None,
@@ -2808,9 +2805,6 @@ class MatplotlibGraphManager(GraphManager):
         share_x : bool or None, default=None
             Share x-axes where sensible (`None`) or force sharing x-axes (True)
             for all plots.
-        reuse : bool, default=True
-            If an existing plot of the given template type exists, reuse the
-            existing plot region rather than selecting a new empty region.
         xlim : (float, float), optional
             X axis limits.
         ylim : (float, float), optional
@@ -2833,7 +2827,6 @@ class MatplotlibGraphManager(GraphManager):
         graphs = self.prepare_graphs_by_name(
             graph_name=graph_name,
             region_name=region_name,
-            reuse=reuse,
             curves=curves,
         )
         if not graphs:

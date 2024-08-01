@@ -1435,7 +1435,6 @@ class BokehGraphManager(GraphManager):
         layout_height: Optional[int] = None,
         xlim: Optional[List[OptionalLimit]] = None,
         ylim: Optional[List[OptionalLimit]] = None,
-        reuse: bool = True,
         curves: Optional[List[Optional[CurveIndexToCurve]]] = None,
         save: Union[bool, str, pathlib.Path, None] = None,
     ) -> BokehAppCreator:
@@ -1466,9 +1465,6 @@ class BokehGraphManager(GraphManager):
             X axis limits for each graph.
         ylim : list of (float, float), optional
             Y axis limits for each graph.
-        reuse : bool, default=True
-            If an existing plot of the given template type exists, reuse the
-            existing plot region rather than selecting a new empty region.
         curves : list of Dict[int, TaoCurveSettings], optional
             One dictionary per graph, with each dictionary mapping the curve
             index to curve settings. These settings will be applied to the
@@ -1480,11 +1476,6 @@ class BokehGraphManager(GraphManager):
         -------
         BokehAppCreator
         """
-        if len(set(graph_names)) < len(graph_names):
-            # Don't reuse existing regions if we place the same template more
-            # than once
-            reuse = False
-
         if not curves:
             curves = [None] * len(graph_names)
         elif len(curves) < len(graph_names):
@@ -1495,7 +1486,6 @@ class BokehGraphManager(GraphManager):
             (
                 self.prepare_graphs_by_name(
                     graph_name=graph_name,
-                    reuse=reuse,
                     curves=graph_curves,
                 )
                 for graph_name, graph_curves in zip(graph_names, curves or [])
@@ -1541,7 +1531,6 @@ class BokehGraphManager(GraphManager):
         height: Optional[int] = None,
         layout_height: Optional[int] = None,
         share_x: Optional[bool] = None,
-        reuse: bool = True,
         xlim: Optional[Tuple[float, float]] = None,
         ylim: Optional[Tuple[float, float]] = None,
         save: Union[bool, str, pathlib.Path, None] = None,
@@ -1574,9 +1563,6 @@ class BokehGraphManager(GraphManager):
         share_x : bool or None, default=None
             Share x-axes where sensible (`None`) or force sharing x-axes (True)
             for all plots.
-        reuse : bool, default=True
-            If an existing plot of the given template type exists, reuse the
-            existing plot region rather than selecting a new empty region.
         xlim : (float, float), optional
             X axis limits.
         ylim : (float, float), optional
@@ -1595,7 +1581,6 @@ class BokehGraphManager(GraphManager):
         graphs = self.prepare_graphs_by_name(
             graph_name=graph_name,
             region_name=region_name,
-            reuse=reuse,
             curves=curves,
         )
         if not graphs:
@@ -1713,7 +1698,6 @@ class NotebookGraphManager(BokehGraphManager):
         ylim: Optional[List[Optional[Tuple[float, float]]]] = None,
         width: Optional[int] = None,
         height: Optional[int] = None,
-        reuse: bool = True,
         save: Union[bool, str, pathlib.Path, None] = None,
     ):
         """
@@ -1743,9 +1727,6 @@ class NotebookGraphManager(BokehGraphManager):
             X axis limits for each graph.
         ylim : list of (float, float), optional
             Y axis limits for each graph.
-        reuse : bool, default=True
-            If an existing plot of the given template type exists, reuse the
-            existing plot region rather than selecting a new empty region.
         curves : list of Dict[int, TaoCurveSettings], optional
             One dictionary per graph, with each dictionary mapping the curve
             index to curve settings. These settings will be applied to the
@@ -1766,7 +1747,6 @@ class NotebookGraphManager(BokehGraphManager):
             figsize=figsize,
             width=width,
             height=height,
-            reuse=reuse,
             xlim=xlim,
             ylim=ylim,
             layout_height=layout_height,
@@ -1790,7 +1770,6 @@ class NotebookGraphManager(BokehGraphManager):
         xlim: Optional[Tuple[float, float]] = None,
         ylim: Optional[Tuple[float, float]] = None,
         notebook_handle: bool = False,
-        reuse: bool = True,
         save: Union[bool, str, pathlib.Path, None] = None,
         curves: Optional[Dict[int, TaoCurveSettings]] = None,
     ):
@@ -1821,9 +1800,6 @@ class NotebookGraphManager(BokehGraphManager):
         share_x : bool or None, default=None
             Share x-axes where sensible (`None`) or force sharing x-axes (True)
             for all plots.
-        reuse : bool, default=True
-            If an existing plot of the given template type exists, reuse the
-            existing plot region rather than selecting a new empty region.
         xlim : (float, float), optional
             X axis limits.
         ylim : (float, float), optional
@@ -1847,7 +1823,6 @@ class NotebookGraphManager(BokehGraphManager):
             width=width,
             height=height,
             layout_height=layout_height,
-            reuse=reuse,
             xlim=xlim,
             ylim=ylim,
             curves=curves,
