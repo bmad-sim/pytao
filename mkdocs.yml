@@ -14,6 +14,11 @@ nav:
       - examples/fodo.ipynb
       - examples/advanced.ipynb
 
+  - Plotting:
+      - examples/plot-bokeh.ipynb
+      - examples/plot-bokeh-vars.ipynb
+      - examples/plot-matplotlib.ipynb
+
   - Dev:
       - development.md
   - API:
