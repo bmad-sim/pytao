@@ -81,12 +81,22 @@ class CurveData(TypedDict):
     symbol: NotRequired[ColumnDataSource]
 
 
-class Defaults:
-    graph_size: Tuple[int, int] = (600, 400)
-    grid_graph_size: Tuple[int, int] = (600, 600)
-    lattice_layout_size: Tuple[int, int] = (600, 150)
-    floor_plan_size: Tuple[int, int] = (600, 600)
+class _Defaults:
+    """
+    Defaults used for Bokeh plots internally.
+
+    To change these values, use `set_defaults`.
+    """
+
+    width: int = 400
+    height: int = 400
+    stacked_height: int = 200
+    layout_height: int = 150
+    show_bokeh_logo: bool = False
     palette: str = "Magma256"
+    tools: str = "pan,wheel_zoom,box_zoom,reset,hover,crosshair"
+    grid_toolbar_location: str = "right"
+    lattice_layout_tools: str = "pan,wheel_zoom,box_zoom,reset,hover,crosshair"
 
     @classmethod
     def get_size_for_class(
@@ -96,30 +106,40 @@ class Defaults:
         user_height: Optional[int] = None,
     ) -> Tuple[int, int]:
         default = {
-            BokehBasicGraph: cls.graph_size,
-            BokehLatticeLayoutGraph: cls.lattice_layout_size,
-            BokehFloorPlanGraph: cls.floor_plan_size,
+            BokehBasicGraph: (cls.width, cls.height),
+            BokehLatticeLayoutGraph: (cls.width, cls.layout_height),
+            BokehFloorPlanGraph: (cls.width, cls.height),
         }[typ]
         return (user_width or default[0], user_height or default[1])
 
 
 def set_defaults(
-    graph_size: Optional[Tuple[int, int]] = None,
-    grid_graph_size: Optional[Tuple[int, int]] = None,
-    lattice_layout_size: Optional[Tuple[int, int]] = None,
-    floor_plan_size: Optional[Tuple[int, int]] = None,
+    width: Optional[int] = None,
+    height: Optional[int] = None,
+    layout_height: Optional[int] = None,
     palette: Optional[str] = None,
+    show_bokeh_logo: Optional[bool] = None,
+    tools: Optional[str] = None,
+    grid_toolbar_location: Optional[str] = None,
+    lattice_layout_tools: Optional[str] = None,
 ):
-    if graph_size is not None:
-        Defaults.graph_size = graph_size
-    if grid_graph_size is not None:
-        Defaults.grid_graph_size = grid_graph_size
-    if lattice_layout_size is not None:
-        Defaults.lattice_layout_size = lattice_layout_size
-    if floor_plan_size is not None:
-        Defaults.floor_plan_size = floor_plan_size
+    """Change defaults used for Bokeh plots."""
+    if width is not None:
+        _Defaults.width = width
+    if height is not None:
+        _Defaults.height = height
+    if layout_height is not None:
+        _Defaults.layout_height = layout_height
     if palette is not None:
-        Defaults.palette = palette
+        _Defaults.palette = palette
+    if show_bokeh_logo is not None:
+        _Defaults.show_bokeh_logo = show_bokeh_logo
+    if tools is not None:
+        _Defaults.tools = tools
+    if grid_toolbar_location is not None:
+        _Defaults.grid_toolbar_location = grid_toolbar_location
+    if lattice_layout_tools is not None:
+        _Defaults.lattice_layout_tools = lattice_layout_tools
 
 
 def _get_curve_data(curve: PlotCurve) -> CurveData:
@@ -557,9 +577,9 @@ class BokehGraphBase(ABC, Generic[TGraph]):
     manager: GraphManager
     graph: TGraph
     sizing_mode: SizingModeType
-    width: int
-    height: int
-    aspect_ratio: float
+    width: Optional[int]
+    height: Optional[int]
+    aspect_ratio: Optional[float]
     x_range: Optional[bokeh.models.Range]
     y_range: Optional[bokeh.models.Range]
 
@@ -568,9 +588,9 @@ class BokehGraphBase(ABC, Generic[TGraph]):
         manager: GraphManager,
         graph: TGraph,
         sizing_mode: SizingModeType,
-        width: int,
-        height: int,
-        aspect_ratio: float,  # w/h
+        aspect_ratio: Optional[float] = None,  # w/h
+        width: Optional[int] = None,
+        height: Optional[int] = None,
     ) -> None:
         self.graph = graph
         self.manager = manager
@@ -614,7 +634,7 @@ class BokehGraphBase(ABC, Generic[TGraph]):
     def create_figure(
         self,
         *,
-        tools: str = "pan,wheel_zoom,box_zoom,save,reset,help,crosshair",
+        tools: str = "pan,wheel_zoom,box_zoom,save,reset,crosshair",
         toolbar_location: str = "above",
     ) -> figure:
         raise NotImplementedError()
@@ -635,14 +655,12 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
         sizing_mode: SizingModeType = "inherit",
         width: Optional[int] = None,
         height: Optional[int] = None,
-        aspect_ratio: float = 4.0,  # w/h
+        aspect_ratio: Optional[float] = 4.0,  # w/h
     ) -> None:
         super().__init__(
             manager=manager,
             graph=graph,
             sizing_mode=sizing_mode,
-            width=width or Defaults.lattice_layout_size[0],
-            height=height or Defaults.lattice_layout_size[1],
             aspect_ratio=aspect_ratio,
         )
 
@@ -659,7 +677,7 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
     def create_figure(
         self,
         *,
-        tools: str = "pan,wheel_zoom,box_zoom,save,reset,help,crosshair",
+        tools: str = "pan,wheel_zoom,box_zoom,save,reset,crosshair",
         toolbar_location: str = "above",
         add_named_hover_tool: bool = True,
     ) -> figure:
@@ -672,8 +690,8 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
             tools=tools,
             aspect_ratio=self.aspect_ratio,
             sizing_mode=self.sizing_mode,
-            width=self.width,
-            height=self.height,
+            # width=self.width,
+            # height=self.height,
         )
         if add_named_hover_tool:
             hover = bokeh.models.HoverTool(
@@ -688,7 +706,7 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
 
         box_zoom = get_tool_from_figure(fig, bokeh.models.BoxZoomTool)
         if box_zoom is not None:
-            box_zoom.match_aspect = True
+            box_zoom.match_aspect = False
 
         fig.xaxis.ticker = bokeh.models.FixedTicker(
             ticks=[elem.info["ele_s_start"] for elem in graph.elements],
@@ -728,15 +746,15 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
         sizing_mode: SizingModeType = "inherit",
         width: Optional[int] = None,
         height: Optional[int] = None,
-        aspect_ratio: float = 1.5,  # w/h
+        aspect_ratio: Optional[float] = None,  # w/h
         variables: Optional[List[Variable]] = None,
     ) -> None:
         super().__init__(
             manager=manager,
             graph=graph,
             sizing_mode=sizing_mode,
-            width=width or Defaults.graph_size[0],
-            height=height or Defaults.graph_size[1],
+            width=width,
+            height=height,
             aspect_ratio=aspect_ratio,
         )
         self.curve_data = _get_graph_data(graph)
@@ -802,7 +820,7 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
     def create_figure(
         self,
         *,
-        tools: str = "pan,wheel_zoom,box_zoom,save,reset,help,hover,crosshair",
+        tools: str = "pan,wheel_zoom,box_zoom,save,reset,hover,crosshair",
         toolbar_location: str = "above",
         sizing_mode: SizingModeType = "inherit",
     ) -> figure:
@@ -877,15 +895,13 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         sizing_mode: SizingModeType = "inherit",
         width: Optional[int] = None,
         height: Optional[int] = None,
-        aspect_ratio: float = 1.0,  # w/h
     ) -> None:
         super().__init__(
             manager=manager,
             graph=graph,
             sizing_mode=sizing_mode,
-            width=width or Defaults.floor_plan_size[0],
-            height=height or Defaults.floor_plan_size[1],
-            aspect_ratio=aspect_ratio,
+            width=width,
+            height=height,
         )
 
     @property
@@ -895,7 +911,7 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
     def create_figure(
         self,
         *,
-        tools: str = "pan,wheel_zoom,box_zoom,save,reset,help,hover,crosshair",
+        tools: str = "pan,wheel_zoom,box_zoom,save,reset,hover",
         toolbar_location: str = "above",
         sizing_mode: SizingModeType = "inherit",
     ) -> figure:
@@ -989,17 +1005,36 @@ class BokehAppState:
         self.layout_pairs = layout_pairs
         self.grid = grid
 
+    def to_gridplot(
+        self,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
+        **kwargs,
+    ) -> bokeh.models.GridPlot:
+        if not _Defaults.show_bokeh_logo:
+            for pair in self.pairs + self.layout_pairs:
+                pair.fig.toolbar.logo = None
+
+        gridplot = bokeh.layouts.gridplot(
+            children=self.grid,
+            width=width,
+            height=height,
+            **kwargs,
+        )
+        gridplot.toolbar.tools.append(bokeh.models.SaveTool())
+        return gridplot
+
+    @property
+    def figures(self) -> List[figure]:
+        return [pair.fig for pair in [*self.pairs, *self.layout_pairs]]
+
     def to_html(
         self,
         title: Optional[str] = None,
         width: Optional[int] = None,
         height: Optional[int] = None,
     ) -> str:
-        layout = bokeh.layouts.gridplot(
-            children=self.grid,
-            width=width,
-            height=height,
-        )
+        layout = self.to_gridplot(width=width, height=height)
         return bokeh.embed.file_html(models=layout, title=title)
 
     def save(
@@ -1038,8 +1073,6 @@ class BokehAppCreator:
     share_x: Optional[bool]
     variables: List[Variable]
     grid: Tuple[int, int]
-    graph_width: Optional[int]
-    graph_height: Optional[int]
     width: Optional[int]
     height: Optional[int]
     include_layout: bool
@@ -1059,8 +1092,6 @@ class BokehAppCreator:
         width: Optional[int] = None,
         height: Optional[int] = None,
         include_layout: bool = False,
-        graph_width: Optional[int] = None,
-        graph_height: Optional[int] = None,
         graph_sizing_mode: Optional[SizingModeType] = None,
         layout_height: Optional[int] = None,
         xlim: Optional[List[OptionalLimit]] = None,
@@ -1100,8 +1131,6 @@ class BokehAppCreator:
         self.grid = grid
         self.width = width
         self.height = height
-        self.graph_width = graph_width
-        self.graph_height = graph_height
         self.graph_sizing_mode = graph_sizing_mode
         self.include_layout = include_layout
         self.layout_height = layout_height
@@ -1129,7 +1158,13 @@ class BokehAppCreator:
 
     def _create_figures(self) -> Tuple[List[BGraphAndFigure], List[BGraphAndFigure]]:
         bgraphs = [self.manager.to_bokeh_graph(graph) for graph in self.graphs]
-        figures = [bgraph.create_figure() for bgraph in bgraphs]
+        figures = [
+            bgraph.create_figure(
+                tools=_Defaults.tools,
+                toolbar_location=_Defaults.grid_toolbar_location,
+            )
+            for bgraph in bgraphs
+        ]
         pairs = [
             BGraphAndFigure(bgraph=bgraph, fig=fig) for bgraph, fig in zip(bgraphs, figures)
         ]
@@ -1140,7 +1175,10 @@ class BokehAppCreator:
             lattice_layout = self.manager.to_bokeh_graph(self.manager.lattice_layout_graph)
             layout_pairs = [
                 BGraphAndFigure(
-                    fig=lattice_layout.create_figure(),
+                    fig=lattice_layout.create_figure(
+                        tools=_Defaults.lattice_layout_tools,
+                        toolbar_location=_Defaults.grid_toolbar_location,
+                    ),
                     bgraph=lattice_layout,
                 )
                 for _ in range(self.ncols)
@@ -1165,38 +1203,33 @@ class BokehAppCreator:
 
         for pair, xl, yl, (row, _col) in zip(pairs, self.xlim, self.ylim, rows_cols):
             fig = pair.fig
-            bgraph = pair.bgraph
             if xl is not None:
                 fig.x_range = bokeh.models.Range1d(*xl)
             if yl is not None:
                 fig.y_range = bokeh.models.Range1d(*yl)
 
-            is_layout = isinstance(bgraph, BokehLatticeLayoutGraph)
+            is_layout = isinstance(pair.bgraph, BokehLatticeLayoutGraph)
 
             if self.graph_sizing_mode is not None:
                 fig.sizing_mode = self.graph_sizing_mode
 
-            width, height = Defaults.get_size_for_class(
-                type(bgraph),
-                user_width=self.graph_width,
-                user_height=self.layout_height if is_layout else self.graph_height,
+            rows[row].append(fig)
+
+        for pair in pairs + layout_pairs:
+            is_layout = isinstance(pair.bgraph, BokehLatticeLayoutGraph)
+            width, height = _Defaults.get_size_for_class(
+                type(pair.bgraph),
+                user_width=self.width,
+                user_height=self.layout_height if is_layout else self.height,
             )
 
-            fig.width = width
-            fig.height = height
-
-            logger.debug("fig %s width=%s height=%s", fig, width, height)
-            rows[row].append(fig)
+            pair.fig.frame_width = width
+            pair.fig.frame_height = height
+            logger.debug("fig %s width=%s height=%s", pair.fig, width, height)
 
         rows.append([pair.fig for pair in layout_pairs])
 
         for pair in layout_pairs:
-            pair.fig.width, pair.fig.height = Defaults.get_size_for_class(
-                type(pair.bgraph),
-                user_width=self.graph_width,
-                user_height=self.layout_height,
-            )
-            logger.debug("layout_fig %s %s %s", pair.fig, pair.fig.width, pair.fig.height)
             if pair.fig is not None:
                 pair.fig.min_border_bottom = 40
 
@@ -1310,14 +1343,14 @@ class BokehAppCreator:
 
             self._monitor_range_updates(state)
 
-        all_elems: List[bokeh.models.UIElement] = [
-            *widget_models,
-            bokeh.layouts.gridplot(
-                children=state.grid,
-                width=self.width,
-                height=self.height,
-            ),
-        ]
+        gridplot = state.to_gridplot(
+            width=self.width,
+            height=self.height,
+            merge_tools=False,
+            toolbar_options={} if _Defaults.show_bokeh_logo else {"logo": None},
+        )
+
+        all_elems: List[bokeh.models.UIElement] = [*widget_models, gridplot]
         return bokeh.layouts.column(all_elems)
 
     def create_full_app(self):
@@ -1531,12 +1564,12 @@ class BokehGraphManager(GraphManager):
             share_x=share_x,
             include_variables=False,
             grid=grid,
-            width=width or Defaults.grid_graph_size[0],
-            height=height or Defaults.grid_graph_size[1],
+            width=width or _Defaults.width,
+            height=height or _Defaults.stacked_height,
+            layout_height=layout_height or _Defaults.layout_height,
             include_layout=include_layout,
             xlim=xlim,
             ylim=ylim,
-            layout_height=layout_height,
         )
 
         if save:
@@ -1621,11 +1654,11 @@ class BokehGraphManager(GraphManager):
             share_x=share_x,
             include_variables=False,
             grid=None,
-            width=width or Defaults.graph_size[0],
-            height=height or Defaults.graph_size[1],
+            width=width or _Defaults.width,
+            height=height or _Defaults.height,
+            layout_height=layout_height or _Defaults.layout_height,
             include_layout=include_layout,
             graph_sizing_mode=sizing_mode,
-            layout_height=layout_height,
             xlim=[xlim],
             ylim=[ylim],
         )
@@ -1678,11 +1711,11 @@ class BokehGraphManager(GraphManager):
         field = ElementField.from_tao(self.tao, ele_id, num_points=num_points, radius=radius)
         fig = figure(title=f"Field of {ele_id}")
 
-        palette = colormap or Defaults.palette
+        palette = colormap or _Defaults.palette
 
         source = _fields_to_data_source([field], x_scale=x_scale)
         cmap = bokeh.models.LinearColorMapper(
-            palette=palette or Defaults.palette,
+            palette=palette or _Defaults.palette,
             low=np.min(source.data["by"]),
             high=np.max(source.data["by"]),
         )
@@ -1700,8 +1733,8 @@ class BokehGraphManager(GraphManager):
         color_bar = bokeh.models.ColorBar(color_mapper=cmap, location=(0, 0))
         fig.add_layout(color_bar, "right")
 
-        fig.width = width or Defaults.graph_size[0]
-        fig.height = height or Defaults.graph_size[1]
+        fig.frame_width = width or _Defaults.width
+        fig.frame_height = height or _Defaults.height
 
         if save:
             if save is True:
