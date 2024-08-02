@@ -33,6 +33,9 @@ def _tao_subprocess(output_fd: int) -> None:
                     sys.exit(0)
                 else:
                     output = "unknown command"
+            except KeyboardInterrupt:
+                logger.debug("Caught KeyboardInterrupt; exiting.")
+                exit(0)
             except Exception as ex:
                 write_pickled_data(
                     output_pipe,
