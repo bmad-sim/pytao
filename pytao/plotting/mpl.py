@@ -150,6 +150,9 @@ class MatplotlibGraphManager(GraphManager):
                 height_ratios=height_ratios,
             )
             axes = [gs[row, :] for row in range(nrows)]
+            for row in axes:
+                for ax in row:
+                    ax.set_axis_off()
 
         xlim = xlim or [None]
         if len(xlim) < len(graphs):
@@ -168,6 +171,7 @@ class MatplotlibGraphManager(GraphManager):
             except UnsupportedGraphError:
                 continue
 
+            ax.set_axis_on()
             if xl is not None:
                 ax.set_xlim(*xl)
             if yl is not None:
@@ -176,7 +180,9 @@ class MatplotlibGraphManager(GraphManager):
         if include_layout:
             layout_graph = self.lattice_layout_graph
             for col in range(ncols):
-                layout_graph.plot(axes[-1][col])
+                ax = axes[-1][col]
+                layout_graph.plot(ax)
+                ax.set_axis_on()
 
         if tight_layout and fig is not None:
             fig.tight_layout()

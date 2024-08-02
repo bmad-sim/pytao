@@ -31,7 +31,7 @@ import numpy as np
 import pydantic.dataclasses as dataclasses
 from matplotlib.ticker import AutoMinorLocator
 from pydantic import ConfigDict
-from pydantic.dataclasses import Field
+from pydantic.fields import Field
 
 from . import pgplot, util
 from .curves import TaoCurveSettings
