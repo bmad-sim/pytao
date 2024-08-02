@@ -1,3 +1,4 @@
+import os
 import sys
 
 
@@ -19,8 +20,15 @@ def main():
     print("-" * len(startup_message))
     print()
 
-    tao = Tao(init=init_args)
-    return IPython.start_ipython(user_ns={"tao": tao}, argv=[])
+    plot = os.environ.get("PYTAO_PLOT", "tao").lower()
+    tao = Tao(init=init_args, plot=plot)
+    user_ns = {"tao": tao}
+    if plot == "mpl":
+        import matplotlib.pyplot as plt
+
+        user_ns["plt"] = plt
+
+    return IPython.start_ipython(user_ns=user_ns, argv=[])
 
 
 if __name__ == "__main__":
