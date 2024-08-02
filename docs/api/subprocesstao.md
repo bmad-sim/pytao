@@ -1,2 +1,1 @@
-::: pytao.Tao
 ::: pytao.SubprocessTao

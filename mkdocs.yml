@@ -21,8 +21,13 @@ nav:
 
   - Dev:
       - development.md
+
   - API:
-      - PyTao: api/pytao.md
+      - Tao: api/tao.md
+      - SubprocessTao: api/subprocesstao.md
+      - Plotting: api/plot.md
+      - Matplotlib: api/plot-mpl.md
+      - Bokeh: api/plot-bokeh.md
 
 theme:
   icon:
