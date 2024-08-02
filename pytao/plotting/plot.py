@@ -2287,14 +2287,6 @@ class GraphManager(ABC):
                 logger.debug("Graph %s found in region %s", graph_name, region_name)
                 return region_name
 
-        if self._graph_name_to_regions.get(graph_name):
-            logger.debug(
-                "Graph %s reusing an existing region: %s",
-                graph_name,
-                self._graph_name_to_regions.get(graph_name),
-            )
-            return sorted(self._graph_name_to_regions[graph_name])[0]
-
         try:
             region_name = find_unused_plot_region(self.tao, set(self.to_place))
         except AllPlotRegionsInUseError:
@@ -2412,6 +2404,8 @@ class GraphManager(ABC):
             region_name = self.get_region_for_graph(graph_name)
             logger.debug(f"Picked {region_name} for {graph_name}")
 
+        self.to_place.pop(region_name, None)
+
         logger.debug(f"Placing {graph_name} in {region_name}")
         self.tao.cmd(f"place -no_buffer {region_name} {graph_name}")
         return region_name
@@ -2510,8 +2504,7 @@ class GraphManager(ABC):
         if not region_name:
             region_name = self.get_region_for_graph(graph_name)
 
-        if region_name not in self.regions:
-            self._place(graph_name=graph_name, region_name=region_name)
+        self._place(graph_name=graph_name, region_name=region_name)
 
         if curves:
             self.configure_curves(region_name, curves or {})
