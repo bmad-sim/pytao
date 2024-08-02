@@ -20,7 +20,7 @@ from .plotting.util import select_graph_manager_class
 
 if typing.TYPE_CHECKING:
     from .plotting.bokeh import BokehGraphManager, NotebookGraphManager  # noqa: F401
-    from .plotting.plot import MatplotlibGraphManager
+    from .plotting import MatplotlibGraphManager
 
     from .subproc import SubprocessTao
 
@@ -615,7 +615,7 @@ class Tao(TaoCore):
 
                 cls = select_graph_manager_class()
             elif key == "mpl":
-                from .plotting import MatplotlibGraphManager as cls
+                from .plotting.mpl import MatplotlibGraphManager as cls
 
             else:
                 raise NotImplementedError(key)

@@ -1,4 +1,5 @@
-from .plot import GraphManager, MatplotlibGraphManager
+from .plot import GraphManager
+from .mpl import MatplotlibGraphManager
 from .util import select_graph_manager_class
 
 __all__ = [
