@@ -101,6 +101,22 @@ class Defaults:
         return (user_width or default[0], user_height or default[1])
 
 
+def set_defaults(
+    graph_size: Optional[Tuple[int, int]] = None,
+    lattice_layout_size: Optional[Tuple[int, int]] = None,
+    floor_plan_size: Optional[Tuple[int, int]] = None,
+    palette: Optional[str] = None,
+):
+    if graph_size is not None:
+        Defaults.graph_size = graph_size
+    if lattice_layout_size is not None:
+        Defaults.lattice_layout_size = lattice_layout_size
+    if floor_plan_size is not None:
+        Defaults.floor_plan_size = floor_plan_size
+    if palette is not None:
+        Defaults.palette = palette
+
+
 def _get_curve_data(curve: PlotCurve) -> CurveData:
     data: CurveData = {}
     if curve.line is not None:

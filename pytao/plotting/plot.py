@@ -82,6 +82,21 @@ class AllPlotRegionsInUseError(Exception):
 T = TypeVar("T")
 
 
+class Defaults:
+    layout_height: float = 0.5
+    colormap: str = "PRGn_r"
+
+
+def set_defaults(
+    layout_height: Optional[float] = None,
+    colormap: Optional[str] = None,
+):
+    if layout_height is not None:
+        Defaults.layout_height = layout_height
+    if colormap is not None:
+        Defaults.colormap = colormap
+
+
 def _clean_pytao_output(dct: dict, typ: Type[T]) -> T:
     return {key: dct.get(key, None) for key in typ.__required_keys__}
 
@@ -2627,16 +2642,17 @@ class MatplotlibGraphManager(GraphManager):
         grid: Tuple[int, int],
         *,
         include_layout: bool = False,
-        figsize: Optional[Tuple[int, int]] = None,
+        figsize: Optional[Tuple[float, float]] = None,
         tight_layout: bool = True,
         share_x: Union[bool, Literal["row", "col", "all"]] = "col",
-        layout_height: float = 0.5,
-        width: int = 6,
-        height: int = 6,
+        layout_height: Optional[float] = None,
+        width: Optional[float] = None,
+        height: Optional[float] = None,
         xlim: Optional[List[Optional[Tuple[float, float]]]] = None,
         ylim: Optional[List[Optional[Tuple[float, float]]]] = None,
         curves: Optional[List[Dict[int, TaoCurveSettings]]] = None,
         save: Union[bool, str, pathlib.Path, None] = None,
+        axes: Optional[List[List[matplotlib.axes.Axes]]] = None,
     ):
         """
         Plot graphs on a grid with Matplotlib.
@@ -2651,15 +2667,17 @@ class MatplotlibGraphManager(GraphManager):
             Include a layout plot at the bottom of each column.
         tight_layout : bool, default=True
             Apply a tight layout with matplotlib.
-        figsize : (int, int), optional
+        figsize : (float, float), optional
             Figure size. Alternative to specifying `width` and `height`
             separately.  This takes precedence over `width` and `height`.
-        width : int, optional
+            Defaults to Matplotlib's `rcParams["figure.figsize"]``.
+        width : float, optional
             Width of the whole plot.
-        height : int, optional
+        height : float, optional
             Height of the whole plot.
         layout_height : int, optional
-            Height of the layout plot.
+            Normalized height of the layout plot - assuming regular plots are
+            of height 1.  Default is 0.5 which is configurable with `set_defaults`.
         share_x : bool or None, default=None
             Share x-axes where sensible (`None`) or force sharing x-axes (True)
             for all plots.
@@ -2708,19 +2726,25 @@ class MatplotlibGraphManager(GraphManager):
             return None
 
         if include_layout:
+            layout_height = layout_height or Defaults.layout_height
             if (nrows * ncols) <= len(graph_names):
                 # Add a row for the layout
                 nrows += 1
             height_ratios = [1] * (nrows - 1) + [layout_height]
 
-        fig, gs = plt.subplots(
-            nrows=nrows,
-            ncols=ncols,
-            sharex=share_x,
-            figsize=figsize,
-            squeeze=False,
-            height_ratios=height_ratios,
-        )
+        if axes is not None:
+            tight_layout = False
+            fig = None
+        else:
+            fig, gs = plt.subplots(
+                nrows=nrows,
+                ncols=ncols,
+                sharex=share_x,
+                figsize=figsize,
+                squeeze=False,
+                height_ratios=height_ratios,
+            )
+            axes = [gs[row, :] for row in range(nrows)]
 
         xlim = xlim or [None]
         if len(xlim) < len(graphs):
@@ -2733,7 +2757,7 @@ class MatplotlibGraphManager(GraphManager):
         rows_cols = [(row, col) for row in range(nrows) for col in range(ncols)]
 
         for graph, xl, yl, (row, col) in zip(graphs, xlim, ylim, rows_cols):
-            ax = gs[row, col]
+            ax = axes[row][col]
             try:
                 graph.plot(ax)
             except UnsupportedGraphError:
@@ -2768,15 +2792,16 @@ class MatplotlibGraphManager(GraphManager):
         region_name: Optional[str] = None,
         include_layout: bool = True,
         tight_layout: bool = True,
-        width: int = 6,
-        height: int = 6,
-        layout_height: float = 0.5,
-        figsize: Optional[Tuple[int, int]] = None,
+        width: Optional[float] = None,
+        height: Optional[float] = None,
+        layout_height: Optional[float] = None,
+        figsize: Optional[Tuple[float, float]] = None,
         share_x: bool = True,
         xlim: Optional[Tuple[float, float]] = None,
         ylim: Optional[Tuple[float, float]] = None,
         save: Union[bool, str, pathlib.Path, None] = None,
         curves: Optional[Dict[int, TaoCurveSettings]] = None,
+        axes: Optional[List[matplotlib.axes.Axes]] = None,
     ):
         """
         Plot a graph with Matplotlib.
@@ -2793,15 +2818,17 @@ class MatplotlibGraphManager(GraphManager):
             the x-axis).
         tight_layout : bool, default=True
             Apply a tight layout with matplotlib.
-        figsize : (int, int), optional
+        figsize : (float, float), optional
             Figure size. Alternative to specifying `width` and `height`
             separately.  This takes precedence over `width` and `height`.
-        width : int, optional
-            Width of each plot.
-        height : int, optional
-            Height of each plot.
-        layout_height : int, optional
-            Height of the layout plot.
+            Defaults to Matplotlib's `rcParams["figure.figsize"]``.
+        width : float, optional
+            Width of the whole plot.
+        height : float, optional
+            Height of the whole plot.
+        layout_height : float, optional
+            Normalized height of the layout plot - assuming regular plots are
+            of height 1.  Default is 0.5 which is configurable with `set_defaults`.
         share_x : bool or None, default=None
             Share x-axes where sensible (`None`) or force sharing x-axes (True)
             for all plots.
@@ -2842,28 +2869,40 @@ class MatplotlibGraphManager(GraphManager):
         ):
             layout_graph = self.lattice_layout_graph
             graphs.append(layout_graph)
-
-            fig, gs = plt.subplots(
-                nrows=len(graphs),
-                ncols=1,
-                sharex=share_x,
-                height_ratios=[1] * (len(graphs) - 1) + [layout_height],
-                figsize=figsize,
-                squeeze=False,
-            )
         else:
-            fig, gs = plt.subplots(
-                nrows=len(graphs),
-                ncols=1,
-                sharex=share_x,
-                figsize=figsize,
-                squeeze=False,
-            )
+            include_layout = False
+
+        if axes is not None:
+            if len(axes) != len(graphs):
+                raise ValueError(
+                    f"Not enough axes provided. Expected {len(graphs)}, got {len(axes)}"
+                )
+        else:
+            if include_layout:
+                layout_height = layout_height or Defaults.layout_height
+                fig, gs = plt.subplots(
+                    nrows=len(graphs),
+                    ncols=1,
+                    sharex=share_x,
+                    height_ratios=[1] * (len(graphs) - 1) + [layout_height],
+                    figsize=figsize,
+                    squeeze=False,
+                )
+            else:
+                fig, gs = plt.subplots(
+                    nrows=len(graphs),
+                    ncols=1,
+                    sharex=share_x,
+                    figsize=figsize,
+                    squeeze=False,
+                )
+            axes = gs[:, 0]
+            assert axes is not None
 
         if include_layout:
             layout_graph = self.lattice_layout_graph
 
-        for ax, graph in zip(gs[:, 0], graphs):
+        for ax, graph in zip(axes, graphs):
             try:
                 graph.plot(ax)
             except UnsupportedGraphError:
@@ -2932,7 +2971,7 @@ class MatplotlibGraphManager(GraphManager):
             _, ax = plt.subplots(figsize=(width, height))
         assert ax is not None
 
-        colormap = colormap or "PRGn_r"
+        colormap = colormap or Defaults.colormap
 
         field = ElementField.from_tao(self.tao, ele_id, num_points=num_points, radius=radius)
         mesh = ax.pcolormesh(
