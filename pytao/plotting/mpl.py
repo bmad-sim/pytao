@@ -99,6 +99,8 @@ class MatplotlibGraphManager(GraphManager):
 
         Returns
         -------
+        list of graphs
+            List of plotted graphs.
         matplotlib.Figure
             To gain access to the resulting plot objects, use the backend's
             `plot` method directly.
@@ -194,7 +196,7 @@ class MatplotlibGraphManager(GraphManager):
             logger.info(f"Saving plot to {save!r}")
             fig.savefig(save)
 
-        return fig, axes
+        return graphs, fig, axes
 
     def plot(
         self,
@@ -255,6 +257,8 @@ class MatplotlibGraphManager(GraphManager):
 
         Returns
         -------
+        list of graphs
+            List of plotted graphs.
         matplotlib.Figure
             To gain access to the resulting plot objects, use the backend's
             `plot` method directly.
@@ -336,7 +340,7 @@ class MatplotlibGraphManager(GraphManager):
                 logger.info(f"Saving plot to {save!r}")
                 fig.savefig(save)
 
-        return fig, axes
+        return graphs, fig, axes
 
     __call__ = plot
 
@@ -353,7 +357,7 @@ class MatplotlibGraphManager(GraphManager):
         x_scale: float = 1e3,
         ax: Optional[matplotlib.axes.Axes] = None,
         save: Union[bool, str, pathlib.Path, None] = None,
-    ) -> matplotlib.axes.Axes:
+    ):
         """
         Plot field information for a given element.
 
@@ -406,4 +410,4 @@ class MatplotlibGraphManager(GraphManager):
                 logger.info(f"Saving plot to {save!r}")
                 fig.savefig(save)
 
-        return ax
+        return field, fig, ax

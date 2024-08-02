@@ -60,6 +60,7 @@ from .plot import (
     PlotPatchPolygon,
     PlotPatchRectangle,
     PlotPatchSbend,
+    UnsupportedGraphError,
 )
 from .types import FloatVariableInfo
 
@@ -82,6 +83,7 @@ class CurveData(TypedDict):
 
 class Defaults:
     graph_size: Tuple[int, int] = (600, 400)
+    grid_graph_size: Tuple[int, int] = (600, 600)
     lattice_layout_size: Tuple[int, int] = (600, 150)
     floor_plan_size: Tuple[int, int] = (600, 600)
     palette: str = "Magma256"
@@ -103,12 +105,15 @@ class Defaults:
 
 def set_defaults(
     graph_size: Optional[Tuple[int, int]] = None,
+    grid_graph_size: Optional[Tuple[int, int]] = None,
     lattice_layout_size: Optional[Tuple[int, int]] = None,
     floor_plan_size: Optional[Tuple[int, int]] = None,
     palette: Optional[str] = None,
 ):
     if graph_size is not None:
         Defaults.graph_size = graph_size
+    if grid_graph_size is not None:
+        Defaults.grid_graph_size = grid_graph_size
     if lattice_layout_size is not None:
         Defaults.lattice_layout_size = lattice_layout_size
     if floor_plan_size is not None:
@@ -1133,12 +1138,6 @@ class BokehAppCreator:
             layout_pairs = []
         else:
             lattice_layout = self.manager.to_bokeh_graph(self.manager.lattice_layout_graph)
-            lattice_layout.width, lattice_layout.height = Defaults.get_size_for_class(
-                type(lattice_layout),
-                user_width=self.graph_width,
-                user_height=self.layout_height,
-            )
-
             layout_pairs = [
                 BGraphAndFigure(
                     fig=lattice_layout.create_figure(),
@@ -1186,11 +1185,18 @@ class BokehAppCreator:
             fig.width = width
             fig.height = height
 
+            logger.debug("fig %s width=%s height=%s", fig, width, height)
             rows[row].append(fig)
 
         rows.append([pair.fig for pair in layout_pairs])
 
         for pair in layout_pairs:
+            pair.fig.width, pair.fig.height = Defaults.get_size_for_class(
+                type(pair.bgraph),
+                user_width=self.graph_width,
+                user_height=self.layout_height,
+            )
+            logger.debug("layout_fig %s %s %s", pair.fig, pair.fig.width, pair.fig.height)
             if pair.fig is not None:
                 pair.fig.min_border_bottom = 40
 
@@ -1510,7 +1516,9 @@ class BokehGraphManager(GraphManager):
         )
 
         if not graphs:
-            raise ValueError(f"No supported plots from these templates: {graph_names}")
+            raise UnsupportedGraphError(
+                f"No supported plots from these templates: {graph_names}"
+            )
 
         if figsize is not None:
             width, height = figsize
@@ -1521,8 +1529,8 @@ class BokehGraphManager(GraphManager):
             share_x=share_x,
             include_variables=False,
             grid=grid,
-            width=width,
-            height=height,
+            width=width or Defaults.grid_graph_size[0],
+            height=height or Defaults.grid_graph_size[1],
             include_layout=include_layout,
             xlim=xlim,
             ylim=ylim,
@@ -1534,7 +1542,7 @@ class BokehGraphManager(GraphManager):
                 save = ""
             filename = app.save(save)
             logger.info(f"Saving plot to {filename!r}")
-        return app
+        return graphs, app
 
     def plot(
         self,
@@ -1599,8 +1607,9 @@ class BokehGraphManager(GraphManager):
             region_name=region_name,
             curves=curves,
         )
+
         if not graphs:
-            return None
+            raise UnsupportedGraphError(f"No supported plots from this template: {graph_name}")
 
         app = BokehAppCreator(
             manager=self,
@@ -1608,8 +1617,8 @@ class BokehGraphManager(GraphManager):
             share_x=share_x,
             include_variables=False,
             grid=None,
-            graph_width=width,
-            graph_height=height,
+            width=width or Defaults.graph_size[0],
+            height=height or Defaults.graph_size[1],
             include_layout=include_layout,
             graph_sizing_mode=sizing_mode,
             layout_height=layout_height,
@@ -1623,7 +1632,7 @@ class BokehGraphManager(GraphManager):
             filename = app.save(save)
             logger.info(f"Saving plot to {filename!r}")
 
-        return app
+        return graphs, app
 
     def plot_field(
         self,
@@ -1681,10 +1690,8 @@ class BokehGraphManager(GraphManager):
         color_bar = bokeh.models.ColorBar(color_mapper=cmap, location=(0, 0))
         fig.add_layout(color_bar, "right")
 
-        if width is not None:
-            fig.width = width
-        if height is not None:
-            fig.height = height
+        fig.width = width or Defaults.graph_size[0]
+        fig.height = height or Defaults.graph_size[1]
 
         if save:
             if save is True:
@@ -1694,7 +1701,7 @@ class BokehGraphManager(GraphManager):
             filename = bokeh.io.save(fig, filename=save)
             logger.info(f"Saving plot to {filename!r}")
 
-        return fig
+        return field, fig
 
 
 class NotebookGraphManager(BokehGraphManager):
@@ -1754,7 +1761,7 @@ class NotebookGraphManager(BokehGraphManager):
         -------
         BokehAppCreator
         """
-        app = super().plot_grid(
+        graphs, app = super().plot_grid(
             graph_names=graph_names,
             grid=grid,
             curves=curves,
@@ -1768,8 +1775,9 @@ class NotebookGraphManager(BokehGraphManager):
             layout_height=layout_height,
             save=save,
         )
+        app.create_app_ui()  # TODO remove me
         bokeh.plotting.show(app.create_full_app())
-        return app
+        return graphs, app
 
     def plot(
         self,
@@ -1831,7 +1839,7 @@ class NotebookGraphManager(BokehGraphManager):
         -------
         BokehAppCreator
         """
-        app = super().plot(
+        graphs, app = super().plot(
             region_name=region_name,
             graph_name=graph_name,
             include_layout=include_layout,
@@ -1845,9 +1853,8 @@ class NotebookGraphManager(BokehGraphManager):
             share_x=share_x,
             save=save,
         )
-        if not app:
-            return
 
+        app.create_app_ui()  # TODO remove me
         if vars:
             app.variables = Variable.from_tao_all(self.tao)
 
@@ -1855,7 +1862,7 @@ class NotebookGraphManager(BokehGraphManager):
             app.create_full_app(),
             notebook_handle=notebook_handle,
         )
-        return app
+        return graphs, app
 
     __call__ = plot
 
@@ -1890,7 +1897,7 @@ class NotebookGraphManager(BokehGraphManager):
         save : pathlib.Path or str, optional
             Save the plot to the given filename.
         """
-        fig = super().plot_field(
+        field, fig = super().plot_field(
             ele_id,
             colormap=colormap,
             radius=radius,
@@ -1901,7 +1908,7 @@ class NotebookGraphManager(BokehGraphManager):
         )
         bokeh.plotting.show(fig, notebook_handle=True)
 
-        return fig
+        return field, fig
 
 
 @functools.cache
