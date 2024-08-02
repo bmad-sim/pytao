@@ -22,7 +22,7 @@ def test_bokeh_manager(
 
         output_file(test_artifacts / f"{filename_base}.html")
 
-        app = manager.plot_all()
+        _, app = manager.plot_all()
         state = app.create_state()
 
         assert len(state.pairs)
@@ -56,7 +56,7 @@ def test_bokeh_examples(
         if example_name == "erl":
             tao.cmd("place r11 zphase")
 
-        app = manager.plot_all()
+        _, app = manager.plot_all()
         state = app.create_state()
         assert len(state.pairs)
         for pair in state.pairs:

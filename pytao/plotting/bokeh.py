@@ -1459,7 +1459,7 @@ class BokehGraphManager(GraphManager):
         ylim: Optional[List[OptionalLimit]] = None,
         curves: Optional[List[Optional[CurveIndexToCurve]]] = None,
         save: Union[bool, str, pathlib.Path, None] = None,
-    ) -> BokehAppCreator:
+    ):
         """
         Plot graphs on a grid with Bokeh.
 
@@ -1496,6 +1496,8 @@ class BokehGraphManager(GraphManager):
 
         Returns
         -------
+        list of graphs
+
         BokehAppCreator
         """
         if not curves:
@@ -1600,6 +1602,8 @@ class BokehGraphManager(GraphManager):
 
         Returns
         -------
+        list of graphs
+
         BokehAppCreator
         """
         graphs = self.prepare_graphs_by_name(
@@ -1664,6 +1668,12 @@ class BokehGraphManager(GraphManager):
         height : int, optional
         save : pathlib.Path or str, optional
             Save the plot to the given filename.
+
+        Returns
+        -------
+        ElementField
+
+        figure
         """
         field = ElementField.from_tao(self.tao, ele_id, num_points=num_points, radius=radius)
         fig = figure(title=f"Field of {ele_id}")
@@ -1759,6 +1769,8 @@ class NotebookGraphManager(BokehGraphManager):
 
         Returns
         -------
+        list of graphs
+
         BokehAppCreator
         """
         graphs, app = super().plot_grid(
