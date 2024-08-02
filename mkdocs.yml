@@ -9,15 +9,13 @@ nav:
 
   - Examples:
       - examples/basic.ipynb
+      - examples/plot-matplotlib.ipynb
+      - examples/plot-bokeh.ipynb
+      - examples/plot-bokeh-vars.ipynb
       - examples/bunch.ipynb
       - examples/special_parsers.ipynb
       - examples/fodo.ipynb
       - examples/advanced.ipynb
-
-  - Plotting:
-      - examples/plot-bokeh.ipynb
-      - examples/plot-bokeh-vars.ipynb
-      - examples/plot-matplotlib.ipynb
 
   - Dev:
       - development.md
