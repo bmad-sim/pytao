@@ -47,3 +47,8 @@ def test_plotting() -> None:
 
 def test_init_override() -> None:
     assert TaoStartup("-init_file foo", init_file="test").tao_init == "-init_file foo"
+
+
+def test_geometry() -> None:
+    assert TaoStartup(geometry="3x3").tao_init == "-geometry 3x3"
+    assert TaoStartup(geometry=(32, 23)).tao_init == "-geometry 32x23"

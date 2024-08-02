@@ -130,7 +130,7 @@ class TaoStartup:
     debug: bool = False
     disable_smooth_line_calc: bool = False
     external_plotting: bool = False
-    geometry: Union[str, Tuple[float, float]] = ""
+    geometry: Union[str, Tuple[int, int]] = ""
     hook_init_file: Optional[AnyPath] = None
     init_file: Optional[AnyPath] = None
     lattice_file: Optional[AnyPath] = None
@@ -163,6 +163,11 @@ class TaoStartup:
         }
         params["init"] = self.init
         params.pop("metadata")
+
+        geometry = params.get("geometry", "")
+        if not isinstance(geometry, str):
+            width, height = geometry
+            params["geometry"] = f"{width}x{height}"
         return params
 
     @property
@@ -316,7 +321,7 @@ class Tao(TaoCore):
         debug: bool = False,
         disable_smooth_line_calc: bool = False,
         external_plotting: bool = False,
-        geometry: Union[str, Tuple[float, float]] = "",
+        geometry: Union[str, Tuple[int, int]] = "",
         hook_init_file: Optional[AnyPath] = None,
         init_file: Optional[AnyPath] = None,
         lattice_file: Optional[AnyPath] = None,
@@ -388,7 +393,7 @@ class Tao(TaoCore):
         debug: bool = False,
         disable_smooth_line_calc: bool = False,
         external_plotting: bool = False,
-        geometry: Union[str, Tuple[float, float]] = "",
+        geometry: Union[str, Tuple[int, int]] = "",
         hook_init_file: Optional[AnyPath] = None,
         init_file: Optional[AnyPath] = None,
         lattice_file: Optional[AnyPath] = None,
