@@ -1,3 +1,4 @@
+from dataclasses import asdict
 from typing import Dict, List, Optional, Tuple, Union
 from typing_extensions import Literal
 
@@ -28,10 +29,11 @@ tao_colors = frozenset(
 )
 
 
-class QuickPlotPoint(pydantic.BaseModel):
-    x: float = pydantic.Field(kw_only=False)
-    y: float = pydantic.Field(kw_only=False)
-    units: str = pydantic.Field(max_length=16, default=" ", kw_only=False)
+@pydantic.dataclasses.dataclass
+class QuickPlotPoint:
+    x: float
+    y: float
+    units: Optional[str] = pydantic.Field(max_length=16, default=None)
 
     def get_commands(
         self,
@@ -41,7 +43,7 @@ class QuickPlotPoint(pydantic.BaseModel):
     ) -> List[str]:
         return [
             f"set graph {region_name}.{graph_name} {parent_name}%{key} = {value}"
-            for key, value in self.model_dump().items()
+            for key, value in asdict(self).items()
             if value is not None
         ]
 
@@ -49,12 +51,13 @@ class QuickPlotPoint(pydantic.BaseModel):
 QuickPlotPointTuple = Tuple[float, float, str]
 
 
-class QuickPlotRectangle(pydantic.BaseModel):
-    x1: float = pydantic.Field(kw_only=False)
-    x2: float = pydantic.Field(kw_only=False)
-    y1: float = pydantic.Field(kw_only=False)
-    y2: float = pydantic.Field(kw_only=False)
-    units: str = pydantic.Field(default=" ", max_length=16)
+@pydantic.dataclasses.dataclass
+class QuickPlotRectangle:
+    x1: float
+    x2: float
+    y1: float
+    y2: float
+    units: Optional[str] = pydantic.Field(default=None, max_length=16)
 
     def get_commands(
         self,
@@ -64,7 +67,7 @@ class QuickPlotRectangle(pydantic.BaseModel):
     ) -> List[str]:
         return [
             f"set graph {region_name}.{graph_name} {parent_name}%{key} = {value}"
-            for key, value in self.model_dump().items()
+            for key, value in asdict(self).items()
             if value is not None
         ]
 
@@ -80,7 +83,7 @@ class TaoAxisSettings(pydantic.BaseModel):
     label_offset: Optional[float] = None
     major_tick_len: Optional[float] = None
     minor_tick_len: Optional[float] = None
-    label_color: Optional[str] = pydantic.Field(max_length=16)
+    label_color: Optional[str] = pydantic.Field(max_length=16, default=None)
     major_div: Optional[int] = None
     major_div_nominal: Optional[int] = None
     minor_div: Optional[int] = None
@@ -88,7 +91,7 @@ class TaoAxisSettings(pydantic.BaseModel):
     places: Optional[int] = None
     tick_side: Optional[int] = None
     number_side: Optional[int] = None
-    label: Optional[str] = pydantic.Field(max_length=80)
+    label: Optional[str] = pydantic.Field(max_length=80, default=None)
     type: Optional[Literal["log", "linear"]] = None
     draw_label: Optional[bool] = None
     draw_numbers: Optional[bool] = None
@@ -124,7 +127,7 @@ class TaoFloorPlanSettings(pydantic.BaseModel):
         graph_name: str,
     ) -> List[str]:
         return [
-            f"set graph {region_name}.{graph_name} floor_plan%{key} = {value}"
+            f"set graph {region_name} floor_plan%{key} = {value}"
             for key, value in self.model_dump().items()
             if value is not None
         ]
@@ -192,13 +195,11 @@ class TaoGraphSettings(pydantic.BaseModel):
             elif key == "text_legend":
                 for legend_index, legend_value in value.items():
                     result.append(
-                        f"set graph {region_name}.{graph_name} text_legend({legend_index}) = {legend_value}"
+                        f"set graph {region_name} text_legend({legend_index}) = {legend_value}"
                     )
             elif key == "box":
                 for box_index, box_value in value.items():
-                    result.append(
-                        f"set graph {region_name}.{graph_name} box({box_index}) = {box_value}"
-                    )
+                    result.append(f"set graph {region_name} box({box_index}) = {box_value}")
             elif isinstance(value, TaoFloorPlanSettings):
                 if graph_type == "floor_plan":
                     result.extend(value.get_commands(region_name, graph_name))
