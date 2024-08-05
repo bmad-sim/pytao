@@ -40,8 +40,17 @@ from typing_extensions import NotRequired, TypedDict
 
 from ..interface_commands import AnyPath
 from . import pgplot, util
-from .curves import TaoCurveSettings, CurveIndexToCurve
+from .curves import TaoCurveSettings, CurveIndexToCurve, PlotCurveLine, PlotCurveSymbols
 from .fields import ElementField
+from .patches import (
+    PlotPatch,
+    PlotPatchArc,
+    PlotPatchCircle,
+    PlotPatchEllipse,
+    PlotPatchPolygon,
+    PlotPatchRectangle,
+    PlotPatchSbend,
+)
 from .plot import (
     AnyGraph,
     BasicGraph,
@@ -52,15 +61,6 @@ from .plot import (
     LatticeLayoutGraph,
     PlotAnnotation,
     PlotCurve,
-    PlotCurveLine,
-    PlotCurveSymbols,
-    PlotPatch,
-    PlotPatchArc,
-    PlotPatchCircle,
-    PlotPatchEllipse,
-    PlotPatchPolygon,
-    PlotPatchRectangle,
-    PlotPatchSbend,
     UnsupportedGraphError,
 )
 from .settings import TaoGraphSettings
@@ -299,12 +299,7 @@ def _plot_curve_line(
     if source is None:
         source = ColumnDataSource(data={})
 
-    source.data.update(
-        {
-            "x": line.xs,
-            "y": line.ys,
-        }
-    )
+    source.data.update({"x": line.xs, "y": line.ys})
     if name is not None:
         # Can't pass legend_label unless it's set to non-None
         kw = {"legend_label": name}
@@ -447,12 +442,27 @@ def _plot_patch(
         source = ColumnDataSource()
 
     line_width = line_width if line_width is not None else patch.linewidth
-    if isinstance(patch, (PlotPatchRectangle, PlotPatchPolygon)):
-        if isinstance(patch, PlotPatchRectangle):
-            source.data["xs"], source.data["ys"] = _patch_rect_to_points(patch)
-        else:
-            source.data["xs"] = [p[0] for p in patch.vertices + patch.vertices[:1]]
-            source.data["ys"] = [p[1] for p in patch.vertices + patch.vertices[:1]]
+    if isinstance(patch, PlotPatchRectangle):
+        cx, cy = patch.center
+        source.data["x"] = [cx]
+        source.data["y"] = [cy]
+        source.data["width"] = [patch.width]
+        source.data["height"] = [patch.height]
+        return fig.rect(
+            x="x",
+            y="y",
+            width="width",
+            height="height",
+            angle=math.radians(patch.angle),
+            fill_alpha=0.0,
+            line_alpha=1.0,
+            line_color=bokeh_color(patch.color),
+            line_width=line_width,
+            source=source,
+        )
+    elif isinstance(patch, PlotPatchPolygon):
+        source.data["xs"] = [p[0] for p in patch.vertices + patch.vertices[:1]]
+        source.data["ys"] = [p[1] for p in patch.vertices + patch.vertices[:1]]
         return fig.line(
             x="xs",
             y="ys",
@@ -951,8 +961,12 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         for elem in self.graph.elements:
             for line in elem.lines:
                 _plot_curve_line(fig, line)
-            for patch in elem.patches:
-                _plot_patch(fig, patch, line_width=elem.info["line_width"])
+            if elem.shape is not None:
+                for line in elem.shape.to_lines():
+                    _plot_curve_line(fig, line)
+                for patch in elem.shape.to_patches():
+                    _plot_patch(fig, patch, line_width=elem.info["line_width"])
+
             for annotation in elem.annotations:
                 _draw_annotation(
                     fig,
@@ -1816,7 +1830,6 @@ class NotebookGraphManager(BokehGraphManager):
             layout_height=layout_height,
             save=save,
         )
-        app.create_app_ui()  # TODO remove me
         bokeh.plotting.show(app.create_full_app())
         return graphs, app
 
@@ -1899,7 +1912,6 @@ class NotebookGraphManager(BokehGraphManager):
             save=save,
         )
 
-        app.create_app_ui()  # TODO remove me
         if vars:
             app.variables = Variable.from_tao_all(self.tao)
 

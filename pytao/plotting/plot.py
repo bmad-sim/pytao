@@ -9,9 +9,7 @@ from typing import (
     ClassVar,
     Dict,
     List,
-    Literal,
     Optional,
-    Sequence,
     Set,
     Tuple,
     Type,
@@ -35,8 +33,21 @@ from pydantic.fields import Field
 
 from pytao.plotting.settings import TaoGraphSettings
 
-from . import pgplot, util
-from .curves import TaoCurveSettings, CurveIndexToCurve
+from . import pgplot, shapes
+from .curves import (
+    TaoCurveSettings,
+    CurveIndexToCurve,
+    PlotCurveLine,
+    PlotCurveSymbols,
+    PlotHistogram,
+)
+from .patches import (
+    PlotPatch,
+    PlotPatchArc,
+    PlotPatchPolygon,
+    PlotPatchEllipse,
+    PlotPatchRectangle,
+)
 from .types import (
     BuildingWallGraphInfo,
     BuildingWallInfo,
@@ -142,231 +153,7 @@ class PlotAnnotation:
         )
 
 
-@dataclasses.dataclass(config=_dcls_config)
-class PlotCurveLine:
-    xs: List[float]
-    ys: List[float]
-    color: str = "black"
-    linestyle: str = "solid"
-    linewidth: float = 1.0
-
-    def plot(self, ax: matplotlib.axes.Axes, label: Optional[str] = None):
-        return ax.plot(
-            self.xs,
-            self.ys,
-            color=pgplot.mpl_color(self.color),
-            linestyle=self.linestyle,
-            linewidth=self.linewidth,
-            label=label,
-        )
-
-
-@dataclasses.dataclass(config=_dcls_config)
-class PlotCurveSymbols:
-    xs: List[float]
-    ys: List[float]
-    color: str
-    markerfacecolor: str
-    markersize: float
-    marker: str
-    markeredgewidth: float
-    linewidth: float = 0
-
-    def plot(self, ax: matplotlib.axes.Axes, label: Optional[str] = None):
-        return ax.plot(
-            self.xs,
-            self.ys,
-            color=pgplot.mpl_color(self.color),
-            markerfacecolor=self.markerfacecolor,
-            markersize=self.markersize,
-            marker=pgplot.symbols.get(self.marker, "."),
-            markeredgewidth=self.markeredgewidth,
-            linewidth=self.linewidth,
-            label=label,
-        )
-
-
-@dataclasses.dataclass(config=_dcls_config)
-class PlotHistogram:
-    xs: List[float]
-    bins: Union[int, Sequence[float], str, None]
-    weights: List[float]
-    histtype: Literal["bar", "barstacked", "step", "stepfilled"]
-    color: str
-
-    def plot(self, ax: matplotlib.axes.Axes):
-        return ax.hist(
-            self.xs,
-            bins=self.bins,
-            weights=self.weights,
-            histtype=self.histtype,
-            color=pgplot.mpl_color(self.color),
-        )
-
-
-@dataclasses.dataclass(config=_dcls_config)
-class PlotPatchBase:
-    edgecolor: Optional[str] = None
-    facecolor: Optional[str] = None
-    color: Optional[str] = None
-    linewidth: Optional[float] = None
-    linestyle: Optional[str] = None
-    antialiased: Optional[bool] = None
-    hatch: Optional[str] = None
-    fill: bool = True
-    capstyle: Optional[str] = None
-    joinstyle: Optional[str] = None
-    alpha: float = 1.0
-
-    @property
-    def _patch_args(self):
-        return {
-            "edgecolor": self.edgecolor,
-            "facecolor": self.facecolor,
-            "color": pgplot.mpl_color(self.color or "black"),
-            "linewidth": self.linewidth,
-            "linestyle": self.linestyle,
-            "antialiased": self.antialiased,
-            "hatch": self.hatch,
-            "fill": self.fill,
-            "capstyle": self.capstyle,
-            "joinstyle": self.joinstyle,
-            "alpha": self.alpha,
-        }
-
-    def to_mpl(self):
-        raise NotImplementedError(type(self))
-
-    def plot(self, ax: matplotlib.axes.Axes):
-        mpl = self.to_mpl()
-        ax.add_patch(mpl)
-        return mpl
-
-
 _point_field = Field(default_factory=lambda: (0.0, 0.0))
-
-
-@dataclasses.dataclass(config=_dcls_config)
-class PlotPatchRectangle(PlotPatchBase):
-    xy: Point = _point_field
-    width: float = 0.0
-    height: float = 0.0
-    angle: float = 0.0
-    rotation_point: Union[Literal["xy", "center"], Point] = "xy"
-
-    def to_mpl(self) -> matplotlib.patches.Rectangle:
-        return matplotlib.patches.Rectangle(
-            xy=self.xy,
-            width=self.width,
-            height=self.height,
-            angle=self.angle,
-            rotation_point=self.rotation_point,
-            **self._patch_args,
-        )
-
-
-@dataclasses.dataclass(config=_dcls_config)
-class PlotPatchArc(PlotPatchBase):
-    xy: Point = _point_field
-    width: float = 0.0
-    height: float = 0.0
-    angle: float = 0.0
-    theta1: float = 0.0
-    theta2: float = 360.0
-    fill: bool = False  # override
-
-    def to_mpl(self) -> matplotlib.patches.Arc:
-        return matplotlib.patches.Arc(
-            xy=self.xy,
-            width=self.width,
-            height=self.height,
-            angle=self.angle,
-            theta1=self.theta1,
-            theta2=self.theta2,
-            **self._patch_args,
-        )
-
-
-@dataclasses.dataclass(config=_dcls_config)
-class PlotPatchCircle(PlotPatchBase):
-    xy: Point = _point_field
-    radius: float = 0.0
-
-    def to_mpl(self) -> matplotlib.patches.Ellipse:
-        return matplotlib.patches.Circle(
-            xy=self.xy,
-            radius=self.radius,
-            **self._patch_args,
-        )
-
-
-@dataclasses.dataclass(config=_dcls_config)
-class PlotPatchPolygon(PlotPatchBase):
-    vertices: List[Point] = Field(default_factory=list)
-
-    def to_mpl(self) -> matplotlib.patches.Polygon:
-        return matplotlib.patches.Polygon(
-            xy=self.vertices,
-            **self._patch_args,
-        )
-
-
-@dataclasses.dataclass(config=_dcls_config)
-class PlotPatchEllipse(PlotPatchBase):
-    xy: Point = _point_field
-    width: float = 0.0
-    height: float = 0.0
-    angle: float = 0.0
-
-    def to_mpl(self) -> matplotlib.patches.Ellipse:
-        return matplotlib.patches.Ellipse(
-            xy=self.xy,
-            width=self.width,
-            height=self.height,
-            angle=self.angle,
-            **self._patch_args,
-        )
-
-
-@dataclasses.dataclass(config=_dcls_config)
-class PlotPatchSbend(PlotPatchBase):
-    spline1: Tuple[Point, Point, Point] = Field(default_factory=tuple)
-    spline2: Tuple[Point, Point, Point] = Field(default_factory=tuple)
-
-    def to_mpl(self) -> matplotlib.patches.PathPatch:
-        codes = [
-            matplotlib.path.Path.MOVETO,
-            matplotlib.path.Path.CURVE3,
-            matplotlib.path.Path.CURVE3,
-            matplotlib.path.Path.LINETO,
-            matplotlib.path.Path.CURVE3,
-            matplotlib.path.Path.CURVE3,
-            matplotlib.path.Path.CLOSEPOLY,
-        ]
-        vertices = [
-            self.spline1[0],
-            self.spline1[1],
-            self.spline1[2],
-            self.spline2[0],
-            self.spline2[1],
-            self.spline2[2],
-            self.spline1[0],
-        ]
-        return matplotlib.patches.PathPatch(
-            matplotlib.path.Path(vertices, codes),
-            facecolor="green",
-            alpha=0.5,
-        )
-
-
-PlotPatch = Union[
-    PlotPatchRectangle,
-    PlotPatchArc,
-    PlotPatchCircle,
-    PlotPatchEllipse,
-    PlotPatchPolygon,
-    PlotPatchSbend,
-]
 
 
 @dataclasses.dataclass(config=_dcls_config)
@@ -1190,487 +977,23 @@ def _get_wrapped_shape_coords(
     return []
 
 
-def _building_wall_to_arc(
-    mx: float,
-    my: float,
-    kx: float,
-    ky: float,
-    k_radii: float,
-    color: str,
-    linewidth: float,
-):
-    (c0x, c0y), (c1x, c1y) = util.circle_intersection(mx, my, kx, ky, abs(k_radii))
-    # radius and endpoints specify 2 possible circle centers for arcs
-    mpx = (mx + kx) / 2
-    mpy = (my + ky) / 2
-    if (
-        np.arctan2((my - mpy), (mx - mpx))
-        < np.arctan2(c0y, c0x)
-        < np.arctan2((my - mpy), (mx - mpx))
-        and k_radii > 0
-    ):
-        center = (c1x, c1y)
-    elif (
-        np.arctan2((my - mpy), (mx - mpx))
-        < np.arctan2(c0y, c0x)
-        < np.arctan2((my - mpy), (mx - mpx))
-        and k_radii < 0
-    ):
-        center = (c0x, c0y)
-    elif k_radii > 0:
-        center = (c0x, c0y)
-    else:
-        center = (c1x, c1y)
-
-    m_angle = 360 + math.degrees(np.arctan2((my - center[1]), (mx - center[0])))
-    k_angle = 360 + math.degrees(np.arctan2((ky - center[1]), (kx - center[0])))
-    if k_angle > m_angle:
-        t1 = m_angle
-        t2 = k_angle
-    else:
-        t1 = k_angle
-        t2 = m_angle
-
-    if abs(k_angle - m_angle) > 180:
-        t1, t2 = t2, t1
-
-    return PlotPatchArc(
-        xy=center,
-        width=k_radii * 2,
-        height=k_radii * 2,
-        theta1=t1,
-        theta2=t2,
-        color=color,
-        linewidth=linewidth,
-    )
-
-
-def _circle_to_patch(
-    x1: float,
-    x2: float,
-    y1: float,
-    y2: float,
-    off1: float,
-    line_width: float,
-    color: str,
-):
-    return PlotPatchCircle(
-        xy=(x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2),
-        radius=off1,
-        linewidth=line_width,
-        color=color,
-        fill=False,
-    )
-
-
-def _box_to_patch(
-    x1: float,
-    x2: float,
-    y1: float,
-    y2: float,
-    off1: float,
-    off2: float,
-    line_width: float,
-    color: str,
-    angle_start: float,
-):
-    return PlotPatchRectangle(
-        xy=(x1 + off2 * np.sin(angle_start), y1 - off2 * np.cos(angle_start)),
-        width=np.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2),
-        height=off1 + off2,
-        linewidth=line_width,
-        color=color,
-        fill=False,
-        angle=math.degrees(angle_start),
-    )
-
-
-def _create_x_lines(
-    x1: float,
-    x2: float,
-    y1: float,
-    y2: float,
-    off1: float,
-    off2: float,
-    line_width: float,
-    color: str,
-    angle_start: float,
-) -> List[PlotCurveLine]:
-    return [
-        PlotCurveLine(
-            xs=[x1 + off2 * np.sin(angle_start), x2 - off1 * np.sin(angle_start)],
-            ys=[y1 - off2 * np.cos(angle_start), y2 + off1 * np.cos(angle_start)],
-            linewidth=line_width,
-            color=color,
-        ),
-        PlotCurveLine(
-            xs=[x1 - off1 * np.sin(angle_start), x2 + off2 * np.sin(angle_start)],
-            ys=[y1 + off1 * np.cos(angle_start), y2 - off2 * np.cos(angle_start)],
-            linewidth=line_width,
-            color=color,
-        ),
-    ]
-
-
-def _create_x_box(
-    x1: float,
-    x2: float,
-    y1: float,
-    y2: float,
-    off1: float,
-    off2: float,
-    line_width: float,
-    color: str,
-    angle_start: float,
-) -> PlotCurveLine:
-    px0 = x1 + off2 * np.sin(angle_start)
-    py0 = y1 - off2 * np.cos(angle_start)
-
-    px1 = x2 - off1 * np.sin(angle_start)
-    py1 = y2 + off1 * np.cos(angle_start)
-
-    px2 = x1 - off1 * np.sin(angle_start)
-    py2 = y1 + off1 * np.cos(angle_start)
-
-    px3 = x2 + off2 * np.sin(angle_start)
-    py3 = y2 - off2 * np.cos(angle_start)
-    return PlotCurveLine(
-        xs=[px0, px1, px2, px3, px0, px2, px3, px1],
-        ys=[py0, py1, py2, py3, py0, py2, py3, py1],
-        linewidth=line_width,
-        color=color,
-    )
-
-
-def _create_sbend_box(
-    x1: float,
-    x2: float,
-    y1: float,
-    y2: float,
-    off1: float,
-    off2: float,
-    line_width: float,
-    color: str,
-    angle_start: float,
-    angle_end: float,
-    rel_angle_start: float,
-    rel_angle_end: float,
-) -> List[PlotCurveLine]:
-    return [
-        PlotCurveLine(
-            [
-                x1 - off1 * np.sin(angle_start - rel_angle_start),
-                x1 + off2 * np.sin(angle_start - rel_angle_start),
-            ],
-            [
-                y1 + off1 * np.cos(angle_start - rel_angle_start),
-                y1 - off2 * np.cos(angle_start - rel_angle_start),
-            ],
-            linewidth=line_width,
-            color=color,
-        ),
-        PlotCurveLine(
-            [
-                x2 - off1 * np.sin(angle_end + rel_angle_end),
-                x2 + off2 * np.sin(angle_end + rel_angle_end),
-            ],
-            [
-                y2 + off1 * np.cos(angle_end + rel_angle_end),
-                y2 - off2 * np.cos(angle_end + rel_angle_end),
-            ],
-            linewidth=line_width,
-            color=color,
-        ),
-    ]
-
-
-def _create_sbend(
-    x1: float,
-    x2: float,
-    y1: float,
-    y2: float,
-    off1: float,
-    off2: float,
-    line_width: float,
-    color: str,
-    angle_start: float,
-    angle_end: float,
-    rel_angle_start: float,
-    rel_angle_end: float,
-) -> Tuple[List[PlotCurveLine], List[PlotPatch]]:
-    line1 = util.line(
-        (x1 - off1 * np.sin(angle_start), y1 + off1 * np.cos(angle_start)),
-        (x1 + off2 * np.sin(angle_start), y1 - off2 * np.cos(angle_start)),
-    )
-    line2 = util.line(
-        (x2 - off1 * np.sin(angle_end), y2 + off1 * np.cos(angle_end)),
-        (x2 + off2 * np.sin(angle_end), y2 - off2 * np.cos(angle_end + rel_angle_end)),
-    )
-    try:
-        intersection = util.intersect(line1, line2)
-    except util.NoIntersectionError:
-        lines = [
-            PlotCurveLine(
-                [
-                    x1 - off1 * np.sin(angle_start - rel_angle_start),
-                    x2 - off1 * np.sin(angle_end + rel_angle_end),
-                ],
-                [
-                    y1 + off1 * np.cos(angle_start - rel_angle_start),
-                    y2 + off1 * np.cos(angle_end + rel_angle_end),
-                ],
-                linewidth=line_width,
-                color=color,
-            ),
-            PlotCurveLine(
-                [
-                    x1 + off2 * np.sin(angle_start - rel_angle_start),
-                    x2 + off2 * np.sin(angle_end + rel_angle_end),
-                ],
-                [
-                    y1 - off2 * np.cos(angle_start - rel_angle_start),
-                    y2 - off2 * np.cos(angle_end + rel_angle_end),
-                ],
-                linewidth=line_width,
-                color=color,
-            ),
-        ]
-        return lines, []
-
-    # draw sbend edges if bend angle is 0
-    angle1 = 360 + math.degrees(
-        np.arctan2(
-            y1 + off1 * np.cos(angle_start - rel_angle_start) - intersection[1],
-            x1 - off1 * np.sin(angle_start - rel_angle_start) - intersection[0],
-        )
-    )
-    angle2 = 360 + math.degrees(
-        np.arctan2(
-            y2 + off1 * np.cos(angle_end + rel_angle_end) - intersection[1],
-            x2 - off1 * np.sin(angle_end + rel_angle_end) - intersection[0],
-        )
-    )
-    # angles of further curve endpoints relative to center of circle
-    angle3 = 360 + math.degrees(
-        np.arctan2(
-            y1 - off2 * np.cos(angle_start - rel_angle_start) - intersection[1],
-            x1 + off2 * np.sin(angle_start - rel_angle_start) - intersection[0],
-        )
-    )
-    angle4 = 360 + math.degrees(
-        np.arctan2(
-            y2 - off2 * np.cos(angle_end + rel_angle_end) - intersection[1],
-            x2 + off2 * np.sin(angle_end + rel_angle_end) - intersection[0],
-        )
-    )
-    # angles of closer curve endpoints relative to center of circle
-
-    if abs(angle1 - angle2) < 180:
-        a1 = min(angle1, angle2)
-        a2 = max(angle1, angle2)
-    else:
-        a1 = max(angle1, angle2)
-        a2 = min(angle1, angle2)
-
-    if abs(angle3 - angle4) < 180:
-        a3 = min(angle3, angle4)
-        a4 = max(angle3, angle4)
-    else:
-        a3 = max(angle3, angle4)
-        a4 = min(angle3, angle4)
-    # determines correct start and end angles for arcs
-
-    rel_sin = np.sin(angle_start - rel_angle_start)
-    rel_cos = np.cos(angle_start - rel_angle_start)
-    patches: List[PlotPatch] = [
-        PlotPatchArc(
-            xy=(intersection[0], intersection[1]),
-            width=(
-                2.0
-                * np.sqrt(
-                    (x1 - off1 * rel_sin - intersection[0]) ** 2
-                    + (y1 + off1 * rel_cos - intersection[1]) ** 2
-                )
-            ),
-            height=(
-                2.0
-                * np.sqrt(
-                    (x1 - off1 * rel_sin - intersection[0]) ** 2
-                    + (y1 + off1 * rel_cos - intersection[1]) ** 2
-                )
-            ),
-            theta1=a1,
-            theta2=a2,
-            linewidth=line_width,
-            color=color,
-        ),
-        PlotPatchArc(
-            xy=(intersection[0], intersection[1]),
-            width=(
-                2.0
-                * np.sqrt(
-                    (x1 + off2 * rel_sin - intersection[0]) ** 2
-                    + (y1 - off2 * rel_cos - intersection[1]) ** 2
-                )
-            ),
-            height=(
-                2.0
-                * np.sqrt(
-                    (x1 + off2 * rel_sin - intersection[0]) ** 2
-                    + (y1 - off2 * rel_cos - intersection[1]) ** 2
-                )
-            ),
-            theta1=a3,
-            theta2=a4,
-            linewidth=line_width,
-            color=color,
-        ),
-    ]
-    patch = _sbend_intersection_to_patch(
-        intersection=intersection,
-        x1=x1,
-        x2=x2,
-        y1=y1,
-        y2=y2,
-        off1=off1,
-        off2=off2,
-        angle_start=angle_start,
-        angle_end=angle_end,
-        rel_angle_start=rel_angle_start,
-        rel_angle_end=rel_angle_end,
-    )
-    patches.append(patch)
-    return [], patches
-
-
-def _sbend_intersection_to_patch(
-    intersection: util.Intersection,
-    x1: float,
-    x2: float,
-    y1: float,
-    y2: float,
-    off1: float,
-    off2: float,
-    angle_start: float,
-    angle_end: float,
-    rel_angle_start: float,
-    rel_angle_end: float,
-):
-    sin_start = np.sin(angle_start - rel_angle_start)
-    cos_start = np.cos(angle_start - rel_angle_start)
-    sin_end = np.sin(angle_end + rel_angle_end)
-    cos_end = np.cos(angle_end + rel_angle_end)
-
-    # corners of sbend
-    c1 = (x1 - off1 * sin_start, y1 + off1 * cos_start)
-    c2 = (x2 - off1 * sin_end, y2 + off1 * cos_end)
-    c3 = (x1 + off2 * sin_start, y1 - off2 * cos_start)
-    c4 = (x2 + off2 * sin_end, y2 - off2 * cos_end)
-
-    # radii of sbend arc edges
-    outer_radius = np.sqrt(
-        (x1 - off1 * sin_start - intersection[0]) ** 2
-        + (y1 + off1 * cos_start - intersection[1]) ** 2
-    )
-    inner_radius = np.sqrt(
-        (x1 + off2 * sin_start - intersection[0]) ** 2
-        + (y1 - off2 * cos_start - intersection[1]) ** 2
-    )
-    if angle_start <= angle_end:
-        outer_radius *= -1
-        inner_radius *= -1
-
-    # midpoints of top and bottom arcs in an sbend
-    mid_angle = (angle_start + angle_end) / 2
-
-    top = (
-        intersection[0] - outer_radius * np.sin(mid_angle),
-        intersection[1] + outer_radius * np.cos(mid_angle),
-    )
-    bottom = (
-        intersection[0] - inner_radius * np.sin(mid_angle),
-        intersection[1] + inner_radius * np.cos(mid_angle),
-    )
-
-    # corresponding control points for a quadratic Bezier curve that
-    # passes through the corners and arc midpoint
-    top_cp = (
-        2 * (top[0]) - 0.5 * (c1[0]) - 0.5 * (c2[0]),
-        2 * (top[1]) - 0.5 * (c1[1]) - 0.5 * (c2[1]),
-    )
-    bottom_cp = (
-        2 * (bottom[0]) - 0.5 * (c3[0]) - 0.5 * (c4[0]),
-        2 * (bottom[1]) - 0.5 * (c3[1]) - 0.5 * (c4[1]),
-    )
-
-    return PlotPatchSbend(
-        spline1=(c1, top_cp, c2),
-        spline2=(c4, bottom_cp, c3),
-        facecolor="green",
-        alpha=0.5,
-    )
-
-
-def _create_bow_tie(
-    x1: float,
-    x2: float,
-    y1: float,
-    y2: float,
-    off1: float,
-    off2: float,
-    line_width: float,
-    color: str,
-    angle_start: float,
-) -> PlotCurveLine:
-    l1x = [x1 + off2 * np.sin(angle_start), x2 - off1 * np.sin(angle_start)]
-    l1y = [y1 - off2 * np.cos(angle_start), y2 + off1 * np.cos(angle_start)]
-    l2x = [x1 - off1 * np.sin(angle_start), x2 + off2 * np.sin(angle_start)]
-    l2y = [y1 + off1 * np.cos(angle_start), y2 - off2 * np.cos(angle_start)]
-    return PlotCurveLine(
-        [l1x[0], l1x[1], l2x[0], l2x[1], l1x[0]],
-        [l1y[0], l1y[1], l2y[0], l2y[1], l1y[0]],
-        linewidth=line_width,
-        color=color,
-    )
-
-
-def _create_diamond(
-    x1: float,
-    x2: float,
-    y1: float,
-    y2: float,
-    off1: float,
-    off2: float,
-    line_width: float,
-    color: str,
-    angle_start: float,
-):
-    l1x1 = x1 + (x2 - x1) / 2 - off1 * np.sin(angle_start)
-    l1y1 = y1 + (y2 - y1) / 2 + off1 * np.cos(angle_start)
-    l2x1 = x1 + (x2 - x1) / 2 + off2 * np.sin(angle_start)
-    l2y1 = y1 + (y2 - y1) / 2 - off2 * np.cos(angle_start)
-    return PlotCurveLine(
-        [x1, l1x1, x2, l2x1, x1],
-        [y1, l1y1, y2, l2y1, y1],
-        linewidth=line_width,
-        color=color,
-    )
-
-
 @dataclasses.dataclass(config=_dcls_config)
 class FloorPlanElement:
     branch_index: int
     index: int
     info: FloorPlanElementInfo
     lines: List[PlotCurveLine]
-    patches: List[PlotPatch]
     annotations: List[PlotAnnotation]
+    shape: Optional[shapes.AnyShape]
 
     def plot(self, ax: matplotlib.axes.Axes):
         for line in self.lines:
             line.plot(ax)
-        for patch in self.patches:
-            patch.plot(ax)
+        # TODO
+        # for patch in self.patches:
+        #     patch.plot(ax)
+        if self.shape is not None:
+            self.shape.plot(ax)
         for annotation in self.annotations:
             annotation.plot(ax)
 
@@ -1749,7 +1072,6 @@ class FloorPlanElement:
         ele_key = ele_key.lower()
 
         lines: List[PlotCurveLine] = []
-        patches: List[PlotPatch] = []
         annotations: List[PlotAnnotation] = []
 
         if ":" in shape:
@@ -1757,119 +1079,36 @@ class FloorPlanElement:
         else:
             _shape_prefix, shape = "", shape
 
-        if ele_key == "drift" or ele_key == "kicker":
-            lines.append(PlotCurveLine(xs=[x1, x2], ys=[y1, y2], color="black"))
+        shape_cls = None
+        shape_instance = None
 
-        if off1 == 0 and off2 == 0 and ele_key != "sbend" and color:
-            lines.append(
-                PlotCurveLine(xs=[x1, x2], ys=[y1, y2], linewidth=line_width, color=color)
-            )
+        if ele_key == "drift":
+            shape_cls = shapes.DriftLine
+        elif ele_key == "kicker":
+            shape_cls = shapes.KickerLine
+        elif ele_key == "sbend":
+            if shape == "box" and color:
+                shape_cls = shapes.SBend
+        elif off1 == 0 and off2 == 0 and color:
+            shape_cls = shapes.LineSegment
+        elif shape == "box" and color:
+            shape_cls = shapes.Box
+        elif shape == "xbox" and color:
+            shape_cls = shapes.XBox
+        elif shape == "x" and color:
+            shape_cls = shapes.LetterX
+        elif shape == "bow_tie" and color:
+            shape_cls = shapes.BowTie
+        elif shape == "diamond" and color:
+            shape_cls = shapes.Diamond
+        elif shape == "circle" and color:
+            shape_cls = shapes.Circle
 
-        elif shape == "box" and ele_key != "sbend" and color:
-            patches.append(
-                _box_to_patch(
-                    x1=x1,
-                    x2=x2,
-                    y1=y1,
-                    y2=y2,
-                    off1=off1,
-                    off2=off2,
-                    line_width=line_width,
-                    color=color,
-                    angle_start=angle_start,
-                )
-            )
+        elif shape:
+            raise ValueError(f"Unhandled shape: {shape}")
 
-        elif shape == "xbox" and ele_key != "sbend" and color:
-            lines.append(
-                _create_x_box(
-                    x1=x1,
-                    x2=x2,
-                    y1=y1,
-                    y2=y2,
-                    off1=off1,
-                    off2=off2,
-                    line_width=line_width,
-                    color=color,
-                    angle_start=angle_start,
-                )
-            )
-
-        elif shape == "x" and ele_key != "sbend" and color:
-            lines.extend(
-                _create_x_lines(
-                    x1=x1,
-                    x2=x2,
-                    y1=y1,
-                    y2=y2,
-                    off1=off1,
-                    off2=off2,
-                    line_width=line_width,
-                    color=color,
-                    angle_start=angle_start,
-                )
-            )
-
-        elif shape == "bow_tie" and ele_key != "sbend" and color:
-            lines.append(
-                _create_bow_tie(
-                    x1=x1,
-                    x2=x2,
-                    y1=y1,
-                    y2=y2,
-                    off1=off1,
-                    off2=off2,
-                    line_width=line_width,
-                    color=color,
-                    angle_start=angle_start,
-                )
-            )
-        elif shape == "diamond" and ele_key != "sbend" and color:
-            lines.append(
-                _create_diamond(
-                    x1=x1,
-                    x2=x2,
-                    y1=y1,
-                    y2=y2,
-                    off1=off1,
-                    off2=off2,
-                    line_width=line_width,
-                    color=color,
-                    angle_start=angle_start,
-                )
-            )
-
-        elif shape == "circle" and ele_key != "sbend" and color:
-            patches.append(
-                _circle_to_patch(
-                    x1=x1,
-                    x2=x2,
-                    y1=y1,
-                    y2=y2,
-                    off1=off1,
-                    line_width=line_width,
-                    color=color,
-                )
-            )
-
-        elif shape == "box" and ele_key == "sbend" and color:
-            lines.extend(
-                _create_sbend_box(
-                    x1=x1,
-                    x2=x2,
-                    y1=y1,
-                    y2=y2,
-                    off1=off1,
-                    off2=off2,
-                    line_width=line_width,
-                    color=color,
-                    angle_start=angle_start,
-                    angle_end=angle_end,
-                    rel_angle_start=rel_angle_start,
-                    rel_angle_end=rel_angle_end,
-                )
-            )
-            sbend_lines, sbend_patches = _create_sbend(
+        if shape_cls is not None:
+            shape_instance = shape_cls(
                 x1=x1,
                 x2=x2,
                 y1=y1,
@@ -1883,10 +1122,6 @@ class FloorPlanElement:
                 rel_angle_start=rel_angle_start,
                 rel_angle_end=rel_angle_end,
             )
-            lines.extend(sbend_lines or [])
-            patches.extend(sbend_patches or [])
-        elif shape:
-            raise ValueError(f"unhandled shape: {shape}")
 
         if label_name and color:
             annotation_angle = math.degrees((angle_end + angle_start) / 2)
@@ -1916,29 +1151,9 @@ class FloorPlanElement:
             index=index,
             info=info,
             lines=lines,
-            patches=patches,
             annotations=annotations,
+            shape=shape_instance,
         )
-        # path approximating sbend region for clickable region on graph using lines and quadratic Bezier curves
-
-        # else:  # for non sbend click detection
-        #     corner1[str(i)] = [
-        #         x1 - off1 * np.sin(angle_start),
-        #         y1 + off1 * np.cos(angle_start),
-        #     ]
-        #     corner2[str(i)] = [
-        #         x2 - off1 * np.sin(angle_start),
-        #         y2 + off1 * np.cos(angle_start),
-        #     ]
-        #     corner3[str(i)] = [
-        #         x1 + off2 * np.sin(angle_start),
-        #         y1 - off2 * np.cos(angle_start),
-        #     ]
-        #     corner4[str(i)] = [
-        #         x2 + off2 * np.sin(angle_start),
-        #         y2 - off2 * np.cos(angle_start),
-        #     ]
-        # coordinates of corners of a floor plan element for clickable region
 
 
 def sort_building_wall_graph_info(
@@ -1995,7 +1210,7 @@ class BuildingWalls:
 
                 else:
                     patches.append(
-                        _building_wall_to_arc(
+                        PlotPatchArc.from_building_wall(
                             mx=p1x,
                             my=p1y,
                             kx=p0x,
