@@ -37,9 +37,10 @@ from bokeh.plotting import figure
 from pydantic.dataclasses import dataclass
 from typing_extensions import NotRequired, TypedDict
 
+
 from ..interface_commands import AnyPath
 from . import pgplot, util
-from .curves import TaoCurveSettings
+from .curves import TaoCurveSettings, CurveIndexToCurve
 from .fields import ElementField
 from .plot import (
     AnyGraph,
@@ -62,6 +63,7 @@ from .plot import (
     PlotPatchSbend,
     UnsupportedGraphError,
 )
+from .settings import TaoGraphSettings
 from .types import FloatVariableInfo
 
 if typing.TYPE_CHECKING:
@@ -986,7 +988,6 @@ AnyBokehGraph = Union[BokehBasicGraph, BokehLatticeLayoutGraph, BokehFloorPlanGr
 
 
 OptionalLimit = Optional[Tuple[float, float]]
-CurveIndexToCurve = Dict[int, TaoCurveSettings]
 UIGridLayoutList = List[Optional[bokeh.models.UIElement]]
 
 
@@ -1490,7 +1491,8 @@ class BokehGraphManager(GraphManager):
         layout_height: Optional[int] = None,
         xlim: Optional[List[OptionalLimit]] = None,
         ylim: Optional[List[OptionalLimit]] = None,
-        curves: Optional[List[Optional[CurveIndexToCurve]]] = None,
+        curves: Optional[List[CurveIndexToCurve]] = None,
+        settings: Optional[List[TaoGraphSettings]] = None,
         save: Union[bool, str, pathlib.Path, None] = None,
     ):
         """
@@ -1524,6 +1526,8 @@ class BokehGraphManager(GraphManager):
             One dictionary per graph, with each dictionary mapping the curve
             index to curve settings. These settings will be applied to the
             placed graphs prior to plotting.
+        settings : list of TaoGraphSettings, optional
+            Graph customization settings, per graph.
         save : pathlib.Path or str, optional
             Save the plot to the given filename.
 
@@ -1533,27 +1537,11 @@ class BokehGraphManager(GraphManager):
 
         BokehAppCreator
         """
-        if not curves:
-            curves = [None] * len(graph_names)
-        elif len(curves) < len(graph_names):
-            assert len(curves)
-            curves = list(curves) + [None] * (len(graph_names) - len(curves))
-
-        graphs = sum(
-            (
-                self.prepare_graphs_by_name(
-                    graph_name=graph_name,
-                    curves=graph_curves,
-                )
-                for graph_name, graph_curves in zip(graph_names, curves or [])
-            ),
-            [],
+        graphs = self.prepare_grid_by_names(
+            graph_names=graph_names,
+            curves=curves,
+            settings=settings,
         )
-
-        if not graphs:
-            raise UnsupportedGraphError(
-                f"No supported plots from these templates: {graph_names}"
-            )
 
         if figsize is not None:
             width, height = figsize
@@ -1594,6 +1582,7 @@ class BokehGraphManager(GraphManager):
         ylim: Optional[Tuple[float, float]] = None,
         save: Union[bool, str, pathlib.Path, None] = None,
         curves: Optional[Dict[int, TaoCurveSettings]] = None,
+        settings: Optional[TaoGraphSettings] = None,
     ):
         """
         Plot a graph with Bokeh.
@@ -1629,6 +1618,8 @@ class BokehGraphManager(GraphManager):
         curves : Dict[int, TaoCurveSettings], optional
             Dictionary of curve index to curve settings. These settings will be
             applied to the placed graph prior to plotting.
+        settings : TaoGraphSettings, optional
+            Graph customization settings.
         save : str or bool, optional
             Save the plot to a static HTML file with the given name.
             If `True`, saves to a filename based on the plot title.
@@ -1643,6 +1634,7 @@ class BokehGraphManager(GraphManager):
             graph_name=graph_name,
             region_name=region_name,
             curves=curves,
+            settings=settings,
         )
 
         if not graphs:
@@ -1755,7 +1747,8 @@ class NotebookGraphManager(BokehGraphManager):
         graph_names: List[str],
         grid: Tuple[int, int],
         *,
-        curves: Optional[List[Optional[CurveIndexToCurve]]] = None,
+        curves: Optional[List[CurveIndexToCurve]] = None,
+        settings: Optional[List[TaoGraphSettings]] = None,
         include_layout: bool = False,
         share_x: Optional[bool] = None,
         figsize: Optional[Tuple[int, int]] = None,
@@ -1797,6 +1790,8 @@ class NotebookGraphManager(BokehGraphManager):
             One dictionary per graph, with each dictionary mapping the curve
             index to curve settings. These settings will be applied to the
             placed graphs prior to plotting.
+        settings : list of TaoGraphSettings, optional
+            Graph customization settings, per graph.
         save : pathlib.Path or str, optional
             Save the plot to the given filename.
 
@@ -1810,6 +1805,7 @@ class NotebookGraphManager(BokehGraphManager):
             graph_names=graph_names,
             grid=grid,
             curves=curves,
+            settings=settings,
             include_layout=include_layout,
             share_x=share_x,
             figsize=figsize,
@@ -1841,6 +1837,7 @@ class NotebookGraphManager(BokehGraphManager):
         notebook_handle: bool = False,
         save: Union[bool, str, pathlib.Path, None] = None,
         curves: Optional[Dict[int, TaoCurveSettings]] = None,
+        settings: Optional[TaoGraphSettings] = None,
     ):
         """
         Plot a graph with Bokeh.
@@ -1876,6 +1873,8 @@ class NotebookGraphManager(BokehGraphManager):
         curves : Dict[int, TaoCurveSettings], optional
             Dictionary of curve index to curve settings. These settings will be
             applied to the placed graph prior to plotting.
+        settings : TaoGraphSettings, optional
+            Graph customization settings.
         save : str or bool, optional
             Save the plot to a static HTML file with the given name.
             If `True`, saves to a filename based on the plot title.
@@ -1895,6 +1894,7 @@ class NotebookGraphManager(BokehGraphManager):
             xlim=xlim,
             ylim=ylim,
             curves=curves,
+            settings=settings,
             share_x=share_x,
             save=save,
         )

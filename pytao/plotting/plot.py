@@ -33,8 +33,10 @@ from matplotlib.ticker import AutoMinorLocator
 from pydantic import ConfigDict
 from pydantic.fields import Field
 
+from pytao.plotting.settings import TaoGraphSettings
+
 from . import pgplot, util
-from .curves import TaoCurveSettings
+from .curves import TaoCurveSettings, CurveIndexToCurve
 from .types import (
     BuildingWallGraphInfo,
     BuildingWallInfo,
@@ -2454,10 +2456,72 @@ class GraphManager(ABC):
 
         self._clear_region(region_name)
 
+    def prepare_grid_by_names(
+        self,
+        graph_names: List[str],
+        curves: Optional[List[CurveIndexToCurve]] = None,
+        settings: Optional[List[TaoGraphSettings]] = None,
+    ):
+        """
+        Prepare multiple graphs for a grid plot.
+
+        Applies per-graph curve settings and also region/graph settings.
+
+        Parameters
+        ----------
+        graph_names : list of str
+            Graph names.
+        curves : list of Dict[int, TaoCurveSettings], optional
+            One dictionary per graph, with each dictionary mapping the curve
+            index to curve settings. These settings will be applied to the
+            placed graphs prior to plotting.
+        settings : list of TaoGraphSettings, optional
+            Graph customization settings.
+
+        Returns
+        -------
+        list of graphs
+        """
+        if not curves:
+            curves = [{}] * len(graph_names)
+        elif len(curves) < len(graph_names):
+            assert len(curves)
+            curves = list(curves) + [{}] * (len(graph_names) - len(curves))
+
+        if not settings:
+            settings = [TaoGraphSettings()] * len(graph_names)
+        elif len(settings) < len(graph_names):
+            settings = list(settings) + [TaoGraphSettings()] * (
+                len(graph_names) - len(settings)
+            )
+
+        graphs = sum(
+            (
+                self.prepare_graphs_by_name(
+                    graph_name=graph_name,
+                    curves=graph_curves,
+                    settings=graph_settings,
+                )
+                for graph_name, graph_curves, graph_settings in zip(
+                    graph_names,
+                    curves,
+                    settings,
+                )
+            ),
+            [],
+        )
+
+        if not graphs:
+            raise UnsupportedGraphError(
+                f"No supported plots from these templates: {graph_names}"
+            )
+        return graphs
+
     def prepare_graphs_by_name(
         self,
         graph_name: str,
         region_name: Optional[str] = None,
+        settings: Optional[TaoGraphSettings] = None,
         curves: Optional[Dict[int, TaoCurveSettings]] = None,
         ignore_unsupported: bool = True,
         ignore_invalid: bool = True,
@@ -2471,8 +2535,10 @@ class GraphManager(ABC):
             The graph template name.
         region_name : str, optional
             The region name to place it.  Determined automatically if unspecified.
+        settings : TaoGraphSettings, optional
+            Graph customization settings.
         curves : Dict[int, TaoCurveSettings], optional
-            Curve settings.
+            Curve settings, keyed by curve number.
         ignore_unsupported : bool
             Ignore unsupported graph types (e.g., key tables).
         ignore_invalid : bool
@@ -2488,8 +2554,11 @@ class GraphManager(ABC):
 
         self._place(graph_name=graph_name, region_name=region_name)
 
+        if settings:
+            self.configure_graph(region_name, settings)
+
         if curves:
-            self.configure_curves(region_name, curves or {})
+            self.configure_curves(region_name, curves)
 
         return self.update_region(
             region_name=region_name,
@@ -2530,6 +2599,40 @@ class GraphManager(ABC):
                 curve_index=curve_idx,
             ):
                 self.tao.cmd(command)
+
+    def configure_graph(
+        self,
+        region_name: str,
+        settings: TaoGraphSettings,
+        *,
+        graph_name: Optional[str] = None,
+    ):
+        """
+        Configure graph settings for a region.
+
+        Parameters
+        ----------
+        region_name : str
+            Already-placed region name.
+        settings : TaoGraphSettings
+            Graph customization settings.
+        graph_name : str, optional
+            The graph name, if available.  If unspecified, settings will be
+            applied to all plots in the region.
+        """
+        if not graph_name:
+            for plot_name in get_plots_in_region(self.tao, region_name):
+                self.configure_graph(region_name, settings=settings, graph_name=plot_name)
+            return
+
+        graph_info = get_plot_graph_info(self.tao, region_name, graph_name)
+        graph_type = graph_info["graph^type"]
+        for command in settings.get_commands(
+            region_name,
+            graph_name,
+            graph_type=graph_type,
+        ):
+            self.tao.cmd(command)
 
     def plot_all(
         self, grid: Optional[Tuple[int, int]] = None, include_layout: bool = False, **kwargs
@@ -2580,6 +2683,7 @@ class GraphManager(ABC):
         *,
         region_name: Optional[str] = None,
         include_layout: bool = True,
+        settings: Optional[TaoGraphSettings] = None,
     ) -> Any:
         pass
 
@@ -2591,6 +2695,7 @@ class GraphManager(ABC):
         *,
         include_layout: bool = False,
         curves: Optional[List[Dict[int, TaoCurveSettings]]] = None,
+        settings: Optional[List[TaoGraphSettings]] = None,
     ) -> Any:
         pass
 

@@ -1,4 +1,5 @@
-from typing import List, Optional
+from __future__ import annotations
+from typing import Dict, List, Optional
 
 import pydantic
 
@@ -111,3 +112,6 @@ class TaoCurveSettings(pydantic.BaseModel):
             for key, value in self.model_dump().items()
             if value is not None
         ]
+
+
+CurveIndexToCurve = Dict[int, TaoCurveSettings]

@@ -16,6 +16,7 @@ from .plot import (
     UnsupportedGraphError,
     LatticeLayoutGraph,
 )
+from .settings import TaoGraphSettings
 
 
 logger = logging.getLogger(__name__)
@@ -66,6 +67,7 @@ class MatplotlibGraphManager(GraphManager):
         xlim: Optional[List[Optional[Tuple[float, float]]]] = None,
         ylim: Optional[List[Optional[Tuple[float, float]]]] = None,
         curves: Optional[List[Dict[int, TaoCurveSettings]]] = None,
+        settings: Optional[List[TaoGraphSettings]] = None,
         save: Union[bool, str, pathlib.Path, None] = None,
         axes: Optional[List[List[matplotlib.axes.Axes]]] = None,
     ):
@@ -104,6 +106,8 @@ class MatplotlibGraphManager(GraphManager):
             One dictionary per graph, with each dictionary mapping the curve
             index to curve settings. These settings will be applied to the
             placed graphs prior to plotting.
+        settings : list of TaoGraphSettings, optional
+            Graph customization settings, per graph.
         save : pathlib.Path or str, optional
             Save the plot to the given filename.
 
@@ -118,28 +122,16 @@ class MatplotlibGraphManager(GraphManager):
             Gridded axes, accessible with `grid[row][col]`.
         """
 
-        if not curves:
-            curves = [None] * len(graph_names)
-
+        graphs = self.prepare_grid_by_names(
+            graph_names=graph_names,
+            curves=curves,
+            settings=settings,
+        )
         nrows, ncols = grid
         height_ratios = None
 
         if figsize is None and width and height:
             figsize = (width, height)
-
-        graphs = sum(
-            (
-                self.prepare_graphs_by_name(
-                    graph_name=graph_name,
-                    curves=graph_curves,
-                )
-                for graph_name, graph_curves in zip(graph_names, curves or [])
-            ),
-            [],
-        )
-
-        if not graphs:
-            return None
 
         if include_layout:
             layout_height = layout_height or _Defaults.layout_height
@@ -223,6 +215,7 @@ class MatplotlibGraphManager(GraphManager):
         xlim: Optional[Tuple[float, float]] = None,
         ylim: Optional[Tuple[float, float]] = None,
         save: Union[bool, str, pathlib.Path, None] = None,
+        settings: Optional[TaoGraphSettings] = None,
         curves: Optional[Dict[int, TaoCurveSettings]] = None,
         axes: Optional[List[matplotlib.axes.Axes]] = None,
     ):
@@ -264,6 +257,8 @@ class MatplotlibGraphManager(GraphManager):
         curves : Dict[int, TaoCurveSettings], optional
             Dictionary of curve index to curve settings. These settings will be
             applied to the placed graph prior to plotting.
+        settings : TaoGraphSettings, optional
+            Graph customization settings.
 
         Returns
         -------
@@ -278,6 +273,7 @@ class MatplotlibGraphManager(GraphManager):
             graph_name=graph_name,
             region_name=region_name,
             curves=curves,
+            settings=settings,
         )
         if not graphs:
             return None
