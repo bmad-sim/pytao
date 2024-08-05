@@ -21,7 +21,7 @@ from .plot import (
 logger = logging.getLogger(__name__)
 
 
-class Defaults:
+class _Defaults:
     layout_height: float = 0.5
     colormap: str = "PRGn_r"
 
@@ -29,11 +29,21 @@ class Defaults:
 def set_defaults(
     layout_height: Optional[float] = None,
     colormap: Optional[str] = None,
+    figsize: Optional[float] = None,
+    width: Optional[int] = None,
+    height: Optional[int] = None,
+    dpi: Optional[int] = None,
 ):
     if layout_height is not None:
-        Defaults.layout_height = layout_height
+        _Defaults.layout_height = layout_height
     if colormap is not None:
-        Defaults.colormap = colormap
+        _Defaults.colormap = colormap
+    if figsize is not None:
+        matplotlib.rcParams["figure.figsize"] = figsize
+    if width and height:
+        matplotlib.rcParams["figure.figsize"] = (width, height)
+    if dpi is not None:
+        matplotlib.rcParams["figure.dpi"] = dpi
 
 
 class MatplotlibGraphManager(GraphManager):
@@ -132,7 +142,7 @@ class MatplotlibGraphManager(GraphManager):
             return None
 
         if include_layout:
-            layout_height = layout_height or Defaults.layout_height
+            layout_height = layout_height or _Defaults.layout_height
             empty_graph_count = nrows * ncols - len(graph_names)
             if empty_graph_count < ncols:
                 # Add a row for the layout
@@ -293,7 +303,7 @@ class MatplotlibGraphManager(GraphManager):
             fig = axes[0].figure
         else:
             if include_layout:
-                layout_height = layout_height or Defaults.layout_height
+                layout_height = layout_height or _Defaults.layout_height
                 fig, gs = plt.subplots(
                     nrows=len(graphs),
                     ncols=1,
@@ -386,7 +396,7 @@ class MatplotlibGraphManager(GraphManager):
             _, ax = plt.subplots(figsize=(width, height))
         assert ax is not None
 
-        colormap = colormap or Defaults.colormap
+        colormap = colormap or _Defaults.colormap
 
         field = ElementField.from_tao(self.tao, ele_id, num_points=num_points, radius=radius)
         mesh = ax.pcolormesh(
