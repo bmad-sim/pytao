@@ -17,6 +17,7 @@ from typing import (
     Union,
     cast,
 )
+from typing_extensions import Literal
 
 import matplotlib.axes
 import matplotlib.cm
@@ -33,7 +34,7 @@ from pydantic.fields import Field
 
 from pytao.plotting.settings import TaoGraphSettings
 
-from . import pgplot, shapes
+from . import pgplot, layout_shapes, shapes
 from .curves import (
     TaoCurveSettings,
     CurveIndexToCurve,
@@ -44,8 +45,6 @@ from .curves import (
 from .patches import (
     PlotPatch,
     PlotPatchArc,
-    PlotPatchPolygon,
-    PlotPatchEllipse,
     PlotPatchRectangle,
 )
 from .types import (
@@ -581,22 +580,23 @@ class BasicGraph(GraphBase):
 @dataclasses.dataclass(config=_dcls_config)
 class LatticeLayoutElement:
     info: PlotLatLayoutInfo
-    patches: List[PlotPatch]
-    lines: List[List[Point]]
+    shape: Optional[layout_shapes.AnyLayoutShape]
     annotations: List[PlotAnnotation]
     color: str
     width: float
 
     def plot(self, ax: matplotlib.axes.Axes):
-        ax.add_collection(
-            matplotlib.collections.LineCollection(
-                self.lines,
-                colors=pgplot.mpl_color(self.color),
-                linewidths=self.width,
-            )
-        )
-        for patch in self.patches:
-            patch.plot(ax)
+        if self.shape is not None:
+            self.shape.plot(ax)
+        # ax.add_collection(
+        #     matplotlib.collections.LineCollection(
+        #         self.lines,
+        #         colors=pgplot.mpl_color(self.color),
+        #         linewidths=self.width,
+        #     )
+        # )
+        # for patch in self.patches:
+        #     patch.plot(ax)
         for annotation in self.annotations:
             annotation.plot(ax)
 
@@ -612,10 +612,8 @@ class LatticeLayoutElement:
         shape: str,
         name: str,
         y2_floor: float,
-    ) -> Tuple[List[PlotPatch], List[List[Point]], List[PlotAnnotation]]:
+    ) -> Tuple[Optional[layout_shapes.AnyLayoutShape], List[PlotAnnotation]]:
         assert s2 > s1
-        patches: List[PlotPatch] = []
-        lines: List[List[Point]] = []
         if name:
             annotations = [
                 PlotAnnotation(
@@ -632,49 +630,27 @@ class LatticeLayoutElement:
         else:
             annotations = []
 
-        patch_kwargs = {
-            "linewidth": width,
-            "color": color,
-            "fill": False,
-        }
-        box_patch = PlotPatchRectangle(
-            xy=(s1, y1), width=s2 - s1, height=y2 - y1, **patch_kwargs
-        )
-        s_mid = (s1 + s2) / 2
-        y_mid = (y1 + y2) / 2
-
-        if shape == "box":
-            patches = [box_patch]
-        elif shape == "xbox":
-            patches = [box_patch]
-            lines = [[(s1, y1), (s2, y2)], [(s1, y2), (s2, y1)]]
-        elif shape == "x":
-            lines = [[(s1, y1), (s2, y2)], [(s1, y2), (s2, y1)]]
-        elif shape == "bow_tie":
-            lines = [[(s1, y1), (s2, y2), (s2, y1), (s1, y2), (s1, y1)]]
-        elif shape == "rbow_tie":
-            lines = [[(s1, y1), (s2, y2), (s1, y2), (s2, y1), (s1, y1)]]
-        elif shape == "diamond":
-            lines = [[(s1, 0), (s_mid, y1), (s2, 0), (s_mid, y2), (s1, 0)]]
-        elif shape == "circle":
-            patches = [
-                PlotPatchEllipse(xy=(s_mid, 0), width=y1 - y2, height=y1 - y2, **patch_kwargs)
-            ]
+        try:
+            shape_cls = layout_shapes.shape_to_class[shape]
+        except KeyError:
+            logger.debug(f"Unsupported layout shape type: {shape}")
+            shape_instance = None
         else:
-            if shape == "u_triangle":
-                vertices = [(s1, y2), (s2, y2), (s_mid, y1)]
-            elif shape == "d_triangle":
-                vertices = [(s1, y1), (s2, y1), (s_mid, y2)]
-            elif shape == "l_triangle":
-                vertices = [(s1, y_mid), (s2, y2), (s2, y1)]
-            elif shape == "r_triangle":
-                vertices = [(s1, y1), (s1, y2), (s2, y_mid)]
-            else:
-                raise NotImplementedError(shape)
+            shape_instance = shape_cls(
+                s1=s1,
+                s2=s2,
+                y1=y1,
+                y2=y2,
+                line_width=width,
+                color=color,
+                name=name,
+                fill=False,
+            )
+        if isinstance(shape_instance, layout_shapes.LayoutTriangle):
+            orientation = cast(Literal["u", "d", "l", "r"], shape[0])
+            shape_instance.orientation = orientation
 
-            patches = [PlotPatchPolygon(vertices=vertices, **patch_kwargs)]
-
-        return patches, lines, annotations
+        return shape_instance, annotations
 
     @classmethod
     def wrapped_shape(
@@ -689,7 +665,7 @@ class LatticeLayoutElement:
         x_min: float,
         x_max: float,
         y2_floor: float,
-    ):
+    ) -> Tuple[Optional[layout_shapes.AnyWrappedLayoutShape], List[PlotAnnotation]]:
         """
         Element is wrapped around the lattice ends, and s1 >= s2.
 
@@ -700,18 +676,23 @@ class LatticeLayoutElement:
         s_min = max((x_min, s1 + (s1 + s2) / 2.0))
         s_max = min((x_max, s1 - (s1 + s2) / 2.0))
 
-        lines = list(
-            list(zip(xs, ys))
-            for xs, ys in _get_wrapped_shape_coords(
-                shape=shape,
+        try:
+            shape_cls = layout_shapes.wrapped_shape_to_class[shape]
+        except KeyError:
+            logger.debug(f"Unsupported wrappedlayout shape type: {shape}")
+            shape_instance = None
+        else:
+            shape_instance = shape_cls(
                 s1=s1,
                 s2=s2,
                 y1=y1,
                 y2=y2,
+                color=color,
                 s_min=s_min,
                 s_max=s_max,
+                name=name,
+                fill=False,
             )
-        )
 
         annotations = [
             PlotAnnotation(
@@ -734,7 +715,7 @@ class LatticeLayoutElement:
             ),
         ]
 
-        return lines, annotations
+        return shape_instance, annotations
 
     @classmethod
     def from_info(
@@ -760,7 +741,7 @@ class LatticeLayoutElement:
 
         # Normal case where element is not wrapped around ends of lattice.
         if s2 > s1:
-            patches, lines, annotations = cls.regular_shape(
+            shape, annotations = cls.regular_shape(
                 s1=s1,
                 s2=s2,
                 y1=y1,
@@ -773,8 +754,7 @@ class LatticeLayoutElement:
             )
 
         else:
-            patches = []
-            lines, annotations = cls.wrapped_shape(
+            shape, annotations = cls.wrapped_shape(
                 s1=s1,
                 s2=s2,
                 y1=y1,
@@ -789,8 +769,7 @@ class LatticeLayoutElement:
 
         return cls(
             info=info,
-            patches=patches,
-            lines=lines,
+            shape=shape,
             color=color,
             width=width,
             annotations=annotations,
@@ -909,72 +888,6 @@ class LatticeLayoutGraph(GraphBase):
             y2_floor=y2_floor,
             elements=elements,
         )
-
-
-def _get_wrapped_shape_coords(
-    shape: str,
-    s1: float,
-    s2: float,
-    y1: float,
-    y2: float,
-    s_min: float,
-    s_max: float,
-):
-    """Case where element is wrapped round the lattice ends."""
-    if shape == "box":
-        return [
-            ([s1, s_max], [y1, y1]),
-            ([s1, s_max], [y2, y2]),
-            ([s_min, s2], [y1, y1]),
-            ([s_min, s2], [y2, y2]),
-            ([s1, s1], [y1, y2]),
-            ([s2, s2], [y1, y2]),
-        ]
-
-    if shape == "xbox":
-        return [
-            ([s1, s_max], [y1, y1]),
-            ([s1, s_max], [y2, y2]),
-            ([s1, s_max], [y1, 0]),
-            ([s1, s_max], [y2, 0]),
-            ([s_min, s2], [y1, y1]),
-            ([s_min, s2], [y2, y2]),
-            ([s_min, s2], [0, y1]),
-            ([s_min, s2], [0, y2]),
-            ([s1, s1], [y1, y2]),
-            ([s2, s2], [y1, y2]),
-        ]
-
-    if shape == "x":
-        return [
-            ([s1, s_max], [y1, 0]),
-            ([s1, s_max], [y2, 0]),
-            ([s_min, s2], [0, y1]),
-            ([s_min, s2], [0, y2]),
-        ]
-
-    if shape == "bow_tie":
-        return [
-            ([s1, s_max], [y1, y1]),
-            ([s1, s_max], [y2, y2]),
-            ([s1, s_max], [y1, 0]),
-            ([s1, s_max], [y2, 0]),
-            ([s_min, s2], [y1, y1]),
-            ([s_min, s2], [y2, y2]),
-            ([s_min, s2], [0, y1]),
-            ([s_min, s2], [0, y2]),
-        ]
-
-    if shape == "diamond":
-        return [
-            ([s1, s_max], [0, y1]),
-            ([s1, s_max], [0, y2]),
-            ([s_min, s2], [y1, 0]),
-            ([s_min, s2], [y2, 0]),
-        ]
-
-    logger.warning(f"Unsupported wrapped shape: {shape}")
-    return []
 
 
 @dataclasses.dataclass(config=_dcls_config)

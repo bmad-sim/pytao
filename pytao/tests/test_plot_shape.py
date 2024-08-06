@@ -52,8 +52,6 @@ def _plot_show_to_savefig(
 def make_shapes(width: float, height: float, angle_low: int, angle_high: int):
     for angle in range(angle_low, angle_high, 5):
         x = angle
-        width = 1
-        height = 2
         for shape in [
             Box(
                 x1=x,

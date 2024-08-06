@@ -42,6 +42,7 @@ from ..interface_commands import AnyPath
 from . import pgplot, util
 from .curves import TaoCurveSettings, CurveIndexToCurve, PlotCurveLine, PlotCurveSymbols
 from .fields import ElementField
+from .layout_shapes import AnyLayoutShape, LayoutShape
 from .patches import (
     PlotPatch,
     PlotPatchArc,
@@ -384,6 +385,18 @@ def _plot_sbend_patch(fig: figure, patch: PlotPatchSbend):
     fig.line(x=[s2x1, s1x0], y=[s2y1, s1y0])
 
 
+def _plot_layout_shape(
+    fig: figure,
+    shape: AnyLayoutShape,
+    line_width: Optional[float] = None,
+):
+    for line in shape.to_lines():
+        _plot_curve_line(fig, line)
+    if isinstance(shape, LayoutShape):
+        for patch in shape.to_patches():
+            _plot_patch(fig, patch, line_width=line_width)
+
+
 def _plot_shape(
     fig: figure,
     shape: AnyShape,
@@ -546,49 +559,51 @@ def _draw_layout_element(
         "name": [elem.info["label_name"]],
         "color": [color],
     }
-    all_lines: List[Tuple[List[float], List[float]]] = []
-    for patch in elem.patches:
-        source = ColumnDataSource(data=dict(base_data))
-        if isinstance(patch, PlotPatchRectangle):
-            all_lines.append(_patch_rect_to_points(patch))
-        elif isinstance(patch, PlotPatchPolygon):
-            all_lines.append(
-                (
-                    [p[0] for p in patch.vertices + patch.vertices[:1]],
-                    [p[1] for p in patch.vertices + patch.vertices[:1]],
-                )
-            )
-        else:
-            _plot_patch(fig, patch, line_width=elem.width, source=source)
+    # all_lines: List[Tuple[List[float], List[float]]] = []
+    if elem.shape:
+        _plot_layout_shape(fig, elem.shape)
+    # for patch in elem.patches:
+    #     source = ColumnDataSource(data=dict(base_data))
+    #     if isinstance(patch, PlotPatchRectangle):
+    #         all_lines.append(_patch_rect_to_points(patch))
+    #     elif isinstance(patch, PlotPatchPolygon):
+    #         all_lines.append(
+    #             (
+    #                 [p[0] for p in patch.vertices + patch.vertices[:1]],
+    #                 [p[1] for p in patch.vertices + patch.vertices[:1]],
+    #             )
+    #         )
+    #     else:
+    #         _plot_patch(fig, patch, line_width=elem.width, source=source)
+    #
+    # if elem.lines:
+    #     for line_points in elem.lines:
+    #         all_lines.append(
+    #             (
+    #                 [pt[0] for pt in line_points],
+    #                 [pt[1] for pt in line_points],
+    #             )
+    #         )
 
-    if elem.lines:
-        for line_points in elem.lines:
-            all_lines.append(
-                (
-                    [pt[0] for pt in line_points],
-                    [pt[1] for pt in line_points],
-                )
-            )
-
-    if all_lines:
-        source = ColumnDataSource(
-            data={
-                "xs": [line[0] for line in all_lines],
-                "ys": [line[1] for line in all_lines],
-                "s_start": base_data["s_start"] * len(all_lines),
-                "s_end": base_data["s_end"] * len(all_lines),
-                "name": base_data["name"] * len(all_lines),
-                "color": base_data["color"] * len(all_lines),
-            }
-        )
-        fig.multi_line(
-            xs="xs",
-            ys="ys",
-            line_width=elem.width,
-            color=color,
-            source=source,
-        )
-
+    # if all_lines:
+    #     source = ColumnDataSource(
+    #         data={
+    #             "xs": [line[0] for line in all_lines],
+    #             "ys": [line[1] for line in all_lines],
+    #             "s_start": base_data["s_start"] * len(all_lines),
+    #             "s_end": base_data["s_end"] * len(all_lines),
+    #             "name": base_data["name"] * len(all_lines),
+    #             "color": base_data["color"] * len(all_lines),
+    #         }
+    #     )
+    #     fig.multi_line(
+    #         xs="xs",
+    #         ys="ys",
+    #         line_width=elem.width,
+    #         color=color,
+    #         source=source,
+    #     )
+    #
     for annotation in elem.annotations:
         if annotation.text == elem.info["label_name"] and skip_labels:
             continue
