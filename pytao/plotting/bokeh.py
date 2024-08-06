@@ -63,6 +63,7 @@ from .plot import (
     PlotCurve,
     UnsupportedGraphError,
 )
+from .shapes import AnyShape
 from .settings import TaoGraphSettings
 from .types import FloatVariableInfo
 
@@ -381,6 +382,38 @@ def _plot_sbend_patch(fig: figure, patch: PlotPatchSbend):
 
     fig.bezier(x0=s2x0, y0=s2y0, cx0=s2cx0, cy0=s2cy0, x1=s2x1, y1=s2y1)
     fig.line(x=[s2x1, s1x0], y=[s2y1, s1y0])
+
+
+def _plot_shape(
+    fig: figure,
+    shape: AnyShape,
+    line_width: Optional[float] = None,
+):
+    for line in shape.to_lines():
+        _plot_curve_line(fig, line)
+    for patch in shape.to_patches():
+        if isinstance(patch, PlotPatchRectangle):
+            # TODO: using fig.rect requires the center position from the shape
+            # which is harder to glean from the patch
+            source = ColumnDataSource()
+            source.data["x"] = [(shape.x1 + shape.x2) / 2.0]
+            source.data["y"] = [(shape.y1 + shape.y2) / 2.0]
+            source.data["width"] = [patch.width]
+            source.data["height"] = [patch.height]
+            return fig.rect(
+                x="x",
+                y="y",
+                width="width",
+                height="height",
+                angle=math.radians(patch.angle),
+                fill_alpha=0.0,
+                line_alpha=1.0,
+                line_color=bokeh_color(patch.color),
+                line_width=line_width,
+                source=source,
+            )
+        else:
+            _plot_patch(fig, patch, line_width=line_width)
 
 
 def _patch_rect_to_points(patch: PlotPatchRectangle) -> Tuple[List[float], List[float]]:
@@ -959,13 +992,8 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         if orbits is not None:
             _plot_curve_symbols(fig, orbits.curve, name="floor_orbits")
         for elem in self.graph.elements:
-            for line in elem.lines:
-                _plot_curve_line(fig, line)
             if elem.shape is not None:
-                for line in elem.shape.to_lines():
-                    _plot_curve_line(fig, line)
-                for patch in elem.shape.to_patches():
-                    _plot_patch(fig, patch, line_width=elem.info["line_width"])
+                _plot_shape(fig, elem.shape, line_width=elem.info["line_width"])
 
             for annotation in elem.annotations:
                 _draw_annotation(
@@ -1054,8 +1082,9 @@ class BokehAppState:
 
     def save(
         self,
-        title: Optional[str] = None,
         filename: AnyPath = "",
+        *,
+        title: Optional[str] = None,
         width: Optional[int] = None,
         height: Optional[int] = None,
     ) -> Optional[pathlib.Path]:
@@ -1597,7 +1626,7 @@ class BokehGraphManager(GraphManager):
         save: Union[bool, str, pathlib.Path, None] = None,
         curves: Optional[Dict[int, TaoCurveSettings]] = None,
         settings: Optional[TaoGraphSettings] = None,
-    ):
+    ) -> Tuple[List[AnyGraph], BokehAppCreator]:
         """
         Plot a graph with Bokeh.
 

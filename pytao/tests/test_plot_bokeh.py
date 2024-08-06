@@ -4,10 +4,26 @@ import re
 import pytest
 from bokeh.plotting import output_file
 
+from pytao.plotting.bokeh import BokehAppState
+
 from .. import TaoStartup
-from .conftest import test_artifacts
+from .conftest import get_example, test_artifacts
 
 logger = logging.getLogger(__name__)
+
+
+def annotate_and_save(state: BokehAppState, test_name: str, filename_base: str):
+    assert len(state.pairs)
+    for pair in state.pairs:
+        fig = pair.fig
+        graph = pair.bgraph.graph
+        fig.title.text = (
+            f"{fig.title.text} ({graph.region_name}.{graph.graph_name} of {test_name})"
+        )
+
+    fn = test_artifacts / f"{filename_base}.html"
+    state.save(fn)
+    return fn
 
 
 def test_bokeh_manager(
@@ -23,15 +39,8 @@ def test_bokeh_manager(
         output_file(test_artifacts / f"{filename_base}.html")
 
         _, app = manager.plot_all()
-        state = app.create_state()
 
-        assert len(state.pairs)
-        for pair in state.pairs:
-            fig = pair.fig
-            graph = pair.bgraph.graph
-            fig.title.text = f"{fig.title.text} ({graph.region_name}.{graph.graph_name} of {request.node.name})"
-
-        state.save(test_artifacts / f"{filename_base}.html")
+        annotate_and_save(app.create_state(), request.node.name, filename_base)
 
         for region in list(manager.regions):
             manager.clear(region)
@@ -57,11 +66,16 @@ def test_bokeh_examples(
             tao.cmd("place r11 zphase")
 
         _, app = manager.plot_all()
-        state = app.create_state()
-        assert len(state.pairs)
-        for pair in state.pairs:
-            fig = pair.fig
-            graph = pair.bgraph.graph
-            fig.title.text = f"{fig.title.text} ({graph.region_name}.{graph.graph_name} of {request.node.name})"
+        annotate_and_save(app.create_state(), request.node.name, filename_base)
 
-        state.save(test_artifacts / f"{filename_base}.html")
+
+def test_bokeh_floor_plan(request: pytest.FixtureRequest):
+    tao_example = get_example("optics_matching")
+    name = re.sub(r"[/\\]", "_", request.node.name)
+    filename_base = f"bokeh_{name}"
+
+    tao_example.plot = "bokeh"
+
+    with tao_example.run_context(use_subprocess=True) as tao:
+        _, app = tao.bokeh.plot("floor_plan")
+        annotate_and_save(app.create_state(), request.node.name, filename_base)

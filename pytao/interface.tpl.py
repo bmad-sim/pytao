@@ -630,14 +630,16 @@ class Tao(TaoCore):
         return graph_manager
 
     @property
-    def matplotlib(self):
-        """Get a matplotlib graph manager."""
-        return self._get_graph_manager_by_key("mpl")
+    def matplotlib(self) -> MatplotlibGraphManager:
+        """Get the Matplotlib graph manager."""
+        return typing.cast(MatplotlibGraphManager, self._get_graph_manager_by_key("mpl"))
 
     @property
-    def bokeh(self):
-        """Get a matplotlib graph manager."""
-        return self._get_graph_manager_by_key("bokeh")
+    def bokeh(self) -> BokehGraphManager:
+        """Get the Bokeh graph manager."""
+        from .plotting.bokeh import BokehGraphManager
+
+        return typing.cast(BokehGraphManager, self._get_graph_manager_by_key("bokeh"))
 
     @property
     def plot_manager(

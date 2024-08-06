@@ -3,11 +3,17 @@ import math
 import re
 from typing import Union
 
+import bokeh.io
+import bokeh.layouts
+import bokeh.plotting
+
 import matplotlib.axes
 import matplotlib.pyplot as plt
 import pytest
 
-from pytao.plotting.shapes import BowTie, Box, Circle, Diamond, SBend, XBox, LetterX
+from ..plotting.shapes import BowTie, Box, Circle, Diamond, SBend, XBox, LetterX
+from ..plotting.bokeh import _plot_shape as plot_shape
+
 
 from .. import SubprocessTao, Tao
 from .conftest import test_artifacts
@@ -119,14 +125,14 @@ def make_shapes(width: float, height: float, angle_low: int, angle_high: int):
             yield shape
 
 
-def test_plot_shapes():
+def test_plot_shapes_mpl():
     fig = plt.figure(figsize=(12, 12))
     ax = fig.subplots()
     assert isinstance(ax, matplotlib.axes.Axes)
     for shape in make_shapes(width=1, height=2, angle_low=0, angle_high=90):
         shape.plot(ax)
 
-    plt.ylim(-5, 45)
+    plt.ylim(-5, 85)
 
     fig = plt.figure(figsize=(12, 12))
     ax = fig.subplots()
@@ -134,6 +140,20 @@ def test_plot_shapes():
     for shape in make_shapes(width=1, height=2, angle_low=90, angle_high=180):
         shape.plot(ax)
 
-    plt.ylim(-5, 45)
+    plt.ylim(-5, 85)
 
     plt.show()
+
+
+def test_plot_shapes_bokeh():
+    bokeh.io.output_file(test_artifacts / "test_plot_shapes_bokeh.html")
+
+    fig1 = bokeh.plotting.figure(match_aspect=True)
+    for shape in make_shapes(width=1, height=2, angle_low=0, angle_high=90):
+        plot_shape(fig1, shape, line_width=1)
+
+    fig2 = bokeh.plotting.figure(match_aspect=True)
+    for shape in make_shapes(width=1, height=2, angle_low=90, angle_high=180):
+        plot_shape(fig2, shape, line_width=1)
+
+    bokeh.io.save(bokeh.layouts.column([fig1, fig2]))

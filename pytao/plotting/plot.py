@@ -982,16 +982,10 @@ class FloorPlanElement:
     branch_index: int
     index: int
     info: FloorPlanElementInfo
-    lines: List[PlotCurveLine]
     annotations: List[PlotAnnotation]
     shape: Optional[shapes.AnyShape]
 
     def plot(self, ax: matplotlib.axes.Axes):
-        for line in self.lines:
-            line.plot(ax)
-        # TODO
-        # for patch in self.patches:
-        #     patch.plot(ax)
         if self.shape is not None:
             self.shape.plot(ax)
         for annotation in self.annotations:
@@ -1071,7 +1065,6 @@ class FloorPlanElement:
     ) -> FloorPlanElement:
         ele_key = ele_key.lower()
 
-        lines: List[PlotCurveLine] = []
         annotations: List[PlotAnnotation] = []
 
         if ":" in shape:
@@ -1150,7 +1143,6 @@ class FloorPlanElement:
             branch_index=branch_index,
             index=index,
             info=info,
-            lines=lines,
             annotations=annotations,
             shape=shape_instance,
         )
