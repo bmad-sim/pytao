@@ -48,8 +48,8 @@ class LayoutShape:
     @property
     def dimensions(self):
         return (
-            abs(self.s2 - self.s1),
-            abs(self.y2 - self.y1),
+            self.s2 - self.s1,
+            self.y2 - self.y1,
         )
 
     @property

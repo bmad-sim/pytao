@@ -5,13 +5,14 @@ from typing import List, Type, Union
 
 import bokeh.io
 import bokeh.layouts
+import bokeh.models
 import bokeh.plotting
 import matplotlib.axes
 import matplotlib.pyplot as plt
 import pytest
 
 from ..plotting import layout_shapes
-from ..plotting.bokeh import _plot_layout_shape as plot_layout_shape
+from ..plotting.bokeh import _plot_layout_shape as plot_layout_shape, get_tool_from_figure
 
 from .. import SubprocessTao, Tao
 from .conftest import test_artifacts
@@ -95,6 +96,9 @@ def test_plot_layout_shapes_bokeh():
     bokeh.io.output_file(test_artifacts / "test_plot_layout_shapes_bokeh.html")
 
     fig1 = bokeh.plotting.figure(match_aspect=True)
+    box_zoom = get_tool_from_figure(fig1, bokeh.models.BoxZoomTool)
+    if box_zoom is not None:
+        box_zoom.match_aspect = True
     for shape in make_shapes(
         width=1,
         height=2,

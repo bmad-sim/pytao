@@ -532,12 +532,15 @@ def _plot_patch(
         )
     if isinstance(patch, PlotPatchEllipse):
         source.data["x"], source.data["y"] = [patch.xy[0]], [patch.xy[1]]
+        source.data["width"] = [patch.width]
+        source.data["height"] = [patch.height]
+        source.data["angle"] = [math.radians(patch.angle)]
         return fig.ellipse(
             x="x",
             y="y",
-            width=[patch.width],
-            height=[patch.height],
-            angle=[math.radians(patch.angle)],
+            width="width",
+            height="height",
+            angle="angle",
             line_width=line_width,
             fill_alpha=int(patch.fill),
             source=source,
