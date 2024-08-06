@@ -47,10 +47,10 @@ class LayoutShape:
 
     @property
     def dimensions(self):
-        return [
+        return (
             abs(self.s2 - self.s1),
             abs(self.y2 - self.y1),
-        ]
+        )
 
     @property
     def center(self) -> Tuple[float, float]:

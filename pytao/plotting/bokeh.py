@@ -990,10 +990,12 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
             # looks with/without this setting
             match_aspect=True,
         )
-        if self.x_range is not None:
-            fig.x_range = self.x_range
-        if self.y_range is not None:
-            fig.y_range = self.y_range
+        # TODO: specifying limits for floor plans can cause malformed glyphs.
+        # Setting x_range/y_range apparently does away with `match_aspect`.
+        # if self.x_range is not None:
+        #     fig.x_range = self.x_range
+        # if self.y_range is not None:
+        #     fig.y_range = self.y_range
 
         box_zoom = get_tool_from_figure(fig, bokeh.models.BoxZoomTool)
         if box_zoom is not None:
@@ -1262,12 +1264,12 @@ class BokehAppCreator:
 
         for pair, xl, yl, (row, _col) in zip(pairs, self.xlim, self.ylim, rows_cols):
             fig = pair.fig
-            if xl is not None:
-                fig.x_range = bokeh.models.Range1d(*xl)
-            if yl is not None:
-                fig.y_range = bokeh.models.Range1d(*yl)
 
-            is_layout = isinstance(pair.bgraph, BokehLatticeLayoutGraph)
+            if not isinstance(pair.bgraph, BokehFloorPlanGraph):
+                if xl is not None:
+                    fig.x_range = bokeh.models.Range1d(*xl)
+                if yl is not None:
+                    fig.y_range = bokeh.models.Range1d(*yl)
 
             if self.graph_sizing_mode is not None:
                 fig.sizing_mode = self.graph_sizing_mode
