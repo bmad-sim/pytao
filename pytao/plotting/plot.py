@@ -985,35 +985,34 @@ class FloorPlanElement:
         else:
             _shape_prefix, shape = "", shape
 
-        shape_cls = None
-        shape_instance = None
+        shape_cls = {
+            "drift": shapes.DriftLine,
+            "kicker": shapes.KickerLine,
+            "box": shapes.Box,
+            "xbox": shapes.XBox,
+            "x": shapes.LetterX,
+            "bow_tie": shapes.BowTie,
+            "diamond": shapes.Diamond,
+            "circle": shapes.Circle,
+        }.get(shape, None)
 
-        if ele_key == "drift":
-            shape_cls = shapes.DriftLine
-        elif ele_key == "kicker":
-            shape_cls = shapes.KickerLine
-        elif ele_key == "sbend":
-            if shape == "box" and color:
-                shape_cls = shapes.SBend
-        elif off1 == 0 and off2 == 0 and color:
+        if ele_key == "sbend" and shape == "box":
+            # An SBend box is a potentially curvy shape
+            shape_cls = shapes.SBend
+        elif off1 == 0 and off2 == 0:
+            # Zero width/height -> just a line segment
             shape_cls = shapes.LineSegment
-        elif shape == "box" and color:
-            shape_cls = shapes.Box
-        elif shape == "xbox" and color:
-            shape_cls = shapes.XBox
-        elif shape == "x" and color:
-            shape_cls = shapes.LetterX
-        elif shape == "bow_tie" and color:
-            shape_cls = shapes.BowTie
-        elif shape == "diamond" and color:
-            shape_cls = shapes.Diamond
-        elif shape == "circle" and color:
-            shape_cls = shapes.Circle
 
-        elif shape:
+        if not color and shape_cls not in (shapes.DriftLine, shapes.KickerLine):
+            # Don't draw colorless shapes, with a couple exceptions
+            shape_cls = None
+
+        if shape and not shape_cls:
             raise ValueError(f"Unhandled shape: {shape}")
 
-        if shape_cls is not None:
+        if shape_cls is None:
+            shape_instance = None
+        else:
             shape_instance = shape_cls(
                 x1=x1,
                 x2=x2,
@@ -1027,6 +1026,7 @@ class FloorPlanElement:
                 angle_end=angle_end,
                 rel_angle_start=rel_angle_start,
                 rel_angle_end=rel_angle_end,
+                name=label_name,
             )
 
         if label_name and color:

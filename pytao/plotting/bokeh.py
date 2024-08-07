@@ -390,20 +390,48 @@ def _plot_layout_shape(
     shape: AnyLayoutShape,
     line_width: Optional[float] = None,
 ):
-    for line in shape.to_lines():
-        _plot_curve_line(fig, line)
+    lines = shape.to_lines()
+    source = ColumnDataSource(
+        data={
+            "xs": [line.xs for line in lines],
+            "ys": [line.ys for line in lines],
+            "name": [shape.name] * len(lines),
+        }
+    )
+    fig.multi_line(
+        xs="xs",
+        ys="ys",
+        color=bokeh_color(shape.color),
+        line_width=shape.line_width,
+        source=source,
+    )
     if isinstance(shape, LayoutShape):
         for patch in shape.to_patches():
             _plot_patch(fig, patch, line_width=line_width)
 
 
-def _plot_shape(
+def _plot_floor_plan_shape(
     fig: figure,
     shape: AnyShape,
     line_width: Optional[float] = None,
 ):
-    for line in shape.to_lines():
-        _plot_curve_line(fig, line)
+    lines = shape.to_lines()
+    if lines:
+        source = ColumnDataSource(
+            data={
+                "xs": [line.xs for line in lines],
+                "ys": [line.ys for line in lines],
+                "name": [shape.name] * len(lines),
+            }
+        )
+        fig.multi_line(
+            xs="xs",
+            ys="ys",
+            color=bokeh_color(shape.color),
+            line_width=shape.line_width,
+            source=source,
+        )
+
     for patch in shape.to_patches():
         if isinstance(patch, PlotPatchRectangle):
             # TODO: using fig.rect requires the center position from the shape
@@ -1013,7 +1041,7 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
             _plot_curve_symbols(fig, orbits.curve, name="floor_orbits")
         for elem in self.graph.elements:
             if elem.shape is not None:
-                _plot_shape(fig, elem.shape, line_width=elem.info["line_width"])
+                _plot_floor_plan_shape(fig, elem.shape, line_width=elem.info["line_width"])
 
             for annotation in elem.annotations:
                 _draw_annotation(

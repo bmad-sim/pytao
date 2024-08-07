@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import pytest
 
 from ..plotting.shapes import BowTie, Box, Circle, Diamond, SBend, XBox, LetterX
-from ..plotting.bokeh import _plot_shape as plot_shape
+from ..plotting.bokeh import _plot_floor_plan_shape as plot_floor_plan_shape
 
 
 from .. import SubprocessTao, Tao
@@ -148,10 +148,10 @@ def test_plot_shapes_bokeh():
 
     fig1 = bokeh.plotting.figure(match_aspect=True)
     for shape in make_shapes(width=1, height=2, angle_low=0, angle_high=90):
-        plot_shape(fig1, shape, line_width=1)
+        plot_floor_plan_shape(fig1, shape, line_width=1)
 
     fig2 = bokeh.plotting.figure(match_aspect=True)
     for shape in make_shapes(width=1, height=2, angle_low=90, angle_high=180):
-        plot_shape(fig2, shape, line_width=1)
+        plot_floor_plan_shape(fig2, shape, line_width=1)
 
     bokeh.io.save(bokeh.layouts.column([fig1, fig2]))

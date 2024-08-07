@@ -44,6 +44,7 @@ class Shape:
     rel_angle_end: float = 0.0  # Only for sbend
     line_width: float = 1.0
     color: str = "black"
+    name: str = ""
 
     @property
     def corner_vertices(self):
