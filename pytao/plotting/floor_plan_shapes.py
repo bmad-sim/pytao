@@ -48,17 +48,17 @@ class Shape:
 
     @property
     def corner_vertices(self):
-        px0 = self.x1 + self.off2 * np.sin(self.angle_start)
-        py0 = self.y1 - self.off2 * np.cos(self.angle_start)
+        px0 = self.x1 + self.off2 * np.sin(self.angle_start)  # x1 + off2 * sin
+        py0 = self.y1 - self.off2 * np.cos(self.angle_start)  # y1 - off2 * cos
 
-        px1 = self.x1 - self.off1 * np.sin(self.angle_start)
-        py1 = self.y1 + self.off1 * np.cos(self.angle_start)
+        px1 = self.x1 - self.off1 * np.sin(self.angle_start)  # x1 - off1 * sin
+        py1 = self.y1 + self.off1 * np.cos(self.angle_start)  # y1 + off1 * cos
 
-        px2 = self.x2 - self.off1 * np.sin(self.angle_start)
-        py2 = self.y2 + self.off1 * np.cos(self.angle_start)
+        px2 = self.x2 - self.off1 * np.sin(self.angle_start)  # x2 - off1 * sin
+        py2 = self.y2 + self.off1 * np.cos(self.angle_start)  # y2 + off1 * cos
 
-        px3 = self.x2 + self.off2 * np.sin(self.angle_start)
-        py3 = self.y2 - self.off2 * np.cos(self.angle_start)
+        px3 = self.x2 + self.off2 * np.sin(self.angle_start)  # x2 + off2 * sin
+        py3 = self.y2 - self.off2 * np.cos(self.angle_start)  # y2 - off2 * cos
         return [
             [px0, px1, px2, px3],
             [py0, py1, py2, py3],

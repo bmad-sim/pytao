@@ -28,7 +28,6 @@ import bokeh.io
 import bokeh.layouts
 import bokeh.models
 import bokeh.plotting
-import bokeh.resources
 import numpy as np
 from bokeh.core.enums import SizingModeType
 from bokeh.document.callbacks import EventCallback
@@ -64,7 +63,7 @@ from .plot import (
     PlotCurve,
     UnsupportedGraphError,
 )
-from .floor_plan_shapes import AnyFloorPlanShape
+from . import floor_plan_shapes
 from .settings import TaoGraphSettings
 from .types import FloatVariableInfo
 
@@ -101,6 +100,7 @@ class _Defaults:
     tools: str = "pan,wheel_zoom,box_zoom,reset,hover,crosshair"
     grid_toolbar_location: str = "right"
     lattice_layout_tools: str = "pan,wheel_zoom,box_zoom,reset,hover,crosshair"
+    floor_plan_tools: str = "pan,wheel_zoom,box_zoom,reset,hover,crosshair"
 
     @classmethod
     def get_size_for_class(
@@ -126,6 +126,7 @@ def set_defaults(
     tools: Optional[str] = None,
     grid_toolbar_location: Optional[str] = None,
     lattice_layout_tools: Optional[str] = None,
+    floor_plan_tools: Optional[str] = None,
 ):
     """Change defaults used for Bokeh plots."""
     if width is not None:
@@ -144,6 +145,8 @@ def set_defaults(
         _Defaults.grid_toolbar_location = grid_toolbar_location
     if lattice_layout_tools is not None:
         _Defaults.lattice_layout_tools = lattice_layout_tools
+    if floor_plan_tools is not None:
+        _Defaults.floor_plan_tools = floor_plan_tools
 
 
 def _get_curve_data(curve: PlotCurve) -> CurveData:
@@ -389,6 +392,8 @@ def _plot_layout_shape(
     fig: figure,
     shape: AnyLayoutShape,
     line_width: Optional[float] = None,
+    s_start: float = 0.0,
+    s_end: float = 0.0,
 ):
     lines = shape.to_lines()
     source = ColumnDataSource(
@@ -396,6 +401,8 @@ def _plot_layout_shape(
             "xs": [line.xs for line in lines],
             "ys": [line.ys for line in lines],
             "name": [shape.name] * len(lines),
+            "s_start": [s_start] * len(lines),
+            "s_end": [s_end] * len(lines),
         }
     )
     fig.multi_line(
@@ -412,9 +419,37 @@ def _plot_layout_shape(
 
 def _plot_floor_plan_shape(
     fig: figure,
-    shape: AnyFloorPlanShape,
+    shape: floor_plan_shapes.AnyFloorPlanShape,
     line_width: Optional[float] = None,
 ):
+    if isinstance(
+        shape,
+        (
+            # floor_plan_shapes.Box,
+            floor_plan_shapes.XBox,
+            floor_plan_shapes.BowTie,
+            floor_plan_shapes.Diamond,
+        ),
+    ):
+        vx, vy = shape.vertices
+        source = ColumnDataSource(
+            data={
+                "xs": [[[vx]]],
+                "ys": [[[vy]]],
+                "name": [shape.name],
+            }
+        )
+        fig.multi_polygons(
+            xs="xs",
+            ys="ys",
+            color=bokeh_color(shape.color),
+            line_width=shape.line_width,
+            source=source,
+            fill_alpha=0.0,
+        )
+
+        return
+
     lines = shape.to_lines()
     if lines:
         source = ColumnDataSource(
@@ -584,66 +619,17 @@ def _draw_layout_element(
     skip_labels: bool = True,
 ):
     color = bokeh_color(elem.color)
-    base_data = {
-        "s_start": [elem.info["ele_s_start"]],
-        "s_end": [elem.info["ele_s_end"]],
-        "name": [elem.info["label_name"]],
-        "color": [color],
-    }
-    # all_lines: List[Tuple[List[float], List[float]]] = []
     if elem.shape:
-        _plot_layout_shape(fig, elem.shape)
-    # for patch in elem.patches:
-    #     source = ColumnDataSource(data=dict(base_data))
-    #     if isinstance(patch, PlotPatchRectangle):
-    #         all_lines.append(_patch_rect_to_points(patch))
-    #     elif isinstance(patch, PlotPatchPolygon):
-    #         all_lines.append(
-    #             (
-    #                 [p[0] for p in patch.vertices + patch.vertices[:1]],
-    #                 [p[1] for p in patch.vertices + patch.vertices[:1]],
-    #             )
-    #         )
-    #     else:
-    #         _plot_patch(fig, patch, line_width=elem.width, source=source)
-    #
-    # if elem.lines:
-    #     for line_points in elem.lines:
-    #         all_lines.append(
-    #             (
-    #                 [pt[0] for pt in line_points],
-    #                 [pt[1] for pt in line_points],
-    #             )
-    #         )
-
-    # if all_lines:
-    #     source = ColumnDataSource(
-    #         data={
-    #             "xs": [line[0] for line in all_lines],
-    #             "ys": [line[1] for line in all_lines],
-    #             "s_start": base_data["s_start"] * len(all_lines),
-    #             "s_end": base_data["s_end"] * len(all_lines),
-    #             "name": base_data["name"] * len(all_lines),
-    #             "color": base_data["color"] * len(all_lines),
-    #         }
-    #     )
-    #     fig.multi_line(
-    #         xs="xs",
-    #         ys="ys",
-    #         line_width=elem.width,
-    #         color=color,
-    #         source=source,
-    #     )
-    #
+        _plot_layout_shape(
+            fig,
+            elem.shape,
+            s_start=elem.info["ele_s_start"],
+            s_end=elem.info["ele_s_end"],
+        )
     for annotation in elem.annotations:
         if annotation.text == elem.info["label_name"] and skip_labels:
             continue
-        _draw_annotation(
-            fig,
-            annotation,
-            color=color,
-            source=ColumnDataSource(data=dict(base_data)),
-        )
+        _draw_annotation(fig, annotation, color=color)
 
 
 def _fields_to_data_source(
@@ -768,10 +754,16 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
     def create_figure(
         self,
         *,
-        tools: str = "pan,wheel_zoom,box_zoom,save,reset,crosshair",
+        tools: Optional[str] = None,
         toolbar_location: str = "above",
-        add_named_hover_tool: bool = True,
     ) -> figure:
+        if tools is None:
+            tools = _Defaults.lattice_layout_tools
+
+        add_named_hover_tool = isinstance(tools, str) and "hover" in tools.split()
+        if add_named_hover_tool:
+            tools = ",".join(tool for tool in tools.split() if tool != "hover")
+
         graph = self.graph
         fig = figure(
             title=pgplot.mathjax_string(graph.title),
@@ -781,8 +773,6 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
             tools=tools,
             aspect_ratio=self.aspect_ratio,
             sizing_mode=self.sizing_mode,
-            # width=self.width,
-            # height=self.height,
         )
         if add_named_hover_tool:
             hover = bokeh.models.HoverTool(
@@ -911,11 +901,15 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
     def create_figure(
         self,
         *,
-        tools: str = "pan,wheel_zoom,box_zoom,save,reset,hover,crosshair",
+        tools: Optional[str] = None,
         toolbar_location: str = "above",
         sizing_mode: SizingModeType = "inherit",
     ) -> figure:
         graph = self.graph
+
+        if tools is None:
+            tools = _Defaults.tools
+
         fig = figure(
             title=pgplot.mathjax_string(graph.title),
             x_axis_label=pgplot.mathjax_string(graph.xlabel),
@@ -1002,10 +996,17 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
     def create_figure(
         self,
         *,
-        tools: str = "pan,wheel_zoom,box_zoom,save,reset,hover",
+        tools: Optional[str] = None,
         toolbar_location: str = "above",
         sizing_mode: SizingModeType = "inherit",
     ) -> figure:
+        if tools is None:
+            tools = _Defaults.floor_plan_tools
+
+        add_named_hover_tool = isinstance(tools, str) and "hover" in tools.split()
+        if add_named_hover_tool:
+            tools = ",".join(tool for tool in tools.split() if tool != "hover")
+
         graph = self.graph
         fig = figure(
             title=pgplot.mathjax_string(graph.title),
@@ -1028,6 +1029,18 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         # if self.y_range is not None:
         #     fig.y_range = self.y_range
 
+        if add_named_hover_tool:
+            hover = bokeh.models.HoverTool(
+                tooltips=[
+                    ("name", "@name"),
+                    # ("Position [m]", "(@x, @y)"),
+                ],
+                mode="mouse",
+                point_policy="follow_mouse",
+                line_policy="none",
+            )
+
+            fig.add_tools(hover)
         box_zoom = get_tool_from_figure(fig, bokeh.models.BoxZoomTool)
         if box_zoom is not None:
             box_zoom.match_aspect = True
@@ -1070,8 +1083,9 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
             show_orbits_toggle.on_change("active", orbits_toggled)
             controls.append(show_orbits_toggle)
 
-        controls_row = [bokeh.layouts.row(controls)] if controls else []
-        return [bokeh.layouts.column([*controls_row, fig])]
+        if controls:
+            return [bokeh.layouts.row(controls)]
+        return []
 
 
 AnyBokehGraph = Union[BokehBasicGraph, BokehLatticeLayoutGraph, BokehFloorPlanGraph]
@@ -1200,7 +1214,7 @@ class BokehAppCreator:
         if len(ylim) < len(graphs):
             ylim.extend([ylim[-1]] * (len(graphs) - len(ylim)))
 
-        if len(graphs) == 1 and isinstance(graphs[0], BokehLatticeLayoutGraph):
+        if any(isinstance(graph, LatticeLayoutGraph) for graph in graphs):
             include_layout = False
         elif not any(graph.is_s_plot for graph in graphs):
             include_layout = False
@@ -1434,6 +1448,11 @@ class BokehAppCreator:
             widget_models.insert(0, bokeh.layouts.row([update_button, num_points_slider]))
 
             self._monitor_range_updates(state)
+
+        for pair in state.pairs:
+            if isinstance(pair.bgraph, BokehFloorPlanGraph):
+                widget_models.extend(pair.bgraph.create_widgets(pair.fig))
+                break
 
         gridplot = state.to_gridplot(
             width=self.width,

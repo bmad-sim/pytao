@@ -6,6 +6,7 @@ from typing import Union
 import bokeh.io
 import bokeh.layouts
 import bokeh.plotting
+import bokeh.resources
 
 import matplotlib.axes
 import matplotlib.pyplot as plt
@@ -123,7 +124,7 @@ def make_shapes(width: float, height: float, angle_low: int, angle_high: int):
             yield shape
 
 
-def test_plot_shapes_mpl():
+def test_floor_plan_shapes_mpl():
     fig = plt.figure(figsize=(12, 12))
     ax = fig.subplots()
     assert isinstance(ax, matplotlib.axes.Axes)
@@ -143,8 +144,8 @@ def test_plot_shapes_mpl():
     plt.show()
 
 
-def test_plot_shapes_bokeh():
-    bokeh.io.output_file(test_artifacts / "test_plot_shapes_bokeh.html")
+def test_floor_plan_shapes_bokeh(request: pytest.FixtureRequest):
+    bokeh.io.output_file(test_artifacts / f"{request.node.name}.html")
 
     fig1 = bokeh.plotting.figure(match_aspect=True)
     for shape in make_shapes(width=1, height=2, angle_low=0, angle_high=90):
@@ -154,4 +155,4 @@ def test_plot_shapes_bokeh():
     for shape in make_shapes(width=1, height=2, angle_low=90, angle_high=180):
         plot_floor_plan_shape(fig2, shape, line_width=1)
 
-    bokeh.io.save(bokeh.layouts.column([fig1, fig2]))
+    bokeh.io.save(bokeh.layouts.column([fig1, fig2]), resources=bokeh.resources.INLINE)
