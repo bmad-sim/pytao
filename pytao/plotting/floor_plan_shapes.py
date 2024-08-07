@@ -479,7 +479,7 @@ class SBend(Shape):
             patch.plot(ax)
 
 
-AnyShape = Union[
+AnyFloorPlanShape = Union[
     BowTie,
     Box,
     Circle,

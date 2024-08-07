@@ -64,7 +64,7 @@ from .plot import (
     PlotCurve,
     UnsupportedGraphError,
 )
-from .shapes import AnyShape
+from .floor_plan_shapes import AnyFloorPlanShape
 from .settings import TaoGraphSettings
 from .types import FloatVariableInfo
 
@@ -412,7 +412,7 @@ def _plot_layout_shape(
 
 def _plot_floor_plan_shape(
     fig: figure,
-    shape: AnyShape,
+    shape: AnyFloorPlanShape,
     line_width: Optional[float] = None,
 ):
     lines = shape.to_lines()

@@ -34,7 +34,7 @@ from pydantic.fields import Field
 
 from pytao.plotting.settings import TaoGraphSettings
 
-from . import pgplot, layout_shapes, shapes
+from . import pgplot, layout_shapes, floor_plan_shapes
 from .curves import (
     TaoCurveSettings,
     CurveIndexToCurve,
@@ -896,7 +896,7 @@ class FloorPlanElement:
     index: int
     info: FloorPlanElementInfo
     annotations: List[PlotAnnotation]
-    shape: Optional[shapes.AnyShape]
+    shape: Optional[floor_plan_shapes.AnyFloorPlanShape]
 
     def plot(self, ax: matplotlib.axes.Axes):
         if self.shape is not None:
@@ -986,24 +986,27 @@ class FloorPlanElement:
             _shape_prefix, shape = "", shape
 
         shape_cls = {
-            "drift": shapes.DriftLine,
-            "kicker": shapes.KickerLine,
-            "box": shapes.Box,
-            "xbox": shapes.XBox,
-            "x": shapes.LetterX,
-            "bow_tie": shapes.BowTie,
-            "diamond": shapes.Diamond,
-            "circle": shapes.Circle,
+            "drift": floor_plan_shapes.DriftLine,
+            "kicker": floor_plan_shapes.KickerLine,
+            "box": floor_plan_shapes.Box,
+            "xbox": floor_plan_shapes.XBox,
+            "x": floor_plan_shapes.LetterX,
+            "bow_tie": floor_plan_shapes.BowTie,
+            "diamond": floor_plan_shapes.Diamond,
+            "circle": floor_plan_shapes.Circle,
         }.get(shape, None)
 
         if ele_key == "sbend" and shape == "box":
             # An SBend box is a potentially curvy shape
-            shape_cls = shapes.SBend
+            shape_cls = floor_plan_shapes.SBend
         elif off1 == 0 and off2 == 0:
             # Zero width/height -> just a line segment
-            shape_cls = shapes.LineSegment
+            shape_cls = floor_plan_shapes.LineSegment
 
-        if not color and shape_cls not in (shapes.DriftLine, shapes.KickerLine):
+        if not color and shape_cls not in {
+            floor_plan_shapes.DriftLine,
+            floor_plan_shapes.KickerLine,
+        }:
             # Don't draw colorless shapes, with a couple exceptions
             shape_cls = None
 
