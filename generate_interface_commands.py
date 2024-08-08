@@ -8,16 +8,27 @@ import json
 import keyword
 import os
 import shutil
+import sys
 
 CMDS_OUTPUT = "./pytao/interface_commands.py"
 TEST_OUTPUT = "./pytao/tests/test_interface_commands.py"
 
-# ## Read the JSON File
-f_name = f'{os.getenv("ACC_ROOT_DIR")}/tao/doc/python-interface-commands.json'
-print(f"Reading JSON from: {f_name}")
+tao_docs = os.path.join(os.getenv("ACC_ROOT_DIR", "../bmad"), "tao", "doc")
 
-with open(f_name, "r") as f:
-    cmds_from_tao = json.load(f)
+# ## Read the JSON File
+for command_name in ("pipe", "python"):
+    f_name = os.path.join(tao_docs, f"{command_name}-interface-commands.json")
+    if os.path.exists(f_name):
+        print(f"Reading JSON from: {f_name}")
+
+        with open(f_name, "r") as f:
+            cmds_from_tao = json.load(f)
+        break
+else:
+    print(
+        f"Unable to find an interface commands JSON file in path: {tao_docs})", file=sys.stderr
+    )
+    exit(1)
 
 with open("interface.tpl.py", "r") as f:
     interface_tpl_py = f.read()
