@@ -178,14 +178,11 @@ class GraphBase:
         raise_if_invalid: bool = False,
     ):
         try:
-            graphs = [
-                graph.get_graph_info()
-                for graph in manager.prepare_graphs_by_name(
-                    region_name=self.region_name,
-                    graph_name=self.graph_name,
-                    ignore_invalid=False,
-                )
-            ]
+            graphs = manager.prepare_graphs_by_name(
+                region_name=self.region_name,
+                graph_name=self.graph_name,
+                ignore_invalid=False,
+            )
         except GraphInvalidError:
             if raise_if_invalid:
                 raise
@@ -200,10 +197,6 @@ class GraphBase:
                     )
                 return graph
         raise RuntimeError("Plot not found after update?")
-
-    def get_graph_info(self):
-        # For wrapping compatibility; messy cleanup reminder
-        return self
 
     def _setup_axis(self, ax: matplotlib.axes.Axes, xticks: bool = True, yticks: bool = True):
         if not self.show_axes:
@@ -812,10 +805,16 @@ class LatticeLayoutGraph(GraphBase):
         return ax
 
     @property
+    def y_min(self) -> float:
+        ele_y1s = [elem.info["y1"] for elem in self.elements]
+        ele_y2s = [elem.info["y2"] for elem in self.elements]
+        return min(ele_y1s + ele_y2s)
+
+    @property
     def y_max(self) -> float:
         ele_y1s = [elem.info["y1"] for elem in self.elements]
         ele_y2s = [elem.info["y2"] for elem in self.elements]
-        return max(max(ele_y1s), max(ele_y2s))
+        return max(ele_y1s + ele_y2s)
 
     @classmethod
     def from_tao(
@@ -827,6 +826,7 @@ class LatticeLayoutGraph(GraphBase):
         branch: Optional[int] = None,
         info: Optional[PlotGraphInfo] = None,
         plot_page: Optional[PlotPage] = None,
+        clamp_ylim: bool = True,
     ) -> LatticeLayoutGraph:
         if info is None:
             try:
@@ -864,7 +864,6 @@ class LatticeLayoutGraph(GraphBase):
 
         ele_y2s = [elem["y2"] for elem in all_elem_info]
         y2_floor = -max(ele_y2s)  # Note negative sign
-
         elements = [
             LatticeLayoutElement.from_info(
                 graph_info=info,
@@ -1339,6 +1338,8 @@ class GraphManager(ABC):
     regions: Dict[str, List[AnyGraph]]
     _to_place: Dict[str, str]
     _graph_name_to_regions: Dict[str, Set[str]]
+    layout_template: str = "lat_layout"
+    floor_plan_template: str = "floor_plan"
 
     def __init__(self, tao: Tao) -> None:
         self.tao = tao
@@ -1372,7 +1373,7 @@ class GraphManager(ABC):
                 if isinstance(graph, LatticeLayoutGraph):
                     return graph
 
-        (graph,) = self.place("lat_layout")
+        (graph,) = self.place(self.layout_template)
         assert isinstance(graph, LatticeLayoutGraph)
         return graph
 
@@ -1383,7 +1384,7 @@ class GraphManager(ABC):
             for graph in region:
                 if isinstance(graph, FloorPlanGraph):
                     return graph
-        (graph,) = self.place("floor_plan")
+        (graph,) = self.place(self.floor_plan_template)
         assert isinstance(graph, FloorPlanGraph)
         return graph
 

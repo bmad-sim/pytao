@@ -95,13 +95,14 @@ class _Defaults:
     width: int = 400
     height: int = 400
     stacked_height: int = 200
-    layout_height: int = 150
+    layout_height: int = 100
     show_bokeh_logo: bool = False
     palette: str = "Magma256"
     tools: str = "pan,wheel_zoom,box_zoom,reset,hover,crosshair"
     grid_toolbar_location: str = "right"
     lattice_layout_tools: str = "pan,wheel_zoom,box_zoom,reset,hover,crosshair"
     floor_plan_tools: str = "pan,wheel_zoom,box_zoom,reset,hover,crosshair"
+    limit_scale_factor: float = 1.01
 
     @classmethod
     def get_size_for_class(
@@ -669,6 +670,9 @@ class BokehGraphBase(ABC, Generic[TGraph]):
         aspect_ratio: Optional[float] = None,  # w/h
         width: Optional[int] = None,
         height: Optional[int] = None,
+        x_range: Optional[bokeh.models.Range] = None,
+        y_range: Optional[bokeh.models.Range] = None,
+        limit_scale_factor: Optional[float] = None,
     ) -> None:
         self.graph = graph
         self.manager = manager
@@ -676,11 +680,14 @@ class BokehGraphBase(ABC, Generic[TGraph]):
         self.width = width
         self.height = height
         self.aspect_ratio = aspect_ratio
-        self.x_range = None
-        self.y_range = None
 
-    def get_graph_info(self) -> TGraph:
-        return self.graph
+        limit_scale_factor = limit_scale_factor or _Defaults.limit_scale_factor
+        self.x_range = x_range or bokeh.models.Range1d(
+            *util.apply_factor_to_limits(*graph.xlim, limit_scale_factor)
+        )
+        self.y_range = y_range or bokeh.models.Range1d(
+            *util.apply_factor_to_limits(*graph.ylim, limit_scale_factor)
+        )
 
     def to_html(
         self,
@@ -733,7 +740,7 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
         sizing_mode: SizingModeType = "inherit",
         width: Optional[int] = None,
         height: Optional[int] = None,
-        aspect_ratio: Optional[float] = 4.0,  # w/h
+        aspect_ratio: Optional[float] = None,  # w/h
     ) -> None:
         super().__init__(
             manager=manager,
@@ -803,6 +810,10 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
 
         for elem in self.graph.elements:
             _draw_layout_element(fig, elem, skip_labels=True)
+
+        fig.renderers.append(
+            bokeh.models.Span(location=0, dimension="width", line_color="black", line_width=1)
+        )
 
         if self.x_range is not None:
             fig.x_range = self.x_range
@@ -1338,7 +1349,8 @@ class BokehAppCreator:
 
         for pair in layout_pairs:
             if pair.fig is not None:
-                pair.fig.min_border_bottom = 40
+                # pair.fig.min_border_bottom = 80
+                pass
 
         for row in rows:
             for fig in row:

@@ -60,6 +60,12 @@ def intersect(L1: Line, L2: Line) -> Intersection:
     return x, y
 
 
+def apply_factor_to_limits(low: float, high: float, factor: float) -> Tuple[float, float]:
+    center = (high + low) / 2
+    span = factor * (high - low)
+    return center - span / 2.0, center + span / 2.0
+
+
 @functools.cache
 def is_jupyter() -> bool:
     """
