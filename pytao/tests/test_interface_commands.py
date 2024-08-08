@@ -12,7 +12,7 @@ def test_beam_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/csr_beam_tracking/tao.init",
             external_plotting=False,
         ) as tao:
             tao.beam(ix_uni="1", ix_branch="0", verbose=True)
@@ -22,7 +22,7 @@ def test_beam_init_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/csr_beam_tracking/tao.init",
             external_plotting=False,
         ) as tao:
             tao.beam_init(ix_uni="1", ix_branch="0", verbose=True)
@@ -32,7 +32,7 @@ def test_bmad_com_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.bmad_com(verbose=True)
@@ -42,7 +42,7 @@ def test_branch1_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.branch1(ix_uni="1", ix_branch="0", verbose=True)
@@ -52,7 +52,7 @@ def test_bunch_comb_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/csr_beam_tracking/tao.init",
             external_plotting=False,
         ) as tao:
             tao.bunch_comb(who="x.beta", verbose=True)
@@ -62,7 +62,7 @@ def test_bunch_params_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/csr_beam_tracking/tao.init",
             external_plotting=False,
         ) as tao:
             tao.bunch_params(ele_id="end", which="model", verbose=True)
@@ -72,7 +72,7 @@ def test_bunch1_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/csr_beam_tracking/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/csr_beam_tracking/tao.init",
             external_plotting=False,
         ) as tao:
             tao.bunch1(ele_id="end", coordinate="x", which="model", ix_bunch="1", verbose=True)
@@ -82,7 +82,7 @@ def test_building_wall_list_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall",
             external_plotting=False,
         ) as tao:
             tao.building_wall_list(ix_section="", verbose=True)
@@ -92,7 +92,7 @@ def test_building_wall_list_2(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall",
             external_plotting=False,
         ) as tao:
             tao.building_wall_list(ix_section="1", verbose=True)
@@ -102,7 +102,7 @@ def test_building_wall_graph_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall",
             external_plotting=False,
         ) as tao:
             tao.building_wall_graph(graph="floor_plan.g", verbose=True)
@@ -112,7 +112,7 @@ def test_building_wall_point_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall",
             external_plotting=False,
         ) as tao:
             tao.building_wall_point(
@@ -131,7 +131,7 @@ def test_building_wall_section_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.building_wall_section(
@@ -143,7 +143,7 @@ def test_constraints_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.constraints(who="data", verbose=True)
@@ -153,7 +153,7 @@ def test_constraints_2(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.constraints(who="var", verbose=True)
@@ -163,7 +163,7 @@ def test_data_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.data(ix_uni="", d2_name="twiss", d1_name="end", dat_index="1", verbose=True)
@@ -173,7 +173,7 @@ def test_data_2(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.data(ix_uni="1", d2_name="twiss", d1_name="end", dat_index="1", verbose=True)
@@ -183,7 +183,7 @@ def test_data_d_array_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.data_d_array(ix_uni="1", d2_name="twiss", d1_name="end", verbose=True)
@@ -193,7 +193,7 @@ def test_data_d1_array_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.data_d1_array(ix_uni="1", d2_datum="twiss", verbose=True)
@@ -203,7 +203,7 @@ def test_data_d2_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.data_d2(ix_uni="1", d2_name="twiss", verbose=True)
@@ -213,7 +213,7 @@ def test_data_d2_array_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.data_d2_array(ix_uni="1", verbose=True)
@@ -223,7 +223,7 @@ def test_data_d2_create_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.data_d2_create(
@@ -239,7 +239,7 @@ def test_data_d2_destroy_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.data_d2_destroy(d2_name="orbit", verbose=True)
@@ -249,7 +249,7 @@ def test_data_parameter_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.data_parameter(data_array="twiss.end", parameter="model_value", verbose=True)
@@ -259,7 +259,7 @@ def test_data_set_design_value_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.data_set_design_value(verbose=True)
@@ -269,7 +269,7 @@ def test_datum_create_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.datum_create(
@@ -298,7 +298,7 @@ def test_datum_has_ele_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.datum_has_ele(datum_type="twiss.end", verbose=True)
@@ -308,7 +308,7 @@ def test_derivative_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.derivative(verbose=True)
@@ -318,7 +318,7 @@ def test_ele_ac_kicker_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.ele_ac_kicker(ele_id="1@0>>1", which="model", verbose=True)
@@ -328,7 +328,7 @@ def test_ele_cartesian_map_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_em_field",
             external_plotting=False,
         ) as tao:
             tao.ele_cartesian_map(
@@ -340,7 +340,7 @@ def test_ele_chamber_wall_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall3d",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall3d",
             external_plotting=False,
         ) as tao:
             tao.ele_chamber_wall(
@@ -352,7 +352,7 @@ def test_ele_control_var_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.ele_control_var(ele_id="1@0>>873", which="model", verbose=True)
@@ -362,7 +362,7 @@ def test_ele_cylindrical_map_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_em_field",
             external_plotting=False,
         ) as tao:
             tao.ele_cylindrical_map(
@@ -374,7 +374,7 @@ def test_ele_elec_multipoles_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.ele_elec_multipoles(ele_id="1@0>>1", which="model", verbose=True)
@@ -384,7 +384,7 @@ def test_ele_floor_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.ele_floor(ele_id="1@0>>1", which="model", where="", verbose=True)
@@ -394,7 +394,7 @@ def test_ele_floor_2(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.ele_floor(ele_id="1@0>>1", which="model", where="center", verbose=True)
@@ -404,7 +404,7 @@ def test_ele_gen_attribs_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.ele_gen_attribs(ele_id="1@0>>1", which="model", verbose=True)
@@ -414,7 +414,7 @@ def test_ele_gen_grad_map_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_em_field",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_em_field",
             external_plotting=False,
         ) as tao:
             tao.ele_gen_grad_map(
@@ -426,7 +426,7 @@ def test_ele_grid_field_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_grid",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_grid",
             external_plotting=False,
         ) as tao:
             tao.ele_grid_field(
@@ -438,7 +438,7 @@ def test_ele_head_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.ele_head(ele_id="1@0>>1", which="model", verbose=True)
@@ -448,7 +448,7 @@ def test_ele_lord_slave_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.ele_lord_slave(ele_id="1@0>>1", which="model", verbose=True)
@@ -458,7 +458,7 @@ def test_ele_mat6_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.ele_mat6(ele_id="1@0>>1", which="model", who="mat6", verbose=True)
@@ -468,7 +468,7 @@ def test_ele_methods_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.ele_methods(ele_id="1@0>>1", which="model", verbose=True)
@@ -478,7 +478,7 @@ def test_ele_multipoles_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.ele_multipoles(ele_id="1@0>>1", which="model", verbose=True)
@@ -488,7 +488,7 @@ def test_ele_orbit_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.ele_orbit(ele_id="1@0>>1", which="model", verbose=True)
@@ -498,7 +498,7 @@ def test_ele_param_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_photon",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_photon",
             external_plotting=False,
         ) as tao:
             tao.ele_param(ele_id="1@0>>1", which="model", who="orbit.vec.1", verbose=True)
@@ -508,7 +508,7 @@ def test_ele_photon_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_photon",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_photon",
             external_plotting=False,
         ) as tao:
             tao.ele_photon(ele_id="1@0>>1", which="model", who="base", verbose=True)
@@ -518,7 +518,7 @@ def test_ele_spin_taylor_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_spin",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_spin",
             external_plotting=False,
         ) as tao:
             tao.ele_spin_taylor(ele_id="1@0>>2", which="model", verbose=True)
@@ -528,7 +528,7 @@ def test_ele_taylor_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_taylor",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_taylor",
             external_plotting=False,
         ) as tao:
             tao.ele_taylor(ele_id="1@0>>34", which="model", verbose=True)
@@ -538,7 +538,7 @@ def test_ele_twiss_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.ele_twiss(ele_id="1@0>>1", which="model", verbose=True)
@@ -548,7 +548,7 @@ def test_ele_wake_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wake",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wake",
             external_plotting=False,
         ) as tao:
             tao.ele_wake(ele_id="1@0>>1", which="model", who="sr_long", verbose=True)
@@ -558,7 +558,7 @@ def test_ele_wall3d_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_wall3d",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall3d",
             external_plotting=False,
         ) as tao:
             tao.ele_wall3d(
@@ -570,7 +570,7 @@ def test_evaluate_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.evaluate(expression="data::cbar.11[1:10]|model", verbose=True)
@@ -580,7 +580,7 @@ def test_em_field_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.em_field(
@@ -592,7 +592,7 @@ def test_enum_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.enum(enum_name="tracking_method", verbose=True)
@@ -602,7 +602,7 @@ def test_floor_plan_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.floor_plan(graph="r13.g", verbose=True)
@@ -612,7 +612,7 @@ def test_floor_orbit_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_floor_orbit",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_floor_orbit",
             external_plotting=False,
         ) as tao:
             tao.floor_orbit(graph="r33.g", verbose=True)
@@ -622,7 +622,7 @@ def test_tao_global_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.tao_global(verbose=True)
@@ -632,7 +632,7 @@ def test_global_optimization_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.global_optimization(verbose=True)
@@ -642,7 +642,7 @@ def test_global_opti_de_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.global_opti_de(verbose=True)
@@ -652,7 +652,7 @@ def test_help_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.help(verbose=True)
@@ -662,7 +662,7 @@ def test_inum_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.inum(who="ix_universe", verbose=True)
@@ -672,7 +672,7 @@ def test_lat_calc_done_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.lat_calc_done(branch_name="1@0", verbose=True)
@@ -682,7 +682,7 @@ def test_lat_ele_list_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.lat_ele_list(branch_name="1@0", verbose=True)
@@ -692,7 +692,7 @@ def test_lat_branch_list_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.lat_branch_list(ix_uni="1", verbose=True)
@@ -702,7 +702,7 @@ def test_lat_list_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.lat_list(
@@ -719,7 +719,7 @@ def test_lat_list_2(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.lat_list(
@@ -736,7 +736,7 @@ def test_lat_param_units_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.lat_param_units(param_name="L", verbose=True)
@@ -746,7 +746,7 @@ def test_matrix_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.matrix(ele1_id="1@0>>q01w|design", ele2_id="q02w", verbose=True)
@@ -756,7 +756,7 @@ def test_merit_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.merit(verbose=True)
@@ -766,7 +766,7 @@ def test_orbit_at_s_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.orbit_at_s(ix_uni="1", ele="10", s_offset="0.7", which="model", verbose=True)
@@ -776,7 +776,7 @@ def test_place_buffer_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.place_buffer(verbose=True)
@@ -786,7 +786,7 @@ def test_plot_curve_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.plot_curve(curve_name="r13.g.a", verbose=True)
@@ -796,7 +796,7 @@ def test_plot_graph_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.plot_graph(graph_name="beta.g", verbose=True)
@@ -806,7 +806,7 @@ def test_plot_histogram_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.plot_histogram(curve_name="r33.g.x", verbose=True)
@@ -816,7 +816,7 @@ def test_plot_lat_layout_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.plot_lat_layout(ix_uni="1", ix_branch="0", verbose=True)
@@ -826,7 +826,7 @@ def test_plot_list_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.plot_list(r_or_g="r", verbose=True)
@@ -836,7 +836,7 @@ def test_plot_template_manage_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.plot_template_manage(
@@ -852,7 +852,7 @@ def test_plot_curve_manage_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.plot_curve_manage(
@@ -864,7 +864,7 @@ def test_plot_graph_manage_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.plot_graph_manage(
@@ -876,7 +876,7 @@ def test_plot_line_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_plot_line -external_plotting",
             external_plotting=False,
         ) as tao:
             tao.plot_line(
@@ -888,7 +888,7 @@ def test_plot_line_2(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_plot_line -external_plotting",
             external_plotting=False,
         ) as tao:
             tao.plot_line(
@@ -900,7 +900,7 @@ def test_plot_symbol_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_plot_line -external_plotting",
             external_plotting=False,
         ) as tao:
             tao.plot_symbol(
@@ -912,7 +912,7 @@ def test_plot_symbol_2(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_plot_line -external_plotting",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_plot_line -external_plotting",
             external_plotting=False,
         ) as tao:
             tao.plot_symbol(
@@ -924,7 +924,7 @@ def test_plot_transfer_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.plot_transfer(from_plot="r13", to_plot="r23", verbose=True)
@@ -934,7 +934,7 @@ def test_plot1_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.plot1(name="beta", verbose=True)
@@ -944,7 +944,7 @@ def test_ptc_com_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.ptc_com(verbose=True)
@@ -954,7 +954,7 @@ def test_ring_general_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.ring_general(ix_uni="1", ix_branch="0", which="model", verbose=True)
@@ -964,7 +964,7 @@ def test_shape_list_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.shape_list(who="floor_plan", verbose=True)
@@ -974,7 +974,7 @@ def test_shape_manage_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.shape_manage(who="floor_plan", index="1", add_or_delete="add", verbose=True)
@@ -984,7 +984,7 @@ def test_shape_pattern_list_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_shape",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_shape",
             external_plotting=False,
         ) as tao:
             tao.shape_pattern_list(ix_pattern="", verbose=True)
@@ -994,7 +994,7 @@ def test_shape_pattern_manage_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_shape",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_shape",
             external_plotting=False,
         ) as tao:
             tao.shape_pattern_manage(
@@ -1006,7 +1006,7 @@ def test_shape_pattern_point_manage_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_shape",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_shape",
             external_plotting=False,
         ) as tao:
             tao.shape_pattern_point_manage(
@@ -1018,7 +1018,7 @@ def test_shape_set_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.shape_set(
@@ -1040,7 +1040,7 @@ def test_show_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.show(line="-python", verbose=True)
@@ -1050,7 +1050,7 @@ def test_space_charge_com_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.space_charge_com(verbose=True)
@@ -1060,7 +1060,7 @@ def test_species_to_int_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.species_to_int(species_str="electron", verbose=True)
@@ -1070,7 +1070,7 @@ def test_species_to_str_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.species_to_str(species_int="-1", verbose=True)
@@ -1080,7 +1080,7 @@ def test_spin_invariant_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.spin_invariant(
@@ -1092,7 +1092,7 @@ def test_spin_polarization_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.spin_polarization(ix_uni="1", ix_branch="0", which="model", verbose=True)
@@ -1102,7 +1102,7 @@ def test_spin_resonance_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.spin_resonance(ix_uni="1", ix_branch="0", which="model", verbose=True)
@@ -1112,7 +1112,7 @@ def test_super_universe_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.super_universe(verbose=True)
@@ -1122,7 +1122,7 @@ def test_taylor_map_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.taylor_map(ele1_id="1@0>>q01w|design", ele2_id="q02w", order="1", verbose=True)
@@ -1132,7 +1132,7 @@ def test_twiss_at_s_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.twiss_at_s(ix_uni="1", ele="10", s_offset="0.7", which="model", verbose=True)
@@ -1142,7 +1142,7 @@ def test_universe_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.universe(ix_uni="1", verbose=True)
@@ -1152,7 +1152,7 @@ def test_var_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.var(var="quad[1]", slaves="", verbose=True)
@@ -1162,7 +1162,7 @@ def test_var_2(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.var(var="quad[1]", slaves="slaves", verbose=True)
@@ -1172,7 +1172,7 @@ def test_var_create_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
             external_plotting=False,
         ) as tao:
             tao.var_create(
@@ -1196,7 +1196,7 @@ def test_var_general_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.var_general(verbose=True)
@@ -1206,7 +1206,7 @@ def test_var_v_array_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.var_v_array(v1_var="quad_k1", verbose=True)
@@ -1216,7 +1216,7 @@ def test_var_v1_array_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.var_v1_array(v1_var="quad_k1", verbose=True)
@@ -1226,7 +1226,7 @@ def test_var_v1_create_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.var_v1_create(v1_name="quad_k1", n_var_min="0", n_var_max="45", verbose=True)
@@ -1236,7 +1236,7 @@ def test_var_v1_destroy_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.var_v1_destroy(v1_datum="quad_k1", verbose=True)
@@ -1246,7 +1246,7 @@ def test_wave_1(caplog, tao_cls):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,
-            "-init $ACC_ROOT_DIR/regression_tests/python_test/cesr/tao.init",
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
             external_plotting=False,
         ) as tao:
             tao.wave(who="params", verbose=True)

@@ -669,7 +669,7 @@ class LatticeLayoutElement:
         """
         Element is wrapped around the lattice ends, and s1 >= s2.
 
-        `$ACC_ROOT_DIR/regression_tests/python_test/tao.init_wake` shows off
+        `$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wake` shows off
         this functionality.
         """
         assert s1 >= s2

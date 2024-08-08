@@ -44,7 +44,7 @@ def ensure_successful_parsing(caplog):
             pytest.fail(error.message)
 
 
-regression_test_root = pathlib.Path("$ACC_ROOT_DIR/regression_tests/python_test/")
+regression_test_root = pathlib.Path("$ACC_ROOT_DIR/regression_tests/pipe_test/")
 example_root = pathlib.Path("$ACC_ROOT_DIR/bmad-doc/tao_examples")
 init_files = list(pathlib.Path(os.path.expandvars(regression_test_root)).glob("tao.init*"))
 example_init_files = list(
