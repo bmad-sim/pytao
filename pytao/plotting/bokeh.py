@@ -3,6 +3,7 @@ from __future__ import annotations
 import functools
 import logging
 import math
+import os
 import pathlib
 import time
 import typing
@@ -1465,6 +1466,15 @@ class BokehAppCreator:
         return bokeh.layouts.column(all_elems)
 
     def create_full_app(self):
+        if os.environ.get("PYTAO_BOKEH_NBCONVERT", "").lower() in "1y":
+            # Do not show full Bokeh server-backed applications when converting
+            # Jupyter notebooks to HTML as they are not supported (and will
+            # show up blank).  This is a way around it by only showing the
+            # graphs without Python-backed widgets - similar to how static HTML
+            # pages are saved.
+            state = self.create_state()
+            return state.to_gridplot()
+
         def bokeh_app(doc):
             doc.add_root(self.create_app_ui())
 
