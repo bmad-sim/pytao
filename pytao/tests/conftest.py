@@ -72,11 +72,13 @@ def get_example(name: str) -> TaoStartup:
         "custom_tao_with_measured_data",
         "x_axis_param_plot",
     }
-    return TaoStartup(
+    startup = TaoStartup(
         init_file=init_file,
         nostartup=nostartup,
         metadata={"name": example_name},
     )
+    print(f"Example {name}: {startup.tao_init}")
+    return startup
 
 
 def get_regression_test(name: str) -> TaoStartup:
