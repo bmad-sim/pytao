@@ -16,11 +16,11 @@ from .tao_ctypes.util import parse_tao_python_data
 from .util.command import make_tao_init
 from .util.parameters import tao_parameter_dict
 from .util import parsers as _pytao_parsers
+from .plotting import MatplotlibGraphManager
 from .plotting.util import select_graph_manager_class
 
 if typing.TYPE_CHECKING:
     from .plotting.bokeh import BokehGraphManager, NotebookGraphManager  # noqa: F401
-    from .plotting import MatplotlibGraphManager
 
     from .subproc import SubprocessTao
 
