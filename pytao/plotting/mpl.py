@@ -276,7 +276,7 @@ class MatplotlibGraphManager(GraphManager):
             settings=settings,
         )
         if not graphs:
-            return None
+            raise UnsupportedGraphError(f"No supported plots from this template: {graph_name}")
 
         if figsize is None and width and height:
             figsize = (width, height)

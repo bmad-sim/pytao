@@ -9,6 +9,9 @@ from ..plotting import (
     TaoFloorPlanSettings,
 )
 
+from pytest import FixtureRequest
+from .conftest import BackendName, get_example, test_artifacts
+
 
 def test_curve_settings_empty():
     assert TaoCurveSettings().get_commands("a", "b", 0) == []
@@ -68,3 +71,51 @@ def test_graph_settings_empty():
 )
 def test_graph_settings(settings: TaoGraphSettings, expected_commands: List[str]):
     assert settings.get_commands("a", "b", graph_type="lat_layout") == expected_commands
+
+
+def test_plot_settings_grid(plot_backend: BackendName, request: FixtureRequest):
+    example = get_example("erl")
+    example.plot = plot_backend
+    with example.run_context(use_subprocess=True) as tao:
+        manager = tao.plot_manager
+        graphs, *_ = manager.plot_grid(
+            graph_names=["zphase", "zphase"],
+            grid=(3, 2),
+            include_layout=True,
+            curves=[
+                {1: TaoCurveSettings(ele_ref_name=r"linac.beg\1")},
+                {1: TaoCurveSettings(ele_ref_name=r"linac.end\1")},
+            ],
+            settings=[
+                TaoGraphSettings(commands=["set graph {graph} title = Test Plot 1"]),
+                TaoGraphSettings(title="Test Plot 2"),
+            ],
+            share_x=False,
+            save=test_artifacts / request.node.name,
+        )
+        graph1, graph2, *_ = graphs
+        assert graph1.title.startswith("Test Plot 1")
+        assert graph2.title.startswith("Test Plot 2")
+
+
+def test_plot_settings(plot_backend: BackendName, request: FixtureRequest):
+    example = get_example("erl")
+    example.plot = plot_backend
+    with example.run_context(use_subprocess=True) as tao:
+        manager = tao.plot_manager
+        graphs, *_ = manager.plot(
+            "zphase",
+            include_layout=True,
+            curves={1: TaoCurveSettings(ele_ref_name=r"linac.beg\1")},
+            settings=TaoGraphSettings(
+                title="Test Plot 1",
+                y=TaoAxisSettings(
+                    label="Y axis label",
+                ),
+            ),
+            share_x=False,
+            save=test_artifacts / request.node.name,
+        )
+        graph1, *_ = graphs
+        assert graph1.title.startswith("Test Plot 1")
+        assert graph1.ylabel == "Y axis label"

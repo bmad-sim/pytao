@@ -1947,7 +1947,7 @@ class NotebookGraphManager(BokehGraphManager):
         save: Union[bool, str, pathlib.Path, None] = None,
         curves: Optional[Dict[int, TaoCurveSettings]] = None,
         settings: Optional[TaoGraphSettings] = None,
-    ):
+    ) -> Tuple[List[AnyGraph], BokehAppCreator]:
         """
         Plot a graph with Bokeh.
 
