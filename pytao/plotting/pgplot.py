@@ -101,7 +101,7 @@ def mpl_string(value: str) -> str:
 
     # Replace any instances of \1 with non-LaTeX equivalents, as these can be
     # used in component names.
-    result = re.sub(r"\\\\(\d+)", r"$ \\\1 $", result)
+    result = re.sub(r"\\\\(\d+)", r"\\backslash\1", result)
 
     if r"\\" in result:
         logger.debug(f"Unknown pgplot character in string: {result}")
