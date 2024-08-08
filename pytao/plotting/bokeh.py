@@ -1707,8 +1707,6 @@ class BokehGraphManager(GraphManager):
             Include a layout plot at the bottom, if not already placed and if
             appropriate (i.e., another plot uses longitudinal coordinates on
             the x-axis).
-        update : bool, default=True
-            Query Tao to update relevant graphs prior to plotting.
         sizing_mode : Optional[SizingModeType]
             Set the sizing mode for all graphs.  Default is configured on a
             per-graph basis, typically "inherit".
@@ -1961,8 +1959,6 @@ class NotebookGraphManager(BokehGraphManager):
             Include a layout plot at the bottom, if not already placed and if
             appropriate (i.e., another plot uses longitudinal coordinates on
             the x-axis).
-        update : bool, default=True
-            Query Tao to update relevant graphs prior to plotting.
         sizing_mode : Optional[SizingModeType]
             Set the sizing mode for all graphs.  Default is configured on a
             per-graph basis, typically "inherit".
