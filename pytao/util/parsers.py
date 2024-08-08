@@ -1175,6 +1175,8 @@ def parse_shape_list(lines, cmd=""):
     """
     Parse shape_list results.
 
+    Keys match those on `shape_set` for convenience.
+
     Returns
     -------
     list of dict
@@ -1182,14 +1184,14 @@ def parse_shape_list(lines, cmd=""):
     return _parse_by_keys_to_types(
         lines,
         {
-            "index": int,
-            "ele_id": str,
+            "shape_index": int,
+            "ele_name": str,
             "shape": str,
             "color": str,
-            "size": float,
-            "label": str,
-            "draw": bool,
-            "multi": bool,
+            "shape_size": float,
+            "type_label": str,
+            "shape_draw": bool,
+            "multi_shape": bool,
             "line_width": int,
         },
     )

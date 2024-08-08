@@ -59,6 +59,7 @@ from .types import (
     PlotPage,
     PlotRegionInfo,
     Point,
+    ShapeListInfo,
     WaveParams,
 )
 
@@ -1324,6 +1325,13 @@ def find_unused_plot_region(tao: Tao, skip: Set[str]) -> str:
     raise AllPlotRegionsInUseError("No more available plot regions.")
 
 
+ShapeWho = Literal["lat_layout", "floor_plan"]
+
+
+def update_shape(tao: Tao, who: ShapeWho, shape: ShapeListInfo):
+    tao.shape_set(who=who, **shape)
+
+
 AnyGraph = Union[BasicGraph, LatticeLayoutGraph, FloorPlanGraph]
 
 
@@ -1799,6 +1807,36 @@ class GraphManager(ABC):
         AnyGraph
         """
         return make_graph(self.tao, region_name, graph_name)
+
+    def set_shape_label_visibility(
+        self,
+        who: ShapeWho,
+        label: Optional[Literal["s", "name"]],
+    ):
+        """
+        Set shape label visibility.
+
+        Parameters
+        ----------
+        who : "lat_layout" or "floor_plan"
+            Change shape label visibility for this graph type.
+        label : "s", "name", or None
+            Show this label for each shape.
+
+        Returns
+        -------
+        list of ShapeListInfo
+        """
+        if label is None:
+            label_string = "none"
+        else:
+            label_string = label
+
+        shapes = cast(List[ShapeListInfo], self.tao.shape_list(who))
+        for shape in shapes:
+            shape["type_label"] = label_string
+            update_shape(self.tao, who, shape)
+        return shapes
 
     @abstractmethod
     def plot(

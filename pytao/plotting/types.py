@@ -350,3 +350,19 @@ FloatVariableInfo = TypedDict(
 
 
 Point = Tuple[float, float]
+
+
+ShapeListInfo = TypedDict(
+    "ShapeListInfo",
+    {
+        "shape_index": int,
+        "ele_name": str,
+        "shape": str,
+        "color": str,
+        "shape_size": float,
+        "type_label": str,
+        "shape_draw": bool,
+        "multi_shape": bool,
+        "line_width": int,
+    },
+)
