@@ -131,7 +131,7 @@ class QuickPlotRectangle:
 QuickPlotRectangleTuple = Tuple[float, float, float, float, str]
 
 
-class TaoAxisSettings(pydantic.BaseModel):
+class TaoAxisSettings(pydantic.BaseModel, extra="forbid", validate_assignment=True):
     """
     Tao per-axis (x, x2, y, or y2) settings in a graph.
 
@@ -238,7 +238,7 @@ class TaoAxisSettings(pydantic.BaseModel):
         ]
 
 
-class TaoFloorPlanSettings(pydantic.BaseModel):
+class TaoFloorPlanSettings(pydantic.BaseModel, extra="forbid", validate_assignment=True):
     """
     Tao graph settings specifically for floor plans.
 
@@ -340,7 +340,7 @@ class TaoFloorPlanSettings(pydantic.BaseModel):
         ]
 
 
-class TaoGraphSettings(pydantic.BaseModel):
+class TaoGraphSettings(pydantic.BaseModel, extra="forbid", validate_assignment=True):
     """
     Per-graph settings for Tao.
 

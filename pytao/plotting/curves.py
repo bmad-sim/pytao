@@ -85,7 +85,7 @@ class PlotHistogram:
         )
 
 
-class TaoCurveSettings(pydantic.BaseModel):
+class TaoCurveSettings(pydantic.BaseModel, extra="forbid", validate_assignment=True):
     """
     TaoCurveSettings are per-curve settings for Tao's `set curve` command.
 
