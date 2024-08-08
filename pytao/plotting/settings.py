@@ -140,6 +140,7 @@ class TaoGraphSettings(pydantic.BaseModel):
         default_factory=dict,
         description="Defines which box the plot is put in.",
     )
+    commands: Optional[List[str]] = None
     component: Optional[str] = None
     clip: Optional[bool] = None
     curve_legend_origin: Optional[Union[QuickPlotPoint, QuickPlotPointTuple]] = None
@@ -177,6 +178,21 @@ class TaoGraphSettings(pydantic.BaseModel):
             if value is None:
                 continue
 
+            if key == "commands":
+                result.extend(
+                    [
+                        cmd.format(
+                            settings=self,
+                            region=region_name,
+                            graph_name=graph_name,
+                            graph_type=graph_type,
+                            graph=f"{region_name}.{graph_name}",
+                        )
+                        for cmd in value
+                        if cmd
+                    ]
+                )
+                continue
             if key in ("curve_legend_origin",) and isinstance(value, tuple):
                 value = QuickPlotPoint(*value)
             elif key in ("scale_margin", "margin", "text_legend_origin") and isinstance(
