@@ -1,10 +1,9 @@
-
 name: Publish Documentation
 
 on:
   push:
     branches:
-      - '**'
+      - "**"
 
 jobs:
   deploy:
@@ -27,13 +26,16 @@ jobs:
         shell: bash -l {0}
         run: |
           mamba list
+      - name: Execute notebooks
+        shell: bash -l {0}
+        run: |
+          bash scripts/execute_notebooks.bash
       - name: Build Docs
         shell: bash -l {0}
         run: |
           mkdocs build
           zip -r pytao-examples.zip docs/examples/
-          mv pytao-examples.zip ./site/assets/.
-          
+          mv pytao-examples.zip ./site/assets/
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:

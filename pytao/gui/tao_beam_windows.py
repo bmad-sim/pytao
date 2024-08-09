@@ -5,7 +5,6 @@ Provides windows for viewing and editing beam properties in tao
 import tkinter as tk
 
 from ..util.parameters import str_to_tao_param
-
 from .tao_base_windows import tao_list_window, tao_parameter_window
 from .tao_set import tao_set
 from .tao_widget import tk_tao_parameter

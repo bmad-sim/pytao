@@ -51,9 +51,13 @@ class taotoolbar(NavigationToolbar2Tk):
         self.gRangeList = []  # list of original x min, x max, y min, and y max for each graph
         try:
             for i in self.templateGraphList:
-                gInfo = self.parent.pipe.cmd_in(
-                    "python plot_graph " + i, no_warn=True
-                ).splitlines()
+                try:
+                    gInfo = self.parent.pipe.cmd_in(
+                        "python plot_graph " + i, no_warn=True
+                    ).splitlines()
+                except RuntimeError:
+                    continue
+
                 gRange = []
                 gInfoDict = {}
                 for i in range(len(gInfo)):

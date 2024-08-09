@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import ctypes
 import logging
 import os
@@ -6,12 +8,15 @@ import subprocess
 import sys
 import threading
 import typing
+from typing import Union
 
 import numpy as np
 
-from .interface_commands import Tao
+from .interface_commands import Tao, TaoStartup
 
 logger = logging.getLogger(__name__)
+
+AnyTao = Union[Tao, "SubprocessTao"]
 
 
 class TaoDisconnectedError(Exception):
@@ -268,9 +273,14 @@ class SubprocessTao(Tao):
     def close_subprocess(self):
         self._pipe.close()
 
-    def init(self, cmd):
-        """Initialize Tao with the given `cmd`."""
-        return self._pipe.send_receive("init", cmd, raises=True)
+    def __del__(self) -> None:
+        try:
+            self.close_subprocess()
+        except Exception:
+            pass
+
+    def _init(self, startup: TaoStartup):
+        return self._pipe.send_receive("init", startup.tao_init, raises=True)
 
     def cmd(self, cmd, raises=True):
         """Runs a command, and returns the output."""

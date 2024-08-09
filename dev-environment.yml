@@ -6,7 +6,7 @@ dependencies:
   - python >=3.9
   - openPMD-beamphysics
   - numpydoc
-  - bmad >=20240628.2
+  - bmad >=20240809
   - bokeh
   - jupyterlab>3
   - ipywidgets
@@ -14,6 +14,7 @@ dependencies:
   - numpy
   - h5py
   - pexpect
+  - pydantic >=2
   # Developer
   - pygments
   - pytest

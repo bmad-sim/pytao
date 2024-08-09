@@ -7,11 +7,12 @@ dependencies:
   - ipykernel
   - ipywidgets
   - jupyterlab
-  - bmad >=20240628.2
+  - bmad >=20240809
   - openPMD-beamphysics
   - numpy
   - h5py
   - pexpect
+  - pydantic >=2
   - pip
   - pip:
       # Install pytao from here.
