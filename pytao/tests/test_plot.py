@@ -72,13 +72,22 @@ def test_plot_data(use_subprocess: bool, plot_backend: BackendName):
         tao.plot("lat_layout")
 
 
-def test_plot_all_requested(
+def test_plot_all_requested_regression_tests(
     tao_regression_test: TaoStartup,
     plot_backend: BackendName,
     use_subprocess: bool,
 ):
     tao_regression_test.plot = plot_backend
     with tao_regression_test.run_context(use_subprocess=use_subprocess) as tao:
+        tao.plot_manager.plot_all()
+
+
+def test_plot_all_requested_examples_mpl(tao_example: TaoStartup):
+    tao_example.plot = "mpl"
+    example_name = tao_example.metadata["name"]
+    with tao_example.run_context(use_subprocess=True) as tao:
+        if example_name == "erl":
+            tao.cmd("place r11 zphase")
         tao.plot_manager.plot_all()
 
 
