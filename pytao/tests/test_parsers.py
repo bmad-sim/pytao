@@ -312,7 +312,7 @@ def test_shape_list_1(tao_cls: Type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
-        assert "index" in tao.shape_list(who="floor_plan")[0]
+        assert "shape_index" in tao.shape_list(who="floor_plan")[0]
 
 
 def test_shape_pattern_list_1(tao_cls: Type[AnyTao]):
