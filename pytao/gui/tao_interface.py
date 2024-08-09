@@ -6,7 +6,8 @@ a few extra features to facilitate communication with the GUI
 import time
 import tkinter as tk
 
-from ..tao_interface import filter_output, new_stdout, tao_interface as _tao_interface
+from ..tao_interface import filter_output, new_stdout
+from ..tao_interface import tao_interface as _tao_interface
 
 
 class tao_interface(_tao_interface):

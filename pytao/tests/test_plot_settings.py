@@ -1,15 +1,14 @@
-import pytest
-
 from typing import List
 
-from ..plotting import (
-    TaoCurveSettings,
-    TaoGraphSettings,
-    TaoAxisSettings,
-    TaoFloorPlanSettings,
-)
-
+import pytest
 from pytest import FixtureRequest
+
+from ..plotting import (
+    TaoAxisSettings,
+    TaoCurveSettings,
+    TaoFloorPlanSettings,
+    TaoGraphSettings,
+)
 from .conftest import BackendName, get_example, test_artifacts
 
 

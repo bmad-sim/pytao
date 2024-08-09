@@ -1,10 +1,11 @@
 from datetime import datetime
 from typing import Type
+
 import numpy as np
 import pytest
 
-from .test_interface_commands import new_tao
 from .. import AnyTao
+from .test_interface_commands import new_tao
 
 
 def test_building_wall_list_1(tao_cls: Type[AnyTao]):

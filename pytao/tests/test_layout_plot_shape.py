@@ -2,7 +2,6 @@ import logging
 import re
 from typing import List, Type, Union
 
-
 import bokeh.io
 import bokeh.layouts
 import bokeh.models
@@ -11,10 +10,10 @@ import matplotlib.axes
 import matplotlib.pyplot as plt
 import pytest
 
-from ..plotting import layout_shapes
-from ..plotting.bokeh import _plot_layout_shape as plot_layout_shape, get_tool_from_figure
-
 from .. import SubprocessTao, Tao
+from ..plotting import layout_shapes
+from ..plotting.bokeh import _plot_layout_shape as plot_layout_shape
+from ..plotting.bokeh import get_tool_from_figure
 from .conftest import test_artifacts
 
 logger = logging.getLogger(__name__)

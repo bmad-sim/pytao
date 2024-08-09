@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import ctypes
 import logging
 import os
@@ -7,7 +8,6 @@ import subprocess
 import sys
 import threading
 import typing
-
 from typing import Union
 
 import numpy as np

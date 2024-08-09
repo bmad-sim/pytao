@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import math
 from typing import (
     List,
@@ -15,10 +16,9 @@ import matplotlib.patches
 import matplotlib.path
 import matplotlib.text
 import numpy as np
-import pydantic.dataclasses as dataclasses
 import pydantic
+import pydantic.dataclasses as dataclasses
 from pydantic.fields import Field
-
 
 from . import pgplot, util
 from .types import Point

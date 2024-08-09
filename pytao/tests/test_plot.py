@@ -7,7 +7,7 @@ import pytest
 
 from .. import SubprocessTao, Tao, TaoStartup
 from ..plotting.curves import TaoCurveSettings
-from .conftest import get_example, get_regression_test, test_artifacts, BackendName
+from .conftest import BackendName, get_example, get_regression_test, test_artifacts
 
 logger = logging.getLogger(__name__)
 

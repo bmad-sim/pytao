@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from functools import cached_property
 import math
+from functools import cached_property
 from typing import List, Optional, Union
 
 import matplotlib.axes
@@ -14,17 +14,15 @@ import numpy as np
 import pydantic.dataclasses as dataclasses
 from pydantic import ConfigDict
 
-
+from . import util
 from .curves import PlotCurveLine
 from .patches import (
     PlotPatch,
     PlotPatchArc,
     PlotPatchCircle,
-    PlotPatchSbend,
     PlotPatchRectangle,
+    PlotPatchSbend,
 )
-from . import util
-
 
 _dcls_config = ConfigDict()
 

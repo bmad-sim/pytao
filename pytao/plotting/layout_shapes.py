@@ -1,8 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC
-from typing import List, Union, Tuple
-from typing_extensions import Literal
+from typing import List, Tuple, Union
 
 import matplotlib.axes
 import matplotlib.cm
@@ -12,7 +11,7 @@ import matplotlib.path
 import matplotlib.text
 import pydantic.dataclasses as dataclasses
 from pydantic import ConfigDict
-
+from typing_extensions import Literal
 
 from . import pgplot
 from .curves import PlotCurveLine
@@ -22,7 +21,6 @@ from .patches import (
     PlotPatchPolygon,
     PlotPatchRectangle,
 )
-
 
 _dcls_config = ConfigDict()
 

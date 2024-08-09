@@ -13,11 +13,10 @@ from .curves import TaoCurveSettings
 from .fields import ElementField
 from .plot import (
     GraphManager,
-    UnsupportedGraphError,
     LatticeLayoutGraph,
+    UnsupportedGraphError,
 )
 from .settings import TaoGraphSettings
-
 
 logger = logging.getLogger(__name__)
 

@@ -1,9 +1,8 @@
 from dataclasses import asdict
 from typing import Dict, List, Optional, Tuple, Union
-from typing_extensions import Literal
 
 import pydantic
-
+from typing_extensions import Literal
 
 tao_colors = frozenset(
     {

@@ -1,8 +1,10 @@
 from __future__ import annotations
-from typing import Dict, List, Optional
 
 from typing import (
+    Dict,
+    List,
     Literal,
+    Optional,
     Sequence,
     Union,
 )
@@ -13,12 +15,10 @@ import matplotlib.collections
 import matplotlib.patches
 import matplotlib.path
 import matplotlib.text
+import pydantic
 import pydantic.dataclasses as dataclasses
 
-
 from . import pgplot
-import pydantic
-
 
 _dcls_config = pydantic.ConfigDict()
 

@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from pydantic import dataclasses
 import typing
-import numpy as np
 
+import numpy as np
+from pydantic import dataclasses
 
 if typing.TYPE_CHECKING:
     from .. import Tao

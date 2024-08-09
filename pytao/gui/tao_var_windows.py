@@ -6,7 +6,6 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 
 from ..util.parameters import str_to_tao_param
-
 from .tao_base_windows import (
     Tao_Toplevel,
     lw_table_window,

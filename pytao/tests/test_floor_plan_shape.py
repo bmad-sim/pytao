@@ -7,16 +7,13 @@ import bokeh.io
 import bokeh.layouts
 import bokeh.plotting
 import bokeh.resources
-
 import matplotlib.axes
 import matplotlib.pyplot as plt
 import pytest
 
-from ..plotting.floor_plan_shapes import BowTie, Box, Circle, Diamond, SBend, XBox, LetterX
-from ..plotting.bokeh import _plot_floor_plan_shape as plot_floor_plan_shape
-
-
 from .. import SubprocessTao, Tao
+from ..plotting.bokeh import _plot_floor_plan_shape as plot_floor_plan_shape
+from ..plotting.floor_plan_shapes import BowTie, Box, Circle, Diamond, LetterX, SBend, XBox
 from .conftest import test_artifacts
 
 logger = logging.getLogger(__name__)

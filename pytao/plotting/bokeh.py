@@ -37,10 +37,9 @@ from bokeh.plotting import figure
 from pydantic.dataclasses import dataclass
 from typing_extensions import NotRequired, TypedDict
 
-
 from ..interface_commands import AnyPath
-from . import pgplot, util
-from .curves import TaoCurveSettings, CurveIndexToCurve, PlotCurveLine, PlotCurveSymbols
+from . import floor_plan_shapes, pgplot, util
+from .curves import CurveIndexToCurve, PlotCurveLine, PlotCurveSymbols, TaoCurveSettings
 from .fields import ElementField
 from .layout_shapes import AnyLayoutShape, LayoutShape
 from .patches import (
@@ -64,7 +63,6 @@ from .plot import (
     PlotCurve,
     UnsupportedGraphError,
 )
-from . import floor_plan_shapes
 from .settings import TaoGraphSettings
 from .types import FloatVariableInfo
 

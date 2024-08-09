@@ -1,12 +1,12 @@
 from .curves import TaoCurveSettings
-from .plot import GraphManager
 from .mpl import MatplotlibGraphManager
+from .plot import GraphManager
 from .settings import (
-    TaoGraphSettings,
-    TaoFloorPlanSettings,
-    TaoAxisSettings,
-    QuickPlotRectangle,
     QuickPlotPoint,
+    QuickPlotRectangle,
+    TaoAxisSettings,
+    TaoFloorPlanSettings,
+    TaoGraphSettings,
 )
 from .util import select_graph_manager_class
 

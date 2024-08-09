@@ -6,7 +6,7 @@ pytao also has some pre-defined constructs for dealing with data from tao
 in the util package.
 """
 
-from .interface_commands import TaoStartup, Tao
+from .interface_commands import Tao, TaoStartup
 from .subproc import AnyTao, SubprocessTao
 from .tao_ctypes import TaoModel, run_tao
 from .tao_ctypes.evaluate import evaluate_tao

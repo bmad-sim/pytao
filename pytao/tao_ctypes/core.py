@@ -9,9 +9,9 @@ from typing import List
 import numpy as np
 
 from .. import tao_ctypes
+from ..util.parameters import tao_parameter_dict
 from .tools import full_path
 from .util import error_in_lines
-from ..util.parameters import tao_parameter_dict
 
 logger = logging.getLogger(__name__)
 
