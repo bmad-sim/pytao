@@ -526,7 +526,7 @@ def _draw_annotation(
         "x",
         "y",
         angle=math.radians(annotation.rotation),
-        text_align="right",  # annotation.horizontalalignment,
+        text_align=annotation.horizontalalignment,
         text_baseline=baseline,
         color=color,
         source=source,
@@ -1482,7 +1482,7 @@ class BokehAppCreator:
         return bokeh.layouts.column(all_elems)
 
     def create_full_app(self):
-        if os.environ.get("PYTAO_BOKEH_NBCONVERT", "").lower() in "1y":
+        if os.environ.get("PYTAO_BOKEH_NBCONVERT", "").lower() in {"1", "y"}:
             # Do not show full Bokeh server-backed applications when converting
             # Jupyter notebooks to HTML as they are not supported (and will
             # show up blank).  This is a way around it by only showing the
