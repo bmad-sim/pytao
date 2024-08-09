@@ -306,7 +306,7 @@ class Tao(TaoCore):
 
     plot_backend_name: Optional[str]
     _graph_managers: dict
-    _min_tao_version = datetime.datetime(2024, 8, 9)
+    _min_tao_version = datetime.datetime(2024, 8, 4)
 
     def __init__(
         self,
