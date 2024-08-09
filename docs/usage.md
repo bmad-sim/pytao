@@ -112,3 +112,22 @@ Start the experimental (and mostly unsupported/deprecated) GUI by using the foll
 ```bash
 pytao-gui -init_file "$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init"
 ```
+
+## Notes about Bokeh on JupyterHub
+
+If you are using PyTao with Bokeh on your computer and are running JupyterLab
+locally, you can safely ignore this section.
+
+If you are accessing a JupyterHub deployment on an HPC cluster through a
+non-`localhost` website, there are some additional setup steps required.
+
+Please read [this document](https://docs.bokeh.org/en/latest/docs/user_guide/output/jupyter.html) from Bokeh for full details.
+
+At minimum, you will need to:
+
+- Configure `JUPYTER_BOKEH_EXTERNAL_URL` to point to your server. For example, users may specify the following in their `~/.bashrc`: `export JUPYTER_BOKEH_EXTERNAL_URL="https//example.com"` (replacing `example.com` with the URL you use to access JupyterHub)
+
+Additionally, you may be required to:
+
+- In the JupyterHub environment, `conda install jupyter-server-proxy`
+- Restart JupyterHub
