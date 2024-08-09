@@ -504,6 +504,7 @@ def _draw_annotation(
     fig: figure,
     annotation: PlotAnnotation,
     color: str = "black,",
+    name: str = "",
     source: Optional[ColumnDataSource] = None,
 ):
     if source is None:
@@ -514,14 +515,19 @@ def _draw_annotation(
             "x": [annotation.x],
             "y": [annotation.y],
             "text": [pgplot.mathjax_string(annotation.text)],
+            "name": [name],
         }
     )
+
+    baseline = annotation.verticalalignment
+    if baseline == "center":
+        baseline = "middle"
     return fig.text(
         "x",
         "y",
         angle=math.radians(annotation.rotation),
         text_align="right",  # annotation.horizontalalignment,
-        text_baseline=annotation.verticalalignment,
+        text_baseline=baseline,
         color=color,
         source=source,
     )
@@ -629,7 +635,7 @@ def _draw_layout_element(
     for annotation in elem.annotations:
         if annotation.text == elem.info["label_name"] and skip_labels:
             continue
-        _draw_annotation(fig, annotation, color=color)
+        _draw_annotation(fig, annotation, color=color, name=elem.info["label_name"])
 
 
 def _fields_to_data_source(
