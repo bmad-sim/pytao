@@ -414,7 +414,7 @@ class Tao(TaoCore):
         startup_file: Optional[AnyPath] = None,
         symbol_import: bool = False,
         var_file: Optional[AnyPath] = None,
-    ) -> None:
+    ) -> List[str]:
         """(Re-)Initialize Tao with the given command."""
         if plot in {"mpl", "bokeh"}:
             self.plot_backend_name = plot
@@ -456,11 +456,14 @@ class Tao(TaoCore):
             var_file=var_file,
         )
 
-        if self.init_settings.can_initialize:
-            self._init(self.init_settings)
-            if not self._tao_version_checked:
-                self._tao_version_checked = True
-                self._check_tao_version()
+        if not self.init_settings.can_initialize:
+            return []
+
+        res = self._init(self.init_settings)
+        if not self._tao_version_checked:
+            self._tao_version_checked = True
+            self._check_tao_version()
+        return res
 
     def _check_tao_version(self):
         version = self.version()
