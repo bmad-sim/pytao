@@ -5,8 +5,10 @@ import pathlib
 import time
 from typing import ClassVar, Dict, List, Literal, Optional, Tuple, Union
 
+import matplotlib.axis
 import matplotlib.axes
 import matplotlib.pyplot as plt
+import matplotlib.ticker
 import numpy as np
 
 from .curves import TaoCurveSettings
@@ -44,6 +46,11 @@ def set_defaults(
         matplotlib.rcParams["figure.figsize"] = (width, height)
     if dpi is not None:
         matplotlib.rcParams["figure.dpi"] = dpi
+
+
+def _reset_tick_locators(ax: Union[matplotlib.axis.XAxis, matplotlib.axis.YAxis]) -> None:
+    ax.set_major_locator(matplotlib.ticker.AutoLocator())
+    ax.set_minor_locator(matplotlib.ticker.AutoMinorLocator())
 
 
 class MatplotlibGraphManager(GraphManager):
@@ -175,10 +182,13 @@ class MatplotlibGraphManager(GraphManager):
                 continue
 
             ax.set_axis_on()
-            if xl is not None:
-                ax.set_xlim(*xl)
-            if yl is not None:
-                ax.set_ylim(*yl)
+            if xl is not None or yl is not None:
+                if xl is not None:
+                    ax.set_xlim(xl)
+                    _reset_tick_locators(ax.xaxis)
+                if yl is not None:
+                    ax.set_ylim(yl)
+                    _reset_tick_locators(ax.yaxis)
 
         if include_layout:
             layout_graph = self.lattice_layout_graph
@@ -327,12 +337,15 @@ class MatplotlibGraphManager(GraphManager):
             except UnsupportedGraphError:
                 continue
 
-            if xlim is not None:
-                ax.set_xlim(xlim)
+            if xlim is not None or ylim is not None:
+                if xlim is not None:
+                    ax.set_xlim(xlim)
+                    _reset_tick_locators(ax.xaxis)
 
-            if ylim is not None:
-                if not isinstance(graph, LatticeLayoutGraph) or len(graphs) == 1:
-                    ax.set_ylim(ylim)
+                if ylim is not None:
+                    if not isinstance(graph, LatticeLayoutGraph) or len(graphs) == 1:
+                        ax.set_ylim(ylim)
+                        _reset_tick_locators(ax.yaxis)
 
         if fig is not None:
             if tight_layout:

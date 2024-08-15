@@ -32,8 +32,6 @@ from pydantic import ConfigDict
 from pydantic.fields import Field
 from typing_extensions import Literal
 
-from pytao.plotting.settings import TaoGraphSettings
-
 from . import floor_plan_shapes, layout_shapes, pgplot
 from .curves import (
     CurveIndexToCurve,
@@ -47,6 +45,7 @@ from .patches import (
     PlotPatchArc,
     PlotPatchRectangle,
 )
+from .settings import TaoGraphSettings
 from .types import (
     BuildingWallGraphInfo,
     BuildingWallInfo,
@@ -198,7 +197,25 @@ class GraphBase:
                 return graph
         raise RuntimeError("Plot not found after update?")
 
-    def _setup_axis(self, ax: matplotlib.axes.Axes, xticks: bool = True, yticks: bool = True):
+    def setup_matplotlib_ticks(self, ax: matplotlib.axes.Axes):
+        """Configure ticks on the provided matplotlib axes (x and y)."""
+        xlim = ax.get_xlim()
+        if self.info["x_minor_div"] > 0:
+            ax.xaxis.set_minor_locator(AutoMinorLocator(self.info["x_minor_div"]))
+            ax.tick_params(axis="x", which="minor", length=4, color="black")
+
+        if self.info["x_major_div_nominal"] > 2:
+            ticks = np.linspace(*xlim, self.info["x_major_div_nominal"])
+            ax.set_xticks(ticks)
+
+        ylim = ax.get_ylim()
+        ax.yaxis.set_minor_locator(AutoMinorLocator())
+        ax.tick_params(axis="y", which="minor", length=4, color="black")
+        if self.info["y_major_div_nominal"] > 2:
+            ax.set_yticks(np.linspace(*ylim, self.info["y_major_div_nominal"]))
+
+    def setup_matplotlib_axis(self, ax: matplotlib.axes.Axes):
+        """Configure limits, title, and basic info for the given axes."""
         if not self.show_axes:
             ax.set_axis_off()
 
@@ -211,31 +228,6 @@ class GraphBase:
 
         if self.draw_grid:
             ax.grid(self.draw_grid, which="major", axis="both")
-
-        if xticks:
-            if self.info["x_minor_div"] > 0:
-                ax.xaxis.set_minor_locator(AutoMinorLocator(self.info["x_minor_div"]))
-                ax.tick_params(axis="x", which="minor", length=4, color="black")
-
-            if self.info["x_major_div_nominal"] > 2:
-                ax.set_xticks(
-                    np.linspace(
-                        ax.get_xlim()[0],
-                        ax.get_xlim()[1],
-                        self.info["x_major_div_nominal"] - 1,
-                    )
-                )
-
-        if yticks:
-            ax.yaxis.set_minor_locator(AutoMinorLocator())
-            ax.tick_params(axis="y", which="minor", length=4, color="black")
-            # ax.set_yticks(
-            #     np.linspace(
-            #         ax.get_ylim()[0],
-            #         ax.get_ylim()[1],
-            #         self.info["y_major_div_nominal"] - 1,
-            #     )
-            # )
 
 
 @dataclasses.dataclass(config=_dcls_config)
@@ -566,7 +558,8 @@ class BasicGraph(GraphBase):
         if self.draw_legend and any(curve.legend_label for curve in self.curves):
             ax.legend()
 
-        self._setup_axis(ax)
+        self.setup_matplotlib_axis(ax)
+        self.setup_matplotlib_ticks(ax)
         return ax
 
 
@@ -798,7 +791,8 @@ class LatticeLayoutGraph(GraphBase):
 
         ax.yaxis.set_visible(False)
 
-        self._setup_axis(ax)
+        self.setup_matplotlib_axis(ax)
+        self.setup_matplotlib_ticks(ax)
         # ax.set_xticks([elem.info["ele_s_start"] for elem in self.elements])
         # ax.set_xticklabels([elem.info["label_name"] for elem in self.elements], rotation=90)
         ax.grid(visible=False)
@@ -1263,7 +1257,7 @@ class FloorPlanGraph(GraphBase):
         if self.floor_orbits is not None:
             self.floor_orbits.plot(ax)
 
-        self._setup_axis(ax, xticks=False, yticks=False)
+        self.setup_matplotlib_axis(ax)
         return ax
 
 

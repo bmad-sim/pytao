@@ -4,9 +4,8 @@ import re
 import pytest
 from bokeh.plotting import output_file
 
-from pytao.plotting.bokeh import BokehAppState
-
 from .. import TaoStartup
+from ..plotting.bokeh import BokehAppState
 from .conftest import get_example, test_artifacts
 
 logger = logging.getLogger(__name__)
