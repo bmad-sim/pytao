@@ -101,7 +101,7 @@ def is_jupyter() -> bool:
 
 @functools.cache
 def select_graph_manager_class():
-    from .plot import MatplotlibGraphManager
+    from .mpl import MatplotlibGraphManager
 
     if not is_jupyter():
         return MatplotlibGraphManager
