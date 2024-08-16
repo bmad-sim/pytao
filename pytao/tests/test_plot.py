@@ -54,6 +54,34 @@ def test_plot_floor_plan(use_subprocess: bool, plot_backend: BackendName):
         tao.plot("floor_plan")
 
 
+def test_plot_all_interface(plot_backend: BackendName):
+    startup = get_regression_test("tao.init_floor_orbit")
+    startup.plot = plot_backend
+    with startup.run_context(use_subprocess=False) as tao:
+        tao.plot()
+
+
+@pytest.mark.parametrize(
+    ("include_layout",),
+    [
+        pytest.param(True, id="include_layout"),
+        pytest.param(False, id="no_layout"),
+    ],
+)
+def test_plot_single_interface(plot_backend: BackendName, include_layout: bool):
+    startup = get_regression_test("tao.init_floor_orbit")
+    startup.plot = plot_backend
+    with startup.run_context(use_subprocess=False) as tao:
+        tao.plot("alpha", include_layout=include_layout)
+
+
+def test_plot_grid_interface(plot_backend: BackendName):
+    startup = get_regression_test("tao.init_floor_orbit")
+    startup.plot = plot_backend
+    with startup.run_context(use_subprocess=False) as tao:
+        tao.plot(["alpha", "beta"])
+
+
 def test_plot_floor_layout(use_subprocess: bool, plot_backend: BackendName):
     startup = get_regression_test("tao.init_floor_orbit")
     startup.plot = plot_backend
