@@ -60,7 +60,7 @@ class MatplotlibGraphManager(GraphManager):
 
     def plot_grid(
         self,
-        graph_names: List[str],
+        templates: List[str],
         grid: Tuple[int, int],
         *,
         include_layout: bool = False,
@@ -82,8 +82,8 @@ class MatplotlibGraphManager(GraphManager):
 
         Parameters
         ----------
-        graph_names : list of str
-            Graph names.
+        templates : list of str
+            Graph template names.
         grid : (nrows, ncols), optional
             Grid the provided graphs into this many rows and columns.
         include_layout : bool, default=False
@@ -129,7 +129,7 @@ class MatplotlibGraphManager(GraphManager):
         """
 
         graphs = self.prepare_grid_by_names(
-            graph_names=graph_names,
+            template_names=templates,
             curves=curves,
             settings=settings,
         )
@@ -141,7 +141,7 @@ class MatplotlibGraphManager(GraphManager):
 
         if include_layout:
             layout_height = layout_height or _Defaults.layout_height
-            empty_graph_count = nrows * ncols - len(graph_names)
+            empty_graph_count = nrows * ncols - len(templates)
             if empty_graph_count < ncols:
                 # Add a row for the layout
                 nrows += 1
@@ -211,7 +211,7 @@ class MatplotlibGraphManager(GraphManager):
 
     def plot(
         self,
-        graph_name: str,
+        template: str,
         *,
         region_name: Optional[str] = None,
         include_layout: bool = True,
@@ -233,7 +233,7 @@ class MatplotlibGraphManager(GraphManager):
 
         Parameters
         ----------
-        graph_name : str
+        template : str
             Graph template name.
         region_name : str, optional
             Graph region name.
@@ -279,13 +279,13 @@ class MatplotlibGraphManager(GraphManager):
         List[matplotlib.axes.Axes]
         """
         graphs = self.prepare_graphs_by_name(
-            graph_name=graph_name,
+            template_name=template,
             region_name=region_name,
             curves=curves,
             settings=settings,
         )
         if not graphs:
-            raise UnsupportedGraphError(f"No supported plots from this template: {graph_name}")
+            raise UnsupportedGraphError(f"No supported plots from this template: {template}")
 
         if figsize is None and width and height:
             figsize = (width, height)

@@ -1616,7 +1616,7 @@ class BokehGraphManager(GraphManager):
 
     def plot_grid(
         self,
-        graph_names: List[str],
+        templates: List[str],
         grid: Tuple[int, int],
         *,
         include_layout: bool = False,
@@ -1636,8 +1636,8 @@ class BokehGraphManager(GraphManager):
 
         Parameters
         ----------
-        graph_names : list of str
-            Graph names.
+        templates : list of str
+            Graph template names.
         grid : (nrows, ncols), optional
             Grid the provided graphs into this many rows and columns.
         include_layout : bool, default=False
@@ -1674,7 +1674,7 @@ class BokehGraphManager(GraphManager):
         BokehAppCreator
         """
         graphs = self.prepare_grid_by_names(
-            graph_names=graph_names,
+            template_names=templates,
             curves=curves,
             settings=settings,
         )
@@ -1705,7 +1705,7 @@ class BokehGraphManager(GraphManager):
 
     def plot(
         self,
-        graph_name: str,
+        template: str,
         *,
         region_name: Optional[str] = None,
         include_layout: bool = True,
@@ -1725,7 +1725,7 @@ class BokehGraphManager(GraphManager):
 
         Parameters
         ----------
-        graph_name : str
+        template : str
             Graph template name.
         region_name : str, optional
             Graph region name.
@@ -1765,14 +1765,14 @@ class BokehGraphManager(GraphManager):
         BokehAppCreator
         """
         graphs = self.prepare_graphs_by_name(
-            graph_name=graph_name,
+            template_name=template,
             region_name=region_name,
             curves=curves,
             settings=settings,
         )
 
         if not graphs:
-            raise UnsupportedGraphError(f"No supported plots from this template: {graph_name}")
+            raise UnsupportedGraphError(f"No supported plots from this template: {template}")
 
         app = BokehAppCreator(
             manager=self,
@@ -1878,7 +1878,7 @@ class NotebookGraphManager(BokehGraphManager):
 
     def plot_grid(
         self,
-        graph_names: List[str],
+        templates: List[str],
         grid: Tuple[int, int],
         *,
         curves: Optional[List[CurveIndexToCurve]] = None,
@@ -1898,8 +1898,8 @@ class NotebookGraphManager(BokehGraphManager):
 
         Parameters
         ----------
-        graph_names : list of str
-            Graph names.
+        templates : list of str
+            Graph template names.
         grid : (nrows, ncols), optional
             Grid the provided graphs into this many rows and columns.
         include_layout : bool, default=False
@@ -1936,7 +1936,7 @@ class NotebookGraphManager(BokehGraphManager):
         BokehAppCreator
         """
         graphs, app = super().plot_grid(
-            graph_names=graph_names,
+            templates=templates,
             grid=grid,
             curves=curves,
             settings=settings,
@@ -1955,7 +1955,7 @@ class NotebookGraphManager(BokehGraphManager):
 
     def plot(
         self,
-        graph_name: str,
+        template: str,
         *,
         region_name: Optional[str] = None,
         include_layout: bool = True,
@@ -1977,7 +1977,7 @@ class NotebookGraphManager(BokehGraphManager):
 
         Parameters
         ----------
-        graph_name : str
+        template : str
             Graph template name.
         region_name : str, optional
             Graph region name.
@@ -2016,7 +2016,7 @@ class NotebookGraphManager(BokehGraphManager):
         """
         graphs, app = super().plot(
             region_name=region_name,
-            graph_name=graph_name,
+            template=template,
             include_layout=include_layout,
             sizing_mode=sizing_mode,
             width=width,

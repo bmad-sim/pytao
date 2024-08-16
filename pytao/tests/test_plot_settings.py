@@ -78,7 +78,7 @@ def test_plot_settings_grid(plot_backend: BackendName, request: FixtureRequest):
     with example.run_context(use_subprocess=True) as tao:
         manager = tao.plot_manager
         graphs, *_ = manager.plot_grid(
-            graph_names=["zphase", "zphase"],
+            templates=["zphase", "zphase"],
             grid=(3, 2),
             include_layout=True,
             curves=[

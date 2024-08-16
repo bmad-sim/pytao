@@ -139,7 +139,7 @@ def test_plot_grid(plot_backend: BackendName):
     with example.run_context(use_subprocess=True) as tao:
         manager = tao.plot_manager
         manager.plot_grid(
-            graph_names=["zphase", "zphase", "zphase", "zphase2"],
+            templates=["zphase", "zphase", "zphase", "zphase2"],
             grid=(2, 2),
             curves=[
                 {1: TaoCurveSettings(ele_ref_name=r"linac.beg\1")},
@@ -158,7 +158,7 @@ def test_plot_grid_with_layout(plot_backend: BackendName):
     with example.run_context(use_subprocess=True) as tao:
         manager = tao.plot_manager
         manager.plot_grid(
-            graph_names=["zphase", "zphase", "zphase", "zphase2"],
+            templates=["zphase", "zphase", "zphase", "zphase2"],
             grid=(3, 2),
             include_layout=True,
             curves=[
@@ -179,4 +179,5 @@ def test_plot_update(plot_backend: BackendName):
     with example.run_context(use_subprocess=True) as tao:
         manager = tao.plot_manager
         (graph,), *_ = manager.plot("alpha1", include_layout=False)
-        graph.update(manager)
+        updated = graph.update(manager)
+        assert graph == updated

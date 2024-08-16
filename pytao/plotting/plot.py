@@ -183,11 +183,13 @@ class GraphBase:
         error_on_new_type: bool = True,
         raise_if_invalid: bool = False,
     ):
+        """ """
         try:
             graphs = manager.prepare_graphs_by_name(
                 region_name=self.region_name,
-                graph_name=self.template_name or self.graph_name,
+                template_name=self.template_name or self.graph_name,
                 ignore_invalid=False,
+                place=False,
             )
         except GraphInvalidError:
             if raise_if_invalid:
@@ -1347,7 +1349,6 @@ class GraphManager(ABC):
     tao: Tao
     regions: Dict[str, List[AnyGraph]]
     _to_place: Dict[str, str]
-    _graph_name_to_regions: Dict[str, Set[str]]
     layout_template: str = "lat_layout"
     floor_plan_template: str = "floor_plan"
 
@@ -1355,13 +1356,11 @@ class GraphManager(ABC):
         self.tao = tao
         self.regions = {}
         self._to_place = {}
-        self._graph_name_to_regions = {}
 
     def tao_init_hook(self) -> None:
         """Tao has reinitialized; clear our state."""
         self.regions.clear()
         self._to_place.clear()
-        self._graph_name_to_regions.clear()
 
     def _update_place_buffer(self):
         for item in self.tao.place_buffer():
@@ -1404,7 +1403,7 @@ class GraphManager(ABC):
         assert isinstance(graph, FloorPlanGraph)
         return graph
 
-    def get_region_for_graph(self, template_name: str) -> str:
+    def get_region_to_place_template(self, template_name: str) -> str:
         """Get a region for placing the graph."""
         for region_name, to_place in self.to_place.items():
             if to_place == template_name:
@@ -1452,10 +1451,10 @@ class GraphManager(ABC):
 
         logger.debug("Placing all plots: %s", to_place)
         result = {}
-        for region_name, graph_name in to_place:
+        for region_name, template_name in to_place:
             try:
                 result[region_name] = self.place(
-                    graph_name=graph_name,
+                    template_name=template_name,
                     region_name=region_name,
                     ignore_invalid=ignore_invalid,
                 )
@@ -1468,19 +1467,19 @@ class GraphManager(ABC):
     def update_region(
         self,
         region_name: str,
-        graph_name: str,
+        template_name: str,
         ignore_invalid: bool = True,
         ignore_unsupported: bool = True,
     ) -> List[AnyGraph]:
         """
-        Update a specific region.
+        Query information about already-placed graphs in a given region.
 
         Parameters
         ----------
         region_name : str, optional
-            The region name to place it.  Determined automatically if unspecified.
-        graph_name : str
-            The graph template name.
+            The region name where the graph was placed.
+        template_name : str
+            The template name the user placed.
         ignore_invalid : bool
             Ignore graphs marked as invalid by bmad.
         ignore_unsupported : bool
@@ -1495,9 +1494,16 @@ class GraphManager(ABC):
 
         result = []
         plot_names = get_plots_in_region(self.tao, region_name)
-        for plot_name in plot_names:
+        for idx, plot_name in enumerate(plot_names):
             try:
-                result.append(self.make_graph(region_name, plot_name))
+                result.append(
+                    self.make_graph(
+                        region_name=region_name,
+                        graph_name=plot_name,
+                        template_name=template_name,
+                        template_graph_index=idx,
+                    )
+                )
             except UnsupportedGraphError as ex:
                 if ignore_unsupported:
                     logger.debug(f"Unsupported graph in region {region_name}: {ex}")
@@ -1510,11 +1516,10 @@ class GraphManager(ABC):
                 raise
 
         self.regions[region_name] = result
-        self._graph_name_to_regions.setdefault(graph_name, set()).add(region_name)
         logger.debug(
-            "Updating region: %s graph: %s generated %d plots",
+            "Updating region: %s template: %s generated %d plots",
             region_name,
-            graph_name,
+            template_name,
             len(result),
         )
         return result
@@ -1525,7 +1530,7 @@ class GraphManager(ABC):
         region_name: Optional[str] = None,
     ) -> str:
         if region_name is None:
-            region_name = self.get_region_for_graph(template_name)
+            region_name = self.get_region_to_place_template(template_name)
             logger.debug(f"Picked {region_name} for template {template_name}")
 
         self.to_place.pop(region_name, None)
@@ -1561,7 +1566,7 @@ class GraphManager(ABC):
         region_name = self._place(template_name, region_name)
         return self.update_region(
             region_name=region_name,
-            graph_name=template_name,
+            template_name=template_name,
             ignore_invalid=ignore_invalid,
         )
 
@@ -1569,16 +1574,11 @@ class GraphManager(ABC):
         if region_name == "*":
             self.regions.clear()
             logger.debug("Clearing all regions")
-            self._graph_name_to_regions.clear()
             return
 
         logger.debug("Clearing region %s", region_name)
         if region_name in self.regions:
             self.regions[region_name].clear()
-
-        for regions in self._graph_name_to_regions.values():
-            if region_name in regions:
-                regions.remove(region_name)
 
     def clear(self, region_name: str = "*"):
         """
@@ -1598,7 +1598,7 @@ class GraphManager(ABC):
 
     def prepare_grid_by_names(
         self,
-        graph_names: List[str],
+        template_names: List[str],
         curves: Optional[List[CurveIndexToCurve]] = None,
         settings: Optional[List[TaoGraphSettings]] = None,
     ):
@@ -1609,7 +1609,7 @@ class GraphManager(ABC):
 
         Parameters
         ----------
-        graph_names : list of str
+        template_names : list of str
             Graph names.
         curves : list of Dict[int, TaoCurveSettings], optional
             One dictionary per graph, with each dictionary mapping the curve
@@ -1623,27 +1623,27 @@ class GraphManager(ABC):
         list of graphs
         """
         if not curves:
-            curves = [{}] * len(graph_names)
-        elif len(curves) < len(graph_names):
+            curves = [{}] * len(template_names)
+        elif len(curves) < len(template_names):
             assert len(curves)
-            curves = list(curves) + [{}] * (len(graph_names) - len(curves))
+            curves = list(curves) + [{}] * (len(template_names) - len(curves))
 
         if not settings:
-            settings = [TaoGraphSettings()] * len(graph_names)
-        elif len(settings) < len(graph_names):
+            settings = [TaoGraphSettings()] * len(template_names)
+        elif len(settings) < len(template_names):
             settings = list(settings) + [TaoGraphSettings()] * (
-                len(graph_names) - len(settings)
+                len(template_names) - len(settings)
             )
 
         graphs = sum(
             (
                 self.prepare_graphs_by_name(
-                    graph_name=graph_name,
+                    template_name=template_name,
                     curves=graph_curves,
                     settings=graph_settings,
                 )
-                for graph_name, graph_curves, graph_settings in zip(
-                    graph_names,
+                for template_name, graph_curves, graph_settings in zip(
+                    template_names,
                     curves,
                     settings,
                 )
@@ -1653,25 +1653,26 @@ class GraphManager(ABC):
 
         if not graphs:
             raise UnsupportedGraphError(
-                f"No supported plots from these templates: {graph_names}"
+                f"No supported plots from these templates: {template_names}"
             )
         return graphs
 
     def prepare_graphs_by_name(
         self,
-        graph_name: str,
+        template_name: str,
         region_name: Optional[str] = None,
         settings: Optional[TaoGraphSettings] = None,
         curves: Optional[Dict[int, TaoCurveSettings]] = None,
         ignore_unsupported: bool = True,
         ignore_invalid: bool = True,
+        place: bool = True,
     ) -> List[AnyGraph]:
         """
         Prepare a graph for plotting.
 
         Parameters
         ----------
-        graph_name : str
+        template_name : str
             The graph template name.
         region_name : str, optional
             The region name to place it.  Determined automatically if unspecified.
@@ -1683,16 +1684,18 @@ class GraphManager(ABC):
             Ignore unsupported graph types (e.g., key tables).
         ignore_invalid : bool
             Ignore graphs marked as invalid by bmad.
+        place : bool, default=True
+            Tell Tao to place the template first.
 
         Returns
         -------
         list of graphs
             The type of each graph is backend-dependent.
         """
-        if not region_name:
-            region_name = self.get_region_for_graph(graph_name)
-
-        self._place(template_name=graph_name, region_name=region_name)
+        if place:
+            region_name = self._place(template_name=template_name, region_name=region_name)
+        elif not region_name:
+            region_name = self.get_region_to_place_template(template_name)
 
         if settings:
             self.configure_graph(region_name, settings)
@@ -1702,7 +1705,7 @@ class GraphManager(ABC):
 
         return self.update_region(
             region_name=region_name,
-            graph_name=graph_name,
+            template_name=template_name,
             ignore_unsupported=ignore_unsupported,
             ignore_invalid=ignore_invalid,
         )
@@ -1799,7 +1802,13 @@ class GraphManager(ABC):
             **kwargs,
         )
 
-    def make_graph(self, region_name: str, graph_name: str) -> AnyGraph:
+    def make_graph(
+        self,
+        region_name: str,
+        graph_name: str,
+        template_name: Optional[str] = None,
+        template_graph_index: Optional[int] = None,
+    ) -> AnyGraph:
         """
         Create a graph instance from an already-placed graph.
 
@@ -1808,18 +1817,28 @@ class GraphManager(ABC):
         region_name : str
             The region name of the graph.
         graph_name : str
-            The graph name (not the template name).
+            The placed graph name (tao_template_graph graph%name).
+        template_name : str, optional
+            The graph template name.
+        template_graph_index : str, optional
+            The zero-based graph index of those placed for `template_name`.
 
         Returns
         -------
         AnyGraph
         """
-        return make_graph(self.tao, region_name, graph_name)
+        return make_graph(
+            self.tao,
+            region_name=region_name,
+            graph_name=graph_name,
+            template_name=template_name,
+            template_graph_index=template_graph_index,
+        )
 
     @abstractmethod
     def plot(
         self,
-        graph_name: str,
+        template: str,
         *,
         region_name: Optional[str] = None,
         include_layout: bool = True,
@@ -1830,7 +1849,7 @@ class GraphManager(ABC):
     @abstractmethod
     def plot_grid(
         self,
-        graph_names: List[str],
+        templates: List[str],
         grid: Tuple[int, int],
         *,
         include_layout: bool = False,
