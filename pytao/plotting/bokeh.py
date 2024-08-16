@@ -15,6 +15,7 @@ from typing import (
     List,
     NamedTuple,
     Optional,
+    Sequence,
     Tuple,
     Type,
     TypeVar,
@@ -65,6 +66,7 @@ from .plot import (
 )
 from .settings import TaoGraphSettings
 from .types import FloatVariableInfo
+from .util import Limit, OptionalLimit, fix_grid_limits
 
 if typing.TYPE_CHECKING:
     from .. import Tao
@@ -717,8 +719,6 @@ class BokehGraphBase(ABC, Generic[TGraph]):
 
         return bokeh_app
 
-    __call__ = create_full_app
-
     @abstractmethod
     def create_figure(
         self,
@@ -1107,7 +1107,6 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
 AnyBokehGraph = Union[BokehBasicGraph, BokehLatticeLayoutGraph, BokehFloorPlanGraph]
 
 
-OptionalLimit = Optional[Tuple[float, float]]
 UIGridLayoutList = List[Optional[bokeh.models.UIElement]]
 
 
@@ -1222,14 +1221,6 @@ class BokehAppCreator:
         if not len(graphs):
             raise ValueError("BokehAppCreator requires 1 or more graph")
 
-        xlim = list(xlim or [None])
-        if len(xlim) < len(graphs):
-            xlim.extend([xlim[-1]] * (len(graphs) - len(xlim)))
-
-        ylim = list(ylim or [None])
-        if len(ylim) < len(graphs):
-            ylim.extend([ylim[-1]] * (len(graphs) - len(ylim)))
-
         if any(isinstance(graph, LatticeLayoutGraph) for graph in graphs):
             include_layout = False
         elif not any(graph.is_s_plot for graph in graphs):
@@ -1256,8 +1247,8 @@ class BokehAppCreator:
         self.graph_sizing_mode = graph_sizing_mode
         self.include_layout = include_layout
         self.layout_height = layout_height
-        self.xlim = xlim
-        self.ylim = ylim
+        self.xlim = fix_grid_limits(xlim, num_graphs=len(graphs))
+        self.ylim = fix_grid_limits(ylim, num_graphs=len(graphs))
 
     def create_state(self) -> BokehAppState:
         """Create an independent application state based on the graph data."""
@@ -1625,8 +1616,8 @@ class BokehGraphManager(GraphManager):
         height: Optional[int] = None,
         figsize: Optional[Tuple[int, int]] = None,
         layout_height: Optional[int] = None,
-        xlim: Optional[List[OptionalLimit]] = None,
-        ylim: Optional[List[OptionalLimit]] = None,
+        xlim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
+        ylim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
         curves: Optional[List[CurveIndexToCurve]] = None,
         settings: Optional[List[TaoGraphSettings]] = None,
         save: Union[bool, str, pathlib.Path, None] = None,
@@ -1887,8 +1878,8 @@ class NotebookGraphManager(BokehGraphManager):
         share_x: Optional[bool] = None,
         figsize: Optional[Tuple[int, int]] = None,
         layout_height: Optional[int] = None,
-        xlim: Optional[List[Optional[Tuple[float, float]]]] = None,
-        ylim: Optional[List[Optional[Tuple[float, float]]]] = None,
+        xlim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
+        ylim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
         width: Optional[int] = None,
         height: Optional[int] = None,
         save: Union[bool, str, pathlib.Path, None] = None,
@@ -1965,8 +1956,8 @@ class NotebookGraphManager(BokehGraphManager):
         layout_height: Optional[int] = None,
         share_x: Optional[bool] = None,
         vars: bool = False,
-        xlim: Optional[Tuple[float, float]] = None,
-        ylim: Optional[Tuple[float, float]] = None,
+        xlim: Optional[Limit] = None,
+        ylim: Optional[Limit] = None,
         notebook_handle: bool = False,
         save: Union[bool, str, pathlib.Path, None] = None,
         curves: Optional[Dict[int, TaoCurveSettings]] = None,
@@ -2038,8 +2029,6 @@ class NotebookGraphManager(BokehGraphManager):
             notebook_handle=notebook_handle,
         )
         return graphs, app
-
-    __call__ = plot
 
     def plot_field(
         self,

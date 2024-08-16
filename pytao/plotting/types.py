@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 from typing_extensions import NotRequired, TypedDict
 
@@ -350,6 +350,8 @@ FloatVariableInfo = TypedDict(
 
 
 Point = Tuple[float, float]
+Limit = Tuple[float, float]
+OptionalLimit = Optional[Limit]
 
 
 ShapeListInfo = TypedDict(

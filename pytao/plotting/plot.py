@@ -59,6 +59,7 @@ from .types import (
     PlotRegionInfo,
     Point,
     WaveParams,
+    Limit,
 )
 
 if typing.TYPE_CHECKING:
@@ -208,8 +209,26 @@ class GraphBase:
                 return graph
         raise RuntimeError("Plot not found after update?")
 
-    def setup_matplotlib_ticks(self, ax: matplotlib.axes.Axes):
-        """Configure ticks on the provided matplotlib axes (x and y)."""
+    def setup_matplotlib_ticks(
+        self,
+        ax: matplotlib.axes.Axes,
+        user_xlim: Optional[Limit],
+        user_ylim: Optional[Limit],
+    ) -> None:
+        if user_xlim is None:
+            self._setup_matplotlib_xticks(ax)
+        else:
+            ax.set_xlim(user_xlim)
+
+        if user_ylim is None:
+            self._setup_matplotlib_yticks(ax)
+        else:
+            ax.set_ylim(user_ylim)
+
+    def _setup_matplotlib_xticks(self, ax: matplotlib.axes.Axes):
+        """Configure ticks on the provided matplotlib x-axis."""
+        ax.set_xlim(_fix_limits(self.xlim))
+
         xlim = ax.get_xlim()
         if self.info["x_minor_div"] > 0:
             ax.xaxis.set_minor_locator(AutoMinorLocator(self.info["x_minor_div"]))
@@ -219,6 +238,9 @@ class GraphBase:
             ticks = np.linspace(*xlim, self.info["x_major_div_nominal"])
             ax.set_xticks(ticks)
 
+    def _setup_matplotlib_yticks(self, ax: matplotlib.axes.Axes):
+        """Configure ticks on the provided matplotlib y-axis."""
+        ax.set_ylim(_fix_limits(self.ylim))
         ylim = ax.get_ylim()
         ax.yaxis.set_minor_locator(AutoMinorLocator())
         ax.tick_params(axis="y", which="minor", length=4, color="black")
@@ -233,8 +255,6 @@ class GraphBase:
         ax.set_title(pgplot.mpl_string(self.title))
         ax.set_xlabel(pgplot.mpl_string(self.xlabel))
         ax.set_ylabel(pgplot.mpl_string(self.ylabel))
-        ax.set_xlim(_fix_limits(self.xlim))
-        ax.set_ylim(_fix_limits(self.ylim))
         ax.set_axisbelow(True)
 
         if self.draw_grid:
@@ -574,7 +594,6 @@ class BasicGraph(GraphBase):
             ax.legend()
 
         self.setup_matplotlib_axis(ax)
-        self.setup_matplotlib_ticks(ax)
         return ax
 
 
@@ -807,7 +826,6 @@ class LatticeLayoutGraph(GraphBase):
         ax.yaxis.set_visible(False)
 
         self.setup_matplotlib_axis(ax)
-        self.setup_matplotlib_ticks(ax)
         # ax.set_xticks([elem.info["ele_s_start"] for elem in self.elements])
         # ax.set_xticklabels([elem.info["label_name"] for elem in self.elements], rotation=90)
         ax.grid(visible=False)

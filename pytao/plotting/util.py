@@ -3,8 +3,9 @@ from __future__ import annotations
 import functools
 import logging
 import sys
-from typing import Tuple
+from typing import List, Optional, Sequence, Tuple, Union
 
+from .types import OptionalLimit, Limit
 import numpy as np
 
 logger = logging.getLogger(__name__)
@@ -109,3 +110,21 @@ def select_graph_manager_class():
     from .bokeh import select_graph_manager_class as select_bokeh_class
 
     return select_bokeh_class()
+
+
+def fix_grid_limits(
+    limits: Union[OptionalLimit, Sequence[OptionalLimit]],
+    num_graphs: int,
+) -> List[Optional[Limit]]:
+    if not limits:
+        return [None] * num_graphs
+
+    if all(isinstance(v, (float, int)) for v in limits):
+        res = [limits]
+    else:
+        res = list(limits or [None])
+
+    if len(res) >= num_graphs:
+        return res[:num_graphs]
+
+    return res + [res[-1]] * (num_graphs - len(res))

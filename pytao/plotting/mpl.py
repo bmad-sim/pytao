@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import pathlib
 import time
-from typing import ClassVar, Dict, List, Literal, Optional, Tuple, Union
+from typing import ClassVar, Dict, List, Literal, Optional, Sequence, Tuple, Union
 
 import matplotlib.axis
 import matplotlib.axes
@@ -19,6 +19,9 @@ from .plot import (
     UnsupportedGraphError,
 )
 from .settings import TaoGraphSettings
+from .util import fix_grid_limits
+from .types import OptionalLimit, Limit
+
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +34,7 @@ class _Defaults:
 def set_defaults(
     layout_height: Optional[float] = None,
     colormap: Optional[str] = None,
-    figsize: Optional[float] = None,
+    figsize: Optional[Tuple[float, float]] = None,
     width: Optional[int] = None,
     height: Optional[int] = None,
     dpi: Optional[int] = None,
@@ -53,6 +56,22 @@ def _reset_tick_locators(ax: Union[matplotlib.axis.XAxis, matplotlib.axis.YAxis]
     ax.set_minor_locator(matplotlib.ticker.AutoMinorLocator())
 
 
+def get_figsize(
+    figsize: Optional[Tuple[float, float]] = None,
+    width: Optional[float] = None,
+    height: Optional[float] = None,
+):
+    if figsize is not None:
+        return figsize
+
+    if width or height:
+        return (
+            width or plt.rcParams["figure.figsize"][0],
+            height or plt.rcParams["figure.figsize"][1],
+        )
+    return None
+
+
 class MatplotlibGraphManager(GraphManager):
     """Matplotlib backend graph manager."""
 
@@ -70,8 +89,8 @@ class MatplotlibGraphManager(GraphManager):
         layout_height: Optional[float] = None,
         width: Optional[float] = None,
         height: Optional[float] = None,
-        xlim: Optional[List[Optional[Tuple[float, float]]]] = None,
-        ylim: Optional[List[Optional[Tuple[float, float]]]] = None,
+        xlim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
+        ylim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
         curves: Optional[List[Dict[int, TaoCurveSettings]]] = None,
         settings: Optional[List[TaoGraphSettings]] = None,
         save: Union[bool, str, pathlib.Path, None] = None,
@@ -101,9 +120,9 @@ class MatplotlibGraphManager(GraphManager):
         layout_height : int, optional
             Normalized height of the layout plot - assuming regular plots are
             of height 1.  Default is 0.5 which is configurable with `set_defaults`.
-        share_x : bool or None, default=None
-            Share x-axes where sensible (`None`) or force sharing x-axes (True)
-            for all plots.
+        share_x : bool, "row", "col", "all", default=True
+            Share all x-axes (`True` or "all"), share x-axes in rows ("row") or
+            in columns ("col").
         xlim : list of (float, float), optional
             X axis limits for each graph.
         ylim : list of (float, float), optional
@@ -136,8 +155,7 @@ class MatplotlibGraphManager(GraphManager):
         nrows, ncols = grid
         height_ratios = None
 
-        if figsize is None and width and height:
-            figsize = (width, height)
+        figsize = get_figsize(figsize, width, height)
 
         if include_layout:
             layout_height = layout_height or _Defaults.layout_height
@@ -164,17 +182,12 @@ class MatplotlibGraphManager(GraphManager):
                 for ax in row:
                     ax.set_axis_off()
 
-        xlim = xlim or [None]
-        if len(xlim) < len(graphs):
-            xlim.extend([xlim[-1]] * (len(graphs) - len(xlim)))
-
-        ylim = ylim or [None]
-        if len(ylim) < len(graphs):
-            ylim.extend([ylim[-1]] * (len(graphs) - len(ylim)))
+        all_xlim = fix_grid_limits(xlim, num_graphs=len(graphs))
+        all_ylim = fix_grid_limits(ylim, num_graphs=len(graphs))
 
         rows_cols = [(row, col) for row in range(nrows) for col in range(ncols)]
 
-        for graph, xl, yl, (row, col) in zip(graphs, xlim, ylim, rows_cols):
+        for graph, xl, yl, (row, col) in zip(graphs, all_xlim, all_ylim, rows_cols):
             ax = axes[row][col]
             try:
                 graph.plot(ax)
@@ -182,13 +195,7 @@ class MatplotlibGraphManager(GraphManager):
                 continue
 
             ax.set_axis_on()
-            if xl is not None or yl is not None:
-                if xl is not None:
-                    ax.set_xlim(xl)
-                    _reset_tick_locators(ax.xaxis)
-                if yl is not None:
-                    ax.set_ylim(yl)
-                    _reset_tick_locators(ax.yaxis)
+            graph.setup_matplotlib_ticks(ax, user_xlim=xl, user_ylim=yl)
 
         if include_layout:
             layout_graph = self.lattice_layout_graph
@@ -196,6 +203,15 @@ class MatplotlibGraphManager(GraphManager):
                 ax = axes[-1][col]
                 layout_graph.plot(ax)
                 ax.set_axis_on()
+
+                xl = None
+                if share_x in {"all", "col", True} and nrows > 1:
+                    try:
+                        xl = axes[0][col].get_xlim()
+                    except IndexError:
+                        pass
+
+                layout_graph.setup_matplotlib_ticks(ax, user_xlim=xl, user_ylim=None)
 
         if tight_layout and fig is not None:
             fig.tight_layout()
@@ -221,8 +237,8 @@ class MatplotlibGraphManager(GraphManager):
         layout_height: Optional[float] = None,
         figsize: Optional[Tuple[float, float]] = None,
         share_x: bool = True,
-        xlim: Optional[Tuple[float, float]] = None,
-        ylim: Optional[Tuple[float, float]] = None,
+        xlim: Optional[Limit] = None,
+        ylim: Optional[Limit] = None,
         save: Union[bool, str, pathlib.Path, None] = None,
         settings: Optional[TaoGraphSettings] = None,
         curves: Optional[Dict[int, TaoCurveSettings]] = None,
@@ -287,8 +303,7 @@ class MatplotlibGraphManager(GraphManager):
         if not graphs:
             raise UnsupportedGraphError(f"No supported plots from this template: {template}")
 
-        if figsize is None and width and height:
-            figsize = (width, height)
+        figsize = get_figsize(figsize, width, height)
 
         if (
             include_layout
@@ -337,15 +352,13 @@ class MatplotlibGraphManager(GraphManager):
             except UnsupportedGraphError:
                 continue
 
-            if xlim is not None or ylim is not None:
-                if xlim is not None:
-                    ax.set_xlim(xlim)
-                    _reset_tick_locators(ax.xaxis)
+            if isinstance(graph, LatticeLayoutGraph) and len(graphs) > 1:
+                # Do not set ylimits if the user specifically requested a layout graph
+                yl = None
+            else:
+                yl = ylim
 
-                if ylim is not None:
-                    if not isinstance(graph, LatticeLayoutGraph) or len(graphs) == 1:
-                        ax.set_ylim(ylim)
-                        _reset_tick_locators(ax.yaxis)
+            graph.setup_matplotlib_ticks(ax, user_xlim=xlim, user_ylim=yl)
 
         if fig is not None:
             if tight_layout:
@@ -360,8 +373,6 @@ class MatplotlibGraphManager(GraphManager):
 
         return graphs, fig, axes
 
-    __call__ = plot
-
     def plot_field(
         self,
         ele_id: str,
@@ -369,7 +380,7 @@ class MatplotlibGraphManager(GraphManager):
         colormap: Optional[str] = None,
         radius: float = 0.015,
         num_points: int = 100,
-        figsize: Optional[Tuple[int, int]] = None,
+        figsize: Optional[Tuple[float, float]] = None,
         width: int = 4,
         height: int = 4,
         x_scale: float = 1e3,
@@ -397,11 +408,10 @@ class MatplotlibGraphManager(GraphManager):
         """
         user_specified_axis = ax is not None
 
-        if figsize is None and width and height:
-            figsize = (width, height)
+        figsize = get_figsize(figsize, width, height)
 
         if ax is None:
-            _, ax = plt.subplots(figsize=(width, height))
+            _, ax = plt.subplots(figsize=figsize)
         assert ax is not None
 
         colormap = colormap or _Defaults.colormap
