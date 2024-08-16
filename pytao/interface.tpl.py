@@ -480,6 +480,13 @@ class Tao(TaoCore):
             )
 
     def _init(self, startup: TaoStartup):
+        for manager in self._graph_managers.values():
+            try:
+                manager.tao_init_hook()
+            except Exception:
+                logger.exception(
+                    "Tao plot manager re-initialization failure (%s)", type(manager)
+                )
         return super().init(startup.tao_init)
 
     def __execute(

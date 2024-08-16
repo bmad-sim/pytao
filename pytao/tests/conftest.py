@@ -13,7 +13,15 @@ from .. import SubprocessTao, Tao, TaoStartup
 matplotlib.use("Agg")
 
 test_root = pathlib.Path(__file__).parent.resolve()
+packaged_examples_root = test_root / "input_files"
 test_artifacts = test_root / "artifacts"
+
+regression_test_root = pathlib.Path("$ACC_ROOT_DIR/regression_tests/pipe_test/")
+example_root = pathlib.Path("$ACC_ROOT_DIR/bmad-doc/tao_examples")
+init_files = list(pathlib.Path(os.path.expandvars(regression_test_root)).glob("tao.init*"))
+example_init_files = list(
+    path for path in pathlib.Path(os.path.expandvars(example_root)).glob("*/tao.init")
+)
 
 
 @pytest.fixture
@@ -44,30 +52,34 @@ def ensure_successful_parsing(caplog):
             pytest.fail(error.message)
 
 
-regression_test_root = pathlib.Path("$ACC_ROOT_DIR/regression_tests/pipe_test/")
-example_root = pathlib.Path("$ACC_ROOT_DIR/bmad-doc/tao_examples")
-init_files = list(pathlib.Path(os.path.expandvars(regression_test_root)).glob("tao.init*"))
-example_init_files = list(
-    path for path in pathlib.Path(os.path.expandvars(example_root)).glob("*/tao.init")
-)
+def get_packaged_example(name: str) -> TaoStartup:
+    """PyTao packaged bmad input data."""
+    init_file = packaged_examples_root / name / "tao.init"
+    startup = TaoStartup(
+        init_file=init_file,
+        # nostartup=nostartup,
+        metadata={"name": name},
+    )
+    print(f"Packaged example {name}: {startup.tao_init}")
+    return startup
 
 
 def get_example(name: str) -> TaoStartup:
+    """Bmad-doc example startup data."""
     init_file = example_root / name / "tao.init"
-    example_name = init_file.parts[-2]
-    if example_name == "multi_turn_orbit":
+    if name == "multi_turn_orbit":
         pytest.skip(
             "Multi-turn orbit example fails with: CANNOT SCALE GRAPH multi_turn.x SINCE NO DATA IS WITHIN THE GRAPH X-AXIS RANGE. "
         )
-    if example_name == "custom_tao_with_measured_data":
+    if name == "custom_tao_with_measured_data":
         # Looks to require some additional compilation and such
         pytest.skip(
             "'custom tao with measured data' example fails with PARSER ERROR DETECTED FOR UNIVERSE: 1"
         )
-    if example_name == "x_axis_param_plot":
+    if name == "x_axis_param_plot":
         pytest.skip("'x_axis_param_plot' example fails saying no data is in range")
 
-    nostartup = example_name in {
+    nostartup = name in {
         # "multi_turn_orbit",
         "custom_tao_with_measured_data",
         "x_axis_param_plot",
@@ -75,13 +87,14 @@ def get_example(name: str) -> TaoStartup:
     startup = TaoStartup(
         init_file=init_file,
         nostartup=nostartup,
-        metadata={"name": example_name},
+        metadata={"name": name},
     )
     print(f"Example {name}: {startup.tao_init}")
     return startup
 
 
 def get_regression_test(name: str) -> TaoStartup:
+    """Bmad-doc 'pipe' interface command regression test files."""
     init_file = regression_test_root / name
     nostartup = init_file.name == "tao.init_floor_orbit"
     return TaoStartup(

@@ -158,8 +158,15 @@ _point_field = Field(default_factory=lambda: (0.0, 0.0))
 class GraphBase:
     info: PlotGraphInfo
     region_info: PlotRegionInfo
+    # The region name where the graph is placed.
     region_name: str
+    # The name of the placed graph.
     graph_name: str
+    # The template used to create this graph.
+    template_name: Optional[str] = None
+    # The index of this graph after placing a template
+    template_graph_index: Optional[int] = None
+    # The Tao-specified x- and y-limits.
     xlim: Point = _point_field
     ylim: Point = _point_field
     xlabel: str = ""
@@ -179,7 +186,7 @@ class GraphBase:
         try:
             graphs = manager.prepare_graphs_by_name(
                 region_name=self.region_name,
-                graph_name=self.graph_name,
+                graph_name=self.template_name or self.graph_name,
                 ignore_invalid=False,
             )
         except GraphInvalidError:
@@ -187,7 +194,9 @@ class GraphBase:
                 raise
             return self
 
-        # TODO
+        if self.template_graph_index is not None:
+            return graphs[self.template_graph_index]
+
         for graph in graphs:
             if graph.graph_name == self.graph_name:
                 if error_on_new_type and not isinstance(graph, type(self)):
@@ -502,6 +511,8 @@ class BasicGraph(GraphBase):
         graph_name: str,
         *,
         info: Optional[PlotGraphInfo] = None,
+        template_name: Optional[str] = None,
+        template_graph_index: Optional[int] = None,
     ) -> BasicGraph:
         if info is None:
             info = get_plot_graph_info(tao, region_name, graph_name)
@@ -535,6 +546,8 @@ class BasicGraph(GraphBase):
             region_info=region_info,
             region_name=region_name,
             graph_name=graph_name,
+            template_name=template_name,
+            template_graph_index=template_graph_index,
             curves=curves,
             show_axes=info["draw_axes"],
             title="{title} {title_suffix}".format(**info),
@@ -820,7 +833,8 @@ class LatticeLayoutGraph(GraphBase):
         branch: Optional[int] = None,
         info: Optional[PlotGraphInfo] = None,
         plot_page: Optional[PlotPage] = None,
-        clamp_ylim: bool = True,
+        template_name: Optional[str] = None,
+        template_graph_index: Optional[int] = None,
     ) -> LatticeLayoutGraph:
         if info is None:
             try:
@@ -873,6 +887,8 @@ class LatticeLayoutGraph(GraphBase):
             region_info=region_info,
             region_name=region_name,
             graph_name=graph_name,
+            template_name=template_name,
+            template_graph_index=template_graph_index,
             xlim=(info["x_min"], info["x_max"]),
             ylim=(info["y_min"], info["y_max"]),
             border_xlim=(1.1 * info["x_min"], 1.1 * info["x_max"]),
@@ -1188,6 +1204,8 @@ class FloorPlanGraph(GraphBase):
         *,
         info: Optional[PlotGraphInfo] = None,
         plot_page: Optional[PlotPage] = None,
+        template_name: Optional[str] = None,
+        template_graph_index: Optional[int] = None,
     ) -> FloorPlanGraph:
         full_name = f"{region_name}.{graph_name}"
         if info is None:
@@ -1233,6 +1251,8 @@ class FloorPlanGraph(GraphBase):
             region_info=region_info,
             region_name=region_name,
             graph_name=graph_name,
+            template_name=template_name,
+            template_graph_index=template_graph_index,
             elements=elements,
             building_walls=building_walls,
             floor_orbits=floor_orbits,
@@ -1274,6 +1294,8 @@ def make_graph(
     tao: Tao,
     region_name: str,
     graph_name: str,
+    template_name: Optional[str] = None,
+    template_graph_index: Optional[int] = None,
 ) -> AnyGraph:
     graph_info = get_plot_graph_info(tao, region_name, graph_name)
     graph_type = graph_info["graph^type"]
@@ -1281,27 +1303,21 @@ def make_graph(
     logger.debug(f"Creating graph {region_name}.{graph_name} ({graph_type})")
 
     if graph_type == "floor_plan":
-        return FloorPlanGraph.from_tao(
-            tao=tao,
-            region_name=region_name,
-            graph_name=graph_name,
-            info=graph_info,
-        )
-    if graph_type == "lat_layout":
-        return LatticeLayoutGraph.from_tao(
-            tao,
-            region_name=region_name,
-            graph_name=graph_name,
-            info=graph_info,
-        )
-    if graph_type == "key_table":
+        cls = FloorPlanGraph
+    elif graph_type == "lat_layout":
+        cls = LatticeLayoutGraph
+    elif graph_type == "key_table":
         raise UnsupportedGraphError(graph_type)
+    else:
+        cls = BasicGraph
 
-    return BasicGraph.from_tao(
-        tao,
+    return cls.from_tao(
+        tao=tao,
         region_name=region_name,
         graph_name=graph_name,
         info=graph_info,
+        template_name=template_name,
+        template_graph_index=template_graph_index,
     )
 
 
@@ -1340,6 +1356,12 @@ class GraphManager(ABC):
         self.regions = {}
         self._to_place = {}
         self._graph_name_to_regions = {}
+
+    def tao_init_hook(self) -> None:
+        """Tao has reinitialized; clear our state."""
+        self.regions.clear()
+        self._to_place.clear()
+        self._graph_name_to_regions.clear()
 
     def _update_place_buffer(self):
         for item in self.tao.place_buffer():
@@ -1382,24 +1404,24 @@ class GraphManager(ABC):
         assert isinstance(graph, FloorPlanGraph)
         return graph
 
-    def get_region_for_graph(self, graph_name: str) -> str:
+    def get_region_for_graph(self, template_name: str) -> str:
         """Get a region for placing the graph."""
         for region_name, to_place in self.to_place.items():
-            if to_place == graph_name:
-                logger.debug("Graph %s found in region %s", graph_name, region_name)
+            if to_place == template_name:
+                logger.debug("Graph %s found in region %s", template_name, region_name)
                 return region_name
 
         try:
             region_name = find_unused_plot_region(self.tao, set(self.to_place))
         except AllPlotRegionsInUseError:
             region_name = list(self.regions)[0]
-            plots_in_region = list(graph.graph_name for graph in self.regions[region_name])
+            plots_in_region = list(graph.template_name for graph in self.regions[region_name])
             if plots_in_region:
                 logger.warning(
                     f"All plot regions are in use; reusing plot region {region_name} which has graphs: {plots_in_region}"
                 )
         else:
-            logger.debug("New region for graph %s: %s", graph_name, region_name)
+            logger.debug("New region for graph %s: %s", template_name, region_name)
         return region_name
 
     def place_all(
@@ -1499,32 +1521,32 @@ class GraphManager(ABC):
 
     def _place(
         self,
-        graph_name: str,
+        template_name: str,
         region_name: Optional[str] = None,
     ) -> str:
         if region_name is None:
-            region_name = self.get_region_for_graph(graph_name)
-            logger.debug(f"Picked {region_name} for {graph_name}")
+            region_name = self.get_region_for_graph(template_name)
+            logger.debug(f"Picked {region_name} for template {template_name}")
 
         self.to_place.pop(region_name, None)
 
-        logger.debug(f"Placing {graph_name} in {region_name}")
-        self.tao.cmd(f"place -no_buffer {region_name} {graph_name}")
+        logger.debug(f"Placing {template_name} in {region_name}")
+        self.tao.cmd(f"place -no_buffer {region_name} {template_name}")
         return region_name
 
     def place(
         self,
-        graph_name: str,
+        template_name: str,
         *,
         region_name: Optional[str] = None,
         ignore_invalid: bool = True,
     ) -> List[AnyGraph]:
         """
-        Place `graph_name` in `region_name`.
+        Place `template_name` in `region_name`.
 
         Parameters
         ----------
-        graph_name : str
+        template_name : str
             The graph template name.
         region_name : str, optional
             The region name to place it.  Determined automatically if unspecified.
@@ -1536,10 +1558,10 @@ class GraphManager(ABC):
         list of graphs
             The type of each graph is backend-dependent.
         """
-        region_name = self._place(graph_name, region_name)
+        region_name = self._place(template_name, region_name)
         return self.update_region(
             region_name=region_name,
-            graph_name=graph_name,
+            graph_name=template_name,
             ignore_invalid=ignore_invalid,
         )
 
@@ -1670,7 +1692,7 @@ class GraphManager(ABC):
         if not region_name:
             region_name = self.get_region_for_graph(graph_name)
 
-        self._place(graph_name=graph_name, region_name=region_name)
+        self._place(template_name=graph_name, region_name=region_name)
 
         if settings:
             self.configure_graph(region_name, settings)

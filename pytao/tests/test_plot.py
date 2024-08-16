@@ -7,7 +7,13 @@ import pytest
 
 from .. import SubprocessTao, Tao, TaoStartup
 from ..plotting.curves import TaoCurveSettings
-from .conftest import BackendName, get_example, get_regression_test, test_artifacts
+from .conftest import (
+    BackendName,
+    get_example,
+    get_packaged_example,
+    get_regression_test,
+    test_artifacts,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -165,3 +171,12 @@ def test_plot_grid_with_layout(plot_backend: BackendName):
             share_x=False,
             save=test_artifacts / f"test_plot_grid_with_layout-{plot_backend}",
         )
+
+
+def test_plot_update(plot_backend: BackendName):
+    example = get_packaged_example("optics_matching_tweaked")
+    example.plot = plot_backend
+    with example.run_context(use_subprocess=True) as tao:
+        manager = tao.plot_manager
+        (graph,), *_ = manager.plot("alpha1", include_layout=False)
+        graph.update(manager)
