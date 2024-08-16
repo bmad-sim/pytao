@@ -458,11 +458,7 @@ def _draw_layout_elems(
         )
 
 
-def _draw_annotations(
-    fig: figure,
-    elems: List[FloorPlanElement],
-    line_width: Optional[float] = None,
-):
+def _draw_annotations(fig: figure, elems: List[FloorPlanElement]):
     data = {
         "x": [],
         "y": [],
@@ -697,10 +693,7 @@ def _plot_patch(
     raise NotImplementedError(f"{type(patch).__name__}")
 
 
-def _fields_to_data_source(
-    fields: List[ElementField],
-    x_scale: float = 1e3,
-):
+def _fields_to_data_source(fields: List[ElementField], x_scale: float = 1.0):
     return ColumnDataSource(
         data={
             "ele_id": [field.ele_id for field in fields],
@@ -783,6 +776,8 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
             graph=graph,
             sizing_mode=sizing_mode,
             aspect_ratio=aspect_ratio,
+            width=width,
+            height=height,
         )
 
     def update_plot(
@@ -804,9 +799,9 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
         if tools is None:
             tools = _Defaults.lattice_layout_tools
 
-        add_named_hover_tool = isinstance(tools, str) and "hover" in tools.split()
+        add_named_hover_tool = isinstance(tools, str) and "hover" in tools.split(",")
         if add_named_hover_tool:
-            tools = ",".join(tool for tool in tools.split() if tool != "hover")
+            tools = ",".join(tool for tool in tools.split(",") if tool != "hover")
 
         graph = self.graph
         fig = figure(
@@ -903,7 +898,6 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
         fig: figure,
         *,
         widgets: Optional[List[bokeh.models.Widget]] = None,
-        tao: Optional[Tao] = None,
     ) -> None:
         try:
             self.tao.cmd("set global lattice_calc_on = F")
@@ -1007,9 +1001,9 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         if tools is None:
             tools = _Defaults.floor_plan_tools
 
-        add_named_hover_tool = isinstance(tools, str) and "hover" in tools.split()
+        add_named_hover_tool = isinstance(tools, str) and "hover" in tools.split(",")
         if add_named_hover_tool:
-            tools = ",".join(tool for tool in tools.split() if tool != "hover")
+            tools = ",".join(tool for tool in tools.split(",") if tool != "hover")
 
         graph = self.graph
         fig = figure(
@@ -1045,6 +1039,7 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
             )
 
             fig.add_tools(hover)
+
         box_zoom = get_tool_from_figure(fig, bokeh.models.BoxZoomTool)
         if box_zoom is not None:
             box_zoom.match_aspect = True
@@ -1059,15 +1054,6 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
 
         _draw_floor_plan_shapes(fig, self.graph.elements)
         _draw_annotations(fig, self.graph.elements)
-        # for elem in self.graph.elements:
-        #     for annotation in elem.annotations:
-        #         _draw_annotation(
-        #             fig,
-        #             annotation,
-        #             color=bokeh_color(elem.info["color"]),
-        #             source=ColumnDataSource(data={"name": [elem.info["label_name"]]}),
-        #         )
-
         _draw_limit_border(fig, graph.xlim, graph.ylim, alpha=0.1)
         return fig
 
@@ -1571,7 +1557,7 @@ class Variable:
 
         for pair in pairs:
             if isinstance(pair.bgraph, (BokehBasicGraph, BokehLatticeLayoutGraph)):
-                pair.bgraph.update_plot(pair.fig, tao=tao)
+                pair.bgraph.update_plot(pair.fig)
 
 
 def _clean_tao_exception_for_user(text: str, command: str) -> str:
@@ -1803,7 +1789,7 @@ class BokehGraphManager(GraphManager):
         colormap: Optional[str] = None,
         radius: float = 0.015,
         num_points: int = 100,
-        x_scale: float = 1e3,
+        x_scale: float = 1.0,
         width: Optional[int] = None,
         height: Optional[int] = None,
         save: Union[bool, str, pathlib.Path, None] = None,
@@ -2054,7 +2040,7 @@ class NotebookGraphManager(BokehGraphManager):
         num_points: int = 100,
         width: Optional[int] = None,
         height: Optional[int] = None,
-        x_scale: float = 1e3,
+        x_scale: float = 1.0,
         save: Union[bool, str, pathlib.Path, None] = None,
     ):
         """
@@ -2084,6 +2070,7 @@ class NotebookGraphManager(BokehGraphManager):
             width=width,
             height=height,
             save=save,
+            x_scale=x_scale,
         )
         bokeh.plotting.show(fig, notebook_handle=True)
 
