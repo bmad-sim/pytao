@@ -195,19 +195,6 @@ def get_tool_from_figure(fig: figure, tool_cls: Type[T_Tool]) -> Optional[T_Tool
     return tools[0] if tools else None
 
 
-def move_layout_to_bottom(bgraphs: List[AnyBokehGraph]) -> List[AnyBokehGraph]:
-    result = []
-    layout = None
-    for bgraph in bgraphs:
-        if isinstance(bgraph, BokehLatticeLayoutGraph):
-            layout = bgraph
-        else:
-            result.append(bgraph)
-    if layout is not None:
-        result.append(layout)
-    return result
-
-
 def link_crosshairs(figs: List[figure]):
     first, *rest = figs
     crosshair = get_tool_from_figure(first, bokeh.models.CrosshairTool)
@@ -695,29 +682,8 @@ class BokehGraphBase(ABC, Generic[TGraph]):
             *util.apply_factor_to_limits(*graph.ylim, limit_scale_factor)
         )
 
-    def to_html(
-        self,
-        title: Optional[str] = None,
-    ) -> str:
-        return bokeh.embed.file_html(models=[self.create_figure()], title=title)
-
-    def save(
-        self,
-        filename: AnyPath,
-        title: Optional[str] = None,
-    ):
-        source = self.to_html(title=title)
-        with open(filename, "wt") as fp:
-            fp.write(source)
-
-    def create_full_app(self):
-        def bokeh_app(doc):
-            primary_figure = self.create_figure()
-            doc.add_root(primary_figure)
-            for model in self.create_widgets(primary_figure):
-                doc.add_root(model)
-
-        return bokeh_app
+    def create_widgets(self, fig: figure) -> List[bokeh.models.UIElement]:
+        return []
 
     @abstractmethod
     def create_figure(
@@ -726,10 +692,6 @@ class BokehGraphBase(ABC, Generic[TGraph]):
         tools: str = "pan,wheel_zoom,box_zoom,save,reset,crosshair",
         toolbar_location: str = "above",
     ) -> figure:
-        raise NotImplementedError()
-
-    @abstractmethod
-    def create_widgets(self, fig: figure) -> List[bokeh.models.UIElement]:
         raise NotImplementedError()
 
 
@@ -824,9 +786,6 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
         if self.y_range is not None:
             fig.y_range = self.y_range
         return fig
-
-    def create_widgets(self, fig: figure) -> List[bokeh.models.UIElement]:
-        return []
 
 
 class BokehBasicGraph(BokehGraphBase[BasicGraph]):
@@ -943,46 +902,6 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
         for curve, source in zip(graph.curves, self.curve_data):
             _plot_curve(fig, curve, source)
         return fig
-
-    def create_widgets(self, fig: figure) -> List[bokeh.models.UIElement]:
-        update_button = bokeh.models.Button(label="Update")
-        num_points_slider = bokeh.models.Slider(
-            title="Data Points",
-            start=10,
-            end=10_000,
-            step=1_000,
-            value=401,
-        )
-
-        def update_plot():
-            self.update_plot(fig, widgets=[update_button, num_points_slider])
-
-        def ranges_update(event: bokeh.events.RangesUpdate) -> None:
-            new_xrange = self.graph.clamp_x_range(event.x0, event.x1)
-            if new_xrange != self.view_x_range:
-                self.view_x_range = new_xrange
-
-            try:
-                update_plot()
-            except Exception:
-                logger.exception("Failed to update number ranges")
-
-        def num_points_changed(_attr, _old, num_points: int):
-            self.num_points = num_points
-            try:
-                update_plot()
-            except Exception:
-                logger.exception("Failed to update number of points")
-
-        num_points_slider.on_change("value", num_points_changed)
-        update_button.on_click(update_plot)
-        fig.on_event(bokeh.events.RangesUpdate, cast(EventCallback, ranges_update))
-
-        models: List[bokeh.models.UIElement] = [
-            bokeh.layouts.column(bokeh.layouts.row(update_button, num_points_slider), fig)
-        ]
-
-        return models
 
 
 class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
@@ -1889,6 +1808,7 @@ class NotebookGraphManager(BokehGraphManager):
         settings: Optional[List[TaoGraphSettings]] = None,
         include_layout: bool = False,
         share_x: Optional[bool] = None,
+        vars: bool = False,
         figsize: Optional[Tuple[int, int]] = None,
         layout_height: Optional[int] = None,
         xlim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
@@ -1911,6 +1831,8 @@ class NotebookGraphManager(BokehGraphManager):
         share_x : bool or None, default=None
             Share x-axes where sensible (`None`) or force sharing x-axes (True)
             for all plots.
+        vars : bool, default=False
+            Show Tao variables as adjustable widgets, like "single mode".
         figsize : (int, int), optional
             Figure size. Alternative to specifying `width` and `height`
             separately.  This takes precedence over `width` and `height`.
@@ -1954,6 +1876,8 @@ class NotebookGraphManager(BokehGraphManager):
             layout_height=layout_height,
             save=save,
         )
+        if vars:
+            app.variables = Variable.from_tao_all(self.tao)
         bokeh.plotting.show(app.create_full_app())
         return graphs, app
 
@@ -2001,6 +1925,8 @@ class NotebookGraphManager(BokehGraphManager):
         share_x : bool or None, default=None
             Share x-axes where sensible (`None`) or force sharing x-axes (True)
             for all plots.
+        vars : bool, default=False
+            Show Tao variables as adjustable widgets, like "single mode".
         xlim : (float, float), optional
             X axis limits.
         ylim : (float, float), optional

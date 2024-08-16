@@ -4,11 +4,14 @@ import re
 
 import bokeh.events
 import bokeh.models
+import bokeh.plotting
 import pytest
 from bokeh.plotting import output_file
 
+from pytao.interface_commands import AnyTao
+
 from .. import TaoStartup
-from ..plotting.bokeh import BokehAppState
+from ..plotting.bokeh import BokehAppState, NotebookGraphManager
 from .conftest import get_example, test_artifacts
 
 logger = logging.getLogger(__name__)
@@ -168,3 +171,61 @@ def test_bokeh_range_updates(request: pytest.FixtureRequest, caplog: pytest.LogC
             for cb in cbs:
                 cb(bokeh.events.RangesUpdate(model=None, x0=10, x1=None))
             assert len(caplog.messages)
+
+
+def get_notebook_graph_manager(tao: AnyTao, monkeypatch: pytest.MonkeyPatch):
+    gm = NotebookGraphManager(tao)
+
+    def show(*args, **kwargs):
+        print("bokeh plotting show:", args, kwargs)
+
+    monkeypatch.setattr(bokeh.plotting, "show", show)
+    return gm
+
+
+def test_bokeh_notebook_plot_vars(
+    request: pytest.FixtureRequest,
+    caplog: pytest.LogCaptureFixture,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    with caplog.at_level(logging.ERROR):
+        with optics_matching(request) as (tao, _):
+            bokeh = get_notebook_graph_manager(tao, monkeypatch)
+            _, app = bokeh.plot("alpha", vars=True)
+
+            app.create_state()
+
+
+# def test_bokeh_plot_grid_vars(
+#     request: pytest.FixtureRequest,
+#     caplog: pytest.LogCaptureFixture,
+#     monkeypatch: pytest.MonkeyPatch,
+# ):
+#     with caplog.at_level(logging.ERROR):
+#         with optics_matching(request) as (tao, _):
+#             bokeh = get_notebook_graph_manager(tao, monkeypatch)
+#             (_alpha, _beta), app = bokeh.plot_grid(
+#                 ["alpha", "beta"],
+#                 grid=(2, 1),
+#                 include_layout=True,
+#                 vars=True,
+#             )
+#
+#             state = app.create_state()
+#
+#             cbs = app._monitor_range_updates(state)
+#
+#             caplog.clear()
+#             for cb in cbs:
+#                 cb(bokeh.events.RangesUpdate(model=None, x0=0, x1=10))
+#             assert not caplog.messages
+#
+#             caplog.clear()
+#             for cb in cbs:
+#                 cb(bokeh.events.RangesUpdate(model=None, x0=10, x1=0))
+#             assert len(caplog.messages)
+#
+#             caplog.clear()
+#             for cb in cbs:
+#                 cb(bokeh.events.RangesUpdate(model=None, x0=10, x1=None))
+#             assert len(caplog.messages)
