@@ -10,9 +10,11 @@ import matplotlib.axes
 import matplotlib.pyplot as plt
 import pytest
 
+from pytao.plotting.plot import LatticeLayoutElement
+
 from .. import SubprocessTao, Tao
 from ..plotting import layout_shapes
-from ..plotting.bokeh import _plot_layout_shape as plot_layout_shape
+from ..plotting.bokeh import _draw_layout_elems as bokeh_draw_layout_elems
 from ..plotting.bokeh import get_tool_from_figure
 from .conftest import test_artifacts
 
@@ -91,6 +93,35 @@ def test_plot_layout_shapes_mpl():
     plt.show()
 
 
+def bokeh_draw_layout_shape(fig: bokeh.plotting.figure, shape: layout_shapes.AnyLayoutShape):
+    bokeh_draw_layout_elems(
+        fig=fig,
+        s_start=0.0,
+        s_end=10.0,
+        skip_labels=False,
+        elems=[
+            LatticeLayoutElement(
+                info={
+                    "ix_branch": 0,
+                    "ix_ele": 0,
+                    "ele_s_start": 0.0,
+                    "ele_s_end": 0.0,
+                    "line_width": 0.0,
+                    "shape": "",
+                    "y1": 0.0,
+                    "y2": 0.0,
+                    "color": "",
+                    "label_name": "",
+                },
+                shape=shape,
+                annotations=[],
+                color=shape.color,
+                width=shape.line_width,
+            ),
+        ],
+    )
+
+
 def test_plot_layout_shapes_bokeh():
     bokeh.io.output_file(test_artifacts / "test_plot_layout_shapes_bokeh.html")
 
@@ -107,10 +138,7 @@ def test_plot_layout_shapes_bokeh():
             {"color": "green", "line_width": 2.0},
         ],
     ):
-        plot_layout_shape(
-            fig1,
-            shape,
-        )
+        bokeh_draw_layout_shape(fig1, shape)
 
     bokeh.io.save(bokeh.layouts.column([fig1]))
 
@@ -161,9 +189,6 @@ def test_plot_layout_wrapped_shapes_bokeh(
         s_min=0,
         s_max=30,
     )
-    plot_layout_shape(
-        fig1,
-        shape,
-    )
+    bokeh_draw_layout_shape(fig1, shape)
 
     bokeh.io.save(bokeh.layouts.column([fig1]))

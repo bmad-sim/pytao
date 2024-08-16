@@ -11,15 +11,59 @@ import matplotlib.axes
 import matplotlib.pyplot as plt
 import pytest
 
+from bokeh.plotting import figure
+
+from pytao.plotting.plot import FloorPlanElement
+
+
 from .. import SubprocessTao, Tao
-from ..plotting.bokeh import _plot_floor_plan_shape as plot_floor_plan_shape
-from ..plotting.floor_plan_shapes import BowTie, Box, Circle, Diamond, LetterX, SBend, XBox
+from ..plotting.bokeh import _draw_floor_plan_shapes
+from ..plotting.floor_plan_shapes import (
+    AnyFloorPlanShape,
+    BowTie,
+    Box,
+    Circle,
+    Diamond,
+    LetterX,
+    SBend,
+    XBox,
+)
 from .conftest import test_artifacts
 
 logger = logging.getLogger(__name__)
 
 
 AnyTao = Union[Tao, SubprocessTao]
+
+
+def draw_floor_plan_shape(
+    fig: figure,
+    shape: AnyFloorPlanShape,
+):
+    elem = FloorPlanElement(
+        branch_index=0,
+        index=0,
+        info={
+            "branch_index": 0,
+            "color": "",
+            "ele_key": "",
+            "end1_r1": 0.0,
+            "end1_r2": 0.0,
+            "end1_theta": 0.0,
+            "end2_r1": 0.0,
+            "end2_r2": 0.0,
+            "end2_theta": 0.0,
+            "index": 0,
+            "label_name": "",
+            "line_width": 0.0,
+            "shape": "",
+            "y1": 0.0,
+            "y2": 0.0,
+        },
+        annotations=[],
+        shape=shape,
+    )
+    _draw_floor_plan_shapes(fig, elems=[elem])
 
 
 @pytest.fixture(autouse=True, scope="function")
@@ -146,10 +190,10 @@ def test_floor_plan_shapes_bokeh(request: pytest.FixtureRequest):
 
     fig1 = bokeh.plotting.figure(match_aspect=True)
     for shape in make_shapes(width=1, height=2, angle_low=0, angle_high=90):
-        plot_floor_plan_shape(fig1, shape, line_width=1)
+        draw_floor_plan_shape(fig1, shape)
 
     fig2 = bokeh.plotting.figure(match_aspect=True)
     for shape in make_shapes(width=1, height=2, angle_low=90, angle_high=180):
-        plot_floor_plan_shape(fig2, shape, line_width=1)
+        draw_floor_plan_shape(fig2, shape)
 
     bokeh.io.save(bokeh.layouts.column([fig1, fig2]), resources=bokeh.resources.INLINE)

@@ -42,7 +42,7 @@ from ..interface_commands import AnyPath
 from . import floor_plan_shapes, pgplot, util
 from .curves import CurveIndexToCurve, PlotCurveLine, PlotCurveSymbols, TaoCurveSettings
 from .fields import ElementField
-from .layout_shapes import AnyLayoutShape, LayoutShape
+from .layout_shapes import LayoutShape
 from .patches import (
     PlotPatch,
     PlotPatchArc,
@@ -55,6 +55,7 @@ from .patches import (
 from .plot import (
     AnyGraph,
     BasicGraph,
+    FloorPlanElement,
     FloorPlanGraph,
     GraphBase,
     GraphManager,
@@ -383,108 +384,190 @@ def _plot_sbend_patch(fig: figure, patch: PlotPatchSbend):
     fig.line(x=[s2x1, s1x0], y=[s2y1, s1y0])
 
 
-def _plot_layout_shape(
+def _draw_layout_elems(
     fig: figure,
-    shape: AnyLayoutShape,
-    line_width: Optional[float] = None,
+    elems: List[LatticeLayoutElement],
     s_start: float = 0.0,
     s_end: float = 0.0,
+    skip_labels: bool = True,
 ):
-    lines = shape.to_lines()
-    source = ColumnDataSource(
-        data={
-            "xs": [line.xs for line in lines],
-            "ys": [line.ys for line in lines],
-            "name": [shape.name] * len(lines),
-            "s_start": [s_start] * len(lines),
-            "s_end": [s_end] * len(lines),
-        }
-    )
-    fig.multi_line(
-        xs="xs",
-        ys="ys",
-        color=bokeh_color(shape.color),
-        line_width=shape.line_width,
-        source=source,
-    )
-    if isinstance(shape, LayoutShape):
-        for patch in shape.to_patches():
-            _plot_patch(fig, patch, line_width=line_width)
+    line_data = {
+        "xs": [],
+        "ys": [],
+        "name": [],
+        "s_start": [],
+        "s_end": [],
+        "line_width": [],
+        "color": [],
+    }
+    rectangles: List[Tuple[LayoutShape, PlotPatchRectangle]] = []
 
+    for elem in elems:
+        color = bokeh_color(elem.color)
+        for annotation in elem.annotations:
+            if annotation.text == elem.info["label_name"] and skip_labels:
+                continue
+            _draw_annotation(fig, annotation, color=color, name=elem.info["label_name"])
 
-def _plot_floor_plan_shape(
-    fig: figure,
-    shape: floor_plan_shapes.AnyFloorPlanShape,
-    line_width: Optional[float] = None,
-):
-    if isinstance(
-        shape,
-        (
-            # floor_plan_shapes.Box,
-            floor_plan_shapes.XBox,
-            floor_plan_shapes.BowTie,
-            floor_plan_shapes.Diamond,
-        ),
-    ):
-        vx, vy = shape.vertices
+        shape = elem.shape
+        if not shape:
+            continue
+
+        lines = shape.to_lines()
+        line_data["xs"].extend([line.xs for line in lines])
+        line_data["ys"].extend([line.ys for line in lines])
+        line_data["name"].extend([shape.name] * len(lines))
+        line_data["s_start"].extend([s_start] * len(lines))
+        line_data["s_end"].extend([s_end] * len(lines))
+        line_data["line_width"].extend([shape.line_width] * len(lines))
+        line_data["color"].extend([color] * len(lines))
+
+        if isinstance(shape, LayoutShape):
+            for patch in shape.to_patches():
+                if isinstance(patch, PlotPatchRectangle):
+                    rectangles.append((shape, patch))
+                else:
+                    _plot_patch(fig, patch, line_width=shape.line_width)
+
+    if rectangles:
         source = ColumnDataSource(
             data={
-                "xs": [[[vx]]],
-                "ys": [[[vy]]],
-                "name": [shape.name],
+                "xs": [[[_patch_rect_to_points(patch)[0]]] for _, patch in rectangles],
+                "ys": [[[_patch_rect_to_points(patch)[1]]] for _, patch in rectangles],
+                "name": [shape.name for shape, _ in rectangles],
+                "color": [bokeh_color(shape.color) for shape, _ in rectangles],
+                "line_width": [shape.line_width for shape, _ in rectangles],
             }
         )
         fig.multi_polygons(
             xs="xs",
             ys="ys",
-            color=bokeh_color(shape.color),
-            line_width=shape.line_width,
+            color="color",
+            line_width="line_width",
             source=source,
             fill_alpha=0.0,
         )
 
-        return
-
-    lines = shape.to_lines()
-    if lines:
-        source = ColumnDataSource(
-            data={
-                "xs": [line.xs for line in lines],
-                "ys": [line.ys for line in lines],
-                "name": [shape.name] * len(lines),
-            }
-        )
+    if line_data:
         fig.multi_line(
             xs="xs",
             ys="ys",
-            color=bokeh_color(shape.color),
-            line_width=shape.line_width,
-            source=source,
+            color="color",
+            line_width="line_width",
+            source=ColumnDataSource(data=line_data),
         )
 
-    for patch in shape.to_patches():
-        if isinstance(patch, PlotPatchRectangle):
-            # TODO: using fig.rect requires the center position from the shape
-            # which is harder to glean from the patch
-            source = ColumnDataSource()
-            source.data["x"] = [(shape.x1 + shape.x2) / 2.0]
-            source.data["y"] = [(shape.y1 + shape.y2) / 2.0]
-            source.data["width"] = [patch.width]
-            source.data["height"] = [patch.height]
-            return fig.rect(
-                x="x",
-                y="y",
-                width="width",
-                height="height",
-                angle=math.radians(patch.angle),
-                fill_alpha=0.0,
-                line_alpha=1.0,
-                line_color=bokeh_color(patch.color),
-                line_width=line_width,
-                source=source,
-            )
+
+def _draw_annotations(
+    fig: figure,
+    elems: List[FloorPlanElement],
+    line_width: Optional[float] = None,
+):
+    data = {
+        "x": [],
+        "y": [],
+        "name": [],
+        "text": [],
+        "color": [],
+        "baseline": [],
+        "align": [],
+        "rotation": [],
+    }
+
+    for elem in elems:
+        for annotation in elem.annotations:
+            baseline = annotation.verticalalignment
+            if baseline == "center":
+                baseline = "middle"
+            data["x"].append(annotation.x)
+            data["y"].append(annotation.y)
+            data["text"].append(pgplot.mathjax_string(annotation.text))
+            data["name"].append(elem.name)
+            data["rotation"].append(math.radians(annotation.rotation))
+            data["align"].append(annotation.horizontalalignment)
+            data["baseline"].append(baseline)
+            data["color"].append(bokeh_color(annotation.color))
+
+    return fig.text(
+        "x",
+        "y",
+        angle="rotation",
+        text_align="align",
+        text_baseline="baseline",
+        color="color",
+        source=ColumnDataSource(data=data),
+    )
+
+
+def _draw_floor_plan_shapes(
+    fig: figure,
+    elems: List[FloorPlanElement],
+):
+    polygon_data = {
+        "xs": [],
+        "ys": [],
+        "name": [],
+        "line_width": [],
+        "color": [],
+    }
+    line_data = {
+        "xs": [],
+        "ys": [],
+        "name": [],
+        "line_width": [],
+        "color": [],
+    }
+    for elem in elems:
+        shape = elem.shape
+        if not shape:
+            continue
+
+        if isinstance(
+            shape,
+            (
+                floor_plan_shapes.Box,
+                floor_plan_shapes.XBox,
+                floor_plan_shapes.BowTie,
+                floor_plan_shapes.Diamond,
+            ),
+        ):
+            vx, vy = shape.vertices
+            polygon_data["xs"].append([[vx]])
+            polygon_data["ys"].append([[vy]])
+            polygon_data["name"].append(shape.name)
+            polygon_data["line_width"].append(shape.line_width)
+            polygon_data["color"].append(bokeh_color(shape.color))
         else:
-            _plot_patch(fig, patch, line_width=line_width)
+            for patch in shape.to_patches():
+                assert not isinstance(patch, (PlotPatchRectangle, PlotPatchPolygon))
+                _plot_patch(fig, patch, line_width=shape.line_width)
+
+            lines = shape.to_lines()
+            if lines:
+                line_data["xs"].extend([line.xs for line in lines])
+                line_data["ys"].extend([line.ys for line in lines])
+                line_data["name"].extend([shape.name] * len(lines))
+                line_data["line_width"].extend([line.linewidth for line in lines])
+                line_data["color"].extend([bokeh_color(line.color) for line in lines])
+
+    if line_data["xs"]:
+        fig.multi_line(
+            xs="xs",
+            ys="ys",
+            color="color",
+            line_width="line_width",
+            source=ColumnDataSource(data=line_data),
+        )
+
+    if polygon_data["xs"]:
+        fig.multi_polygons(
+            xs="xs",
+            ys="ys",
+            color="color",
+            line_width="line_width",
+            source=ColumnDataSource(data=polygon_data),
+            fill_alpha=0.0,
+        )
 
 
 def _patch_rect_to_points(patch: PlotPatchRectangle) -> Tuple[List[float], List[float]]:
@@ -612,25 +695,6 @@ def _plot_patch(
     if isinstance(patch, PlotPatchSbend):
         return _plot_sbend_patch(fig, patch)
     raise NotImplementedError(f"{type(patch).__name__}")
-
-
-def _draw_layout_element(
-    fig: figure,
-    elem: LatticeLayoutElement,
-    skip_labels: bool = True,
-):
-    color = bokeh_color(elem.color)
-    if elem.shape:
-        _plot_layout_shape(
-            fig,
-            elem.shape,
-            s_start=elem.info["ele_s_start"],
-            s_end=elem.info["ele_s_end"],
-        )
-    for annotation in elem.annotations:
-        if annotation.text == elem.info["label_name"] and skip_labels:
-            continue
-        _draw_annotation(fig, annotation, color=color, name=elem.info["label_name"])
 
 
 def _fields_to_data_source(
@@ -780,8 +844,7 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
         fig.yaxis.ticker = []
         fig.yaxis.visible = False
 
-        for elem in self.graph.elements:
-            _draw_layout_element(fig, elem, skip_labels=True)
+        _draw_layout_elems(fig, self.graph.elements, skip_labels=True)
 
         fig.renderers.append(
             bokeh.models.Span(location=0, dimension="width", line_color="black", line_width=1)
@@ -993,17 +1056,17 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         orbits = self.graph.floor_orbits
         if orbits is not None:
             _plot_curve_symbols(fig, orbits.curve, name="floor_orbits")
-        for elem in self.graph.elements:
-            if elem.shape is not None:
-                _plot_floor_plan_shape(fig, elem.shape, line_width=elem.info["line_width"])
 
-            for annotation in elem.annotations:
-                _draw_annotation(
-                    fig,
-                    annotation,
-                    color=bokeh_color(elem.info["color"]),
-                    source=ColumnDataSource(data={"name": [elem.info["label_name"]]}),
-                )
+        _draw_floor_plan_shapes(fig, self.graph.elements)
+        _draw_annotations(fig, self.graph.elements)
+        # for elem in self.graph.elements:
+        #     for annotation in elem.annotations:
+        #         _draw_annotation(
+        #             fig,
+        #             annotation,
+        #             color=bokeh_color(elem.info["color"]),
+        #             source=ColumnDataSource(data={"name": [elem.info["label_name"]]}),
+        #         )
 
         _draw_limit_border(fig, graph.xlim, graph.ylim, alpha=0.1)
         return fig

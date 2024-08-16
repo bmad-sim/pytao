@@ -158,10 +158,10 @@ class Box(Shape):
         )
         return [patch]
 
-    # @property
-    # def vertices(self):
-    #     px, py = self.corner_vertices
-    #     return [px + px[:1], py + py[:1]]
+    @property
+    def vertices(self):
+        px, py = self.corner_vertices
+        return [px + px[:1], py + py[:1]]
 
 
 @dataclasses.dataclass(config=_dcls_config)
