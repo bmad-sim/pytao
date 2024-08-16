@@ -103,6 +103,7 @@ class _Defaults:
     grid_toolbar_location: str = "right"
     lattice_layout_tools: str = "pan,wheel_zoom,box_zoom,reset,hover,crosshair"
     floor_plan_tools: str = "pan,wheel_zoom,box_zoom,reset,hover,crosshair"
+    floor_plan_font_size: str = "0.75em"
     limit_scale_factor: float = 1.01
 
     @classmethod
@@ -131,6 +132,7 @@ def set_defaults(
     grid_toolbar_location: Optional[str] = None,
     lattice_layout_tools: Optional[str] = None,
     floor_plan_tools: Optional[str] = None,
+    floor_plan_font_size: Optional[str] = None,
     limit_scale_factor: Optional[float] = None,
 ):
     """Change defaults used for Bokeh plots."""
@@ -154,6 +156,8 @@ def set_defaults(
         _Defaults.lattice_layout_tools = lattice_layout_tools
     if floor_plan_tools is not None:
         _Defaults.floor_plan_tools = floor_plan_tools
+    if floor_plan_font_size is not None:
+        _Defaults.floor_plan_font_size = floor_plan_font_size
     if limit_scale_factor is not None:
         _Defaults.limit_scale_factor = limit_scale_factor
 
@@ -459,7 +463,11 @@ def _draw_layout_elems(
         )
 
 
-def _draw_annotations(fig: figure, elems: List[FloorPlanElement]):
+def _draw_annotations(
+    fig: figure,
+    elems: List[FloorPlanElement],
+    font_size: Optional[str] = None,
+):
     data = {
         "x": [],
         "y": [],
@@ -469,10 +477,14 @@ def _draw_annotations(fig: figure, elems: List[FloorPlanElement]):
         "baseline": [],
         "align": [],
         "rotation": [],
+        "font_size": [],
     }
 
+    if font_size is None:
+        font_size = _Defaults.floor_plan_font_size
+
     for elem in elems:
-        for idx, annotation in enumerate(elem.annotations):
+        for annotation in elem.annotations:
             baseline = annotation.verticalalignment
             if baseline == "center":
                 baseline = "middle"
@@ -484,6 +496,7 @@ def _draw_annotations(fig: figure, elems: List[FloorPlanElement]):
             data["align"].append(annotation.horizontalalignment)
             data["baseline"].append(baseline)
             data["color"].append(bokeh_color(annotation.color))
+            data["font_size"].append(font_size)
 
     return fig.text(
         "x",
@@ -491,7 +504,7 @@ def _draw_annotations(fig: figure, elems: List[FloorPlanElement]):
         angle="rotation",
         text_align="align",
         text_baseline="baseline",
-        text_font_size=10,
+        text_font_size="font_size",
         color="color",
         source=ColumnDataSource(data=data),
     )
