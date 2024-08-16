@@ -1796,7 +1796,10 @@ class GraphManager(ABC):
             self.tao.cmd(command)
 
     def plot_all(
-        self, grid: Optional[Tuple[int, int]] = None, include_layout: bool = False, **kwargs
+        self,
+        grid: Optional[Tuple[int, int]] = None,
+        include_layout: bool = False,
+        **kwargs,
     ):
         """
         Plot all "placed" graphs.
@@ -1810,11 +1813,11 @@ class GraphManager(ABC):
         **kwargs
             Keyword arguments are passed to `.plot_grid()`.
         """
-        graph_names = list(self.to_place.values())
+        template_names = list(self.to_place.values())
         if not grid:
-            grid = (len(graph_names), 1)
+            grid = (len(template_names), 1)
         return self.plot_grid(
-            graph_names,
+            template_names,
             grid=grid,
             include_layout=include_layout,
             **kwargs,
