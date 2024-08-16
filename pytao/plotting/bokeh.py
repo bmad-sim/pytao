@@ -122,6 +122,7 @@ class _Defaults:
 def set_defaults(
     width: Optional[int] = None,
     height: Optional[int] = None,
+    stacked_height: Optional[int] = None,
     layout_height: Optional[int] = None,
     palette: Optional[str] = None,
     show_bokeh_logo: Optional[bool] = None,
@@ -129,12 +130,15 @@ def set_defaults(
     grid_toolbar_location: Optional[str] = None,
     lattice_layout_tools: Optional[str] = None,
     floor_plan_tools: Optional[str] = None,
+    limit_scale_factor: Optional[float] = None,
 ):
     """Change defaults used for Bokeh plots."""
     if width is not None:
         _Defaults.width = width
     if height is not None:
         _Defaults.height = height
+    if stacked_height is not None:
+        _Defaults.stacked_height = stacked_height
     if layout_height is not None:
         _Defaults.layout_height = layout_height
     if palette is not None:
@@ -149,6 +153,8 @@ def set_defaults(
         _Defaults.lattice_layout_tools = lattice_layout_tools
     if floor_plan_tools is not None:
         _Defaults.floor_plan_tools = floor_plan_tools
+    if limit_scale_factor is not None:
+        _Defaults.limit_scale_factor = limit_scale_factor
 
 
 def _get_curve_data(curve: PlotCurve) -> CurveData:
@@ -1369,12 +1375,14 @@ class BokehAppCreator:
         widget_models: List[bokeh.layouts.UIElement] = []
         if self.variables:
             status_label = bokeh.models.PreText()
-            spinners = _handle_variables(
-                tao=self.manager.tao,
-                variables=self.variables,
-                status_label=status_label,
-                pairs=state.pairs,
-            )
+            spinners = [
+                var.create_spinner(
+                    tao=self.manager.tao,
+                    status_label=status_label,
+                    pairs=state.pairs,
+                )
+                for var in self.variables
+            ]
             widget_models.insert(0, bokeh.layouts.row([status_label]))
             per_row = 6
             while spinners:
@@ -1436,14 +1444,24 @@ class Variable:
         self.value = value
         tao.cmd(f"set var {self.name}|{self.parameter} = {self.value}")
 
-    def create_spinner(self) -> bokeh.models.Spinner:
-        return bokeh.models.Spinner(
+    def create_spinner(
+        self,
+        tao: Tao,
+        status_label: bokeh.models.PreText,
+        pairs: List[BGraphAndFigure],
+    ) -> bokeh.models.Spinner:
+        spinner = bokeh.models.Spinner(
             title=self.name,
             value=self.value,
             step=self.step,
             low=self.info["low_lim"],
             high=self.info["high_lim"],
         )
+        spinner.on_change(
+            "value",
+            functools.partial(self.ui_update, tao=tao, status_label=status_label, pairs=pairs),
+        )
+        return spinner
 
     @classmethod
     def from_tao(cls, tao: Tao, name: str, *, parameter: str = "model") -> Variable:
@@ -1468,28 +1486,18 @@ class Variable:
             for idx in range(var_info["lbound"], var_info["ubound"] + 1)
         ]
 
-
-def _clean_tao_exception_for_user(text: str, command: str) -> str:
-    def clean_line(line: str) -> str:
-        # "[ERROR | 2024-JUL-22 09:20:20] tao_set_invalid:"
-        if line.startswith("[") and line.endswith(f"{command}:"):
-            return line.split(f"{command}:", 1)[1]
-        return line
-
-    text = text.replace("ERROR detected: ", "\n")
-    lines = [clean_line(line.rstrip()) for line in text.splitlines()]
-    return "\n".join(line for line in lines if line.strip())
-
-
-def _handle_variables(
-    tao: Tao,
-    variables: List[Variable],
-    status_label: bokeh.models.PreText,
-    pairs: List[BGraphAndFigure],
-) -> List[bokeh.models.UIElement]:
-    def variable_updated(attr: str, old: float, new: float, *, var: Variable):
+    def ui_update(
+        self,
+        attr: str,
+        old: float,
+        new: float,
+        *,
+        tao: Tao,
+        status_label: bokeh.models.PreText,
+        pairs: List[BGraphAndFigure],
+    ):
         try:
-            var.set_value(tao, new)
+            self.set_value(tao, new)
         except RuntimeError as ex:
             status_label.text = _clean_tao_exception_for_user(
                 str(ex),
@@ -1502,12 +1510,17 @@ def _handle_variables(
             if isinstance(pair.bgraph, (BokehBasicGraph, BokehLatticeLayoutGraph)):
                 pair.bgraph.update_plot(pair.fig, tao=tao)
 
-    spinners = []
-    for var in variables:
-        spinner = var.create_spinner()
-        spinners.append(spinner)
-        spinner.on_change("value", functools.partial(variable_updated, var=var))
-    return spinners
+
+def _clean_tao_exception_for_user(text: str, command: str) -> str:
+    def clean_line(line: str) -> str:
+        # "[ERROR | 2024-JUL-22 09:20:20] tao_set_invalid:"
+        if line.startswith("[") and line.endswith(f"{command}:"):
+            return line.split(f"{command}:", 1)[1]
+        return line
+
+    text = text.replace("ERROR detected: ", "\n")
+    lines = [clean_line(line.rstrip()) for line in text.splitlines()]
+    return "\n".join(line for line in lines if line.strip())
 
 
 class BokehGraphManager(GraphManager):

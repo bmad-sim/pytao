@@ -1,6 +1,7 @@
 import contextlib
 import logging
 import re
+import unittest.mock
 
 import bokeh.events
 import bokeh.models
@@ -8,10 +9,20 @@ import bokeh.plotting
 import pytest
 from bokeh.plotting import output_file
 
-from pytao.interface_commands import AnyTao
-
 from .. import TaoStartup
-from ..plotting.bokeh import BokehAppState, NotebookGraphManager
+from ..plotting.bokeh import (
+    _Defaults,
+    initialize_jupyter,
+    select_graph_manager_class,
+    set_defaults,
+    BokehAppCreator,
+    BokehAppState,
+    NotebookGraphManager,
+    Variable,
+)
+from ..plotting.plot import FloorPlanGraph
+from ..plotting.settings import TaoFloorPlanSettings, TaoGraphSettings
+from ..subproc import AnyTao
 from .conftest import get_example, test_artifacts
 
 logger = logging.getLogger(__name__)
@@ -96,16 +107,21 @@ def optics_matching(request: pytest.FixtureRequest):
         yield tao, name
 
 
+def get_ui_from_app(app: BokehAppCreator):
+    class Doc:
+        def add_root(self, ui):
+            self.ui = ui
+
+    doc = Doc()
+    app.create_full_app()(doc)
+    return doc.ui
+
+
 def test_bokeh_smoke_create_full_app(request: pytest.FixtureRequest):
     with optics_matching(request) as (tao, _):
         _, app = tao.bokeh.plot_grid(["alpha", "beta"], grid=(2, 1), include_layout=True)
 
-        class Doc:
-            def add_root(self, ui):
-                self.ui = ui
-
-        doc = Doc()
-        app.create_full_app()(doc)
+        print(get_ui_from_app(app))
 
 
 def test_bokeh_update_button(request: pytest.FixtureRequest, caplog: pytest.LogCaptureFixture):
@@ -183,49 +199,95 @@ def get_notebook_graph_manager(tao: AnyTao, monkeypatch: pytest.MonkeyPatch):
     return gm
 
 
+@pytest.mark.parametrize(
+    ("grid",),
+    [
+        pytest.param(True, id="grid"),
+        pytest.param(False, id="normal"),
+    ],
+)
 def test_bokeh_notebook_plot_vars(
     request: pytest.FixtureRequest,
     caplog: pytest.LogCaptureFixture,
     monkeypatch: pytest.MonkeyPatch,
+    grid: bool,
 ):
     with caplog.at_level(logging.ERROR):
         with optics_matching(request) as (tao, _):
-            bokeh = get_notebook_graph_manager(tao, monkeypatch)
-            _, app = bokeh.plot("alpha", vars=True)
+            gm = get_notebook_graph_manager(tao, monkeypatch)
+            if grid:
+                _, app = gm.plot_grid(["alpha", "beta"], grid=(2, 1), vars=True)
+            else:
+                _, app = gm.plot("alpha", vars=True)
 
-            app.create_state()
+            state = app.create_state()
+
+            status_label = bokeh.models.PreText()
+
+            def try_value(var: Variable, value: float) -> None:
+                var.ui_update(
+                    "",
+                    0.0,
+                    value,
+                    tao=tao,
+                    status_label=status_label,
+                    pairs=state.pairs,
+                )
+
+            def set_value_raise(*args, **kwargs):
+                raise RuntimeError("raised")
+
+            for var in app.variables:
+                status_label.text = ""
+                try_value(var, value=var.value)
+                assert not str(status_label.text)
+
+            for var in app.variables:
+                status_label.text = ""
+                monkeypatch.setattr(var, "set_value", set_value_raise)
+                try_value(var, value=var.value)
+                assert "raised" in str(status_label.text)
 
 
-# def test_bokeh_plot_grid_vars(
-#     request: pytest.FixtureRequest,
-#     caplog: pytest.LogCaptureFixture,
-#     monkeypatch: pytest.MonkeyPatch,
-# ):
-#     with caplog.at_level(logging.ERROR):
-#         with optics_matching(request) as (tao, _):
-#             bokeh = get_notebook_graph_manager(tao, monkeypatch)
-#             (_alpha, _beta), app = bokeh.plot_grid(
-#                 ["alpha", "beta"],
-#                 grid=(2, 1),
-#                 include_layout=True,
-#                 vars=True,
-#             )
-#
-#             state = app.create_state()
-#
-#             cbs = app._monitor_range_updates(state)
-#
-#             caplog.clear()
-#             for cb in cbs:
-#                 cb(bokeh.events.RangesUpdate(model=None, x0=0, x1=10))
-#             assert not caplog.messages
-#
-#             caplog.clear()
-#             for cb in cbs:
-#                 cb(bokeh.events.RangesUpdate(model=None, x0=10, x1=0))
-#             assert len(caplog.messages)
-#
-#             caplog.clear()
-#             for cb in cbs:
-#                 cb(bokeh.events.RangesUpdate(model=None, x0=10, x1=None))
-#             assert len(caplog.messages)
+def test_bokeh_floor_orbits(
+    request: pytest.FixtureRequest,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    with optics_matching(request) as (tao, _):
+        gm = get_notebook_graph_manager(tao, monkeypatch)
+        (floor_plan,), app = gm.plot(
+            "floor_plan",
+            settings=TaoGraphSettings(floor_plan=TaoFloorPlanSettings(orbit_scale=1.0)),
+        )
+
+        assert isinstance(floor_plan, FloorPlanGraph)
+
+        ui = get_ui_from_app(app)
+        assert ui.children[0].children[0].label == "Show orbits"
+
+
+default_options = sorted(
+    set(
+        attr
+        for attr in dir(_Defaults)
+        if not attr.startswith("_") and attr not in {"get_size_for_class"}
+    )
+)
+
+
+@pytest.mark.parametrize(("attr",), [pytest.param(attr) for attr in default_options])
+def test_bokeh_set_defaults(attr: str):
+    value = getattr(_Defaults, attr)
+    set_defaults(**{attr: value})
+    assert getattr(_Defaults, attr) == value
+
+
+def test_smoke_select_graph_manager_class():
+    select_graph_manager_class()
+
+
+def test_smoke_init_jupyter(monkeypatch: pytest.MonkeyPatch):
+    output_notebook = unittest.mock.Mock()
+    monkeypatch.setattr(bokeh.plotting, "output_notebook", output_notebook)
+    initialize_jupyter()
+    assert output_notebook.called
