@@ -1301,7 +1301,9 @@ class BokehAppCreator:
             if self.share_x is None:
                 share_common_x_axes(pairs + layout_pairs)
             elif self.share_x:
-                share_x_axes(self.figures + [pair.fig for pair in layout_pairs])
+                all_figs = figures + [pair.fig for pair in layout_pairs]
+                share_x_axes(all_figs)
+                link_crosshairs(all_figs)
 
         return pairs, layout_pairs
 
