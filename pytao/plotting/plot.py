@@ -605,6 +605,10 @@ class LatticeLayoutElement:
     color: str
     width: float
 
+    @property
+    def name(self) -> str:
+        return self.info["label_name"]
+
     def plot(self, ax: matplotlib.axes.Axes):
         if self.shape is not None:
             self.shape.plot(ax)

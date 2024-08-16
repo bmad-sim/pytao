@@ -387,8 +387,6 @@ def _plot_sbend_patch(fig: figure, patch: PlotPatchSbend):
 def _draw_layout_elems(
     fig: figure,
     elems: List[LatticeLayoutElement],
-    s_start: float = 0.0,
-    s_end: float = 0.0,
     skip_labels: bool = True,
 ):
     line_data = {
@@ -400,14 +398,15 @@ def _draw_layout_elems(
         "line_width": [],
         "color": [],
     }
-    rectangles: List[Tuple[LayoutShape, PlotPatchRectangle]] = []
+    rectangles: List[Tuple[LatticeLayoutElement, LayoutShape, PlotPatchRectangle]] = []
 
     for elem in elems:
         color = bokeh_color(elem.color)
         for annotation in elem.annotations:
-            if annotation.text == elem.info["label_name"] and skip_labels:
+            if annotation.text == elem.name and skip_labels:
+                # We skip labels here as they work better as X tick labels
                 continue
-            _draw_annotation(fig, annotation, color=color, name=elem.info["label_name"])
+            _draw_annotation(fig, annotation, color=color, name=elem.name)
 
         shape = elem.shape
         if not shape:
@@ -416,27 +415,29 @@ def _draw_layout_elems(
         lines = shape.to_lines()
         line_data["xs"].extend([line.xs for line in lines])
         line_data["ys"].extend([line.ys for line in lines])
-        line_data["name"].extend([shape.name] * len(lines))
-        line_data["s_start"].extend([s_start] * len(lines))
-        line_data["s_end"].extend([s_end] * len(lines))
+        line_data["name"].extend([elem.name] * len(lines))
+        line_data["s_start"].extend([elem.info["ele_s_start"]] * len(lines))
+        line_data["s_end"].extend([elem.info["ele_s_end"]] * len(lines))
         line_data["line_width"].extend([shape.line_width] * len(lines))
         line_data["color"].extend([color] * len(lines))
 
         if isinstance(shape, LayoutShape):
             for patch in shape.to_patches():
                 if isinstance(patch, PlotPatchRectangle):
-                    rectangles.append((shape, patch))
+                    rectangles.append((elem, shape, patch))
                 else:
                     _plot_patch(fig, patch, line_width=shape.line_width)
 
     if rectangles:
         source = ColumnDataSource(
             data={
-                "xs": [[[_patch_rect_to_points(patch)[0]]] for _, patch in rectangles],
-                "ys": [[[_patch_rect_to_points(patch)[1]]] for _, patch in rectangles],
-                "name": [shape.name for shape, _ in rectangles],
-                "color": [bokeh_color(shape.color) for shape, _ in rectangles],
-                "line_width": [shape.line_width for shape, _ in rectangles],
+                "xs": [[[_patch_rect_to_points(patch)[0]]] for _, _, patch in rectangles],
+                "ys": [[[_patch_rect_to_points(patch)[1]]] for _, _, patch in rectangles],
+                "name": [shape.name for _, shape, _ in rectangles],
+                "color": [bokeh_color(shape.color) for _, shape, _ in rectangles],
+                "line_width": [shape.line_width for _, shape, _ in rectangles],
+                "s_start": [elem.info["ele_s_start"] for elem, _, _ in rectangles],
+                "s_end": [elem.info["ele_s_end"] for elem, _, _ in rectangles],
             }
         )
         fig.multi_polygons(
@@ -471,7 +472,7 @@ def _draw_annotations(fig: figure, elems: List[FloorPlanElement]):
     }
 
     for elem in elems:
-        for annotation in elem.annotations:
+        for idx, annotation in enumerate(elem.annotations):
             baseline = annotation.verticalalignment
             if baseline == "center":
                 baseline = "middle"
@@ -490,6 +491,7 @@ def _draw_annotations(fig: figure, elems: List[FloorPlanElement]):
         angle="rotation",
         text_align="align",
         text_baseline="baseline",
+        text_font_size=10,
         color="color",
         source=ColumnDataSource(data=data),
     )
@@ -813,16 +815,6 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
             aspect_ratio=self.aspect_ratio,
             sizing_mode=self.sizing_mode,
         )
-        if add_named_hover_tool:
-            hover = bokeh.models.HoverTool(
-                tooltips=[
-                    ("name", "@name"),
-                    ("s start [m]", "@s_start"),
-                    ("s end [m]", "@s_end"),
-                ]
-            )
-
-            fig.add_tools(hover)
 
         box_zoom = get_tool_from_figure(fig, bokeh.models.BoxZoomTool)
         if box_zoom is not None:
@@ -840,6 +832,19 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
         fig.yaxis.visible = False
 
         _draw_layout_elems(fig, self.graph.elements, skip_labels=True)
+
+        if add_named_hover_tool:
+            hover = bokeh.models.HoverTool(
+                renderers=get_hoverable_renderers(fig),
+                tooltips=[
+                    ("name", "@name"),
+                    ("s start [m]", "@s_start"),
+                    ("s end [m]", "@s_end"),
+                ],
+                mode="vline",
+            )
+
+            fig.add_tools(hover)
 
         fig.renderers.append(
             bokeh.models.Span(location=0, dimension="width", line_color="black", line_width=1)
@@ -967,6 +972,10 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
         return fig
 
 
+def get_hoverable_renderers(fig: figure) -> List[bokeh.models.GlyphRenderer]:
+    return [rend for rend in list(fig.renderers) if any(rend.data_source.data.get("name", []))]
+
+
 class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
     graph_type: ClassVar[str] = "floor_plan"
     graph: FloorPlanGraph
@@ -1027,22 +1036,22 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         # if self.y_range is not None:
         #     fig.y_range = self.y_range
 
+        box_zoom = get_tool_from_figure(fig, bokeh.models.BoxZoomTool)
+        if box_zoom is not None:
+            box_zoom.match_aspect = True
+
+        _draw_floor_plan_shapes(fig, self.graph.elements)
+
         if add_named_hover_tool:
             hover = bokeh.models.HoverTool(
+                renderers=get_hoverable_renderers(fig),
                 tooltips=[
                     ("name", "@name"),
                     # ("Position [m]", "(@x, @y)"),
                 ],
-                mode="mouse",
-                point_policy="follow_mouse",
-                line_policy="none",
             )
 
             fig.add_tools(hover)
-
-        box_zoom = get_tool_from_figure(fig, bokeh.models.BoxZoomTool)
-        if box_zoom is not None:
-            box_zoom.match_aspect = True
 
         for line in self.graph.building_walls.lines:
             _plot_curve_line(fig, line)
@@ -1052,7 +1061,6 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         if orbits is not None:
             _plot_curve_symbols(fig, orbits.curve, name="floor_orbits")
 
-        _draw_floor_plan_shapes(fig, self.graph.elements)
         _draw_annotations(fig, self.graph.elements)
         _draw_limit_border(fig, graph.xlim, graph.ylim, alpha=0.1)
         return fig

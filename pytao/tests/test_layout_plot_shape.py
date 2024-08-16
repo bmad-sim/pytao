@@ -96,8 +96,6 @@ def test_plot_layout_shapes_mpl():
 def bokeh_draw_layout_shape(fig: bokeh.plotting.figure, shape: layout_shapes.AnyLayoutShape):
     bokeh_draw_layout_elems(
         fig=fig,
-        s_start=0.0,
-        s_end=10.0,
         skip_labels=False,
         elems=[
             LatticeLayoutElement(
