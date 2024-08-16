@@ -120,7 +120,7 @@ class MatplotlibGraphManager(GraphManager):
         layout_height : int, optional
             Normalized height of the layout plot - assuming regular plots are
             of height 1.  Default is 0.5 which is configurable with `set_defaults`.
-        share_x : bool, "row", "col", "all", default=True
+        share_x : bool, "row", "col", "all", default="col"
             Share all x-axes (`True` or "all"), share x-axes in rows ("row") or
             in columns ("col").
         xlim : list of (float, float), optional
@@ -270,9 +270,8 @@ class MatplotlibGraphManager(GraphManager):
         layout_height : float, optional
             Normalized height of the layout plot - assuming regular plots are
             of height 1.  Default is 0.5 which is configurable with `set_defaults`.
-        share_x : bool or None, default=None
-            Share x-axes where sensible (`None`) or force sharing x-axes (True)
-            for all plots.
+        share_x : bool, default=True
+            Share x-axes for all plots.
         xlim : (float, float), optional
             X axis limits.
         ylim : (float, float), optional
