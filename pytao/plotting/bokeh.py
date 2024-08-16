@@ -1393,6 +1393,10 @@ class BokehAppCreator:
         )
 
         def num_points_changed(_attr, _old, num_points: int):
+            if num_points < 1:
+                logger.error("Internal error: unexpected number of points")
+                return
+
             for pair in state.pairs:
                 bgraph = pair.bgraph
                 if not isinstance(bgraph, BokehBasicGraph):
@@ -1411,7 +1415,12 @@ class BokehAppCreator:
         def ranges_update(
             bgraph: BokehBasicGraph, fig: figure, event: bokeh.events.RangesUpdate
         ) -> None:
-            new_xrange = bgraph.graph.clamp_x_range(event.x0, event.x1)
+            x0, x1 = event.x0, event.x1
+            if x0 is None or x1 is None or x1 < x0:
+                logger.error(f"Internal error: unexpected range: {x0} {x1}")
+                return
+
+            new_xrange = bgraph.graph.clamp_x_range(x0, x1)
             if new_xrange != bgraph.view_x_range:
                 bgraph.view_x_range = new_xrange
 
@@ -1420,14 +1429,16 @@ class BokehAppCreator:
             except Exception:
                 logger.exception("Failed to update number ranges")
 
+        callbacks = []
         for pair in state.pairs:
             if not isinstance(pair.bgraph, BokehBasicGraph):
                 continue
 
-            pair.fig.on_event(
-                bokeh.events.RangesUpdate,
-                cast(EventCallback, functools.partial(ranges_update, pair.bgraph, pair.fig)),
-            )
+            cb = cast(EventCallback, functools.partial(ranges_update, pair.bgraph, pair.fig))
+            pair.fig.on_event(bokeh.events.RangesUpdate, cb)
+            callbacks.append(cb)
+
+        return callbacks
 
     def create_app_ui(self):
         # Ensure we get a new set of data sources and figures for each app
