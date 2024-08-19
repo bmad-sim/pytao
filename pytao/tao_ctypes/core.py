@@ -1,4 +1,5 @@
 import ctypes
+from ctypes.util import find_library
 import logging
 import os
 import shutil
@@ -313,7 +314,7 @@ def auto_discovery_libtao():
     Use system loader to try and find libtao.
     """
     # Find tao library regardless of suffix (ie .so, .dylib, etc) and load
-    so_lib_file = ctypes.util.find_library('tao')
+    so_lib_file = find_library('tao')
     so_lib = ctypes.CDLL(so_lib_file) if so_lib_file is not None else None
     return so_lib, so_lib_file
 
