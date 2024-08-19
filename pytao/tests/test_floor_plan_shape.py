@@ -13,9 +13,6 @@ import pytest
 
 from bokeh.plotting import figure
 
-from pytao.plotting.plot import FloorPlanElement
-
-
 from .. import SubprocessTao, Tao
 from ..plotting.bokeh import _draw_floor_plan_shapes
 from ..plotting.floor_plan_shapes import (
@@ -28,6 +25,8 @@ from ..plotting.floor_plan_shapes import (
     SBend,
     XBox,
 )
+from ..plotting.plot import FloorPlanElement
+from ..plotting.mpl import plot_floor_plan_shape as mpl_plot_floor_plan_shape
 from .conftest import test_artifacts
 
 logger = logging.getLogger(__name__)
@@ -170,7 +169,7 @@ def test_floor_plan_shapes_mpl():
     ax = fig.subplots()
     assert isinstance(ax, matplotlib.axes.Axes)
     for shape in make_shapes(width=1, height=2, angle_low=0, angle_high=90):
-        shape.plot(ax)
+        mpl_plot_floor_plan_shape(shape, ax)
 
     plt.ylim(-5, 85)
 
@@ -178,7 +177,7 @@ def test_floor_plan_shapes_mpl():
     ax = fig.subplots()
     assert isinstance(ax, matplotlib.axes.Axes)
     for shape in make_shapes(width=1, height=2, angle_low=90, angle_high=180):
-        shape.plot(ax)
+        mpl_plot_floor_plan_shape(shape, ax)
 
     plt.ylim(-5, 85)
 

@@ -10,12 +10,12 @@ import matplotlib.axes
 import matplotlib.pyplot as plt
 import pytest
 
-from pytao.plotting.plot import LatticeLayoutElement
-
 from .. import SubprocessTao, Tao
 from ..plotting import layout_shapes
 from ..plotting.bokeh import _draw_layout_elems as bokeh_draw_layout_elems
 from ..plotting.bokeh import get_tool_from_figure
+from ..plotting.mpl import plot_layout_shape as mpl_plot_layout_shape
+from ..plotting.plot import LatticeLayoutElement
 from .conftest import test_artifacts
 
 logger = logging.getLogger(__name__)
@@ -84,7 +84,7 @@ def test_plot_layout_shapes_mpl():
             {"color": "green", "line_width": 2.0},
         ],
     ):
-        shape.plot(ax)
+        mpl_plot_layout_shape(shape, ax)
 
     assert shape is not None
     plt.xlim(-5, shape.s2 + 5)
@@ -164,7 +164,7 @@ def test_plot_layout_wrapped_shapes_mpl(shape_cls: Type[layout_shapes.AnyWrapped
         s_min=0,
         s_max=30,
     )
-    shape.plot(ax)
+    mpl_plot_layout_shape(shape, ax)
 
     plt.xlim(-1, 31)
     plt.ylim(-5, 10)

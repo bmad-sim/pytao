@@ -25,8 +25,6 @@ from pydantic import ConfigDict
 from pydantic.fields import Field
 from typing_extensions import Literal
 
-from pytao.plotting.util import fix_grid_limits
-
 from . import floor_plan_shapes, layout_shapes, pgplot
 from .curves import (
     CurveIndexToCurve,
@@ -57,6 +55,8 @@ from .types import (
     WaveParams,
     OptionalLimit,
 )
+from .util import fix_grid_limits
+
 
 if typing.TYPE_CHECKING:
     from .. import Tao

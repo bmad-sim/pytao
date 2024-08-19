@@ -266,8 +266,9 @@ def plot_layout_shape(shape: layout_shapes.AnyLayoutShape, ax: matplotlib.axes.A
 def plot_floor_plan_shape(shape: floor_plan_shapes.Shape, ax: matplotlib.axes.Axes):
     for line in shape.to_lines():
         plot_curve_line(line, ax)
-    for patch in shape.to_patches():
-        plot_patch(patch, ax)
+    if not isinstance(shape, floor_plan_shapes.Box):
+        for patch in shape.to_patches():
+            plot_patch(patch, ax)
 
 
 def plot(graph: AnyGraph, ax: Optional[matplotlib.axes.Axes] = None) -> matplotlib.axes.Axes:
