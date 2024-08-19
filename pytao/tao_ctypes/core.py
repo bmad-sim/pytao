@@ -313,9 +313,9 @@ def auto_discovery_libtao():
     Use system loader to try and find libtao.
     """
     # Find tao library regardless of suffix (ie .so, .dylib, etc) and load
-    lib = ctypes.util.find_library('tao')
-    lib_handler = ctypes.CDLL(lib) if lib is not None else None
-    return lib_handler, lib
+    so_lib_file = ctypes.util.find_library('tao')
+    so_lib = ctypes.CDLL(so_lib_file) if so_lib_file is not None else None
+    return so_lib, so_lib_file
 
 
 # ----------------------------------------------------------------------
