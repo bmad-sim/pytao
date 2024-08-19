@@ -107,6 +107,7 @@ class _Defaults:
     grid_toolbar_location: str = "right"
     lattice_layout_tools: str = "pan,wheel_zoom,box_zoom,reset,hover,crosshair"
     floor_plan_tools: str = "pan,wheel_zoom,box_zoom,reset,hover,crosshair"
+    layout_font_size: str = "0.75em"
     floor_plan_font_size: str = "0.75em"
     limit_scale_factor: float = 1.01
 
@@ -136,6 +137,7 @@ def set_defaults(
     grid_toolbar_location: Optional[str] = None,
     lattice_layout_tools: Optional[str] = None,
     floor_plan_tools: Optional[str] = None,
+    layout_font_size: Optional[str] = None,
     floor_plan_font_size: Optional[str] = None,
     limit_scale_factor: Optional[float] = None,
 ):
@@ -160,6 +162,8 @@ def set_defaults(
         _Defaults.lattice_layout_tools = lattice_layout_tools
     if floor_plan_tools is not None:
         _Defaults.floor_plan_tools = floor_plan_tools
+    if layout_font_size is not None:
+        _Defaults.layout_font_size = layout_font_size
     if floor_plan_font_size is not None:
         _Defaults.floor_plan_font_size = floor_plan_font_size
     if limit_scale_factor is not None:
@@ -408,14 +412,15 @@ def _draw_layout_elems(
     }
     rectangles: List[Tuple[LatticeLayoutElement, LayoutShape, PlotPatchRectangle]] = []
 
+    _draw_annotations(
+        fig,
+        {elem.name: elem.annotations for elem in elems},
+        font_size=_Defaults.layout_font_size,
+        skip_labels=skip_labels,
+    )
+
     for elem in elems:
         color = bokeh_color(elem.color)
-        for annotation in elem.annotations:
-            if annotation.text == elem.name and skip_labels:
-                # We skip labels here as they work better as X tick labels
-                continue
-            _draw_annotation(fig, annotation, color=color, name=elem.name)
-
         shape = elem.shape
         if not shape:
             continue
@@ -469,8 +474,10 @@ def _draw_layout_elems(
 
 def _draw_annotations(
     fig: figure,
-    elems: List[FloorPlanElement],
-    font_size: Optional[str] = None,
+    name_to_annotations: Dict[str, List[PlotAnnotation]],
+    *,
+    font_size: str,
+    skip_labels: bool = False,
 ):
     data = {
         "x": [],
@@ -484,18 +491,19 @@ def _draw_annotations(
         "font_size": [],
     }
 
-    if font_size is None:
-        font_size = _Defaults.floor_plan_font_size
+    for name, annotations_ in name_to_annotations.items():
+        for annotation in annotations_:
+            if annotation.text == name and skip_labels:
+                # We skip labels here as they work better as X tick labels
+                continue
 
-    for elem in elems:
-        for annotation in elem.annotations:
             baseline = annotation.verticalalignment
             if baseline == "center":
                 baseline = "middle"
             data["x"].append(annotation.x)
             data["y"].append(annotation.y)
             data["text"].append(pgplot.mathjax_string(annotation.text))
-            data["name"].append(elem.name)
+            data["name"].append(name)
             data["rotation"].append(math.radians(annotation.rotation))
             data["align"].append(annotation.horizontalalignment)
             data["baseline"].append(baseline)
@@ -599,39 +607,6 @@ def _patch_rect_to_points(patch: PlotPatchRectangle) -> Tuple[List[float], List[
     return (
         points[:, 0].tolist() + [points[0, 0]],
         points[:, 1].tolist() + [points[0, 1]],
-    )
-
-
-def _draw_annotation(
-    fig: figure,
-    annotation: PlotAnnotation,
-    color: str = "black,",
-    name: str = "",
-    source: Optional[ColumnDataSource] = None,
-):
-    if source is None:
-        source = ColumnDataSource()
-
-    source.data.update(
-        {
-            "x": [annotation.x],
-            "y": [annotation.y],
-            "text": [pgplot.mathjax_string(annotation.text)],
-            "name": [name],
-        }
-    )
-
-    baseline = annotation.verticalalignment
-    if baseline == "center":
-        baseline = "middle"
-    return fig.text(
-        "x",
-        "y",
-        angle=math.radians(annotation.rotation),
-        text_align=annotation.horizontalalignment,
-        text_baseline=baseline,
-        color=color,
-        source=source,
     )
 
 
@@ -1087,7 +1062,12 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         if orbits is not None:
             _plot_curve_symbols(fig, orbits.curve, name="floor_orbits")
 
-        _draw_annotations(fig, self.graph.elements)
+        _draw_annotations(
+            fig,
+            {elem.name: elem.annotations for elem in self.graph.elements},
+            font_size=_Defaults.floor_plan_font_size,
+            skip_labels=False,
+        )
         _draw_limit_border(fig, graph.xlim, graph.ylim, alpha=0.1)
         return fig
 
@@ -1223,8 +1203,8 @@ class BokehAppCreator:
         include_layout: bool = False,
         graph_sizing_mode: Optional[SizingModeType] = None,
         layout_height: Optional[int] = None,
-        xlim: Optional[List[OptionalLimit]] = None,
-        ylim: Optional[List[OptionalLimit]] = None,
+        xlim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
+        ylim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
     ) -> None:
         if not len(graphs):
             raise ValueError("BokehAppCreator requires 1 or more graph")
