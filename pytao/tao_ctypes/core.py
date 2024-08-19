@@ -61,6 +61,7 @@ class TaoCore:
         if self.so_lib_file:
             self.so_lib = ctypes.CDLL(self.so_lib_file)
         else:
+            # Find shared library from path and load it
             lib, lib_file = auto_discovery_libtao()
 
             if lib:
@@ -310,13 +311,17 @@ def auto_discovery_libtao():
     """
     Use system loader to try and find libtao.
     """
-    for lib in ["libtao.so", "libtao.dylib", "libtao.dll"]:
-        try:
-            lib_handler = ctypes.CDLL(lib)
-            return lib_handler, lib
-        except OSError:
-            continue
-    return None, None
+    # Find tao library regardless of suffix (ie .so, .dylib, etc)
+    lib = ctypes.util.find_library('tao')
+    
+    # Try to load it
+    if lib is not None:
+        lib_handler = ctypes.CDLL(lib)
+    else:
+        lib_handler = None
+
+    # Return handler and library name
+    return lib_handler, lib
 
 
 # ----------------------------------------------------------------------
