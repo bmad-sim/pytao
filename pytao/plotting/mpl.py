@@ -70,11 +70,6 @@ def set_defaults(
         matplotlib.rcParams["figure.dpi"] = dpi
 
 
-def _reset_tick_locators(ax: Union[matplotlib.axis.XAxis, matplotlib.axis.YAxis]) -> None:
-    ax.set_major_locator(matplotlib.ticker.AutoLocator())
-    ax.set_minor_locator(matplotlib.ticker.AutoMinorLocator())
-
-
 def setup_matplotlib_ticks(
     graph: AnyGraph,
     ax: matplotlib.axes.Axes,

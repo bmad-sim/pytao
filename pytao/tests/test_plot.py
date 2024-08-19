@@ -7,6 +7,7 @@ import pytest
 
 from .. import SubprocessTao, Tao, TaoStartup
 from ..plotting.curves import TaoCurveSettings
+from ..plotting import mpl
 from .conftest import (
     BackendName,
     get_example,
@@ -209,3 +210,19 @@ def test_plot_update(plot_backend: BackendName):
         (graph,), *_ = manager.plot("alpha1", include_layout=False)
         updated = graph.update(manager)
         assert graph == updated
+
+
+default_options = sorted(
+    set(
+        attr
+        for attr in dir(mpl._Defaults)
+        if not attr.startswith("_") and attr not in {"get_size_for_class"}
+    )
+)
+
+
+@pytest.mark.parametrize(("attr",), [pytest.param(attr) for attr in default_options])
+def test_mpl_set_defaults(attr: str):
+    value = getattr(mpl._Defaults, attr)
+    mpl.set_defaults(**{attr: value})
+    assert getattr(mpl._Defaults, attr) == value

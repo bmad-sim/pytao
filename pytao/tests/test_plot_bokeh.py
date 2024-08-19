@@ -93,6 +93,7 @@ def test_bokeh_floor_plan(request: pytest.FixtureRequest):
     tao_example.plot = "bokeh"
 
     with tao_example.run_context(use_subprocess=True) as tao:
+        tao.update_plot_shapes("quadrupole", type_label="name", layout=True, floor=True)
         _, app = tao.bokeh.plot("floor_plan")
         annotate_and_save(app.create_state(), request.node.name, filename_base)
 
