@@ -4,12 +4,6 @@ import math
 from functools import cached_property
 from typing import List, Optional, Union
 
-import matplotlib.axes
-import matplotlib.cm
-import matplotlib.collections
-import matplotlib.patches
-import matplotlib.path
-import matplotlib.text
 import numpy as np
 import pydantic.dataclasses as dataclasses
 from pydantic import ConfigDict
@@ -75,12 +69,6 @@ class Shape:
 
     def to_patches(self) -> List[PlotPatch]:
         return []
-
-    def plot(self, ax: matplotlib.axes.Axes):
-        for line in self.to_lines():
-            line.plot(ax)
-        for patch in self.to_patches():
-            patch.plot(ax)
 
 
 @dataclasses.dataclass(config=_dcls_config)
@@ -468,13 +456,6 @@ class SBend(Shape):
             rel_angle_start=self.rel_angle_start,
             rel_angle_end=self.rel_angle_end,
         )
-
-    def plot(self, ax: matplotlib.axes.Axes):
-        for line in self.to_lines():
-            line.plot(ax)
-
-        for patch in self.to_patches():
-            patch.plot(ax)
 
 
 AnyFloorPlanShape = Union[

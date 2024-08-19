@@ -10,6 +10,7 @@ from typing import (
     Dict,
     List,
     Optional,
+    Sequence,
     Set,
     Tuple,
     Type,
@@ -18,19 +19,13 @@ from typing import (
     cast,
 )
 
-import matplotlib.axes
-import matplotlib.cm
-import matplotlib.collections
-import matplotlib.patches
-import matplotlib.path
-import matplotlib.pyplot as plt
-import matplotlib.text
 import numpy as np
 import pydantic.dataclasses as dataclasses
-from matplotlib.ticker import AutoMinorLocator
 from pydantic import ConfigDict
 from pydantic.fields import Field
 from typing_extensions import Literal
+
+from pytao.plotting.util import fix_grid_limits
 
 from . import floor_plan_shapes, layout_shapes, pgplot
 from .curves import (
@@ -51,6 +46,7 @@ from .types import (
     BuildingWallInfo,
     FloorOrbitInfo,
     FloorPlanElementInfo,
+    Limit,
     PlotCurveInfo,
     PlotGraphInfo,
     PlotHistogramInfo,
@@ -59,7 +55,7 @@ from .types import (
     PlotRegionInfo,
     Point,
     WaveParams,
-    Limit,
+    OptionalLimit,
 )
 
 if typing.TYPE_CHECKING:
@@ -93,15 +89,6 @@ T = TypeVar("T")
 
 def _clean_pytao_output(dct: dict, typ: Type[T]) -> T:
     return {key: dct.get(key, None) for key in typ.__required_keys__}
-
-
-def _fix_limits(lim: Point, pad_factor: float = 0.0) -> Point:
-    low, high = lim
-    if np.isclose(low, 0.0) and np.isclose(high, 0.0):
-        # TODO: matplotlib can sometimes get in a bad spot trying to plot empty data
-        # with very small limits
-        return (-0.001, 0.001)
-    return (low - abs(low * pad_factor), high + abs(high * pad_factor))
 
 
 def _should_use_symbol_color(symbol_type: str, fill_pattern: str) -> bool:
@@ -138,19 +125,6 @@ class PlotAnnotation:
     rotation: float = 0
     rotation_mode: str = "default"
 
-    def plot(self, ax: matplotlib.axes.Axes):
-        return ax.annotate(
-            xy=(self.x, self.y),
-            text=pgplot.mpl_string(self.text),
-            horizontalalignment=self.horizontalalignment,
-            verticalalignment=self.verticalalignment,
-            clip_on=self.clip_on,
-            color=pgplot.mpl_color(self.color),
-            rotation=self.rotation,
-            rotation_mode=self.rotation_mode,
-            fontsize=8,
-        )
-
 
 _point_field = Field(default_factory=lambda: (0.0, 0.0))
 
@@ -184,7 +158,20 @@ class GraphBase:
         error_on_new_type: bool = True,
         raise_if_invalid: bool = False,
     ):
-        """ """
+        """
+        Ask Tao to update the plot region. Returns a new Graph instance.
+
+        Raises
+        ------
+        GraphInvalidError
+            If `raise_if_invalid` is set and Tao reports the graph data as
+            invalid.
+        ValueError
+            If `error_on_new_type` is set and the graph type changes after the
+            update.
+        RuntimeError
+            If the same graph is no longer found after the update.
+        """
         try:
             graphs = manager.prepare_graphs_by_name(
                 region_name=self.region_name,
@@ -209,57 +196,6 @@ class GraphBase:
                 return graph
         raise RuntimeError("Plot not found after update?")
 
-    def setup_matplotlib_ticks(
-        self,
-        ax: matplotlib.axes.Axes,
-        user_xlim: Optional[Limit],
-        user_ylim: Optional[Limit],
-    ) -> None:
-        if user_xlim is None:
-            self._setup_matplotlib_xticks(ax)
-        else:
-            ax.set_xlim(user_xlim)
-
-        if user_ylim is None:
-            self._setup_matplotlib_yticks(ax)
-        else:
-            ax.set_ylim(user_ylim)
-
-    def _setup_matplotlib_xticks(self, ax: matplotlib.axes.Axes):
-        """Configure ticks on the provided matplotlib x-axis."""
-        ax.set_xlim(_fix_limits(self.xlim))
-
-        xlim = ax.get_xlim()
-        if self.info["x_minor_div"] > 0:
-            ax.xaxis.set_minor_locator(AutoMinorLocator(self.info["x_minor_div"]))
-            ax.tick_params(axis="x", which="minor", length=4, color="black")
-
-        if self.info["x_major_div_nominal"] > 2:
-            ticks = np.linspace(*xlim, self.info["x_major_div_nominal"])
-            ax.set_xticks(ticks)
-
-    def _setup_matplotlib_yticks(self, ax: matplotlib.axes.Axes):
-        """Configure ticks on the provided matplotlib y-axis."""
-        ax.set_ylim(_fix_limits(self.ylim))
-        ylim = ax.get_ylim()
-        ax.yaxis.set_minor_locator(AutoMinorLocator())
-        ax.tick_params(axis="y", which="minor", length=4, color="black")
-        if self.info["y_major_div_nominal"] > 2:
-            ax.set_yticks(np.linspace(*ylim, self.info["y_major_div_nominal"]))
-
-    def setup_matplotlib_axis(self, ax: matplotlib.axes.Axes):
-        """Configure limits, title, and basic info for the given axes."""
-        if not self.show_axes:
-            ax.set_axis_off()
-
-        ax.set_title(pgplot.mpl_string(self.title))
-        ax.set_xlabel(pgplot.mpl_string(self.xlabel))
-        ax.set_ylabel(pgplot.mpl_string(self.ylabel))
-        ax.set_axisbelow(True)
-
-        if self.draw_grid:
-            ax.grid(self.draw_grid, which="major", axis="both")
-
 
 @dataclasses.dataclass(config=_dcls_config)
 class PlotCurve:
@@ -268,23 +204,6 @@ class PlotCurve:
     symbol: Optional[PlotCurveSymbols]
     histogram: Optional[PlotHistogram] = None
     patches: Optional[List[PlotPatch]] = None
-
-    def plot(self, ax: matplotlib.axes.Axes):
-        res = []
-        if self.line is not None:
-            res.append(self.line.plot(ax, label=pgplot.mpl_string(self.legend_label)))
-        if self.symbol is not None:
-            res.append(
-                self.symbol.plot(
-                    ax,
-                    label=pgplot.mpl_string(self.legend_label) if self.line is None else None,
-                )
-            )
-        if self.histogram is not None:
-            res.append(self.histogram.plot(ax))
-        for patch in self.patches or []:
-            res.append(patch.plot(ax))
-        return res
 
     @property
     def legend_label(self) -> str:
@@ -581,21 +500,6 @@ class BasicGraph(GraphBase):
             draw_legend=info["draw_curve_legend"],
         )
 
-    def plot(self, ax: Optional[matplotlib.axes.Axes] = None):
-        if ax is None:
-            _, ax = plt.subplots()
-            assert ax is not None
-
-        for curve in self.curves:
-            assert not curve.info["use_y2"], "TODO: y2 support"
-            curve.plot(ax)
-
-        if self.draw_legend and any(curve.legend_label for curve in self.curves):
-            ax.legend()
-
-        self.setup_matplotlib_axis(ax)
-        return ax
-
 
 @dataclasses.dataclass(config=_dcls_config)
 class LatticeLayoutElement:
@@ -608,21 +512,6 @@ class LatticeLayoutElement:
     @property
     def name(self) -> str:
         return self.info["label_name"]
-
-    def plot(self, ax: matplotlib.axes.Axes):
-        if self.shape is not None:
-            self.shape.plot(ax)
-        # ax.add_collection(
-        #     matplotlib.collections.LineCollection(
-        #         self.lines,
-        #         colors=pgplot.mpl_color(self.color),
-        #         linewidths=self.width,
-        #     )
-        # )
-        # for patch in self.patches:
-        #     patch.plot(ax)
-        for annotation in self.annotations:
-            annotation.plot(ax)
 
     @classmethod
     def regular_shape(
@@ -813,28 +702,6 @@ class LatticeLayoutGraph(GraphBase):
     def is_s_plot(self) -> bool:
         return True
 
-    def plot(self, ax: Optional[matplotlib.axes.Axes] = None):
-        if ax is None:
-            _, ax = plt.subplots()
-        assert ax is not None
-
-        ax.axhline(y=0, color="Black", linewidth=1)
-
-        for elem in self.elements:
-            elem.plot(ax)
-
-        # Invisible line to give the lat layout enough vertical space.
-        # Without this, the tops and bottoms of shapes could be cut off
-        # ax.plot([0, 0], [-1.7 * self.y_max, 1.3 * self.y_max], alpha=0)
-
-        ax.yaxis.set_visible(False)
-
-        self.setup_matplotlib_axis(ax)
-        # ax.set_xticks([elem.info["ele_s_start"] for elem in self.elements])
-        # ax.set_xticklabels([elem.info["label_name"] for elem in self.elements], rotation=90)
-        ax.grid(visible=False)
-        return ax
-
     @property
     def y_min(self) -> float:
         ele_y1s = [elem.info["y1"] for elem in self.elements]
@@ -930,12 +797,6 @@ class FloorPlanElement:
     info: FloorPlanElementInfo
     annotations: List[PlotAnnotation]
     shape: Optional[floor_plan_shapes.AnyFloorPlanShape]
-
-    def plot(self, ax: matplotlib.axes.Axes):
-        if self.shape is not None:
-            self.shape.plot(ax)
-        for annotation in self.annotations:
-            annotation.plot(ax)
 
     @property
     def name(self) -> str:
@@ -1114,12 +975,6 @@ class BuildingWalls:
     lines: List[PlotCurveLine] = Field(default_factory=list)
     patches: List[PlotPatch] = Field(default_factory=list)
 
-    def plot(self, ax: matplotlib.axes.Axes):
-        for line in self.lines:
-            line.plot(ax)
-        for patch in self.patches:
-            patch.plot(ax)
-
     @classmethod
     def from_info(
         cls,
@@ -1204,9 +1059,6 @@ class FloorOrbits:
             ),
         )
 
-    def plot(self, ax: matplotlib.axes.Axes):
-        self.curve.plot(ax)
-
 
 @dataclasses.dataclass(config=_dcls_config)
 class FloorPlanGraph(GraphBase):
@@ -1288,21 +1140,6 @@ class FloorPlanGraph(GraphBase):
             ylim=(info["y_min"], info["y_max"]),
             draw_legend=info["draw_curve_legend"],
         )
-
-    def plot(self, ax: Optional[matplotlib.axes.Axes] = None):
-        if ax is None:
-            _, ax = plt.subplots()
-            assert ax is not None
-
-        for elem in self.elements:
-            elem.plot(ax)
-
-        self.building_walls.plot(ax)
-        if self.floor_orbits is not None:
-            self.floor_orbits.plot(ax)
-
-        self.setup_matplotlib_axis(ax)
-        return ax
 
 
 def get_plots_in_region(tao: Tao, region_name: str):
@@ -1623,6 +1460,8 @@ class GraphManager(ABC):
         template_names: List[str],
         curves: Optional[List[CurveIndexToCurve]] = None,
         settings: Optional[List[TaoGraphSettings]] = None,
+        xlim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
+        ylim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
     ):
         """
         Prepare multiple graphs for a grid plot.
@@ -1639,23 +1478,32 @@ class GraphManager(ABC):
             placed graphs prior to plotting.
         settings : list of TaoGraphSettings, optional
             Graph customization settings.
+        xlim : list of (float, float), optional
+            X axis limits for each graph.
+        ylim : list of (float, float), optional
+            Y axis limits for each graph.
 
         Returns
         -------
         list of graphs
         """
+        num_graphs = len(template_names)
         if not curves:
-            curves = [{}] * len(template_names)
-        elif len(curves) < len(template_names):
+            curves = [{}] * num_graphs
+        elif len(curves) < num_graphs:
             assert len(curves)
-            curves = list(curves) + [{}] * (len(template_names) - len(curves))
+            curves = list(curves) + [{}] * (num_graphs - len(curves))
 
         if not settings:
-            settings = [TaoGraphSettings()] * len(template_names)
-        elif len(settings) < len(template_names):
-            settings = list(settings) + [TaoGraphSettings()] * (
-                len(template_names) - len(settings)
-            )
+            settings = [TaoGraphSettings()] * num_graphs
+        elif len(settings) < num_graphs:
+            settings = list(settings) + [TaoGraphSettings()] * (num_graphs - len(settings))
+
+        xlim = fix_grid_limits(xlim, num_graphs=num_graphs)
+        ylim = fix_grid_limits(ylim, num_graphs=num_graphs)
+        for setting, xl, yl in zip(settings, xlim, ylim):
+            setting.xlim = xl
+            setting.ylim = yl
 
         graphs = sum(
             (
@@ -1682,12 +1530,15 @@ class GraphManager(ABC):
     def prepare_graphs_by_name(
         self,
         template_name: str,
+        *,
         region_name: Optional[str] = None,
         settings: Optional[TaoGraphSettings] = None,
         curves: Optional[Dict[int, TaoCurveSettings]] = None,
         ignore_unsupported: bool = True,
         ignore_invalid: bool = True,
         place: bool = True,
+        xlim: Optional[Limit] = None,
+        ylim: Optional[Limit] = None,
     ) -> List[AnyGraph]:
         """
         Prepare a graph for plotting.
@@ -1708,6 +1559,10 @@ class GraphManager(ABC):
             Ignore graphs marked as invalid by bmad.
         place : bool, default=True
             Tell Tao to place the template first.
+        xlim : (float, float), optional
+            X axis limits.
+        ylim : (float, float), optional
+            Y axis limits.
 
         Returns
         -------
@@ -1719,10 +1574,16 @@ class GraphManager(ABC):
         elif not region_name:
             region_name = self.get_region_to_place_template(template_name)
 
-        if settings:
-            self.configure_graph(region_name, settings)
+        if settings is None:
+            settings = TaoGraphSettings()
+        if xlim is not None:
+            settings.xlim = xlim
+        if ylim is not None:
+            settings.ylim = ylim
 
-        if curves:
+        self.configure_graph(region_name, settings)
+
+        if curves is not None:
             self.configure_curves(region_name, curves)
 
         return self.update_region(
@@ -1868,6 +1729,8 @@ class GraphManager(ABC):
         region_name: Optional[str] = None,
         include_layout: bool = True,
         settings: Optional[TaoGraphSettings] = None,
+        xlim: Optional[Limit] = None,
+        ylim: Optional[Limit] = None,
     ) -> Any:
         pass
 
@@ -1880,6 +1743,8 @@ class GraphManager(ABC):
         include_layout: bool = False,
         curves: Optional[List[Dict[int, TaoCurveSettings]]] = None,
         settings: Optional[List[TaoGraphSettings]] = None,
+        xlim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
+        ylim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
     ) -> Any:
         pass
 

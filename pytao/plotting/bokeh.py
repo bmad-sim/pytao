@@ -1683,6 +1683,8 @@ class BokehGraphManager(GraphManager):
             template_names=templates,
             curves=curves,
             settings=settings,
+            xlim=xlim,
+            ylim=ylim,
         )
 
         if figsize is not None:
@@ -1775,6 +1777,8 @@ class BokehGraphManager(GraphManager):
             region_name=region_name,
             curves=curves,
             settings=settings,
+            xlim=xlim,
+            ylim=ylim,
         )
 
         if not graphs:

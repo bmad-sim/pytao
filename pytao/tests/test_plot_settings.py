@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 import pytest
 from pytest import FixtureRequest
@@ -9,6 +9,8 @@ from ..plotting import (
     TaoFloorPlanSettings,
     TaoGraphSettings,
 )
+from ..plotting.types import Limit
+
 from .conftest import BackendName, get_example, test_artifacts
 
 
@@ -69,6 +71,41 @@ def test_graph_settings_empty():
     ],
 )
 def test_graph_settings(settings: TaoGraphSettings, expected_commands: List[str]):
+    assert settings.get_commands("a", "b", graph_type="lat_layout") == expected_commands
+
+
+@pytest.mark.parametrize(
+    ("xlim", "ylim", "expected_commands"),
+    [
+        pytest.param(None, None, [], id="no-lims"),
+        pytest.param(
+            (1.0, 2.0),
+            None,
+            ["x_scale a 1.0 2.0"],
+            id="xlim",
+        ),
+        pytest.param(
+            None,
+            (1.0, 2.0),
+            ["scale -y a 1.0 2.0"],
+            id="ylim",
+        ),
+        pytest.param(
+            (1.0, 2.0),
+            (1.0, 2.0),
+            ["x_scale a 1.0 2.0", "scale -y a 1.0 2.0"],
+            id="both",
+        ),
+    ],
+)
+def test_graph_settings_xlim_ylim(
+    xlim: Optional[Limit],
+    ylim: Optional[Limit],
+    expected_commands: List[str],
+):
+    settings = TaoGraphSettings()
+    settings.xlim = xlim
+    settings.ylim = ylim
     assert settings.get_commands("a", "b", graph_type="lat_layout") == expected_commands
 
 

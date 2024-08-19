@@ -4,6 +4,8 @@ from typing import Dict, List, Optional, Tuple, Union
 import pydantic
 from typing_extensions import Literal
 
+from .types import Limit
+
 tao_colors = frozenset(
     {
         "Not_Set",
@@ -210,6 +212,9 @@ class TaoAxisSettings(pydantic.BaseModel, extra="forbid", validate_assignment=Tr
     draw_label: Optional[bool] = None
     draw_numbers: Optional[bool] = None
 
+    scale: Optional[Tuple[float, float]] = None
+    scale_gang: Optional[bool] = None
+
     def get_commands(
         self,
         region_name: str,
@@ -230,10 +235,28 @@ class TaoAxisSettings(pydantic.BaseModel, extra="forbid", validate_assignment=Tr
         list of str
             Commands to send to Tao to apply these settings.
         """
-        return [
+        items = {key: value for key, value in self.model_dump().items() if value is not None}
+        scale = items.pop("scale", None)
+        scale_gang = items.pop("scale_gang", None)
+
+        commands = []
+        if scale is not None:
+            scale_low, scale_high = scale
+            scale_cmd = {
+                "x": "x_scale",
+                "x2": "x_scale",
+                "y": "scale -y",
+                "y2": "scale -y2",
+            }[axis_name]
+            if scale_gang:
+                scale_cmd = f"{scale_cmd} -gang"
+            elif scale_gang is False:  # note: may be None
+                scale_cmd = f"{scale_cmd} -nogang"
+            commands.append(f"{scale_cmd} {region_name} {scale_low} {scale_high}")
+
+        return commands + [
             f"set graph {region_name} {axis_name}%{key} = {value}"
-            for key, value in self.model_dump().items()
-            if value is not None
+            for key, value in items.items()
         ]
 
 
@@ -542,6 +565,9 @@ class TaoGraphSettings(pydantic.BaseModel, extra="forbid", validate_assignment=T
     y2_mirrors_y: Optional[bool] = None
     x_axis_scale_factor: Optional[float] = None
 
+    # 'set plot':
+    n_curve_points: Optional[int] = None
+
     def get_commands(
         self,
         region_name: str,
@@ -602,6 +628,8 @@ class TaoGraphSettings(pydantic.BaseModel, extra="forbid", validate_assignment=T
                 result.extend(value.get_commands(region_name, graph_name, key))
             elif isinstance(value, TaoAxisSettings):
                 result.extend(value.get_commands(region_name, key))
+            elif key == "n_curve_points":
+                result.append(f"set plot {region_name} n_curve_pts = {value}")
             elif key == "text_legend":
                 for legend_index, legend_value in value.items():
                     result.append(
@@ -616,3 +644,27 @@ class TaoGraphSettings(pydantic.BaseModel, extra="forbid", validate_assignment=T
             else:
                 result.append(f"set graph {region_name}.{graph_name} {key} = {value}")
         return result
+
+    @property
+    def xlim(self) -> Optional[Limit]:
+        if self.x is None:
+            return None
+        return self.x.scale
+
+    @xlim.setter
+    def xlim(self, xlim: Optional[Limit]):
+        if self.x is None:
+            self.x = TaoAxisSettings()
+        self.x.scale = xlim
+
+    @property
+    def ylim(self) -> Optional[Limit]:
+        if self.y is None:
+            return None
+        return self.y.scale
+
+    @ylim.setter
+    def ylim(self, ylim: Optional[Limit]):
+        if self.y is None:
+            self.y = TaoAxisSettings()
+        self.y.scale = ylim

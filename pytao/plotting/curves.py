@@ -9,16 +9,8 @@ from typing import (
     Union,
 )
 
-import matplotlib.axes
-import matplotlib.cm
-import matplotlib.collections
-import matplotlib.patches
-import matplotlib.path
-import matplotlib.text
 import pydantic
 import pydantic.dataclasses as dataclasses
-
-from . import pgplot
 
 _dcls_config = pydantic.ConfigDict()
 
@@ -30,16 +22,6 @@ class PlotCurveLine:
     color: str = "black"
     linestyle: str = "solid"
     linewidth: float = 1.0
-
-    def plot(self, ax: matplotlib.axes.Axes, label: Optional[str] = None):
-        return ax.plot(
-            self.xs,
-            self.ys,
-            color=pgplot.mpl_color(self.color or "black"),
-            linestyle=self.linestyle,
-            linewidth=self.linewidth,
-            label=label,
-        )
 
 
 @dataclasses.dataclass(config=_dcls_config)
@@ -53,19 +35,6 @@ class PlotCurveSymbols:
     markeredgewidth: float
     linewidth: float = 0
 
-    def plot(self, ax: matplotlib.axes.Axes, label: Optional[str] = None):
-        return ax.plot(
-            self.xs,
-            self.ys,
-            color=pgplot.mpl_color(self.color),
-            markerfacecolor=self.markerfacecolor,
-            markersize=self.markersize,
-            marker=pgplot.symbols.get(self.marker, "."),
-            markeredgewidth=self.markeredgewidth,
-            linewidth=self.linewidth,
-            label=label,
-        )
-
 
 @dataclasses.dataclass(config=_dcls_config)
 class PlotHistogram:
@@ -74,15 +43,6 @@ class PlotHistogram:
     weights: List[float]
     histtype: Literal["bar", "barstacked", "step", "stepfilled"]
     color: str
-
-    def plot(self, ax: matplotlib.axes.Axes):
-        return ax.hist(
-            self.xs,
-            bins=self.bins,
-            weights=self.weights,
-            histtype=self.histtype,
-            color=pgplot.mpl_color(self.color),
-        )
 
 
 class TaoCurveSettings(pydantic.BaseModel, extra="forbid", validate_assignment=True):

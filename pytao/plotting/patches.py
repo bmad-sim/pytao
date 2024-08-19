@@ -59,11 +59,6 @@ class PlotPatchBase:
     def to_mpl(self):
         raise NotImplementedError(type(self))
 
-    def plot(self, ax: matplotlib.axes.Axes):
-        mpl = self.to_mpl()
-        ax.add_patch(mpl)
-        return mpl
-
 
 _point_field = Field(default_factory=lambda: (0.0, 0.0))
 

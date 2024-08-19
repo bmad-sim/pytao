@@ -5,23 +5,34 @@ import pathlib
 import time
 from typing import ClassVar, Dict, List, Literal, Optional, Sequence, Tuple, Union
 
-import matplotlib.axis
 import matplotlib.axes
+import matplotlib.axis
+import matplotlib.cm
+import matplotlib.collections
+import matplotlib.patches
+import matplotlib.path
 import matplotlib.pyplot as plt
+import matplotlib.text
 import matplotlib.ticker
 import numpy as np
 
-from .curves import TaoCurveSettings
+from . import floor_plan_shapes, layout_shapes, pgplot
+from .curves import PlotCurveLine, PlotCurveSymbols, PlotHistogram, TaoCurveSettings
 from .fields import ElementField
+from .patches import PlotPatch
 from .plot import (
+    AnyGraph,
+    BasicGraph,
+    FloorPlanGraph,
     GraphManager,
     LatticeLayoutGraph,
+    PlotAnnotation,
+    PlotCurve,
     UnsupportedGraphError,
 )
 from .settings import TaoGraphSettings
+from .types import Limit, OptionalLimit, Point
 from .util import fix_grid_limits
-from .types import OptionalLimit, Limit
-
 
 logger = logging.getLogger(__name__)
 
@@ -56,6 +67,72 @@ def _reset_tick_locators(ax: Union[matplotlib.axis.XAxis, matplotlib.axis.YAxis]
     ax.set_minor_locator(matplotlib.ticker.AutoMinorLocator())
 
 
+def setup_matplotlib_ticks(
+    graph: AnyGraph,
+    ax: matplotlib.axes.Axes,
+    user_xlim: Optional[Limit],
+    user_ylim: Optional[Limit],
+) -> None:
+    if user_xlim is None:
+        _setup_matplotlib_xticks(graph, ax)
+    else:
+        ax.set_xlim(user_xlim)
+
+    if user_ylim is None:
+        _setup_matplotlib_yticks(graph, ax)
+    else:
+        ax.set_ylim(user_ylim)
+
+
+def _fix_limits(lim: Point, pad_factor: float = 0.0) -> Point:
+    low, high = lim
+    if np.isclose(low, 0.0) and np.isclose(high, 0.0):
+        # TODO: matplotlib can sometimes get in a bad spot trying to plot empty data
+        # with very small limits
+        return (-0.001, 0.001)
+    return (low - abs(low * pad_factor), high + abs(high * pad_factor))
+
+
+def _setup_matplotlib_xticks(graph: AnyGraph, ax: matplotlib.axes.Axes):
+    """Configure ticks on the provided matplotlib x-axis."""
+    ax.set_xlim(_fix_limits(graph.xlim))
+
+    xlim = ax.get_xlim()
+    if graph.info["x_minor_div"] > 0:
+        ax.xaxis.set_minor_locator(
+            matplotlib.ticker.AutoMinorLocator(graph.info["x_minor_div"])
+        )
+        ax.tick_params(axis="x", which="minor", length=4, color="black")
+
+    if graph.info["x_major_div_nominal"] > 2:
+        ticks = np.linspace(*xlim, graph.info["x_major_div_nominal"])
+        ax.set_xticks(ticks)
+
+
+def _setup_matplotlib_yticks(graph: AnyGraph, ax: matplotlib.axes.Axes):
+    """Configure ticks on the provided matplotlib y-axis."""
+    ax.set_ylim(_fix_limits(graph.ylim))
+    ylim = ax.get_ylim()
+    ax.yaxis.set_minor_locator(matplotlib.ticker.AutoMinorLocator())
+    ax.tick_params(axis="y", which="minor", length=4, color="black")
+    if graph.info["y_major_div_nominal"] > 2:
+        ax.set_yticks(np.linspace(*ylim, graph.info["y_major_div_nominal"]))
+
+
+def setup_matplotlib_axis(graph: AnyGraph, ax: matplotlib.axes.Axes):
+    """Configure limits, title, and basic info for the given axes."""
+    if not graph.show_axes:
+        ax.set_axis_off()
+
+    ax.set_title(pgplot.mpl_string(graph.title))
+    ax.set_xlabel(pgplot.mpl_string(graph.xlabel))
+    ax.set_ylabel(pgplot.mpl_string(graph.ylabel))
+    ax.set_axisbelow(True)
+
+    if graph.draw_grid:
+        ax.grid(graph.draw_grid, which="major", axis="both")
+
+
 def get_figsize(
     figsize: Optional[Tuple[float, float]] = None,
     width: Optional[float] = None,
@@ -70,6 +147,187 @@ def get_figsize(
             height or plt.rcParams["figure.figsize"][1],
         )
     return None
+
+
+def plot_annotation(annotation: PlotAnnotation, ax: matplotlib.axes.Axes):
+    return ax.annotate(
+        xy=(annotation.x, annotation.y),
+        text=pgplot.mpl_string(annotation.text),
+        horizontalalignment=annotation.horizontalalignment,
+        verticalalignment=annotation.verticalalignment,
+        clip_on=annotation.clip_on,
+        color=pgplot.mpl_color(annotation.color),
+        rotation=annotation.rotation,
+        rotation_mode=annotation.rotation_mode,
+        fontsize=8,
+    )
+
+
+def plot_curve_line(
+    curve: PlotCurveLine,
+    ax: matplotlib.axes.Axes,
+    label: Optional[str] = None,
+):
+    return ax.plot(
+        curve.xs,
+        curve.ys,
+        color=pgplot.mpl_color(curve.color or "black"),
+        linestyle=curve.linestyle,
+        linewidth=curve.linewidth,
+        label=label,
+    )
+
+
+def plot_curve_symbols(
+    curve: PlotCurveSymbols,
+    ax: matplotlib.axes.Axes,
+    label: Optional[str] = None,
+):
+    return ax.plot(
+        curve.xs,
+        curve.ys,
+        color=pgplot.mpl_color(curve.color),
+        markerfacecolor=curve.markerfacecolor,
+        markersize=curve.markersize,
+        marker=pgplot.symbols.get(curve.marker, "."),
+        markeredgewidth=curve.markeredgewidth,
+        linewidth=curve.linewidth,
+        label=label,
+    )
+
+
+def plot_histogram(
+    hist: PlotHistogram,
+    ax: matplotlib.axes.Axes,
+):
+    return ax.hist(
+        hist.xs,
+        bins=hist.bins,
+        weights=hist.weights,
+        histtype=hist.histtype,
+        color=pgplot.mpl_color(hist.color),
+    )
+
+
+def plot_curve(curve: PlotCurve, ax: matplotlib.axes.Axes):
+    res = []
+    if curve.line is not None:
+        res.append(
+            plot_curve_line(
+                curve.line,
+                ax,
+                label=pgplot.mpl_string(curve.legend_label),
+            )
+        )
+    if curve.symbol is not None:
+        res.append(
+            plot_curve_symbols(
+                curve.symbol,
+                ax,
+                label=pgplot.mpl_string(curve.legend_label) if curve.line is None else None,
+            )
+        )
+    if curve.histogram is not None:
+        res.append(plot_histogram(curve.histogram, ax))
+    for patch in curve.patches or []:
+        res.append(plot_patch(patch, ax))
+    return res
+
+
+def plot_patch(patch: PlotPatch, ax: matplotlib.axes.Axes):
+    mpl = patch.to_mpl()
+    ax.add_patch(mpl)
+    return mpl
+
+
+def plot_layout_shape(shape: layout_shapes.AnyLayoutShape, ax: matplotlib.axes.Axes):
+    if isinstance(shape, layout_shapes.LayoutWrappedShape):
+        ax.add_collection(
+            matplotlib.collections.LineCollection(
+                [[(x, y) for x, y in zip(line[0], line[1])] for line in shape.lines],
+                colors=pgplot.mpl_color(shape.color),
+                linewidths=shape.line_width,
+            )
+        )
+    else:
+        lines = shape.lines
+        if lines:
+            ax.add_collection(
+                matplotlib.collections.LineCollection(
+                    lines,
+                    colors=pgplot.mpl_color(shape.color),
+                    linewidths=shape.line_width,
+                )
+            )
+        for patch in shape.to_patches():
+            plot_patch(patch, ax)
+
+
+def plot_floor_plan_shape(shape: floor_plan_shapes.Shape, ax: matplotlib.axes.Axes):
+    for line in shape.to_lines():
+        plot_curve_line(line, ax)
+    for patch in shape.to_patches():
+        plot_patch(patch, ax)
+
+
+def plot(graph: AnyGraph, ax: Optional[matplotlib.axes.Axes] = None) -> matplotlib.axes.Axes:
+    if ax is None:
+        _, ax = plt.subplots()
+
+    assert ax is not None
+
+    if isinstance(graph, BasicGraph):
+        for curve in graph.curves:
+            assert not curve.info["use_y2"], "TODO: y2 support"
+            plot_curve(curve, ax)
+
+        if graph.draw_legend and any(curve.legend_label for curve in graph.curves):
+            ax.legend()
+
+    elif isinstance(graph, LatticeLayoutGraph):
+        ax.axhline(y=0, color="Black", linewidth=1)
+
+        for elem in graph.elements:
+            if elem.shape is not None:
+                plot_layout_shape(elem.shape, ax)
+            # ax.add_collection(
+            #     matplotlib.collections.LineCollection(
+            #         elem.lines,
+            #         colors=pgplot.mpl_color(elem.color),
+            #         linewidths=elem.width,
+            #     )
+            # )
+            # for patch in elem.patches:
+            #     plot_patch(patch, ax)
+            for annotation in elem.annotations:
+                plot_annotation(annotation, ax)
+
+        # Invisible line to give the lat layout enough vertical space.
+        # Without this, the tops and bottoms of shapes could be cut off
+        # ax.plot([0, 0], [-1.7 * self.y_max, 1.3 * self.y_max], alpha=0)
+        ax.yaxis.set_visible(False)
+
+        # ax.set_xticks([elem.info["ele_s_start"] for elem in self.elements])
+        # ax.set_xticklabels([elem.info["label_name"] for elem in self.elements], rotation=90)
+        ax.grid(visible=False)
+    elif isinstance(graph, FloorPlanGraph):
+        for elem in graph.elements:
+            if elem.shape is not None:
+                plot_floor_plan_shape(elem.shape, ax)
+            for annotation in elem.annotations:
+                plot_annotation(annotation, ax)
+
+        for line in graph.building_walls.lines:
+            plot_curve_line(line, ax)
+        for patch in graph.building_walls.patches:
+            plot_patch(patch, ax)
+        if graph.floor_orbits is not None:
+            plot_curve_symbols(graph.floor_orbits.curve, ax)
+    else:
+        raise NotImplementedError(f"Unsupported graph for matplotlib: {type(graph)}")
+
+    setup_matplotlib_axis(graph, ax)
+    return ax
 
 
 class MatplotlibGraphManager(GraphManager):
@@ -151,6 +409,8 @@ class MatplotlibGraphManager(GraphManager):
             template_names=templates,
             curves=curves,
             settings=settings,
+            xlim=xlim,
+            ylim=ylim,
         )
         nrows, ncols = grid
         height_ratios = None
@@ -177,7 +437,7 @@ class MatplotlibGraphManager(GraphManager):
                 squeeze=False,
                 height_ratios=height_ratios,
             )
-            axes = [gs[row, :] for row in range(nrows)]
+            axes = [list(gs[row, :]) for row in range(nrows)]
             for row in axes:
                 for ax in row:
                     ax.set_axis_off()
@@ -190,18 +450,18 @@ class MatplotlibGraphManager(GraphManager):
         for graph, xl, yl, (row, col) in zip(graphs, all_xlim, all_ylim, rows_cols):
             ax = axes[row][col]
             try:
-                graph.plot(ax)
+                plot(graph, ax)
             except UnsupportedGraphError:
                 continue
 
             ax.set_axis_on()
-            graph.setup_matplotlib_ticks(ax, user_xlim=xl, user_ylim=yl)
+            setup_matplotlib_ticks(graph, ax, user_xlim=xl, user_ylim=yl)
 
         if include_layout:
             layout_graph = self.lattice_layout_graph
             for col in range(ncols):
                 ax = axes[-1][col]
-                layout_graph.plot(ax)
+                plot(layout_graph, ax)
                 ax.set_axis_on()
 
                 xl = None
@@ -211,7 +471,7 @@ class MatplotlibGraphManager(GraphManager):
                     except IndexError:
                         pass
 
-                layout_graph.setup_matplotlib_ticks(ax, user_xlim=xl, user_ylim=None)
+                setup_matplotlib_ticks(layout_graph, ax, user_xlim=xl, user_ylim=None)
 
         if tight_layout and fig is not None:
             fig.tight_layout()
@@ -298,6 +558,8 @@ class MatplotlibGraphManager(GraphManager):
             region_name=region_name,
             curves=curves,
             settings=settings,
+            xlim=xlim,
+            ylim=ylim,
         )
         if not graphs:
             raise UnsupportedGraphError(f"No supported plots from this template: {template}")
@@ -339,7 +601,7 @@ class MatplotlibGraphManager(GraphManager):
                     figsize=figsize,
                     squeeze=False,
                 )
-            axes = gs[:, 0]
+            axes = list(gs[:, 0])
             assert axes is not None
 
         if include_layout:
@@ -347,7 +609,7 @@ class MatplotlibGraphManager(GraphManager):
 
         for ax, graph in zip(axes, graphs):
             try:
-                graph.plot(ax)
+                plot(graph, ax)
             except UnsupportedGraphError:
                 continue
 
@@ -357,7 +619,7 @@ class MatplotlibGraphManager(GraphManager):
             else:
                 yl = ylim
 
-            graph.setup_matplotlib_ticks(ax, user_xlim=xlim, user_ylim=yl)
+            setup_matplotlib_ticks(graph, ax, user_xlim=xlim, user_ylim=yl)
 
         if fig is not None:
             if tight_layout:

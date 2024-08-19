@@ -3,17 +3,10 @@ from __future__ import annotations
 from abc import ABC
 from typing import List, Tuple, Union
 
-import matplotlib.axes
-import matplotlib.cm
-import matplotlib.collections
-import matplotlib.patches
-import matplotlib.path
-import matplotlib.text
 import pydantic.dataclasses as dataclasses
 from pydantic import ConfigDict
 from typing_extensions import Literal
 
-from . import pgplot
 from .curves import PlotCurveLine
 from .patches import (
     PlotPatch,
@@ -77,19 +70,6 @@ class LayoutShape:
 
     def to_patches(self) -> List[PlotPatch]:
         return []
-
-    def plot(self, ax: matplotlib.axes.Axes):
-        lines = self.lines
-        if lines:
-            ax.add_collection(
-                matplotlib.collections.LineCollection(
-                    lines,
-                    colors=pgplot.mpl_color(self.color),
-                    linewidths=self.line_width,
-                )
-            )
-        for patch in self.to_patches():
-            patch.plot(ax)
 
     @property
     def patch_kwargs(self):
@@ -275,15 +255,6 @@ class LayoutWrappedShape(ABC):
             PlotCurveLine(lx, ly, linewidth=self.line_width, color=self.color)
             for lx, ly in self.lines
         ]
-
-    def plot(self, ax: matplotlib.axes.Axes):
-        ax.add_collection(
-            matplotlib.collections.LineCollection(
-                [[(x, y) for x, y in zip(line[0], line[1])] for line in self.lines],
-                colors=pgplot.mpl_color(self.color),
-                linewidths=self.line_width,
-            )
-        )
 
 
 @dataclasses.dataclass(config=_dcls_config)
