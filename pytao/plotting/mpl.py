@@ -19,7 +19,15 @@ import numpy as np
 from . import floor_plan_shapes, layout_shapes, pgplot
 from .curves import PlotCurveLine, PlotCurveSymbols, PlotHistogram, TaoCurveSettings
 from .fields import ElementField
-from .patches import PlotPatch
+from .patches import (
+    PlotPatch,
+    PlotPatchArc,
+    PlotPatchCircle,
+    PlotPatchEllipse,
+    PlotPatchPolygon,
+    PlotPatchRectangle,
+    PlotPatchSbend,
+)
 from .plot import (
     AnyGraph,
     BasicGraph,
@@ -234,8 +242,76 @@ def plot_curve(curve: PlotCurve, ax: matplotlib.axes.Axes):
     return res
 
 
+def patch_to_mpl(patch: PlotPatch):
+    if isinstance(patch, PlotPatchRectangle):
+        return matplotlib.patches.Rectangle(
+            xy=patch.xy,
+            width=patch.width,
+            height=patch.height,
+            angle=patch.angle,
+            rotation_point=patch.rotation_point,
+            **patch._patch_args,
+        )
+    if isinstance(patch, PlotPatchArc):
+        return matplotlib.patches.Arc(
+            xy=patch.xy,
+            width=patch.width,
+            height=patch.height,
+            angle=patch.angle,
+            theta1=patch.theta1,
+            theta2=patch.theta2,
+            **patch._patch_args,
+        )
+    if isinstance(patch, PlotPatchCircle):
+        return matplotlib.patches.Circle(
+            xy=patch.xy,
+            radius=patch.radius,
+            **patch._patch_args,
+        )
+    if isinstance(patch, PlotPatchPolygon):
+        return matplotlib.patches.Polygon(
+            xy=patch.vertices,
+            **patch._patch_args,
+        )
+
+    if isinstance(patch, PlotPatchEllipse):
+        return matplotlib.patches.Ellipse(
+            xy=patch.xy,
+            width=patch.width,
+            height=patch.height,
+            angle=patch.angle,
+            **patch._patch_args,
+        )
+    if isinstance(patch, PlotPatchSbend):
+        codes = [
+            matplotlib.path.Path.MOVETO,
+            matplotlib.path.Path.CURVE3,
+            matplotlib.path.Path.CURVE3,
+            matplotlib.path.Path.LINETO,
+            matplotlib.path.Path.CURVE3,
+            matplotlib.path.Path.CURVE3,
+            matplotlib.path.Path.CLOSEPOLY,
+        ]
+        vertices = [
+            patch.spline1[0],
+            patch.spline1[1],
+            patch.spline1[2],
+            patch.spline2[0],
+            patch.spline2[1],
+            patch.spline2[2],
+            patch.spline1[0],
+        ]
+        return matplotlib.patches.PathPatch(
+            matplotlib.path.Path(vertices, codes),
+            facecolor="green",
+            alpha=0.5,
+        )
+
+    raise NotImplementedError(f"Unsupported patch type: {type(patch).__name__}")
+
+
 def plot_patch(patch: PlotPatch, ax: matplotlib.axes.Axes):
-    mpl = patch.to_mpl()
+    mpl = patch_to_mpl(patch)
     ax.add_patch(mpl)
     return mpl
 

@@ -9,12 +9,6 @@ from typing import (
     Union,
 )
 
-import matplotlib.axes
-import matplotlib.cm
-import matplotlib.collections
-import matplotlib.patches
-import matplotlib.path
-import matplotlib.text
 import numpy as np
 import pydantic
 import pydantic.dataclasses as dataclasses
@@ -56,9 +50,6 @@ class PlotPatchBase:
             "alpha": self.alpha,
         }
 
-    def to_mpl(self):
-        raise NotImplementedError(type(self))
-
 
 _point_field = Field(default_factory=lambda: (0.0, 0.0))
 
@@ -76,16 +67,6 @@ class PlotPatchRectangle(PlotPatchBase):
         return (
             self.xy[0] + self.width / 2,
             self.xy[1] + self.height / 2,
-        )
-
-    def to_mpl(self) -> matplotlib.patches.Rectangle:
-        return matplotlib.patches.Rectangle(
-            xy=self.xy,
-            width=self.width,
-            height=self.height,
-            angle=self.angle,
-            rotation_point=self.rotation_point,
-            **self._patch_args,
         )
 
 
@@ -155,40 +136,16 @@ class PlotPatchArc(PlotPatchBase):
             linewidth=linewidth,
         )
 
-    def to_mpl(self) -> matplotlib.patches.Arc:
-        return matplotlib.patches.Arc(
-            xy=self.xy,
-            width=self.width,
-            height=self.height,
-            angle=self.angle,
-            theta1=self.theta1,
-            theta2=self.theta2,
-            **self._patch_args,
-        )
-
 
 @dataclasses.dataclass(config=_dcls_config)
 class PlotPatchCircle(PlotPatchBase):
     xy: Point = _point_field
     radius: float = 0.0
 
-    def to_mpl(self) -> matplotlib.patches.Ellipse:
-        return matplotlib.patches.Circle(
-            xy=self.xy,
-            radius=self.radius,
-            **self._patch_args,
-        )
-
 
 @dataclasses.dataclass(config=_dcls_config)
 class PlotPatchPolygon(PlotPatchBase):
     vertices: List[Point] = Field(default_factory=list)
-
-    def to_mpl(self) -> matplotlib.patches.Polygon:
-        return matplotlib.patches.Polygon(
-            xy=self.vertices,
-            **self._patch_args,
-        )
 
 
 @dataclasses.dataclass(config=_dcls_config)
@@ -198,45 +155,11 @@ class PlotPatchEllipse(PlotPatchBase):
     height: float = 0.0
     angle: float = 0.0
 
-    def to_mpl(self) -> matplotlib.patches.Ellipse:
-        return matplotlib.patches.Ellipse(
-            xy=self.xy,
-            width=self.width,
-            height=self.height,
-            angle=self.angle,
-            **self._patch_args,
-        )
-
 
 @dataclasses.dataclass(config=_dcls_config)
 class PlotPatchSbend(PlotPatchBase):
     spline1: Tuple[Point, Point, Point] = Field(default_factory=tuple)
     spline2: Tuple[Point, Point, Point] = Field(default_factory=tuple)
-
-    def to_mpl(self) -> matplotlib.patches.PathPatch:
-        codes = [
-            matplotlib.path.Path.MOVETO,
-            matplotlib.path.Path.CURVE3,
-            matplotlib.path.Path.CURVE3,
-            matplotlib.path.Path.LINETO,
-            matplotlib.path.Path.CURVE3,
-            matplotlib.path.Path.CURVE3,
-            matplotlib.path.Path.CLOSEPOLY,
-        ]
-        vertices = [
-            self.spline1[0],
-            self.spline1[1],
-            self.spline1[2],
-            self.spline2[0],
-            self.spline2[1],
-            self.spline2[2],
-            self.spline1[0],
-        ]
-        return matplotlib.patches.PathPatch(
-            matplotlib.path.Path(vertices, codes),
-            facecolor="green",
-            alpha=0.5,
-        )
 
 
 PlotPatch = Union[

@@ -30,6 +30,10 @@ import bokeh.io
 import bokeh.layouts
 import bokeh.models
 import bokeh.plotting
+
+# TODO remove mpl dep - only used in a single spot
+import matplotlib
+import matplotlib.patches
 import numpy as np
 from bokeh.core.enums import SizingModeType
 from bokeh.document.callbacks import EventCallback
@@ -582,7 +586,16 @@ def _draw_floor_plan_shapes(
 
 
 def _patch_rect_to_points(patch: PlotPatchRectangle) -> Tuple[List[float], List[float]]:
-    points = patch.to_mpl().get_corners()
+    mpl_patch = matplotlib.patches.Rectangle(
+        xy=patch.xy,
+        width=patch.width,
+        height=patch.height,
+        angle=patch.angle,
+        rotation_point=patch.rotation_point,
+        **patch._patch_args,
+    )
+
+    points = mpl_patch.get_corners()
     return (
         points[:, 0].tolist() + [points[0, 0]],
         points[:, 1].tolist() + [points[0, 1]],
