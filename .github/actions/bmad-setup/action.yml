@@ -1,0 +1,16 @@
+name: "bmad setup"
+description: "Clone the latest bmad"
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+      with:
+        repository: bmad-sim/bmad-ecosystem
+        fetch-depth: 1
+        path: bmad
+
+    - name: Set ACC_ROOT_DIR
+      shell: bash -l {0}
+      run: |
+        PYTAO_ROOT=/home/runner/work/pytao/pytao
+        echo "ACC_ROOT_DIR=$PYTAO_ROOT/bmad" >> $GITHUB_ENV

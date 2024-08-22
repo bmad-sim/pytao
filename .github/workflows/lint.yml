@@ -12,13 +12,9 @@ jobs:
         with:
           fetch-depth: 1
 
-      - uses: conda-incubator/setup-miniconda@v3
+      - uses: ./.github/actions/conda-setup
         with:
-          python-version: 3.12
-          mamba-version: "*"
-          channels: conda-forge
-          activate-environment: pytao-dev
-          environment-file: dev-environment.yml
+          python-version: "3.12"
 
       - name: Install pre-commit
         run: python -m pip install pre-commit

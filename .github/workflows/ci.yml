@@ -23,35 +23,16 @@ jobs:
         with:
           fetch-depth: 1
 
-      - uses: actions/checkout@v4
-        with:
-          repository: bmad-sim/bmad-ecosystem
-          fetch-depth: 1
-          path: bmad
-
-      - uses: conda-incubator/setup-miniconda@v3
+      - uses: ./.github/actions/conda-setup
         with:
           python-version: ${{ matrix.python-version }}
-          mamba-version: "*"
-          channels: conda-forge
-          activate-environment: pytao-dev
-          environment-file: dev-environment.yml
 
-      - name: Setup Bmad
-        run: |
-          PYTAO_ROOT=/home/runner/work/pytao/pytao
-          echo "ACC_ROOT_DIR=$PYTAO_ROOT/bmad" >> $GITHUB_ENV
+      - uses: ./.github/actions/bmad-setup
 
       - name: Show conda environment packages
         shell: bash -l {0}
         run: |
           conda list
-
-      - name: Ensure importability
-        shell: bash -l {0}
-        run: |
-          cd /
-          python -c "import pytao"
 
       - name: Run Tests
         shell: bash -l {0}
