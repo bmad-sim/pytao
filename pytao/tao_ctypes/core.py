@@ -1,4 +1,5 @@
 import ctypes
+from ctypes.util import find_library
 import logging
 import os
 import shutil
@@ -57,15 +58,17 @@ class TaoCore:
         else:
             self.so_lib_file = so_lib
 
+        # Library was found from ACC_ROOT_DIR environment variable
         if self.so_lib_file:
             self.so_lib = ctypes.CDLL(self.so_lib_file)
-        else:
-            lib, lib_file = auto_discovery_libtao()
 
-            if lib:
-                self.so_lib = lib
-                self.so_lib_file = lib_file
-            else:
+        # Try loading from system path
+        else:
+            # Find shared library from path and load it (finds regardless of extensions like .so or .dylib)
+            self.so_lib, self.so_lib_file = auto_discovery_libtao()
+
+            # Raise an error if not found
+            if self.so_lib_file is None:
                 raise ValueError("Shared object libtao library not found.")
 
         self.so_lib.tao_c_out_io_buffer_get_line.restype = ctypes.c_char_p
@@ -309,13 +312,10 @@ def auto_discovery_libtao():
     """
     Use system loader to try and find libtao.
     """
-    for lib in ["libtao.so", "libtao.dylib", "libtao.dll"]:
-        try:
-            lib_handler = ctypes.CDLL(lib)
-            return lib_handler, lib
-        except OSError:
-            continue
-    return None, None
+    # Find tao library regardless of suffix (ie .so, .dylib, etc) and load
+    so_lib_file = find_library("tao")
+    so_lib = ctypes.CDLL(so_lib_file) if so_lib_file is not None else None
+    return so_lib, so_lib_file
 
 
 # ----------------------------------------------------------------------
