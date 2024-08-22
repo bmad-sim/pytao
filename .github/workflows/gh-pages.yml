@@ -2,15 +2,12 @@ name: Publish Documentation
 
 on:
   push:
-    branches:
-      - "**"
   pull_request:
   schedule:
     - cron: "0 0 * * *" # every day at midnight
 
 jobs:
   deploy:
-    if: ${{ github.repository == 'bmad-sim/pytao' }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
