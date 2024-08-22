@@ -1,5 +1,10 @@
 name: "conda setup"
 description: "Prepare the pytao conda environment"
+inputs:
+  python-version:
+    description: Python version
+    required: false
+    default: "3.9"
 runs:
   using: "composite"
   steps:
@@ -11,7 +16,7 @@ runs:
         use-mamba: true
         channels: conda-forge
         environment-file: dev-environment.yml
-        python-version: ${{ python-version }}
+        python-version: ${{ inputs.python-version }}
 
     - name: Show the installed packages
       shell: bash -l {0}
