@@ -1,3 +1,5 @@
+import pprint
+
 import matplotlib as mp
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
@@ -797,10 +799,20 @@ class taoplot:
             branch = layInfoDict["-1^ix_branch"].value
 
             # List of strings containing information about each element
-            eleInfo = pipe.cmd_in(
-                "python plot_lat_layout " + str(universe) + "@" + str(branch),
-                no_warn=True,
-            ).splitlines()
+            try:
+                eleInfo = pipe.cmd_in(
+                    "python plot_lat_layout " + str(universe) + "@" + str(branch),
+                    no_warn=True,
+                ).splitlines()
+            except RuntimeError as ex:
+                print(f"Failed to plot layout: {ex}")
+                print("The layout information dictionary is as follows:")
+                pprint.pprint(layInfoDict)
+                print("Trying branch 0...")
+                eleInfo = pipe.cmd_in(
+                    f"python plot_lat_layout {universe}@0",
+                    no_warn=True,
+                ).splitlines()
 
             # All dict keys and entries are strings which match a lattice layout element index (eg: '1') string to the corresponding information
             eleIndexList = []
@@ -813,17 +825,18 @@ class taoplot:
             eleColorDict = {}
             eleNameDict = {}
             for i in range(len(eleInfo)):
-                eleIndexList.append(int(eleInfo[i].split(";")[0]))
-                eleStartDict[eleInfo[i].split(";")[0]] = float(eleInfo[i].split(";")[1])
-                eleEndDict[eleInfo[i].split(";")[0]] = float(eleInfo[i].split(";")[2])
-                eleLwDict[eleInfo[i].split(";")[0]] = float(eleInfo[i].split(";")[3])
-                eleShapeDict[eleInfo[i].split(";")[0]] = eleInfo[i].split(";")[4].lower()
-                eleY1Dict[eleInfo[i].split(";")[0]] = float(eleInfo[i].split(";")[5])
-                eleY2Dict[eleInfo[i].split(";")[0]] = float(eleInfo[i].split(";")[6])
-                eleColorDict[eleInfo[i].split(";")[0]] = mpl_color(
-                    eleInfo[i].split(";")[7].lower()
-                )
-                eleNameDict[eleInfo[i].split(";")[0]] = eleInfo[i].split(";")[8]
+                # NOTE: unhandled branch is element 0
+                split_ = eleInfo[i].split(";")
+                index = split_[1]
+                eleIndexList.append(int(split_[1]))
+                eleStartDict[index] = float(split_[2])
+                eleEndDict[index] = float(split_[3])
+                eleLwDict[index] = float(split_[4])
+                eleShapeDict[index] = split_[5].lower()
+                eleY1Dict[index] = float(split_[6])
+                eleY2Dict[index] = float(split_[7])
+                eleColorDict[index] = mpl_color(split_[8].lower())
+                eleNameDict[index] = split_[9]
 
             # Plotting line segments one-by-one can be slow if there are thousands of lattice elements.
             # So keep a list of line segments and plot all at once at the end.

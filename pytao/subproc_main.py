@@ -58,4 +58,11 @@ if __name__ == "__main__":
             file=sys.stderr,
         )
         exit(1)
-    _tao_subprocess(output_fd)
+
+    try:
+        _tao_subprocess(output_fd)
+    except OSError:
+        exit(1)
+    except KeyboardInterrupt:
+        logger.debug("Caught KeyboardInterrupt; exiting.")
+        exit(0)

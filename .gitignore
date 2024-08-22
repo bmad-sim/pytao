@@ -116,3 +116,10 @@ ENV/
 *.swp
 
 pytao/_version.py
+pytao/tests/artifacts
+docs/examples/alpha*.html
+docs/examples/beta*.html
+docs/examples/beta*.png
+docs/examples/fodo10.bmad 
+docs/examples/markers.bmad 
+docs/examples/wake.dat

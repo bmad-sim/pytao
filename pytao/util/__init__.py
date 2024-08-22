@@ -10,7 +10,6 @@ from .parameters import (
     tao_parameter_dict,
 )
 
-
 __all__ = [
     "lat_element",
     "InvalidParamError",

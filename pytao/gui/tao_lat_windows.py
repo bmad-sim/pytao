@@ -7,7 +7,6 @@ from tkinter import messagebox, ttk
 
 from ..util.lattice_element import lat_element
 from ..util.parameters import str_to_tao_param
-
 from .tao_base_windows import (
     Tao_Toplevel,
     tao_branch_widgets,

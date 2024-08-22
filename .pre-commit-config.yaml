@@ -31,7 +31,7 @@ repos:
         args: ["--maxkb=100000"]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.5.0
+    rev: v0.6.1
     hooks:
       - id: ruff
         args: ["--config", "pyproject.toml"]
@@ -41,3 +41,13 @@ repos:
         args: ["--config", "pyproject.toml"]
         types_or: [python]
         exclude: "^(pytao/_version.py)$"
+
+  - repo: local
+    hooks:
+      - id: jupyter-notebook-clear-output
+        name: jupyter-notebook-jupyter-clear
+        files: \.ipynb$
+        stages: [commit]
+        language: system
+        entry: jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace
+        # exclude: "^.*().ipynb$"

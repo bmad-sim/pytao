@@ -1,3 +1,5 @@
+import ast
+import datetime
 import logging
 from typing import Dict, List, Optional
 
@@ -1090,9 +1092,10 @@ def parse_plot_lat_layout(lines, cmd=""):
     return _parse_by_keys_to_types(
         lines,
         {
-            "index": int,
+            "ix_branch": int,
+            "ix_ele": int,
             "ele_s_start": float,
-            "ele_s": float,
+            "ele_s_end": float,
             "line_width": float,
             "shape": str,
             "y1": float,
@@ -1172,6 +1175,8 @@ def parse_shape_list(lines, cmd=""):
     """
     Parse shape_list results.
 
+    Keys match those on `shape_set` for convenience.
+
     Returns
     -------
     list of dict
@@ -1179,14 +1184,14 @@ def parse_shape_list(lines, cmd=""):
     return _parse_by_keys_to_types(
         lines,
         {
-            "index": int,
-            "ele_id": str,
+            "shape_index": int,
+            "ele_name": str,
             "shape": str,
             "color": str,
-            "size": float,
-            "label": str,
-            "draw": bool,
-            "multi": bool,
+            "shape_size": float,
+            "type_label": str,
+            "shape_draw": bool,
+            "multi_shape": bool,
             "line_width": int,
         },
     )
@@ -1275,10 +1280,14 @@ def parse_spin_resonance(lines, cmd=""):
     -------
     dict
     """
-    lines = [
-        line for line in lines if "[INFO]" not in line and "note: setting" not in line.lower()
-    ]
-    return parse_tao_python_data(lines)
+    # Filter lines as INFO/notes may appear in output
+    return parse_tao_python_data(
+        [
+            line
+            for line in lines
+            if "[INFO]" not in line and "note: setting" not in line.lower()
+        ]
+    )
 
 
 def parse_super_universe(lines, cmd=""):
@@ -1381,3 +1390,82 @@ def parse_lat_list(lines, cmd=""):
     list of str
     """
     return lines
+
+
+def parse_place_buffer(lines, cmd=""):
+    """
+    Parse place_buffer results.
+
+    Returns
+    -------
+    list of dict
+    """
+    return _parse_by_keys_to_types(
+        lines,
+        {
+            "region": str,
+            "graph": str,
+        },
+    )
+
+
+def parse_show_plot_page(lines, cmd=""):
+    """
+    Parse 'show plot_page' output.
+
+    Returns
+    -------
+    list of dict
+    """
+
+    def literal_eval(value: str):
+        try:
+            return ast.literal_eval(value)
+        except (ValueError, SyntaxError):
+            return value
+
+    result = {}
+    for line in lines:
+        line = line.strip()
+        if not line or "=" not in line:
+            continue
+
+        variable, value = line.split("=", 1)
+        variable = variable.strip().lstrip("%")
+        value = value.rsplit("!")[0].strip()
+        if value.startswith('"') or not value:
+            value = value.strip('"')
+        elif value in {"TF"}:
+            value = {"T": True, "F": False}[value]
+        else:
+            value = [literal_eval(part) for part in value.split()]
+
+            if "," in variable and "%" in variable:
+                prefix = variable[: variable.index("%")]
+                suffixes = [
+                    suffix.strip() for suffix in variable[variable.index("%") :].split(",")
+                ]
+                result.update(
+                    {f"{prefix}%{suffix}": val for suffix, val in zip(suffixes, value)}
+                )
+                continue
+            if len(value) == 1:
+                (value,) = value
+
+        result[variable] = value
+    return {key.replace("%", "_"): value for key, value in result.items()}
+
+
+def parse_show_version(lines, cmd=""):
+    """
+    Parse 'show version' output.
+
+    Returns
+    -------
+    datetime.datetime or None
+    """
+    try:
+        return datetime.datetime.strptime("".join(lines).strip(), "Date: %Y/%m/%d %H:%M:%S")
+    except ValueError:
+        logger.warning("Failed to parse version output: %s", lines)
+        return None

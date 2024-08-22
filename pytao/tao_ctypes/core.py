@@ -4,13 +4,14 @@ import os
 import shutil
 import tempfile
 import textwrap
+from typing import List
 
 import numpy as np
 
-from pytao import tao_ctypes
-from pytao.tao_ctypes.tools import full_path
-from pytao.tao_ctypes.util import error_in_lines
+from .. import tao_ctypes
 from ..util.parameters import tao_parameter_dict
+from .tools import full_path
+from .util import error_in_lines
 
 logger = logging.getLogger(__name__)
 
@@ -33,8 +34,6 @@ class TaoCore:
     tao = tao_ctypes.Tao()
     tao.init("command line args here...")
     """
-
-    # ---------------------------------------------
 
     def __init__(self, init="", so_lib=""):
         # TL/DR; Leave this import out of the global scope.
@@ -106,7 +105,7 @@ class TaoCore:
     # ---------------------------------------------
     # Init Tao
 
-    def init(self, cmd):
+    def init(self, cmd: str) -> List[str]:
         if not tao_ctypes.initialized:
             logger.debug(f"Initializing Tao with: {cmd}")
             err = self.so_lib.tao_c_init_tao(cmd.encode("utf-8"))
@@ -115,9 +114,9 @@ class TaoCore:
                 raise ValueError(f"Unable to init Tao with: {cmd!r}. Tao output: {message}")
             tao_ctypes.initialized = True
             return self.get_output()
-        else:
-            # Reinit
-            return self.cmd(f"reinit tao -clear {cmd}", raises=True)
+
+        # Reinit
+        return self.cmd(f"reinit tao -clear {cmd}", raises=True)
 
     # ---------------------------------------------
     # Send a command to Tao and return the output
