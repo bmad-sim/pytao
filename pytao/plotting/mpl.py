@@ -383,6 +383,7 @@ def plot(graph: AnyGraph, ax: Optional[matplotlib.axes.Axes] = None) -> matplotl
         # ax.set_xticklabels([elem.info["label_name"] for elem in self.elements], rotation=90)
         ax.grid(visible=False)
     elif isinstance(graph, FloorPlanGraph):
+        ax.set_aspect("equal")
         for elem in graph.elements:
             if elem.shape is not None:
                 plot_floor_plan_shape(elem.shape, ax)
