@@ -1,0 +1,30 @@
+name: "conda setup"
+description: "Prepare the pytao conda environment"
+inputs:
+  python-version:
+    description: Python version
+    required: false
+    default: "3.9"
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Mambaforge
+      uses: conda-incubator/setup-miniconda@v3
+      with:
+        miniforge-variant: Mambaforge
+        activate-environment: pytao-dev
+        use-mamba: true
+        channels: conda-forge
+        environment-file: dev-environment.yml
+        python-version: ${{ inputs.python-version }}
+
+    - name: Show the installed packages
+      shell: bash -l {0}
+      run: |
+        conda list
+
+    - name: Ensure importability
+      shell: bash -l {0}
+      run: |
+        cd /
+        python -c "import pytao"

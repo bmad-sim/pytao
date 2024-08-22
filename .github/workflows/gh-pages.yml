@@ -2,41 +2,45 @@ name: Publish Documentation
 
 on:
   push:
-    branches:
-      - "**"
+  pull_request:
+  schedule:
+    - cron: "0 0 * * *" # every day at midnight
 
 jobs:
   deploy:
-    if: ${{ github.repository == 'bmad-sim/pytao' }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest]
         python-version: [3.12]
     steps:
-      - uses: actions/checkout@v3
-      - uses: conda-incubator/setup-miniconda@v2
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/conda-setup
         with:
           python-version: ${{ matrix.python-version }}
-          mamba-version: "*"
-          channels: conda-forge
-          activate-environment: pytao-dev
-          environment-file: dev-environment.yml
+
+      - uses: ./.github/actions/bmad-setup
+
       - name: List mamba
         shell: bash -l {0}
         run: |
           mamba list
+
       - name: Execute notebooks
         shell: bash -l {0}
         run: |
           bash scripts/execute_notebooks.bash
+
       - name: Build Docs
         shell: bash -l {0}
         run: |
           mkdocs build
           zip -r pytao-examples.zip docs/examples/
           mv pytao-examples.zip ./site/assets/
+
       - name: Deploy to gh-pages
+        if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags') }}
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
