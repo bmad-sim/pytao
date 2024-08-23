@@ -552,6 +552,7 @@ def _draw_floor_plan_shapes(
                 floor_plan_shapes.XBox,
                 floor_plan_shapes.BowTie,
                 floor_plan_shapes.Diamond,
+                floor_plan_shapes.Triangle,
             ),
         ):
             vx, vy = shape.vertices
