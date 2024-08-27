@@ -17,7 +17,7 @@ from .util import error_in_lines
 logger = logging.getLogger(__name__)
 
 
-class TaoInitialiationError(Exception):
+class TaoInitializationError(Exception):
     pass
 
 
@@ -42,7 +42,7 @@ class TaoCore:
         self._init_shared_library(so_lib=so_lib)
 
         if not init:
-            raise TaoInitialiationError(
+            raise TaoInitializationError(
                 "Tao now requires an `init` string in order to initialize a new Tao object."
             )
         self._init_output = self.init(init)

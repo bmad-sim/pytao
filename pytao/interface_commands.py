@@ -22,7 +22,7 @@ from typing_extensions import Literal, override
 from .plotting import MatplotlibGraphManager
 from .plotting.types import ShapeListInfo
 from .plotting.util import select_graph_manager_class
-from .tao_ctypes.core import TaoCore, TaoInitialiationError
+from .tao_ctypes.core import TaoCore, TaoInitializationError
 from .tao_ctypes.util import parse_tao_python_data
 from .util import parsers as _pytao_parsers
 from .util.command import make_tao_init
@@ -566,7 +566,7 @@ class Tao(TaoCore):
         )
 
         if not self.init_settings.can_initialize:
-            raise TaoInitialiationError(
+            raise TaoInitializationError(
                 f"Tao will not be able to initialize with the following settings:"
                 f"\n"
                 f"\ninit={self.init_settings.tao_init!r}"
