@@ -17,7 +17,8 @@ from .util import error_in_lines
 logger = logging.getLogger(__name__)
 
 
-# --------------------------------------
+class TaoInitialiationError(Exception):
+    pass
 
 
 class TaoCore:
@@ -39,6 +40,11 @@ class TaoCore:
 
     def __init__(self, init="", so_lib=""):
         self._init_shared_library(so_lib=so_lib)
+
+        if not init:
+            raise TaoInitialiationError(
+                "Tao now requires an `init` string in order to initialize a new Tao object."
+            )
         self._init_output = self.init(init)
         try:
             self.register_cell_magic()

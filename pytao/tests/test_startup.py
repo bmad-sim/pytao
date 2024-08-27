@@ -1,5 +1,7 @@
 import pytest
 
+from pytao.tao_ctypes.core import TaoInitialiationError
+
 from .. import Tao, TaoStartup
 
 
@@ -55,7 +57,7 @@ def test_geometry() -> None:
 
 
 def test_startup_requires_init() -> None:
-    with pytest.raises(ValueError):
+    with pytest.raises(TaoInitialiationError):
         Tao()
-    with pytest.raises(ValueError):
+    with pytest.raises(TaoInitialiationError):
         Tao("bad_init")
