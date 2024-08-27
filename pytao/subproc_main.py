@@ -21,11 +21,15 @@ def _tao_subprocess(output_fd: int) -> None:
             message = read_pickled_data(sys.stdin.buffer)
             try:
                 command = message["command"]
-                if command == "init":
-                    tao = Tao(*message["args"])
-                    output = tao.init_output
-                elif command == "quit":
+                if command == "quit":
                     sys.exit(0)
+
+                if command == "init":
+                    if tao is None:
+                        tao = Tao(*message["args"])
+                        output = tao.init_output
+                    else:
+                        output = tao.init(*message["args"])
                 elif tao is None:
                     raise RuntimeError("Tao object not yet initialized")
                 elif command == "cmd":
