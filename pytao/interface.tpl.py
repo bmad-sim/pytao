@@ -302,12 +302,24 @@ class Tao(TaoCore):
         Import symbols defined in lattice files(s)?
     var_file : str or pathlib.Path, default=None
         Define variables for plotting and optimization
+
+    Attributes
+    ----------
+    plot_backend_name : str or None
+        Plotting backend name, if using pytao plotting. `None` indicates that
+        internal Tao plotting is to be used.
+        Changing the backend may require reinitialization to enable external
+        plotting.
+    init_output : list of str
+        Tao initialization output, recorded when the Tao object first
+        initializes.  Subsequent calls to `init()` will override this variable.
     """
 
     plot_backend_name: Optional[str]
     _graph_managers: dict
     _min_tao_version = datetime.datetime(2024, 8, 4)
 
+    @override
     def __init__(
         self,
         init: str = "",
@@ -343,10 +355,13 @@ class Tao(TaoCore):
         symbol_import: bool = False,
         var_file: Optional[AnyPath] = None,
     ):
+        self._init_shared_library(so_lib=so_lib)
         self.plot_backend_name = None
         self._graph_managers = {}
         self._tao_version_checked = False
-        super().__init__(init="", so_lib=so_lib)
+        # NOTE: do not call super() here - we handle the init arguments on our
+        # own.
+        # super().__init__(init="", so_lib=so_lib)
         self.init(
             cmd=init,
             plot=plot,
@@ -379,6 +394,13 @@ class Tao(TaoCore):
             symbol_import=symbol_import,
             var_file=var_file,
         )
+        try:
+            self.register_cell_magic()
+        except Exception:
+            logger.debug("Failed to register cell magic", exc_info=True)
+
+    def __repr__(self) -> str:
+        return f"<Tao init={self.init_settings.tao_init!r} so_lib_file={self.so_lib_file!r}>"
 
     @override
     def init(
@@ -415,7 +437,87 @@ class Tao(TaoCore):
         symbol_import: bool = False,
         var_file: Optional[AnyPath] = None,
     ) -> List[str]:
-        """(Re-)Initialize Tao with the given command."""
+        """
+        (Re-)Initialize Tao with the given command.
+
+        Parameters
+        ----------
+        init : str, optional
+            Initialization string for Tao.  Same as the tao command-line, including
+            "-init" and such.  Shell variables in `init` strings will be expanded
+            by Tao.  For example, an `init` string containing `$HOME` would be
+            replaced by your home directory.
+        so_lib : str, optional
+            Path to the Tao shared library.  Auto-detected if not specified.
+        plot : str, bool, optional
+            Use pytao's plotting mechanism with matplotlib or bokeh, if available.
+            If `True`, pytao will pick an appropriate plotting backend.
+            If `False` or "tao", Tao plotting will be used. (Default)
+            If "mpl", the pytao matplotlib plotting backend will be selected.
+            If "bokeh", the pytao Bokeh plotting backend will be selected.
+
+        beam_file : str or pathlib.Path, default=None
+            File containing the tao_beam_init namelist.
+        beam_init_position_file : pathlib.Path or str, default=None
+            File containing initial particle positions.
+        building_wall_file : str or pathlib.Path, default=None
+            Define the building tunnel wall
+        command : str, optional
+            Commands to run after startup file commands
+        data_file : str or pathlib.Path, default=None
+            Define data for plotting and optimization
+        debug : bool, default=False
+            Debug mode for Wizards
+        disable_smooth_line_calc : bool, default=False
+            Disable the smooth line calc used in plotting
+        external_plotting : bool, default=False
+            Tells Tao that plotting is done externally to Tao.
+        geometry : "wxh" or (width, height) tuple, optional
+            Plot window geometry (pixels)
+        hook_init_file :  pathlib.Path or str, default=None
+            Init file for hook routines (Default = tao_hook.init)
+        init_file : str or pathlib.Path, default=None
+            Tao init file
+        lattice_file : str or pathlib.Path, default=None
+            Bmad lattice file
+        log_startup : bool, default=False
+            Write startup debugging info
+        no_stopping : bool, default=False
+            For debugging : Prevents Tao from exiting on errors
+        noinit : bool, default=False
+            Do not use Tao init file.
+        noplot : bool, default=False
+            Do not open a plotting window
+        nostartup : bool, default=False
+            Do not open a startup command file
+        no_rad_int : bool, default=False
+            Do not do any radiation integrals calculations.
+        plot_file : str or pathlib.Path, default=None
+            Plotting initialization file
+        prompt_color : str, optional
+            Set color of prompt string. Default is blue.
+        reverse : bool, default=False
+            Reverse lattice element order?
+        rf_on : bool, default=False
+            Use "--rf_on" to turn off RF (default is now RF on)
+        quiet : bool, default=False
+            Suppress terminal output when running a command file?
+        slice_lattice : str, optional
+            Discards elements from lattice that are not in the list
+        start_branch_at : str, optional
+            Start lattice branch at element.
+        startup_file : str or pathlib.Path, default=None
+            Commands to run after parsing Tao init file
+        symbol_import : bool, default=False
+            Import symbols defined in lattice files(s)?
+        var_file : str or pathlib.Path, default=None
+            Define variables for plotting and optimization
+
+        Returns
+        -------
+        list of str
+            Tao's initialization output.
+        """
         if plot in {"mpl", "bokeh"}:
             self.plot_backend_name = plot
         else:
@@ -456,14 +558,11 @@ class Tao(TaoCore):
             var_file=var_file,
         )
 
-        if not self.init_settings.can_initialize:
-            return []
-
-        res = self._init(self.init_settings)
+        self._init_output = self._init(self.init_settings)
         if not self._tao_version_checked:
             self._tao_version_checked = True
             self._check_tao_version()
-        return res
+        return self._init_output
 
     def _check_tao_version(self):
         version = self.version()

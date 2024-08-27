@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 def _tao_subprocess(output_fd: int) -> None:
     logger.debug("Tao subprocess handler started")
 
-    tao = Tao()
+    tao = None
 
     with os.fdopen(output_fd, "wb") as output_pipe:
         while True:
@@ -22,15 +22,18 @@ def _tao_subprocess(output_fd: int) -> None:
             try:
                 command = message["command"]
                 if command == "init":
-                    output = tao.init(*message["args"])
+                    tao = Tao(*message["args"])
+                    output = tao.init_output
+                elif command == "quit":
+                    sys.exit(0)
+                elif tao is None:
+                    raise RuntimeError("Tao object not yet initialized")
                 elif command == "cmd":
                     output = tao.cmd(*message["args"])
                 elif command == "cmd_real":
                     output = tao.cmd_real(*message["args"])
                 elif command == "cmd_integer":
                     output = tao.cmd_integer(*message["args"])
-                elif command == "quit":
-                    sys.exit(0)
                 else:
                     output = "unknown command"
             except Exception as ex:

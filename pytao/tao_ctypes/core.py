@@ -32,21 +32,20 @@ class TaoCore:
     sys.path.insert(0, TAO_PYTHON_DIR)
 
     import tao_ctypes
-    tao = tao_ctypes.Tao()
-    tao.init("command line args here...")
+    tao = tao_ctypes.Tao("command line args here...")
     """
 
-    def __init__(self, init="", so_lib=""):
-        # TL/DR; Leave this import out of the global scope.
-        #
-        # Make it lazy import to avoid cyclical dependency.
-        # at __init__.py there is an import for Tao which
-        # would cause interface_commands to be imported always
-        # once we import pytao.
-        # If by any chance the interface_commands.py is broken and
-        # we try to autogenerate it will complain about the broken
-        # interface_commands file.
+    _init_output: List[str]
 
+    def __init__(self, init="", so_lib=""):
+        self._init_shared_library(so_lib=so_lib)
+        self._init_output = self.init(init)
+        try:
+            self.register_cell_magic()
+        except Exception:
+            pass
+
+    def _init_shared_library(self, so_lib: str = "") -> None:
         # Library needs to be set.
         self.so_lib_file = None
         if so_lib == "":
@@ -74,13 +73,10 @@ class TaoCore:
         self.so_lib.tao_c_out_io_buffer_get_line.restype = ctypes.c_char_p
         self.so_lib.tao_c_out_io_buffer_reset.restype = None
 
-        try:
-            self.register_cell_magic()
-        except Exception:
-            pass
-
-        if init:
-            self.init(init)
+    @property
+    def init_output(self) -> List[str]:
+        """Output from the latest Tao initialization."""
+        return list(self._init_output)
 
     # ---------------------------------------------
     # Used by init and cmd routines

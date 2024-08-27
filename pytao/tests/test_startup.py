@@ -1,6 +1,6 @@
 import pytest
 
-from .. import TaoStartup
+from .. import Tao, TaoStartup
 
 
 def test_examples_can_init(tao_example: TaoStartup) -> None:
@@ -52,3 +52,10 @@ def test_init_override() -> None:
 def test_geometry() -> None:
     assert TaoStartup(geometry="3x3").tao_init == "-geometry 3x3"
     assert TaoStartup(geometry=(32, 23)).tao_init == "-geometry 32x23"
+
+
+def test_startup_requires_init() -> None:
+    with pytest.raises(ValueError):
+        Tao()
+    with pytest.raises(ValueError):
+        Tao("bad_init")
