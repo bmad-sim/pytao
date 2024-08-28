@@ -61,3 +61,13 @@ def test_startup_requires_init() -> None:
         Tao()
     with pytest.raises(TaoInitializationError):
         Tao("bad_init")
+
+
+def test_startup_bad_file() -> None:
+    bad_fn = "/tmp/foooooobarrrr"
+    with pytest.raises(TaoInitializationError) as raises_context:
+        Tao(f"-init_file {bad_fn}")
+    ex = raises_context.value
+    assert hasattr(ex, "tao_output")
+    assert bad_fn in ex.tao_output
+    assert "TAO INITIALIZATION FILE NOT FOUND" in ex.tao_output

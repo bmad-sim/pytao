@@ -654,8 +654,9 @@ class Tao(TaoCore):
             if as_dict:
                 return parse_tao_python_data(raw_output)
             return tao_parameter_dict(raw_output)
-        except Exception:
+        except Exception as ex:
             if raises:
+                ex.tao_output = raw_output
                 raise
             logger.exception(
                 "Failed to parse string data with custom parser. Returning raw value."
