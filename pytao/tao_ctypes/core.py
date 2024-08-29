@@ -5,7 +5,7 @@ import os
 import shutil
 import tempfile
 import textwrap
-from typing import List
+from typing import List, Tuple
 
 import numpy as np
 
@@ -17,7 +17,28 @@ from .util import error_in_lines
 logger = logging.getLogger(__name__)
 
 
-# --------------------------------------
+class TaoException(Exception):
+    pass
+
+
+class TaoExceptionWithOutput(TaoException):
+    tao_output: str
+
+    def __init__(self, message: str, tao_output: str = ""):
+        super().__init__(message)
+        self.tao_output = tao_output
+
+
+class TaoInitializationError(TaoExceptionWithOutput, RuntimeError):
+    tao_output: str
+
+
+class TaoSharedLibraryNotFoundError(TaoException, RuntimeError):
+    pass
+
+
+class TaoCommandError(TaoExceptionWithOutput, RuntimeError):
+    tao_output: str
 
 
 class TaoCore:
@@ -32,55 +53,33 @@ class TaoCore:
     sys.path.insert(0, TAO_PYTHON_DIR)
 
     import tao_ctypes
-    tao = tao_ctypes.Tao()
-    tao.init("command line args here...")
+    tao = tao_ctypes.Tao("command line args here...")
     """
 
+    _init_output: List[str]
+    so_lib: ctypes.CDLL
+    so_lib_file: str
+
     def __init__(self, init="", so_lib=""):
-        # TL/DR; Leave this import out of the global scope.
-        #
-        # Make it lazy import to avoid cyclical dependency.
-        # at __init__.py there is an import for Tao which
-        # would cause interface_commands to be imported always
-        # once we import pytao.
-        # If by any chance the interface_commands.py is broken and
-        # we try to autogenerate it will complain about the broken
-        # interface_commands file.
+        self._init_shared_library(so_lib=so_lib)
 
-        # Library needs to be set.
-        self.so_lib_file = None
-        if so_lib == "":
-            # Search
-            ACC_ROOT_DIR = os.getenv("ACC_ROOT_DIR", "")
-            if ACC_ROOT_DIR:
-                BASE_DIR = os.path.join(ACC_ROOT_DIR, "production", "lib")
-                self.so_lib_file = find_libtao(BASE_DIR)
-        else:
-            self.so_lib_file = so_lib
-
-        # Library was found from ACC_ROOT_DIR environment variable
-        if self.so_lib_file:
-            self.so_lib = ctypes.CDLL(self.so_lib_file)
-
-        # Try loading from system path
-        else:
-            # Find shared library from path and load it (finds regardless of extensions like .so or .dylib)
-            self.so_lib, self.so_lib_file = auto_discovery_libtao()
-
-            # Raise an error if not found
-            if self.so_lib_file is None:
-                raise ValueError("Shared object libtao library not found.")
-
-        self.so_lib.tao_c_out_io_buffer_get_line.restype = ctypes.c_char_p
-        self.so_lib.tao_c_out_io_buffer_reset.restype = None
-
+        if not init:
+            raise TaoInitializationError(
+                "pytao now requires an `init` string in order to initialize a new Tao object."
+            )
+        self._init_output = self.init(init)
         try:
             self.register_cell_magic()
         except Exception:
             pass
 
-        if init:
-            self.init(init)
+    def _init_shared_library(self, so_lib: str) -> None:
+        self.so_lib, self.so_lib_file = init_libtao(user_path=so_lib)
+
+    @property
+    def init_output(self) -> List[str]:
+        """Output from the latest Tao initialization."""
+        return list(self._init_output)
 
     # ---------------------------------------------
     # Used by init and cmd routines
@@ -113,13 +112,21 @@ class TaoCore:
             logger.debug(f"Initializing Tao with: {cmd}")
             err = self.so_lib.tao_c_init_tao(cmd.encode("utf-8"))
             if err != 0:
-                message = textwrap.indent("\n".join(self.get_output() or ""), "  ")
-                raise ValueError(f"Unable to init Tao with: {cmd!r}. Tao output: {message}")
+                raw_output = self.get_output() or ""
+                message = textwrap.indent("\n".join(raw_output), "  ")
+                raise TaoInitializationError(
+                    f"Unable to init Tao with: {cmd!r}. Tao output:\n{message}",
+                    tao_output="\n".join(raw_output),
+                )
             tao_ctypes.initialized = True
             return self.get_output()
 
-        # Reinit
-        return self.cmd(f"reinit tao -clear {cmd}", raises=True)
+        try:
+            return self.cmd(f"reinit tao -clear {cmd}", raises=True)
+        except RuntimeError as ex:
+            raise TaoInitializationError(
+                str(ex), tao_output=getattr(ex, "tao_output", "") or ""
+            ) from None
 
     # ---------------------------------------------
     # Send a command to Tao and return the output
@@ -145,7 +152,10 @@ class TaoCore:
 
         err = error_in_lines(lines)
         if err:
-            raise RuntimeError(f"Command: {cmd} causes error: {err}")
+            raise TaoCommandError(
+                f"Command: {cmd} causes error: {err}",
+                tao_output="\n".join(lines),
+            )
 
         return lines
 
@@ -216,9 +226,8 @@ class TaoCore:
         if err:
             self.reset_output()
             if raises:
-                raise RuntimeError(err)
-            else:
-                return None
+                raise TaoCommandError(err, tao_output="n".join(lines))
+            return None
 
         # Extract array data
         # This is a pointer to the scratch space.
@@ -254,9 +263,8 @@ class TaoCore:
         if err:
             self.reset_output()
             if raises:
-                raise RuntimeError(err)
-            else:
-                return None
+                raise TaoCommandError(err, tao_output="n".join(lines))
+            return None
 
         # Extract array data
         # This is a pointer to the scratch space.
@@ -315,6 +323,54 @@ def auto_discovery_libtao():
     # Find tao library regardless of suffix (ie .so, .dylib, etc) and load
     so_lib_file = find_library("tao")
     so_lib = ctypes.CDLL(so_lib_file) if so_lib_file is not None else None
+    return so_lib, so_lib_file
+
+
+def _configure_cdll(so_lib: ctypes.CDLL) -> None:
+    """Configure return types for specific exported functions."""
+    so_lib.tao_c_out_io_buffer_get_line.restype = ctypes.c_char_p
+    so_lib.tao_c_out_io_buffer_reset.restype = None
+
+
+def init_libtao(user_path: str = "") -> Tuple[ctypes.CDLL, str]:
+    """
+    Find the libtao shared library and initialize it.
+
+    Parameters
+    ----------
+    user_path : str, optional
+        User-specified path to the library.
+
+    Returns
+    -------
+    ctypes.CDLL
+        The shared library instance.
+    str
+        Path to the shared library.
+    """
+    so_lib_file = None
+    if user_path:
+        so_lib_file = user_path
+    else:
+        ACC_ROOT_DIR = os.getenv("ACC_ROOT_DIR", "")
+        if ACC_ROOT_DIR:
+            BASE_DIR = os.path.join(ACC_ROOT_DIR, "production", "lib")
+            so_lib_file = find_libtao(BASE_DIR)
+
+    # Library was found from ACC_ROOT_DIR environment variable
+    if so_lib_file:
+        so_lib = ctypes.CDLL(so_lib_file)
+        _configure_cdll(so_lib)
+        return so_lib, so_lib_file
+
+    # Try loading from system path
+    # Find shared library from path and load it (finds regardless of extensions like .so or .dylib)
+    so_lib, so_lib_file = auto_discovery_libtao()
+
+    if so_lib_file is None or so_lib is None:
+        raise TaoSharedLibraryNotFoundError("Shared object libtao library not found.")
+
+    _configure_cdll(so_lib)
     return so_lib, so_lib_file
 
 
