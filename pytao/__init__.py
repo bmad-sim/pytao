@@ -9,6 +9,11 @@ in the util package.
 from .interface_commands import Tao, TaoStartup
 from .subproc import AnyTao, SubprocessTao
 from .tao_ctypes import TaoModel, run_tao
+from .tao_ctypes.core import (
+    TaoException,
+    TaoInitializationError,
+    TaoSharedLibraryNotFoundError,
+)
 from .tao_ctypes.evaluate import evaluate_tao
 from .tao_interface import tao_interface
 from .tao_pexpect import tao_io
@@ -22,7 +27,10 @@ __all__ = [
     "AnyTao",
     "SubprocessTao",
     "Tao",
+    "TaoException",
+    "TaoInitializationError",
     "TaoModel",
+    "TaoSharedLibraryNotFoundError",
     "TaoStartup",
     "evaluate_tao",
     "run_tao",
