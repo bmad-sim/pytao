@@ -326,6 +326,12 @@ def auto_discovery_libtao():
     return so_lib, so_lib_file
 
 
+def _configure_cdll(so_lib: ctypes.CDLL) -> None:
+    """Configure return types for specific exported functions."""
+    so_lib.tao_c_out_io_buffer_get_line.restype = ctypes.c_char_p
+    so_lib.tao_c_out_io_buffer_reset.restype = None
+
+
 def init_libtao(user_path: str = "") -> Tuple[ctypes.CDLL, str]:
     """
     Find the libtao shared library and initialize it.
@@ -354,6 +360,7 @@ def init_libtao(user_path: str = "") -> Tuple[ctypes.CDLL, str]:
     # Library was found from ACC_ROOT_DIR environment variable
     if so_lib_file:
         so_lib = ctypes.CDLL(so_lib_file)
+        _configure_cdll(so_lib)
         return so_lib, so_lib_file
 
     # Try loading from system path
@@ -363,8 +370,7 @@ def init_libtao(user_path: str = "") -> Tuple[ctypes.CDLL, str]:
     if so_lib_file is None or so_lib is None:
         raise TaoSharedLibraryNotFoundError("Shared object libtao library not found.")
 
-    so_lib.tao_c_out_io_buffer_get_line.restype = ctypes.c_char_p
-    so_lib.tao_c_out_io_buffer_reset.restype = None
+    _configure_cdll(so_lib)
     return so_lib, so_lib_file
 
 
