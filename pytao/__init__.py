@@ -10,6 +10,7 @@ from .interface_commands import Tao, TaoStartup
 from .subproc import AnyTao, SubprocessTao
 from .tao_ctypes import TaoModel, run_tao
 from .tao_ctypes.core import (
+    TaoCommandError,
     TaoException,
     TaoInitializationError,
     TaoSharedLibraryNotFoundError,
@@ -27,6 +28,7 @@ __all__ = [
     "AnyTao",
     "SubprocessTao",
     "Tao",
+    "TaoCommandError",
     "TaoException",
     "TaoInitializationError",
     "TaoModel",
