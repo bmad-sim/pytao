@@ -21,12 +21,24 @@ class TaoException(Exception):
     pass
 
 
-class TaoInitializationError(RuntimeError, TaoException):
+class TaoExceptionWithOutput(TaoException):
+    tao_output: str
+
+    def __init__(self, message: str, tao_output: str = ""):
+        super().__init__(message)
+        self.tao_output = tao_output
+
+
+class TaoInitializationError(TaoExceptionWithOutput, RuntimeError):
     tao_output: str
 
 
-class TaoSharedLibraryNotFoundError(RuntimeError, TaoException):
+class TaoSharedLibraryNotFoundError(TaoException, RuntimeError):
     pass
+
+
+class TaoCommandError(TaoExceptionWithOutput, RuntimeError):
+    tao_output: str
 
 
 class TaoCore:
@@ -53,7 +65,7 @@ class TaoCore:
 
         if not init:
             raise TaoInitializationError(
-                "Tao now requires an `init` string in order to initialize a new Tao object."
+                "pytao now requires an `init` string in order to initialize a new Tao object."
             )
         self._init_output = self.init(init)
         try:
@@ -102,20 +114,19 @@ class TaoCore:
             if err != 0:
                 raw_output = self.get_output() or ""
                 message = textwrap.indent("\n".join(raw_output), "  ")
-                ex = TaoInitializationError(
-                    f"Unable to init Tao with: {cmd!r}. Tao output:\n{message}"
+                raise TaoInitializationError(
+                    f"Unable to init Tao with: {cmd!r}. Tao output:\n{message}",
+                    tao_output="\n".join(raw_output),
                 )
-                ex.tao_output = "\n".join(raw_output)
-                raise ex
             tao_ctypes.initialized = True
             return self.get_output()
 
         try:
             return self.cmd(f"reinit tao -clear {cmd}", raises=True)
         except RuntimeError as ex:
-            new_ex = TaoInitializationError(str(ex))
-            new_ex.tao_output = getattr(ex, "tao_output", None) or ""
-            raise new_ex from None
+            raise TaoInitializationError(
+                str(ex), tao_output=getattr(ex, "tao_output", "") or ""
+            ) from None
 
     # ---------------------------------------------
     # Send a command to Tao and return the output
@@ -141,7 +152,10 @@ class TaoCore:
 
         err = error_in_lines(lines)
         if err:
-            raise RuntimeError(f"Command: {cmd} causes error: {err}")
+            raise TaoCommandError(
+                f"Command: {cmd} causes error: {err}",
+                tao_output="\n".join(lines),
+            )
 
         return lines
 
@@ -212,9 +226,8 @@ class TaoCore:
         if err:
             self.reset_output()
             if raises:
-                raise RuntimeError(err)
-            else:
-                return None
+                raise TaoCommandError(err, tao_output="n".join(lines))
+            return None
 
         # Extract array data
         # This is a pointer to the scratch space.
@@ -250,9 +263,8 @@ class TaoCore:
         if err:
             self.reset_output()
             if raises:
-                raise RuntimeError(err)
-            else:
-                return None
+                raise TaoCommandError(err, tao_output="n".join(lines))
+            return None
 
         # Extract array data
         # This is a pointer to the scratch space.
