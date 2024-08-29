@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from functools import partial
 import logging
 import math
 import typing
@@ -888,6 +889,10 @@ class FloorPlanElement:
             "bow_tie": floor_plan_shapes.BowTie,
             "diamond": floor_plan_shapes.Diamond,
             "circle": floor_plan_shapes.Circle,
+            "u_triangle": partial(floor_plan_shapes.Triangle, orientation="u"),
+            "d_triangle": partial(floor_plan_shapes.Triangle, orientation="d"),
+            "l_triangle": partial(floor_plan_shapes.Triangle, orientation="l"),
+            "r_triangle": partial(floor_plan_shapes.Triangle, orientation="r"),
         }.get(shape, None)
 
         if ele_key == "sbend" and shape == "box":

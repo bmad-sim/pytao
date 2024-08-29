@@ -3,6 +3,7 @@ from __future__ import annotations
 import math
 from functools import cached_property
 from typing import List, Optional, Union
+from typing_extensions import Literal
 
 import numpy as np
 import pydantic.dataclasses as dataclasses
@@ -458,6 +459,33 @@ class SBend(Shape):
         )
 
 
+@dataclasses.dataclass(config=_dcls_config)
+class Triangle(Shape):
+    orientation: Literal["u", "d", "l", "r"] = "u"
+
+    @property
+    def vertices(self):
+        p0, p1, p2, p3 = tuple(zip(*self.corner_vertices))
+
+        def midpoint(start, end):
+            x0, y0 = start
+            x1, y1 = end
+            return (x0 + x1) / 2.0, (y0 + y1) / 2.0
+
+        if self.orientation == "u":
+            points = [p0, p3, midpoint(p1, p2), p0]
+        elif self.orientation == "d":
+            points = [p1, p2, midpoint(p0, p3), p1]
+        elif self.orientation == "l":
+            points = [p2, p3, midpoint(p0, p1), p2]
+        elif self.orientation == "r":
+            points = [p0, p1, midpoint(p2, p3), p0]
+        else:
+            raise ValueError(f"Unsupported triangle orientation: {self.orientation}")
+
+        return [tuple(x for x, _ in points), tuple(y for _, y in points)]
+
+
 AnyFloorPlanShape = Union[
     BowTie,
     Box,
@@ -469,4 +497,5 @@ AnyFloorPlanShape = Union[
     LetterX,
     SBend,
     XBox,
+    Triangle,
 ]

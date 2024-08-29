@@ -107,6 +107,7 @@ class _Defaults:
     grid_toolbar_location: str = "right"
     lattice_layout_tools: str = "pan,wheel_zoom,box_zoom,reset,hover,crosshair"
     floor_plan_tools: str = "pan,wheel_zoom,box_zoom,reset,hover,crosshair"
+    floor_plan_annotate_elements: bool = True
     layout_font_size: str = "0.75em"
     floor_plan_font_size: str = "0.75em"
     limit_scale_factor: float = 1.01
@@ -137,6 +138,7 @@ def set_defaults(
     grid_toolbar_location: Optional[str] = None,
     lattice_layout_tools: Optional[str] = None,
     floor_plan_tools: Optional[str] = None,
+    floor_plan_annotate_elements: Optional[bool] = None,
     layout_font_size: Optional[str] = None,
     floor_plan_font_size: Optional[str] = None,
     limit_scale_factor: Optional[float] = None,
@@ -162,6 +164,8 @@ def set_defaults(
         _Defaults.lattice_layout_tools = lattice_layout_tools
     if floor_plan_tools is not None:
         _Defaults.floor_plan_tools = floor_plan_tools
+    if floor_plan_annotate_elements is not None:
+        _Defaults.floor_plan_annotate_elements = floor_plan_annotate_elements
     if layout_font_size is not None:
         _Defaults.layout_font_size = layout_font_size
     if floor_plan_font_size is not None:
@@ -552,6 +556,7 @@ def _draw_floor_plan_shapes(
                 floor_plan_shapes.XBox,
                 floor_plan_shapes.BowTie,
                 floor_plan_shapes.Diamond,
+                floor_plan_shapes.Triangle,
             ),
         ):
             vx, vy = shape.vertices
@@ -1062,12 +1067,13 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         if orbits is not None:
             _plot_curve_symbols(fig, orbits.curve, name="floor_orbits")
 
-        _draw_annotations(
-            fig,
-            {elem.name: elem.annotations for elem in self.graph.elements},
-            font_size=_Defaults.floor_plan_font_size,
-            skip_labels=False,
-        )
+        if _Defaults.floor_plan_annotate_elements:
+            _draw_annotations(
+                fig,
+                {elem.name: elem.annotations for elem in self.graph.elements},
+                font_size=_Defaults.floor_plan_font_size,
+                skip_labels=False,
+            )
         _draw_limit_border(fig, graph.xlim, graph.ylim, alpha=0.1)
         return fig
 
