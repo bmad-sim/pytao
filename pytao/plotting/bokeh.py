@@ -110,6 +110,7 @@ class _Defaults:
     layout_font_size: str = "0.75em"
     floor_plan_font_size: str = "0.75em"
     limit_scale_factor: float = 1.01
+    max_data_points: int = 10_000
 
     @classmethod
     def get_size_for_class(
@@ -140,6 +141,7 @@ def set_defaults(
     layout_font_size: Optional[str] = None,
     floor_plan_font_size: Optional[str] = None,
     limit_scale_factor: Optional[float] = None,
+    max_data_points: Optional[int] = None,
 ):
     """Change defaults used for Bokeh plots."""
     if width is not None:
@@ -168,6 +170,8 @@ def set_defaults(
         _Defaults.floor_plan_font_size = floor_plan_font_size
     if limit_scale_factor is not None:
         _Defaults.limit_scale_factor = limit_scale_factor
+    if max_data_points is not None:
+        _Defaults.max_data_points = max_data_points
 
 
 def _get_curve_data(curve: PlotCurve) -> CurveData:
@@ -1375,7 +1379,7 @@ class BokehAppCreator:
         num_points_slider = bokeh.models.Slider(
             title="Data Points",
             start=10,
-            end=10_000,
+            end=_Defaults.max_data_points,
             step=1_000,
             value=401,
         )
