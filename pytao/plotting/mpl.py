@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 import matplotlib.text
 import matplotlib.ticker
 import numpy as np
+from pandas.core.frame import functools
 
 from . import floor_plan_shapes, layout_shapes, pgplot
 from .curves import PlotCurveLine, PlotCurveSymbols, PlotHistogram, TaoCurveSettings
@@ -68,6 +69,11 @@ def set_defaults(
         matplotlib.rcParams["figure.figsize"] = (width, height)
     if dpi is not None:
         matplotlib.rcParams["figure.dpi"] = dpi
+
+    info = {key: value for key, value in vars(_Defaults).items() if not key.startswith("_")}
+    info["figsize"] = matplotlib.rcParams["figure.figsize"]
+    info["dpi"] = matplotlib.rcParams["figure.dpi"]
+    return info
 
 
 def setup_matplotlib_ticks(
@@ -407,6 +413,10 @@ class MatplotlibGraphManager(GraphManager):
     """Matplotlib backend graph manager."""
 
     _key_: ClassVar[str] = "mpl"
+
+    @functools.wraps(set_defaults)
+    def configure(self, **kwargs):
+        return set_defaults(**kwargs)
 
     def plot_grid(
         self,
