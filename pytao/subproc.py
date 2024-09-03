@@ -12,6 +12,7 @@ from typing import Union
 
 import numpy as np
 
+from .tao_ctypes.core import TaoCommandError
 from .interface_commands import Tao, TaoStartup
 
 logger = logging.getLogger(__name__)
@@ -147,8 +148,12 @@ def _get_result(value, raises: bool = True):
         error = value.get("error")
         error_cls = value.get("error_cls")
         tb = value.get("traceback", "")
+        tao_output = value.get("tao_output", "")
         if raises:
-            ex = RuntimeError(f"Tao in subprocess raised {error_cls}: {error}")
+            ex = TaoCommandError(
+                f"Tao in subprocess raised {error_cls}: {error}",
+                tao_output=tao_output,
+            )
             if hasattr(ex, "add_note") and callable(ex.add_note):
                 ex.add_note(f"Subprocess {tb}")
             raise ex

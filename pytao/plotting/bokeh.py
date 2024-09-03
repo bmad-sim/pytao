@@ -971,11 +971,7 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
         except TaoCommandError as ex:
             logger.error(f"Failed to update plot extents: {ex.tao_output}")
         finally:
-            try:
-                self.tao.cmd("set global lattice_calc_on = T")
-            except TaoCommandError as ex:
-                logger.error(f"Failed to update plot: {ex.tao_output}")
-                return
+            self.tao.cmd("set global lattice_calc_on = T")
 
         logger.debug(f"x={self.view_x_range} points={self.num_points}")
 
@@ -1500,6 +1496,30 @@ class BokehAppCreator:
 
         return callbacks
 
+    def create_variable_widgets(self, state: BokehAppState):
+        status_label = bokeh.models.PreText(height_policy="max", max_height=300)
+        widgets = [
+            var.create_widgets(
+                tao=self.manager.tao,
+                status_label=status_label,
+                pairs=state.pairs,
+                show_sliders=_Defaults.show_sliders,
+            )
+            for var in self.variables
+        ]
+
+        per_row = _Defaults.variables_per_row
+        if _Defaults.show_sliders:
+            per_row *= 2
+
+        rows = _widgets_to_rows(sum(widgets, []), per_row=per_row)
+        return bokeh.layouts.row(
+            [
+                bokeh.layouts.column(rows),
+                bokeh.layouts.column([status_label]),
+            ]
+        )
+
     def create_app_ui(self):
         # Ensure we get a new set of data sources and figures for each app
         state = self.create_state()
@@ -1509,21 +1529,7 @@ class BokehAppCreator:
 
         widget_models: List[bokeh.layouts.UIElement] = []
         if self.variables:
-            status_label = bokeh.models.PreText()
-            widgets = [
-                var.create_widgets(
-                    tao=self.manager.tao,
-                    status_label=status_label,
-                    pairs=state.pairs,
-                    show_sliders=_Defaults.show_sliders,
-                )
-                for var in self.variables
-            ]
-            widget_models = (
-                _widgets_to_rows(sum(widgets, []), per_row=_Defaults.variables_per_row * 2)
-                + [bokeh.layouts.row([status_label])]
-                + widget_models
-            )
+            widget_models.append(self.create_variable_widgets(state))
 
         if any(isinstance(pair.bgraph, BokehBasicGraph) for pair in state.pairs):
             update_button = self._add_update_button(state)
@@ -1670,20 +1676,29 @@ class Variable:
         status_label: bokeh.models.PreText,
         pairs: List[BGraphAndFigure],
     ):
-        try:
-            self.set_value(tao, new)
-        # except (RuntimeError, TaoCommandError) as ex:
-        except RuntimeError as ex:
-            status_label.text = _clean_tao_exception_for_user(
+        status_label.text = ""
+
+        def record_exception(ex: Exception) -> None:
+            exc_text = _clean_tao_exception_for_user(
                 getattr(ex, "tao_output", str(ex)),
                 command="tao_set_invalid",
             )
-        else:
-            status_label.text = ""
+            if status_label.text:
+                status_label.text = "\n".join((status_label.text, exc_text))
+            else:
+                status_label.text = exc_text
+
+        try:
+            self.set_value(tao, new)
+        except Exception as ex:
+            record_exception(ex)
 
         for pair in pairs:
             if isinstance(pair.bgraph, (BokehBasicGraph, BokehLatticeLayoutGraph)):
-                pair.bgraph.update_plot(pair.fig)
+                try:
+                    pair.bgraph.update_plot(pair.fig)
+                except Exception as ex:
+                    record_exception(ex)
 
 
 def _clean_tao_exception_for_user(text: str, command: str) -> str:
