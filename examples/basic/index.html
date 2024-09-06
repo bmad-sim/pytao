@@ -1762,7 +1762,6 @@ Ref_time_start, Ref_time:  2.075773E-09,  2.127992E-09
 
 Attribute values [Only non-zero values shown]:
     1  L                           =  1.5655000E-02 m        31  L_SOFT_EDGE                 =  0.0000000E+00 m
-    3  R_SOLENOID                  =  0.0000000E+00 m
     5  KS                          = -8.5023386E-02 1/m      49  BS_FIELD                    =  1.5000000E+00 T
    10  FRINGE_TYPE                 =  None (1)               11  FRINGE_AT                   =  No_End (4)
    13  SPIN_FRINGE_ON              =  T (1)
@@ -1771,9 +1770,7 @@ Attribute values [Only non-zero values shown]:
    53  P0C                         =  5.2890000E+09 eV           BETA                        =  1.0000000E+00
    54  E_TOT                       =  5.2890000E+09 eV           GAMMA                       =  1.0350315E+04
    64  REF_TIME_START              =  2.0757727E-09 sec      50  DELTA_REF_TIME              =  5.2219459E-11 sec
-   65  INTEGRATOR_ORDER            = 0
    67  DS_STEP                     =  2.0000000E-01 m        66  NUM_STEPS                   = 1
-   68  CSR_DS_STEP                 =  0.0000000E+00 m
 
        TRACKING_METHOD              =  Bmad_Standard             APERTURE_AT                =  No_Aperture
        MAT6_CALC_METHOD             =  Auto                      APERTURE_TYPE              =  Rectangular
@@ -3422,7 +3419,7 @@ except Exception as ex:
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Exception handled: Command: python var foobar  causes error: ERROR detected: [ERROR | 2024-SEP-05 01:12:44] tao_pipe_cmd:
+<pre>Exception handled: Command: python var foobar  causes error: ERROR detected: [ERROR | 2024-SEP-06 01:12:59] tao_pipe_cmd:
     "pipe var foobar": Not a valid variable name
 INVALID
 </pre>
@@ -3475,7 +3472,7 @@ INVALID
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[35]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>['[ERROR | 2024-SEP-05 01:12:44] tao_command:',
+<pre>['[ERROR | 2024-SEP-06 01:12:59] tao_command:',
  '    UNRECOGNIZED COMMAND: invalid_command']</pre>
 </div>
 </div>
