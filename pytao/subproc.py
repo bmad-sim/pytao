@@ -352,6 +352,7 @@ class SubprocessTao(Tao):
                 self.close_subprocess()
             except Exception:
                 pass
+            raise
 
     @property
     def subprocess_alive(self) -> bool:
