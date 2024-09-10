@@ -14,6 +14,7 @@ from .subproc import (
     SubprocessRequest,
     SubprocessResult,
     SubprocessSuccessResult,
+    TaoDisconnectedError,
     array_to_dict,
     read_pickled_data,
     write_pickled_data,
@@ -102,7 +103,7 @@ if __name__ == "__main__":
 
     try:
         _tao_subprocess(output_fd)
-    except OSError:
+    except (TaoDisconnectedError, OSError):
         exit(1)
     except KeyboardInterrupt:
         logger.debug("Caught KeyboardInterrupt; exiting.")
