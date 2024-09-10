@@ -70,6 +70,7 @@ from .plot import (
     UnsupportedGraphError,
 )
 from .settings import TaoGraphSettings
+from ..tao_ctypes.core import TaoCommandError
 from .types import FloatVariableInfo
 from .util import Limit, OptionalLimit, fix_grid_limits
 
@@ -111,6 +112,9 @@ class _Defaults:
     layout_font_size: str = "0.75em"
     floor_plan_font_size: str = "0.75em"
     limit_scale_factor: float = 1.01
+    max_data_points: int = 10_000
+    variables_per_row: int = 2
+    show_sliders: bool = True
 
     @classmethod
     def get_size_for_class(
@@ -142,20 +146,62 @@ def set_defaults(
     layout_font_size: Optional[str] = None,
     floor_plan_font_size: Optional[str] = None,
     limit_scale_factor: Optional[float] = None,
+    max_data_points: Optional[int] = None,
+    variables_per_row: Optional[int] = None,
+    show_sliders: Optional[bool] = None,
 ):
-    """Change defaults used for Bokeh plots."""
+    """
+    Change defaults used for Bokeh plots.
+
+    Parameters
+    ----------
+    width : int, optional
+        Plot default width.
+    height : int, optional
+        Plot default height.
+    stacked_height : int, optional
+        Stacked plot default height (`plot_grid`)
+    layout_height : int, optional
+        Layout plot height.
+    palette : str, optional
+        Palette for `plot_field`.
+    show_bokeh_logo : bool, optional
+        Show Bokeh logo on each plot.
+    tools : str, default="pan,wheel_zoom,box_zoom,reset,hover,crosshair"
+        Bokeh tools to use.
+    grid_toolbar_location : str, default="right"
+        Toolbar location for gridded plots.
+    lattice_layout_tools : str, optional
+        Bokeh tools to use specifically for lattice layouts.
+    floor_plan_tools : str, optional
+        Bokeh tools to use specifically for floor plan layouts.
+    layout_font_size : str, optional
+        Font size to use in lattice layouts.
+    floor_plan_font_size : str, optional
+        Font size to use in floor plan layouts.
+    limit_scale_factor : float, default=1.01
+        View limits from Tao are scaled by this factor.  This can be used to
+        ensure that all data is visible despite drawing method differences.
+    max_data_points : int, optional
+        Maximum number of data points to show in the slider.
+    variables_per_row : int, default=2
+        Variables to list per row when in single mode (i.e., `vars=True`).
+    show_sliders : bool, default=True
+        Show sliders alongside the spinners in single mode.
+    """
+
     if width is not None:
-        _Defaults.width = width
+        _Defaults.width = int(width)
     if height is not None:
-        _Defaults.height = height
+        _Defaults.height = int(height)
     if stacked_height is not None:
-        _Defaults.stacked_height = stacked_height
+        _Defaults.stacked_height = int(stacked_height)
     if layout_height is not None:
-        _Defaults.layout_height = layout_height
+        _Defaults.layout_height = int(layout_height)
     if palette is not None:
         _Defaults.palette = palette
     if show_bokeh_logo is not None:
-        _Defaults.show_bokeh_logo = show_bokeh_logo
+        _Defaults.show_bokeh_logo = bool(show_bokeh_logo)
     if tools is not None:
         _Defaults.tools = tools
     if grid_toolbar_location is not None:
@@ -171,7 +217,18 @@ def set_defaults(
     if floor_plan_font_size is not None:
         _Defaults.floor_plan_font_size = floor_plan_font_size
     if limit_scale_factor is not None:
-        _Defaults.limit_scale_factor = limit_scale_factor
+        _Defaults.limit_scale_factor = float(limit_scale_factor)
+    if max_data_points is not None:
+        _Defaults.max_data_points = int(max_data_points)
+    if variables_per_row is not None:
+        _Defaults.variables_per_row = int(variables_per_row)
+    if show_sliders is not None:
+        _Defaults.show_sliders = bool(show_sliders)
+    return {
+        key: value
+        for key, value in vars(_Defaults).items()
+        if not key.startswith("_") and key not in {"get_size_for_class"}
+    }
 
 
 def _get_curve_data(curve: PlotCurve) -> CurveData:
@@ -916,6 +973,8 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
             self.tao.cmd(
                 f"x_scale {self.graph.region_name} {self.view_x_range[0]} {self.view_x_range[1]}"
             )
+        except TaoCommandError as ex:
+            logger.error(f"Failed to update plot extents: {ex.tao_output}")
         finally:
             self.tao.cmd("set global lattice_calc_on = T")
 
@@ -1170,6 +1229,15 @@ class BokehAppState:
         return pathlib.Path(filename)
 
 
+def _widgets_to_rows(widgets: Sequence[bokeh.models.UIElement], per_row: int):
+    widgets = list(widgets)
+    rows = []
+    while widgets:
+        rows.append(bokeh.layouts.row(widgets[:per_row]))
+        widgets = widgets[per_row:]
+    return rows
+
+
 class BokehAppCreator:
     """
     A composite Bokeh application creator made up of 1 or more graphs.
@@ -1381,7 +1449,7 @@ class BokehAppCreator:
         num_points_slider = bokeh.models.Slider(
             title="Data Points",
             start=10,
-            end=10_000,
+            end=_Defaults.max_data_points,
             step=1_000,
             value=401,
         )
@@ -1434,6 +1502,30 @@ class BokehAppCreator:
 
         return callbacks
 
+    def create_variable_widgets(self, state: BokehAppState):
+        status_label = bokeh.models.PreText(height_policy="max", max_height=300)
+        widgets = [
+            var.create_widgets(
+                tao=self.manager.tao,
+                status_label=status_label,
+                pairs=state.pairs,
+                show_sliders=_Defaults.show_sliders,
+            )
+            for var in self.variables
+        ]
+
+        per_row = _Defaults.variables_per_row
+        if _Defaults.show_sliders:
+            per_row *= 2
+
+        rows = _widgets_to_rows(sum(widgets, []), per_row=per_row)
+        return bokeh.layouts.row(
+            [
+                bokeh.layouts.column(rows),
+                bokeh.layouts.column([status_label]),
+            ]
+        )
+
     def create_app_ui(self):
         # Ensure we get a new set of data sources and figures for each app
         state = self.create_state()
@@ -1443,21 +1535,7 @@ class BokehAppCreator:
 
         widget_models: List[bokeh.layouts.UIElement] = []
         if self.variables:
-            status_label = bokeh.models.PreText()
-            spinners = [
-                var.create_spinner(
-                    tao=self.manager.tao,
-                    status_label=status_label,
-                    pairs=state.pairs,
-                )
-                for var in self.variables
-            ]
-            widget_models.insert(0, bokeh.layouts.row([status_label]))
-            per_row = 6
-            while spinners:
-                row = bokeh.layouts.row(spinners[-per_row:])
-                spinners = spinners[:-per_row]
-                widget_models.insert(0, row)
+            widget_models.append(self.create_variable_widgets(state))
 
         if any(isinstance(pair.bgraph, BokehBasicGraph) for pair in state.pairs):
             update_button = self._add_update_button(state)
@@ -1513,6 +1591,44 @@ class Variable:
         self.value = value
         tao.cmd(f"set var {self.name}|{self.parameter} = {self.value}")
 
+    def create_slider(self) -> bokeh.models.Slider:
+        return bokeh.models.Slider(
+            title=self.name,
+            start=self.info["low_lim"],
+            end=self.info["high_lim"],
+            step=self.step,
+            value=self.value,
+            name="slider",
+        )
+
+    def create_widgets(
+        self,
+        tao: Tao,
+        status_label: bokeh.models.PreText,
+        pairs: List[BGraphAndFigure],
+        show_sliders: bool,
+    ) -> List[bokeh.models.UIElement]:
+        spinner = self.create_spinner(tao, status_label, pairs)
+
+        if not show_sliders:
+            return [spinner]
+
+        slider = self.create_slider()
+        update_linked_value = bokeh.models.CustomJS(
+            args=dict(slider=slider, spinner=spinner),
+            code="""
+            if (cb_obj.name == "slider") {
+                spinner.value = slider.value
+            } else {
+                slider.value = spinner.value
+            }
+            """,
+        )
+
+        slider.js_on_change("value", update_linked_value)
+        spinner.js_on_change("value", update_linked_value)
+        return [slider, spinner]
+
     def create_spinner(
         self,
         tao: Tao,
@@ -1525,6 +1641,7 @@ class Variable:
             step=self.step,
             low=self.info["low_lim"],
             high=self.info["high_lim"],
+            name="spinner",
         )
         spinner.on_change(
             "value",
@@ -1565,19 +1682,29 @@ class Variable:
         status_label: bokeh.models.PreText,
         pairs: List[BGraphAndFigure],
     ):
-        try:
-            self.set_value(tao, new)
-        except RuntimeError as ex:
-            status_label.text = _clean_tao_exception_for_user(
-                str(ex),
+        status_label.text = ""
+
+        def record_exception(ex: Exception) -> None:
+            exc_text = _clean_tao_exception_for_user(
+                getattr(ex, "tao_output", str(ex)),
                 command="tao_set_invalid",
             )
-        else:
-            status_label.text = ""
+            if status_label.text:
+                status_label.text = "\n".join((status_label.text, exc_text))
+            else:
+                status_label.text = exc_text
+
+        try:
+            self.set_value(tao, new)
+        except Exception as ex:
+            record_exception(ex)
 
         for pair in pairs:
             if isinstance(pair.bgraph, (BokehBasicGraph, BokehLatticeLayoutGraph)):
-                pair.bgraph.update_plot(pair.fig)
+                try:
+                    pair.bgraph.update_plot(pair.fig)
+                except Exception as ex:
+                    record_exception(ex)
 
 
 def _clean_tao_exception_for_user(text: str, command: str) -> str:
@@ -1596,6 +1723,10 @@ class BokehGraphManager(GraphManager):
     """Bokeh backend graph manager - for non-Jupyter contexts."""
 
     _key_: ClassVar[str] = "bokeh"
+
+    @functools.wraps(set_defaults)
+    def configure(self, **kwargs):
+        return set_defaults(**kwargs)
 
     def to_bokeh_graph(self, graph: AnyGraph) -> AnyBokehGraph:
         """

@@ -5,6 +5,7 @@ import traceback
 
 import numpy as np
 
+from .tao_ctypes.core import TaoCommandError
 from .interface_commands import Tao
 from .subproc import array_to_dict, read_pickled_data, write_pickled_data
 
@@ -31,7 +32,7 @@ def _tao_subprocess(output_fd: int) -> None:
                     else:
                         output = tao.init(*message["args"])
                 elif tao is None:
-                    raise RuntimeError("Tao object not yet initialized")
+                    raise TaoCommandError("Tao object not yet initialized")
                 elif command == "cmd":
                     output = tao.cmd(*message["args"])
                 elif command == "cmd_real":
@@ -47,6 +48,7 @@ def _tao_subprocess(output_fd: int) -> None:
                         "error": str(ex),
                         "error_cls": type(ex).__name__,
                         "traceback": traceback.format_exc(),
+                        "tao_output": getattr(ex, "tao_output", ""),
                     },
                 )
             else:
