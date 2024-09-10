@@ -1,9 +1,256 @@
-"""
-pytao specific utilities
+from __future__ import annotations
 
-"""
+import contextlib
+import contextvars
+import textwrap
+from dataclasses import dataclass, field
+from typing import Dict, FrozenSet, Iterable, List, Optional, Set, Tuple
 
 import numpy as np
+from typing_extensions import Literal
+
+TaoMessageLevel = Literal[
+    "INFO",  # Informational message
+    "SUCCESS",  # Successful completion notice
+    "WARNING",  # General warning
+    "ERROR",  # General error
+    "FATAL",  # Fatal error - cannot continue computations, reset will be attempted
+    "ABORT",  # Severe error which will lead to an abort
+    "MESSAGE",  # An important message
+]
+
+all_capture_levels = ("INFO", "SUCCESS", "WARNING", "ERROR", "FATAL", "ABORT", "MESSAGE")
+error_capture_levels = ("ERROR", "FATAL", "ABORT")
+
+
+error_capture_context: contextvars.ContextVar[Optional[TaoErrorCaptureContext]] = (
+    contextvars.ContextVar("error_capture_context", default=None)
+)
+
+
+class TaoException(Exception):
+    pass
+
+
+class TaoExceptionWithOutput(TaoException):
+    tao_output: str
+
+    def __init__(self, message: str, tao_output: str = ""):
+        super().__init__(message)
+        self.tao_output = tao_output
+
+    @property
+    def errors(self) -> List[TaoMessage]:
+        return self.get_errors()
+
+    @property
+    def messages(self) -> List[TaoMessage]:
+        return self.get_messages(all_capture_levels)
+
+    def get_errors(
+        self,
+        exclude_functions: Iterable[str] = (),
+    ) -> List[TaoMessage]:
+        return self.get_messages(
+            levels=error_capture_levels,
+            exclude_functions=exclude_functions,
+        )
+
+    def get_messages(
+        self,
+        levels: Iterable[TaoMessageLevel] = (),
+        exclude_functions: Iterable[str] = (),
+    ) -> List[TaoMessage]:
+        if not levels:
+            levels = all_capture_levels
+        _, messages = capture_messages_from_functions(
+            self.tao_output.splitlines(), levels=levels
+        )
+
+        return [message for message in messages if message.function not in exclude_functions]
+
+
+class TaoInitializationError(TaoExceptionWithOutput, RuntimeError):
+    tao_output: str
+    fatal: bool
+
+    def __init__(self, message: str, tao_output: str = "", fatal: bool = False):
+        super().__init__(message, tao_output=tao_output)
+        self.fatal = fatal
+
+
+class TaoSharedLibraryNotFoundError(TaoException, RuntimeError):
+    pass
+
+
+class TaoCommandError(TaoExceptionWithOutput, RuntimeError):
+    tao_output: str
+
+
+CaptureByLevel = Dict[TaoMessageLevel, FrozenSet[str]]
+
+
+@dataclass
+class TaoErrorCaptureContext:
+    functions: FrozenSet[str] = field(default_factory=frozenset)
+    by_level: CaptureByLevel = field(default_factory=dict)
+    by_command: Dict[str, FrozenSet[str]] = field(default_factory=dict)
+
+    def check_output(self, cmd: str, lines: List[str]):
+        cmd = cmd.strip()
+        if not cmd:
+            by_command = {}
+        else:
+            by_command = self.by_command.get(cmd.split()[0].lower(), frozenset())
+
+        def should_include(message: TaoMessage) -> bool:
+            return (
+                message.function not in self.functions
+                and message.function not in self.by_level.get(message.level, ())
+                and message.function not in by_command
+            )
+
+        messages = [
+            message
+            for message in capture_messages_from_functions(lines)[1]
+            if should_include(message)
+        ]
+
+        errors = [message for message in messages if message.level in error_capture_levels]
+        if errors:
+            functions = ", ".join(sorted(set(error.function for error in errors)))
+            error_lines = "\n\n".join(
+                "\n".join(
+                    (
+                        f"{error.level.capitalize()} in {error.function}:",
+                        textwrap.indent(error.message, "  "),
+                    )
+                )
+                for error in errors
+            )
+            raise TaoCommandError(
+                f"Command: {cmd} causes errors in the function(s): {functions}\n\n{error_lines}",
+                tao_output="\n".join(lines),
+            )
+        return messages
+
+
+@dataclass
+class TaoMessage:
+    level: TaoMessageLevel
+    function: str
+    message: str
+
+    @property
+    def level_number(self) -> int:
+        return all_capture_levels.index(self.level)
+
+
+@contextlib.contextmanager
+def capture(
+    *,
+    functions: Optional[Iterable[str]] = None,
+    by_level: Optional[Dict[TaoMessageLevel, Iterable[str]]] = None,
+    by_command: Optional[Dict[str, Iterable[str]]] = None,
+):
+    def fix_by_level(items: Dict[TaoMessageLevel, Iterable[str]]) -> CaptureByLevel:
+        return {level: frozenset(functions) for level, functions in items.items()}
+
+    ctx = TaoErrorCaptureContext(
+        functions=frozenset(functions or set()),
+        by_level=fix_by_level(by_level or {}),
+        by_command={key: frozenset(value) for key, value in (by_command or {}).items()},
+    )
+    prev = error_capture_context.get()
+    error_capture_context.set(ctx)
+    yield ctx
+    error_capture_context.set(prev)
+
+
+def capture_messages_from_functions(
+    lines: List[str],
+    levels: Iterable[TaoMessageLevel] = all_capture_levels,
+) -> Tuple[List[str], List[TaoMessage]]:
+    """
+    Capture Tao output text lines.
+
+    Parameters
+    ----------
+    lines : List[str]
+        Lines from Tao.
+    levels : one or more of {"INFO", "SUCCESS", "WARNING", "ERROR", "FATAL", "ABORT"}
+        Message levels to capture.
+
+    Returns
+    -------
+    filtered_lines : str
+    """
+    out_lines = []
+    message = None
+    messages: List[TaoMessage] = []
+    for line in lines:
+        if message is not None:
+            if not line.strip() or line[0].isspace():
+                # Lines starting with space are part of the message
+                message.message = "\n".join((message.message, line.lstrip())).strip()
+                continue
+            message = None
+
+        for level in levels:
+            # Two possible formats:
+            # * [LEVEL] function:
+            # * [LEVEL | date-time] function:
+            if line.startswith(f"[{level}") and line.endswith(":"):
+                function = line.split()[-1].rstrip(":")
+                message = TaoMessage(level=level, function=function, message="")
+                messages.append(message)
+                break
+        else:
+            out_lines.append(line)
+
+    return out_lines, messages
+
+
+def filter_output_lines(lines: List[str], exclude: Set[str]) -> List[str]:
+    """
+    Filter Tao output text lines.
+
+    Parameters
+    ----------
+    lines : List[str]
+        Lines from Tao.
+    exclude : Set[str]
+        Function names to exclude.
+
+    Returns
+    -------
+    List[str]
+        Lines filtered, excluding those pertaining to the requested functions.
+    """
+    removing_block = False
+    out_lines = []
+    for line in lines:
+        if removing_block:
+            if not line.strip():
+                # Empty line -> skip
+                continue
+            if line[0].isspace():
+                # Lines starting with spaces in a skipped block are ignored
+                continue
+            removing_block = False
+
+        if not line.startswith("[ERROR"):
+            out_lines.append(line)
+            continue
+
+        for func in exclude:
+            if line.endswith(f"{func}:"):
+                removing_block = True
+                break
+        else:
+            out_lines.append(line)
+
+    return out_lines
 
 
 def error_in_lines(lines):

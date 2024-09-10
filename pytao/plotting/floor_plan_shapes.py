@@ -3,11 +3,11 @@ from __future__ import annotations
 import math
 from functools import cached_property
 from typing import List, Optional, Union
-from typing_extensions import Literal
 
 import numpy as np
 import pydantic.dataclasses as dataclasses
 from pydantic import ConfigDict
+from typing_extensions import Literal
 
 from . import util
 from .curves import PlotCurveLine

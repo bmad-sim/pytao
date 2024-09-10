@@ -11,11 +11,11 @@ from .subproc import AnyTao, SubprocessTao
 from .tao_ctypes import TaoModel, run_tao
 from .tao_ctypes.core import (
     TaoCommandError,
-    TaoException,
     TaoInitializationError,
     TaoSharedLibraryNotFoundError,
 )
 from .tao_ctypes.evaluate import evaluate_tao
+from .tao_ctypes.util import TaoException
 from .tao_interface import tao_interface
 from .tao_pexpect import tao_io
 

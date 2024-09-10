@@ -1,14 +1,16 @@
+import atexit
 import contextlib
 import logging
 import os
 import pathlib
-from typing import Generator, Type, TypeVar
+from typing import Generator, Iterable, List, Optional, Type, TypeVar
 
 import matplotlib
 import pytest
 from typing_extensions import Literal
 
 from .. import SubprocessTao, Tao, TaoStartup
+from ..tao_ctypes.util import capture, filter_output_lines
 
 matplotlib.use("Agg")
 
@@ -52,6 +54,20 @@ def ensure_successful_parsing(caplog):
             pytest.fail(error.message)
 
 
+@contextlib.contextmanager
+def error_filter_context(tao: Tao, exclude: Iterable[str]):
+    def get_output(reset: bool = True) -> List[str]:
+        lines = orig_get_output(reset=reset)
+        return filter_output_lines(lines, exclude=set(exclude))
+
+    orig_get_output = tao.get_output
+    try:
+        tao.get_output = get_output
+        yield
+    finally:
+        tao.get_output = orig_get_output
+
+
 REUSE_SUBPROCESS = os.environ.get("TAO_REUSE_SUBPROCESS", "y").lower() in {"y", "yes", "1"}
 
 if "PYTEST_XDIST_WORKER" in os.environ or os.environ.get("ACTIONS_RUNNER_DEBUG", "") == "true":
@@ -72,7 +88,8 @@ else:
 
         @contextlib.contextmanager
         def run_context(self, use_subprocess: bool = False):
-            yield self.run(use_subprocess=use_subprocess)
+            with capture(by_command={"init": ["tao_find_plots"]}):
+                yield self.run(use_subprocess=use_subprocess)
 
 
 def get_packaged_example(name: str) -> TaoStartup:
@@ -106,6 +123,7 @@ def get_example(name: str) -> TaoStartup:
         # "multi_turn_orbit",
         "custom_tao_with_measured_data",
         "x_axis_param_plot",
+        # "erl",
     }
     startup = TaoTestStartup(
         init_file=init_file,
@@ -159,15 +177,22 @@ def tao_cls(request: pytest.FixtureRequest):
 T = TypeVar("T", bound=Tao)
 
 
-_subproc_tao = None
+_subproc_tao: Optional[SubprocessTao] = None
+
+
+def _clean_subproc_tao():
+    if _subproc_tao is not None:
+        _subproc_tao.close_subprocess()
 
 
 def _get_reusable_subprocess_tao(init, **kwargs) -> SubprocessTao:
     global _subproc_tao
-    if _subproc_tao is None:
+    if _subproc_tao is None or not _subproc_tao.subprocess_alive:
+        atexit.register(_clean_subproc_tao)
         _subproc_tao = SubprocessTao(init, **kwargs)
     else:
-        _subproc_tao.init(init, **kwargs)
+        with error_filter_context(_subproc_tao, {"tao_find_plots"}):
+            _subproc_tao.init(init, **kwargs)
     return _subproc_tao
 
 

@@ -5,8 +5,9 @@ import logging
 import sys
 from typing import List, Optional, Sequence, Tuple, Union
 
-from .types import OptionalLimit, Limit
 import numpy as np
+
+from .types import Limit, OptionalLimit
 
 logger = logging.getLogger(__name__)
 

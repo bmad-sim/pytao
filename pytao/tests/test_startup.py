@@ -71,3 +71,4 @@ def test_startup_bad_file() -> None:
     assert hasattr(ex, "tao_output")
     assert bad_fn in ex.tao_output
     assert "TAO INITIALIZATION FILE NOT FOUND" in ex.tao_output
+    print(str(ex))

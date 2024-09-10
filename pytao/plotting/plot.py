@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from functools import partial
 import logging
 import math
 import typing
 from abc import ABC, abstractmethod
+from functools import partial
 from typing import (
     Any,
     ClassVar,
@@ -46,6 +46,7 @@ from .types import (
     FloorOrbitInfo,
     FloorPlanElementInfo,
     Limit,
+    OptionalLimit,
     PlotCurveInfo,
     PlotGraphInfo,
     PlotHistogramInfo,
@@ -54,10 +55,8 @@ from .types import (
     PlotRegionInfo,
     Point,
     WaveParams,
-    OptionalLimit,
 )
 from .util import fix_grid_limits
-
 
 if typing.TYPE_CHECKING:
     from .. import Tao
