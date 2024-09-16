@@ -5,8 +5,10 @@ import dataclasses
 import logging
 import os
 import pickle
+import queue
 import subprocess
 import sys
+import tempfile
 import threading
 import typing
 from typing import Any, List, Union, cast
@@ -110,24 +112,21 @@ def read_pickled_data(pipe):
     return data
 
 
-def write_pickled_data(pipe, data):
+def write_pickled_data(file, data):
     """
-    Read pickled data from the pipe.
+    Write pickled data to the file (named pipe / FIFO).
 
     Parameters
     ----------
-    pipe : file-like object, or file
+    file : file-like object
     data :
         Picklable data
     """
     logger.debug(f"-> {data}")
     message_bytes = pickle.dumps(data) + b"\n"
     to_write = bytes(ctypes.c_uint32(len(message_bytes))) + message_bytes
-    if isinstance(pipe, int):
-        os.write(pipe, to_write)
-    else:
-        pipe.write(to_write)
-        pipe.flush()
+    file.write(to_write)
+    file.flush()
 
 
 class SerializedArray(typing.TypedDict):
@@ -202,44 +201,54 @@ class _TaoPipe:
     """Tao subprocess Pipe helper."""
 
     def __init__(self):
+        self._lock = threading.Lock()
+        self._init_queue = queue.Queue(maxsize=1)
         self._subproc = None
-        self._read_pipe = None
+        self._fifo = None
         self._monitor_thread = None
-        self._subproc_in_fd = None
-        self._subproc_out_fd = None
 
     def close(self):
         """Close the pipe."""
-        if self._subproc_out_fd is None:
-            return
-
         try:
             self.send_receive("quit", "", raises=False)
         except TaoDisconnectedError:
             pass
 
-    def _tao_subprocess_monitor(self, subproc: subprocess.Popen):
+    def _tao_subprocess(self):
         """Subprocess monitor thread.  Cleans up after the subprocess ends."""
-        in_fd = self._subproc_in_fd
-        out_fd = self._subproc_out_fd
-        try:
-            code = subproc.wait()
-            if code != 0:
-                logger.warning(f"Subprocess exited with error code {code}")
-            else:
-                logger.debug("Subprocess exited without error")
-            for fd in (in_fd, out_fd):
-                if fd is not None:
-                    try:
-                        os.close(fd)
-                    except OSError:
-                        pass
-        finally:
-            self._subproc = None
-            self._read_pipe = None
-            self._subproc_in_fd = None
-            self._subproc_out_fd = None
-            self._monitor_thread = None
+
+        with tempfile.TemporaryDirectory(suffix="_pytao_subproc") as tempdir:
+            fifo_path = os.path.join(tempdir, "fifo")
+            os.mkfifo(fifo_path, mode=0o600)
+            try:
+                subproc = subprocess.Popen(
+                    [
+                        sys.executable,
+                        "-m",
+                        "pytao.subproc_main",
+                        fifo_path,
+                    ],
+                    stdin=subprocess.PIPE,
+                )
+            except Exception as ex:
+                self._init_queue.put(ex)
+                raise
+
+            with open(fifo_path, "rb") as self._fifo:
+                self._subproc = subproc
+                self._init_queue.put(subproc)
+
+                assert subproc.stdin is not None
+                try:
+                    code = subproc.wait()
+                    if code != 0:
+                        logger.warning(f"Subprocess exited with error code {code}")
+                    else:
+                        logger.debug("Subprocess exited without error")
+                finally:
+                    self._subproc = None
+                    self._monitor_thread = None
+                    self._fifo = None
 
     def _send(self, cmd: Command, argument: str):
         """Send `cmd` with `argument` over the pipe."""
@@ -255,32 +264,30 @@ class _TaoPipe:
 
     def _receive(self) -> SubprocessResult:
         """Read back the command result from the subprocess."""
-        return read_pickled_data(self._read_pipe)
+        if self._fifo is None:
+            raise TaoDisconnectedError("The SubprocessTao pipe is closed")
+        return read_pickled_data(self._fifo)
 
     def _init_subprocess(self) -> subprocess.Popen:
         """Initialize the Tao subprocess, the pipe, and monitor thread."""
         logger.debug("Initializing Tao subprocess")
-        assert self._subproc is None
-        self._subproc_in_fd, self._subproc_out_fd = os.pipe()
-        subproc = subprocess.Popen(
-            [
-                sys.executable,
-                "-m",
-                "pytao.subproc_main",
-                str(self._subproc_out_fd),
-            ],
-            stdin=subprocess.PIPE,
-            pass_fds=[self._subproc_out_fd],
-        )
-        self._read_pipe = os.fdopen(self._subproc_in_fd, "rb")
-        assert subproc.stdin is not None
-        self._monitor_thread = threading.Thread(
-            target=self._tao_subprocess_monitor,
-            args=(subproc,),
-            daemon=True,
-        )
-        self._monitor_thread.start()
-        return subproc
+        with self._lock:
+            self._monitor_thread = threading.Thread(
+                target=self._tao_subprocess,
+                daemon=True,
+            )
+            self._monitor_thread.start()
+            start = self._init_queue.get()
+            if not isinstance(start, subprocess.Popen):
+                if isinstance(start, Exception):
+                    raise start
+                else:
+                    raise NotImplementedError(
+                        f"Failed to start Tao subprocess, unknown error: {type(start).__name__}"
+                    )
+            self._subproc = start
+
+        return self._subproc
 
     def send_receive(self, cmd: Command, argument: str, raises: bool):
         """

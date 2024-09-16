@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import contextlib
 import logging
-import os
 import sys
 import traceback
 
@@ -25,7 +24,7 @@ from .tao_ctypes.util import filter_tao_messages_context
 logger = logging.getLogger(__name__)
 
 
-def _tao_subprocess(output_fd: int) -> None:
+def _tao_subprocess(output_fifo_filename: str) -> None:
     logger.debug("Tao subprocess handler started")
 
     tao = None
@@ -85,15 +84,15 @@ def _tao_subprocess(output_fd: int) -> None:
             }
             return error
 
-    with os.fdopen(output_fd, "wb") as output_pipe:
+    with open(output_fifo_filename, "wb") as output_fifo:
         while True:
             message = read_pickled_data(sys.stdin.buffer)
-            write_pickled_data(output_pipe, make_response(message))
+            write_pickled_data(output_fifo, make_response(message))
 
 
 if __name__ == "__main__":
     try:
-        output_fd = int(sys.argv[1])
+        output_fifo_filename = sys.argv[1]
     except (IndexError, ValueError):
         print(
             f"Usage: {sys.executable} {__file__} (output_file_descriptor)",
@@ -102,7 +101,7 @@ if __name__ == "__main__":
         exit(1)
 
     try:
-        _tao_subprocess(output_fd)
+        _tao_subprocess(output_fifo_filename)
     except (TaoDisconnectedError, OSError):
         exit(1)
     except KeyboardInterrupt:
