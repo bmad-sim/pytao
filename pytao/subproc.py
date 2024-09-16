@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ctypes
 import dataclasses
+import io
 import logging
 import os
 import pickle
@@ -11,10 +12,9 @@ import sys
 import tempfile
 import threading
 import typing
-from typing import Any, List, Union, cast
+from typing import Any, List, Optional, Union, cast
 
 import numpy as np
-from bokeh.core.property.singletons import Optional
 from typing_extensions import Literal, NotRequired, TypedDict, override
 
 from .interface_commands import Tao, TaoStartup
@@ -198,14 +198,29 @@ def _get_result(value: SubprocessResult, raises: bool = True):
 
 
 class _TaoPipe:
-    """Tao subprocess Pipe helper."""
+    """
+    Tao subprocess Pipe helper.
+
+    This corresponds to a single Tao subprocess.  For a new subprocess,
+    instantiate another `_TaoPipe` instance.
+    """
+
+    _lock: threading.Lock
+    _init_queue: queue.Queue
+    _subproc: subprocess.Popen
+    _fifo: Optional[io.BufferedReader]
+    _subprocess_monitor_thread: Optional[threading.Thread]
 
     def __init__(self):
         self._lock = threading.Lock()
         self._init_queue = queue.Queue(maxsize=1)
-        self._subproc = None
-        self._fifo = None
-        self._monitor_thread = None
+        self._subproc = self._init_subprocess()
+
+    @property
+    def alive(self) -> bool:
+        """Subprocess is still running."""
+        # No exit code -> is still running
+        return self._subproc.poll() is None
 
     def close(self):
         """Close the pipe."""
@@ -231,6 +246,8 @@ class _TaoPipe:
                     stdin=subprocess.PIPE,
                 )
             except Exception as ex:
+                # Report the exception back to the main thread so it can be
+                # re-raised appropriately.
                 self._init_queue.put(ex)
                 raise
 
@@ -246,15 +263,11 @@ class _TaoPipe:
                     else:
                         logger.debug("Subprocess exited without error")
                 finally:
-                    self._subproc = None
-                    self._monitor_thread = None
+                    self._subprocess_monitor_thread = None
                     self._fifo = None
 
     def _send(self, cmd: Command, argument: str):
         """Send `cmd` with `argument` over the pipe."""
-        if self._subproc is None:
-            self._subproc = self._init_subprocess()
-
         assert self._subproc.stdin is not None
         req: SubprocessRequest = {"command": cmd, "arg": argument}
         ctx = error_filter_context.get()
@@ -272,11 +285,11 @@ class _TaoPipe:
         """Initialize the Tao subprocess, the pipe, and monitor thread."""
         logger.debug("Initializing Tao subprocess")
         with self._lock:
-            self._monitor_thread = threading.Thread(
+            self._subprocess_monitor_thread = threading.Thread(
                 target=self._tao_subprocess,
                 daemon=True,
             )
-            self._monitor_thread.start()
+            self._subprocess_monitor_thread.start()
             start = self._init_queue.get()
             if not isinstance(start, subprocess.Popen):
                 if isinstance(start, Exception):
@@ -348,8 +361,10 @@ class SubprocessTao(Tao):
         ...     tao.plot("floor")
     """
 
+    _subproc_pipe_: Optional[_TaoPipe]
+
     def __init__(self, *args, **kwargs):
-        self._pipe = _TaoPipe()
+        self._subproc_pipe_ = None
         try:
             super().__init__(*args, **kwargs)
         except Exception:
@@ -362,16 +377,26 @@ class SubprocessTao(Tao):
             raise
 
     @property
+    def _pipe(self) -> _TaoPipe:
+        if self._subproc_pipe_ is None:
+            self._subproc_pipe_ = _TaoPipe()
+        elif not self._subproc_pipe_.alive:
+            raise TaoDisconnectedError("Tao subprocess is no longer running")
+
+        return self._subproc_pipe_
+
+    @property
     def subprocess_alive(self) -> bool:
         """Subprocess is still running."""
-        if not self._pipe._subproc:
+        if not self._subproc_pipe_:
             return False
-        # No exit code -> is still running
-        return self._pipe._subproc.poll() is None
+        return self._subproc_pipe_.alive
 
     def close_subprocess(self) -> None:
         """Close the Tao subprocess."""
-        self._pipe.close()
+        if self._subproc_pipe_ is not None:
+            self._subproc_pipe_.close()
+        self._subproc_pipe_ = None
 
     def __enter__(self):
         return self
@@ -394,6 +419,10 @@ class SubprocessTao(Tao):
     @override
     def _init(self, startup: TaoStartup):
         self._reset_graph_managers()
+        if not self.subprocess_alive:
+            logger.debug("Reinitializing Tao subprocess")
+            self._subproc_pipe_ = _TaoPipe()
+
         return self._send_command_through_pipe("init", startup.tao_init, raises=True)
 
     @override
