@@ -1,14 +1,16 @@
+import atexit
 import contextlib
 import logging
 import os
 import pathlib
-from typing import Generator, Type, TypeVar
+from typing import Generator, Iterable, List, Optional, Type, TypeVar
 
 import matplotlib
 import pytest
 from typing_extensions import Literal
 
 from .. import SubprocessTao, Tao, TaoStartup
+from ..tao_ctypes.util import filter_tao_messages_context, filter_output_lines
 
 matplotlib.use("Agg")
 
@@ -52,10 +54,48 @@ def ensure_successful_parsing(caplog):
             pytest.fail(error.message)
 
 
+@contextlib.contextmanager
+def error_filter_context(tao: Tao, exclude: Iterable[str]):
+    def get_output(reset: bool = True) -> List[str]:
+        lines = orig_get_output(reset=reset)
+        return filter_output_lines(lines, exclude=set(exclude))
+
+    orig_get_output = tao.get_output
+    try:
+        tao.get_output = get_output
+        yield
+    finally:
+        tao.get_output = orig_get_output
+
+
+REUSE_SUBPROCESS = os.environ.get("TAO_REUSE_SUBPROCESS", "y").lower() in {"y", "yes", "1"}
+
+if "PYTEST_XDIST_WORKER" in os.environ or os.environ.get("ACTIONS_RUNNER_DEBUG", "") == "true":
+    REUSE_SUBPROCESS = False
+
+
+if not REUSE_SUBPROCESS:
+    TaoTestStartup = TaoStartup
+else:
+
+    class TaoTestStartup(TaoStartup):
+        def run(self, use_subprocess: bool = False):
+            """Create a new Tao instance and run it using these settings."""
+            params = self.tao_class_params
+            if use_subprocess:
+                return _get_reusable_subprocess_tao(**params)
+            return Tao(**params)
+
+        @contextlib.contextmanager
+        def run_context(self, use_subprocess: bool = False):
+            with filter_tao_messages_context(by_command={"init": ["tao_find_plots"]}):
+                yield self.run(use_subprocess=use_subprocess)
+
+
 def get_packaged_example(name: str) -> TaoStartup:
     """PyTao packaged bmad input data."""
     init_file = packaged_examples_root / name / "tao.init"
-    startup = TaoStartup(
+    startup = TaoTestStartup(
         init_file=init_file,
         # nostartup=nostartup,
         metadata={"name": name},
@@ -83,8 +123,9 @@ def get_example(name: str) -> TaoStartup:
         # "multi_turn_orbit",
         "custom_tao_with_measured_data",
         "x_axis_param_plot",
+        # "erl",
     }
-    startup = TaoStartup(
+    startup = TaoTestStartup(
         init_file=init_file,
         nostartup=nostartup,
         metadata={"name": name},
@@ -97,7 +138,7 @@ def get_regression_test(name: str) -> TaoStartup:
     """Bmad-doc 'pipe' interface command regression test files."""
     init_file = regression_test_root / name
     nostartup = init_file.name == "tao.init_floor_orbit"
-    return TaoStartup(
+    return TaoTestStartup(
         init_file=init_file,
         nostartup=nostartup,
         metadata={"name": init_file.name},
@@ -136,6 +177,25 @@ def tao_cls(request: pytest.FixtureRequest):
 T = TypeVar("T", bound=Tao)
 
 
+_subproc_tao: Optional[SubprocessTao] = None
+
+
+def _clean_subproc_tao():
+    if _subproc_tao is not None:
+        _subproc_tao.close_subprocess()
+
+
+def _get_reusable_subprocess_tao(init, **kwargs) -> SubprocessTao:
+    global _subproc_tao
+    if _subproc_tao is None or not _subproc_tao.subprocess_alive:
+        atexit.register(_clean_subproc_tao)
+        _subproc_tao = SubprocessTao(init, **kwargs)
+    else:
+        with error_filter_context(_subproc_tao, {"tao_find_plots"}):
+            _subproc_tao.init(init, **kwargs)
+    return _subproc_tao
+
+
 @contextlib.contextmanager
 def new_tao(
     tao_cls: Type[T],
@@ -149,9 +209,14 @@ def new_tao(
         init = " ".join((init, "-external_plotting"))
     if not plot:
         init = " ".join((init, "-noplot"))
-    tao = tao_cls(init, **kwargs)
+
+    if tao_cls is SubprocessTao and REUSE_SUBPROCESS:
+        tao = _get_reusable_subprocess_tao(init, **kwargs)
+    else:
+        tao = tao_cls(init, **kwargs)
+
     yield tao
-    if hasattr(tao, "close_subprocess"):
+    if hasattr(tao, "close_subprocess") and not REUSE_SUBPROCESS:
         print("Closing tao subprocess")
         tao.close_subprocess()
 

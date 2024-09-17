@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 import pytest
 
 from .. import SubprocessTao, Tao, TaoStartup
-from ..plotting.curves import TaoCurveSettings
 from ..plotting import mpl
+from ..plotting.curves import TaoCurveSettings
 from .conftest import (
     BackendName,
     get_example,

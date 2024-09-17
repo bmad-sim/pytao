@@ -11,14 +11,14 @@ from bokeh.plotting import output_file
 
 from .. import TaoStartup
 from ..plotting.bokeh import (
-    _Defaults,
-    initialize_jupyter,
-    select_graph_manager_class,
-    set_defaults,
     BokehAppCreator,
     BokehAppState,
     NotebookGraphManager,
     Variable,
+    _Defaults,
+    initialize_jupyter,
+    select_graph_manager_class,
+    set_defaults,
 )
 from ..plotting.plot import FloorPlanGraph
 from ..plotting.settings import TaoFloorPlanSettings, TaoGraphSettings

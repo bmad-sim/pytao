@@ -10,7 +10,6 @@ from ..plotting import (
     TaoGraphSettings,
 )
 from ..plotting.types import Limit
-
 from .conftest import BackendName, get_example, test_artifacts
 
 

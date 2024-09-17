@@ -10,7 +10,6 @@ import bokeh.resources
 import matplotlib.axes
 import matplotlib.pyplot as plt
 import pytest
-
 from bokeh.plotting import figure
 
 from .. import SubprocessTao, Tao
@@ -26,8 +25,8 @@ from ..plotting.floor_plan_shapes import (
     Triangle,
     XBox,
 )
-from ..plotting.plot import FloorPlanElement
 from ..plotting.mpl import plot_floor_plan_shape as mpl_plot_floor_plan_shape
+from ..plotting.plot import FloorPlanElement
 from .conftest import test_artifacts
 
 logger = logging.getLogger(__name__)

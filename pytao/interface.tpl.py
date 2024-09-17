@@ -400,7 +400,7 @@ class Tao(TaoCore):
             logger.debug("Failed to register cell magic", exc_info=True)
 
     def __repr__(self) -> str:
-        return f"<Tao init={self.init_settings.tao_init!r} so_lib_file={self.so_lib_file!r}>"
+        return f"<{self.__class__.__name__} init={self.init_settings.tao_init!r} so_lib_file={self.so_lib_file!r}>"
 
     @override
     def init(
@@ -595,7 +595,7 @@ class Tao(TaoCore):
                 f"\nSome features may not work as expected.  Please upgrade bmad."
             )
 
-    def _init(self, startup: TaoStartup):
+    def _reset_graph_managers(self) -> None:
         for manager in self._graph_managers.values():
             try:
                 manager.tao_init_hook()
@@ -603,6 +603,9 @@ class Tao(TaoCore):
                 logger.exception(
                     "Tao plot manager re-initialization failure (%s)", type(manager)
                 )
+
+    def _init(self, startup: TaoStartup):
+        self._reset_graph_managers()
         return super().init(startup.tao_init)
 
     def __execute(
@@ -728,6 +731,50 @@ class Tao(TaoCore):
         dat["species"] = species.lower()
 
         return dat
+
+    def cmds(self, cmds, suppress_lattice_calc=True, suppress_plotting=True, raises=True):
+        """
+        Runs a list of commands, optionally suppressing lattice calculations
+        and plotting updates.
+
+        Parameters
+        ----------
+        cmds : list of str
+            List of string commands.
+        suppress_lattice_calc : bool, default=True
+            Suppress lattice calc when applying the commands.
+        suppress_plotting  : bool, default=True
+            Suppress plotting when applying commands.
+        raises : bool, default=True
+            Raise an exception of [ERROR or [FATAL is detected in the output.
+
+        Returns
+        -------
+        list
+            Results corresponding to the commands
+
+        """
+        # Get globals to detect plotting
+        g = self.tao_global()
+        ploton, laton = g["plot_on"], g["lattice_calc_on"]
+
+        if suppress_plotting and ploton:
+            self.cmd("set global plot_on = F")
+        if suppress_lattice_calc and laton:
+            self.cmd("set global lattice_calc_on = F")
+
+        # Actually apply commands
+        results = []
+        for cmd in cmds:
+            res = self.cmd(cmd, raises=raises)
+            results.append(res)
+
+        if suppress_plotting and ploton:
+            self.cmd("set global plot_on = T")
+        if suppress_lattice_calc and laton:
+            self.cmd("set global lattice_calc_on = T")
+
+        return results
 
     def version(self) -> Optional[datetime.datetime]:
         """Get the date-coded version."""

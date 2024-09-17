@@ -43,6 +43,7 @@ from pydantic.dataclasses import dataclass
 from typing_extensions import NotRequired, TypedDict
 
 from ..interface_commands import AnyPath
+from ..tao_ctypes.core import TaoCommandError
 from . import floor_plan_shapes, pgplot, util
 from .curves import CurveIndexToCurve, PlotCurveLine, PlotCurveSymbols, TaoCurveSettings
 from .fields import ElementField
@@ -70,7 +71,6 @@ from .plot import (
     UnsupportedGraphError,
 )
 from .settings import TaoGraphSettings
-from ..tao_ctypes.core import TaoCommandError
 from .types import FloatVariableInfo
 from .util import Limit, OptionalLimit, fix_grid_limits
 

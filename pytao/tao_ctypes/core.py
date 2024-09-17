@@ -1,44 +1,26 @@
 import ctypes
-from ctypes.util import find_library
 import logging
 import os
 import shutil
 import tempfile
 import textwrap
-from typing import List, Tuple
+from ctypes.util import find_library
+from typing import List, Optional, Tuple, Type, Union
 
 import numpy as np
 
 from .. import tao_ctypes
 from ..util.parameters import tao_parameter_dict
+from . import util
 from .tools import full_path
-from .util import error_in_lines
+from .util import (
+    TaoCommandError,
+    TaoInitializationError,
+    TaoMessage,
+    TaoSharedLibraryNotFoundError,
+)
 
 logger = logging.getLogger(__name__)
-
-
-class TaoException(Exception):
-    pass
-
-
-class TaoExceptionWithOutput(TaoException):
-    tao_output: str
-
-    def __init__(self, message: str, tao_output: str = ""):
-        super().__init__(message)
-        self.tao_output = tao_output
-
-
-class TaoInitializationError(TaoExceptionWithOutput, RuntimeError):
-    tao_output: str
-
-
-class TaoSharedLibraryNotFoundError(TaoException, RuntimeError):
-    pass
-
-
-class TaoCommandError(TaoExceptionWithOutput, RuntimeError):
-    tao_output: str
 
 
 class TaoCore:
@@ -57,6 +39,7 @@ class TaoCore:
     """
 
     _init_output: List[str]
+    _last_output: List[str]
     so_lib: ctypes.CDLL
     so_lib_file: str
 
@@ -81,19 +64,31 @@ class TaoCore:
         """Output from the latest Tao initialization."""
         return list(self._init_output)
 
-    # ---------------------------------------------
-    # Used by init and cmd routines
+    @property
+    def last_output(self) -> List[str]:
+        return list(self._last_output)
 
-    def get_output(self, reset=True):
+    def get_output(self, reset=True) -> List[str]:
         """
         Returns a list of output strings.
-        If reset, the internal Tao buffers will be reset.
+
+        Parameters
+        ----------
+        reset : bool, default=True
+            Reset the internal Tao buffers after getting the output.
+
+        Returns
+        -------
+        list of str
+            Tao output text lines.
         """
         n_lines = self.so_lib.tao_c_out_io_buffer_num_lines()
         lines = [
             self.so_lib.tao_c_out_io_buffer_get_line(i).decode("utf-8")
             for i in range(1, n_lines + 1)
         ]
+
+        self._last_output = lines
         if reset:
             self.so_lib.tao_c_out_io_buffer_reset()
         return lines
@@ -104,189 +99,226 @@ class TaoCore:
         """
         self.so_lib.tao_c_out_io_buffer_reset()
 
-    # ---------------------------------------------
-    # Init Tao
+    def _init_or_reinit(self, cmd: str) -> Tuple[int, List[str]]:
+        """
+        Initialize (or reinitialize) Tao with `cmd`.
+
+        Parameters
+        ----------
+        cmd : str
+            The command to (re)initialize Tao with.
+
+        Returns
+        -------
+        errno : int
+            Tao's reported error number on first initialization.
+        list of str
+            Tao initialization output text.
+        """
+        if not tao_ctypes.initialized:
+            logger.debug(f"Initializing Tao with: {cmd!r}")
+            errno = self.so_lib.tao_c_init_tao(cmd.encode("utf-8"))
+            tao_ctypes.initialized = True
+            output = self.get_output()
+        else:
+            errno = 0
+            output = self.cmd(f"reinit tao -clear {cmd}", raises=False)
+
+        self._init_output = output
+        return errno, output
 
     def init(self, cmd: str) -> List[str]:
-        if not tao_ctypes.initialized:
-            logger.debug(f"Initializing Tao with: {cmd}")
-            err = self.so_lib.tao_c_init_tao(cmd.encode("utf-8"))
-            if err != 0:
-                raw_output = self.get_output() or ""
-                message = textwrap.indent("\n".join(raw_output), "  ")
-                raise TaoInitializationError(
-                    f"Unable to init Tao with: {cmd!r}. Tao output:\n{message}",
-                    tao_output="\n".join(raw_output),
-                )
-            tao_ctypes.initialized = True
-            return self.get_output()
+        """
+        Initialize (or reinitialize) Tao with `cmd`.
 
+        Parameters
+        ----------
+        cmd : str
+            The command to (re)initialize Tao with.
+
+        Returns
+        -------
+        list of str
+            Tao initialization output text.
+
+        Raises
+        ------
+        TaoInitializationError
+        """
+        errno, output = self._init_or_reinit(cmd)
         try:
-            return self.cmd(f"reinit tao -clear {cmd}", raises=True)
-        except RuntimeError as ex:
+            self._check_output_lines(cmd=f"init {cmd}", lines=output)
+        except TaoCommandError as ex:
+            message = textwrap.indent("\n".join(output), "  ")
+            raise TaoInitializationError(str(ex), tao_output="\n".join(output)) from None
+
+        if errno != 0:
+            message = textwrap.indent("\n".join(output), "  ")
             raise TaoInitializationError(
-                str(ex), tao_output=getattr(ex, "tao_output", "") or ""
-            ) from None
+                (
+                    f"Tao initialization reported an unrecoverable error (code={errno}):\n"
+                    f"Tao> {cmd}\n"
+                    f"\n\n{message}"
+                ),
+                tao_output="\n".join(output),
+            )
+        return output
 
-    # ---------------------------------------------
-    # Send a command to Tao and return the output
-
-    def cmd(self, cmd, raises=True):
+    def _check_output_lines(self, cmd: str, lines: List[str]) -> Optional[List[TaoMessage]]:
         """
-        Runs a command, and returns the text output
+        Check Tao output for errors respecting the current capture context.
 
-        cmd: command string
-        raises: will raise an exception of [ERROR or [FATAL is detected in the output
-
-        Returns a list of strings
+        Parameters
+        ----------
+        cmd : str
+            The Tao command which returned output `lines`.
+        lines : List[str]
+            Tao output lines for `cmd`.
         """
+        ctx = util.error_filter_context.get()
+        if ctx is not None:
+            return ctx.check_output(cmd, lines)
 
-        logger.debug(f"Tao> {cmd}")
-
-        self.so_lib.tao_c_command(cmd.encode("utf-8"))
-        lines = self.get_output()
-
-        # Error checking
-        if not raises:
-            return lines
-
-        err = error_in_lines(lines)
+        err = util.error_in_lines(lines)
         if err:
             raise TaoCommandError(
                 f"Command: {cmd} causes error: {err}",
                 tao_output="\n".join(lines),
             )
 
-        return lines
-
-    def cmds(self, cmds, suppress_lattice_calc=True, suppress_plotting=True, raises=True):
+    def cmd(self, cmd, raises=True) -> List[str]:
         """
-        Runs a list of commands
+        Runs a command, and returns the text output.
 
-        Args:
-            cmds: list of commands
+        Parameters
+        ----------
+        cmd : str
+            Command string
+        raises : bool, default=True
+            Raise an exception of [ERROR or [FATAL is detected in the output
 
-            suppress_lattice_calc: bool, optional
-                If True, will suppress lattice calc when applying the commands
-                Default: True
-
-            suppress_plotting: bool, optional
-                If True, will suppress plotting when applying commands
-                Default: True
-
-            raises: bool, optional
-                If True will raise an exception of [ERROR or [FATAL is detected in the
-                output
-                Default: True
-
-        Returns:
-            list of results corresponding to the commands
-
+        Returns
+        -------
+        list of str
+            Output lines.
         """
-        # Get globals to detect plotting
-        g = self.tao_global()
-        ploton, laton = g["plot_on"], g["lattice_calc_on"]
 
-        if suppress_plotting and ploton:
-            self.cmd("set global plot_on = F")
-        if suppress_lattice_calc and laton:
-            self.cmd("set global lattice_calc_on = F")
-
-        # Actually apply commands
-        results = []
-        for cmd in cmds:
-            res = self.cmd(cmd, raises=raises)
-            results.append(res)
-
-        if suppress_plotting and ploton:
-            self.cmd("set global plot_on = T")
-        if suppress_lattice_calc and laton:
-            self.cmd("set global lattice_calc_on = T")
-
-        return results
-
-    # ---------------------------------------------
-    # Get real array output.
-    # Only python commands that load the real array buffer can be used with this method.
-
-    def cmd_real(self, cmd, raises=True):
         logger.debug(f"Tao> {cmd}")
 
         self.so_lib.tao_c_command(cmd.encode("utf-8"))
-        n = self.so_lib.tao_c_real_array_size()
-        # Empty array
-        if n == 0:
-            return np.array([], dtype=float)
 
-        self.so_lib.tao_c_get_real_array.restype = ctypes.POINTER(ctypes.c_double * n)
-
-        # Check the output for errors
-        lines = self.get_output(reset=False)
-        err = error_in_lines(lines)
-        if err:
+        try:
+            if not raises:
+                return self.get_output(reset=False)
+            lines = self.get_output(reset=False)
+            self._check_output_lines(cmd, lines)
+            return lines
+        finally:
             self.reset_output()
+
+    def _get_array(
+        self,
+        cmd: str,
+        dtype: Union[Type[float], Type[int]],
+        raises: bool,
+    ) -> Optional[np.ndarray]:
+        """
+        Get an array directly from Tao (without string parsing).
+
+        Does not reset the output buffer.  The caller is expected to handle
+        this.
+
+        Parameters
+        ----------
+        cmd : str
+            The command used to retrieve this data.
+        dtype : type
+            The data type - float or int.
+        raises : bool
+            Raise TaoCommandError if an error is detected in the text output.
+
+        Returns
+        -------
+        np.ndarray or None
+            The array.  None is only returned if `raises=False` and an error
+            is detected in the output.
+        """
+        if dtype is float:
+            ctypes_type = ctypes.c_double
+            num_elements = self.so_lib.tao_c_real_array_size()
+            get_array = self.so_lib.tao_c_get_real_array
+        elif dtype is int:
+            ctypes_type = ctypes.c_int32
+            num_elements = self.so_lib.tao_c_integer_array_size()
+            get_array = self.so_lib.tao_c_get_integer_array
+        else:
+            raise ValueError(f"Unsupported dtype: {dtype}")
+
+        if num_elements == 0:
+            return np.array([], dtype=dtype)
+
+        try:
+            self._check_output_lines(cmd, self.get_output(reset=False))
+        except TaoCommandError:
             if raises:
-                raise TaoCommandError(err, tao_output="n".join(lines))
+                raise
             return None
 
+        # This is a pointer to the scratch space of (num_elements * dtype)
+        get_array.restype = ctypes.POINTER(ctypes_type * num_elements)
+        ptr = ctypes.addressof(get_array().contents)
+
         # Extract array data
-        # This is a pointer to the scratch space.
-        array = np.ctypeslib.as_array(
-            (ctypes.c_double * n).from_address(
-                ctypes.addressof(self.so_lib.tao_c_get_real_array().contents)
-            )
-        )
+        array = np.ctypeslib.as_array((ctypes_type * num_elements).from_address(ptr))
+        return array.copy()
 
-        array = array.copy()
-        self.reset_output()
+    def cmd_real(self, cmd: str, raises: bool = True) -> Optional[np.ndarray]:
+        """
+        Get real array output.
 
-        return array
+        Only python commands that load the real array buffer can be used with this method.
 
-    # ----------
-    # Get integer array output.
-    # Only python commands that load the integer array buffer can be used with this method.
+        Parameters
+        ----------
+        cmd : str
+        raises : bool, default=True
+        """
 
-    def cmd_integer(self, cmd, raises=True):
         logger.debug(f"Tao> {cmd}")
 
         self.so_lib.tao_c_command(cmd.encode("utf-8"))
-        n = self.so_lib.tao_c_integer_array_size()
-        # Empty array
-        if n == 0:
-            return np.array([], dtype=int)
-
-        self.so_lib.tao_c_get_integer_array.restype = ctypes.POINTER(ctypes.c_int * n)
-
-        # Check the output for errors
-        lines = self.get_output(reset=False)
-        err = error_in_lines(lines)
-        if err:
+        try:
+            return self._get_array(cmd=cmd, dtype=float, raises=raises)
+        finally:
             self.reset_output()
-            if raises:
-                raise TaoCommandError(err, tao_output="n".join(lines))
-            return None
 
-        # Extract array data
-        # This is a pointer to the scratch space.
-        array = np.ctypeslib.as_array(
-            (ctypes.c_int * n).from_address(
-                ctypes.addressof(self.so_lib.tao_c_get_integer_array().contents)
-            )
-        )
+    def cmd_integer(self, cmd: str, raises: bool = True) -> Optional[np.ndarray]:
+        """
+        Get integer array output.
 
-        array = array.copy()
-        self.reset_output()
+        Only python commands that load the real array buffer can be used with this method.
 
-        return array
+        Parameters
+        ----------
+        cmd : str
+        raises : bool, default=True
+        """
+        logger.debug(f"Tao> {cmd}")
 
-    # ---------------------------------------------
+        self.so_lib.tao_c_command(cmd.encode("utf-8"))
+        try:
+            return self._get_array(cmd=cmd, dtype=int, raises=raises)
+        finally:
+            self.reset_output()
 
     def register_cell_magic(self):
         """
-        Registers a cell magic in Jupyter notebooks
-        Invoke by
-        %%tao
-        sho lat
+        Registers a cell magic in Jupyter notebooks.
+
+        Example:
+
+            %%tao
+            sho lat
         """
 
         from IPython.core.magic import register_cell_magic
