@@ -15,7 +15,7 @@ from .tao_ctypes.core import (
     TaoSharedLibraryNotFoundError,
 )
 from .tao_ctypes.evaluate import evaluate_tao
-from .tao_ctypes.util import TaoException
+from .tao_ctypes.util import TaoException, filter_tao_messages, filter_tao_messages_context
 from .tao_interface import tao_interface
 from .tao_pexpect import tao_io
 
@@ -35,6 +35,8 @@ __all__ = [
     "TaoSharedLibraryNotFoundError",
     "TaoStartup",
     "evaluate_tao",
+    "filter_tao_messages",
+    "filter_tao_messages_context",
     "run_tao",
     "tao_interface",
     "tao_io",

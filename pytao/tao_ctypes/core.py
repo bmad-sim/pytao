@@ -175,7 +175,7 @@ class TaoCore:
         lines : List[str]
             Tao output lines for `cmd`.
         """
-        ctx = util.error_capture_context.get()
+        ctx = util.error_filter_context.get()
         if ctx is not None:
             return ctx.check_output(cmd, lines)
 

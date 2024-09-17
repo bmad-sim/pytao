@@ -10,7 +10,7 @@ import pytest
 from typing_extensions import Literal
 
 from .. import SubprocessTao, Tao, TaoStartup
-from ..tao_ctypes.util import capture, filter_output_lines
+from ..tao_ctypes.util import filter_tao_messages_context, filter_output_lines
 
 matplotlib.use("Agg")
 
@@ -88,7 +88,7 @@ else:
 
         @contextlib.contextmanager
         def run_context(self, use_subprocess: bool = False):
-            with capture(by_command={"init": ["tao_find_plots"]}):
+            with filter_tao_messages_context(by_command={"init": ["tao_find_plots"]}):
                 yield self.run(use_subprocess=use_subprocess)
 
 

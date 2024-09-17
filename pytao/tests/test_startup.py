@@ -1,7 +1,6 @@
 import pytest
 
-from pytao.tao_ctypes.core import TaoInitializationError
-
+from ..tao_ctypes.core import TaoInitializationError
 from .. import Tao, TaoStartup
 
 

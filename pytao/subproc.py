@@ -17,7 +17,7 @@ from typing_extensions import Literal, NotRequired, TypedDict, override
 
 from .interface_commands import Tao, TaoStartup
 from .tao_ctypes.core import TaoCommandError
-from .tao_ctypes.util import error_capture_context
+from .tao_ctypes.util import error_filter_context
 
 logger = logging.getLogger(__name__)
 
@@ -248,7 +248,7 @@ class _TaoPipe:
 
         assert self._subproc.stdin is not None
         req: SubprocessRequest = {"command": cmd, "arg": argument}
-        ctx = error_capture_context.get()
+        ctx = error_filter_context.get()
         if ctx is not None:
             req["capture_ctx"] = dataclasses.asdict(ctx)
         return write_pickled_data(self._subproc.stdin, req)
