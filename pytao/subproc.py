@@ -12,7 +12,7 @@ import sys
 import tempfile
 import threading
 import typing
-from typing import Any, List, Optional, Union, cast
+from typing import Any, Callable, Dict, List, Optional, Union, cast
 
 import numpy as np
 from typing_extensions import Literal, NotRequired, TypedDict, override
@@ -25,12 +25,14 @@ logger = logging.getLogger(__name__)
 
 AnyTao = Union[Tao, "SubprocessTao"]
 
-Command = Literal["quit", "init", "cmd", "cmd_real", "cmd_integer"]
+Command = Literal["quit", "init", "cmd", "cmd_real", "cmd_integer", "function"]
+SupportedKwarg = Union[float, int, str, bool, bytes, dict, list, tuple, set, np.ndarray]
 
 
 class SubprocessRequest(TypedDict):
     command: Command
     arg: str
+    kwargs: NotRequired[Dict[str, Any]]
     capture_ctx: NotRequired[dict]
 
 
@@ -107,7 +109,7 @@ def read_pickled_data(pipe):
     data = pickle.loads(buffer)
     res = data.get("result", None)
     if isinstance(res, dict) and "__type__" in res:
-        data["result"] = dict_to_array(res)
+        data["result"] = dict_to_array(cast(SerializedArray, res))
     logger.debug(f"<- {data}")
     return data
 
@@ -145,6 +147,32 @@ def array_to_dict(arr: np.ndarray) -> SerializedArray:
         "dtype": arr.dtype,
         "data": arr.tobytes(),
     }
+
+
+def deserialize_value(value: SupportedKwarg):
+    if isinstance(value, (float, int, str, bytes, bool)):
+        return value
+    if isinstance(value, dict):
+        if "__type__" in value:
+            return dict_to_array(cast(SerializedArray, value))
+        return {key: deserialize_value(value) for key, value in value.items()}
+    if isinstance(value, (list, tuple, set)):
+        return type(value)(deserialize_value(v) for v in value)
+    if isinstance(value, np.ndarray):
+        return value
+    raise ValueError(f"Unsupported data type for deserialization: {type(value)}")
+
+
+def serialize_value(value: Any):
+    if isinstance(value, (float, int, str, bytes)):
+        return value
+    if isinstance(value, dict):
+        return {key: serialize_value(value) for key, value in value.items()}
+    if isinstance(value, np.ndarray):
+        return array_to_dict(value)
+    if isinstance(value, (list, tuple, set)):
+        return type(value)(serialize_value(v) for v in value)
+    raise ValueError(f"Unsupported data type for serialization: {type(value)}")
 
 
 def dict_to_array(data: SerializedArray) -> np.ndarray:
@@ -266,11 +294,13 @@ class _TaoPipe:
                     self._subprocess_monitor_thread = None
                     self._fifo = None
 
-    def _send(self, cmd: Command, argument: str):
+    def _send(self, cmd: Command, argument: str, **kwargs: SupportedKwarg):
         """Send `cmd` with `argument` over the pipe."""
         assert self._subproc.stdin is not None
         req: SubprocessRequest = {"command": cmd, "arg": argument}
         ctx = error_filter_context.get()
+        if kwargs:
+            req["kwargs"] = serialize_value(kwargs)
         if ctx is not None:
             req["capture_ctx"] = dataclasses.asdict(ctx)
         return write_pickled_data(self._subproc.stdin, req)
@@ -334,6 +364,44 @@ class _TaoPipe:
                 f"has already exited."
             )
 
+    def send_receive_custom(self, func: Callable, kwargs: Dict[str, SupportedKwarg]):
+        """
+        Run a custom function in the subprocess and retrieve its result.
+
+        Parameters
+        ----------
+        cmd : one of {"init", "cmd", "cmd_real", "cmd_integer", "quit", "function"}
+            The command class to send.
+        argument : str
+            The argument to send to the command.
+        raises : bool
+            Raise if the subprocess command raises or disconnects.
+
+        Returns
+        -------
+        tao_output : str
+            Raw Tao output for the command.
+        result : Any
+            The final deserialized result of the command - which may be an ndarray,
+            a list of dictionaries, a list of strings, and so on.
+        """
+        if not callable(func):
+            raise ValueError(f"Object of type{type(func).__name__} is not callable")
+        if not func.__module__ or func.__module__ == "__main__":
+            raise ValueError(f"Function {func.__name__} is not in an importable module")
+        if func.__name__ == "__lambda__":
+            raise ValueError(f"Function {func.__name__} is a lambda function")
+        try:
+            self._send("function", f"{func.__module__}.{func.__name__}", **kwargs)
+            received = self._receive()
+            result = _get_result(received, raises=True)
+            return deserialize_value(result)
+        except BrokenPipeError:
+            raise TaoCommandError(
+                f"Function {func.__name__}() was unable to complete as the subprocess "
+                f"has already exited."
+            )
+
 
 class SubprocessTao(Tao):
     """
@@ -377,15 +445,6 @@ class SubprocessTao(Tao):
             raise
 
     @property
-    def _pipe(self) -> _TaoPipe:
-        if self._subproc_pipe_ is None:
-            self._subproc_pipe_ = _TaoPipe()
-        elif not self._subproc_pipe_.alive:
-            raise TaoDisconnectedError("Tao subprocess is no longer running")
-
-        return self._subproc_pipe_
-
-    @property
     def subprocess_alive(self) -> bool:
         """Subprocess is still running."""
         if not self._subproc_pipe_:
@@ -411,10 +470,33 @@ class SubprocessTao(Tao):
             pass
 
     def _send_command_through_pipe(self, command: Command, tao_cmdline: str, raises: bool):
-        output, result = self._pipe.send_receive(command, tao_cmdline, raises=raises)
+        if not self.subprocess_alive:
+            raise TaoDisconnectedError(
+                "Tao subprocess is no longer running. Make a new `SubprocessTao` "
+                "object or reinitialize with `.init()`."
+            )
+        assert self._subproc_pipe_ is not None
+        output, result = self._subproc_pipe_.send_receive(command, tao_cmdline, raises=raises)
         output_lines = output.splitlines()
         self._last_output = output_lines
         return result
+
+    def subprocess_call(self, func: Callable, **kwargs):
+        """
+        Run a custom function in the subprocess.
+
+        The function must be readily importable by Python and not a dynamically
+        created function or `lambda`.  The first argument passed will be the
+        `tao` object, and the remainder of the arguments are user-specified by
+        keyword only.
+        """
+        if not self.subprocess_alive:
+            raise TaoDisconnectedError(
+                "Tao subprocess is no longer running. Make a new `SubprocessTao` "
+                "object or reinitialize with `.init()`."
+            )
+        assert self._subproc_pipe_ is not None
+        return self._subproc_pipe_.send_receive_custom(func, kwargs)
 
     @override
     def _init(self, startup: TaoStartup):

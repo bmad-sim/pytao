@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import contextlib
+from functools import partial
 import logging
 import sys
 import traceback
@@ -15,11 +16,12 @@ from .subproc import (
     SubprocessSuccessResult,
     TaoDisconnectedError,
     array_to_dict,
+    deserialize_value,
     read_pickled_data,
     write_pickled_data,
 )
 from .tao_ctypes.core import TaoCommandError
-from .tao_ctypes.util import filter_tao_messages_context
+from .tao_ctypes.util import filter_tao_messages_context, import_by_name
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +30,12 @@ def _tao_subprocess(output_fifo_filename: str) -> None:
     logger.debug("Tao subprocess handler started")
 
     tao = None
+
+    def run_custom_function(message: SubprocessRequest, *_):
+        func_name = message["arg"]
+        func = import_by_name(func_name)
+        kwargs = deserialize_value(message.get("kwargs", {}))
+        return func(tao, **kwargs)
 
     def run_tao_command(message: SubprocessRequest):
         nonlocal tao
@@ -58,6 +66,7 @@ def _tao_subprocess(output_fifo_filename: str) -> None:
                     "cmd": tao.cmd,
                     "cmd_real": tao.cmd_real,
                     "cmd_integer": tao.cmd_integer,
+                    "function": partial(run_custom_function, message),
                 }[command]
             except KeyError:
                 raise RuntimeError(f"Unexpected Tao subprocess command: {command}")
