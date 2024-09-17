@@ -20,7 +20,7 @@ from .subproc import (
     write_pickled_data,
 )
 from .tao_ctypes.core import TaoCommandError
-from .tao_ctypes.util import capture
+from .tao_ctypes.util import filter_tao_messages_context
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +42,7 @@ def _tao_subprocess(output_fd: int) -> None:
         if not capture_context_options:
             capture_context = contextlib.nullcontext()
         else:
-            capture_context = capture(**capture_context_options)
+            capture_context = filter_tao_messages_context(**capture_context_options)
 
         with capture_context:
             if command == "init":
