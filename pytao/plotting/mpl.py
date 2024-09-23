@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import functools
 import logging
 import pathlib
 import time
@@ -15,7 +16,6 @@ import matplotlib.pyplot as plt
 import matplotlib.text
 import matplotlib.ticker
 import numpy as np
-from pandas.core.frame import functools
 
 from . import floor_plan_shapes, layout_shapes, pgplot
 from .curves import PlotCurveLine, PlotCurveSymbols, PlotHistogram, TaoCurveSettings
