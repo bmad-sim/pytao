@@ -233,14 +233,12 @@ class _TaoPipe:
     instantiate another `_TaoPipe` instance.
     """
 
-    _lock: threading.Lock
     _init_queue: queue.Queue
     _subproc: subprocess.Popen
     _fifo: Optional[io.BufferedReader]
     _subprocess_monitor_thread: Optional[threading.Thread]
 
     def __init__(self):
-        self._lock = threading.Lock()
         self._init_queue = queue.Queue(maxsize=1)
         self._subproc = self._init_subprocess()
 
@@ -314,21 +312,20 @@ class _TaoPipe:
     def _init_subprocess(self) -> subprocess.Popen:
         """Initialize the Tao subprocess, the pipe, and monitor thread."""
         logger.debug("Initializing Tao subprocess")
-        with self._lock:
-            self._subprocess_monitor_thread = threading.Thread(
-                target=self._tao_subprocess,
-                daemon=True,
-            )
-            self._subprocess_monitor_thread.start()
-            start = self._init_queue.get()
-            if not isinstance(start, subprocess.Popen):
-                if isinstance(start, Exception):
-                    raise start
-                else:
-                    raise NotImplementedError(
-                        f"Failed to start Tao subprocess, unknown error: {type(start).__name__}"
-                    )
-            self._subproc = start
+        self._subprocess_monitor_thread = threading.Thread(
+            target=self._tao_subprocess,
+            daemon=True,
+        )
+        self._subprocess_monitor_thread.start()
+        start = self._init_queue.get()
+        if not isinstance(start, subprocess.Popen):
+            if isinstance(start, Exception):
+                raise start
+            else:
+                raise NotImplementedError(
+                    f"Failed to start Tao subprocess, unknown error: {type(start).__name__}"
+                )
+        self._subproc = start
 
         return self._subproc
 
