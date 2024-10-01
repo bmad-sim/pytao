@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import contextlib
 import contextvars
+import importlib
+import sys
 import textwrap
 from dataclasses import dataclass, field
 from typing import Dict, FrozenSet, Iterable, List, Optional, Set, Tuple
@@ -633,3 +635,24 @@ def simple_lat_table(tao, ix_universe=1, ix_branch=0, which="model", who="twiss"
         if name == "END":
             break
     return ele_table
+
+
+def import_by_name(clsname: str):
+    """
+    Import the given object by name.
+
+    Parameters
+    ----------
+    clsname : str
+        The module path to find the class e.g.
+        ``"pytao.Tao"``
+    """
+    module, cls = clsname.rsplit(".", 1)
+    if module not in sys.modules:
+        importlib.import_module(module)
+
+    mod = sys.modules[module]
+    try:
+        return getattr(mod, cls)
+    except AttributeError:
+        raise ImportError(f"Unable to import {clsname!r} from module {module!r}")

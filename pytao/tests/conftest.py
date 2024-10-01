@@ -75,7 +75,14 @@ if "PYTEST_XDIST_WORKER" in os.environ or os.environ.get("ACTIONS_RUNNER_DEBUG",
 
 
 if not REUSE_SUBPROCESS:
-    TaoTestStartup = TaoStartup
+
+    class TaoTestStartup(TaoStartup):
+        @contextlib.contextmanager
+        def run_context(self, use_subprocess: bool = False):
+            with filter_tao_messages_context(by_command={"init": ["tao_find_plots"]}):
+                # super() will close the subprocess for us
+                with super().run_context(use_subprocess=use_subprocess) as tao:
+                    yield tao
 else:
 
     class TaoTestStartup(TaoStartup):
