@@ -177,7 +177,8 @@ def parse_ele_control_var(lines, cmd=""):
             ix, name, value = line.split(";")
         except ValueError:
             logger.warning("Skipping value: %s", line)
-        d[name] = float(value)
+        else:
+            d[name] = float(value)
     return d
 
 
