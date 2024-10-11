@@ -174,10 +174,13 @@ def parse_ele_control_var(lines, cmd=""):
     d = {}
     for line in lines:
         try:
-            ix, name, value = line.split(";")
+            # Group controller var has an old_value. Overlay and ramper vars do
+            # not.  Ignore 'old_value' here.
+            ix, name, value, *_ = line.split(";")
         except ValueError:
             logger.warning("Skipping value: %s", line)
-        d[name] = float(value)
+        else:
+            d[name] = float(value)
     return d
 
 
