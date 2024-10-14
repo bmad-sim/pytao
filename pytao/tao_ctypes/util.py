@@ -490,12 +490,41 @@ def parse_tao_lat_ele_list(lines):
 
 def parse_pytype(type, val):
     """
-    Parses the various types from tao_python_cmd
+    Parses the various types from `tao_pipe_cmd`
 
-
+    INT         - Integer number
+    INT_ARR     - Integer array.
+    REAL        - Real number
+    REAL_ARR    - Real array
+    COMPLEX     - Complex number (Re;Im)
+    LOGIC       - Logical: "T" or "F".
+    INUM        - Integer whose allowed values can be obtained using the "pipe inum" command.
+    ENUM        - String whose allowed values can be obtained using the "pipe enum" command.
+    ENUM_ARR    - Array of enums.
+    FILE        - Name of file.
+    CRYSTAL     - Crystal name string. EG: "Si(111)"
+    DAT_TYPE    - Data type string. EG: "orbit.x"
+    DAT_TYPE_Z  - Data type string if plot%x_axis_type = 'data'. Otherwise is a data_type_z enum.
+    SPECIES     - Species name string. EG: "H2SO4++"
+    ELE_PARAM   - Lattice element parameter string. EG "K1"
+    STR         - String that does not fall into one of the above string categories.
+    STR_ARR     - String array
+    STRUCT      - Structure. In this case {component_value} is of the form:
+                    {name1};{type1};{value1};{name2}
     """
 
-    # Handle
+    if type in [
+        "STR_ARR",
+        "ENUM_ARR",
+    ]:
+        return val
+
+    if type == "INT_ARR":
+        return np.array(val).astype(int)
+
+    if type == "REAL_ARR":
+        return np.array(val).astype(float)
+
     if isinstance(val, list):
         if len(val) == 1:
             val = val[0]
@@ -522,14 +551,12 @@ def parse_pytype(type, val):
     if type == "REAL":
         return float(val)
 
-    if type == "INT_ARR":
-        return np.array(val).astype(int)
-
-    if type == "REAL_ARR":
-        return np.array(val).astype(float)
-
     if type == "COMPLEX":
-        return complex(*val)
+        if len(val) == 3 and not len(val[0]):
+            # TODO: remove after this is addressed:
+            # https://github.com/bmad-sim/bmad-ecosystem/issues/1232#issuecomment-2411742845
+            val = val[1:]
+        return complex(*(float(v) for v in val))
 
     if type == "STRUCT":
         return {name: parse_pytype(t1, v1) for name, t1, v1 in chunks(val, 3)}
