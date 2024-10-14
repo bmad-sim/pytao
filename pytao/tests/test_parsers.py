@@ -111,6 +111,23 @@ def test_ele_chamber_wall_1(tao_cls: Type[AnyTao]):
         }
 
 
+def test_ele_grid_field_points(tao_cls: Type[AnyTao]):
+    with new_tao(
+        tao_cls,
+        init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_grid",
+    ) as tao:
+        assert set(
+            tao.ele_grid_field(ele_id="1@0>>1", which="model", index="1", who="points")[
+                0
+            ].keys()
+        ) == {
+            "i",
+            "j",
+            "k",
+            "data",
+        }
+
+
 def test_ele_elec_multipoles_1(tao_cls: Type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"

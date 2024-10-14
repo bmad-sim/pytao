@@ -727,6 +727,36 @@ def parse_ele_elec_multipoles(lines, cmd=""):
     }
 
 
+def parse_ele_grid_field(lines, cmd=""):
+    """
+    Parse ele_grid_field results.
+
+    Returns
+    -------
+    dict or list of dict
+        "points" mode will be a list of dictionaries.
+        Normal mode will be a single dictionary.
+    """
+
+    args = _get_cmd_args(cmd)
+    if args[-1].lower() == "points":
+
+        def parse_point_line(line: str):
+            parts = line.split(";")
+            i, j, k = (int(part) for part in parts[:3])
+            data = [ast.literal_eval(part) for part in parts[3:]]
+            return {
+                "i": i,
+                "j": j,
+                "k": k,
+                "data": data,
+            }
+
+        return [parse_point_line(line) for line in lines]
+
+    return parse_tao_python_data(lines)
+
+
 def parse_ele_gen_grad_map(lines, cmd=""):
     """
     Parse ele_gen_grad_map results.
@@ -739,7 +769,7 @@ def parse_ele_gen_grad_map(lines, cmd=""):
     """
 
     args = _get_cmd_args(cmd)
-    if args[-1] == "derivs":
+    if args[-1].lower() == "derivs":
         return _parse_by_keys_to_types(
             lines,
             {
@@ -914,7 +944,7 @@ def parse_ele_wall3d(lines, cmd=""):
         return info
 
     args = _get_cmd_args(cmd)
-    if args[-1] == "table":
+    if args[-1].lower() == "table":
         sections = split_sections(lines)
         return [parse_section(section) for section in sections]
 
