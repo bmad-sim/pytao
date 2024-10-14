@@ -710,12 +710,7 @@ def parse_ele_elec_multipoles(lines, cmd=""):
     logic_lines = [line for line in lines if "LOGIC" in line]
     lines = [line for line in lines if line not in logic_lines]
     key_to_type = {key: float for key in lines[0].split(";")}
-    settings = {}
-    for line in logic_lines:
-        # parse_tao_python_data1 doesn't work as it's missing 'settable'
-        # (line) for line in logic_lines
-        name, _type, value = line.split(";")
-        settings[name] = parse_bool(value)
+    settings = parse_tao_python_data(logic_lines)
 
     # TODO: 'data' is not actually parsed in the test suite
     return {
