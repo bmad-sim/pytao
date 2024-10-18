@@ -495,7 +495,9 @@ def parse_pytype(type, val):
 
     """
 
-    # Handle
+    if type == "STR_ARR":
+        return val
+
     if isinstance(val, list):
         if len(val) == 1:
             val = val[0]

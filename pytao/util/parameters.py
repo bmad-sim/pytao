@@ -69,6 +69,7 @@ class tao_parameter:
             "DAT_TYPE_Z",
             "DAT_TYPE_E",
             "ELE_PARAM",
+            "STR_ARR",
             "REAL_ARR",
             "ENUM",
             "ENUM_Z",
