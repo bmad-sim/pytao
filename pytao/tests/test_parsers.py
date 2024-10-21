@@ -4,8 +4,57 @@ from typing import Type
 import numpy as np
 import pytest
 
+from ..tao_ctypes.util import parse_tao_python_data
 from .. import AnyTao
 from .test_interface_commands import new_tao
+
+
+@pytest.mark.parametrize(
+    ["type", "value", "expected"],
+    [
+        # <component_name>;<type>;<is_variable>;<component_value>
+        pytest.param("STR", "1", "1"),
+        pytest.param("ENUM", "1", "1"),
+        pytest.param("FILE", "1", "1"),
+        pytest.param("CRYSTAL", "1", "1"),
+        pytest.param("COMPONENT", "1", "1"),
+        pytest.param("DAT_TYPE", "1", "1"),
+        pytest.param("DAT_TYPE_Z", "1", "1"),
+        pytest.param("SPECIES", "1", "1"),
+        pytest.param("ELE_PARAM", "1", "1"),
+        pytest.param("STR_ARR", "1", ["1"]),
+        pytest.param("ENUM_ARR", "1", ["1"]),
+        pytest.param("STR_ARR", "1;2", ["1", "2"]),
+        pytest.param("ENUM_ARR", "1;2", ["1", "2"]),
+        pytest.param("LOGIC", "T", True),
+        pytest.param("LOGIC", "F", False),
+        pytest.param("INT", "1", 1),
+        pytest.param("INUM", "1", 1),
+        pytest.param("REAL", "1", 1.0),
+        pytest.param("INT_ARR", "0;1;2", np.array([0, 1, 2])),
+        pytest.param("REAL_ARR", "0.;1.;2.", np.array([0.0, 1.0, 2.0])),
+        pytest.param("INT_ARR", "0", np.array([0])),
+        pytest.param("REAL_ARR", "0.", np.array([0.0])),
+        pytest.param("COMPLEX", "0.;1.", 1j),
+        pytest.param("STRUCT", "n1;INT;0;n2;REAL;1.0", {"n1": 0, "n2": 1.0}),
+        pytest.param(
+            "STRUCT",
+            "width;INT;0;color;ENUM;color;line^pattern;ENUM;pattern",
+            {"width": 0, "color": "color", "line^pattern": "pattern"},
+        ),
+    ],
+)
+def test_parse_line(type: str, value: str, expected):
+    name = "name"
+
+    for settable in "FTI":
+        line = f"{name};{type};{settable};{value}"
+        parsed_value = parse_tao_python_data([line])[name]
+
+        if isinstance(expected, np.ndarray):
+            assert np.all(parsed_value == expected)
+        else:
+            assert parsed_value == expected
 
 
 def test_building_wall_list_1(tao_cls: Type[AnyTao]):
@@ -108,6 +157,23 @@ def test_ele_chamber_wall_1(tao_cls: Type[AnyTao]):
             "longitudinal_position",
             "z1",
             "-z2",
+        }
+
+
+def test_ele_grid_field_points(tao_cls: Type[AnyTao]):
+    with new_tao(
+        tao_cls,
+        init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_grid",
+    ) as tao:
+        assert set(
+            tao.ele_grid_field(ele_id="1@0>>1", which="model", index="1", who="points")[
+                0
+            ].keys()
+        ) == {
+            "i",
+            "j",
+            "k",
+            "data",
         }
 
 
