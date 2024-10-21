@@ -552,10 +552,6 @@ def parse_pytype(type, val):
         return float(val)
 
     if type == "COMPLEX":
-        if len(val) == 3 and not len(val[0]):
-            # TODO: remove after this is addressed:
-            # https://github.com/bmad-sim/bmad-ecosystem/issues/1232#issuecomment-2411742845
-            val = val[1:]
         return complex(*(float(v) for v in val))
 
     if type == "STRUCT":
