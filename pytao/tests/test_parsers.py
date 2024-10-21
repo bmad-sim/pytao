@@ -36,7 +36,6 @@ from .test_interface_commands import new_tao
         pytest.param("INT_ARR", "0", np.array([0])),
         pytest.param("REAL_ARR", "0.", np.array([0.0])),
         pytest.param("COMPLEX", "0.;1.", 1j),
-        pytest.param("COMPLEX", ";0.;1.", 1j),  # TODO: remove after upstream fix
         pytest.param("STRUCT", "n1;INT;0;n2;REAL;1.0", {"n1": 0, "n2": 1.0}),
         pytest.param(
             "STRUCT",
