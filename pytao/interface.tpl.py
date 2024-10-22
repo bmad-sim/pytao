@@ -396,6 +396,9 @@ class Tao(TaoCore):
         )
         try:
             self.register_cell_magic()
+        except NameError:
+            # Not in IPython
+            pass
         except Exception:
             logger.debug("Failed to register cell magic", exc_info=True)
 
