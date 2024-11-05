@@ -403,7 +403,7 @@ class Tao(TaoCore):
             logger.debug("Failed to register cell magic", exc_info=True)
 
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} init={self.init_settings.tao_init!r} so_lib_file={self.so_lib_file!r}>"
+        return f"<{self.__class__.__name__} init={self.init_settings.tao_init!r} so_lib={self.so_lib_file!r}>"
 
     @override
     def init(
