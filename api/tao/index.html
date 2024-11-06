@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.43">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.44">
     
     
       
@@ -10924,7 +10924,7 @@ Used for group, overlay and ramper type elements.</p>
   {which} is one of: "model", "base" or "design"</p>
 <p>Example:
   pipe ele:control_var 3@1&gt;&gt;7|model
-This gives element number 7 in branch 1 of universe 3.</p>
+This gives control info on element number 7 in branch 1 of universe 3.</p>
 </details>
 
 <p><span class="doc-section-title">Examples:</span></p>
@@ -11008,7 +11008,7 @@ This gives element number 7 in branch 1 of universe 3.</p>
 
 <span class="sd">    Example:</span>
 <span class="sd">      pipe ele:control_var 3@1&gt;&gt;7|model</span>
-<span class="sd">    This gives element number 7 in branch 1 of universe 3.</span>
+<span class="sd">    This gives control info on element number 7 in branch 1 of universe 3.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -11588,9 +11588,8 @@ lines where N is the number of slaves.</p>
   {which} is one of: "model", "base" or "design"
   {where} is an optional argument which, if present, is one of
     beginning  ! Upstream end
-    center     ! Middle of element
-    end        ! Downstream end (default)
-Note: {where} ignored for photonic elements crystal, mirror, and multilayer_mirror.</p>
+    center     ! Middle of element. Surface of element for photonic reflecting elements (crystal, mirror).
+    end        ! Downstream end (default)</p>
 <p>Example:
   pipe ele:floor 3@1&gt;&gt;7|model
 This gives element number 7 in branch 1 of universe 3.</p>
@@ -11671,8 +11670,7 @@ This gives element number 7 in branch 1 of universe 3.</p>
 <span class="normal">2723</span>
 <span class="normal">2724</span>
 <span class="normal">2725</span>
-<span class="normal">2726</span>
-<span class="normal">2727</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_floor</span><span class="p">(</span>
+<span class="normal">2726</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_floor</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -11702,9 +11700,8 @@ This gives element number 7 in branch 1 of universe 3.</p>
 <span class="sd">      {which} is one of: &quot;model&quot;, &quot;base&quot; or &quot;design&quot;</span>
 <span class="sd">      {where} is an optional argument which, if present, is one of</span>
 <span class="sd">        beginning  ! Upstream end</span>
-<span class="sd">        center     ! Middle of element</span>
+<span class="sd">        center     ! Middle of element. Surface of element for photonic reflecting elements (crystal, mirror).</span>
 <span class="sd">        end        ! Downstream end (default)</span>
-<span class="sd">    Note: {where} ignored for photonic elements crystal, mirror, and multilayer_mirror.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">      pipe ele:floor 3@1&gt;&gt;7|model</span>
@@ -11845,7 +11842,8 @@ This gives element number 7 in branch 1 of universe 3.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2729</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2728</span>
+<span class="normal">2729</span>
 <span class="normal">2730</span>
 <span class="normal">2731</span>
 <span class="normal">2732</span>
@@ -11887,8 +11885,7 @@ This gives element number 7 in branch 1 of universe 3.</p>
 <span class="normal">2768</span>
 <span class="normal">2769</span>
 <span class="normal">2770</span>
-<span class="normal">2771</span>
-<span class="normal">2772</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_gen_attribs</span><span class="p">(</span>
+<span class="normal">2771</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_gen_attribs</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -12079,7 +12076,8 @@ This gives element number 7 in branch 1 of universe 3.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2774</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2773</span>
+<span class="normal">2774</span>
 <span class="normal">2775</span>
 <span class="normal">2776</span>
 <span class="normal">2777</span>
@@ -12129,8 +12127,7 @@ This gives element number 7 in branch 1 of universe 3.</p>
 <span class="normal">2821</span>
 <span class="normal">2822</span>
 <span class="normal">2823</span>
-<span class="normal">2824</span>
-<span class="normal">2825</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_gen_grad_map</span><span class="p">(</span>
+<span class="normal">2824</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_gen_grad_map</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">who</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -12329,7 +12326,8 @@ This gives grid #2 of element number 7 in branch 1 of universe 3.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2827</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2826</span>
+<span class="normal">2827</span>
 <span class="normal">2828</span>
 <span class="normal">2829</span>
 <span class="normal">2830</span>
@@ -12379,8 +12377,7 @@ This gives grid #2 of element number 7 in branch 1 of universe 3.</p>
 <span class="normal">2874</span>
 <span class="normal">2875</span>
 <span class="normal">2876</span>
-<span class="normal">2877</span>
-<span class="normal">2878</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_grid_field</span><span class="p">(</span>
+<span class="normal">2877</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_grid_field</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">who</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -12544,7 +12541,8 @@ This gives element number 7 in branch 1 of universe 3.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2880</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2879</span>
+<span class="normal">2880</span>
 <span class="normal">2881</span>
 <span class="normal">2882</span>
 <span class="normal">2883</span>
@@ -12584,8 +12582,7 @@ This gives element number 7 in branch 1 of universe 3.</p>
 <span class="normal">2917</span>
 <span class="normal">2918</span>
 <span class="normal">2919</span>
-<span class="normal">2920</span>
-<span class="normal">2921</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_head</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">2920</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_head</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output &quot;head&quot; Element attributes</span>
@@ -12744,7 +12741,8 @@ These "Slave" and "Lord" lines are the slaves and lords of the "Element" element
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2923</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2922</span>
+<span class="normal">2923</span>
 <span class="normal">2924</span>
 <span class="normal">2925</span>
 <span class="normal">2926</span>
@@ -12792,8 +12790,7 @@ These "Slave" and "Lord" lines are the slaves and lords of the "Element" element
 <span class="normal">2968</span>
 <span class="normal">2969</span>
 <span class="normal">2970</span>
-<span class="normal">2971</span>
-<span class="normal">2972</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_lord_slave</span><span class="p">(</span>
+<span class="normal">2971</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_lord_slave</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -12973,7 +12970,8 @@ This gives element number 7 in branch 1 of universe 3.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2974</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2973</span>
+<span class="normal">2974</span>
 <span class="normal">2975</span>
 <span class="normal">2976</span>
 <span class="normal">2977</span>
@@ -13018,8 +13016,7 @@ This gives element number 7 in branch 1 of universe 3.</p>
 <span class="normal">3016</span>
 <span class="normal">3017</span>
 <span class="normal">3018</span>
-<span class="normal">3019</span>
-<span class="normal">3020</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_mat6</span><span class="p">(</span>
+<span class="normal">3019</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_mat6</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">who</span><span class="o">=</span><span class="s2">&quot;mat6&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -13178,7 +13175,8 @@ This gives element number 7 in branch 1 of universe 3.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3022</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3021</span>
+<span class="normal">3022</span>
 <span class="normal">3023</span>
 <span class="normal">3024</span>
 <span class="normal">3025</span>
@@ -13218,8 +13216,7 @@ This gives element number 7 in branch 1 of universe 3.</p>
 <span class="normal">3059</span>
 <span class="normal">3060</span>
 <span class="normal">3061</span>
-<span class="normal">3062</span>
-<span class="normal">3063</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_methods</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">3062</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_methods</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output element methods</span>
@@ -13373,7 +13370,8 @@ This gives element number 7 in branch 1 of universe 3.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3065</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3064</span>
+<span class="normal">3065</span>
 <span class="normal">3066</span>
 <span class="normal">3067</span>
 <span class="normal">3068</span>
@@ -13415,8 +13413,7 @@ This gives element number 7 in branch 1 of universe 3.</p>
 <span class="normal">3104</span>
 <span class="normal">3105</span>
 <span class="normal">3106</span>
-<span class="normal">3107</span>
-<span class="normal">3108</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_multipoles</span><span class="p">(</span>
+<span class="normal">3107</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_multipoles</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -13572,7 +13569,8 @@ This gives element number 7 in branch 1 of universe 3.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3110</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3109</span>
+<span class="normal">3110</span>
 <span class="normal">3111</span>
 <span class="normal">3112</span>
 <span class="normal">3113</span>
@@ -13612,8 +13610,7 @@ This gives element number 7 in branch 1 of universe 3.</p>
 <span class="normal">3147</span>
 <span class="normal">3148</span>
 <span class="normal">3149</span>
-<span class="normal">3150</span>
-<span class="normal">3151</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_orbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">3150</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_orbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output element orbit</span>
@@ -13788,7 +13785,8 @@ command cannot tell if a parameter is allowed to vary).</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3153</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3152</span>
+<span class="normal">3153</span>
 <span class="normal">3154</span>
 <span class="normal">3155</span>
 <span class="normal">3156</span>
@@ -13839,8 +13837,7 @@ command cannot tell if a parameter is allowed to vary).</p>
 <span class="normal">3201</span>
 <span class="normal">3202</span>
 <span class="normal">3203</span>
-<span class="normal">3204</span>
-<span class="normal">3205</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_param</span><span class="p">(</span>
+<span class="normal">3204</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_param</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="n">who</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -14022,7 +14019,8 @@ This gives element number 7 in branch 1 of universe 3.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3207</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3206</span>
+<span class="normal">3207</span>
 <span class="normal">3208</span>
 <span class="normal">3209</span>
 <span class="normal">3210</span>
@@ -14067,8 +14065,7 @@ This gives element number 7 in branch 1 of universe 3.</p>
 <span class="normal">3249</span>
 <span class="normal">3250</span>
 <span class="normal">3251</span>
-<span class="normal">3252</span>
-<span class="normal">3253</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_photon</span><span class="p">(</span>
+<span class="normal">3252</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_photon</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="n">who</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -14227,7 +14224,8 @@ This gives element number 7 in branch 1 of universe 3.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3255</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3254</span>
+<span class="normal">3255</span>
 <span class="normal">3256</span>
 <span class="normal">3257</span>
 <span class="normal">3258</span>
@@ -14269,8 +14267,7 @@ This gives element number 7 in branch 1 of universe 3.</p>
 <span class="normal">3294</span>
 <span class="normal">3295</span>
 <span class="normal">3296</span>
-<span class="normal">3297</span>
-<span class="normal">3298</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_spin_taylor</span><span class="p">(</span>
+<span class="normal">3297</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_spin_taylor</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -14426,7 +14423,8 @@ This gives element number 7 in branch 1 of universe 3.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3300</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3299</span>
+<span class="normal">3300</span>
 <span class="normal">3301</span>
 <span class="normal">3302</span>
 <span class="normal">3303</span>
@@ -14466,8 +14464,7 @@ This gives element number 7 in branch 1 of universe 3.</p>
 <span class="normal">3337</span>
 <span class="normal">3338</span>
 <span class="normal">3339</span>
-<span class="normal">3340</span>
-<span class="normal">3341</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_taylor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">3340</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_taylor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output element taylor map</span>
@@ -14621,7 +14618,8 @@ This gives element number 7 in branch 1 of universe 3.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3343</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3342</span>
+<span class="normal">3343</span>
 <span class="normal">3344</span>
 <span class="normal">3345</span>
 <span class="normal">3346</span>
@@ -14661,8 +14659,7 @@ This gives element number 7 in branch 1 of universe 3.</p>
 <span class="normal">3380</span>
 <span class="normal">3381</span>
 <span class="normal">3382</span>
-<span class="normal">3383</span>
-<span class="normal">3384</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_twiss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">3383</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_twiss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output element Twiss parameters</span>
@@ -14836,7 +14833,8 @@ This gives element number 7 in branch 1 of universe 3.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3386</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3385</span>
+<span class="normal">3386</span>
 <span class="normal">3387</span>
 <span class="normal">3388</span>
 <span class="normal">3389</span>
@@ -14884,8 +14882,7 @@ This gives element number 7 in branch 1 of universe 3.</p>
 <span class="normal">3431</span>
 <span class="normal">3432</span>
 <span class="normal">3433</span>
-<span class="normal">3434</span>
-<span class="normal">3435</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_wake</span><span class="p">(</span>
+<span class="normal">3434</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_wake</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="n">who</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -15081,7 +15078,8 @@ This gives element number 7 in branch 1 of universe 3.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3437</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3436</span>
+<span class="normal">3437</span>
 <span class="normal">3438</span>
 <span class="normal">3439</span>
 <span class="normal">3440</span>
@@ -15128,8 +15126,7 @@ This gives element number 7 in branch 1 of universe 3.</p>
 <span class="normal">3481</span>
 <span class="normal">3482</span>
 <span class="normal">3483</span>
-<span class="normal">3484</span>
-<span class="normal">3485</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_wall3d</span><span class="p">(</span>
+<span class="normal">3484</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ele_wall3d</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">who</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -15353,7 +15350,8 @@ This gives element number 7 in branch 1 of universe 3.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3540</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3539</span>
+<span class="normal">3540</span>
 <span class="normal">3541</span>
 <span class="normal">3542</span>
 <span class="normal">3543</span>
@@ -15411,8 +15409,7 @@ This gives element number 7 in branch 1 of universe 3.</p>
 <span class="normal">3595</span>
 <span class="normal">3596</span>
 <span class="normal">3597</span>
-<span class="normal">3598</span>
-<span class="normal">3599</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">em_field</span><span class="p">(</span>
+<span class="normal">3598</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">em_field</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ele_id</span><span class="p">,</span>
     <span class="n">x</span><span class="p">,</span>
@@ -15563,7 +15560,8 @@ This gives element number 7 in branch 1 of universe 3.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3601</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3600</span>
+<span class="normal">3601</span>
 <span class="normal">3602</span>
 <span class="normal">3603</span>
 <span class="normal">3604</span>
@@ -15594,8 +15592,7 @@ This gives element number 7 in branch 1 of universe 3.</p>
 <span class="normal">3629</span>
 <span class="normal">3630</span>
 <span class="normal">3631</span>
-<span class="normal">3632</span>
-<span class="normal">3633</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">enum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enum_name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">3632</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">enum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enum_name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output list of possible values for enumerated numbers.</span>
@@ -15749,7 +15746,8 @@ This gives element number 7 in branch 1 of universe 3.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3487</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3486</span>
+<span class="normal">3487</span>
 <span class="normal">3488</span>
 <span class="normal">3489</span>
 <span class="normal">3490</span>
@@ -15799,8 +15797,7 @@ This gives element number 7 in branch 1 of universe 3.</p>
 <span class="normal">3534</span>
 <span class="normal">3535</span>
 <span class="normal">3536</span>
-<span class="normal">3537</span>
-<span class="normal">3538</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span>
+<span class="normal">3537</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="s2">&quot;-array_out&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -15941,7 +15938,8 @@ This gives element number 7 in branch 1 of universe 3.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3668</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3667</span>
+<span class="normal">3668</span>
 <span class="normal">3669</span>
 <span class="normal">3670</span>
 <span class="normal">3671</span>
@@ -15971,8 +15969,7 @@ This gives element number 7 in branch 1 of universe 3.</p>
 <span class="normal">3695</span>
 <span class="normal">3696</span>
 <span class="normal">3697</span>
-<span class="normal">3698</span>
-<span class="normal">3699</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">floor_orbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">3698</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">floor_orbit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output (x, y) coordinates for drawing the particle orbit on a floor plan.</span>
@@ -16093,7 +16090,8 @@ This gives element number 7 in branch 1 of universe 3.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3635</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3634</span>
+<span class="normal">3635</span>
 <span class="normal">3636</span>
 <span class="normal">3637</span>
 <span class="normal">3638</span>
@@ -16123,8 +16121,7 @@ This gives element number 7 in branch 1 of universe 3.</p>
 <span class="normal">3662</span>
 <span class="normal">3663</span>
 <span class="normal">3664</span>
-<span class="normal">3665</span>
-<span class="normal">3666</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">floor_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">3665</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">floor_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output (x,y) points and other information that can be used for drawing a floor_plan.</span>
@@ -16215,7 +16212,8 @@ This gives element number 7 in branch 1 of universe 3.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3769</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3768</span>
+<span class="normal">3769</span>
 <span class="normal">3770</span>
 <span class="normal">3771</span>
 <span class="normal">3772</span>
@@ -16242,8 +16240,7 @@ This gives element number 7 in branch 1 of universe 3.</p>
 <span class="normal">3793</span>
 <span class="normal">3794</span>
 <span class="normal">3795</span>
-<span class="normal">3796</span>
-<span class="normal">3797</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">global_opti_de</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">3796</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">global_opti_de</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output DE optimization parameters.</span>
@@ -16332,7 +16329,8 @@ Also see global:opti_de.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3738</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3737</span>
+<span class="normal">3738</span>
 <span class="normal">3739</span>
 <span class="normal">3740</span>
 <span class="normal">3741</span>
@@ -16360,8 +16358,7 @@ Also see global:opti_de.</p>
 <span class="normal">3763</span>
 <span class="normal">3764</span>
 <span class="normal">3765</span>
-<span class="normal">3766</span>
-<span class="normal">3767</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">global_optimization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">3766</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">global_optimization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output optimization parameters.</span>
@@ -16449,7 +16446,8 @@ Also see global:opti_de.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3799</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3798</span>
+<span class="normal">3799</span>
 <span class="normal">3800</span>
 <span class="normal">3801</span>
 <span class="normal">3802</span>
@@ -16472,8 +16470,7 @@ Also see global:opti_de.</p>
 <span class="normal">3819</span>
 <span class="normal">3820</span>
 <span class="normal">3821</span>
-<span class="normal">3822</span>
-<span class="normal">3823</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">3822</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output list of &quot;help xxx&quot; topics</span>
@@ -17507,7 +17504,8 @@ For example, possible index numbers for the branches of a lattice.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3825</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3824</span>
+<span class="normal">3825</span>
 <span class="normal">3826</span>
 <span class="normal">3827</span>
 <span class="normal">3828</span>
@@ -17536,8 +17534,7 @@ For example, possible index numbers for the branches of a lattice.</p>
 <span class="normal">3851</span>
 <span class="normal">3852</span>
 <span class="normal">3853</span>
-<span class="normal">3854</span>
-<span class="normal">3855</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">inum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">who</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">3854</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">inum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">who</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output list of possible values for an INUM parameter.</span>
@@ -17660,7 +17657,8 @@ For example, possible index numbers for the branches of a lattice.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3927</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3926</span>
+<span class="normal">3927</span>
 <span class="normal">3928</span>
 <span class="normal">3929</span>
 <span class="normal">3930</span>
@@ -17693,8 +17691,7 @@ For example, possible index numbers for the branches of a lattice.</p>
 <span class="normal">3957</span>
 <span class="normal">3958</span>
 <span class="normal">3959</span>
-<span class="normal">3960</span>
-<span class="normal">3961</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">lat_branch_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">3960</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">lat_branch_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output lattice branch list</span>
@@ -17819,7 +17816,8 @@ For example, possible index numbers for the branches of a lattice.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3857</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3856</span>
+<span class="normal">3857</span>
 <span class="normal">3858</span>
 <span class="normal">3859</span>
 <span class="normal">3860</span>
@@ -17850,8 +17848,7 @@ For example, possible index numbers for the branches of a lattice.</p>
 <span class="normal">3885</span>
 <span class="normal">3886</span>
 <span class="normal">3887</span>
-<span class="normal">3888</span>
-<span class="normal">3889</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">lat_calc_done</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">3888</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">lat_calc_done</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output if a lattice recalculation has been proformed since the last</span>
@@ -17976,7 +17973,8 @@ For example, possible index numbers for the branches of a lattice.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3891</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3890</span>
+<span class="normal">3891</span>
 <span class="normal">3892</span>
 <span class="normal">3893</span>
 <span class="normal">3894</span>
@@ -18009,8 +18007,7 @@ For example, possible index numbers for the branches of a lattice.</p>
 <span class="normal">3921</span>
 <span class="normal">3922</span>
 <span class="normal">3923</span>
-<span class="normal">3924</span>
-<span class="normal">3925</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">lat_ele_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">branch_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">3924</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">lat_ele_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">branch_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output lattice element list.</span>
@@ -18280,7 +18277,8 @@ For example, possible index numbers for the branches of a lattice.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3963</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3962</span>
+<span class="normal">3963</span>
 <span class="normal">3964</span>
 <span class="normal">3965</span>
 <span class="normal">3966</span>
@@ -18395,8 +18393,7 @@ For example, possible index numbers for the branches of a lattice.</p>
 <span class="normal">4075</span>
 <span class="normal">4076</span>
 <span class="normal">4077</span>
-<span class="normal">4078</span>
-<span class="normal">4079</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">lat_list</span><span class="p">(</span>
+<span class="normal">4078</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">lat_list</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">elements</span><span class="p">,</span>
     <span class="n">who</span><span class="p">,</span>
@@ -18602,7 +18599,8 @@ For example, possible index numbers for the branches of a lattice.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4081</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4080</span>
+<span class="normal">4081</span>
 <span class="normal">4082</span>
 <span class="normal">4083</span>
 <span class="normal">4084</span>
@@ -18632,8 +18630,7 @@ For example, possible index numbers for the branches of a lattice.</p>
 <span class="normal">4108</span>
 <span class="normal">4109</span>
 <span class="normal">4110</span>
-<span class="normal">4111</span>
-<span class="normal">4112</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">lat_param_units</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">4111</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">lat_param_units</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output units of a parameter associated with a lattice or lattice element.</span>
@@ -18778,7 +18775,8 @@ Note: {ele2_id} should just be an element name or index without universe, branch
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4114</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4113</span>
+<span class="normal">4114</span>
 <span class="normal">4115</span>
 <span class="normal">4116</span>
 <span class="normal">4117</span>
@@ -18821,8 +18819,7 @@ Note: {ele2_id} should just be an element name or index without universe, branch
 <span class="normal">4154</span>
 <span class="normal">4155</span>
 <span class="normal">4156</span>
-<span class="normal">4157</span>
-<span class="normal">4158</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ele1_id</span><span class="p">,</span> <span class="n">ele2_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">4157</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ele1_id</span><span class="p">,</span> <span class="n">ele2_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output matrix value from the exit end of one element to the exit end of the other.</span>
@@ -18925,7 +18922,8 @@ Note: {ele2_id} should just be an element name or index without universe, branch
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4160</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4159</span>
+<span class="normal">4160</span>
 <span class="normal">4161</span>
 <span class="normal">4162</span>
 <span class="normal">4163</span>
@@ -18951,8 +18949,7 @@ Note: {ele2_id} should just be an element name or index without universe, branch
 <span class="normal">4183</span>
 <span class="normal">4184</span>
 <span class="normal">4185</span>
-<span class="normal">4186</span>
-<span class="normal">4187</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">merit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">4186</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">merit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output merit value.</span>
@@ -19129,7 +19126,8 @@ Note: {ele2_id} should just be an element name or index without universe, branch
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4189</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4188</span>
+<span class="normal">4189</span>
 <span class="normal">4190</span>
 <span class="normal">4191</span>
 <span class="normal">4192</span>
@@ -19185,8 +19183,7 @@ Note: {ele2_id} should just be an element name or index without universe, branch
 <span class="normal">4242</span>
 <span class="normal">4243</span>
 <span class="normal">4244</span>
-<span class="normal">4245</span>
-<span class="normal">4246</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">orbit_at_s</span><span class="p">(</span>
+<span class="normal">4245</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">orbit_at_s</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">ix_uni</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -19304,7 +19301,8 @@ See the Tao manual for more details.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4248</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4247</span>
+<span class="normal">4248</span>
 <span class="normal">4249</span>
 <span class="normal">4250</span>
 <span class="normal">4251</span>
@@ -19331,8 +19329,7 @@ See the Tao manual for more details.</p>
 <span class="normal">4272</span>
 <span class="normal">4273</span>
 <span class="normal">4274</span>
-<span class="normal">4275</span>
-<span class="normal">4276</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">place_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">4275</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">place_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output the place command buffer and reset the buffer.</span>
@@ -19916,7 +19913,8 @@ Output syntax is parameter list form. See documentation at the beginning of this
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4805</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4804</span>
+<span class="normal">4805</span>
 <span class="normal">4806</span>
 <span class="normal">4807</span>
 <span class="normal">4808</span>
@@ -19949,8 +19947,7 @@ Output syntax is parameter list form. See documentation at the beginning of this
 <span class="normal">4835</span>
 <span class="normal">4836</span>
 <span class="normal">4837</span>
-<span class="normal">4838</span>
-<span class="normal">4839</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">4838</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output info on a given plot.</span>
@@ -20074,7 +20071,8 @@ Output syntax is parameter list form. See documentation at the beginning of this
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4278</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4277</span>
+<span class="normal">4278</span>
 <span class="normal">4279</span>
 <span class="normal">4280</span>
 <span class="normal">4281</span>
@@ -20104,8 +20102,7 @@ Output syntax is parameter list form. See documentation at the beginning of this
 <span class="normal">4305</span>
 <span class="normal">4306</span>
 <span class="normal">4307</span>
-<span class="normal">4308</span>
-<span class="normal">4309</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_curve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">curve_name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">4308</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_curve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">curve_name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output curve information for a plot.</span>
@@ -20262,7 +20259,8 @@ must be one greater than the number of curves.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4527</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4526</span>
+<span class="normal">4527</span>
 <span class="normal">4528</span>
 <span class="normal">4529</span>
 <span class="normal">4530</span>
@@ -20303,8 +20301,7 @@ must be one greater than the number of curves.</p>
 <span class="normal">4565</span>
 <span class="normal">4566</span>
 <span class="normal">4567</span>
-<span class="normal">4568</span>
-<span class="normal">4569</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_curve_manage</span><span class="p">(</span>
+<span class="normal">4568</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_curve_manage</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">graph_name</span><span class="p">,</span> <span class="n">curve_index</span><span class="p">,</span> <span class="n">curve_name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -20633,7 +20630,8 @@ where
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4311</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4310</span>
+<span class="normal">4311</span>
 <span class="normal">4312</span>
 <span class="normal">4313</span>
 <span class="normal">4314</span>
@@ -20670,8 +20668,7 @@ where
 <span class="normal">4345</span>
 <span class="normal">4346</span>
 <span class="normal">4347</span>
-<span class="normal">4348</span>
-<span class="normal">4349</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph_name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">4348</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph_name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output graph info.</span>
@@ -20835,7 +20832,8 @@ must be one greater than the number of graphs.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4571</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4570</span>
+<span class="normal">4571</span>
 <span class="normal">4572</span>
 <span class="normal">4573</span>
 <span class="normal">4574</span>
@@ -20876,8 +20874,7 @@ must be one greater than the number of graphs.</p>
 <span class="normal">4609</span>
 <span class="normal">4610</span>
 <span class="normal">4611</span>
-<span class="normal">4612</span>
-<span class="normal">4613</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_graph_manage</span><span class="p">(</span>
+<span class="normal">4612</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_graph_manage</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">plot_name</span><span class="p">,</span> <span class="n">graph_index</span><span class="p">,</span> <span class="n">graph_name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -21009,7 +21006,8 @@ must be one greater than the number of graphs.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4351</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4350</span>
+<span class="normal">4351</span>
 <span class="normal">4352</span>
 <span class="normal">4353</span>
 <span class="normal">4354</span>
@@ -21039,8 +21037,7 @@ must be one greater than the number of graphs.</p>
 <span class="normal">4378</span>
 <span class="normal">4379</span>
 <span class="normal">4380</span>
-<span class="normal">4381</span>
-<span class="normal">4382</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">curve_name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">4381</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">curve_name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output plot histogram info.</span>
@@ -21181,7 +21178,8 @@ must be one greater than the number of graphs.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4384</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4383</span>
+<span class="normal">4384</span>
 <span class="normal">4385</span>
 <span class="normal">4386</span>
 <span class="normal">4387</span>
@@ -21218,8 +21216,7 @@ must be one greater than the number of graphs.</p>
 <span class="normal">4418</span>
 <span class="normal">4419</span>
 <span class="normal">4420</span>
-<span class="normal">4421</span>
-<span class="normal">4422</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_lat_layout</span><span class="p">(</span>
+<span class="normal">4421</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_lat_layout</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">ix_uni</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ix_branch</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -21421,7 +21418,8 @@ Examples:
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4615</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4614</span>
+<span class="normal">4615</span>
 <span class="normal">4616</span>
 <span class="normal">4617</span>
 <span class="normal">4618</span>
@@ -21492,8 +21490,7 @@ Examples:
 <span class="normal">4683</span>
 <span class="normal">4684</span>
 <span class="normal">4685</span>
-<span class="normal">4686</span>
-<span class="normal">4687</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_line</span><span class="p">(</span>
+<span class="normal">4686</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_line</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">region_name</span><span class="p">,</span>
     <span class="n">graph_name</span><span class="p">,</span>
@@ -21673,7 +21670,8 @@ Examples:
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4424</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4423</span>
+<span class="normal">4424</span>
 <span class="normal">4425</span>
 <span class="normal">4426</span>
 <span class="normal">4427</span>
@@ -21715,8 +21713,7 @@ Examples:
 <span class="normal">4463</span>
 <span class="normal">4464</span>
 <span class="normal">4465</span>
-<span class="normal">4466</span>
-<span class="normal">4467</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_or_g</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">4466</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r_or_g</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output list of plot templates or plot regions.</span>
@@ -21954,7 +21951,8 @@ Examples:
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4689</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4688</span>
+<span class="normal">4689</span>
 <span class="normal">4690</span>
 <span class="normal">4691</span>
 <span class="normal">4692</span>
@@ -22027,8 +22025,7 @@ Examples:
 <span class="normal">4759</span>
 <span class="normal">4760</span>
 <span class="normal">4761</span>
-<span class="normal">4762</span>
-<span class="normal">4763</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_symbol</span><span class="p">(</span>
+<span class="normal">4762</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_symbol</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">region_name</span><span class="p">,</span>
     <span class="n">graph_name</span><span class="p">,</span>
@@ -22250,7 +22247,8 @@ Examples:
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4469</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4468</span>
+<span class="normal">4469</span>
 <span class="normal">4470</span>
 <span class="normal">4471</span>
 <span class="normal">4472</span>
@@ -22305,8 +22303,7 @@ Examples:
 <span class="normal">4521</span>
 <span class="normal">4522</span>
 <span class="normal">4523</span>
-<span class="normal">4524</span>
-<span class="normal">4525</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_template_manage</span><span class="p">(</span>
+<span class="normal">4524</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_template_manage</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">template_location</span><span class="p">,</span>
     <span class="n">template_name</span><span class="p">,</span>
@@ -22472,7 +22469,8 @@ If {to_plot} is not present and {from_plot} is a template plot, the "to plots"
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4765</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4764</span>
+<span class="normal">4765</span>
 <span class="normal">4766</span>
 <span class="normal">4767</span>
 <span class="normal">4768</span>
@@ -22509,8 +22507,7 @@ If {to_plot} is not present and {from_plot} is a template plot, the "to plots"
 <span class="normal">4799</span>
 <span class="normal">4800</span>
 <span class="normal">4801</span>
-<span class="normal">4802</span>
-<span class="normal">4803</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_transfer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_plot</span><span class="p">,</span> <span class="n">to_plot</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">4802</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_transfer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_plot</span><span class="p">,</span> <span class="n">to_plot</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output transfer plot parameters from the &quot;from plot&quot; to the &quot;to plot&quot; (or plots).</span>
@@ -22607,7 +22604,8 @@ If {to_plot} is not present and {from_plot} is a template plot, the "to plots"
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4841</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4840</span>
+<span class="normal">4841</span>
 <span class="normal">4842</span>
 <span class="normal">4843</span>
 <span class="normal">4844</span>
@@ -22632,8 +22630,7 @@ If {to_plot} is not present and {from_plot} is a template plot, the "to plots"
 <span class="normal">4863</span>
 <span class="normal">4864</span>
 <span class="normal">4865</span>
-<span class="normal">4866</span>
-<span class="normal">4867</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ptc_com</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">4866</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ptc_com</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output Ptc_com structure components.</span>
@@ -22790,7 +22787,8 @@ Example:
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4869</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4868</span>
+<span class="normal">4869</span>
 <span class="normal">4870</span>
 <span class="normal">4871</span>
 <span class="normal">4872</span>
@@ -22840,8 +22838,7 @@ Example:
 <span class="normal">4916</span>
 <span class="normal">4917</span>
 <span class="normal">4918</span>
-<span class="normal">4919</span>
-<span class="normal">4920</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ring_general</span><span class="p">(</span>
+<span class="normal">4919</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ring_general</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">ix_uni</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -22985,7 +22982,8 @@ Example:
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4922</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4921</span>
+<span class="normal">4922</span>
 <span class="normal">4923</span>
 <span class="normal">4924</span>
 <span class="normal">4925</span>
@@ -23019,8 +23017,7 @@ Example:
 <span class="normal">4953</span>
 <span class="normal">4954</span>
 <span class="normal">4955</span>
-<span class="normal">4956</span>
-<span class="normal">4957</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">shape_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">who</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">4956</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">shape_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">who</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output lat_layout or floor_plan shapes list</span>
@@ -23189,7 +23186,8 @@ This is important since an added shape is in a ill-defined state.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4959</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4958</span>
+<span class="normal">4959</span>
 <span class="normal">4960</span>
 <span class="normal">4961</span>
 <span class="normal">4962</span>
@@ -23239,8 +23237,7 @@ This is important since an added shape is in a ill-defined state.</p>
 <span class="normal">5006</span>
 <span class="normal">5007</span>
 <span class="normal">5008</span>
-<span class="normal">5009</span>
-<span class="normal">5010</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">shape_manage</span><span class="p">(</span>
+<span class="normal">5009</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">shape_manage</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">who</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">add_or_delete</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -23384,7 +23381,8 @@ If {ix_pattern} is present, list points of given pattern.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5012</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5011</span>
+<span class="normal">5012</span>
 <span class="normal">5013</span>
 <span class="normal">5014</span>
 <span class="normal">5015</span>
@@ -23417,8 +23415,7 @@ If {ix_pattern} is present, list points of given pattern.</p>
 <span class="normal">5042</span>
 <span class="normal">5043</span>
 <span class="normal">5044</span>
-<span class="normal">5045</span>
-<span class="normal">5046</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">shape_pattern_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ix_pattern</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">5045</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">shape_pattern_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ix_pattern</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output list of shape patterns or shape pattern points</span>
@@ -23580,7 +23577,8 @@ If {ix_pattern} is present, list points of given pattern.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5048</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5047</span>
+<span class="normal">5048</span>
 <span class="normal">5049</span>
 <span class="normal">5050</span>
 <span class="normal">5051</span>
@@ -23623,8 +23621,7 @@ If {ix_pattern} is present, list points of given pattern.</p>
 <span class="normal">5088</span>
 <span class="normal">5089</span>
 <span class="normal">5090</span>
-<span class="normal">5091</span>
-<span class="normal">5092</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">shape_pattern_manage</span><span class="p">(</span>
+<span class="normal">5091</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">shape_pattern_manage</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">ix_pattern</span><span class="p">,</span> <span class="n">pat_name</span><span class="p">,</span> <span class="n">pat_line_width</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -23811,7 +23808,8 @@ If {ix_pattern} is present, list points of given pattern.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5094</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5093</span>
+<span class="normal">5094</span>
 <span class="normal">5095</span>
 <span class="normal">5096</span>
 <span class="normal">5097</span>
@@ -23855,8 +23853,7 @@ If {ix_pattern} is present, list points of given pattern.</p>
 <span class="normal">5135</span>
 <span class="normal">5136</span>
 <span class="normal">5137</span>
-<span class="normal">5138</span>
-<span class="normal">5139</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">shape_pattern_point_manage</span><span class="p">(</span>
+<span class="normal">5138</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">shape_pattern_point_manage</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">ix_pattern</span><span class="p">,</span> <span class="n">ix_point</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -24140,7 +24137,8 @@ If {ix_pattern} is present, list points of given pattern.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5141</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5140</span>
+<span class="normal">5141</span>
 <span class="normal">5142</span>
 <span class="normal">5143</span>
 <span class="normal">5144</span>
@@ -24208,8 +24206,7 @@ If {ix_pattern} is present, list points of given pattern.</p>
 <span class="normal">5206</span>
 <span class="normal">5207</span>
 <span class="normal">5208</span>
-<span class="normal">5209</span>
-<span class="normal">5210</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">shape_set</span><span class="p">(</span>
+<span class="normal">5209</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">shape_set</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">who</span><span class="p">,</span>
     <span class="n">shape_index</span><span class="p">,</span>
@@ -24372,7 +24369,8 @@ Example:
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5212</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5211</span>
+<span class="normal">5212</span>
 <span class="normal">5213</span>
 <span class="normal">5214</span>
 <span class="normal">5215</span>
@@ -24406,8 +24404,7 @@ Example:
 <span class="normal">5243</span>
 <span class="normal">5244</span>
 <span class="normal">5245</span>
-<span class="normal">5246</span>
-<span class="normal">5247</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">5246</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output the output from a show command.</span>
@@ -24502,7 +24499,8 @@ Example:
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5249</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5248</span>
+<span class="normal">5249</span>
 <span class="normal">5250</span>
 <span class="normal">5251</span>
 <span class="normal">5252</span>
@@ -24529,8 +24527,7 @@ Example:
 <span class="normal">5273</span>
 <span class="normal">5274</span>
 <span class="normal">5275</span>
-<span class="normal">5276</span>
-<span class="normal">5277</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">space_charge_com</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">5276</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">space_charge_com</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output space_charge_com structure parameters.</span>
@@ -24650,7 +24647,8 @@ Example:
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5279</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5278</span>
+<span class="normal">5279</span>
 <span class="normal">5280</span>
 <span class="normal">5281</span>
 <span class="normal">5282</span>
@@ -24683,8 +24681,7 @@ Example:
 <span class="normal">5309</span>
 <span class="normal">5310</span>
 <span class="normal">5311</span>
-<span class="normal">5312</span>
-<span class="normal">5313</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">species_to_int</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">species_str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">5312</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">species_to_int</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">species_str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Convert species name to corresponding integer</span>
@@ -24810,7 +24807,8 @@ Example:
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5315</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5314</span>
+<span class="normal">5315</span>
 <span class="normal">5316</span>
 <span class="normal">5317</span>
 <span class="normal">5318</span>
@@ -24843,8 +24841,7 @@ Example:
 <span class="normal">5345</span>
 <span class="normal">5346</span>
 <span class="normal">5347</span>
-<span class="normal">5348</span>
-<span class="normal">5349</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">species_to_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">species_int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">5348</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">species_to_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">species_int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Convert species integer id to corresponding</span>
@@ -25062,7 +25059,8 @@ See the Bmad manual for more details.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5351</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5350</span>
+<span class="normal">5351</span>
 <span class="normal">5352</span>
 <span class="normal">5353</span>
 <span class="normal">5354</span>
@@ -25138,8 +25136,7 @@ See the Bmad manual for more details.</p>
 <span class="normal">5424</span>
 <span class="normal">5425</span>
 <span class="normal">5426</span>
-<span class="normal">5427</span>
-<span class="normal">5428</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">spin_invariant</span><span class="p">(</span>
+<span class="normal">5427</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">spin_invariant</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">who</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -25351,7 +25348,8 @@ See the Bmad manual for more details.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5430</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5429</span>
+<span class="normal">5430</span>
 <span class="normal">5431</span>
 <span class="normal">5432</span>
 <span class="normal">5433</span>
@@ -25407,8 +25405,7 @@ See the Bmad manual for more details.</p>
 <span class="normal">5483</span>
 <span class="normal">5484</span>
 <span class="normal">5485</span>
-<span class="normal">5486</span>
-<span class="normal">5487</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">spin_polarization</span><span class="p">(</span>
+<span class="normal">5486</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">spin_polarization</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">ix_uni</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -25615,7 +25612,8 @@ This will return a string_list with the following fields:
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5489</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5488</span>
+<span class="normal">5489</span>
 <span class="normal">5490</span>
 <span class="normal">5491</span>
 <span class="normal">5492</span>
@@ -25671,8 +25669,7 @@ This will return a string_list with the following fields:
 <span class="normal">5542</span>
 <span class="normal">5543</span>
 <span class="normal">5544</span>
-<span class="normal">5545</span>
-<span class="normal">5546</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">spin_resonance</span><span class="p">(</span>
+<span class="normal">5545</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">spin_resonance</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">ix_uni</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -25788,7 +25785,8 @@ This will return a string_list with the following fields:
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5548</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5547</span>
+<span class="normal">5548</span>
 <span class="normal">5549</span>
 <span class="normal">5550</span>
 <span class="normal">5551</span>
@@ -25813,8 +25811,7 @@ This will return a string_list with the following fields:
 <span class="normal">5570</span>
 <span class="normal">5571</span>
 <span class="normal">5572</span>
-<span class="normal">5573</span>
-<span class="normal">5574</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">super_universe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">5573</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">super_universe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output super_Universe parameters.</span>
@@ -25906,7 +25903,8 @@ This will return a string_list with the following fields:
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3701</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">3700</span>
+<span class="normal">3701</span>
 <span class="normal">3702</span>
 <span class="normal">3703</span>
 <span class="normal">3704</span>
@@ -25940,8 +25938,7 @@ This will return a string_list with the following fields:
 <span class="normal">3732</span>
 <span class="normal">3733</span>
 <span class="normal">3734</span>
-<span class="normal">3735</span>
-<span class="normal">3736</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">tao_global</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">3735</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">tao_global</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output global parameters.</span>
@@ -26109,7 +26106,8 @@ Example:
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5576</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5575</span>
+<span class="normal">5576</span>
 <span class="normal">5577</span>
 <span class="normal">5578</span>
 <span class="normal">5579</span>
@@ -26157,8 +26155,7 @@ Example:
 <span class="normal">5621</span>
 <span class="normal">5622</span>
 <span class="normal">5623</span>
-<span class="normal">5624</span>
-<span class="normal">5625</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">taylor_map</span><span class="p">(</span>
+<span class="normal">5624</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">taylor_map</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">ele1_id</span><span class="p">,</span> <span class="n">ele2_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -26355,7 +26352,8 @@ Example:
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5627</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5626</span>
+<span class="normal">5627</span>
 <span class="normal">5628</span>
 <span class="normal">5629</span>
 <span class="normal">5630</span>
@@ -26408,8 +26406,7 @@ Example:
 <span class="normal">5677</span>
 <span class="normal">5678</span>
 <span class="normal">5679</span>
-<span class="normal">5680</span>
-<span class="normal">5681</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">twiss_at_s</span><span class="p">(</span>
+<span class="normal">5680</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">twiss_at_s</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">ix_uni</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -26554,7 +26551,8 @@ Example:
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5683</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5682</span>
+<span class="normal">5683</span>
 <span class="normal">5684</span>
 <span class="normal">5685</span>
 <span class="normal">5686</span>
@@ -26586,8 +26584,7 @@ Example:
 <span class="normal">5712</span>
 <span class="normal">5713</span>
 <span class="normal">5714</span>
-<span class="normal">5715</span>
-<span class="normal">5716</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">universe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ix_uni</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">5715</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">universe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ix_uni</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output universe info.</span>
@@ -27268,7 +27265,8 @@ Normal mode will be a dict.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5718</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5717</span>
+<span class="normal">5718</span>
 <span class="normal">5719</span>
 <span class="normal">5720</span>
 <span class="normal">5721</span>
@@ -27308,8 +27306,7 @@ Normal mode will be a dict.</p>
 <span class="normal">5755</span>
 <span class="normal">5756</span>
 <span class="normal">5757</span>
-<span class="normal">5758</span>
-<span class="normal">5759</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">slaves</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">5758</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">slaves</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output parameters of a given variable.</span>
@@ -27621,7 +27618,8 @@ the "pipe var_v1_create" command.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5761</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5760</span>
+<span class="normal">5761</span>
 <span class="normal">5762</span>
 <span class="normal">5763</span>
 <span class="normal">5764</span>
@@ -27697,8 +27695,7 @@ the "pipe var_v1_create" command.</p>
 <span class="normal">5834</span>
 <span class="normal">5835</span>
 <span class="normal">5836</span>
-<span class="normal">5837</span>
-<span class="normal">5838</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_create</span><span class="p">(</span>
+<span class="normal">5837</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_create</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">var_name</span><span class="p">,</span>
     <span class="n">ele_name</span><span class="p">,</span>
@@ -27836,7 +27833,8 @@ the "pipe var_v1_create" command.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5840</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5839</span>
+<span class="normal">5840</span>
 <span class="normal">5841</span>
 <span class="normal">5842</span>
 <span class="normal">5843</span>
@@ -27864,8 +27862,7 @@ the "pipe var_v1_create" command.</p>
 <span class="normal">5865</span>
 <span class="normal">5866</span>
 <span class="normal">5867</span>
-<span class="normal">5868</span>
-<span class="normal">5869</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_general</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">5868</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_general</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output list of all variable v1 arrays</span>
@@ -27984,7 +27981,8 @@ the "pipe var_v1_create" command.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5907</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5906</span>
+<span class="normal">5907</span>
 <span class="normal">5908</span>
 <span class="normal">5909</span>
 <span class="normal">5910</span>
@@ -28014,8 +28012,7 @@ the "pipe var_v1_create" command.</p>
 <span class="normal">5934</span>
 <span class="normal">5935</span>
 <span class="normal">5936</span>
-<span class="normal">5937</span>
-<span class="normal">5938</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_v1_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v1_var</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">5937</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_v1_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v1_var</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output list of variables in a given variable v1 array</span>
@@ -28184,7 +28181,8 @@ partially created variable and generating unwanted error messages.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5940</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5939</span>
+<span class="normal">5940</span>
 <span class="normal">5941</span>
 <span class="normal">5942</span>
 <span class="normal">5943</span>
@@ -28238,8 +28236,7 @@ partially created variable and generating unwanted error messages.</p>
 <span class="normal">5991</span>
 <span class="normal">5992</span>
 <span class="normal">5993</span>
-<span class="normal">5994</span>
-<span class="normal">5995</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_v1_create</span><span class="p">(</span>
+<span class="normal">5994</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_v1_create</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">v1_name</span><span class="p">,</span> <span class="n">n_var_min</span><span class="p">,</span> <span class="n">n_var_max</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -28384,7 +28381,8 @@ partially created variable and generating unwanted error messages.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5997</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5996</span>
+<span class="normal">5997</span>
 <span class="normal">5998</span>
 <span class="normal">5999</span>
 <span class="normal">6000</span>
@@ -28414,8 +28412,7 @@ partially created variable and generating unwanted error messages.</p>
 <span class="normal">6024</span>
 <span class="normal">6025</span>
 <span class="normal">6026</span>
-<span class="normal">6027</span>
-<span class="normal">6028</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_v1_destroy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v1_datum</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">6027</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_v1_destroy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v1_datum</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Destroy a v1 var structure along with associated var sub-array.</span>
@@ -28538,7 +28535,8 @@ partially created variable and generating unwanted error messages.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5871</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">5870</span>
+<span class="normal">5871</span>
 <span class="normal">5872</span>
 <span class="normal">5873</span>
 <span class="normal">5874</span>
@@ -28571,8 +28569,7 @@ partially created variable and generating unwanted error messages.</p>
 <span class="normal">5901</span>
 <span class="normal">5902</span>
 <span class="normal">5903</span>
-<span class="normal">5904</span>
-<span class="normal">5905</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_v_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v1_var</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">5904</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">var_v_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v1_var</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output list of variables for a given data_v1.</span>
@@ -28731,7 +28728,8 @@ partially created variable and generating unwanted error messages.</p>
 
             <details class="quote">
               <summary>Source code in <code>pytao/interface_commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">6030</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">6029</span>
+<span class="normal">6030</span>
 <span class="normal">6031</span>
 <span class="normal">6032</span>
 <span class="normal">6033</span>
@@ -28765,8 +28763,7 @@ partially created variable and generating unwanted error messages.</p>
 <span class="normal">6061</span>
 <span class="normal">6062</span>
 <span class="normal">6063</span>
-<span class="normal">6064</span>
-<span class="normal">6065</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">wave</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">who</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="normal">6064</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">wave</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">who</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Output Wave analysis info.</span>
