@@ -78,15 +78,15 @@ class TaoCurveSettings(pydantic.BaseModel, extra="forbid", validate_assignment=T
         above. For example:
             "model - design"
         This will plot the difference between the model and design values.
-    ix_branch: int
+    ix_branch : int
         Branch index.
-    ix_bunch: int
+    ix_bunch : int
         Bunch index.
-    ix_universe: int
+    ix_universe : int
         Universe index.
-    symbol_every: int
+    symbol_every : int
         Symbol skip number.
-    y_axis_scale_factor: int
+    y_axis_scale_factor : int
         Scaling of y axis
     draw_line : bool
         Draw a line through the data points?

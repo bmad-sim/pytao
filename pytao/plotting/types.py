@@ -89,8 +89,6 @@ PlotCurveInfo = TypedDict(
         "draw_symbol_index": bool,
         "draw_symbols": bool,
         "ele_ref_name": str,
-        "ix_ele_ref": int,
-        "ix_ele_ref_track": int,
         "ix_universe": int,
         "legend_text": str,
         "line": PlotCurveLineInfo,
