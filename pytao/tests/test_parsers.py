@@ -4,8 +4,9 @@ from typing import Type
 import numpy as np
 import pytest
 
-from ..tao_ctypes.util import parse_tao_python_data
 from .. import AnyTao
+from ..tao_ctypes.util import parse_tao_python_data
+from .conftest import ensure_successful_parsing
 from .test_interface_commands import new_tao
 
 
@@ -523,3 +524,23 @@ def test_parse_version(tao_cls: Type[AnyTao]):
     ) as tao:
         res = tao.version()
     assert isinstance(res, datetime)
+
+
+def test_parse_wall3d_radius(caplog, tao_cls: Type[AnyTao]):
+    with ensure_successful_parsing(caplog):
+        with new_tao(
+            tao_cls,
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall3d",
+            external_plotting=False,
+        ) as tao:
+            radius = tao.wall3d_radius(
+                ix_uni=1,
+                ix_branch=0,
+                s_position=0.0,
+                angle=0.0,
+                verbose=True,
+            )
+        assert isinstance(radius, dict)
+        assert len(radius["origin"]) == 3
+        assert len(radius["perpendicular"]) == 3
+        assert isinstance(radius["wall_radius"], float)
