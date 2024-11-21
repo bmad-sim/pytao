@@ -1497,17 +1497,3 @@ def parse_show_version(lines, cmd=""):
     except ValueError:
         logger.warning("Failed to parse version output: %s", lines)
         return None
-
-
-def parse_wall3d_radius(lines, cmd=""):
-    """
-    Parse wall3d_radius results.
-
-    Returns
-    -------
-    dict
-    """
-    lines = "\n".join(lines)
-    lines = lines.replace("origin;REAL;F;", "origin;REAL_ARR;F;")  # TODO hotfix
-    lines = lines.replace("perpendicular;REAL;F;", "perpendicular;REAL_ARR;F;")  # TODO hotfix
-    return parse_tao_python_data(lines.splitlines())
