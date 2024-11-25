@@ -226,6 +226,11 @@ class PlotCurve:
     ) -> PlotCurve:
         full_name = f"{region_name}.{graph_name}.{curve_name}"
         curve_info = cast(PlotCurveInfo, tao.plot_curve(full_name))
+
+        # Removed in https://github.com/bmad-sim/bmad-ecosystem/pull/1300
+        curve_info.pop("ix_ele_ref", None)
+        curve_info.pop("ix_ele_ref_track", None)
+
         try:
             points = [
                 (line["x"], line["y"])
