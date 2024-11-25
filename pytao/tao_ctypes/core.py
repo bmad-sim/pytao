@@ -1,3 +1,4 @@
+from __future__ import annotations
 import ctypes
 import logging
 import os
@@ -21,6 +22,43 @@ from .util import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+def _tao_line_cell_magic(tao_instance: TaoCore, line: str, cell: Optional[str] = None):
+    from IPython import get_ipython
+
+    ipy = get_ipython()
+    assert ipy is not None
+
+    if cell is None:
+        cmds = [line.format(**ipy.user_ns)]
+    else:
+        if line.strip():
+            try:
+                (tao_instance_name,) = line.strip().split()
+                tao_instance = ipy.user_ns[tao_instance_name]
+                if not isinstance(tao_instance, TaoCore):
+                    raise ValueError("Not a valid Tao instance")
+            except Exception as ex:
+                raise ValueError(
+                    f"Usage: %%tao [tao_instance_name]\n"
+                    f"If specified, tao_instance_name must be the variable name of a 'Tao' instance. "
+                    f"({ex.__class__.__name__}: {ex})"
+                )
+
+        cell = cell.format(**ipy.user_ns)
+        cmds = cell.split("\n")
+
+    for cmd in cmds:
+        if not cmd.strip():
+            continue
+
+        header = f"Tao> {cmd}"
+        print("-" * len(header))
+        print(header)
+        res = tao_instance.cmd(cmd)
+        for line in res:
+            print(line)
 
 
 class TaoCore:
@@ -321,18 +359,11 @@ class TaoCore:
             sho lat
         """
 
-        from IPython.core.magic import register_cell_magic
+        from IPython.core.magic import register_line_cell_magic
 
-        @register_cell_magic
-        def tao(line, cell):
-            cell = cell.format(**globals())
-            cmds = cell.split("\n")
-            for c in cmds:
-                print("-------------------------")
-                print("Tao> " + c)
-                res = self.cmd(c)
-                for line in res:
-                    print(line)
+        @register_line_cell_magic
+        def tao(line, cell=None):
+            _tao_line_cell_magic(tao_instance=self, line=line, cell=cell)
 
         del tao
 
