@@ -251,12 +251,12 @@ def _sbend_intersection_to_patch(
     # corresponding control points for a quadratic Bezier curve that
     # passes through the corners and arc midpoint
     top_cp = (
-        2 * (top[0]) - 0.5 * (c1[0]) - 0.5 * (c2[0]),
-        2 * (top[1]) - 0.5 * (c1[1]) - 0.5 * (c2[1]),
+        2 * top[0] - 0.5 * c1[0] - 0.5 * c2[0],
+        2 * top[1] - 0.5 * c1[1] - 0.5 * c2[1],
     )
     bottom_cp = (
-        2 * (bottom[0]) - 0.5 * (c3[0]) - 0.5 * (c4[0]),
-        2 * (bottom[1]) - 0.5 * (c3[1]) - 0.5 * (c4[1]),
+        2 * bottom[0] - 0.5 * c3[0] - 0.5 * c4[0],
+        2 * bottom[1] - 0.5 * c3[1] - 0.5 * c4[1],
     )
 
     return PlotPatchSbend(
