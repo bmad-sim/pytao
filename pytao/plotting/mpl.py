@@ -48,21 +48,52 @@ logger = logging.getLogger(__name__)
 
 class _Defaults:
     layout_height: float = 0.5
+    line_width_scale: float = 0.5
+    floor_line_width_scale: float = 0.5
     colormap: str = "PRGn_r"
 
 
 def set_defaults(
     layout_height: Optional[float] = None,
     colormap: Optional[str] = None,
+    line_width_scale: Optional[float] = None,
+    floor_line_width_scale: Optional[float] = None,
     figsize: Optional[Tuple[float, float]] = None,
-    width: Optional[int] = None,
-    height: Optional[int] = None,
+    width: Optional[float] = None,
+    height: Optional[float] = None,
     dpi: Optional[int] = None,
 ):
+    """
+    Set default values for Matplotlib plot settings.
+
+    Parameters
+    ----------
+    layout_height : float, optional
+        Height of the layout. Default is 0.5.
+    colormap : str, optional
+        Colormap to use for plotting. Default is "PRGn_r".
+    line_width_scale : float, optional
+        Scale factor for line widths, excluding floor plan lines. Default is 0.5.
+    floor_line_width_scale : float, optional
+        Scale factor for floor plan line widths. Default is 0.5.
+    figsize : tuple of float, optional
+        Size of the figure (width, height). Default is as-configured in matplotlib rcParams.
+    width : float, optional
+        Width of the figure in inches. Default is as-configured in matplotlib rcParams.
+    height : float, optional
+        Height of the figure in inches. Default is as-configured in matplotlib rcParams.
+    dpi : int, optional
+        Dots per inch for the figure. Default is as-configured in matplotlib rcParams.
+    """
+
     if layout_height is not None:
         _Defaults.layout_height = layout_height
     if colormap is not None:
         _Defaults.colormap = colormap
+    if line_width_scale is not None:
+        _Defaults.line_width_scale = line_width_scale
+    if floor_line_width_scale is not None:
+        _Defaults.floor_line_width_scale = floor_line_width_scale
     if figsize is not None:
         matplotlib.rcParams["figure.figsize"] = figsize
     if width and height:
@@ -176,13 +207,14 @@ def plot_curve_line(
     curve: PlotCurveLine,
     ax: matplotlib.axes.Axes,
     label: Optional[str] = None,
+    line_width_scale: float = 1.0,
 ):
     return ax.plot(
         curve.xs,
         curve.ys,
         color=pgplot.mpl_color(curve.color or "black"),
         linestyle=curve.linestyle,
-        linewidth=curve.linewidth,
+        linewidth=curve.linewidth * line_width_scale,
         label=label,
     )
 
@@ -218,7 +250,7 @@ def plot_histogram(
     )
 
 
-def plot_curve(curve: PlotCurve, ax: matplotlib.axes.Axes):
+def plot_curve(curve: PlotCurve, ax: matplotlib.axes.Axes, line_width_scale: float = 1.0):
     res = []
     if curve.line is not None:
         res.append(
@@ -239,11 +271,15 @@ def plot_curve(curve: PlotCurve, ax: matplotlib.axes.Axes):
     if curve.histogram is not None:
         res.append(plot_histogram(curve.histogram, ax))
     for patch in curve.patches or []:
-        res.append(plot_patch(patch, ax))
+        res.append(plot_patch(patch, ax, line_width_scale=line_width_scale))
     return res
 
 
-def patch_to_mpl(patch: PlotPatch):
+def patch_to_mpl(patch: PlotPatch, line_width_scale: float = 1.0):
+    patch_args = patch._patch_args
+    if patch_args["linewidth"] is not None:
+        patch_args["linewidth"] *= line_width_scale
+
     if isinstance(patch, PlotPatchRectangle):
         return matplotlib.patches.Rectangle(
             xy=patch.xy,
@@ -251,7 +287,7 @@ def patch_to_mpl(patch: PlotPatch):
             height=patch.height,
             angle=patch.angle,
             rotation_point=patch.rotation_point,
-            **patch._patch_args,
+            **patch_args,
         )
     if isinstance(patch, PlotPatchArc):
         return matplotlib.patches.Arc(
@@ -261,18 +297,18 @@ def patch_to_mpl(patch: PlotPatch):
             angle=patch.angle,
             theta1=patch.theta1,
             theta2=patch.theta2,
-            **patch._patch_args,
+            **patch_args,
         )
     if isinstance(patch, PlotPatchCircle):
         return matplotlib.patches.Circle(
             xy=patch.xy,
             radius=patch.radius,
-            **patch._patch_args,
+            **patch_args,
         )
     if isinstance(patch, PlotPatchPolygon):
         return matplotlib.patches.Polygon(
             xy=patch.vertices,
-            **patch._patch_args,
+            **patch_args,
         )
 
     if isinstance(patch, PlotPatchEllipse):
@@ -281,7 +317,7 @@ def patch_to_mpl(patch: PlotPatch):
             width=patch.width,
             height=patch.height,
             angle=patch.angle,
-            **patch._patch_args,
+            **patch_args,
         )
     if isinstance(patch, PlotPatchSbend):
         codes = [
@@ -304,26 +340,34 @@ def patch_to_mpl(patch: PlotPatch):
         ]
         return matplotlib.patches.PathPatch(
             matplotlib.path.Path(vertices, codes),
-            facecolor="green",
-            alpha=0.5,
+            # facecolor="green",
+            # alpha=0.5,
+            **patch_args,
         )
 
     raise NotImplementedError(f"Unsupported patch type: {type(patch).__name__}")
 
 
-def plot_patch(patch: PlotPatch, ax: matplotlib.axes.Axes):
-    mpl = patch_to_mpl(patch)
+def plot_patch(patch: PlotPatch, ax: matplotlib.axes.Axes, line_width_scale: float = 1.0):
+    mpl = patch_to_mpl(patch, line_width_scale=line_width_scale)
     ax.add_patch(mpl)
     return mpl
 
 
-def plot_layout_shape(shape: layout_shapes.AnyLayoutShape, ax: matplotlib.axes.Axes):
+def plot_layout_shape(
+    shape: layout_shapes.AnyLayoutShape,
+    ax: matplotlib.axes.Axes,
+    line_width_scale: Optional[float] = None,
+):
+    if line_width_scale is None:
+        line_width_scale = _Defaults.line_width_scale
+
     if isinstance(shape, layout_shapes.LayoutWrappedShape):
         ax.add_collection(
             matplotlib.collections.LineCollection(
                 [[(x, y) for x, y in zip(line[0], line[1])] for line in shape.lines],
                 colors=pgplot.mpl_color(shape.color),
-                linewidths=shape.line_width,
+                linewidths=shape.line_width * line_width_scale,
             )
         )
     else:
@@ -333,19 +377,26 @@ def plot_layout_shape(shape: layout_shapes.AnyLayoutShape, ax: matplotlib.axes.A
                 matplotlib.collections.LineCollection(
                     lines,
                     colors=pgplot.mpl_color(shape.color),
-                    linewidths=shape.line_width,
+                    linewidths=shape.line_width * line_width_scale,
                 )
             )
         for patch in shape.to_patches():
-            plot_patch(patch, ax)
+            plot_patch(patch, ax, line_width_scale=line_width_scale)
 
 
-def plot_floor_plan_shape(shape: floor_plan_shapes.Shape, ax: matplotlib.axes.Axes):
+def plot_floor_plan_shape(
+    shape: floor_plan_shapes.Shape,
+    ax: matplotlib.axes.Axes,
+    line_width_scale: Optional[float] = None,
+):
+    if line_width_scale is None:
+        line_width_scale = _Defaults.floor_line_width_scale
+
     for line in shape.to_lines():
-        plot_curve_line(line, ax)
+        plot_curve_line(line, ax, line_width_scale=line_width_scale)
     if not isinstance(shape, floor_plan_shapes.Box):
         for patch in shape.to_patches():
-            plot_patch(patch, ax)
+            plot_patch(patch, ax, line_width_scale=line_width_scale)
 
 
 def plot(graph: AnyGraph, ax: Optional[matplotlib.axes.Axes] = None) -> matplotlib.axes.Axes:
@@ -356,8 +407,10 @@ def plot(graph: AnyGraph, ax: Optional[matplotlib.axes.Axes] = None) -> matplotl
 
     if isinstance(graph, BasicGraph):
         for curve in graph.curves:
-            assert not curve.info["use_y2"], "TODO: y2 support"
-            plot_curve(curve, ax)
+            if curve.info["use_y2"]:
+                raise NotImplementedError("y2 support")
+
+            plot_curve(curve, ax, line_width_scale=_Defaults.line_width_scale)
 
         if graph.draw_legend and any(curve.legend_label for curve in graph.curves):
             ax.legend()
@@ -367,7 +420,7 @@ def plot(graph: AnyGraph, ax: Optional[matplotlib.axes.Axes] = None) -> matplotl
 
         for elem in graph.elements:
             if elem.shape is not None:
-                plot_layout_shape(elem.shape, ax)
+                plot_layout_shape(elem.shape, ax, line_width_scale=_Defaults.line_width_scale)
             # ax.add_collection(
             #     matplotlib.collections.LineCollection(
             #         elem.lines,
@@ -392,14 +445,18 @@ def plot(graph: AnyGraph, ax: Optional[matplotlib.axes.Axes] = None) -> matplotl
         ax.set_aspect("equal")
         for elem in graph.elements:
             if elem.shape is not None:
-                plot_floor_plan_shape(elem.shape, ax)
+                plot_floor_plan_shape(
+                    elem.shape,
+                    ax,
+                    line_width_scale=_Defaults.floor_line_width_scale,
+                )
             for annotation in elem.annotations:
                 plot_annotation(annotation, ax)
 
         for line in graph.building_walls.lines:
-            plot_curve_line(line, ax)
+            plot_curve_line(line, ax, line_width_scale=_Defaults.floor_line_width_scale)
         for patch in graph.building_walls.patches:
-            plot_patch(patch, ax)
+            plot_patch(patch, ax, line_width_scale=_Defaults.floor_line_width_scale)
         if graph.floor_orbits is not None:
             plot_curve_symbols(graph.floor_orbits.curve, ax)
     else:
