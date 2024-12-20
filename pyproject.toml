@@ -41,10 +41,6 @@ Documentation = "https://bmad-sim.github.io/pytao/"
 Repository = "https://github.com/bmad-sim/pytao"
 Issues = "https://github.com/bmad-sim/pytao/issues"
 
-[options]
-zip_safe = false
-include_package_data = true
-
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["pytao*"]
