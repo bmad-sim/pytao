@@ -9,6 +9,7 @@ from dataclasses import asdict
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
+import pydantic
 from pydantic import ConfigDict, dataclasses
 from typing_extensions import Literal, override
 
@@ -54,6 +55,9 @@ class TaoStartup:
         If "bokeh", the pytao Bokeh plotting backend will be selected.
     metadata : dict[str, Any], optional
         User-specified metadata about this startup.  Not passed to Tao.
+    env : dict[str, str], optional
+        Environment variables to set when initializing a new subprocess Tao.
+        Not used for the standard in-process `Tao` class.
     beam_file : str or pathlib.Path, default=None
         File containing the tao_beam_init namelist.
     beam_init_position_file : pathlib.Path or str, default=None
@@ -113,14 +117,15 @@ class TaoStartup:
     """
 
     # General case 'init' string:
-    init: str = dataclasses.Field(default="", kw_only=False)
+    init: str = pydantic.Field(default="", kw_only=False)
 
     # Tao ctypes-specific - shared library location.
-    so_lib: str = dataclasses.Field(default="", kw_only=False)
+    so_lib: str = pydantic.Field(default="", kw_only=False)
 
     # pytao specific
-    metadata: Dict[str, Any] = dataclasses.Field(default_factory=dict)
     plot: Union[str, bool] = "tao"
+    metadata: Dict[str, Any] = pydantic.Field(default_factory=dict)
+    env: Dict[str, str] = pydantic.Field(default_factory=dict)  # only for subprocesses
 
     # All remaining flags:
     beam_file: Optional[AnyPath] = None
@@ -164,6 +169,7 @@ class TaoStartup:
         }
         params["init"] = self.init
         params.pop("metadata")
+        params.pop("env")
 
         geometry = params.get("geometry", "")
         if not isinstance(geometry, str):
@@ -202,7 +208,7 @@ class TaoStartup:
         if use_subprocess:
             from .subproc import SubprocessTao
 
-            return SubprocessTao(**params)
+            return SubprocessTao(**params, env=self.env)
         return Tao(**params)
 
     @contextlib.contextmanager
