@@ -133,3 +133,28 @@ def test_custom_command_exception(subproc_tao: SubprocessTao) -> None:
     with pytest.raises(TaoCommandError) as ex:
         subproc_tao.subprocess_call(failure_func, a=3)
     assert "ValueError: test got kwargs: {'a': 3}" in str(ex.value)
+
+
+def tao_custom_command_sleep(tao: Tao, delay: float):
+    assert isinstance(tao, Tao)
+    print(f"Sleeping for {delay}")
+    time.sleep(delay)
+    print("Done")
+    return delay
+
+
+def test_custom_command_timeout(subproc_tao: SubprocessTao) -> None:
+    with SubprocessTao(
+        init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/csr_beam_tracking/tao.init",
+        noplot=True,
+    ) as tao:
+        with pytest.raises(TimeoutError):
+            with tao.timeout(0.1):
+                res = tao.subprocess_call(tao_custom_command_sleep, delay=10.0)
+                print("subproc result was", res)
+
+
+def test_custom_command_timeout_success(subproc_tao: SubprocessTao) -> None:
+    with subproc_tao.timeout(10.0):
+        res = subproc_tao.subprocess_call(tao_custom_command, value=1)
+        assert res == 2
