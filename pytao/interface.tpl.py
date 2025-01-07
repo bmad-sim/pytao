@@ -125,7 +125,7 @@ class TaoStartup:
     # pytao specific
     plot: Union[str, bool] = "tao"
     metadata: Dict[str, Any] = pydantic.Field(default_factory=dict)
-    env: Dict[str, str] = pydantic.Field(default_factory=dict)  # only for subprocesses
+    env: Optional[Dict[str, str]] = None  # only for subprocesses
 
     # All remaining flags:
     beam_file: Optional[AnyPath] = None
