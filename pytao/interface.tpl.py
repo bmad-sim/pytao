@@ -169,7 +169,7 @@ class TaoStartup:
         }
         params["init"] = self.init
         params.pop("metadata")
-        params.pop("env")
+        params.pop("env", None)
 
         geometry = params.get("geometry", "")
         if not isinstance(geometry, str):
