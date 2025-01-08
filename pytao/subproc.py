@@ -237,9 +237,11 @@ class _TaoPipe:
     _subproc: subprocess.Popen
     _fifo: Optional[io.BufferedReader]
     _subprocess_monitor_thread: Optional[threading.Thread]
+    _subprocess_env: Dict[str, str]
 
-    def __init__(self):
+    def __init__(self, env: Dict[str, str]):
         self._init_queue = queue.Queue(maxsize=1)
+        self._subprocess_env = env.copy()
         self._subproc = self._init_subprocess()
 
     @property
@@ -270,6 +272,7 @@ class _TaoPipe:
                         fifo_path,
                     ],
                     stdin=subprocess.PIPE,
+                    env=self._subprocess_env,
                 )
             except Exception as ex:
                 # Report the exception back to the main thread so it can be
@@ -424,22 +427,50 @@ class SubprocessTao(Tao):
 
         >>> with SubprocessTao(init_file="$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init", plot=True) as tao:
         ...     tao.plot("floor")
+
+    To add a new environment variable in addition to the parent process
+    environment:
+
+        >>> import os
+        >>> with SubprocessTao(init_file="...", env={**os.environ, "NEW_VAR": "NEW_VALUE"}) as tao:
+        ...     print(tao.version())
+
+    Parameters
+    ----------
+    env : dict[str, str] or None, optional
+        Environment variables to use for the subprocess.  If None, defaults to
+        `os.environ`.
+
+    Attributes
+    ----------
+    subprocess_env : dict[str, str]
+        Environment variables to use for the subprocess.  It is recommended to
+        use a new `SubprocessTao` instance in order to update these environment
+        variables. However, while this dictionary may be updated in place, it
+        will only be applied after the next subprocess starts and initializes.
+        That is, `tao.close_subprocess()` and `tao.init()`.
     """
 
     _subproc_pipe_: Optional[_TaoPipe]
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, env: Optional[Dict[str, str]] = None, **kwargs):
         self._subproc_pipe_ = None
+        self.subprocess_env = dict(env if env is not None else os.environ)
+
         try:
+            # There is a bit of spaghetti here:
+            # * super().__init__() calls
+            # * self.init() which wraps
+            # * self._init() which is defined below in this class, opening the subproc
             super().__init__(*args, **kwargs)
-        except Exception:
+        except Exception as ex:
             # In case we don't make a usable SubprocessTao object, close the
             # subprocess so it doesn't linger.
             try:
                 self.close_subprocess()
             except Exception:
                 pass
-            raise
+            raise ex
 
     @property
     def subprocess_alive(self) -> bool:
@@ -500,7 +531,7 @@ class SubprocessTao(Tao):
         self._reset_graph_managers()
         if not self.subprocess_alive:
             logger.debug("Reinitializing Tao subprocess")
-            self._subproc_pipe_ = _TaoPipe()
+            self._subproc_pipe_ = _TaoPipe(env=self.subprocess_env)
 
         return self._send_command_through_pipe("init", startup.tao_init, raises=True)
 
