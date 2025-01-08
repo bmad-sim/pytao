@@ -55,7 +55,7 @@ def intersect(L1: Line, L2: Line) -> Intersection:
     Dx = L1[2] * L2[1] - L1[1] * L2[2]
     Dy = L1[0] * L2[2] - L1[2] * L2[0]
 
-    if D == 0:
+    if np.isclose(D, 0.0):
         raise NoIntersectionError()
 
     x = Dx / D
