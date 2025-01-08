@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import ctypes
 import dataclasses
 import io
@@ -250,12 +251,16 @@ class _TaoPipe:
         # No exit code -> is still running
         return self._subproc.poll() is None
 
-    def close(self):
+    def close(self) -> None:
         """Close the pipe."""
         try:
             self.send_receive("quit", "", raises=False)
         except TaoDisconnectedError:
             pass
+
+    def close_forcefully(self) -> None:
+        """Close the pipe."""
+        self._subproc.terminate()
 
     def _tao_subprocess(self):
         """Subprocess monitor thread.  Cleans up after the subprocess ends."""
@@ -403,6 +408,76 @@ class _TaoPipe:
             )
 
 
+@contextlib.contextmanager
+def subprocess_timeout_context(
+    taos: List[SubprocessTao],
+    timeout: float,
+    *,
+    timeout_hook: Optional[Callable[[], None]] = None,
+):
+    """
+    Context manager to set a timeout for a block of SubprocessTao calls.
+
+    Note that there is no possibility for a graceful timeout. In the event
+    of a timeout, all subprocesses will be terminated.
+
+    Parameters
+    ----------
+    taos : list of SubprocessTao
+    timeout : float
+        The timeout duration in seconds.
+    timeout_hook : callable, optional
+        An alternative hook to call when the timeouts occur.
+        This replaces the built-in subprocess-closing hook.
+
+    Yields
+    ------
+    None
+        Yields control back to the calling context.
+
+    Raises
+    ------
+    TimeoutError
+        If the block of code does not execute within `when` seconds.
+        The Tao subprocesses are forcefully terminated at this point.
+    """
+    timed_out = False
+
+    def monitor():
+        if evt.wait(timeout):
+            return
+
+        nonlocal timed_out
+        timed_out = True
+
+        if timeout_hook is not None:
+            timeout_hook()
+        else:
+            for tao in taos:
+                try:
+                    tao.close_subprocess(force=True)
+                except Exception:
+                    logger.debug("Subprocess close fail", exc_info=True)
+
+    evt = threading.Event()
+    monitor_thread = threading.Thread(daemon=True, target=monitor)
+    monitor_thread.start()
+    try:
+        yield
+    except TaoDisconnectedError:
+        if not timed_out:
+            # Tao disconnected, but not due to our timeout
+            raise
+        # Otherwise, the reason for disconnection was our timeout closure.
+
+    evt.set()
+    monitor_thread.join()
+    if timed_out:
+        raise TimeoutError(
+            f"Operation timed out after {timeout} seconds. Closing Tao subprocesses."
+        )
+
+
 class SubprocessTao(Tao):
     """
     Subprocess helper for Tao.
@@ -479,11 +554,41 @@ class SubprocessTao(Tao):
             return False
         return self._subproc_pipe_.alive
 
-    def close_subprocess(self) -> None:
+    def close_subprocess(self, *, force: bool = False) -> None:
         """Close the Tao subprocess."""
         if self._subproc_pipe_ is not None:
-            self._subproc_pipe_.close()
+            if force:
+                self._subproc_pipe_.close_forcefully()
+            else:
+                self._subproc_pipe_.close()
         self._subproc_pipe_ = None
+
+    @contextlib.contextmanager
+    def timeout(self, when: float):
+        """
+        Context manager to set a timeout for a block of SubprocessTao calls.
+
+        Note that there is no possibility for a graceful timeout. In the event
+        of a timeout, the subprocess will be terminated.
+
+        Parameters
+        ----------
+        when : float
+            The timeout duration in seconds.
+
+        Yields
+        ------
+        None
+            Yields control back to the calling context.
+
+        Raises
+        ------
+        TimeoutError
+            If the block of code does not execute within `when` seconds.
+            The Tao subprocess is forcefully terminated at this point.
+        """
+        with subprocess_timeout_context([self], timeout=when):
+            yield
 
     def __enter__(self):
         return self
