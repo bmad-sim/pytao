@@ -1908,7 +1908,7 @@ update.</p>
 <span class="normal">194</span>
 <span class="normal">195</span>
 <span class="normal">196</span>
-<span class="normal">197</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">update</span><span class="p">(</span>
+<span class="normal">197</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">manager</span><span class="p">:</span> <span class="n">GraphManager</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -1995,7 +1995,7 @@ update.</p>
                     <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1223</span>
 <span class="normal">1224</span>
 <span class="normal">1225</span>
-<span class="normal">1226</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">1226</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tao</span> <span class="o">=</span> <span class="n">tao</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">regions</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_to_place</span> <span class="o">=</span> <span class="p">{}</span>
@@ -2145,7 +2145,7 @@ update.</p>
 <span class="normal">1462</span>
 <span class="normal">1463</span>
 <span class="normal">1464</span>
-<span class="normal">1465</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span><span class="p">):</span>
+<span class="normal">1465</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Clear a single region or all regions.</span>
 
@@ -2278,7 +2278,7 @@ applied to all plots in the region.</p>
 <span class="normal">1633</span>
 <span class="normal">1634</span>
 <span class="normal">1635</span>
-<span class="normal">1636</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">configure_curves</span><span class="p">(</span>
+<span class="normal">1636</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">configure_curves</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">region_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">settings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">TaoCurveSettings</span><span class="p">],</span>
@@ -2429,7 +2429,7 @@ applied to all plots in the region.</p>
 <span class="normal">1667</span>
 <span class="normal">1668</span>
 <span class="normal">1669</span>
-<span class="normal">1670</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">configure_graph</span><span class="p">(</span>
+<span class="normal">1670</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">configure_graph</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">region_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">settings</span><span class="p">:</span> <span class="n">TaoGraphSettings</span><span class="p">,</span>
@@ -2503,7 +2503,7 @@ applied to all plots in the region.</p>
 <span class="normal">1289</span>
 <span class="normal">1290</span>
 <span class="normal">1291</span>
-<span class="normal">1292</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_region_to_place_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">1292</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_region_to_place_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a region for placing the graph.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">region_name</span><span class="p">,</span> <span class="n">to_place</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_place</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">to_place</span> <span class="o">==</span> <span class="n">template_name</span><span class="p">:</span>
@@ -2678,7 +2678,7 @@ applied to all plots in the region.</p>
 <span class="normal">1728</span>
 <span class="normal">1729</span>
 <span class="normal">1730</span>
-<span class="normal">1731</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">make_graph</span><span class="p">(</span>
+<span class="normal">1731</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_graph</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">region_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">graph_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -2848,7 +2848,7 @@ applied to all plots in the region.</p>
 <span class="normal">1436</span>
 <span class="normal">1437</span>
 <span class="normal">1438</span>
-<span class="normal">1439</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">place</span><span class="p">(</span>
+<span class="normal">1439</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">place</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -3011,7 +3011,7 @@ applied to all plots in the region.</p>
 <span class="normal">1330</span>
 <span class="normal">1331</span>
 <span class="normal">1332</span>
-<span class="normal">1333</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">place_all</span><span class="p">(</span>
+<span class="normal">1333</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">place_all</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">ignore_invalid</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -3162,7 +3162,7 @@ applied to all plots in the region.</p>
 <span class="normal">1695</span>
 <span class="normal">1696</span>
 <span class="normal">1697</span>
-<span class="normal">1698</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_all</span><span class="p">(</span>
+<span class="normal">1698</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_all</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">grid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">include_layout</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -3458,7 +3458,7 @@ applied to all plots in the region.</p>
 <span class="normal">1600</span>
 <span class="normal">1601</span>
 <span class="normal">1602</span>
-<span class="normal">1603</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">prepare_graphs_by_name</span><span class="p">(</span>
+<span class="normal">1603</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">prepare_graphs_by_name</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -3737,7 +3737,7 @@ placed graphs prior to plotting.</p>
 <span class="normal">1534</span>
 <span class="normal">1535</span>
 <span class="normal">1536</span>
-<span class="normal">1537</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">prepare_grid_by_names</span><span class="p">(</span>
+<span class="normal">1537</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">prepare_grid_by_names</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">template_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">curves</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">CurveIndexToCurve</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -3834,7 +3834,7 @@ placed graphs prior to plotting.</p>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1228</span>
 <span class="normal">1229</span>
 <span class="normal">1230</span>
-<span class="normal">1231</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">tao_init_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">1231</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">tao_init_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Tao has reinitialized; clear our state.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">regions</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_to_place</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
@@ -4021,7 +4021,7 @@ placed graphs prior to plotting.</p>
 <span class="normal">1390</span>
 <span class="normal">1391</span>
 <span class="normal">1392</span>
-<span class="normal">1393</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">update_region</span><span class="p">(</span>
+<span class="normal">1393</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_region</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">region_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -4213,7 +4213,7 @@ this functionality.</p>
 <span class="normal">634</span>
 <span class="normal">635</span>
 <span class="normal">636</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
-<span class="k">def</span> <span class="nf">wrapped_shape</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">wrapped_shape</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span>
     <span class="n">s1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">s2</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -4625,7 +4625,7 @@ This will plot the difference between the model and design values.</p>
 <span class="normal">117</span>
 <span class="normal">118</span>
 <span class="normal">119</span>
-<span class="normal">120</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">mathjax_string</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">120</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mathjax_string</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Takes string with pgplot characters and returns string with characters replaced with MathJax equivalent.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -4667,7 +4667,7 @@ This will plot the difference between the model and design values.</p>
 <span class="normal">16</span>
 <span class="normal">17</span>
 <span class="normal">18</span>
-<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">mpl_color</span><span class="p">(</span><span class="n">pgplot_color</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mpl_color</span><span class="p">(</span><span class="n">pgplot_color</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Pgplot color to matplotlib color.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">&quot;yellow_green&quot;</span><span class="p">:</span> <span class="s2">&quot;greenyellow&quot;</span><span class="p">,</span>
@@ -4732,7 +4732,7 @@ This will plot the difference between the model and design values.</p>
 <span class="normal">106</span>
 <span class="normal">107</span>
 <span class="normal">108</span>
-<span class="normal">109</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">mpl_string</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">109</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mpl_string</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Takes string with pgplot characters and returns string with characters replaced with matplotlib equivalent.&quot;&quot;&quot;</span>
     <span class="n">backslash</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span>
     <span class="k">if</span> <span class="n">backslash</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
@@ -5017,7 +5017,7 @@ This will plot the difference between the model and design values.</p>
 <span class="normal">73</span>
 <span class="normal">74</span>
 <span class="normal">75</span>
-<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_commands</span><span class="p">(</span>
+<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_commands</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">region_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">graph_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -5292,7 +5292,7 @@ This will plot the difference between the model and design values.</p>
 <span class="normal">126</span>
 <span class="normal">127</span>
 <span class="normal">128</span>
-<span class="normal">129</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_commands</span><span class="p">(</span>
+<span class="normal">129</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_commands</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">region_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">graph_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -5736,7 +5736,7 @@ to use it instead.</p>
 <span class="normal">257</span>
 <span class="normal">258</span>
 <span class="normal">259</span>
-<span class="normal">260</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_commands</span><span class="p">(</span>
+<span class="normal">260</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_commands</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">region_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">axis_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -6105,7 +6105,7 @@ clockwise in the (x, y) plane.</p>
 <span class="normal">359</span>
 <span class="normal">360</span>
 <span class="normal">361</span>
-<span class="normal">362</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_commands</span><span class="p">(</span>
+<span class="normal">362</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_commands</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">region_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">graph_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -6773,7 +6773,7 @@ horizontal scale will be in millimeters. Also see
 <span class="normal">643</span>
 <span class="normal">644</span>
 <span class="normal">645</span>
-<span class="normal">646</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_commands</span><span class="p">(</span>
+<span class="normal">646</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_commands</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">region_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">graph_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>

@@ -1474,10 +1474,10 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pytao</span> <span class="kn">import</span> <span class="n">Tao</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pytao</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tao</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 <span class="o">%</span><span class="n">config</span> <span class="n">InlineBackend</span><span class="o">.</span><span class="n">figure_format</span> <span class="o">=</span> <span class="s1">'retina'</span>
 </pre></div>
@@ -1542,7 +1542,7 @@ import os
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span> <span class="nf">add_info</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">add_info</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
     <span class="n">twiss1</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">ele_twiss</span><span class="p">(</span><span class="s2">"q1"</span><span class="p">)</span>
     <span class="n">twiss2</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">ele_twiss</span><span class="p">(</span><span class="s2">"q2"</span><span class="p">)</span>
 
@@ -1653,7 +1653,7 @@ Lord Elements:
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span> <span class="nf">set_kx</span><span class="p">(</span><span class="n">k1</span><span class="p">):</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">set_kx</span><span class="p">(</span><span class="n">k1</span><span class="p">):</span>
     <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"set ele q1 k1 = </span><span class="si">{</span><span class="n">k1</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"set ele q2 k1 = </span><span class="si">{</span><span class="o">-</span><span class="n">k1</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span>
 
     <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
@@ -2009,7 +2009,7 @@ Tao&gt; sho dat
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span> <span class="nf">set_k</span><span class="p">(</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">):</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">set_k</span><span class="p">(</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">):</span>
     <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"set ele q1 k1 = </span><span class="si">{</span><span class="n">k1</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"set ele q2 k1 = </span><span class="si">{</span><span class="o">-</span><span class="n">k2</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span>
 
     <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
@@ -2208,8 +2208,8 @@ for k1, k2 in zip(fK1, fK2):
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>CPU times: user 1.63 s, sys: 378 ms, total: 2.01 s
-Wall time: 2 s
+<pre>CPU times: user 1.65 s, sys: 384 ms, total: 2.03 s
+Wall time: 2.03 s
 </pre>
 </div>
 </div>
@@ -2317,7 +2317,7 @@ phi_b
 <span class="n">NICE</span><span class="p">[</span><span class="s2">"mean_beta_b"</span><span class="p">]</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"$&lt;\beta_y&gt;$"</span>
 
 
-<span class="k">def</span> <span class="nf">nice</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">nice</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">NICE</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">NICE</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">key</span>
@@ -2358,7 +2358,7 @@ def nice(key):
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># fig, ax = plt.subplots(figsize=(10,8))</span>
 
 
-<span class="k">def</span> <span class="nf">plot1</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot1</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
         <span class="n">DAT</span><span class="p">[</span><span class="n">key</span><span class="p">],</span>
         <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">,</span>
@@ -2447,7 +2447,7 @@ plot1("mean_beta_b")</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="n">beta_a</span><span class="p">,</span> <span class="n">beta_b</span><span class="p">):</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">optimize</span><span class="p">(</span><span class="n">beta_a</span><span class="p">,</span> <span class="n">beta_b</span><span class="p">):</span>
     <span class="n">cmds</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"""</span>
 <span class="s2">alias setbetas</span>
 <span class="s2">veto var *</span>
@@ -2801,7 +2801,7 @@ T</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pytao.misc.markers</span> <span class="kn">import</span> <span class="n">make_markers</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pytao.misc.markers</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_markers</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-24">from pytao.misc.markers import make_markers</div>
 </div>
@@ -3116,8 +3116,8 @@ tao.cmd("set global track_type = beam;set global track_type = single")</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span> <span class="nn">h5py</span>
-<span class="kn">from</span> <span class="nn">pmd_beamphysics</span> <span class="kn">import</span> <span class="n">ParticleGroup</span><span class="p">,</span> <span class="n">particle_paths</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">h5py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pmd_beamphysics</span><span class="w"> </span><span class="kn">import</span> <span class="n">ParticleGroup</span><span class="p">,</span> <span class="n">particle_paths</span>
 
 <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="s2">"beam_dump.h5"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5</span><span class="p">:</span>
     <span class="n">pp</span> <span class="o">=</span> <span class="n">particle_paths</span><span class="p">(</span><span class="n">h5</span><span class="p">)</span>
@@ -3298,7 +3298,7 @@ plt.legend()</ct></div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[33]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>&lt;matplotlib.legend.Legend at 0x7f7ca1b49e80&gt;</pre>
+<pre>&lt;matplotlib.legend.Legend at 0x7f4e08fc54c0&gt;</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
