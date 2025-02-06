@@ -83,6 +83,9 @@ Tao(
 )
 ```
 
+Note that `quiet` mode may cause portions of PyTao to function improperly. See
+upstream [issue](https://github.com/bmad-sim/bmad-ecosystem/issues/1380).
+
 ## PyTao on the command-line
 
 PyTao has a simple IPython entrypoint, giving you quick access to Tao in Python.
