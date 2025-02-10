@@ -1,7 +1,13 @@
+from __future__ import annotations
+
+from typing import Literal, Union
+
 import shlex
 
+Quiet = Literal["all", "warnings"]
 
-def make_tao_init(init: str, **kwargs) -> str:
+
+def make_tao_init(init: str, *, quiet: Union[bool, Quiet] = False, **kwargs) -> str:
     """
     Make Tao init string based on optional flags/command-line arguments.
 
@@ -15,6 +21,10 @@ def make_tao_init(init: str, **kwargs) -> str:
         Only added as an argument if not empty and not False.
     """
     result = shlex.split(init)
+
+    if quiet is True:
+        quiet = "all"
+
     for name, value in kwargs.items():
         switch = f"-{name}"
         if switch in result:

@@ -19,7 +19,7 @@ from .plotting.util import select_graph_manager_class
 from .tao_ctypes.core import TaoCore, TaoInitializationError
 from .tao_ctypes.util import parse_tao_python_data
 from .util import parsers as _pytao_parsers
-from .util.command import make_tao_init
+from .util.command import make_tao_init, Quiet
 from .util.parameters import tao_parameter_dict
 
 if typing.TYPE_CHECKING:
@@ -102,8 +102,9 @@ class TaoStartup:
         Reverse lattice element order?
     rf_on : bool, default=False
         Use "--rf_on" to turn off RF (default is now RF on)
-    quiet : bool, default=False
-        Suppress terminal output when running a command file?
+    quiet : bool or "all" or "warnings", default=False
+        Suppress terminal output when running a command file.
+        For backward compatibility, True is equivalent to "all".
     slice_lattice : str, optional
         Discards elements from lattice that are not in the list
     start_branch_at : str, optional
@@ -150,7 +151,7 @@ class TaoStartup:
     prompt_color: str = ""
     reverse: bool = False
     rf_on: bool = False
-    quiet: bool = False
+    quiet: Union[bool, Quiet] = False
     slice_lattice: str = ""
     start_branch_at: str = ""
     startup_file: Optional[AnyPath] = None
