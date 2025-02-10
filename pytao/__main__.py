@@ -12,11 +12,11 @@ def main():
     from .interface_commands import Tao
 
     init_args = " ".join(sys.argv[1:])
-    startup_message = f"Initializing `tao` object with the following: {init_args}"
+    startup_message = f"Initializing `tao` object with: {init_args}"
     print("-" * len(startup_message))
     print(startup_message)
     print()
-    print("Type`tao.` and hit tab to see available commands.")
+    print("Type `tao.` and hit tab to see available commands.")
     print("-" * len(startup_message))
     print()
 
