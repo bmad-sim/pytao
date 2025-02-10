@@ -108,6 +108,31 @@ In [1]: tao.plot("beta")
 In [2]: plt.show()
 ```
 
+## PyTao plotting and startup scripts
+
+When PyTao is instructed to use its Matplotlib or Bokeh backends, it configures
+the underlying Tao instance to work in `-noplot` mode. If you have plotting
+calls in your startup script, you may see warnings and errors that prevent you
+from using your Tao object.
+
+Consider these alternatives:
+
+1. Use `-nostartup` (or `Tao(nostartup=True)`) to avoid using your startup file.
+2. Consider making a "no plot" alternative startup file.
+3. Use PyTao error filtering to ignore errors coming from specific Tao functions at startup:
+
+   ```python
+   import matplotlib.pyplot as plt
+   from pytao import Tao, filter_tao_messages_context
+
+
+   with filter_tao_messages_context(functions=["tao_find_plots"]):
+       tao = Tao(init_file="tao.init", plot="mpl")
+
+   tao.plot("beta")
+   plt.show()
+   ```
+
 ## PyTao (deprecated/experimental) GUI
 
 Start the experimental (and mostly unsupported/deprecated) GUI by using the following:
