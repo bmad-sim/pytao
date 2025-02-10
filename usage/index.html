@@ -485,6 +485,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#pytao-plotting-and-startup-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      PyTao plotting and startup scripts
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#pytao-deprecatedexperimental-gui" class="md-nav__link">
     <span class="md-ellipsis">
       PyTao (deprecated/experimental) GUI
@@ -1035,6 +1044,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#pytao-plotting-and-startup-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      PyTao plotting and startup scripts
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#pytao-deprecatedexperimental-gui" class="md-nav__link">
     <span class="md-ellipsis">
       PyTao (deprecated/experimental) GUI
@@ -1148,6 +1166,27 @@ upstream <a href="https://github.com/bmad-sim/bmad-ecosystem/issues/1380">issue<
 <div class="highlight"><pre><span></span><code><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">tao</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s2">&quot;beta&quot;</span><span class="p">)</span>
 
 <span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="pytao-plotting-and-startup-scripts">PyTao plotting and startup scripts</h2>
+<p>When PyTao is instructed to use its Matplotlib or Bokeh backends, it configures
+the underlying Tao instance to work in <code>-noplot</code> mode. If you have plotting
+calls in your startup script, you may see warnings and errors that prevent you
+from using your Tao object.</p>
+<p>Consider these alternatives:</p>
+<ol>
+<li>Use <code>-nostartup</code> (or <code>Tao(nostartup=True)</code>) to avoid using your startup file.</li>
+<li>Consider making a "no plot" alternative startup file.</li>
+<li>Use PyTao error filtering to ignore errors coming from specific Tao functions at startup:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pytao</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tao</span><span class="p">,</span> <span class="n">filter_tao_messages_context</span>
+
+
+<span class="k">with</span> <span class="n">filter_tao_messages_context</span><span class="p">(</span><span class="n">functions</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tao_find_plots&quot;</span><span class="p">]):</span>
+    <span class="n">tao</span> <span class="o">=</span> <span class="n">Tao</span><span class="p">(</span><span class="n">init_file</span><span class="o">=</span><span class="s2">&quot;tao.init&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="s2">&quot;mpl&quot;</span><span class="p">)</span>
+
+<span class="n">tao</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s2">&quot;beta&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div>
 <h2 id="pytao-deprecatedexperimental-gui">PyTao (deprecated/experimental) GUI</h2>
 <p>Start the experimental (and mostly unsupported/deprecated) GUI by using the following:</p>
