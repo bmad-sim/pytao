@@ -585,9 +585,6 @@ class Tao(TaoCore):
                 f"\n>>> Tao('-lat $ACC_ROOT_DIR/bmad-doc/tao_examples/erl/bmad.lat')"
             )
 
-        if quiet:
-            logger.warning("Tao quiet mode enabled. PyTao may not function properly.")
-
         self._init_output = self._init(self.init_settings)
         if not self._tao_version_checked:
             self._tao_version_checked = True
