@@ -19,7 +19,7 @@ from .plotting.util import select_graph_manager_class
 from .tao_ctypes.core import TaoCore, TaoInitializationError
 from .tao_ctypes.util import parse_tao_python_data
 from .util import parsers as _pytao_parsers
-from .util.command import make_tao_init
+from .util.command import make_tao_init, Quiet
 from .util.parameters import tao_parameter_dict
 
 if typing.TYPE_CHECKING:
@@ -102,8 +102,9 @@ class TaoStartup:
         Reverse lattice element order?
     rf_on : bool, default=False
         Use "--rf_on" to turn off RF (default is now RF on)
-    quiet : bool, default=False
-        Suppress terminal output when running a command file?
+    quiet : bool or "all" or "warnings", default=False
+        Suppress terminal output when running a command file.
+        For backward compatibility, True is equivalent to "all".
     slice_lattice : str, optional
         Discards elements from lattice that are not in the list
     start_branch_at : str, optional
@@ -150,7 +151,7 @@ class TaoStartup:
     prompt_color: str = ""
     reverse: bool = False
     rf_on: bool = False
-    quiet: bool = False
+    quiet: Union[bool, Quiet] = False
     slice_lattice: str = ""
     start_branch_at: str = ""
     startup_file: Optional[AnyPath] = None
@@ -323,7 +324,7 @@ class Tao(TaoCore):
 
     plot_backend_name: Optional[str]
     _graph_managers: dict
-    _min_tao_version = datetime.datetime(2024, 11, 19)
+    _min_tao_version = datetime.datetime(2025, 2, 10)
 
     @override
     def __init__(
@@ -583,9 +584,6 @@ class Tao(TaoCore):
                 f"\nAlternatively, you may pass the full command-line arguments:"
                 f"\n>>> Tao('-lat $ACC_ROOT_DIR/bmad-doc/tao_examples/erl/bmad.lat')"
             )
-
-        if quiet:
-            logger.warning("Tao quiet mode enabled. PyTao may not function properly.")
 
         self._init_output = self._init(self.init_settings)
         if not self._tao_version_checked:
