@@ -767,7 +767,7 @@ class LatticeLayoutGraph(GraphBase):
         all_elem_info = cast(List[PlotLatLayoutInfo], all_elem_info)
 
         ele_y2s = [elem["y2"] for elem in all_elem_info]
-        y2_floor = -max(ele_y2s)  # Note negative sign
+        y2_floor = -max(ele_y2s) if ele_y2s else 0.0  # Note negative sign
         elements = [
             LatticeLayoutElement.from_info(
                 graph_info=info,
