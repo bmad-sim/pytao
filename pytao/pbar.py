@@ -195,7 +195,7 @@ def track_beam_wrapper(
 
     Yields
     ------
-    tqdm.Tqdm
+    tqdm.tqdm
         Context manager yields nothing but provides progress bar functionality
 
     Notes
@@ -211,12 +211,17 @@ def track_beam_wrapper(
         if pbar is None:
             return
 
+        if active_idx == -1:
+            # Not yet started somehow
+            active_idx = start_idx
+
         ele = track.ix_to_name.get(active_idx, "?")
         pbar.set_postfix({"Element": ele, "ix_ele": active_idx}, refresh=False)
         pbar.n = active_idx - start_idx
         pbar.refresh()
 
     cancel_event = threading.Event()
+    pbar = None
     try:
         with maybe_progress_bar(
             use_progress_bar,
@@ -234,3 +239,5 @@ def track_beam_wrapper(
         yield
     finally:
         cancel_event.set()
+        if pbar is not None:
+            pbar.close()
