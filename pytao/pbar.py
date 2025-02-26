@@ -175,6 +175,7 @@ def track_beam_wrapper(
     ix_uni: str = "",
     use_progress_bar: bool = True,
     jupyter: bool | None = None,
+    leave: bool = False,
 ) -> typing.Generator[tqdm | None]:
     """
     A context manager that optionally adds a progress bar during beam tracking.
@@ -192,6 +193,8 @@ def track_beam_wrapper(
     jupyter : bool | None, optional
         Whether running in Jupyter environment. If None (default), auto-detects
         the presence of Jupyter.
+    leave : bool, optional
+        Leave the progress bar after completion. Defaults to False.
 
     Yields
     ------
@@ -226,8 +229,9 @@ def track_beam_wrapper(
         with maybe_progress_bar(
             use_progress_bar,
             total=end_idx - start_idx,
-            leave=False,
+            leave=leave,
             jupyter=jupyter,
+            unit="ele",
         ) as pbar:
             if use_progress_bar:
                 thr = threading.Thread(
