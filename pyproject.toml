@@ -41,6 +41,7 @@ all = [
   "openpmd-beamphysics",
   "pexpect",
   "pydantic>=2",
+  "tqdm",
 ]
 test = ["pytest", "pytest-cov"]
 
