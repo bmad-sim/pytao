@@ -4,7 +4,6 @@ import contextlib
 import datetime
 import logging
 import pathlib
-import threading
 import typing
 from dataclasses import asdict
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -14,7 +13,7 @@ import pydantic
 from pydantic import ConfigDict, dataclasses
 from typing_extensions import Literal, override
 
-from .pbar import maybe_progress_bar, active_beam_track_monitor
+from . import pbar
 from .plotting import MatplotlibGraphManager
 from .plotting.types import ShapeListInfo
 from .plotting.util import select_graph_manager_class
@@ -1134,62 +1133,33 @@ class Tao(TaoCore):
         """
         return self.so_lib.tao_c_get_beam_track_element()
 
-    @contextlib.contextmanager
-    def tqdm_wrapper(self, *, ix_branch: str = "", progress_bar: bool = True):
-        ix_eles = self.lat_list(
-            "*",
-            "ele.ix_ele",
-            flags="-array_out -track_only",
+    def track_beam(
+        self,
+        ix_branch: str = "",
+        ix_uni: str = "",
+        use_progress_bar: bool = True,
+        jupyter: bool | None = None,
+    ) -> list[str]:
+        """
+        Tracks the beam through the lattice.
+
+        Parameters
+        ----------
+        ix_branch : str, optional
+            Branch index, by default ""
+        ix_uni : str, optional
+            Universe index, by default ""
+        use_progress_bar : bool, optional
+            Whether to show a progress bar, by default True
+        jupyter : bool | None, optional
+            Whether running in Jupyter environment. If None (default), auto-detects
+            the presence of Jupyter.
+        """
+        with pbar.track_beam_wrapper(
+            tao=self,
+            ix_uni=ix_uni,
             ix_branch=ix_branch,
-        )
-        ele_names = self.lat_list(
-            "*",
-            "ele.name",
-            flags="-array_out -track_only",
-            ix_branch=ix_branch,
-        )
-        ix_to_name = dict(zip(ix_eles, ele_names))
-        name_to_ix = dict(zip(ele_names, ix_eles))
-
-        beam = self.beam(ix_branch)
-        track_start = beam["track_start"] or ele_names[0]
-        track_end = beam["track_end"] or ele_names[-1]
-
-        start_idx = name_to_ix[track_start]
-        end_idx = name_to_ix[track_end]
-
-        def update_progress_bar(active_idx: int):
-            if pbar is None:
-                return
-
-            ele = ix_to_name.get(active_idx, "?")
-            pbar.set_postfix({"Element": ele, "ix_ele": active_idx}, refresh=False)
-            pbar.n = active_idx - start_idx
-            pbar.refresh()
-
-        cancel_event = threading.Event()
-        try:
-            with maybe_progress_bar(
-                progress_bar,
-                total=end_idx - start_idx,
-                leave=False,
-            ) as pbar:
-                if progress_bar:
-                    thr = threading.Thread(
-                        daemon=True,
-                        target=active_beam_track_monitor,
-                        args=(
-                            self,
-                            update_progress_bar,
-                            cancel_event,
-                        ),
-                    )
-                    thr.start()
-
-                yield
-        finally:
-            cancel_event.set()
-
-    def track_beam(self):
-        with self.tqdm_wrapper():
-            self.cmd("set global track_type = beam")
+            use_progress_bar=use_progress_bar,
+            jupyter=jupyter,
+        ):
+            return self.cmd("set global track_type = beam")
