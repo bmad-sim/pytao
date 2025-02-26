@@ -236,7 +236,7 @@ def track_beam_wrapper(
                     kwargs=dict(tao=tao, cb=update_progress_bar, cancel_event=cancel_event),
                 )
                 thr.start()
-        yield
+            yield pbar
     finally:
         cancel_event.set()
         if pbar is not None:
