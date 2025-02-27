@@ -1139,9 +1139,14 @@ class Tao(TaoCore):
         ix_uni: str = "",
         use_progress_bar: bool = True,
         jupyter: bool | None = None,
+        restore_track_type: bool = True,
     ) -> list[str]:
         """
-        Tracks the beam through the lattice.
+        Tracks the beam through the lattice by running:
+
+        ```
+        set global track_type = beam
+        ```
 
         Parameters
         ----------
@@ -1154,7 +1159,19 @@ class Tao(TaoCore):
         jupyter : bool | None, optional
             Whether running in Jupyter environment. If None (default), auto-detects
             the presence of Jupyter.
+        restore_track_type : bool, optional
+            Restore the current track type after tracking the beam.
+
+        Returns
+        -------
+        list of str
+            Output from Tao.
         """
+        prev_track_type = self.tao_global()["track_type"]
+
+        set_beam_command = "set global track_type = beam"
+        restore_beam_command = f"set global track_type = {prev_track_type.lower()}"
+
         with pbar.track_beam_wrapper(
             tao=self,
             ix_uni=ix_uni,
@@ -1162,4 +1179,6 @@ class Tao(TaoCore):
             use_progress_bar=use_progress_bar,
             jupyter=jupyter,
         ):
-            return self.cmd("set global track_type = beam")
+            if restore_track_type and set_beam_command != restore_beam_command:
+                return self.cmd(f"{set_beam_command}; {restore_beam_command}")
+            return self.cmd(f"{set_beam_command}")
