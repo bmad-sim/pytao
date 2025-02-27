@@ -15,6 +15,7 @@ dependencies:
   - h5py
   - pexpect
   - pydantic >=2
+  - tqdm
   # Developer
   - pygments
   - pytest
