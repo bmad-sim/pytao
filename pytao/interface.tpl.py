@@ -1181,4 +1181,4 @@ class Tao(TaoCore):
         ):
             if restore_track_type and set_beam_command != restore_beam_command:
                 return self.cmd(f"{set_beam_command}; {restore_beam_command}")
-            return self.cmd(f"{set_beam_command}")
+            return self.cmd(set_beam_command)
