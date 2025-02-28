@@ -13,6 +13,7 @@ import pydantic
 from pydantic import ConfigDict, dataclasses
 from typing_extensions import Literal, override
 
+from . import pbar
 from .plotting import MatplotlibGraphManager
 from .plotting.types import ShapeListInfo
 from .plotting.util import select_graph_manager_class
@@ -324,7 +325,7 @@ class Tao(TaoCore):
 
     plot_backend_name: Optional[str]
     _graph_managers: dict
-    _min_tao_version = datetime.datetime(2025, 2, 10)
+    _min_tao_version = datetime.datetime(2025, 2, 21)
 
     @override
     def __init__(
@@ -1122,3 +1123,62 @@ class Tao(TaoCore):
             num_points=num_points,
             **kwargs,
         )
+
+    def get_active_beam_track_element(self) -> int:
+        """
+        Get the active element index being tracked.
+
+        Thread-safe and intended to be used by UIs to determine which element
+        is currently being tracked.
+        """
+        return self.so_lib.tao_c_get_beam_track_element()
+
+    def track_beam(
+        self,
+        ix_branch: str = "",
+        ix_uni: str = "",
+        use_progress_bar: bool = True,
+        jupyter: bool | None = None,
+        restore_track_type: bool = True,
+    ) -> list[str]:
+        """
+        Tracks the beam through the lattice by running:
+
+        ```
+        set global track_type = beam
+        ```
+
+        Parameters
+        ----------
+        ix_branch : str, optional
+            Branch index, by default ""
+        ix_uni : str, optional
+            Universe index, by default ""
+        use_progress_bar : bool, optional
+            Whether to show a progress bar, by default True
+        jupyter : bool | None, optional
+            Whether running in Jupyter environment. If None (default), auto-detects
+            the presence of Jupyter.
+        restore_track_type : bool, optional
+            Restore the current track type after tracking the beam.
+
+        Returns
+        -------
+        list of str
+            Output from Tao.
+        """
+        prev_track_type = self.tao_global()["track_type"]
+
+        set_beam_command = "set global track_type = beam"
+        restore_beam_command = f"set global track_type = {prev_track_type.lower()}"
+
+        with pbar.track_beam_wrapper(
+            tao=self,
+            ix_uni=ix_uni,
+            ix_branch=ix_branch,
+            use_progress_bar=use_progress_bar,
+            jupyter=jupyter,
+        ):
+            if restore_track_type and set_beam_command != restore_beam_command:
+                return self.cmd(f"{set_beam_command}; {restore_beam_command}")
+            return self.cmd(set_beam_command)

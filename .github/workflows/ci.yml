@@ -36,7 +36,7 @@ jobs:
           conda list
 
       - name: Run Tests
-        shell: bash -l {0}
+        shell: bash --login -eo pipefail {0}
         run: |
           export TAO_REUSE_SUBPROCESS=${{ matrix.subprocess-reuse }}
           echo -e '## Test results\n\n```' >> "$GITHUB_STEP_SUMMARY"

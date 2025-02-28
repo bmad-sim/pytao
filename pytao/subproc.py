@@ -26,7 +26,15 @@ logger = logging.getLogger(__name__)
 
 AnyTao = Union[Tao, "SubprocessTao"]
 
-Command = Literal["quit", "init", "cmd", "cmd_real", "cmd_integer", "function"]
+Command = Literal[
+    "quit",
+    "init",
+    "cmd",
+    "cmd_real",
+    "cmd_integer",
+    "function",
+    "get_active_beam_track_element",
+]
 SupportedKwarg = Union[float, int, str, bool, bytes, dict, list, tuple, set, np.ndarray]
 
 
@@ -343,7 +351,7 @@ class _TaoPipe:
 
         Parameters
         ----------
-        cmd : one of {"init", "cmd", "cmd_real", "cmd_integer", "quit"}
+        cmd : one of {"init", "cmd", "cmd_real", "cmd_integer", "quit", "function", "get_active_beam_track_element"}
             The command class to send.
         argument : str
             The argument to send to the command.
@@ -375,12 +383,10 @@ class _TaoPipe:
 
         Parameters
         ----------
-        cmd : one of {"init", "cmd", "cmd_real", "cmd_integer", "quit", "function"}
-            The command class to send.
-        argument : str
-            The argument to send to the command.
-        raises : bool
-            Raise if the subprocess command raises or disconnects.
+        func: callable
+            The function to call.
+        kwargs : dict of str to SupportedKwarg
+            Keyword arguments for the function.
 
         Returns
         -------
@@ -657,3 +663,8 @@ class SubprocessTao(Tao):
         """Runs a command, and returns an integer array."""
         res = self._send_command_through_pipe("cmd_integer", cmd, raises=raises)
         return cast(Optional[np.ndarray], res)
+
+    def get_active_beam_track_element(self) -> int:
+        """Get the active element index being tracked."""
+        res = self._send_command_through_pipe("get_active_beam_track_element", "", raises=True)
+        return cast(int, res)

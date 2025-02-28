@@ -44,6 +44,11 @@ def _tao_subprocess(output_fifo_filename: str) -> None:
         if command == "quit":
             sys.exit(0)
 
+        if command == "get_active_beam_track_element":
+            if tao is None:
+                raise TaoCommandError("Tao object not yet initialized")
+            return tao.get_active_beam_track_element()
+
         arg = message.get("arg", None)
         capture_context_options = message.get("capture_ctx", None)
         if not capture_context_options:

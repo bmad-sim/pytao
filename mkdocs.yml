@@ -18,6 +18,7 @@ nav:
       - examples/special_parsers.ipynb
       - examples/fodo.ipynb
       - examples/advanced.ipynb
+      - examples/beam_track_progress_bar.ipynb
 
   - Dev:
       - development.md
