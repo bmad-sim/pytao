@@ -155,6 +155,8 @@ class TrackingInfo(pydantic.BaseModel):
                 ix_branch=ix_branch,
             ),
         )
+        ele_names = [ele_name.upper() for ele_name in ele_names]
+
         ix_to_name = dict(zip(ix_eles, ele_names))
         name_to_ix = dict(zip(ele_names, ix_eles))
 
@@ -207,8 +209,8 @@ def track_beam_wrapper(
     Progress bar shows current element name and index while tracking.
     """
     track = TrackingInfo.from_tao(tao, ix_branch=ix_branch, ix_uni=ix_uni)
-    start_idx = track.name_to_ix[track.track_start]
-    end_idx = track.name_to_ix[track.track_end]
+    start_idx = track.name_to_ix[track.track_start.upper()]
+    end_idx = track.name_to_ix[track.track_end.upper()]
 
     def update_progress_bar(active_idx: int):
         if pbar is None:
