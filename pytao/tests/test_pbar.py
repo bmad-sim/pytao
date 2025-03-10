@@ -49,3 +49,23 @@ def test_cli_progress_bar(tao_cls: Type[AnyTao]):
         set_gaussian(tao, n_particle=1)
         tao.track_beam(use_progress_bar=False)
         tao.track_beam(use_progress_bar=True)
+
+
+def test_cli_progress_bar_track_start(tao_cls: Type[AnyTao]):
+    with new_tao(
+        tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall"
+    ) as tao:
+        set_gaussian(tao, n_particle=1)
+        tao.cmd("set global lattice_calc_on = F")
+        tao.track_beam("BEGinning", "eND", use_progress_bar=True)
+        assert not tao.tao_global()["lattice_calc_on"]
+        assert tao.beam(ix_branch=0)["track_start"] == "BEGinning"
+        assert tao.beam(ix_branch=0)["track_end"] == "eND"
+
+        tao.cmd("set global lattice_calc_on = T")
+        assert tao.tao_global()["lattice_calc_on"]
+        tao.track_beam(track_end="END", use_progress_bar=True)
+        assert tao.tao_global()["lattice_calc_on"]
+
+        assert tao.beam(ix_branch=0)["track_start"] == "BEGinning"
+        assert tao.beam(ix_branch=0)["track_end"] == "END"

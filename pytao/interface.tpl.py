@@ -1135,6 +1135,9 @@ class Tao(TaoCore):
 
     def track_beam(
         self,
+        track_start: str | int | None = None,
+        track_end: str | int | None = None,
+        *,
         ix_branch: str = "",
         ix_uni: str = "",
         use_progress_bar: bool = True,
@@ -1150,6 +1153,12 @@ class Tao(TaoCore):
 
         Parameters
         ----------
+        track_start : str, int, or None, optional
+            Where to start tracking.  If None (the default), uses the current
+            tracking settings.
+        track_end : str, int, or None, optional
+            Where to stop tracking.  If None (the default), uses the current
+            tracking settings.
         ix_branch : str, optional
             Branch index, by default ""
         ix_uni : str, optional
@@ -1167,10 +1176,31 @@ class Tao(TaoCore):
         list of str
             Output from Tao.
         """
-        prev_track_type = self.tao_global()["track_type"]
+        glob = typing.cast(Dict[str, Any], self.tao_global())
+
+        prev_track_type = glob["track_type"]
+
+        if track_start is not None:
+            self.cmd(f"set beam_init track_start = {track_start}")
+
+        if track_end is not None:
+            self.cmd(f"set beam_init track_end = {track_end}")
+
+        lat_calc_on = glob["lattice_calc_on"]
 
         set_beam_command = "set global track_type = beam"
         restore_beam_command = f"set global track_type = {prev_track_type.lower()}"
+
+        commands = [set_beam_command]
+
+        if not lat_calc_on:
+            # Turn on lattice calculations for long enough to track the beam:
+            commands.append("set global lattice_calc_on = T")
+            # Toggle it off after finishing:
+            commands.append("set global lattice_calc_on = F")
+
+        if restore_track_type and set_beam_command != restore_beam_command:
+            commands.append(restore_beam_command)
 
         with pbar.track_beam_wrapper(
             tao=self,
@@ -1179,6 +1209,4 @@ class Tao(TaoCore):
             use_progress_bar=use_progress_bar,
             jupyter=jupyter,
         ):
-            if restore_track_type and set_beam_command != restore_beam_command:
-                return self.cmd(f"{set_beam_command}; {restore_beam_command}")
-            return self.cmd(set_beam_command)
+            return self.cmd("; ".join(commands))
