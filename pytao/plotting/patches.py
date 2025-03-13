@@ -36,10 +36,12 @@ class PlotPatchBase:
 
     @property
     def _patch_args(self):
+        colors = {"edgecolor": pgplot.mpl_color(self.color or self.edgecolor or "black")}
+
+        if self.facecolor is not None:
+            colors["facecolor"] = self.facecolor
         return {
-            "edgecolor": self.edgecolor,
-            "facecolor": self.facecolor,
-            "color": pgplot.mpl_color(self.color or "black"),
+            **colors,
             "linewidth": self.linewidth,
             "linestyle": self.linestyle,
             "antialiased": self.antialiased,
