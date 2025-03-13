@@ -14,9 +14,6 @@ from pydantic import ConfigDict, dataclasses
 from typing_extensions import Literal, override
 
 from . import pbar
-from .plotting import MatplotlibGraphManager
-from .plotting.types import ShapeListInfo
-from .plotting.util import select_graph_manager_class
 from .tao_ctypes.core import TaoCore, TaoInitializationError
 from .tao_ctypes.util import parse_tao_python_data
 from .util import parsers as _pytao_parsers
@@ -24,7 +21,9 @@ from .util.command import make_tao_init, Quiet
 from .util.parameters import tao_parameter_dict
 
 if typing.TYPE_CHECKING:
-    from .plotting.bokeh import BokehGraphManager, NotebookGraphManager  # noqa: F401
+    from .plotting import MatplotlibGraphManager
+    from .plotting.bokeh import BokehGraphManager, NotebookGraphManager
+    from .plotting.types import ShapeListInfo
     from .subproc import SubprocessTao
 
     AnyTao = Union["Tao", SubprocessTao]
@@ -818,14 +817,12 @@ class Tao(TaoCore):
     @property
     def matplotlib(self) -> MatplotlibGraphManager:
         """Get the Matplotlib graph manager."""
-        return typing.cast(MatplotlibGraphManager, self._get_graph_manager_by_key("mpl"))
+        return typing.cast("MatplotlibGraphManager", self._get_graph_manager_by_key("mpl"))
 
     @property
     def bokeh(self) -> BokehGraphManager:
         """Get the Bokeh graph manager."""
-        from .plotting.bokeh import BokehGraphManager
-
-        return typing.cast(BokehGraphManager, self._get_graph_manager_by_key("bokeh"))
+        return typing.cast("BokehGraphManager", self._get_graph_manager_by_key("bokeh"))
 
     @property
     def plot_manager(
@@ -843,6 +840,8 @@ class Tao(TaoCore):
 
     def _get_user_specified_backend(self, backend: Optional[str]):
         if backend is None:
+            from .plotting.util import select_graph_manager_class
+
             backend = self.plot_backend_name or select_graph_manager_class()._key_
 
         if not self.init_settings.external_plotting:
@@ -954,7 +953,7 @@ class Tao(TaoCore):
 
         res = []
         for who in who_list:
-            shape_list_info = typing.cast(List[ShapeListInfo], self.shape_list(who))
+            shape_list_info = typing.cast(List["ShapeListInfo"], self.shape_list(who))
             res.extend(shape_list_info)
             for info in shape_list_info:
                 should_set = any(
@@ -1135,6 +1134,9 @@ class Tao(TaoCore):
 
     def track_beam(
         self,
+        track_start: str | int | None = None,
+        track_end: str | int | None = None,
+        *,
         ix_branch: str = "",
         ix_uni: str = "",
         use_progress_bar: bool = True,
@@ -1150,6 +1152,12 @@ class Tao(TaoCore):
 
         Parameters
         ----------
+        track_start : str, int, or None, optional
+            Where to start tracking.  If None (the default), uses the current
+            tracking settings.
+        track_end : str, int, or None, optional
+            Where to stop tracking.  If None (the default), uses the current
+            tracking settings.
         ix_branch : str, optional
             Branch index, by default ""
         ix_uni : str, optional
@@ -1167,10 +1175,31 @@ class Tao(TaoCore):
         list of str
             Output from Tao.
         """
-        prev_track_type = self.tao_global()["track_type"]
+        glob = typing.cast(Dict[str, Any], self.tao_global())
+
+        prev_track_type = glob["track_type"]
+
+        if track_start is not None:
+            self.cmd(f"set beam_init track_start = {track_start}")
+
+        if track_end is not None:
+            self.cmd(f"set beam_init track_end = {track_end}")
+
+        lat_calc_on = glob["lattice_calc_on"]
 
         set_beam_command = "set global track_type = beam"
         restore_beam_command = f"set global track_type = {prev_track_type.lower()}"
+
+        commands = [set_beam_command]
+
+        if not lat_calc_on:
+            # Turn on lattice calculations for long enough to track the beam:
+            commands.append("set global lattice_calc_on = T")
+            # Toggle it off after finishing:
+            commands.append("set global lattice_calc_on = F")
+
+        if restore_track_type and set_beam_command != restore_beam_command:
+            commands.append(restore_beam_command)
 
         with pbar.track_beam_wrapper(
             tao=self,
@@ -1179,6 +1208,4 @@ class Tao(TaoCore):
             use_progress_bar=use_progress_bar,
             jupyter=jupyter,
         ):
-            if restore_track_type and set_beam_command != restore_beam_command:
-                return self.cmd(f"{set_beam_command}; {restore_beam_command}")
-            return self.cmd(set_beam_command)
+            return self.cmd("; ".join(commands))
