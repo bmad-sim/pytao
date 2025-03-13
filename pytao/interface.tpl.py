@@ -14,9 +14,6 @@ from pydantic import ConfigDict, dataclasses
 from typing_extensions import Literal, override
 
 from . import pbar
-from .plotting import MatplotlibGraphManager
-from .plotting.types import ShapeListInfo
-from .plotting.util import select_graph_manager_class
 from .tao_ctypes.core import TaoCore, TaoInitializationError
 from .tao_ctypes.util import parse_tao_python_data
 from .util import parsers as _pytao_parsers
@@ -24,7 +21,9 @@ from .util.command import make_tao_init, Quiet
 from .util.parameters import tao_parameter_dict
 
 if typing.TYPE_CHECKING:
-    from .plotting.bokeh import BokehGraphManager, NotebookGraphManager  # noqa: F401
+    from .plotting import MatplotlibGraphManager
+    from .plotting.bokeh import BokehGraphManager, NotebookGraphManager
+    from .plotting.types import ShapeListInfo
     from .subproc import SubprocessTao
 
     AnyTao = Union["Tao", SubprocessTao]
@@ -818,14 +817,12 @@ class Tao(TaoCore):
     @property
     def matplotlib(self) -> MatplotlibGraphManager:
         """Get the Matplotlib graph manager."""
-        return typing.cast(MatplotlibGraphManager, self._get_graph_manager_by_key("mpl"))
+        return typing.cast("MatplotlibGraphManager", self._get_graph_manager_by_key("mpl"))
 
     @property
     def bokeh(self) -> BokehGraphManager:
         """Get the Bokeh graph manager."""
-        from .plotting.bokeh import BokehGraphManager
-
-        return typing.cast(BokehGraphManager, self._get_graph_manager_by_key("bokeh"))
+        return typing.cast("BokehGraphManager", self._get_graph_manager_by_key("bokeh"))
 
     @property
     def plot_manager(
@@ -843,6 +840,8 @@ class Tao(TaoCore):
 
     def _get_user_specified_backend(self, backend: Optional[str]):
         if backend is None:
+            from .plotting.util import select_graph_manager_class
+
             backend = self.plot_backend_name or select_graph_manager_class()._key_
 
         if not self.init_settings.external_plotting:
@@ -954,7 +953,7 @@ class Tao(TaoCore):
 
         res = []
         for who in who_list:
-            shape_list_info = typing.cast(List[ShapeListInfo], self.shape_list(who))
+            shape_list_info = typing.cast(List["ShapeListInfo"], self.shape_list(who))
             res.extend(shape_list_info)
             for info in shape_list_info:
                 should_set = any(
