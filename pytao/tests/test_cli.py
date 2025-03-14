@@ -21,6 +21,14 @@ def test_split_args_basic():
     assert tao_args == "tao_command -args"
 
 
+def test_split_args_common():
+    args = ["--pyplot", "mpl", "-noplot", "-args", "-lat", "latfile"]
+    pytao_args, tao_args = split_pytao_tao_args(args)
+
+    assert pytao_args.pyplot == "mpl"
+    assert tao_args == "-noplot -args -lat latfile"
+
+
 def test_split_args_all_options():
     args = [
         "--pyplot",
