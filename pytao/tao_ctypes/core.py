@@ -165,7 +165,7 @@ class TaoCore:
         self._init_output = output
         return errno, output
 
-    def init(self, cmd: str) -> List[str]:
+    def _init_or_raise(self, cmd: str, strict_init: bool = False) -> List[str]:
         """
         Initialize (or reinitialize) Tao with `cmd`.
 
@@ -173,6 +173,11 @@ class TaoCore:
         ----------
         cmd : str
             The command to (re)initialize Tao with.
+        strict_init : bool, optional
+            Be strict about errors in the initialization output. If True, any
+            errors will cause PyTao to raise, even if they are not fatal per
+            Tao.
+            Individual messages may be suppressed with `filter_tao_messages`.
 
         Returns
         -------
@@ -187,8 +192,11 @@ class TaoCore:
         try:
             self._check_output_lines(cmd=f"init {cmd}", lines=output)
         except TaoCommandError as ex:
-            message = textwrap.indent("\n".join(output), "  ")
-            raise TaoInitializationError(str(ex), tao_output="\n".join(output)) from None
+            if strict_init:
+                message = textwrap.indent("\n".join(output), "  ")
+                raise TaoInitializationError(str(ex), tao_output="\n".join(output)) from None
+
+            logger.warning("Errors detected in Tao initialization output:\n%s", ex.tao_output)
 
         if errno != 0:
             message = textwrap.indent("\n".join(output), "  ")

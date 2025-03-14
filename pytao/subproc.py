@@ -637,8 +637,9 @@ class SubprocessTao(Tao):
         assert self._subproc_pipe_ is not None
         return self._subproc_pipe_.send_receive_custom(func, kwargs)
 
-    @override
-    def _init(self, startup: TaoStartup):
+    def _init_backend(self, startup: TaoStartup):
+        # Backend initialization: this is the hook for either Tao or SubprocessTao
+        # to do its thing.
         self._reset_graph_managers()
         if not self.subprocess_alive:
             logger.debug("Reinitializing Tao subprocess")
