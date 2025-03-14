@@ -15,6 +15,7 @@ from .conftest import (
     get_packaged_example,
     get_regression_test,
     test_artifacts,
+    REUSE_SUBPROCESS,
 )
 
 logger = logging.getLogger(__name__)
@@ -123,6 +124,9 @@ def test_plot_all_requested_regression_tests(
 def test_plot_all_requested_examples_mpl(tao_example: TaoStartup):
     tao_example.plot = "mpl"
     example_name = tao_example.metadata["name"]
+    if example_name == "driving_terms" and REUSE_SUBPROCESS:
+        pytest.skip("driving_terms is unstable with reinitialization")
+
     with tao_example.run_context(use_subprocess=True) as tao:
         if example_name == "erl":
             tao.cmd("place r11 zphase")
