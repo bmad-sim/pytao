@@ -192,7 +192,9 @@ class TaoCore:
         try:
             self._check_output_lines(cmd=f"init {cmd}", lines=output)
         except TaoCommandError as ex:
-            if strict_init:
+            if strict_init or any(msg.level in {"FATAL", "ABORT"} for msg in ex.messages):
+                # In strict mode, any errors count as failure.
+                # In all cases, FATAL/ABORT must raise
                 message = textwrap.indent("\n".join(output), "  ")
                 raise TaoInitializationError(str(ex), tao_output="\n".join(output)) from None
 

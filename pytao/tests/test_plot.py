@@ -5,7 +5,8 @@ from typing import Union
 import matplotlib.pyplot as plt
 import pytest
 
-from .. import SubprocessTao, Tao, TaoStartup
+from .. import SubprocessTao, Tao, TaoStartup, filter_tao_messages_context
+
 from ..plotting import mpl
 from ..plotting.curves import TaoCurveSettings
 from .conftest import (
@@ -113,8 +114,10 @@ def test_plot_all_requested_regression_tests(
     use_subprocess: bool,
 ):
     tao_regression_test.plot = plot_backend
-    with tao_regression_test.run_context(use_subprocess=use_subprocess) as tao:
-        tao.plot_manager.plot_all()
+
+    with filter_tao_messages_context(functions=["twiss_propagate1"]):
+        with tao_regression_test.run_context(use_subprocess=use_subprocess) as tao:
+            tao.plot_manager.plot_all()
 
 
 def test_plot_all_requested_examples_mpl(tao_example: TaoStartup):
@@ -134,7 +137,8 @@ def test_plot_manager(
     tao_regression_test.plot = plot_backend
     with tao_regression_test.run_context(use_subprocess=use_subprocess) as tao:
         manager = tao.plot_manager
-        manager.plot_all()
+        with filter_tao_messages_context(functions=["twiss_propagate1"]):
+            manager.plot_all()
 
         for region in list(manager.regions):
             manager.clear(region)

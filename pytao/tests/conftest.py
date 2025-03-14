@@ -10,7 +10,7 @@ import pytest
 from typing_extensions import Literal
 
 from .. import SubprocessTao, Tao, TaoStartup
-from ..tao_ctypes.util import filter_tao_messages_context, filter_output_lines
+from ..tao_ctypes.util import filter_output_lines
 
 matplotlib.use("Agg")
 
@@ -79,10 +79,9 @@ if not REUSE_SUBPROCESS:
     class TaoTestStartup(TaoStartup):
         @contextlib.contextmanager
         def run_context(self, use_subprocess: bool = False):
-            with filter_tao_messages_context(by_command={"init": ["tao_find_plots"]}):
-                # super() will close the subprocess for us
-                with super().run_context(use_subprocess=use_subprocess) as tao:
-                    yield tao
+            # super() will close the subprocess for us
+            with super().run_context(use_subprocess=use_subprocess) as tao:
+                yield tao
 else:
 
     class TaoTestStartup(TaoStartup):
@@ -95,8 +94,7 @@ else:
 
         @contextlib.contextmanager
         def run_context(self, use_subprocess: bool = False):
-            with filter_tao_messages_context(by_command={"init": ["tao_find_plots"]}):
-                yield self.run(use_subprocess=use_subprocess)
+            yield self.run(use_subprocess=use_subprocess)
 
 
 def get_packaged_example(name: str) -> TaoStartup:
@@ -136,6 +134,7 @@ def get_example(name: str) -> TaoStartup:
         init_file=init_file,
         nostartup=nostartup,
         metadata={"name": name},
+        noplot=True,
     )
     print(f"Example {name}: {startup.tao_init}")
     return startup
@@ -198,8 +197,7 @@ def _get_reusable_subprocess_tao(init, **kwargs) -> SubprocessTao:
         atexit.register(_clean_subproc_tao)
         _subproc_tao = SubprocessTao(init, **kwargs)
     else:
-        with error_filter_context(_subproc_tao, {"tao_find_plots"}):
-            _subproc_tao.init(init, **kwargs)
+        _subproc_tao.init(init, **kwargs)
     return _subproc_tao
 
 

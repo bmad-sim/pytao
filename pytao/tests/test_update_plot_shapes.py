@@ -12,7 +12,7 @@ AnyTao = Union[Tao, SubprocessTao]
 
 def test_update_plot_shapes(use_subprocess: bool):
     example = get_example("optics_matching")
-    tao = example.run(use_subprocess=use_subprocess)
+    tao = example.run(use_subprocess=use_subprocess, noplot=True)
 
     orig_shapes = set(shape["shape"] for shape in tao.shape_list("lat_layout"))
     tao.update_plot_shapes(layout=True, shape="xbox")
