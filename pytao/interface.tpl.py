@@ -15,7 +15,7 @@ from typing_extensions import Literal, override
 
 from . import pbar
 from .tao_ctypes.core import TaoCore, TaoInitializationError
-from .tao_ctypes.util import parse_tao_python_data
+from .tao_ctypes.util import TaoCommandError, parse_tao_python_data
 from .util import parsers as _pytao_parsers
 from .util.command import make_tao_init, Quiet
 from .util.parameters import tao_parameter_dict
@@ -58,10 +58,6 @@ class TaoStartup:
     env : dict[str, str], optional
         Environment variables to set when initializing a new subprocess Tao.
         Not used for the standard in-process `Tao` class.
-    strict_init : bool, optional
-        Be strict about errors in the initialization output. If True, any
-        errors will cause PyTao to raise, even if they are not fatal per Tao.
-        Individual messages may be suppressed with `filter_tao_messages`.
     beam_file : str or pathlib.Path, default=None
         File containing the tao_beam_init namelist.
     beam_init_position_file : pathlib.Path or str, default=None
@@ -131,7 +127,6 @@ class TaoStartup:
     plot: Union[str, bool] = "tao"
     metadata: Dict[str, Any] = pydantic.Field(default_factory=dict)
     env: Optional[Dict[str, str]] = None  # only for subprocesses
-    strict_init: bool = False
 
     # All remaining flags:
     beam_file: Optional[AnyPath] = None
@@ -421,7 +416,6 @@ class Tao(TaoCore):
     def init(
         self,
         cmd: str = "",
-        strict_init: bool = False,
         *,
         plot: Union[str, bool] = "tao",
         beam_file: Optional[AnyPath] = None,
@@ -544,7 +538,6 @@ class Tao(TaoCore):
         self.init_settings = TaoStartup(
             init=cmd,
             plot=plot,
-            strict_init=strict_init,
             beam_file=beam_file,
             beam_init_position_file=beam_init_position_file,
             building_wall_file=building_wall_file,
@@ -599,7 +592,13 @@ class Tao(TaoCore):
         return self._init_output
 
     def _check_tao_version(self):
-        version = self.version()
+        try:
+            version = self.version()
+        except TaoCommandError as ex:
+            logger.warning(f"Failed to check Tao version: {ex}")
+            logger.debug(f"Failed to check Tao version: {ex}", exc_info=True)
+            return
+
         if version is None:
             # Don't continue to warn about failing to parse the version
             return
@@ -625,7 +624,7 @@ class Tao(TaoCore):
         # Backend initialization: this is the hook for either Tao or SubprocessTao
         # to do its thing.
         self._reset_graph_managers()
-        return self._init_or_raise(startup.tao_init, strict_init=startup.strict_init)
+        return self._init_or_raise(startup.tao_init)
 
     def __execute(
         self,

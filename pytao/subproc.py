@@ -19,8 +19,7 @@ import numpy as np
 from typing_extensions import Literal, NotRequired, TypedDict, override
 
 from .interface_commands import Tao, TaoStartup
-from .tao_ctypes.core import TaoCommandError
-from .tao_ctypes.util import error_filter_context
+from .tao_ctypes.util import error_filter_context, TaoCommandError, TaoInitializationError
 
 logger = logging.getLogger(__name__)
 
@@ -192,7 +191,7 @@ def dict_to_array(data: SerializedArray) -> np.ndarray:
     return arr.reshape(data["shape"])
 
 
-def _get_result(value: SubprocessResult, raises: bool = True):
+def _get_result(value: SubprocessResult, raises: bool = True, initializing: bool = False):
     """
     Pick out the result data from the subprocess return value.
 
@@ -221,7 +220,8 @@ def _get_result(value: SubprocessResult, raises: bool = True):
         tb = value.get("traceback", "")
         tao_output = value.get("tao_output", "")
         if raises:
-            ex = TaoCommandError(
+            err_cls = TaoInitializationError if initializing else TaoCommandError
+            ex = err_cls(
                 f"Tao in subprocess raised {error_cls}: {error}",
                 tao_output=tao_output,
             )
@@ -369,7 +369,7 @@ class _TaoPipe:
         try:
             self._send(cmd, argument)
             received = self._receive()
-            result = _get_result(received, raises=raises)
+            result = _get_result(received, raises=raises, initializing=cmd == "init")
             return received["tao_output"], result
         except BrokenPipeError:
             raise TaoCommandError(

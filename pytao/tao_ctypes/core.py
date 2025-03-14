@@ -154,18 +154,26 @@ class TaoCore:
             Tao initialization output text.
         """
         if not tao_ctypes.initialized:
-            logger.debug(f"Initializing Tao with: {cmd!r}")
+            logger.debug("Initializing Tao.")
+            logger.debug(f"Tao> {cmd}")
             errno = self.so_lib.tao_c_init_tao(cmd.encode("utf-8"))
-            tao_ctypes.initialized = True
-            output = self.get_output()
+            if errno == 0:
+                # Only mark it initialized on the first actual success.
+                tao_ctypes.initialized = True
         else:
-            errno = 0
-            output = self.cmd(f"reinit tao -clear {cmd}", raises=False)
+            logger.debug("Re-initializing Tao.")
+
+            reinit_cmd = f"reinit tao -clear {cmd}"
+            logger.debug(f"Tao> {reinit_cmd}")
+
+            errno = self.so_lib.tao_c_command(reinit_cmd.encode("utf-8"))
+
+        output = self.get_output()
 
         self._init_output = output
         return errno, output
 
-    def _init_or_raise(self, cmd: str, strict_init: bool = False) -> List[str]:
+    def _init_or_raise(self, cmd: str) -> List[str]:
         """
         Initialize (or reinitialize) Tao with `cmd`.
 
@@ -173,11 +181,6 @@ class TaoCore:
         ----------
         cmd : str
             The command to (re)initialize Tao with.
-        strict_init : bool, optional
-            Be strict about errors in the initialization output. If True, any
-            errors will cause PyTao to raise, even if they are not fatal per
-            Tao.
-            Individual messages may be suppressed with `filter_tao_messages`.
 
         Returns
         -------
@@ -189,17 +192,6 @@ class TaoCore:
         TaoInitializationError
         """
         errno, output = self._init_or_reinit(cmd)
-        try:
-            self._check_output_lines(cmd=f"init {cmd}", lines=output)
-        except TaoCommandError as ex:
-            if strict_init or any(msg.level in {"FATAL", "ABORT"} for msg in ex.messages):
-                # In strict mode, any errors count as failure.
-                # In all cases, FATAL/ABORT must raise
-                message = textwrap.indent("\n".join(output), "  ")
-                raise TaoInitializationError(str(ex), tao_output="\n".join(output)) from None
-
-            logger.warning("Errors detected in Tao initialization output:\n%s", ex.tao_output)
-
         if errno != 0:
             message = textwrap.indent("\n".join(output), "  ")
             raise TaoInitializationError(
@@ -582,8 +574,8 @@ class TaoModel(TaoCore):
         s += "\n Working in path: " + self.path
         return s
 
-    def init(self, cmd: str, strict_init: bool = False) -> List[str]:
-        return self._init_or_raise(cmd, strict_init=strict_init)
+    def init(self, cmd: str) -> List[str]:
+        return self._init_or_raise(cmd)
 
 
 # -------------------------------------------------------------------------------
