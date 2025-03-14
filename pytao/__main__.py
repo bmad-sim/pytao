@@ -1,5 +1,6 @@
 from __future__ import annotations
 import argparse
+import code
 import logging
 import os
 import sys
@@ -20,7 +21,7 @@ class PytaoArgs(SimpleNamespace):
 
 
 def create_argparser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="PyTAO command line interface")
+    parser = argparse.ArgumentParser(description="PyTao command line interface")
     parser.add_argument(
         "--pyplot",
         choices=["mpl", "bokeh"],
@@ -55,20 +56,21 @@ def split_pytao_tao_args(args: list[str]) -> tuple[PytaoArgs, str]:
     return pytao, " ".join(tao)
 
 
-def main():
-    try:
-        import IPython
-    except ImportError as ex:
-        print(f"IPython unavailable ({ex}); pytao interactive mode unavailable.")
-        exit(1)
-
+def init(ipython: bool):
     python_args, init_args = split_pytao_tao_args(sys.argv[1:])
 
     startup_message = f"Initializing Tao object with: {init_args}"
     print("-" * len(startup_message))
     print(startup_message)
     print()
-    print("Type `tao.` and hit tab to see available commands.")
+
+    if ipython:
+        print("Type `tao.` and hit tab to see available commands.")
+    else:
+        print("The `tao` object is available.")
+        print("Tab completion not available in basic mode.")
+        print("To enable tab completion, install IPython: pip install ipython")
+
     print("-" * len(startup_message))
 
     plot = os.environ.get("PYTAO_PLOT", python_args.pyplot or "tao").lower()
@@ -76,7 +78,7 @@ def main():
     tao_cls = SubprocessTao if python_args.pysubprocess else Tao
     tao = tao_cls(init=init_args, plot=plot)
 
-    user_ns: dict = {"tao": tao}
+    user_ns = {"tao": tao}
     if plot == "mpl":
         import matplotlib.pyplot as plt
 
@@ -88,6 +90,33 @@ def main():
     if python_args.pylog:
         logger.setLevel(python_args.pylog)
         logging.basicConfig()
+    return python_args, user_ns
+
+
+def main_python():
+    python_args, user_ns = init(ipython=False)
+
+    # Handle command or script execution
+    if python_args.pycommand:
+        exec(python_args.pycommand, user_ns)
+
+    if python_args.pyscript:
+        with open(python_args.pyscript) as f:
+            script_content = f.read()
+        exec(script_content, user_ns)
+
+    # If no command or script specified or if script should be followed by interactive mode
+    if not (python_args.pycommand or python_args.pyscript) or python_args.pyscript:
+        console = code.InteractiveConsole(locals=user_ns)
+        console.interact(banner="")
+
+    return 0
+
+
+def main_ipython():
+    import IPython
+
+    python_args, user_ns = init(ipython=True)
 
     ipy_argv = ["--no-banner"]
     if python_args.pycommand:
@@ -102,5 +131,10 @@ def main():
     return IPython.start_ipython(user_ns=user_ns, argv=ipy_argv)
 
 
-if __name__ == "__main__":
-    main()
+def main():
+    try:
+        import IPython  # noqa
+    except ImportError:
+        main_python()
+    else:
+        main_ipython()
