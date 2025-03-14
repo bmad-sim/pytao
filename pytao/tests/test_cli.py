@@ -165,6 +165,7 @@ def test_main_python_script(tmp_path: pathlib.Path):
                 "pytao",
                 "--pyscript",
                 str(fn),
+                "-noplot",
                 "-lat",
                 "$ACC_ROOT_DIR/bmad-doc/tao_examples/fodo/fodo.bmad",
             ],
