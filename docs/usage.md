@@ -96,7 +96,13 @@ The following will start IPython with a `Tao` instance available as `tao`:
 pytao -init_file "$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init"
 ```
 
-To use PyTao's Matplotlib backend, do the following:
+To use PyTao's Matplotlib backend, set `--pyplot=mpl`:
+
+```bash
+pytao --pyplot=mpl -init "$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init"
+```
+
+Or use the environment variable `PYTAO_PLOT`:
 
 ```bash
 PYTAO_PLOT=mpl pytao -init_file "$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init"
@@ -104,8 +110,6 @@ PYTAO_PLOT=mpl pytao -init_file "$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/
 
 ```python
 In [1]: tao.plot("beta")
-
-In [2]: plt.show()
 ```
 
 ## PyTao plotting and startup scripts
