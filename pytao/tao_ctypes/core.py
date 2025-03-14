@@ -580,6 +580,9 @@ class TaoModel(TaoCore):
         s += "\n Working in path: " + self.path
         return s
 
+    def init(self, cmd: str, strict_init: bool = False) -> List[str]:
+        return self._init_or_raise(cmd, strict_init=strict_init)
+
 
 # -------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------
