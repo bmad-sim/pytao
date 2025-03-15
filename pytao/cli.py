@@ -1,0 +1,186 @@
+from __future__ import annotations
+import argparse
+import code
+import logging
+import os
+import sys
+from types import SimpleNamespace
+
+from pytao.tao_ctypes.util import TaoInitializationError
+
+from .interface_commands import Tao
+from .subproc import SubprocessTao
+
+logger = logging.getLogger("pytao")
+
+
+class PytaoArgs(SimpleNamespace):
+    pyplot: str | None
+    pyscript: str | None
+    pycommand: str | None
+    pylog: str | None
+    pysubprocess: bool
+
+
+DESCRIPTION = """
+
+Tao options (use -- to negate any option):
+  -beam_file <file_name>               File containing the tao_beam_init namelist.
+  -beam_init_position_file <file_name> File containing initial particle positions.
+  -building_wall_file <file_name>      Define the building tunnel wall
+  -command <command_string>            Commands to run after startup file commands
+  -data_file <file_name>               Define data for plotting and optimization
+  -debug                               Debug mode for Wizards
+  -disable_smooth_line_calc            Disable the smooth line calc used in plotting
+  -external_plotting                   Tells Tao that plotting is done externally to Tao.
+  -geometry <width>x<height>           Plot window geometry (pixels)
+  -help                                Display this list of command line options
+  -hook_init_file <file_name>          Init file for hook routines (Default = tao_hook.init)
+  -init_file <file_name>               Tao init file
+  -lattice_file <file_name>            Bmad lattice file
+  -log_startup                         Write startup debugging info
+  -no_stopping                         For debugging: Prevents Tao from exiting on errors
+  -noinit                              Do not use Tao init file.
+  -noplot                              Do not open a plotting window
+  -nostartup                           Do not open a startup command file
+  -no_rad_int                          Do not do any radiation integrals calculations.
+  -plot_file <file_name>               Plotting initialization file
+  -prompt_color <color>                Set color of prompt string. Default is blue.
+  -reverse                             Reverse lattice element order?
+  -rf_on                               Use "--rf_on" to turn off RF (default is now RF on)
+  -quiet <level>                       Suppress terminal output when running a command file?
+                                        Levels: "all" (default), "warnings".
+  -slice_lattice <ele_list>            Discards elements from lattice that are not in the list
+  -start_branch_at <ele_name>          Start lattice branch at element.
+  -startup_file <file_name>            Commands to run after parsing Tao init file
+  -symbol_import                       Import symbols defined in lattice files(s)?
+  -var_file <file_name>                Define variables for plotting and optimization
+"""
+
+
+def create_argparser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="PyTao command-line interface",
+        epilog=DESCRIPTION,
+        prog="pytao",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "--pyplot",
+        choices=["mpl", "bokeh"],
+        help="Select plotting backend: Matplotlib (mpl) or bokeh",
+    )
+    parser.add_argument(
+        "--pyscript",
+        type=str,
+        help="Python script filename to run at startup. May use `tao` object.",
+    )
+    parser.add_argument(
+        "--pycommand",
+        type=str,
+        help="Python command to run at startup. May use `tao` object.",
+    )
+    parser.add_argument(
+        "--pylog",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+        help="Set logging level.",
+    )
+    parser.add_argument(
+        "--pysubprocess",
+        action="store_true",
+        help="Launch Tao in a subprocess.",
+    )
+    return parser
+
+
+def split_pytao_tao_args(args: list[str]) -> tuple[PytaoArgs, str]:
+    parser = create_argparser()
+    pytao, tao = parser.parse_known_intermixed_args(args, namespace=PytaoArgs())
+    return pytao, " ".join(tao)
+
+
+def init(ipython: bool):
+    python_args, init_args = split_pytao_tao_args(sys.argv[1:])
+
+    startup_message = f"Initializing Tao object with: {init_args}"
+    print("-" * len(startup_message))
+    print(startup_message)
+    print()
+
+    if ipython:
+        print("Type `tao.` and hit tab to see available commands.")
+    else:
+        print("The `tao` object is available.")
+        print("Tab completion not available in basic mode.")
+        print("To enable tab completion, install IPython: pip install ipython")
+
+    print("-" * len(startup_message))
+
+    plot = os.environ.get("PYTAO_PLOT", python_args.pyplot or "tao").lower()
+
+    tao_cls = SubprocessTao if python_args.pysubprocess else Tao
+
+    try:
+        tao = tao_cls(init=init_args, plot=plot)
+    except TaoInitializationError as ex:
+        if "Tao will not be able to initialize with the following settings:" in str(ex):
+            create_argparser().print_help()
+            sys.exit(1)
+        raise
+
+    user_ns = {"tao": tao}
+    if plot == "mpl":
+        import matplotlib.pyplot as plt
+
+        user_ns["plt"] = plt
+        plt.ion()
+        print()
+        print("* Matplotlib mode configured. Pyplot available as `plt`. *")
+
+    if python_args.pylog:
+        logger.setLevel(python_args.pylog)
+        logging.basicConfig()
+    return python_args, user_ns
+
+
+def main_python():
+    python_args, user_ns = init(ipython=False)
+
+    # Handle command or script execution
+    if python_args.pycommand:
+        exec(python_args.pycommand, user_ns)
+
+    if python_args.pyscript:
+        with open(python_args.pyscript) as f:
+            script_content = f.read()
+        exec(script_content, user_ns)
+
+    console = code.InteractiveConsole(locals=user_ns)
+    console.interact(banner="")
+
+
+def main_ipython():
+    import IPython
+
+    python_args, user_ns = init(ipython=True)
+
+    ipy_argv = ["--no-banner"]
+    if python_args.pycommand:
+        ipy_argv.append("-c")
+        ipy_argv.append(python_args.pycommand)
+    if python_args.pyscript:
+        ipy_argv.append("-i")
+        ipy_argv.append(python_args.pyscript)
+
+    if len(ipy_argv) > 1:
+        logger.debug("Initializing IPython with: %s", ipy_argv)
+    return IPython.start_ipython(user_ns=user_ns, argv=ipy_argv)
+
+
+def main():
+    try:
+        import IPython  # noqa
+    except ImportError:
+        main_python()
+    else:
+        main_ipython()

@@ -40,26 +40,35 @@ Currently PyTao requires an installed Bmad distribution compiled with the `ACC_E
 
 ## Quickstart
 
-Start a quick pytao session with IPython using:
+Start a quick PyTao session with IPython using:
 
-```
+```bash
 $ pytao -init tao.init
-------------------------------------------------------------
-Initializing `tao` object with the following: -init tao.init
+----------------------------------------------------------
+Initializing Tao object with the following: -init tao.init
 Type`tao.` and hit tab to see available commands.
-------------------------------------------------------------
-
-Python 3.12.0 | packaged by conda-forge | (main, Oct  3 2023, 08:36:57) [Clang 15.0.7 ]
-Type 'copyright', 'credits' or 'license' for more information
-IPython 8.18.1 -- An enhanced Interactive Python. Type '?' for help.
+----------------------------------------------------------
 
 In [1]: tao
-Out[1]: <pytao.interface_commands.Tao at 0x13c43d4f0>
+Out[1]: <Tao init='-init tao.init' so_lib='/path/to/libtao.so'>
+```
+
+To use PyTao's plotting with Matplotlib (`"mpl"`, alternatively Bokeh `"bokeh"`), use the `--pyplot` argument.
+
+```bash
+$ pytao --pyplot=mpl -init "$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init"
+------------------------------------------------------------------------------------------------------
+Initializing Tao object with: -init /Users/klauer/Repos/bmad/bmad-doc/tao_examples/cbeta_cell/tao.init
+
+Type `tao.` and hit tab to see available commands.
+------------------------------------------------------------------------------------------------------
+
+* Matplotlib mode configured. Pyplot available as `plt`. *
 ```
 
 Start pytao's GUI from the command-line with:
 
-```
+```bash
 pytao-gui -init tao.init
 ```
 

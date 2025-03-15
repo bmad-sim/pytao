@@ -26,7 +26,7 @@ classifiers = [
 ]
 
 [project.scripts]
-pytao = "pytao.__main__:main"
+pytao = "pytao.cli:main"
 pytao-gui = "pytao.gui.__main__:main"
 
 [project.optional-dependencies]

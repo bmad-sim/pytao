@@ -64,10 +64,14 @@ def test_startup_requires_init() -> None:
 
 def test_startup_bad_file() -> None:
     bad_fn = "/tmp/foooooobarrrr"
-    with pytest.raises(TaoInitializationError) as raises_context:
-        Tao(f"-init_file {bad_fn}")
-    ex = raises_context.value
-    assert hasattr(ex, "tao_output")
-    assert bad_fn in ex.tao_output
-    assert "TAO INITIALIZATION FILE NOT FOUND" in ex.tao_output
-    print(str(ex))
+    for check in range(1, 3):
+        print(f"** Check number {check} **")
+        # We do this *twice* because it's actually two different paths to
+        # initialization of the underlying Fortran library.
+        with pytest.raises(TaoInitializationError) as raises_context:
+            Tao(f"-init_file {bad_fn}")
+        ex = raises_context.value
+        assert hasattr(ex, "tao_output")
+        assert bad_fn in ex.tao_output
+        assert "TAO INITIALIZATION FILE NOT FOUND" in ex.tao_output
+        print(str(ex))

@@ -15,7 +15,7 @@ from typing_extensions import Literal, override
 
 from . import pbar
 from .tao_ctypes.core import TaoCore, TaoInitializationError
-from .tao_ctypes.util import parse_tao_python_data
+from .tao_ctypes.util import TaoCommandError, parse_tao_python_data
 from .util import parsers as _pytao_parsers
 from .util.command import make_tao_init, Quiet
 from .util.parameters import tao_parameter_dict
@@ -568,6 +568,11 @@ class Tao(TaoCore):
             var_file=var_file,
         )
 
+        default_tao_init = "tao.init"
+        if not self.init_settings.can_initialize and pathlib.Path(default_tao_init).exists():
+            # Can't initialize unless -lat or -init are specified.
+            self.init_settings.init_file = default_tao_init
+
         if not self.init_settings.can_initialize:
             raise TaoInitializationError(
                 f"Tao will not be able to initialize with the following settings:"
@@ -585,14 +590,20 @@ class Tao(TaoCore):
                 f"\n>>> Tao('-lat $ACC_ROOT_DIR/bmad-doc/tao_examples/erl/bmad.lat')"
             )
 
-        self._init_output = self._init(self.init_settings)
+        self._init_output = self._init_backend(self.init_settings)
         if not self._tao_version_checked:
             self._tao_version_checked = True
             self._check_tao_version()
         return self._init_output
 
     def _check_tao_version(self):
-        version = self.version()
+        try:
+            version = self.version()
+        except TaoCommandError as ex:
+            logger.warning(f"Failed to check Tao version: {ex}")
+            logger.debug(f"Failed to check Tao version: {ex}", exc_info=True)
+            return
+
         if version is None:
             # Don't continue to warn about failing to parse the version
             return
@@ -614,9 +625,11 @@ class Tao(TaoCore):
                     "Tao plot manager re-initialization failure (%s)", type(manager)
                 )
 
-    def _init(self, startup: TaoStartup):
+    def _init_backend(self, startup: TaoStartup):
+        # Backend initialization: this is the hook for either Tao or SubprocessTao
+        # to do its thing.
         self._reset_graph_managers()
-        return super().init(startup.tao_init)
+        return self._init_or_raise(startup.tao_init)
 
     def __execute(
         self,

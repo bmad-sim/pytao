@@ -739,7 +739,7 @@ def parse_ele_grid_field(lines, cmd=""):
         def parse_point_line(line: str):
             parts = line.split(";")
             i, j, k = (int(part) for part in parts[:3])
-            data = [ast.literal_eval(part) for part in parts[3:]]
+            data = [ast.literal_eval(part.strip()) for part in parts[3:]]
             return {
                 "i": i,
                 "j": j,
@@ -1448,7 +1448,7 @@ def parse_show_plot_page(lines, cmd=""):
 
     def literal_eval(value: str):
         try:
-            return ast.literal_eval(value)
+            return ast.literal_eval(value.strip())
         except (ValueError, SyntaxError):
             return value
 
