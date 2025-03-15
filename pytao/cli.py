@@ -6,6 +6,8 @@ import os
 import sys
 from types import SimpleNamespace
 
+from pytao.tao_ctypes.util import TaoInitializationError
+
 from .interface_commands import Tao
 from .subproc import SubprocessTao
 
@@ -117,7 +119,14 @@ def init(ipython: bool):
     plot = os.environ.get("PYTAO_PLOT", python_args.pyplot or "tao").lower()
 
     tao_cls = SubprocessTao if python_args.pysubprocess else Tao
-    tao = tao_cls(init=init_args, plot=plot)
+
+    try:
+        tao = tao_cls(init=init_args, plot=plot)
+    except TaoInitializationError as ex:
+        if "Tao will not be able to initialize with the following settings:" in str(ex):
+            create_argparser().print_help()
+            sys.exit(1)
+        raise
 
     user_ns = {"tao": tao}
     if plot == "mpl":

@@ -568,6 +568,11 @@ class Tao(TaoCore):
             var_file=var_file,
         )
 
+        default_tao_init = "tao.init"
+        if not self.init_settings.can_initialize and pathlib.Path(default_tao_init).exists():
+            # Can't initialize unless -lat or -init are specified.
+            self.init_settings.init_file = default_tao_init
+
         if not self.init_settings.can_initialize:
             raise TaoInitializationError(
                 f"Tao will not be able to initialize with the following settings:"
