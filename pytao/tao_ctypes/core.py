@@ -52,6 +52,22 @@ def ipython_shell(tao: Tao) -> None:
         banner1="Entering Tao interactive shell. Type commands as in Tao.",
     )
 
+    # def tao_plot_completer(ipython, event):
+    #     """Tab completion for the 'plot' command"""
+    #     options = ["setup", "list", "export", "place", "template", "curve", "axis"]
+    #     return [opt for opt in options if opt.startswith(event.symbol)]
+    #
+    # def tao_top_level_completer(ipython, event):
+    #     """Tab completion for top-level Tao commands"""
+    #     options = [
+    #         "show",
+    #     ]
+    #     return [opt for opt in options if opt.startswith(event.symbol)]
+    #
+    # # Register the tab completion functions
+    # ipshell.set_hook("complete_command", tao_plot_completer, str_key="plot")
+    # ipshell.set_hook("complete_command", tao_top_level_completer, re_key="^")
+
     print("Type Tao commands as you would normally in Tao.")
     print("Type 'exit', 'quit', or press Ctrl-D on a blank line to return to IPython mode.")
 

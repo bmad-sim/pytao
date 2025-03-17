@@ -22,6 +22,7 @@ class PytaoArgs:
     pyprefix: str = "`"
     pyscript: str | None = None
 
+    pytao: bool = False
     pyinteractive: bool = True
     pyquiet: bool = False
     pysubprocess: bool = False
@@ -95,6 +96,11 @@ def create_argparser() -> argparse.ArgumentParser:
         "--pyquiet",
         action="store_true",
         help="Do not show any PyTao banner or welcome messages.",
+    )
+    parser.add_argument(
+        "--pytao",
+        action="store_true",
+        help="Go straight to interactive Tao mode first.",
     )
     parser.add_argument(
         "--pylog",
@@ -212,6 +218,10 @@ def main_ipython():
         conf.InteractiveShellApp.exec_lines.append(
             f"tao.register_input_transformer({python_args.pyprefix!r})"
         )
+
+    if python_args.pytao:
+        conf.InteractiveShellApp.exec_lines.append("tao.shell()")
+
     return IPython.start_ipython(config=conf, user_ns=user_ns, argv=ipy_argv)
 
 
