@@ -88,7 +88,7 @@ def generate_params(params):
 
         dtype = p.type
         if "default=" in dtype:
-            kwargs.append(f"{name}='{dtype[dtype.find('=')+1:].strip()}'")
+            kwargs.append(f"{name}='{dtype[dtype.find('=') + 1 :].strip()}'")
         elif "optional" in dtype:
             kwargs.append(f"{name}=''")
         else:
@@ -169,12 +169,7 @@ cmds_to_module = [
 print()
 
 
-# TODO: bring these back to bmad
-hotfixes = {
-    "var": {
-        "command_str": "python var {var} {slaves}",
-    }
-}
+hotfixes = {}
 
 for method, metadata in cmds_from_tao.items():
     if method in hotfixes:
@@ -193,14 +188,14 @@ for method, metadata in cmds_from_tao.items():
         print(f"***Error generating code for: {method}. Exception was: {ex}")
         raise
 
-    method_template = f'''
+    method_template = f"""
     def {clean_method}({params}):
 {add_tabs('"""', 2)}
 {add_tabs(str(np_docs), 2)}
 {add_tabs('"""', 2)}
 {add_tabs(code, 2)}
 
-'''
+"""
     cmds_to_module.append(method_template)
 
 with open(CMDS_OUTPUT, "w") as out:
@@ -267,8 +262,8 @@ for method, metadata in cmds_from_tao.items():
         args.append("verbose=True")
         test_code = f"""
 with ensure_successful_parsing(caplog):
-    with new_tao(tao_cls, '{test_meta['init']}', external_plotting=False) as tao:
-        tao.{clean_method}({', '.join(args)})
+    with new_tao(tao_cls, '{test_meta["init"]}', external_plotting=False) as tao:
+        tao.{clean_method}({", ".join(args)})
         """
         method_template = f"""
 def test_{clean_method}_{test_name}(caplog, tao_cls):
