@@ -20,6 +20,7 @@ class PytaoArgs(SimpleNamespace):
     pycommand: str | None
     pylog: str | None
     pysubprocess: bool
+    pyinteractive: bool
 
 
 DESCRIPTION = """
@@ -79,6 +80,12 @@ def create_argparser() -> argparse.ArgumentParser:
         "--pycommand",
         type=str,
         help="Python command to run at startup. May use `tao` object.",
+    )
+    parser.add_argument(
+        "--pyno-interactive",
+        action="store_false",
+        dest="pyinteractive",
+        help="After running `pycommand`, do not enter interactive mode.",
     )
     parser.add_argument(
         "--pylog",
@@ -161,20 +168,25 @@ def main_python():
 
 def main_ipython():
     import IPython
+    from traitlets.config import Config
 
     python_args, user_ns = init(ipython=True)
 
     ipy_argv = ["--no-banner"]
+    if python_args.pyinteractive:
+        ipy_argv.append("-i")
     if python_args.pycommand:
         ipy_argv.append("-c")
         ipy_argv.append(python_args.pycommand)
     if python_args.pyscript:
-        ipy_argv.append("-i")
         ipy_argv.append(python_args.pyscript)
 
     if len(ipy_argv) > 1:
         logger.debug("Initializing IPython with: %s", ipy_argv)
-    return IPython.start_ipython(user_ns=user_ns, argv=ipy_argv)
+
+    conf = Config()
+    conf.InteractiveShellApp.exec_lines = ["tao.register_cell_magic()"]
+    return IPython.start_ipython(config=conf, user_ns=user_ns, argv=ipy_argv)
 
 
 def main():

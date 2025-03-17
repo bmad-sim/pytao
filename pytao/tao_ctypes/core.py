@@ -90,7 +90,7 @@ class TaoCore:
             )
         self._init_output = self.init(init)
         try:
-            self.register_cell_magic()
+            self._register_cell_magic()
         except Exception:
             pass
 
@@ -355,10 +355,12 @@ class TaoCore:
         """
         Registers a cell magic in Jupyter notebooks.
 
-        Example:
+        Examples
+        --------
+        >>> %tao sho lat
 
-            %%tao
-            sho lat
+        >>> %%tao
+        ... sho lat
         """
 
         from IPython.core.magic import register_line_cell_magic
