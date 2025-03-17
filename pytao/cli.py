@@ -15,12 +15,14 @@ logger = logging.getLogger("pytao")
 
 
 class PytaoArgs(SimpleNamespace):
-    pyplot: str | None
-    pyscript: str | None
     pycommand: str | None
     pylog: str | None
-    pysubprocess: bool
+    pyplot: str | None
+    pyscript: str | None
+
     pyinteractive: bool
+    pyquiet: bool
+    pysubprocess: bool
 
 
 DESCRIPTION = """
@@ -88,6 +90,11 @@ def create_argparser() -> argparse.ArgumentParser:
         help="After running `pycommand`, do not enter interactive mode.",
     )
     parser.add_argument(
+        "--pyquiet",
+        action="store_true",
+        help="Do not show any PyTao banner or welcome messages.",
+    )
+    parser.add_argument(
         "--pylog",
         choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
         help="Set logging level.",
@@ -109,19 +116,20 @@ def split_pytao_tao_args(args: list[str]) -> tuple[PytaoArgs, str]:
 def init(ipython: bool):
     python_args, init_args = split_pytao_tao_args(sys.argv[1:])
 
-    startup_message = f"Initializing Tao object with: {init_args}"
-    print("-" * len(startup_message))
-    print(startup_message)
-    print()
+    if not python_args.pyquiet:
+        startup_message = f"Initializing Tao object with: {init_args}"
+        print("-" * len(startup_message))
+        print(startup_message)
+        print()
 
-    if ipython:
-        print("Type `tao.` and hit tab to see available commands.")
-    else:
-        print("The `tao` object is available.")
-        print("Tab completion not available in basic mode.")
-        print("To enable tab completion, install IPython: pip install ipython")
+        if ipython:
+            print("Type `tao.` and hit tab to see available commands.")
+        else:
+            print("The `tao` object is available.")
+            print("Tab completion not available in basic mode.")
+            print("To enable tab completion, install IPython: pip install ipython")
 
-    print("-" * len(startup_message))
+        print("-" * len(startup_message))
 
     plot = os.environ.get("PYTAO_PLOT", python_args.pyplot or "tao").lower()
 
@@ -141,8 +149,10 @@ def init(ipython: bool):
 
         user_ns["plt"] = plt
         plt.ion()
-        print()
-        print("* Matplotlib mode configured. Pyplot available as `plt`. *")
+
+        if not python_args.pyquiet:
+            print()
+            print("* Matplotlib mode configured. Pyplot available as `plt`. *")
 
     if python_args.pylog:
         logger.setLevel(python_args.pylog)
