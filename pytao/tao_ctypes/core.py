@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import ctypes
 import logging
 import os
@@ -7,7 +8,7 @@ import shutil
 import tempfile
 import textwrap
 from ctypes.util import find_library
-from typing import List, Optional, Tuple, Type, Union, TYPE_CHECKING
+from typing import TYPE_CHECKING, List, Optional, Tuple, Type, Union
 
 import numpy as np
 
@@ -42,33 +43,65 @@ def ipython_shell(tao: Tao) -> None:
     cfg.TerminalInteractiveShell.prompts_class = TaoPrompt
     cfg.TerminalInteractiveShell.confirm_exit = False
 
+    # Remove standard completion stuff from Jedi:
+    cfg.IPCompleter.use_jedi = False
+
+    cfg.IPCompleter.disable_matchers = [
+        "IPCompleter.latex_name_matcher",
+        # "IPCompleter.unicode_name_matcher",
+        "back_latex_name_matcher",
+        "back_unicode_name_matcher",
+        # "IPCompleter.fwd_unicode_matcher",
+        "IPCompleter.magic_config_matcher",
+        "IPCompleter.magic_color_matcher",
+        # "IPCompleter.custom_completer_matcher",
+        "IPCompleter.dict_key_matcher",
+        "IPCompleter.magic_matcher",
+        "IPCompleter.python_matcher",
+        "IPCompleter.file_matcher",  # <- TODO can we use this in a restricted way?
+        "IPCompleter.python_func_kw_matcher",
+    ]
+
     pytao_config = pathlib.Path("~/.config/.pytao").expanduser()
     pytao_config.mkdir(parents=True, exist_ok=True)
 
     cfg.HistoryManager.hist_file = pytao_config / "pytao_shell_history.db"
+
+    # TODO: can we integrate with Tao's history?
+    # try:
+    #     with open(pathlib.Path("~/.history_tao")) as fp:
+    #         tao_history = fp.readlines()
+    # except IOError:
+    #     tao_history = []
 
     ipshell = InteractiveShellEmbed(
         config=cfg,
         banner1="Entering Tao interactive shell. Type commands as in Tao.",
     )
 
-    # def tao_plot_completer(ipython, event):
-    #     """Tab completion for the 'plot' command"""
-    #     options = ["setup", "list", "export", "place", "template", "curve", "axis"]
-    #     return [opt for opt in options if opt.startswith(event.symbol)]
-    #
-    # def tao_top_level_completer(ipython, event):
-    #     """Tab completion for top-level Tao commands"""
-    #     options = [
-    #         "show",
-    #     ]
-    #     return [opt for opt in options if opt.startswith(event.symbol)]
-    #
-    # # Register the tab completion functions
-    # ipshell.set_hook("complete_command", tao_plot_completer, str_key="plot")
-    # ipshell.set_hook("complete_command", tao_top_level_completer, re_key="^")
+    def tao_top_level_completer(ipython, event):
+        """Tab completion for top-level Tao commands."""
+        options = list(tao._autocomplete_usage_)
 
-    print("Type Tao commands as you would normally in Tao.")
+        parts = [part.lower() for part in event.line.lstrip().split()]
+
+        if " ".join(parts[:2]) in {"change ele", "set ele", "show ele"}:
+            return tao.lat_list(f"{event.symbol}*", "ele.name")
+
+        cmd = parts[0] if parts else None
+
+        if cmd not in tao._autocomplete_usage_:
+            return [opt for opt in options if opt.startswith(event.symbol.lower())]
+
+        level = len(parts)
+        return [
+            option.split(" ")[level]
+            for option, _help in tao._autocomplete_usage_[cmd]
+            if option.count(" ") > level and "{" not in option and "<" not in option
+        ]
+
+    ipshell.set_hook("complete_command", tao_top_level_completer, re_key="^")
+
     print("Type 'exit', 'quit', or press Ctrl-D on a blank line to return to IPython mode.")
 
     def preprocess_line(line: str) -> str:
@@ -78,7 +111,11 @@ def ipython_shell(tao: Tao) -> None:
         if line.startswith("get_ipython"):
             return line
 
-        print("\n".join(tao.cmd(line, raises=False)))
+        res = tao.cmd(line, raises=False)
+        if isinstance(res, str):
+            res = [res]
+
+        print("\n".join(res))
         return ""
 
     def preprocess_lines(lines: list[str]) -> list[str]:
@@ -100,9 +137,12 @@ def simple_shell(tao: Tao) -> None:
             if cmd.lower() in ("exit", "quit"):
                 break
             result = tao.cmd(cmd)
-            if result:
+            res = tao.cmd(cmd, raises=False)
+            if isinstance(res, str):
+                res = [res]
+            if res:
                 print("\n".join(result))
-        except EOFError:
+        except (KeyboardInterrupt, EOFError):
             break
         except Exception as e:
             print(f"Error: {e}")

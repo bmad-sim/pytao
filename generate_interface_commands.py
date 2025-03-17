@@ -19,7 +19,7 @@ TEST_OUTPUT = "./pytao/tests/test_interface_commands.py"
 tao_docs = os.path.join(os.getenv("ACC_ROOT_DIR", "../bmad"), "tao", "doc")
 
 
-def sanitize_method_name(method):
+def sanitize_method_name(method: str) -> str:
     clean_name = method.replace(":", "_")
     if clean_name == "global":
         clean_name = "tao_global"
@@ -28,14 +28,14 @@ def sanitize_method_name(method):
     return clean_name.strip()
 
 
-def sanitize(text):
+def sanitize(text: str) -> str:
     if "!" in text:
         ex_pos = text.find("!")
         text = text[:ex_pos]
     return text.replace("%", "_").replace("(", "_").replace(")", "").replace("?", "").strip()
 
 
-def add_tabs(text, tabs):
+def add_tabs(text: str, tabs: int) -> str:
     return "    " * tabs + text.replace("\n", "\n" + "    " * tabs)
 
 
@@ -46,25 +46,24 @@ def sanitize_help_section(text: str) -> str:
     return re.sub(pattern, r"\1", text)
 
 
-def parse_help_section(section: str, latex_source: str):
+def get_usage_from_help_section(section: str, latex_source: str) -> list[str]:
     complex_commands = ["write", "set", "create"]
 
     if section in complex_commands:
-        examples = []
+        examples: list[str] = []
         example_pattern = re.compile(r"\\begin{example}(.*?)\\end{example}", re.DOTALL)
 
-        for i, match in enumerate(example_pattern.finditer(latex_source)):
+        for match in list(example_pattern.finditer(latex_source))[1:]:
             # Skip the first match as it's typically the format
-            if i > 0:
-                example_text = match.group(1).strip()
-                examples.append(example_text)
+            example_text = match.group(1).strip()
+            examples.extend(example_text.splitlines())
         return examples
 
-    example_match = re.search(r"\\begin{example}(.*?)\\end{example}", latex_source, re.DOTALL)
+    usage_match = re.search(r"\\begin{example}(.*?)\\end{example}", latex_source, re.DOTALL)
 
-    if example_match:
-        format_text = [line.strip() for line in example_match.group(1).strip().splitlines()]
-        return format_text  # parse_latex_section("\n".join(lines))
+    if usage_match:
+        format_text = [line.strip() for line in usage_match.group(1).strip().splitlines()]
+        return format_text
     return [section]
 
 
@@ -82,26 +81,34 @@ def parse_command_list_help(command_list_tex: str):
         if section:
             sections[section].append(line)
 
+    def split_comment(line: str) -> tuple[str, str]:
+        line = line.strip()
+        if "!" in line:
+            cmd, comment = line.split("!", 1)
+        else:
+            cmd, comment = line, ""
+        return cmd.strip(), comment.strip()
+
     return {
         section: [
-            sanitize_help_section(line)
-            for line in parse_help_section(section, "\n".join(lines))
+            split_comment(sanitize_help_section(line))
+            for line in get_usage_from_help_section(section, "\n".join(lines))
+            if line.startswith(section)
         ]
         for section, lines in sections.items()
     }
 
 
-# def generate_autocompletion(command_list_tex: str):
-#     import rich
-#
-#     rich.print(parse_command_list_help(command_list_tex), file=sys.stderr)
+def generate_autocompletion(command_list_tex: str):
+    return parse_command_list_help(command_list_tex)
 
 
 def generate_params(params):
     """
     Generates the list of parameters for the Tao Python method.
-    This method uses the NumpyDocString Parameter class to introspect
-    for optional flags.
+
+    This method uses the NumpyDocString Parameter class to introspect for
+    optional flags.
 
     `verbose` and `as_dict`, `raises` are always keyword arguments defaulting to True`.
 
@@ -119,15 +126,15 @@ def generate_params(params):
 
     args = ["self"]
     kwargs = []
-    for idx, p in enumerate(params):
-        name = sanitize(p.name)
+    for param in params:
+        name = sanitize(param.name)
 
         # Skip empty params.
         if not name:
             assert len(params) == 1
             continue
 
-        dtype = p.type
+        dtype = param.type
         if "default=" in dtype:
             kwargs.append(f"{name}='{dtype[dtype.find('=') + 1 :].strip()}'")
         elif "optional" in dtype:
@@ -139,9 +146,7 @@ def generate_params(params):
     kwargs.append("as_dict=True")
     kwargs.append("raises=True")
 
-    param_str = ", ".join(args + ["*"] + kwargs)
-
-    return param_str
+    return ", ".join(args + ["*"] + kwargs)
 
 
 def generate_method_code(command_str, docs, method, command, returns):
@@ -154,14 +159,11 @@ def generate_method_code(command_str, docs, method, command, returns):
     ----------
     docs : NumpyDocString
       The NumpyDocString instance
-
     method : str
       The cleaned method name
-
     command : str
       The `command_str` text from the JSON parser. This is a Python f-string for the Tao command.
       E.g.: "python lat_list {flags} {ix_uni}_{ix_branch}>>{elements}|{which} {who}"
-
     returns : list
       List of Parameter objects obtained via parsing the Tao docstring with NumpyDocString.
 
@@ -269,6 +271,9 @@ def write_interface_commands():
     """
         cmds_to_module.append(method_template)
 
+    command_to_usage = generate_autocompletion(os.path.join(tao_docs, "command-list.tex"))
+    cmds_to_module.append(f"_autocomplete_usage_ = {command_to_usage!r}")
+
     with open(CMDS_OUTPUT, "w") as out:
         out.writelines(cmds_to_module)
 
@@ -276,6 +281,26 @@ def write_interface_commands():
 
 
 def get_tests(examples):
+    """
+    Parse examples to extract test cases with their initialization and arguments.
+
+    Parameters
+    ----------
+    examples : list of str
+        A list of strings containing test examples in a specific format.
+        The format should follow these patterns:
+        - "Example: <test_name>" to start a new test case
+        - "init: <initialization_code>" to specify initialization code
+        - "args:" to indicate the start of arguments list
+        - "<arg_name>: <arg_value>" for each argument
+
+    Returns
+    -------
+    dict
+        A dictionary where keys are test names and values are dictionaries with:
+        - 'init': initialization code (string)
+        - 'args': dictionary of argument names to their values
+    """
     tests = {}
     name = ""
     parsing_args = False
@@ -338,8 +363,6 @@ def test_{clean_method}_{test_name}(caplog, tao_cls):
         out.writelines(cmds_to_test_module)
 
     print(f"Generated file: {TEST_OUTPUT}")
-
-    # generate_autocompletion(os.path.join(tao_docs, "command-list.tex"))
 
     if shutil.which("ruff"):
         os.system(f'ruff format "{CMDS_OUTPUT}" "{TEST_OUTPUT}"')
