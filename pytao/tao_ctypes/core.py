@@ -2,6 +2,7 @@ from __future__ import annotations
 import ctypes
 import logging
 import os
+import pathlib
 import shutil
 import tempfile
 import textwrap
@@ -27,6 +28,70 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
+def ipython_shell(tao: Tao) -> None:
+    """Spawn an interactive Tao shell using IPython."""
+    from IPython.terminal.embed import InteractiveShellEmbed
+    from IPython.terminal.prompts import Prompts, Token
+    from traitlets.config.loader import Config
+
+    class TaoPrompt(Prompts):
+        def in_prompt_tokens(self, cli=None):
+            return [(Token.Prompt, "Tao> ")]
+
+    cfg = Config()
+    cfg.TerminalInteractiveShell.prompts_class = TaoPrompt
+    cfg.TerminalInteractiveShell.confirm_exit = False
+
+    pytao_config = pathlib.Path("~/.config/.pytao").expanduser()
+    pytao_config.mkdir(parents=True, exist_ok=True)
+
+    cfg.HistoryManager.hist_file = pytao_config / "pytao_shell_history.db"
+
+    ipshell = InteractiveShellEmbed(
+        config=cfg,
+        banner1="Entering Tao interactive shell. Type commands as in Tao.",
+    )
+
+    print("Type Tao commands as you would normally in Tao.")
+    print("Type 'exit', 'quit', or press Ctrl-D on a blank line to return to IPython mode.")
+
+    def preprocess_line(line: str) -> str:
+        line = line.strip()
+        if line.lower() in ["exit()", "quit()", "history"] or not line:
+            return line
+        if line.startswith("get_ipython"):
+            return line
+
+        print("\n".join(tao.cmd(line, raises=False)))
+        return ""
+
+    def preprocess_lines(lines: list[str]) -> list[str]:
+        lines = [preprocess_line(line) for line in lines]
+        return [preprocess_line(line) for line in lines]
+
+    ipshell.input_transformers_post.append(preprocess_lines)
+
+    ipshell()
+
+
+def simple_shell(tao: Tao) -> None:
+    print("Entering Tao interactive shell.")
+    print("Type 'exit', 'quit', or press Ctrl-D on a blank line to return to Python mode.")
+
+    while True:
+        try:
+            cmd = input("Tao> ")
+            if cmd.lower() in ("exit", "quit"):
+                break
+            result = tao.cmd(cmd)
+            if result:
+                print("\n".join(result))
+        except EOFError:
+            break
+        except Exception as e:
+            print(f"Error: {e}")
+
+
 def register_input_transformer(prefix: str = "`"):
     """
     Register IPython magic convenience transform.
@@ -48,7 +113,9 @@ def register_input_transformer(prefix: str = "`"):
         """Transform lines that start with the prefix."""
         transformed_lines = []
         for line in lines:
-            if line.startswith(prefix):
+            if line.strip() == prefix:
+                transformed_lines.append("tao.shell()")
+            elif line.startswith(prefix):
                 cmd = line[len(prefix) :].strip()
                 transformed_lines.append(
                     f"""
@@ -452,9 +519,28 @@ class TaoCore:
 
         @register_line_cell_magic
         def tao(line, cell=None):
-            _tao_line_cell_magic(tao_instance=self, line=line, cell=cell)
+            _tao_line_cell_magic(
+                tao_instance=self,  # type: ignore
+                line=line,
+                cell=cell,
+            )
 
         del tao
+
+    def shell(self) -> None:
+        """
+        Start an interactive shell with a 'Tao>' prompt.
+
+        Uses IPython if available, otherwise falls back to standard Python input loop.
+        """
+        try:
+            ipython_shell(
+                tao=self,  # type: ignore
+            )
+        except ImportError:
+            simple_shell(
+                tao=self,  # type: ignore
+            )
 
 
 def find_libtao(base_dir):
