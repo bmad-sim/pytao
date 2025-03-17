@@ -6,7 +6,7 @@ import shutil
 import tempfile
 import textwrap
 from ctypes.util import find_library
-from typing import List, Optional, Tuple, Type, Union
+from typing import List, Optional, Tuple, Type, Union, TYPE_CHECKING
 
 import numpy as np
 
@@ -21,10 +21,80 @@ from .util import (
     TaoSharedLibraryNotFoundError,
 )
 
+if TYPE_CHECKING:
+    from ..interface_commands import Tao
+
 logger = logging.getLogger(__name__)
 
 
-def _tao_line_cell_magic(tao_instance: TaoCore, line: str, cell: Optional[str] = None):
+def register_input_transformer(prefix: str = "`"):
+    """
+    Register IPython magic convenience transform.
+
+    Parameters
+    ----------
+    prefix : str, optional
+        The leading character(s) for the command prefix.
+    """
+    import IPython
+
+    ip = IPython.get_ipython()
+
+    if ip is None:
+        return  # Not in an IPython environment
+
+    # Define our transformer function
+    def tao_transform(lines: list[str]) -> list[str]:
+        """Transform lines that start with the prefix."""
+        transformed_lines = []
+        for line in lines:
+            if line.startswith(prefix):
+                cmd = line[len(prefix) :].strip()
+                transformed_lines.append(
+                    f"""
+                    print("\\n".join(tao.cmd({cmd!r})))
+                    """.strip()
+                )
+                logger.debug(f"Transformed: {cmd} -> {transformed_lines[-1]}")
+            else:
+                transformed_lines.append(line)
+        return transformed_lines
+
+    # Register the transformer in the IPython instance
+    ip.input_transformers_post.append(tao_transform)
+
+
+def _tao_line_cell_magic(tao_instance: Tao, line: str, cell: Optional[str] = None):
+    """
+    Execute Tao commands in IPython as line or cell magic.
+
+    This function is used to implement the %tao line magic and %%tao cell magic
+    in IPython. It sends commands to a Tao instance and prints the results.
+
+    Parameters
+    ----------
+    tao_instance : Tao
+        The Tao instance registered with the line/cell magic.
+    line : str
+        The line content when used as line magic, or the line after %%tao when
+        used as cell magic. In cell magic, this can optionally specify a
+        different Tao instance to use.
+    cell : str or None, default=None
+        The cell content when used as cell magic.
+        If None, function operates as line magic.
+
+    Returns
+    -------
+    None
+        Results are printed rather than returned.
+
+    Raises
+    ------
+    ValueError
+        If the specified tao_instance_name in cell magic is invalid or not a TaoCore instance.
+    AssertionError
+        If not running in an IPython environment.
+    """
     from IPython import get_ipython
 
     ipy = get_ipython()
@@ -90,7 +160,7 @@ class TaoCore:
             )
         self._init_output = self.init(init)
         try:
-            self._register_cell_magic()
+            self.register_cell_magic()
         except Exception:
             pass
 
@@ -350,6 +420,21 @@ class TaoCore:
             return self._get_array(cmd=cmd, dtype=int, raises=raises)
         finally:
             self.reset_output()
+
+    def register_input_transformer(self, prefix: str) -> None:
+        """
+        Registers an IPython input text transformer. Every IPython line
+        that starts with `prefix` character(s) will turn into a `tao.cmd()` line.
+
+        Examples
+        --------
+        >>> %tao sho lat
+
+        >>> %%tao
+        ... sho lat
+        """
+
+        register_input_transformer()
 
     def register_cell_magic(self):
         """

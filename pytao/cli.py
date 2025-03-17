@@ -18,6 +18,7 @@ class PytaoArgs(SimpleNamespace):
     pycommand: str | None
     pylog: str | None
     pyplot: str | None
+    pyprefix: str | None = "`"
     pyscript: str | None
 
     pyinteractive: bool
@@ -100,6 +101,14 @@ def create_argparser() -> argparse.ArgumentParser:
         help="Set logging level.",
     )
     parser.add_argument(
+        "--pyprefix",
+        default="`",
+        help=(
+            "Default prefix for the input text transformer. Every IPython line "
+            "that starts with this character will turn into a `tao.cmd()` line."
+        ),
+    )
+    parser.add_argument(
         "--pysubprocess",
         action="store_true",
         help="Launch Tao in a subprocess.",
@@ -157,6 +166,7 @@ def init(ipython: bool):
     if python_args.pylog:
         logger.setLevel(python_args.pylog)
         logging.basicConfig()
+
     return python_args, user_ns
 
 
@@ -196,6 +206,11 @@ def main_ipython():
 
     conf = Config()
     conf.InteractiveShellApp.exec_lines = ["tao.register_cell_magic()"]
+
+    if python_args.pyprefix:
+        conf.InteractiveShellApp.exec_lines.append(
+            f"tao.register_input_transformer({python_args.pyprefix!r})"
+        )
     return IPython.start_ipython(config=conf, user_ns=user_ns, argv=ipy_argv)
 
 
