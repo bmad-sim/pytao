@@ -115,9 +115,7 @@ def test_init_logging(mock_logging, mock_tao):
 @patch("code.InteractiveConsole")
 def test_main_python_interactive(mock_console, mock_init):
     """Test Python backend with interactive console"""
-    python_args = PytaoArgs(
-        pyplot=None, pyscript=None, pycommand=None, pylog=None, pysubprocess=False
-    )
+    python_args = PytaoArgs(pysubprocess=False)
     mock_init.return_value = (python_args, {"tao": MagicMock()})
 
     console_instance = MagicMock()
@@ -134,13 +132,7 @@ def test_main_python_interactive(mock_console, mock_init):
 @patch("builtins.exec")
 def test_main_python_command(mock_exec, mock_init, mock_console):
     """Test Python backend with command execution"""
-    python_args = PytaoArgs(
-        pyplot=None,
-        pyscript=None,
-        pycommand="print('hello')",
-        pylog=None,
-        pysubprocess=False,
-    )
+    python_args = PytaoArgs(pycommand="print('hello')", pysubprocess=False)
     user_ns = {"tao": MagicMock()}
     mock_init.return_value = (python_args, user_ns)
 
@@ -177,15 +169,24 @@ def test_main_python_script(tmp_path: pathlib.Path):
 @patch("IPython.start_ipython")
 def test_main_ipython_basic(mock_start_ipython, mock_init):
     """Test basic IPython backend"""
-    python_args = PytaoArgs(
-        pyplot=None, pyscript=None, pycommand=None, pylog=None, pysubprocess=False
-    )
+    python_args = PytaoArgs(pysubprocess=False, pyprefix="<")
     user_ns = {"tao": MagicMock()}
     mock_init.return_value = (python_args, user_ns)
 
     main_ipython()
 
-    mock_start_ipython.assert_called_with(user_ns=user_ns, argv=["--no-banner"])
+    mock_start_ipython.assert_called_with(
+        config={
+            "InteractiveShellApp": {
+                "exec_lines": [
+                    "tao.register_cell_magic()",
+                    "tao.register_input_transformer('<')",
+                ]
+            }
+        },
+        user_ns=user_ns,
+        argv=["--no-banner", "-i"],
+    )
 
 
 @patch("pytao.cli.init")
@@ -193,10 +194,7 @@ def test_main_ipython_basic(mock_start_ipython, mock_init):
 def test_main_ipython_command(mock_start_ipython, mock_init):
     """Test IPython backend with command"""
     python_args = PytaoArgs(
-        pyplot=None,
-        pyscript=None,
         pycommand="print('hello')",
-        pylog=None,
         pysubprocess=False,
     )
     user_ns = {"tao": MagicMock()}
@@ -205,7 +203,44 @@ def test_main_ipython_command(mock_start_ipython, mock_init):
     main_ipython()
 
     mock_start_ipython.assert_called_with(
-        user_ns=user_ns, argv=["--no-banner", "-c", "print('hello')"]
+        config={
+            "InteractiveShellApp": {
+                "exec_lines": [
+                    "tao.register_cell_magic()",
+                    "tao.register_input_transformer('`')",
+                ]
+            }
+        },
+        user_ns=user_ns,
+        argv=["--no-banner", "-i", "-c", "print('hello')"],
+    )
+
+
+@patch("pytao.cli.init")
+@patch("IPython.start_ipython")
+def test_main_ipython_script_no_interactive(mock_start_ipython, mock_init):
+    """Test IPython backend with script"""
+    python_args = PytaoArgs(
+        pyscript="script.py",
+        pysubprocess=False,
+        pyinteractive=False,
+    )
+    user_ns = {"tao": MagicMock()}
+    mock_init.return_value = (python_args, user_ns)
+
+    main_ipython()
+
+    mock_start_ipython.assert_called_with(
+        config={
+            "InteractiveShellApp": {
+                "exec_lines": [
+                    "tao.register_cell_magic()",
+                    "tao.register_input_transformer('`')",
+                ]
+            }
+        },
+        user_ns=user_ns,
+        argv=["--no-banner", "script.py"],
     )
 
 
@@ -214,7 +249,9 @@ def test_main_ipython_command(mock_start_ipython, mock_init):
 def test_main_ipython_script(mock_start_ipython, mock_init):
     """Test IPython backend with script"""
     python_args = PytaoArgs(
-        pyplot=None, pyscript="script.py", pycommand=None, pylog=None, pysubprocess=False
+        pyscript="script.py",
+        pysubprocess=False,
+        pyinteractive=True,
     )
     user_ns = {"tao": MagicMock()}
     mock_init.return_value = (python_args, user_ns)
@@ -222,5 +259,14 @@ def test_main_ipython_script(mock_start_ipython, mock_init):
     main_ipython()
 
     mock_start_ipython.assert_called_with(
-        user_ns=user_ns, argv=["--no-banner", "-i", "script.py"]
+        config={
+            "InteractiveShellApp": {
+                "exec_lines": [
+                    "tao.register_cell_magic()",
+                    "tao.register_input_transformer('`')",
+                ]
+            }
+        },
+        user_ns=user_ns,
+        argv=["--no-banner", "-i", "script.py"],
     )

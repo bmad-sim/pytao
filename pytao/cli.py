@@ -1,10 +1,10 @@
 from __future__ import annotations
 import argparse
 import code
+import dataclasses
 import logging
 import os
 import sys
-from types import SimpleNamespace
 
 from pytao.tao_ctypes.util import TaoInitializationError
 
@@ -14,16 +14,17 @@ from .subproc import SubprocessTao
 logger = logging.getLogger("pytao")
 
 
-class PytaoArgs(SimpleNamespace):
-    pycommand: str | None
-    pylog: str | None
-    pyplot: str | None
-    pyprefix: str | None = "`"
-    pyscript: str | None
+@dataclasses.dataclass
+class PytaoArgs:
+    pycommand: str | None = None
+    pylog: str | None = None
+    pyplot: str | None = None
+    pyprefix: str = "`"
+    pyscript: str | None = None
 
-    pyinteractive: bool
-    pyquiet: bool
-    pysubprocess: bool
+    pyinteractive: bool = True
+    pyquiet: bool = False
+    pysubprocess: bool = False
 
 
 DESCRIPTION = """
