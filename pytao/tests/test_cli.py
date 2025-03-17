@@ -1,6 +1,7 @@
 import code
 import os
 import pathlib
+import pytest
 import sys
 from unittest.mock import MagicMock, Mock, patch
 
@@ -11,6 +12,7 @@ from ..cli import (
     main_python,
     split_pytao_tao_args,
 )
+from ..tao_ctypes.core import register_input_transformer
 
 
 def test_split_args_basic():
@@ -270,3 +272,76 @@ def test_main_ipython_script(mock_start_ipython, mock_init):
         user_ns=user_ns,
         argv=["--no-banner", "-i", "script.py"],
     )
+
+
+def test_register_input_transformer():
+    """Test the register_input_transformer function."""
+
+    # Create a mock IPython instance
+    mock_ipython = Mock()
+    mock_ipython.input_transformers_post = []
+
+    # Patch get_ipython to return our mock
+    with patch("IPython.get_ipython", return_value=mock_ipython):
+        # Call the function we're testing
+        register_input_transformer(prefix="`")
+
+        assert len(mock_ipython.input_transformers_post) == 1
+        transformer = mock_ipython.input_transformers_post[0]
+
+        input_lines = [
+            "`show lat -element=quad::*",
+            'print("Hello world")',
+            "`python show_info()",
+        ]
+
+        transformed_lines = transformer(input_lines)
+        assert transformed_lines == [
+            "print(\"\\n\".join(tao.cmd('show lat -element=quad::*')))",
+            'print("Hello world")',
+            "print(\"\\n\".join(tao.cmd('python show_info()')))",
+        ]
+
+
+def test_register_input_transformer_no_ipython():
+    """Test when IPython is not available."""
+
+    with patch("IPython.get_ipython", return_value=None):
+        result = register_input_transformer(prefix="`")
+        assert result is None
+
+
+def test_register_input_transformer_custom_prefix():
+    """Test with a custom prefix."""
+
+    mock_ipython = Mock()
+    mock_ipython.input_transformers_post = []
+
+    with patch("IPython.get_ipython", return_value=mock_ipython):
+        register_input_transformer(prefix="<")
+
+        assert len(mock_ipython.input_transformers_post) == 1
+        transformer = mock_ipython.input_transformers_post[0]
+
+        input_lines = [
+            "<show lat -element=quad::*",
+            'print("Hello world")',
+            "<python show_info()",
+        ]
+
+        transformed_lines = transformer(input_lines)
+
+        assert transformed_lines == [
+            "print(\"\\n\".join(tao.cmd('show lat -element=quad::*')))",
+            'print("Hello world")',
+            "print(\"\\n\".join(tao.cmd('python show_info()')))",
+        ]
+
+
+def test_import_error_handling():
+    with patch.dict(sys.modules, {"IPython": None}):
+        with patch(
+            "builtins.__import__", side_effect=ImportError("No module named 'IPython'")
+        ):
+            with pytest.raises(ImportError):
+                register_input_transformer(prefix="`")
