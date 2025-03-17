@@ -25,7 +25,7 @@ class PytaoArgs:
     pytao: bool = False
     pyinteractive: bool = True
     pyquiet: bool = False
-    pysubprocess: bool = False
+    pysubprocess: bool = True
 
 
 DESCRIPTION = """
@@ -116,9 +116,10 @@ def create_argparser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
-        "--pysubprocess",
-        action="store_true",
-        help="Launch Tao in a subprocess.",
+        "--pyno-subprocess",
+        action="store_false",
+        dest="pysubprocess",
+        help="Do not launch Tao in a subprocess.",
     )
     return parser
 

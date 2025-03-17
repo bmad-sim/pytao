@@ -41,7 +41,6 @@ def test_split_args_all_options():
         "print('hello')",
         "--pylog",
         "DEBUG",
-        "--pysubprocess",
         "tao_command",
     ]
     pytao_args, tao_args = split_pytao_tao_args(args)
@@ -60,7 +59,7 @@ def test_init_regular_tao(mock_tao, mock_subprocess_tao):
     """Test initialization with regular Tao"""
     mock_instance = MagicMock()
     mock_tao.return_value = mock_instance
-    with patch.object(sys, "argv", ["pytao", "--pyplot", "mpl"]):
+    with patch.object(sys, "argv", ["pytao", "--pyplot", "mpl", "--pyno-subprocess"]):
         python_args, user_ns = init(ipython=False)
 
         assert python_args.pyplot == "mpl"
@@ -78,7 +77,7 @@ def test_init_subprocess_tao(mock_tao, mock_subprocess_tao):
     mock_instance = MagicMock()
     mock_subprocess_tao.return_value = mock_instance
 
-    with patch.object(sys, "argv", ["pytao", "--pysubprocess"]):
+    with patch.object(sys, "argv", ["pytao"]):
         python_args, user_ns = init(ipython=True)
 
         assert python_args.pysubprocess is True
@@ -88,7 +87,7 @@ def test_init_subprocess_tao(mock_tao, mock_subprocess_tao):
         mock_tao.assert_not_called()
 
 
-@patch("pytao.cli.Tao")
+@patch("pytao.cli.SubprocessTao")
 @patch.dict(os.environ, {"PYTAO_PLOT": "bokeh"})
 def test_init_env_plot_backend(mock_tao):
     """Test plot backend from environment variable"""
@@ -100,7 +99,7 @@ def test_init_env_plot_backend(mock_tao):
         mock_tao.assert_called_with(init="", plot="bokeh")
 
 
-@patch("pytao.cli.Tao")
+@patch("pytao.cli.SubprocessTao")
 @patch("logging.basicConfig")
 def test_init_logging(mock_logging, mock_tao):
     """Test logging configuration"""
