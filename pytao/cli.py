@@ -130,29 +130,42 @@ def split_pytao_tao_args(args: list[str]) -> tuple[PytaoArgs, str]:
     return pytao, " ".join(tao)
 
 
+def _get_implied_init_args(init_args: str) -> str:
+    tao_init_parts = init_args.split()
+    can_init = any(part.startswith(flag) for part in tao_init_parts for flag in {"-i", "-la"})
+    if can_init:
+        return init_args
+    return f"{init_args.strip()} -init tao.init"
+
+
+def print_header(ipython: bool, startup_message: str, plot: str = "") -> None:
+    print("-" * len(startup_message))
+    print(startup_message)
+    print()
+
+    if ipython:
+        print("Type `tao.` and hit tab to see available commands.")
+    else:
+        print("The `tao` object is available.")
+        print("Tab completion not available in basic mode.")
+        print("To enable tab completion, install IPython: pip install ipython")
+
+    print("-" * len(startup_message))
+
+    if plot == "mpl":
+        print()
+        print("* Matplotlib mode configured. Pyplot available as `plt`. *")
+
+
 def init(ipython: bool):
     python_args, init_args = split_pytao_tao_args(sys.argv[1:])
 
-    if not python_args.pyquiet:
-        if not init_args:
-            # NOTE: this is implicit if the user did not specify any arguments
-            init_args = "-init tao.init"
-
-        startup_message = f"Initializing Tao object with: {init_args}"
-        print("-" * len(startup_message))
-        print(startup_message)
-        print()
-
-        if ipython:
-            print("Type `tao.` and hit tab to see available commands.")
-        else:
-            print("The `tao` object is available.")
-            print("Tab completion not available in basic mode.")
-            print("To enable tab completion, install IPython: pip install ipython")
-
-        print("-" * len(startup_message))
-
     plot = os.environ.get("PYTAO_PLOT", python_args.pyplot or "tao").lower()
+
+    if not python_args.pyquiet:
+        implied_init_args = _get_implied_init_args(init_args)
+        startup_message = f"Initializing Tao object with: {implied_init_args}"
+        print_header(ipython=ipython, startup_message=startup_message, plot=plot)
 
     tao_cls = SubprocessTao if python_args.pysubprocess else Tao
 
@@ -170,10 +183,6 @@ def init(ipython: bool):
 
         user_ns["plt"] = plt
         plt.ion()
-
-        if not python_args.pyquiet:
-            print()
-            print("* Matplotlib mode configured. Pyplot available as `plt`. *")
 
     if python_args.pylog:
         logger.setLevel(python_args.pylog)
