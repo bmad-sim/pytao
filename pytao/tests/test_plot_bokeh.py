@@ -23,6 +23,7 @@ from ..plotting.bokeh import (
 from ..plotting.plot import FloorPlanGraph
 from ..plotting.settings import TaoFloorPlanSettings, TaoGraphSettings
 from ..subproc import AnyTao
+from ..tao_ctypes.util import filter_tao_messages_context
 from .conftest import get_example, test_artifacts
 
 logger = logging.getLogger(__name__)
@@ -54,7 +55,8 @@ def test_bokeh_manager(
 
         output_file(test_artifacts / f"{filename_base}.html")
 
-        _, app = manager.plot_all()
+        with filter_tao_messages_context(functions=["twiss_propagate1"]):
+            _, app = manager.plot_all()
 
         annotate_and_save(app.create_state(), request.node.name, filename_base)
 

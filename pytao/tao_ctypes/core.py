@@ -1,12 +1,14 @@
 from __future__ import annotations
+
 import ctypes
 import logging
 import os
+import pathlib
 import shutil
 import tempfile
 import textwrap
 from ctypes.util import find_library
-from typing import List, Optional, Tuple, Type, Union
+from typing import TYPE_CHECKING, List, Optional, Tuple, Type, Union
 
 import numpy as np
 
@@ -21,10 +23,201 @@ from .util import (
     TaoSharedLibraryNotFoundError,
 )
 
+if TYPE_CHECKING:
+    from ..interface_commands import Tao
+
 logger = logging.getLogger(__name__)
 
 
-def _tao_line_cell_magic(tao_instance: TaoCore, line: str, cell: Optional[str] = None):
+def ipython_shell(tao: Tao) -> None:
+    """Spawn an interactive Tao shell using IPython."""
+    from IPython.terminal.embed import InteractiveShellEmbed
+    from IPython.terminal.prompts import Prompts, Token
+    from traitlets.config.loader import Config
+
+    class TaoPrompt(Prompts):
+        def in_prompt_tokens(self, cli=None):
+            return [(Token.Prompt, "Tao> ")]
+
+    cfg = Config()
+    cfg.TerminalInteractiveShell.prompts_class = TaoPrompt
+    cfg.TerminalInteractiveShell.confirm_exit = False
+
+    # Remove standard completion stuff from Jedi:
+    cfg.IPCompleter.use_jedi = False
+
+    cfg.IPCompleter.disable_matchers = [
+        "IPCompleter.latex_name_matcher",
+        # "IPCompleter.unicode_name_matcher",
+        "back_latex_name_matcher",
+        "back_unicode_name_matcher",
+        # "IPCompleter.fwd_unicode_matcher",
+        "IPCompleter.magic_config_matcher",
+        "IPCompleter.magic_color_matcher",
+        # "IPCompleter.custom_completer_matcher",
+        "IPCompleter.dict_key_matcher",
+        "IPCompleter.magic_matcher",
+        "IPCompleter.python_matcher",
+        "IPCompleter.file_matcher",  # <- TODO can we use this in a restricted way?
+        "IPCompleter.python_func_kw_matcher",
+    ]
+
+    pytao_config = pathlib.Path("~/.config/.pytao").expanduser()
+    pytao_config.mkdir(parents=True, exist_ok=True)
+
+    cfg.HistoryManager.hist_file = pytao_config / "pytao_shell_history.db"
+
+    # TODO: can we integrate with Tao's history?
+    # try:
+    #     with open(pathlib.Path("~/.history_tao")) as fp:
+    #         tao_history = fp.readlines()
+    # except IOError:
+    #     tao_history = []
+
+    ipshell = InteractiveShellEmbed(
+        config=cfg,
+        banner1="Entering Tao interactive shell. Type commands as in Tao.",
+    )
+
+    def tao_top_level_completer(ipython, event):
+        """Tab completion for top-level Tao commands."""
+        options = list(tao._autocomplete_usage_)
+
+        parts = [part.lower() for part in event.line.lstrip().split()]
+
+        if " ".join(parts[:2]) in {"change ele", "set ele", "show ele"}:
+            return tao.lat_list(f"{event.symbol}*", "ele.name")
+
+        cmd = parts[0] if parts else None
+
+        if cmd not in tao._autocomplete_usage_:
+            return [opt for opt in options if opt.startswith(event.symbol.lower())]
+
+        level = len(parts)
+        return [
+            option.split(" ")[level]
+            for option, _help in tao._autocomplete_usage_[cmd]
+            if option.count(" ") > level and "{" not in option and "<" not in option
+        ]
+
+    ipshell.set_hook("complete_command", tao_top_level_completer, re_key="^")
+
+    print("Type 'exit', 'quit', or press Ctrl-D on a blank line to return to IPython mode.")
+
+    def preprocess_line(line: str) -> str:
+        line = line.strip()
+        if line.lower() in ["exit()", "quit()", "history"] or not line:
+            return line
+        if line.startswith("get_ipython"):
+            return line
+
+        res = tao.cmd(line, raises=False)
+        if isinstance(res, str):
+            res = [res]
+
+        print("\n".join(res))
+        return ""
+
+    def preprocess_lines(lines: list[str]) -> list[str]:
+        lines = [preprocess_line(line) for line in lines]
+        return [preprocess_line(line) for line in lines]
+
+    ipshell.input_transformers_post.append(preprocess_lines)
+
+    ipshell()
+
+
+def simple_shell(tao: Tao) -> None:
+    print("Entering Tao interactive shell.")
+    print("Type 'exit', 'quit', or press Ctrl-D on a blank line to return to Python mode.")
+
+    while True:
+        try:
+            cmd = input("Tao> ")
+            if cmd.lower() in ("exit", "quit"):
+                break
+            result = tao.cmd(cmd)
+            res = tao.cmd(cmd, raises=False)
+            if isinstance(res, str):
+                res = [res]
+            if res:
+                print("\n".join(result))
+        except (KeyboardInterrupt, EOFError):
+            break
+        except Exception as e:
+            print(f"Error: {e}")
+
+
+def register_input_transformer(prefix: str = "`"):
+    """
+    Register IPython magic convenience transform.
+
+    Parameters
+    ----------
+    prefix : str, optional
+        The leading character(s) for the command prefix.
+    """
+    import IPython
+
+    ip = IPython.get_ipython()
+
+    if ip is None:
+        return  # Not in an IPython environment
+
+    # Define our transformer function
+    def tao_transform(lines: list[str]) -> list[str]:
+        """Transform lines that start with the prefix."""
+        transformed_lines = []
+        for line in lines:
+            if line.strip() == prefix:
+                transformed_lines.append("tao.shell()")
+            elif line.startswith(prefix):
+                cmd = line[len(prefix) :].strip()
+                transformed_lines.append(
+                    f"""
+                    print("\\n".join(tao.cmd({cmd!r})))
+                    """.strip()
+                )
+                logger.debug(f"Transformed: {cmd} -> {transformed_lines[-1]}")
+            else:
+                transformed_lines.append(line)
+        return transformed_lines
+
+    # Register the transformer in the IPython instance
+    ip.input_transformers_post.append(tao_transform)
+
+
+def _tao_line_cell_magic(tao_instance: Tao, line: str, cell: Optional[str] = None):
+    """
+    Execute Tao commands in IPython as line or cell magic.
+
+    This function is used to implement the %tao line magic and %%tao cell magic
+    in IPython. It sends commands to a Tao instance and prints the results.
+
+    Parameters
+    ----------
+    tao_instance : Tao
+        The Tao instance registered with the line/cell magic.
+    line : str
+        The line content when used as line magic, or the line after %%tao when
+        used as cell magic. In cell magic, this can optionally specify a
+        different Tao instance to use.
+    cell : str or None, default=None
+        The cell content when used as cell magic.
+        If None, function operates as line magic.
+
+    Returns
+    -------
+    None
+        Results are printed rather than returned.
+
+    Raises
+    ------
+    ValueError
+        If the specified tao_instance_name in cell magic is invalid or not a TaoCore instance.
+    AssertionError
+        If not running in an IPython environment.
+    """
     from IPython import get_ipython
 
     ipy = get_ipython()
@@ -154,18 +347,26 @@ class TaoCore:
             Tao initialization output text.
         """
         if not tao_ctypes.initialized:
-            logger.debug(f"Initializing Tao with: {cmd!r}")
+            logger.debug("Initializing Tao.")
+            logger.debug(f"Tao> {cmd}")
             errno = self.so_lib.tao_c_init_tao(cmd.encode("utf-8"))
-            tao_ctypes.initialized = True
-            output = self.get_output()
+            if errno == 0:
+                # Only mark it initialized on the first actual success.
+                tao_ctypes.initialized = True
         else:
-            errno = 0
-            output = self.cmd(f"reinit tao -clear {cmd}", raises=False)
+            logger.debug("Re-initializing Tao.")
+
+            reinit_cmd = f"reinit tao -clear {cmd}"
+            logger.debug(f"Tao> {reinit_cmd}")
+
+            errno = self.so_lib.tao_c_command(reinit_cmd.encode("utf-8"))
+
+        output = self.get_output()
 
         self._init_output = output
         return errno, output
 
-    def init(self, cmd: str) -> List[str]:
+    def _init_or_raise(self, cmd: str) -> List[str]:
         """
         Initialize (or reinitialize) Tao with `cmd`.
 
@@ -184,12 +385,6 @@ class TaoCore:
         TaoInitializationError
         """
         errno, output = self._init_or_reinit(cmd)
-        try:
-            self._check_output_lines(cmd=f"init {cmd}", lines=output)
-        except TaoCommandError as ex:
-            message = textwrap.indent("\n".join(output), "  ")
-            raise TaoInitializationError(str(ex), tao_output="\n".join(output)) from None
-
         if errno != 0:
             message = textwrap.indent("\n".join(output), "  ")
             raise TaoInitializationError(
@@ -349,23 +544,59 @@ class TaoCore:
         finally:
             self.reset_output()
 
+    def register_input_transformer(self, prefix: str) -> None:
+        """
+        Registers an IPython input text transformer. Every IPython line
+        that starts with `prefix` character(s) will turn into a `tao.cmd()` line.
+
+        Examples
+        --------
+        >>> %tao sho lat
+
+        >>> %%tao
+        ... sho lat
+        """
+
+        register_input_transformer()
+
     def register_cell_magic(self):
         """
         Registers a cell magic in Jupyter notebooks.
 
-        Example:
+        Examples
+        --------
+        >>> %tao sho lat
 
-            %%tao
-            sho lat
+        >>> %%tao
+        ... sho lat
         """
 
         from IPython.core.magic import register_line_cell_magic
 
         @register_line_cell_magic
         def tao(line, cell=None):
-            _tao_line_cell_magic(tao_instance=self, line=line, cell=cell)
+            _tao_line_cell_magic(
+                tao_instance=self,  # type: ignore
+                line=line,
+                cell=cell,
+            )
 
         del tao
+
+    def shell(self) -> None:
+        """
+        Start an interactive shell with a 'Tao>' prompt.
+
+        Uses IPython if available, otherwise falls back to standard Python input loop.
+        """
+        try:
+            ipython_shell(
+                tao=self,  # type: ignore
+            )
+        except ImportError:
+            simple_shell(
+                tao=self,  # type: ignore
+            )
 
 
 def find_libtao(base_dir):
@@ -571,6 +802,9 @@ class TaoModel(TaoCore):
         s = "Tao Model initialized from: " + self.original_path
         s += "\n Working in path: " + self.path
         return s
+
+    def init(self, cmd: str) -> List[str]:
+        return self._init_or_raise(cmd)
 
 
 # -------------------------------------------------------------------------------

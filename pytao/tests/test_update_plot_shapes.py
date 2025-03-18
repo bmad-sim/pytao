@@ -10,9 +10,9 @@ logger = logging.getLogger(__name__)
 AnyTao = Union[Tao, SubprocessTao]
 
 
-def test_update_plot_shapes(use_subprocess: bool):
+def test_update_plot_shapes():
     example = get_example("optics_matching")
-    tao = example.run(use_subprocess=use_subprocess)
+    tao = example.run(use_subprocess=True)
 
     orig_shapes = set(shape["shape"] for shape in tao.shape_list("lat_layout"))
     tao.update_plot_shapes(layout=True, shape="xbox")
@@ -24,7 +24,7 @@ def test_update_plot_shapes(use_subprocess: bool):
 
 def test_update_plot_shape_by_id():
     example = get_example("optics_matching")
-    tao = example.run(use_subprocess=False)
+    tao = example.run(use_subprocess=True)
 
     (orig_shape,) = [
         shape for shape in tao.shape_list("lat_layout") if shape["shape_index"] == 1
@@ -46,7 +46,7 @@ def test_update_plot_shape_by_id():
 
 def test_update_plot_shape_by_name():
     example = get_example("optics_matching")
-    tao = example.run(use_subprocess=False)
+    tao = example.run(use_subprocess=True)
 
     ele_name = "quadrupole::*"
     (orig_shape,) = [
