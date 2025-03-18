@@ -156,6 +156,15 @@ def print_header(ipython: bool, startup_message: str, plot: str = "") -> None:
         print()
         print("* Matplotlib mode configured. Pyplot available as `plt`. *")
 
+    elif plot == "bokeh":
+        print()
+        print("* Bokeh mode configured. *")
+        print()
+        print(
+            "No interactive window is available with Bokeh. To save plots for viewing with a browser: "
+        )
+        print("  tao.plot('beta', save='beta.html')`")
+
 
 def init(ipython: bool):
     python_args, init_args = split_pytao_tao_args(sys.argv[1:])
