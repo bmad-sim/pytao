@@ -134,6 +134,10 @@ def init(ipython: bool):
     python_args, init_args = split_pytao_tao_args(sys.argv[1:])
 
     if not python_args.pyquiet:
+        if not init_args:
+            # NOTE: this is implicit if the user did not specify any arguments
+            init_args = "-init tao.init"
+
         startup_message = f"Initializing Tao object with: {init_args}"
         print("-" * len(startup_message))
         print(startup_message)
