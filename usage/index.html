@@ -1184,12 +1184,13 @@ upstream <a href="https://github.com/bmad-sim/bmad-ecosystem/issues/1380">issue<
 <p>The following will start IPython with a <code>Tao</code> instance available as <code>tao</code>:</p>
 <div class="highlight"><pre><span></span><code>pytao<span class="w"> </span>-init_file<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ACC_ROOT_DIR</span><span class="s2">/bmad-doc/tao_examples/cbeta_cell/tao.init&quot;</span>
 </code></pre></div>
-<p>To use PyTao's Matplotlib backend, do the following:</p>
+<p>To use PyTao's Matplotlib backend, set <code>--pyplot=mpl</code>:</p>
+<div class="highlight"><pre><span></span><code>pytao<span class="w"> </span>--pyplot<span class="o">=</span>mpl<span class="w"> </span>-init<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ACC_ROOT_DIR</span><span class="s2">/bmad-doc/tao_examples/cbeta_cell/tao.init&quot;</span>
+</code></pre></div>
+<p>Or use the environment variable <code>PYTAO_PLOT</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nv">PYTAO_PLOT</span><span class="o">=</span>mpl<span class="w"> </span>pytao<span class="w"> </span>-init_file<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ACC_ROOT_DIR</span><span class="s2">/bmad-doc/tao_examples/cbeta_cell/tao.init&quot;</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">tao</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s2">&quot;beta&quot;</span><span class="p">)</span>
-
-<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div>
 <h2 id="pytao-plotting-and-startup-scripts">PyTao plotting and startup scripts</h2>
 <p>When PyTao is instructed to use its Matplotlib or Bokeh backends, it configures
