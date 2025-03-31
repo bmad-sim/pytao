@@ -232,19 +232,22 @@ class PlotCurve:
         curve_info.pop("ix_ele_ref_track", None)
 
         try:
-            points = [
-                (line["x"], line["y"])
-                for line in tao.plot_line(region_name, graph_name, curve_name) or []
-            ]
+            points = list(
+                zip(
+                    tao.plot_line(region_name, graph_name, curve_name, x_or_y="x"),
+                    tao.plot_line(region_name, graph_name, curve_name, x_or_y="y"),
+                )
+            )
         except RuntimeError:
             points = []
 
         try:
-            symbol_points = [
-                (sym["x_symb"], sym["y_symb"])
-                for sym in tao.plot_symbol(region_name, graph_name, curve_name, x_or_y="")
-                or []
-            ]
+            symbol_points = list(
+                zip(
+                    tao.plot_symbol(region_name, graph_name, curve_name, x_or_y="x"),
+                    tao.plot_symbol(region_name, graph_name, curve_name, x_or_y="y"),
+                )
+            )
         except RuntimeError:
             symbol_points = []
 
