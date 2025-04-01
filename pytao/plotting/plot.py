@@ -1407,7 +1407,15 @@ class GraphManager(ABC):
         self.to_place.pop(region_name, None)
 
         logger.debug(f"Placing {template_name} in {region_name}")
-        self.tao.cmd(f"place -no_buffer {region_name} {template_name}")
+        self.tao.cmd(
+            "; ".join(
+                (
+                    # Ensure overlapping plots won't delete existing ones
+                    "set plot_page delete_overlapping_plots = F",
+                    f"place -no_buffer {region_name} {template_name}",
+                ),
+            )
+        )
         return region_name
 
     def place(
