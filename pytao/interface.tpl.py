@@ -1287,15 +1287,15 @@ class Tao(TaoCore):
             ele_ids.extend(self.unique_ele_ids_from_universe(ix_uni=ix_uni))
         return ele_ids
 
-    def unique_ele_ids(self, selectors: list[str] | None = None):
+    def unique_ele_ids(self, *selectors: str):
         """
         Retrieve unique element IDs based on universe/branch-selectors and/or specific IDs.
 
-        By default, returns all unique element IDs from the superuniverse.
+        If no selectors are specified, returns all unique element IDs from the superuniverse.
 
         Parameters
         ----------
-        selectors : list of str, optional
+        *selectors : str
             List of universes, branches, or specific element IDs:
             - Full superuniverse: `None` or empty list
             - Specific universes: ["1", ...]
@@ -1314,8 +1314,7 @@ class Tao(TaoCore):
         - `{UNIVERSE}@{BRANCH}` → All elements in the branch.
         - `{UNIVERSE}@{BRANCH}>>{ELEMENT}` → A specific element ID.
         """
-        if selectors is None or not selectors:
-            # Default behavior: retrieve all elements from the entire superuniverse
+        if not selectors:
             return self.unique_ele_ids_from_superuniverse()
 
         ele_ids = []
