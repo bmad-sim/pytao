@@ -1222,3 +1222,123 @@ class Tao(TaoCore):
             jupyter=jupyter,
         ):
             return self.cmd("; ".join(commands))
+
+    def unique_ele_ids_from_branch(
+        self,
+        ix_uni: str | int,
+        ix_branch: str | int,
+    ) -> list[str]:
+        """
+        Retrieve unique element IDs from a specific universe and branch.
+
+        Parameters
+        ----------
+        ix_uni : str or int
+            The universe index (ID) from which the branch originates.
+        ix_branch : str or int
+            The branch index (ID) to retrieve element IDs from.
+
+        Returns
+        -------
+        list of str
+            A list of element IDs in the format "{ix_uni}@{ix_branch}>>{ele_id}".
+        """
+        return [
+            f"{ix_uni}@{ix_branch}>>{ele_id}"
+            for ele_id in self.lat_list(
+                "*",
+                "ele.ix_ele",
+                flags="-no_slaves",
+                ix_uni=str(ix_uni),
+                ix_branch=str(ix_branch),
+            )
+        ]
+
+    def unique_ele_ids_from_universe(self, ix_uni: str | int) -> list[str]:
+        """
+        Retrieve element IDs from all branches in a universe.
+
+        Parameters
+        ----------
+        ix_uni : str or int
+            The universe index (ID) to retrieve element IDs from.
+
+        Returns
+        -------
+        list of str
+            A list of element IDs from all branches in the given universe.
+        """
+        ele_ids = []
+        for ix_branch in self.inum(f"{ix_uni}^ix_branch"):
+            ele_ids.extend(self.unique_ele_ids_from_branch(ix_uni=ix_uni, ix_branch=ix_branch))
+        return ele_ids
+
+    def unique_ele_ids_from_superuniverse(self) -> list[str]:
+        """
+        Retrieve element IDs from all universes in the Tao superuniverse.
+
+        Returns
+        -------
+        list of str
+            A list of element IDs from all universes in the superuniverse.
+        """
+        ele_ids = []
+        for ix_uni in self.inum("ix_universe"):
+            ele_ids.extend(self.unique_ele_ids_from_universe(ix_uni=ix_uni))
+        return ele_ids
+
+    def unique_ele_ids(self, *selectors: str):
+        """
+        Retrieve unique element IDs based on universe/branch-selectors and/or specific IDs.
+
+        If no selectors are specified, returns all unique element IDs from the superuniverse.
+
+        Parameters
+        ----------
+        *selectors : str
+            List of universes, branches, or specific element IDs:
+            - Full superuniverse: `None` or empty list
+            - Specific universes: ["1", ...]
+            - Universe-branch pair: ["1@2", ...]
+            - Specific element IDs: ["1@2>>10", ...]
+
+        Returns
+        -------
+        list of str
+            A sorted list of resolved element IDs based on the provided selectors.
+
+        Notes
+        -----
+        The accepted syntax includes:
+        - `{UNIVERSE}` → All branches in the universe.
+        - `{UNIVERSE}@{BRANCH}` → All elements in the branch.
+        - `{UNIVERSE}@{BRANCH}>>{ELEMENT}` → A specific element ID.
+        """
+        if not selectors:
+            return self.unique_ele_ids_from_superuniverse()
+
+        ele_ids = []
+
+        for sel in selectors:
+            if ">>" in sel:
+                # Specific element ID (e.g., "1@2>>10")
+                ele_ids.append(sel)
+            elif "@" in sel:
+                # Universe@Branch selector (e.g., "1@2")
+                ix_uni, ix_branch = sel.split("@", 1)
+                ele_ids.extend(
+                    self.unique_ele_ids_from_branch(ix_uni=ix_uni, ix_branch=ix_branch)
+                )
+            else:
+                # Universe selector (e.g., "1")
+                ele_ids.extend(self.unique_ele_ids_from_universe(ix_uni=sel))
+
+        def ele_sort(ele: str):
+            try:
+                uni_branch, ix_ele = ele.split(">>")
+                ix_uni, ix_branch = uni_branch.split("@")
+            except Exception:
+                raise ValueError(f"Malformed element ID: {ele}")
+            return int(ix_uni), int(ix_branch), int(ix_ele)
+
+        return sorted(ele_ids, key=ele_sort)
