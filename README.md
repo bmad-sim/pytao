@@ -17,7 +17,7 @@ See the [PyTao installation instructions](https://bmad-sim.github.io/pytao/user_
 conda install -c conda-forge pytao
 ```
 
-Currently PyTao requires an installed Bmad distribution compiled with the `ACC_ENABLE_SHARED="Y"` flag. This can be set in the `bmad_dist/util/dist_prefs` file.
+Currently PyTao requires an installed Bmad distribution compiled with the `ACC_ENABLE_SHARED="Y"` or `ACC_ENABLE_SHARED_ONLY="Y"` flag. This can be set in the `bmad_dist/util/dist_prefs` file (the default setting is fine).
 
 ## Current Build status and Release Info
 
