@@ -73,8 +73,8 @@ def create_argparser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--pyplot",
-        choices=["mpl", "bokeh"],
-        help="Select plotting backend: Matplotlib (mpl) or bokeh",
+        choices=["mpl", "bokeh", "plotly"],
+        help="Select plotting backend: Matplotlib (mpl), bokeh, or plotly",
     )
     parser.add_argument(
         "--pyscript",
