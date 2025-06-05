@@ -2,8 +2,8 @@
 
 Note! The **Bmad Distribution** (which includes _Tao_) must be installed
 before installing PyTao. Additionally, the Bmad Distribution must be
-compiled with the `ACC_ENABLE_SHARED="Y"` flag set in the
-`bmad_dist/util/dist_prefs` file.
+compiled with the `ACC_ENABLE_SHARED="Y"` or `ACC_ENABLE_SHARED_ONLY="Y"` flag. 
+This can be set in the `bmad_dist/util/dist_prefs` file (the default setting is fine).
 
 For instructions on how to install the _Bmad Distribution_, please refer
 to the instructions available at the _Bmad_ website.
