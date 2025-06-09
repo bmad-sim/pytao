@@ -24,6 +24,7 @@ from .util.parameters import tao_parameter_dict
 if typing.TYPE_CHECKING:
     from .plotting import MatplotlibGraphManager
     from .plotting.bokeh import BokehGraphManager, NotebookGraphManager
+    from .plotting.plotly import PlotlyGraphManager
     from .plotting.types import ShapeListInfo
     from .subproc import SubprocessTao
 
@@ -529,12 +530,12 @@ class Tao(TaoCore):
         list of str
             Tao's initialization output.
         """
-        if plot in {"mpl", "bokeh"}:
+        if plot in {"mpl", "bokeh", "plotly"}:
             self.plot_backend_name = plot
         else:
             self.plot_backend_name = None
 
-        use_pytao_plotting = plot in {"mpl", "bokeh", True}
+        use_pytao_plotting = plot in {"mpl", "bokeh", "plotly", True}
 
         self.init_settings = TaoStartup(
             init=cmd,
@@ -842,6 +843,10 @@ class Tao(TaoCore):
             elif key == "mpl":
                 from .plotting.mpl import MatplotlibGraphManager as cls
 
+            elif key == "plotly":
+                from .plotting.plotly import select_graph_manager_class
+
+                cls = select_graph_manager_class()
             else:
                 raise NotImplementedError(key)
 
@@ -858,6 +863,11 @@ class Tao(TaoCore):
     def bokeh(self) -> BokehGraphManager:
         """Get the Bokeh graph manager."""
         return typing.cast("BokehGraphManager", self._get_graph_manager_by_key("bokeh"))
+
+    @property
+    def plotly(self) -> PlotlyGraphManager:
+        """Get the Bokeh graph manager."""
+        return typing.cast("PlotlyGraphManager", self._get_graph_manager_by_key("plotly"))
 
     @property
     def plot_manager(
@@ -886,7 +896,7 @@ class Tao(TaoCore):
                 "For example: tao.init(..., plot=True)"
             )
 
-        if backend not in {"mpl", "bokeh"}:
+        if backend not in {"mpl", "bokeh", "plotly"}:
             raise ValueError(f"Unsupported backend: {backend}")
 
         return self._get_graph_manager_by_key(backend)
