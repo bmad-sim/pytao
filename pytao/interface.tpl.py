@@ -1364,3 +1364,25 @@ class Tao(TaoCore):
             return int(ix_uni), int(ix_branch), int(ix_ele)
 
         return sorted(ele_ids, key=ele_sort)
+
+    @contextlib.contextmanager
+    def with_universe(self, universe_id: Union[int, str]):
+        """
+        A context manager to temporarily set the default universe.
+
+        Parameters
+        ----------
+        universe_id : str or int
+            The universe ID to set as default during the context.
+
+        Notes
+        -----
+        The original default universe is restored upon exiting the context, even if
+        an exception occurs.
+        """
+        original_universe = self.universe("")["ix_universe"]
+        try:
+            self.cmd(f"set default universe = {universe_id}")
+            yield
+        finally:
+            self.cmd(f"set default universe = {original_universe}")
