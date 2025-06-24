@@ -370,6 +370,7 @@ def _add_rectangle_patch(
     x0, y0 = patch.xy
     width, height = patch.width, patch.height
 
+    color = plotly_color(patch.color)
     if patch.angle != 0:
         corners = _get_rotated_rectangle_corners(patch)
         x_coords = [p[0] for p in corners] + [corners[0][0]]
@@ -381,7 +382,7 @@ def _add_rectangle_patch(
                 y=y_coords,
                 mode="lines",
                 line=dict(
-                    color=plotly_color(patch.color),
+                    color=color,
                     width=line_width or patch.linewidth,
                 ),
                 fill=None,
@@ -398,10 +399,10 @@ def _add_rectangle_patch(
             x1=x0 + width,
             y1=y0 + height,
             line=dict(
-                color=plotly_color(patch.color),
+                color=color,
                 width=line_width or patch.linewidth,
             ),
-            fillcolor="rgba(0,0,0,0)",
+            fillcolor=color if patch.fill else "rgba(0,0,0,0)",
             row=row,
             col=col,
         )
@@ -1463,7 +1464,7 @@ class PlotlyVariable:
             if self._update_callback:
                 self._update_callback()
         except Exception as ex:
-            print(f"Error updating {self.name}: {ex}")
+            logger.error(f"Error updating {self.name}: {ex}")
 
     def set_value(self, tao: Tao, value: float):
         """Set the variable value in Tao."""
@@ -1532,7 +1533,7 @@ class PlotlyAppCreator:
                         if updated is not None:
                             updated_graphs.append(updated)
                     except Exception as ex:
-                        print(f"Error updating graph {graph}: {ex}")
+                        logger.error(f"Error updating graph {graph}: {ex}")
                         updated_graphs.append(graph)  # Keep original if update fails
 
                 if updated_graphs:
@@ -1563,7 +1564,7 @@ class PlotlyAppCreator:
                         self.figure.layout = new_fig.layout
 
             except Exception as ex:
-                print(f"Error updating plots: {ex}")
+                logger.error(f"Error updating plots: {ex}")
 
         # Create widgets for each variable
         widget_rows = []
