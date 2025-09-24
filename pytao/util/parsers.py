@@ -14,6 +14,13 @@ class Settings:
     ensure_count: bool = False
 
 
+# Custom type for float or None values
+class FloatOrNone:
+    """Type marker for values that should be parsed as float or None if empty."""
+
+    pass
+
+
 # Helpers
 def _parse_str_bool(s):
     """
@@ -395,6 +402,8 @@ def fix_value(value: str, typ: type):
     value = value.strip()
     if typ is bool:
         return _parse_str_bool(value)
+    if typ is FloatOrNone:
+        return _value_float_or_none(value)
     if typ is float:
         if ("-" in value or "+" in value) and "e" not in value:
             # TODO: some floating point values like gg%deriv of ele_gen_grad_map
@@ -1123,27 +1132,17 @@ def parse_lord_control(lines, cmd=""):
       list[dict]: [{"index": int, "name": str, "type": str,
                     "attribute": str, "control": str, "value": float|None}, ...]
     """
-    out = []
-    for raw in lines:
-        line = raw.strip()
-        if not line or line.startswith("#") or line.startswith("Tao>"):
-            continue
-        parts = [p.strip() for p in line.split(";", maxsplit=5)]
-        if len(parts) != 6:
-            raise ValueError(f"Expected 6 fields, got {len(parts)} in: {raw!r}")
-
-        idx_s, name, ltype, attribute, control, value_s = parts
-        out.append(
-            {
-                "index": int(idx_s),
-                "name": name,
-                "type": ltype,
-                "attribute": attribute,
-                "control": control,  # e.g. "0.4034E-01*COMMAND"
-                "value": _value_float_or_none(value_s),
-            }
-        )
-    return out
+    return _parse_by_keys_to_types(
+        lines,
+        {
+            "index": int,
+            "name": str,
+            "type": str,
+            "attribute": str,
+            "control": str,
+            "value": FloatOrNone,
+        },
+    )
 
 
 def parse_slave_control(lines, cmd=""):
@@ -1155,28 +1154,18 @@ def parse_slave_control(lines, cmd=""):
       list[dict]: [{"branch": int, "index": int, "name": str, "type": str,
                     "attribute": str, "control": str, "value": float|None}, ...]
     """
-    out = []
-    for raw in lines:
-        line = raw.strip()
-        if not line or line.startswith("#") or line.startswith("Tao>"):
-            continue
-        parts = [p.strip() for p in line.split(";", maxsplit=6)]
-        if len(parts) != 7:
-            raise ValueError(f"Expected 7 fields, got {len(parts)} in: {raw!r}")
-
-        branch_s, idx_s, name, ltype, attribute, control, value_s = parts
-        out.append(
-            {
-                "branch": int(branch_s),
-                "index": int(idx_s),
-                "name": name,
-                "type": ltype,
-                "attribute": attribute,
-                "control": control,  # e.g. "-0.016*COMMAND"
-                "value": _value_float_or_none(value_s),
-            }
-        )
-    return out
+    return _parse_by_keys_to_types(
+        lines,
+        {
+            "branch": int,
+            "index": int,
+            "name": str,
+            "type": str,
+            "attribute": str,
+            "control": str,
+            "value": FloatOrNone,
+        },
+    )
 
 
 def parse_plot_lat_layout(lines, cmd=""):
