@@ -200,7 +200,7 @@ def test_ele_lord_slave_1(tao_cls: Type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
-        assert set(tao.ele_lord_slave(ele_id="1@0>>1", which="model")[0].keys()) == {
+        assert set(tao.ele_lord_slave(ele_id="1@0>>1")[0].keys()) == {
             "type",
             "location_name",
             "name",
