@@ -1108,6 +1108,72 @@ def parse_lat_param_units(lines, cmd=""):
     """
     return lines[0]
 
+def _value_float_or_none(s: str):
+    s = s.strip()
+    return None if s == "" else float(s)
+
+def parse_lord_control(lines, cmd=""):
+    """
+    Input line format:
+      Lord-index;Lord-name;Lord-type;Attribute-controlled;Control-expression;Value
+
+    Returns:
+      list[dict]: [{"index": int, "name": str, "type": str,
+                    "attribute": str, "control": str, "value": float|None}, ...]
+    """
+    out = []
+    for raw in lines:
+        line = raw.strip()
+        if not line or line.startswith("#") or line.startswith("Tao>"):
+            continue
+        parts = [p.strip() for p in line.split(";", maxsplit=5)]
+        if len(parts) != 6:
+            raise ValueError(f"Expected 6 fields, got {len(parts)} in: {raw!r}")
+
+        idx_s, name, ltype, attribute, control, value_s = parts
+        out.append({
+            "index": int(idx_s),
+            "name": name,
+            "type": ltype,
+            "attribute": attribute,
+            "control": control,                 # e.g. "0.4034E-01*COMMAND"
+            "value": _value_float_or_none(value_s),
+        })
+    return out
+
+
+def parse_slave_control(lines, cmd=""):
+    """
+    Input line format:
+      Slave-branch;Slave-index;Slave-name;Slave-type;Attribute-controlled;Control-expression;Value
+
+    Returns:
+      list[dict]: [{"branch": int, "index": int, "name": str, "type": str,
+                    "attribute": str, "control": str, "value": float|None}, ...]
+    """
+    out = []
+    for raw in lines:
+        line = raw.strip()
+        if not line or line.startswith("#") or line.startswith("Tao>"):
+            continue
+        parts = [p.strip() for p in line.split(";", maxsplit=6)]
+        if len(parts) != 7:
+            raise ValueError(f"Expected 7 fields, got {len(parts)} in: {raw!r}")
+
+        branch_s, idx_s, name, ltype, attribute, control, value_s = parts
+        out.append({
+            "branch": int(branch_s),
+            "index": int(idx_s),
+            "name": name,
+            "type": ltype,
+            "attribute": attribute,
+            "control": control,                 # e.g. "-0.016*COMMAND"
+            "value": _value_float_or_none(value_s),
+        })
+    return out
+
+
+
 
 def parse_plot_lat_layout(lines, cmd=""):
     """
@@ -1264,6 +1330,7 @@ def parse_show(lines, cmd=""):
     return lines  # raise NotImplementedError()
 
 
+    
 def parse_species_to_int(lines, cmd=""):
     """
     Parse species_to_int results.
