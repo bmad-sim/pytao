@@ -1108,9 +1108,11 @@ def parse_lat_param_units(lines, cmd=""):
     """
     return lines[0]
 
+
 def _value_float_or_none(s: str):
     s = s.strip()
     return None if s == "" else float(s)
+
 
 def parse_lord_control(lines, cmd=""):
     """
@@ -1131,14 +1133,16 @@ def parse_lord_control(lines, cmd=""):
             raise ValueError(f"Expected 6 fields, got {len(parts)} in: {raw!r}")
 
         idx_s, name, ltype, attribute, control, value_s = parts
-        out.append({
-            "index": int(idx_s),
-            "name": name,
-            "type": ltype,
-            "attribute": attribute,
-            "control": control,                 # e.g. "0.4034E-01*COMMAND"
-            "value": _value_float_or_none(value_s),
-        })
+        out.append(
+            {
+                "index": int(idx_s),
+                "name": name,
+                "type": ltype,
+                "attribute": attribute,
+                "control": control,  # e.g. "0.4034E-01*COMMAND"
+                "value": _value_float_or_none(value_s),
+            }
+        )
     return out
 
 
@@ -1161,18 +1165,18 @@ def parse_slave_control(lines, cmd=""):
             raise ValueError(f"Expected 7 fields, got {len(parts)} in: {raw!r}")
 
         branch_s, idx_s, name, ltype, attribute, control, value_s = parts
-        out.append({
-            "branch": int(branch_s),
-            "index": int(idx_s),
-            "name": name,
-            "type": ltype,
-            "attribute": attribute,
-            "control": control,                 # e.g. "-0.016*COMMAND"
-            "value": _value_float_or_none(value_s),
-        })
+        out.append(
+            {
+                "branch": int(branch_s),
+                "index": int(idx_s),
+                "name": name,
+                "type": ltype,
+                "attribute": attribute,
+                "control": control,  # e.g. "-0.016*COMMAND"
+                "value": _value_float_or_none(value_s),
+            }
+        )
     return out
-
-
 
 
 def parse_plot_lat_layout(lines, cmd=""):
@@ -1330,7 +1334,6 @@ def parse_show(lines, cmd=""):
     return lines  # raise NotImplementedError()
 
 
-    
 def parse_species_to_int(lines, cmd=""):
     """
     Parse species_to_int results.
