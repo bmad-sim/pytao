@@ -14,6 +14,13 @@ class Settings:
     ensure_count: bool = False
 
 
+# Custom type for float or None values
+class FloatOrNone:
+    """Type marker for values that should be parsed as float or None if empty."""
+
+    pass
+
+
 # Helpers
 def _parse_str_bool(s):
     """
@@ -395,6 +402,8 @@ def fix_value(value: str, typ: type):
     value = value.strip()
     if typ is bool:
         return _parse_str_bool(value)
+    if typ is FloatOrNone:
+        return _value_float_or_none(value)
     if typ is float:
         if ("-" in value or "+" in value) and "e" not in value:
             # TODO: some floating point values like gg%deriv of ele_gen_grad_map
@@ -1107,6 +1116,48 @@ def parse_lat_param_units(lines, cmd=""):
     str
     """
     return lines[0]
+
+
+def _value_float_or_none(s: str):
+    s = s.strip()
+    return None if s == "" else float(s)
+
+
+def parse_lord_control(lines, cmd=""):
+    """
+    Input line format:
+      Lord-index;Lord-name;Lord-type;Attribute-controlled;Control-expression;Value
+    """
+    return _parse_by_keys_to_types(
+        lines,
+        {
+            "index": int,
+            "name": str,
+            "key": str,
+            "attribute": str,
+            "expression": str,
+            "value": FloatOrNone,
+        },
+    )
+
+
+def parse_slave_control(lines, cmd=""):
+    """
+    Input line format:
+      Slave-branch;Slave-index;Slave-name;Slave-type;Attribute-controlled;Control-expression;Value
+    """
+    return _parse_by_keys_to_types(
+        lines,
+        {
+            "branch": int,
+            "index": int,
+            "name": str,
+            "key": str,
+            "attribute": str,
+            "expression": str,
+            "value": FloatOrNone,
+        },
+    )
 
 
 def parse_plot_lat_layout(lines, cmd=""):

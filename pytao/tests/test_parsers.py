@@ -200,7 +200,7 @@ def test_ele_lord_slave_1(tao_cls: Type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
-        assert set(tao.ele_lord_slave(ele_id="1@0>>1", which="model")[0].keys()) == {
+        assert set(tao.ele_lord_slave(ele_id="1@0>>1")[0].keys()) == {
             "type",
             "location_name",
             "name",
@@ -334,6 +334,25 @@ def test_lat_param_units_1(tao_cls: Type[AnyTao]):
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
         assert isinstance(tao.lat_param_units(param_name="L"), str)
+
+
+def test_lord_control(tao_cls: Type[AnyTao]):
+    with new_tao(
+        tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
+    ) as tao:
+        d_list = tao.lord_control("sex_20w")
+        assert "key" in d_list[0]
+
+
+def test_slave_control(tao_cls: Type[AnyTao]):
+    with new_tao(
+        tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
+    ) as tao:
+        d_list = tao.slave_control("ASYM_IR")
+        assert "key" in d_list[0]
+
+        d_list = tao.slave_control("CLEO_SOL")
+        assert d_list[0]["value"] is None
 
 
 def test_plot_lat_layout_1(tao_cls: Type[AnyTao]):
