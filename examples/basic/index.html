@@ -2487,11 +2487,9 @@ names[0:5]</div>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="o">%</span><span class="n">config</span> <span class="n">InlineBackend</span><span class="o">.</span><span class="n">figure_format</span> <span class="o">=</span> <span class="s1">'retina'</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-15">%config InlineBackend.figure_format = 'retina'
-import matplotlib.pyplot as plt
-import numpy as np</div>
+import matplotlib.pyplot as plt</div>
 </div>
 </div>
 </div>
@@ -2677,14 +2675,11 @@ import numpy as np</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pytao</span><span class="w"> </span><span class="kn">import</span> <span class="n">interface_commands</span>
-
-<span class="n">all_cmds</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">Tao</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)]</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">all_cmds</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">Tao</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)]</span>
 <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="n">all_cmds</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-19">from pytao import interface_commands
-
+<div class="clipboard-copy-txt" id="cell-19">
 all_cmds = [name for name in dir(Tao) if not name.startswith("_")]
 for cmd in all_cmds:
     print(cmd)</div>
@@ -2775,6 +2770,7 @@ lat_ele_list
 lat_header
 lat_list
 lat_param_units
+lord_control
 matplotlib
 matrix
 merit
@@ -2809,6 +2805,7 @@ shape_pattern_point_manage
 shape_set
 shell
 show
+slave_control
 space_charge_com
 species_to_int
 species_to_str
@@ -2886,7 +2883,7 @@ wave
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[20]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>137</pre>
+<pre>139</pre>
 </div>
 </div>
 </div>
@@ -3543,7 +3540,7 @@ except Exception as ex:
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Exception handled: Command: pipe var foobar  causes error: ERROR detected: [ERROR | 2025-SEP-25 01:22:32] tao_pipe_cmd:
+<pre>Exception handled: Command: pipe var foobar  causes error: ERROR detected: [ERROR | 2025-SEP-25 14:46:38] tao_pipe_cmd:
     "pipe var foobar": Not a valid variable name
 INVALID
 </pre>
@@ -3596,7 +3593,7 @@ INVALID
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[35]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>['[ERROR | 2025-SEP-25 01:22:32] tao_command:',
+<pre>['[ERROR | 2025-SEP-25 14:46:38] tao_command:',
  '    UNRECOGNIZED COMMAND: invalid_command']</pre>
 </div>
 </div>
