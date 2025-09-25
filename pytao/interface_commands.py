@@ -1371,31 +1371,31 @@ class Tao(TaoCore):
 
         return sorted(ele_ids, key=ele_sort)
 
-    def beam(self, ix_branch, *, ix_uni='', verbose=False, as_dict=True, raises=True):
+    def beam(self, ix_branch, *, ix_uni="", verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output beam parameters that are not in the beam_init structure.
-        
+
         Parameters
         ----------
         ix_uni : optional
         ix_branch : ""
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe beam {ix_uni}@{ix_branch}
-        
+
         Where:
           {ix_uni} is a universe index. Defaults to s%global%default_universe.
           {ix_branch} is a lattice branch index. Defaults to s%global%default_branch.
-        
+
         Note: To set beam_init parameters use the "set beam" command.
-        
+
         Examples
         --------
         Example: 1
@@ -1403,38 +1403,38 @@ class Tao(TaoCore):
          args:
            ix_uni: 1
            ix_branch: 0
-        
-        """
-        cmd = f'pipe beam {ix_uni}@{ix_branch}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='beam', cmd_type='string_list')
 
-    
-    def beam_init(self, ix_branch, *, ix_uni='', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe beam {ix_uni}@{ix_branch}"
+        if verbose:
+            print(cmd)
+        return self.__execute(cmd, as_dict, raises, method_name="beam", cmd_type="string_list")
+
+    def beam_init(self, ix_branch, *, ix_uni="", verbose=False, as_dict=True, raises=True):
+        """
+
         Output beam_init parameters.
-        
+
         Parameters
         ----------
         ix_uni : optional
         ix_branch : ""
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe beam_init {ix_uni}@{ix_branch}
-        
+
         Where:
           {ix_uni} is a universe index. Defaults to s%global%default_universe.
           {ix_branch} is a lattice branch index. Defaults to s%global%default_branch.
-        
+
         Note: To set beam_init parameters use the "set beam_init" command
-        
+
         Examples
         --------
         Example: 1
@@ -1442,62 +1442,66 @@ class Tao(TaoCore):
          args:
            ix_uni: 1
            ix_branch: 0
-        
-        """
-        cmd = f'pipe beam_init {ix_uni}@{ix_branch}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='beam_init', cmd_type='string_list')
 
-    
+        """
+        cmd = f"pipe beam_init {ix_uni}@{ix_branch}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="beam_init", cmd_type="string_list"
+        )
+
     def bmad_com(self, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output bmad_com structure components.
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe bmad_com
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
-        
-        """
-        cmd = f'pipe bmad_com'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='bmad_com', cmd_type='string_list')
 
-    
+        """
+        cmd = "pipe bmad_com"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="bmad_com", cmd_type="string_list"
+        )
+
     def branch1(self, ix_uni, ix_branch, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output lattice branch information for a particular lattice branch.
-        
+
         Parameters
         ----------
         ix_uni : ""
         ix_branch : ""
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe branch1 {ix_uni}@{ix_branch}
-        
+
         Where:
           {ix_uni} is a universe index. Defaults to s%global%default_universe.
           {ix_branch} is a lattice branch index. Defaults to s%global%default_branch.
-        
+
         Examples
         --------
         Example: 1
@@ -1505,19 +1509,32 @@ class Tao(TaoCore):
          args:
            ix_uni: 1
            ix_branch: 0
-        
-        """
-        cmd = f'pipe branch1 {ix_uni}@{ix_branch}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='branch1', cmd_type='string_list')
 
-    
-    def bunch_comb(self, who, *, ix_uni='', ix_branch='', ix_bunch='1', flags='-array_out', verbose=False, as_dict=True, raises=True):
         """
-        
-        Outputs bunch parameters at a comb point. 
+        cmd = f"pipe branch1 {ix_uni}@{ix_branch}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="branch1", cmd_type="string_list"
+        )
+
+    def bunch_comb(
+        self,
+        who,
+        *,
+        ix_uni="",
+        ix_branch="",
+        ix_bunch="1",
+        flags="-array_out",
+        verbose=False,
+        as_dict=True,
+        raises=True,
+    ):
+        """
+
+        Outputs bunch parameters at a comb point.
         Also see the "write bunch_comb" and "show bunch -comb" commands.
-        
+
         Parameters
         ----------
         who
@@ -1525,81 +1542,85 @@ class Tao(TaoCore):
         ix_branch : optional
         ix_bunch : default=1
         flags : default=-array_out
-        
+
         Returns
         -------
         string_list
             if '-array_out' not in flags
         real_array
             if '-array_out' in flags
-        
+
         Notes
         -----
         Command syntax:
           pipe bunch_comb {flags} {who} {ix_uni}@{ix_branch} {ix_bunch}
-        
+
         Where:
           {flags} are optional switches:
-              -array_out : If present, the output will be available in the 
+              -array_out : If present, the output will be available in the
                      tao_c_interface_com%c_real array.
           {ix_uni} is a universe index. Defaults to s%global%default_universe.
           {ix_branch} is a branch index. Defaults to s%global%default_branch.
           {ix_bunch} is the bunch index. Defaults to 1.
           {who} is one of:
-              x, px, y, py, z, pz, t, s, spin.x, spin.y, spin.z, p0c, beta     -- centroid 
-              x.Q, y.Q, z.Q, a.Q, b.Q, c.Q where Q is one of: beta, alpha, gamma, phi, 
+              x, px, y, py, z, pz, t, s, spin.x, spin.y, spin.z, p0c, beta     -- centroid
+              x.Q, y.Q, z.Q, a.Q, b.Q, c.Q where Q is one of: beta, alpha, gamma, phi,
                                               eta, etap, sigma, sigma_p, emit, norm_emit
             sigma.IJ where I, J in range [1,6]
             rel_min.I, rel_max.I where I in range [1,6]
             charge_live, n_particle_live, n_particle_lost_in_ele, ix_ele
-        
+
           Note: If ix_uni or ix_branch is present, "@" must be present.
-        
+
         Example:
           pipe bunch_comb py 2@1 1
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/csr_beam_tracking/tao.init
          args:
            who: x.beta
-        
-        """
-        cmd = f'pipe bunch_comb {flags} {who} {ix_uni}@{ix_branch} {ix_bunch}'
-        if verbose: print(cmd)
-        if '-array_out' not in flags:
-            return self.__execute(cmd, as_dict, raises, method_name='bunch_comb', cmd_type='string_list')
-        if '-array_out' in flags:
-            return self.__execute(cmd, as_dict, raises, method_name='bunch_comb', cmd_type='real_array')
 
-    
-    def bunch_params(self, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe bunch_comb {flags} {who} {ix_uni}@{ix_branch} {ix_bunch}"
+        if verbose:
+            print(cmd)
+        if "-array_out" not in flags:
+            return self.__execute(
+                cmd, as_dict, raises, method_name="bunch_comb", cmd_type="string_list"
+            )
+        if "-array_out" in flags:
+            return self.__execute(
+                cmd, as_dict, raises, method_name="bunch_comb", cmd_type="real_array"
+            )
+
+    def bunch_params(self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True):
+        """
+
         Outputs bunch parameters at the exit end of a given lattice element.
-        
+
         Parameters
         ----------
         ele_id
         which : default=model
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe bunch_params {ele_id}|{which}
-        
+
         Where:
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
-        
+
         Example:
           pipe bunch_params end|model  ! parameters at model lattice element named "end".
-        
+
         Examples
         --------
         Example: 1
@@ -1607,48 +1628,60 @@ class Tao(TaoCore):
          args:
            ele_id: end
            which: model
-        
-        """
-        cmd = f'pipe bunch_params {ele_id}|{which}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='bunch_params', cmd_type='string_list')
 
-    
-    def bunch1(self, ele_id, coordinate, *, which='model', ix_bunch='1', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe bunch_params {ele_id}|{which}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="bunch_params", cmd_type="string_list"
+        )
+
+    def bunch1(
+        self,
+        ele_id,
+        coordinate,
+        *,
+        which="model",
+        ix_bunch="1",
+        verbose=False,
+        as_dict=True,
+        raises=True,
+    ):
+        """
+
         Outputs Bunch parameters at the exit end of a given lattice element.
-        
+
         Parameters
         ----------
         ele_id
         coordinate
         which : default=model
         ix_bunch : default=1
-        
+
         Returns
         -------
         real_array
             if coordinate in ['x', 'px', 'y', 'py', 'z', 'pz', 's', 't', 'charge', 'p0c']
         integer_array
             if coordinate in ['state', 'ix_ele']
-        
+
         Notes
         -----
         Command syntax:
           pipe bunch1 {ele_id}|{which} {ix_bunch} {coordinate}
-        
+
         Where:
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
           {ix_bunch} is the bunch index.
-          {coordinate} is one of: x, px, y, py, z, pz, "s", "t", "charge", "p0c", 
+          {coordinate} is one of: x, px, y, py, z, pz, "s", "t", "charge", "p0c",
                                                                         "state", "ix_ele"
-        
+
         For example, if {coordinate} = "px", the phase space px coordinate of each particle
-        of the bunch is displayed. The "state" of a particle is an integer. 
+        of the bunch is displayed. The "state" of a particle is an integer.
         A value of 1 means alive and any other value means the particle has been lost.
-        
+
         Examples
         --------
         Example: 1
@@ -1658,99 +1691,120 @@ class Tao(TaoCore):
            coordinate: x
            which: model
            ix_bunch: 1
-        
-        """
-        cmd = f'pipe bunch1 {ele_id}|{which} {ix_bunch} {coordinate}'
-        if verbose: print(cmd)
-        if coordinate in ['x', 'px', 'y', 'py', 'z', 'pz', 's', 't', 'charge', 'p0c']:
-            return self.__execute(cmd, as_dict, raises, method_name='bunch1', cmd_type='real_array')
-        if coordinate in ['state', 'ix_ele']:
-            return self.__execute(cmd, as_dict, raises, method_name='bunch1', cmd_type='integer_array')
 
-    
-    def building_wall_list(self, *, ix_section='', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe bunch1 {ele_id}|{which} {ix_bunch} {coordinate}"
+        if verbose:
+            print(cmd)
+        if coordinate in ["x", "px", "y", "py", "z", "pz", "s", "t", "charge", "p0c"]:
+            return self.__execute(
+                cmd, as_dict, raises, method_name="bunch1", cmd_type="real_array"
+            )
+        if coordinate in ["state", "ix_ele"]:
+            return self.__execute(
+                cmd, as_dict, raises, method_name="bunch1", cmd_type="integer_array"
+            )
+
+    def building_wall_list(self, *, ix_section="", verbose=False, as_dict=True, raises=True):
+        """
+
         Output List of building wall sections or section points
-        
+
         Parameters
         ----------
         ix_section : optional
-        
+
         Returns
         -------
         list of dicts
-        
+
         Notes
         -----
         Command syntax:
           pipe building_wall_list {ix_section}
-        
+
         Where:
           {ix_section} is a building wall section index.
-        
+
         If {ix_section} is not present, a list of building wall sections is given.
         If {ix_section} is present, a list of section points is given.
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall
          args:
            ix_section:
-        
+
         Example: 2
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall
          args:
            ix_section: 1
-        
-        """
-        cmd = f'pipe building_wall_list {ix_section}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='building_wall_list', cmd_type='string_list')
 
-    
+        """
+        cmd = f"pipe building_wall_list {ix_section}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="building_wall_list", cmd_type="string_list"
+        )
+
     def building_wall_graph(self, graph, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output (x, y) points for drawing the building wall for a particular graph.
-        
+
         Parameters
         ----------
         graph
-        
+
         Returns
         -------
         list of dicts
-        
+
         Notes
         -----
         Command syntax:
           pipe building_wall_graph {graph}
-        
+
         Where:
           {graph} is a plot region graph name.
-        
+
         Note: The graph defines the coordinate system for the (x, y) points.
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall
          args:
            graph: floor_plan.g
-        
-        """
-        cmd = f'pipe building_wall_graph {graph}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='building_wall_graph', cmd_type='string_list')
 
-    
-    def building_wall_point(self, ix_section, ix_point, z, x, radius, z_center, x_center, *, verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe building_wall_graph {graph}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="building_wall_graph", cmd_type="string_list"
+        )
+
+    def building_wall_point(
+        self,
+        ix_section,
+        ix_point,
+        z,
+        x,
+        radius,
+        z_center,
+        x_center,
+        *,
+        verbose=False,
+        as_dict=True,
+        raises=True,
+    ):
+        """
+
         add or delete a building wall point
-        
+
         Parameters
         ----------
         ix_section
@@ -1760,24 +1814,24 @@ class Tao(TaoCore):
         radius
         z_center
         x_center
-        
+
         Returns
         -------
         None
-        
+
         Notes
         -----
         Command syntax:
           pipe building_wall_point {ix_section}^^{ix_point}^^{z}^^{x}^^{radius}^^
                                                                       {z_center}^^{x_center}
-        
+
         Where:
           {ix_section}    -- Section index.
-          {ix_point}      -- Point index. Points of higher indexes will be moved up 
+          {ix_point}      -- Point index. Points of higher indexes will be moved up
                                if adding a point and down if deleting.
           {z}, etc...     -- See tao_building_wall_point_struct components.
                           -- If {z} is set to "delete" then delete the point.
-        
+
         Examples
         --------
         Example: 1
@@ -1790,33 +1844,37 @@ class Tao(TaoCore):
            radius: 0
            z_center: 0
            x_center: 0
-        
-        """
-        cmd = f'pipe building_wall_point {ix_section}^^{ix_point}^^{z}^^{x}^^{radius}^^{z_center}^^{x_center}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='building_wall_point', cmd_type='None')
 
-    
-    def building_wall_section(self, ix_section, sec_name, sec_constraint, *, verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe building_wall_point {ix_section}^^{ix_point}^^{z}^^{x}^^{radius}^^{z_center}^^{x_center}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="building_wall_point", cmd_type="None"
+        )
+
+    def building_wall_section(
+        self, ix_section, sec_name, sec_constraint, *, verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Add or delete a building wall section
-        
+
         Parameters
         ----------
         ix_section
         sec_name
         sec_constraint
-        
+
         Returns
         -------
         None
-        
+
         Notes
         -----
         Command syntax:
           pipe building_wall_section {ix_section}^^{sec_name}^^{sec_constraint}
-        
+
         Where:
           {ix_section}      -- Section index. Sections with higher indexes will be
                                  moved up if adding a section and down if deleting.
@@ -1826,7 +1884,7 @@ class Tao(TaoCore):
               none
               left_side
               right_side
-        
+
         Examples
         --------
         Example: 1
@@ -1835,35 +1893,37 @@ class Tao(TaoCore):
            ix_section: 1
            sec_name: test
            sec_constraint: none
-        
-        """
-        cmd = f'pipe building_wall_section {ix_section}^^{sec_name}^^{sec_constraint}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='building_wall_section', cmd_type='None')
 
-    
+        """
+        cmd = f"pipe building_wall_section {ix_section}^^{sec_name}^^{sec_constraint}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="building_wall_section", cmd_type="None"
+        )
+
     def constraints(self, who, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output optimization data and variable parameters that contribute to the merit function.
-        
+
         Parameters
         ----------
         who
-        
+
         Returns
         -------
         list of dicts
             The keys depend on "data" or "var"
-        
+
         Notes
         -----
         Command syntax:
           pipe constraints {who}
-        
+
         Where:
           {who} is one of: "data" or "var"
-        
+
         Data constraints output is:
           data name
           constraint type
@@ -1887,111 +1947,127 @@ class Tao(TaoCore):
           weight
           merit value
           dmerit/dvar
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching
          args:
            who: data
-        
+
         Example: 2
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
            who:var
-        
-        """
-        cmd = f'pipe constraints {who}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='constraints', cmd_type='string_list')
 
-    
-    def da_aperture(self, *, ix_uni='', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe constraints {who}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="constraints", cmd_type="string_list"
+        )
+
+    def da_aperture(self, *, ix_uni="", verbose=False, as_dict=True, raises=True):
+        """
+
         Output dynamic aperture data
-        
+
         Parameters
         ----------
         ix_uni : optional
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe da_aperture {ix_uni}
-        
+
         Where:
           {ix_uni} is a universe index. Defaults to s%global%default_universe.
-        
-        """
-        cmd = f'pipe da_aperture {ix_uni}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='da_aperture', cmd_type='string_list')
 
-    
-    def da_params(self, *, ix_uni='', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe da_aperture {ix_uni}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="da_aperture", cmd_type="string_list"
+        )
+
+    def da_params(self, *, ix_uni="", verbose=False, as_dict=True, raises=True):
+        """
+
         Output dynamic aperture input parameters
-        
+
         Parameters
         ----------
         ix_uni : optional
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe da_params {ix_uni}
-        
+
         Where:
           {ix_uni} is a universe index. Defaults to s%global%default_universe.
-        
-        """
-        cmd = f'pipe da_params {ix_uni}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='da_params', cmd_type='string_list')
 
-    
-    def data(self, d2_name, d1_name, *, ix_uni='', dat_index='1', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe da_params {ix_uni}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="da_params", cmd_type="string_list"
+        )
+
+    def data(
+        self,
+        d2_name,
+        d1_name,
+        *,
+        ix_uni="",
+        dat_index="1",
+        verbose=False,
+        as_dict=True,
+        raises=True,
+    ):
+        """
+
         Output Individual datum parameters.
-        
+
         Parameters
         ----------
         d2_name
         d1_name
         ix_uni : optional
         dat_index : default=1
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe data {ix_uni}@{d2_name}.{d1_name}[{dat_index}]
-        
+
         Where:
           {ix_uni} is a universe index. Defaults to s%global%default_universe.
           {d2_name} is the name of the d2_data structure the datum is in.
           {d1_datum} is the name of the d1_data structure the datum is in.
           {dat_index} is the index of the datum.
-        
+
         Use the "pipe data-d1" command to get detailed info on a specific d1 array.
-        
+
         Example:
           pipe data 1@orbit.x[10]
-        
+
         Examples
         --------
         Example: 1
@@ -1999,9 +2075,9 @@ class Tao(TaoCore):
          args:
            ix_uni:
            d2_name: twiss
-           d1_name: end 
-           dat_index: 1  
-        
+           d1_name: end
+           dat_index: 1
+
         Example: 2
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching
          args:
@@ -2009,24 +2085,26 @@ class Tao(TaoCore):
            d2_name: twiss
            d1_name: end
            dat_index: 1
-        
-        """
-        cmd = f'pipe data {ix_uni}@{d2_name}.{d1_name}[{dat_index}]'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='data', cmd_type='string_list')
 
-    
-    def data_d_array(self, d2_name, d1_name, *, ix_uni='', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe data {ix_uni}@{d2_name}.{d1_name}[{dat_index}]"
+        if verbose:
+            print(cmd)
+        return self.__execute(cmd, as_dict, raises, method_name="data", cmd_type="string_list")
+
+    def data_d_array(
+        self, d2_name, d1_name, *, ix_uni="", verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Output list of datums for a given d1_data structure.
-        
+
         Parameters
         ----------
         d2_name
         d1_name
         ix_uni : optional
-        
+
         Returns
         -------
         datums: list of dicts
@@ -2036,94 +2114,20 @@ class Tao(TaoCore):
             'meas_value', 'model_value', 'design_value',
             'useit_opt', 'useit_plot', 'good_user',
             'weight', 'exists'
-        
+
         Notes
         -----
         Command syntax:
           pipe data_d_array {ix_uni}@{d2_name}.{d1_name}
-        
+
         Where:
           {ix_uni} is a universe index. Defaults to s%global%default_universe.
           {d2_name} is the name of the containing d2_data structure.
           {d1_name} is the name of the d1_data structure containing the array of datums.
-        
+
         Example:
           pipe data_d_array 1@orbit.x
-        
-        Examples
-        --------
-        Example: 1
-         init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching
-         args:
-           ix_uni: 1 
-           d2_name: twiss
-           d1_name: end
-        
-        """
-        cmd = f'pipe data_d_array {ix_uni}@{d2_name}.{d1_name}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='data_d_array', cmd_type='string_list')
 
-    
-    def data_d1_array(self, d2_datum, *, ix_uni='', verbose=False, as_dict=True, raises=True):
-        """
-        
-        Output list of d1 arrays for a given data_d2.
-        
-        Parameters
-        ----------
-        d2_datum
-        ix_uni : optional
-        
-        Returns
-        -------
-        list of dicts
-        
-        Notes
-        -----
-        Command syntax:
-          pipe data_d1_array {d2_datum}
-        
-        {d2_datum} should be of the form
-          {ix_uni}@{d2_datum_name}
-        
-        Examples
-        --------
-        Example: 1
-         init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching
-         args:
-           ix_uni: 1 
-           d2_datum: twiss
-        
-        """
-        cmd = f'pipe data_d1_array {d2_datum}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='data_d1_array', cmd_type='string_list')
-
-    
-    def data_d2(self, d2_name, *, ix_uni='', verbose=False, as_dict=True, raises=True):
-        """
-        
-        Output information on a d2_datum.
-        
-        Parameters
-        ----------
-        d2_name
-        ix_uni : optional
-        
-        Returns
-        -------
-        string_list
-        
-        Notes
-        -----
-        Command syntax:
-          pipe data_d2 {ix_uni}@{d2_name}
-        
-        Where:
-          {ix_uni} is a universe index. Defaults to s%global%default_universe.
-          {d2_name} is the name of the d2_data structure.
-        
         Examples
         --------
         Example: 1
@@ -2131,71 +2135,163 @@ class Tao(TaoCore):
          args:
            ix_uni: 1
            d2_name: twiss
-        
-        """
-        cmd = f'pipe data_d2 {ix_uni}@{d2_name}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='data_d2', cmd_type='string_list')
+           d1_name: end
 
-    
+        """
+        cmd = f"pipe data_d_array {ix_uni}@{d2_name}.{d1_name}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="data_d_array", cmd_type="string_list"
+        )
+
+    def data_d1_array(self, d2_datum, *, ix_uni="", verbose=False, as_dict=True, raises=True):
+        """
+
+        Output list of d1 arrays for a given data_d2.
+
+        Parameters
+        ----------
+        d2_datum
+        ix_uni : optional
+
+        Returns
+        -------
+        list of dicts
+
+        Notes
+        -----
+        Command syntax:
+          pipe data_d1_array {d2_datum}
+
+        {d2_datum} should be of the form
+          {ix_uni}@{d2_datum_name}
+
+        Examples
+        --------
+        Example: 1
+         init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching
+         args:
+           ix_uni: 1
+           d2_datum: twiss
+
+        """
+        cmd = f"pipe data_d1_array {d2_datum}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="data_d1_array", cmd_type="string_list"
+        )
+
+    def data_d2(self, d2_name, *, ix_uni="", verbose=False, as_dict=True, raises=True):
+        """
+
+        Output information on a d2_datum.
+
+        Parameters
+        ----------
+        d2_name
+        ix_uni : optional
+
+        Returns
+        -------
+        string_list
+
+        Notes
+        -----
+        Command syntax:
+          pipe data_d2 {ix_uni}@{d2_name}
+
+        Where:
+          {ix_uni} is a universe index. Defaults to s%global%default_universe.
+          {d2_name} is the name of the d2_data structure.
+
+        Examples
+        --------
+        Example: 1
+         init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching
+         args:
+           ix_uni: 1
+           d2_name: twiss
+
+        """
+        cmd = f"pipe data_d2 {ix_uni}@{d2_name}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="data_d2", cmd_type="string_list"
+        )
+
     def data_d2_array(self, ix_uni, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output data d2 info for a given universe.
-        
+
         Parameters
         ----------
         ix_uni
-        
+
         Returns
         -------
         list of str
-        
+
         Notes
         -----
         Command syntax:
           pipe data_d2_array {ix_uni}
-        
+
         Where:
           {ix_uni} is a universe index. Defaults to s%global%default_universe.
-        
+
         Example:
           pipe data_d2_array 1
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
-           ix_uni : 1 
-        
-        """
-        cmd = f'pipe data_d2_array {ix_uni}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='data_d2_array', cmd_type='string_list')
+           ix_uni : 1
 
-    
-    def data_d2_create(self, d2_name, n_d1_data, d_data_arrays_name_min_max, *, ix_uni='', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe data_d2_array {ix_uni}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="data_d2_array", cmd_type="string_list"
+        )
+
+    def data_d2_create(
+        self,
+        d2_name,
+        n_d1_data,
+        d_data_arrays_name_min_max,
+        *,
+        ix_uni="",
+        verbose=False,
+        as_dict=True,
+        raises=True,
+    ):
+        """
+
         Create a d2 data structure along with associated d1 and data arrays.
-        
+
         Parameters
         ----------
         d2_name
         n_d1_data
         d_data_arrays_name_min_max
         ix_uni : optional
-        
+
         Returns
         -------
         None
-        
+
         Notes
         -----
         Command syntax:
           pipe data_d2_create {ix_uni}@{d2_name}^^{n_d1_data}^^{d_data_arrays_name_min_max}
-        
+
         Where:
           {ix_uni} is a universe index. Defaults to s%global%default_universe.
           {d2_name} is the name of the d2_data structure to create.
@@ -2203,24 +2299,24 @@ class Tao(TaoCore):
           {d_data_arrays_name_min_max} has the form
             {name1}^^{lower_bound1}^^{upper_bound1}^^....
                                                    ^^{nameN}^^{lower_boundN}^^{upper_boundN}
-          where {name} is the data array name and 
+          where {name} is the data array name and
           {lower_bound} and {upper_bound} are the bounds of the array.
-        
+
         Example:
           pipe data_d2_create 2@orbit^^2^^x^^0^^45^^y^^1^^47
-        This example creates a d2 data structure called "orbit" with 
+        This example creates a d2 data structure called "orbit" with
         two d1 structures called "x" and "y".
-        
+
         The "x" d1 structure has an associated data array with indexes in the range [0, 45].
         The "y" d1 structure has an associated data arrray with indexes in the range [1, 47].
-        
+
         Use the "set data" command to set created datum parameters.
-        
-        Note: When setting multiple data parameters, 
+
+        Note: When setting multiple data parameters,
               temporarily toggle s%global%lattice_calc_on to False
-          ("set global lattice_calc_on = F") to prevent Tao trying to 
+          ("set global lattice_calc_on = F") to prevent Tao trying to
               evaluate the partially created datum and generating unwanted error messages.
-        
+
         Examples
         --------
         Example: 1
@@ -2228,128 +2324,167 @@ class Tao(TaoCore):
          args:
            ix_uni: 1
            d2_name: orbit
-           n_d1_data: 2 
+           n_d1_data: 2
            d_data_arrays_name_min_max: x^^0^^45^^y^^1^^47
-        
-        """
-        cmd = f'pipe data_d2_create {ix_uni}@{d2_name}^^{n_d1_data}^^{d_data_arrays_name_min_max}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='data_d2_create', cmd_type='None')
 
-    
-    def data_d2_destroy(self, d2_name, *, ix_uni='', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe data_d2_create {ix_uni}@{d2_name}^^{n_d1_data}^^{d_data_arrays_name_min_max}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="data_d2_create", cmd_type="None"
+        )
+
+    def data_d2_destroy(self, d2_name, *, ix_uni="", verbose=False, as_dict=True, raises=True):
+        """
+
         Destroy a d2 data structure along with associated d1 and data arrays.
-        
+
         Parameters
         ----------
         d2_name
         ix_uni : optional
-        
+
         Returns
         -------
         None
-        
+
         Notes
         -----
         Command syntax:
           pipe data_d2_destroy {ix_uni}@{d2_name}
-        
+
         Where:
           {ix_uni} is a universe index. Defaults to s%global%default_universe.
           {d2_name} is the name of the d2_data structure to destroy.
-        
+
         Example:
           pipe data_d2_destroy 2@orbit
         This destroys the orbit d2_data structure in universe 2.
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
            d2_name: orbit
-        
-        """
-        cmd = f'pipe data_d2_destroy {ix_uni}@{d2_name}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='data_d2_destroy', cmd_type='None')
 
-    
-    def data_parameter(self, data_array, parameter, *, verbose=False, as_dict=True, raises=True):
         """
-        
-        Output an array of values for a particular datum parameter for a given array of datums, 
-        
+        cmd = f"pipe data_d2_destroy {ix_uni}@{d2_name}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="data_d2_destroy", cmd_type="None"
+        )
+
+    def data_parameter(
+        self, data_array, parameter, *, verbose=False, as_dict=True, raises=True
+    ):
+        """
+
+        Output an array of values for a particular datum parameter for a given array of datums,
+
         Parameters
         ----------
         data_array
         parameter
-        
+
         Returns
         -------
         list of dict
-        
+
         Notes
         -----
         Command syntax:
           pipe data_parameter {data_array} {parameter}
-        
+
         {parameter} may be any tao_data_struct parameter.
         Example:
           pipe data_parameter orbit.x model_value
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching
          args:
-           data_array: twiss.end 
+           data_array: twiss.end
            parameter: model_value
-        
-        """
-        cmd = f'pipe data_parameter {data_array} {parameter}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='data_parameter', cmd_type='string_list')
 
-    
+        """
+        cmd = f"pipe data_parameter {data_array} {parameter}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="data_parameter", cmd_type="string_list"
+        )
+
     def data_set_design_value(self, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Set the design (and base & model) values for all datums.
-        
+
         Returns
         -------
         None
-        
+
         Notes
         -----
         Command syntax:
           pipe data_set_design_value
-        
+
         Example:
           pipe data_set_design_value
-        
+
         Note: Use the "data_d2_create" and "datum_create" first to create datums.
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching
          args:
-        
-        """
-        cmd = f'pipe data_set_design_value'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='data_set_design_value', cmd_type='None')
 
-    
-    def datum_create(self, datum_name, data_type, *, ele_ref_name='', ele_start_name='', ele_name='', merit_type='', meas='0', good_meas='F', ref='0', good_ref='F', weight='0', good_user='T', data_source='lat', eval_point='END', s_offset='0', ix_bunch='0', invalid_value='0', spin_axis_n0_1='', spin_axis_n0_2='', spin_axis_n0_3='', spin_axis_l_1='', spin_axis_l_2='', spin_axis_l_3='', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = "pipe data_set_design_value"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="data_set_design_value", cmd_type="None"
+        )
+
+    def datum_create(
+        self,
+        datum_name,
+        data_type,
+        *,
+        ele_ref_name="",
+        ele_start_name="",
+        ele_name="",
+        merit_type="",
+        meas="0",
+        good_meas="F",
+        ref="0",
+        good_ref="F",
+        weight="0",
+        good_user="T",
+        data_source="lat",
+        eval_point="END",
+        s_offset="0",
+        ix_bunch="0",
+        invalid_value="0",
+        spin_axis_n0_1="",
+        spin_axis_n0_2="",
+        spin_axis_n0_3="",
+        spin_axis_l_1="",
+        spin_axis_l_2="",
+        spin_axis_l_3="",
+        verbose=False,
+        as_dict=True,
+        raises=True,
+    ):
+        """
+
         Create a datum.
-        
+
         Parameters
         ----------
         datum_name          ! EG: orb.x[3]
@@ -2375,11 +2510,11 @@ class Tao(TaoCore):
         spin_axis%l(1) : optional
         spin_axis%l(2) : optional
         spin_axis%l(3) : optional
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
@@ -2389,14 +2524,14 @@ class Tao(TaoCore):
                               {eval_point}^^{s_offset}^^{ix_bunch}^^{invalid_value}^^
                               {spin_axis%n0(1)}^^{spin_axis%n0(2)}^^{spin_axis%n0(3)}^^
                               {spin_axis%l(1)}^^{spin_axis%l(2)}^^{spin_axis%l(3)}
-        
-        Note: The 3 values for spin_axis%n0, as a group, are optional. 
+
+        Note: The 3 values for spin_axis%n0, as a group, are optional.
               Also the 3 values for spin_axis%l are, as a group, optional.
-        Note: Use the "pipe data_d2_create" command first to create a d2 structure 
+        Note: Use the "pipe data_d2_create" command first to create a d2 structure
               with associated d1 arrays.
         Note: After creating all your datums, use the "pipe data_set_design_value" routine
               to set the design (and model) values.
-        
+
         Examples
         --------
         Example: 1
@@ -2419,104 +2554,112 @@ class Tao(TaoCore):
            s_offset: 0
            ix_bunch: 1
            invalid_value: 0
-        
-        """
-        cmd = f'pipe datum_create {datum_name}^^{data_type}^^{ele_ref_name}^^{ele_start_name}^^{ele_name}^^{merit_type}^^{meas}^^{good_meas}^^{ref}^^{good_ref}^^{weight}^^{good_user}^^{data_source}^^{eval_point}^^{s_offset}^^{ix_bunch}^^{invalid_value}^^{spin_axis_n0_1}^^{spin_axis_n0_2}^^{spin_axis_n0_3}^^{spin_axis_l_1}^^{spin_axis_l_2}^^{spin_axis_l_3}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='datum_create', cmd_type='string_list')
 
-    
+        """
+        cmd = f"pipe datum_create {datum_name}^^{data_type}^^{ele_ref_name}^^{ele_start_name}^^{ele_name}^^{merit_type}^^{meas}^^{good_meas}^^{ref}^^{good_ref}^^{weight}^^{good_user}^^{data_source}^^{eval_point}^^{s_offset}^^{ix_bunch}^^{invalid_value}^^{spin_axis_n0_1}^^{spin_axis_n0_2}^^{spin_axis_n0_3}^^{spin_axis_l_1}^^{spin_axis_l_2}^^{spin_axis_l_3}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="datum_create", cmd_type="string_list"
+        )
+
     def datum_has_ele(self, datum_type, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output whether a datum type has an associated lattice element
-        
+
         Parameters
         ----------
         datum_type
-        
+
         Returns
         -------
         str or None
             "no", "yes", "maybe", "provisional"
-        
+
         Notes
         -----
         Command syntax:
           pipe datum_has_ele {datum_type}
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching
          args:
-           datum_type: twiss.end 
-        
-        """
-        cmd = f'pipe datum_has_ele {datum_type}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='datum_has_ele', cmd_type='string_list')
+           datum_type: twiss.end
 
-    
+        """
+        cmd = f"pipe datum_has_ele {datum_type}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="datum_has_ele", cmd_type="string_list"
+        )
+
     def derivative(self, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output optimization derivatives
-        
+
         Returns
         -------
         out : dict
             Dictionary with keys corresponding to universe indexes (int),
             with dModel_dVar as the value:
                 np.ndarray with shape (n_data, n_var)
-        
+
         Notes
         -----
         Command syntax:
           pipe derivative
-        
-        Note: To save time, this command will not recalculate derivatives. 
+
+        Note: To save time, this command will not recalculate derivatives.
         Use the "derivative" command beforehand to recalcuate if needed.
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching
          args:
-        
-        """
-        cmd = f'pipe derivative'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='derivative', cmd_type='string_list')
 
-    
-    def ele_ac_kicker(self, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = "pipe derivative"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="derivative", cmd_type="string_list"
+        )
+
+    def ele_ac_kicker(
+        self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Output element ac_kicker parameters
-        
+
         Parameters
         ----------
         ele_id
         which : default=model
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:ac_kicker {ele_id}|{which}
-        
-        Where: 
+
+        Where:
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
-        
+
         Example:
           pipe ele:ac_kicker 3@1>>7|model
         This gives element number 7 in branch 1 of universe 3.
-        
+
         Examples
         --------
         Example: 1
@@ -2524,44 +2667,48 @@ class Tao(TaoCore):
          args:
           ele_id: 1@0>>1
           which: model
-        
-        """
-        cmd = f'pipe ele:ac_kicker {ele_id}|{which}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_ac_kicker', cmd_type='string_list')
 
-    
-    def ele_cartesian_map(self, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe ele:ac_kicker {ele_id}|{which}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_ac_kicker", cmd_type="string_list"
+        )
+
+    def ele_cartesian_map(
+        self, ele_id, index, who, *, which="model", verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Output element cartesian_map parameters
-        
+
         Parameters
         ----------
         ele_id
         index
         who
         which : default=model
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:cartesian_map {ele_id}|{which} {index} {who}
-        
+
         Where:
           {ele_id} is an element name or index
           {which} is one of: "model", "base" or "design"
           {index} is the index number in the ele%cartesian_map(:) array
           {who} is one of: "base", or "terms"
-        
+
         Example:
           pipe ele:cartesian_map 3@1>>7|model 2 base
         This gives element number 7 in branch 1 of universe 3.
-        
+
         Examples
         --------
         Example: 1
@@ -2571,34 +2718,38 @@ class Tao(TaoCore):
           which: model
           index: 1
           who: base
-        
-        """
-        cmd = f'pipe ele:cartesian_map {ele_id}|{which} {index} {who}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_cartesian_map', cmd_type='string_list')
 
-    
-    def ele_chamber_wall(self, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe ele:cartesian_map {ele_id}|{which} {index} {who}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_cartesian_map", cmd_type="string_list"
+        )
+
+    def ele_chamber_wall(
+        self, ele_id, index, who, *, which="model", verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Output element beam chamber wall parameters
-        
+
         Parameters
         ----------
         ele_id
         index
         who
         which : default=model
-        
+
         Returns
         -------
         list of dict
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:chamber_wall {ele_id}|{which} {index} {who}
-        
+
         Where:
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
@@ -2606,7 +2757,7 @@ class Tao(TaoCore):
           {who} is one of:
             "x"       ! Return min/max in horizontal plane
             "y"       ! Return min/max in vertical plane
-        
+
         Examples
         --------
         Example: 1
@@ -2616,41 +2767,45 @@ class Tao(TaoCore):
           which: model
           index: 1
           who: x
-        
-        """
-        cmd = f'pipe ele:chamber_wall {ele_id}|{which} {index} {who}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_chamber_wall', cmd_type='string_list')
 
-    
-    def ele_control_var(self, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe ele:chamber_wall {ele_id}|{which} {index} {who}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_chamber_wall", cmd_type="string_list"
+        )
+
+    def ele_control_var(
+        self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Output list of element control variables.
         Used for group, overlay and ramper type elements.
-        
+
         Parameters
         ----------
         ele_id
         which : default=model
-        
+
         Returns
         -------
         dict of attributes and values
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:control_var {ele_id}|{which}
-        
+
         Where:
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
-        
+
         Example:
           pipe ele:control_var 3@1>>7|model
         This gives control info on element number 7 in branch 1 of universe 3.
-        
+
         Examples
         --------
         Example: 1
@@ -2658,44 +2813,48 @@ class Tao(TaoCore):
          args:
           ele_id: 1@0>>873
           which: model
-        
-        """
-        cmd = f'pipe ele:control_var {ele_id}|{which}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_control_var', cmd_type='string_list')
 
-    
-    def ele_cylindrical_map(self, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe ele:control_var {ele_id}|{which}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_control_var", cmd_type="string_list"
+        )
+
+    def ele_cylindrical_map(
+        self, ele_id, index, who, *, which="model", verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Output element cylindrical_map
-        
+
         Parameters
         ----------
         ele_id
         index
         who
         which : default=model
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:cylindrical_map {ele_id}|{which} {index} {who}
-        
-        Where 
+
+        Where
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
           {index} is the index number in the ele%cylindrical_map(:) array
           {who} is one of: "base", or "terms"
-        
+
         Example:
           pipe ele:cylindrical_map 3@1>>7|model 2 base
         This gives map #2 of element number 7 in branch 1 of universe 3.
-        
+
         Examples
         --------
         Example: 1
@@ -2705,40 +2864,44 @@ class Tao(TaoCore):
           which: model
           index: 1
           who: base
-        
-        """
-        cmd = f'pipe ele:cylindrical_map {ele_id}|{which} {index} {who}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_cylindrical_map', cmd_type='string_list')
 
-    
-    def ele_elec_multipoles(self, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe ele:cylindrical_map {ele_id}|{which} {index} {who}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_cylindrical_map", cmd_type="string_list"
+        )
+
+    def ele_elec_multipoles(
+        self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Output element electric multipoles
-        
+
         Parameters
         ----------
         ele_id
         which : default=model
-        
+
         Returns
         -------
         dict
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:elec_multipoles {ele_id}|{which}
-        
+
         Where:
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
-        
+
         Example:
           pipe ele:elec_multipoles 3@1>>7|model
         This gives element number 7 in branch 1 of universe 3.
-        
+
         Examples
         --------
         Example: 1
@@ -2746,49 +2909,53 @@ class Tao(TaoCore):
          args:
           ele_id: 1@0>>1
           which: model
-        
-        """
-        cmd = f'pipe ele:elec_multipoles {ele_id}|{which}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_elec_multipoles', cmd_type='string_list')
 
-    
-    def ele_floor(self, ele_id, *, which='model', where='end', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe ele:elec_multipoles {ele_id}|{which}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_elec_multipoles", cmd_type="string_list"
+        )
+
+    def ele_floor(
+        self, ele_id, *, which="model", where="end", verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Output element floor coordinates. The output gives four lines. "Reference" is
         without element misalignments and "Actual" is with misalignments. The lines with "-W"
         give the W matrix. The exception is that if ele is a multipass_lord, there will be 4*N
         lines where N is the number of slaves.
-        
+
         Parameters
         ----------
         ele_id
         which : default=model
         where : default=end
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:floor {ele_id}|{which} {where}
-        
+
         Where:
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
           {where} is an optional argument which, if present, is one of
             beginning  ! Upstream end.
-            center     ! Middle of the element. This is the surface of element when used 
+            center     ! Middle of the element. This is the surface of element when used
                        !  with photonic reflecting elements such as crystal and mirror elements.
             end        ! Downstream end (default).
-        
+
         Example:
           pipe ele:floor 3@1>>7|model
         This gives element number 7 in branch 1 of universe 3.
-        
+
         Examples
         --------
         Example: 1
@@ -2796,48 +2963,52 @@ class Tao(TaoCore):
          args:
           ele_id: 1@0>>1
           which: model
-          where: 
-        
+          where:
+
         Example: 2
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
           ele_id: 1@0>>1
           which: model
           where: center
-        
-        """
-        cmd = f'pipe ele:floor {ele_id}|{which} {where}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_floor', cmd_type='string_list')
 
-    
-    def ele_gen_attribs(self, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe ele:floor {ele_id}|{which} {where}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_floor", cmd_type="string_list"
+        )
+
+    def ele_gen_attribs(
+        self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Output element general attributes
-        
+
         Parameters
         ----------
         ele_id
         which : default=model
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:gen_attribs {ele_id}|{which}
-        
-        Where: 
+
+        Where:
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
-        
+
         Example:
           pipe ele:gen_attribs 3@1>>7|model
         This gives element number 7 in branch 1 of universe 3.
-        
+
         Examples
         --------
         Example: 1
@@ -2845,46 +3016,50 @@ class Tao(TaoCore):
          args:
           ele_id: 1@0>>1
           which: model
-        
-        """
-        cmd = f'pipe ele:gen_attribs {ele_id}|{which}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_gen_attribs', cmd_type='string_list')
 
-    
-    def ele_gen_grad_map(self, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True):
         """
-        
-        Output element gen_grad_map 
-        
+        cmd = f"pipe ele:gen_attribs {ele_id}|{which}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_gen_attribs", cmd_type="string_list"
+        )
+
+    def ele_gen_grad_map(
+        self, ele_id, index, who, *, which="model", verbose=False, as_dict=True, raises=True
+    ):
+        """
+
+        Output element gen_grad_map
+
         Parameters
         ----------
         ele_id
         index
         who
         which : default=model
-        
+
         Returns
         -------
         dict or list of dict
             "derivs" mode will be a list of dictionaries.
             Normal mode will be a single dictionary.
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:gen_grad_map {ele_id}|{which} {index} {who}
-        
-        Where: 
+
+        Where:
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
           {index} is the index number in the ele%gen_grad_map(:) array
           {who} is one of: "base", or "derivs".
-        
+
         Example:
           pipe ele:gen_grad_map 3@1>>7|model 2 base
         This gives element number 7 in branch 1 of universe 3.
-        
+
         Examples
         --------
         Example: 1
@@ -2894,46 +3069,50 @@ class Tao(TaoCore):
           which: model
           index: 1
           who: derivs
-        
-        """
-        cmd = f'pipe ele:gen_grad_map {ele_id}|{which} {index} {who}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_gen_grad_map', cmd_type='string_list')
 
-    
-    def ele_grid_field(self, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe ele:gen_grad_map {ele_id}|{which} {index} {who}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_gen_grad_map", cmd_type="string_list"
+        )
+
+    def ele_grid_field(
+        self, ele_id, index, who, *, which="model", verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Output element grid_field
-        
+
         Parameters
         ----------
         ele_id
         index
         who
         which : default=model
-        
+
         Returns
         -------
         dict or list of dict
             "points" mode will be a list of dictionaries.
             Normal mode will be a single dictionary.
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:grid_field {ele_id}|{which} {index} {who}
-        
+
         Where:
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
           {index} is the index number in the ele%grid_field(:) array.
           {who} is one of: "base", or "points"
-        
+
         Example:
           pipe ele:grid_field 3@1>>7|model 2 base
         This gives grid #2 of element number 7 in branch 1 of universe 3.
-        
+
         Examples
         --------
         Example: 1
@@ -2942,41 +3121,43 @@ class Tao(TaoCore):
           ele_id: 1@0>>1
           which: model
           index: 1
-          who: base 
-        
-        """
-        cmd = f'pipe ele:grid_field {ele_id}|{which} {index} {who}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_grid_field', cmd_type='string_list')
+          who: base
 
-    
-    def ele_head(self, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe ele:grid_field {ele_id}|{which} {index} {who}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_grid_field", cmd_type="string_list"
+        )
+
+    def ele_head(self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True):
+        """
+
         Output "head" Element attributes
-        
+
         Parameters
         ----------
         ele_id
         which : default=model
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:head {ele_id}|{which}
-        
-        Where: 
+
+        Where:
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
-        
+
         Example:
           pipe ele:head 3@1>>7|model
         This gives element number 7 in branch 1 of universe 3.
-        
+
         Examples
         --------
         Example: 1
@@ -2984,87 +3165,93 @@ class Tao(TaoCore):
          args:
           ele_id: 1@0>>1
           which: model
-        
-        """
-        cmd = f'pipe ele:head {ele_id}|{which}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_head', cmd_type='string_list')
 
-    
+        """
+        cmd = f"pipe ele:head {ele_id}|{which}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_head", cmd_type="string_list"
+        )
+
     def ele_lord_slave(self, ele_id, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output the lord/slave tree of an element.
-        
+
         Parameters
         ----------
         ele_id
-        
+
         Returns
         -------
         list of dict
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:lord_slave {ele_id}
-        
-        Where: 
+
+        Where:
           {ele_id} is an element name or index.
-        
+
         Example:
           pipe ele:lord_slave 3@1>>7
         This gives lord and slave info on element number 7 in branch 1 of universe 3.
-        
+
         The output is a number of lines.
         Each line gives information on an element (element index, etc.).
-        Some lines begin with the word "Element". 
-        After each "Element" line, there are a number of lines (possibly zero) 
+        Some lines begin with the word "Element".
+        After each "Element" line, there are a number of lines (possibly zero)
         that begin with the word "Slave or "Lord".
         These "Slave" and "Lord" lines are the slaves and lords of the "Element" element.
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
           ele_id: 1@0>>1
-        
-        """
-        cmd = f'pipe ele:lord_slave {ele_id}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_lord_slave', cmd_type='string_list')
 
-    
-    def ele_mat6(self, ele_id, *, which='model', who='mat6', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe ele:lord_slave {ele_id}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_lord_slave", cmd_type="string_list"
+        )
+
+    def ele_mat6(
+        self, ele_id, *, which="model", who="mat6", verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Output element mat6
-        
+
         Parameters
         ----------
         ele_id
         which : default=model
         who : default=mat6
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:mat6 {ele_id}|{which} {who}
-        
-        Where: 
+
+        Where:
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
           {who} is one of: "mat6", "vec0", or "err"
-        
+
         Example:
           pipe ele:mat6 3@1>>7|model mat6
         This gives element number 7 in branch 1 of universe 3.
-        
+
         Examples
         --------
         Example: 1
@@ -3073,40 +3260,42 @@ class Tao(TaoCore):
           ele_id: 1@0>>1
           which: model
           who: mat6
-        
-        """
-        cmd = f'pipe ele:mat6 {ele_id}|{which} {who}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_mat6', cmd_type='string_list')
 
-    
-    def ele_methods(self, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe ele:mat6 {ele_id}|{which} {who}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_mat6", cmd_type="string_list"
+        )
+
+    def ele_methods(self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True):
+        """
+
         Output element methods
-        
+
         Parameters
         ----------
         ele_id
         which : default=model
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:methods {ele_id}|{which}
-        
-        Where: 
+
+        Where:
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
-        
+
         Example:
           pipe ele:methods 3@1>>7|model
         This gives element number 7 in branch 1 of universe 3.
-        
+
         Examples
         --------
         Example: 1
@@ -3114,40 +3303,44 @@ class Tao(TaoCore):
          args:
           ele_id: 1@0>>1
           which: model
-        
-        """
-        cmd = f'pipe ele:methods {ele_id}|{which}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_methods', cmd_type='string_list')
 
-    
-    def ele_multipoles(self, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe ele:methods {ele_id}|{which}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_methods", cmd_type="string_list"
+        )
+
+    def ele_multipoles(
+        self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Output element multipoles
-        
+
         Parameters
         ----------
         ele_id
         which : default=model
-        
+
         Returns
         -------
         dict
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:multipoles {ele_id}|{which}
-        
-        Where: 
+
+        Where:
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
-        
+
         Example:
           pipe ele:multipoles 3@1>>7|model
         This gives element number 7 in branch 1 of universe 3.
-        
+
         Examples
         --------
         Example: 1
@@ -3155,40 +3348,42 @@ class Tao(TaoCore):
          args:
           ele_id: 1@0>>1
           which: model
-        
-        """
-        cmd = f'pipe ele:multipoles {ele_id}|{which}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_multipoles', cmd_type='string_list')
 
-    
-    def ele_orbit(self, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe ele:multipoles {ele_id}|{which}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_multipoles", cmd_type="string_list"
+        )
+
+    def ele_orbit(self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True):
+        """
+
         Output element orbit
-        
+
         Parameters
         ----------
         ele_id
         which : default=model
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:orbit {ele_id}|{which}
-        
-        Where: 
+
+        Where:
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
-        
+
         Example:
           pipe ele:orbit 3@1>>7|model
         This gives element number 7 in branch 1 of universe 3.
-        
+
         Examples
         --------
         Example: 1
@@ -3196,48 +3391,52 @@ class Tao(TaoCore):
          args:
           ele_id: 1@0>>1
           which: model
-        
-        """
-        cmd = f'pipe ele:orbit {ele_id}|{which}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_orbit', cmd_type='string_list')
 
-    
-    def ele_param(self, ele_id, who, *, which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe ele:orbit {ele_id}|{which}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_orbit", cmd_type="string_list"
+        )
+
+    def ele_param(
+        self, ele_id, who, *, which="model", verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Output lattice element parameter
-        
+
         Parameters
         ----------
         ele_id
         who
         which : default=model
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:param {ele_id}|{which} {who}
-        
-        Where: 
+
+        Where:
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
           {who} values are the same as {who} values for "pipe lat_list".
                 Note: Here {who} must be a single parameter and not a list.
-        
+
         Example:
           pipe ele:param 3@1>>7|model e_tot
         This gives E_tot of element number 7 in branch 1 of universe 3.
-        
-        Note: On output the {variable} component will always be "F" (since this 
+
+        Note: On output the {variable} component will always be "F" (since this
         command cannot tell if a parameter is allowed to vary).
-        
+
         Also see: "pipe lat_list".
-        
+
         Examples
         --------
         Example: 1
@@ -3246,42 +3445,46 @@ class Tao(TaoCore):
           ele_id: 1@0>>1
           which: model
           who: orbit.vec.1
-        
-        """
-        cmd = f'pipe ele:param {ele_id}|{which} {who}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_param', cmd_type='string_list')
 
-    
-    def ele_photon(self, ele_id, who, *, which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe ele:param {ele_id}|{which} {who}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_param", cmd_type="string_list"
+        )
+
+    def ele_photon(
+        self, ele_id, who, *, which="model", verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Output element photon parameters
-        
+
         Parameters
         ----------
         ele_id
         who
         which : default=model
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:photon {ele_id}|{which} {who}
-        
-        Where: 
+
+        Where:
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
           {who} is one of: "base", "material", or "curvature"
-        
+
         Example:
           pipe ele:photon 3@1>>7|model base
         This gives element number 7 in branch 1 of universe 3.
-        
+
         Examples
         --------
         Example: 1
@@ -3290,40 +3493,44 @@ class Tao(TaoCore):
           ele_id: 1@0>>1
           which: model
           who: base
-        
-        """
-        cmd = f'pipe ele:photon {ele_id}|{which} {who}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_photon', cmd_type='string_list')
 
-    
-    def ele_spin_taylor(self, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe ele:photon {ele_id}|{which} {who}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_photon", cmd_type="string_list"
+        )
+
+    def ele_spin_taylor(
+        self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Output element spin_taylor parameters
-        
+
         Parameters
         ----------
         ele_id
         which : default=model
-        
+
         Returns
         -------
         list of dict
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:spin_taylor {ele_id}|{which}
-        
-        Where: 
+
+        Where:
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
-        
+
         Example:
           pipe ele:spin_taylor 3@1>>7|model
         This gives element number 7 in branch 1 of universe 3.
-        
+
         Examples
         --------
         Example: 1
@@ -3331,40 +3538,42 @@ class Tao(TaoCore):
          args:
           ele_id: 1@0>>2
           which: model
-        
-        """
-        cmd = f'pipe ele:spin_taylor {ele_id}|{which}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_spin_taylor', cmd_type='string_list')
 
-    
-    def ele_taylor(self, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
         """
-        
-        Output element taylor map 
-        
+        cmd = f"pipe ele:spin_taylor {ele_id}|{which}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_spin_taylor", cmd_type="string_list"
+        )
+
+    def ele_taylor(self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True):
+        """
+
+        Output element taylor map
+
         Parameters
         ----------
         ele_id
         which : default=model
-        
+
         Returns
         -------
         dict
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:taylor {ele_id}|{which}
-        
-        Where: 
+
+        Where:
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
-        
+
         Example:
           pipe ele:taylor 3@1>>7|model
         This gives element number 7 in branch 1 of universe 3.
-        
+
         Examples
         --------
         Example: 1
@@ -3372,40 +3581,42 @@ class Tao(TaoCore):
          args:
           ele_id: 1@0>>34
           which: model
-        
-        """
-        cmd = f'pipe ele:taylor {ele_id}|{which}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_taylor', cmd_type='string_list')
 
-    
-    def ele_twiss(self, ele_id, *, which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe ele:taylor {ele_id}|{which}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_taylor", cmd_type="string_list"
+        )
+
+    def ele_twiss(self, ele_id, *, which="model", verbose=False, as_dict=True, raises=True):
+        """
+
         Output element Twiss parameters
-        
+
         Parameters
         ----------
         ele_id
         which : default=model
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:twiss {ele_id}|{which}
-        
-        Where: 
+
+        Where:
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
-        
+
         Example:
           pipe ele:twiss 3@1>>7|model
         This gives element number 7 in branch 1 of universe 3.
-        
+
         Examples
         --------
         Example: 1
@@ -3413,45 +3624,49 @@ class Tao(TaoCore):
          args:
           ele_id: 1@0>>1
           which: model
-        
-        """
-        cmd = f'pipe ele:twiss {ele_id}|{which}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_twiss', cmd_type='string_list')
 
-    
-    def ele_wake(self, ele_id, who, *, which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe ele:twiss {ele_id}|{which}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_twiss", cmd_type="string_list"
+        )
+
+    def ele_wake(
+        self, ele_id, who, *, which="model", verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Output element wake.
-        
+
         Parameters
         ----------
         ele_id
         who
         which : default=model
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:wake {ele_id}|{which} {who}
-        
-        Where: 
+
+        Where:
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
           {Who} is one of:
               "sr_long"        "sr_long_table"
               "sr_trans"       "sr_trans_table"
               "lr_mode_table"  "base"
-        
+
         Example:
           pipe ele:wake 3@1>>7|model
         This gives element number 7 in branch 1 of universe 3.
-        
+
         Examples
         --------
         Example: 1
@@ -3460,44 +3675,48 @@ class Tao(TaoCore):
           ele_id: 1@0>>1
           which: model
           who: sr_long
-        
-        """
-        cmd = f'pipe ele:wake {ele_id}|{which} {who}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_wake', cmd_type='string_list')
 
-    
-    def ele_wall3d(self, ele_id, index, who, *, which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe ele:wake {ele_id}|{which} {who}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_wake", cmd_type="string_list"
+        )
+
+    def ele_wall3d(
+        self, ele_id, index, who, *, which="model", verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Output element wall3d parameters.
-        
+
         Parameters
         ----------
         ele_id
         index
         who
         which : default=model
-        
+
         Returns
         -------
         list of dict
-        
+
         Notes
         -----
         Command syntax:
           pipe ele:wall3d {ele_id}|{which} {index} {who}
-        
-        Where: 
+
+        Where:
           {ele_id} is an element name or index.
           {which} is one of: "model", "base" or "design"
-          {index} is the index number in the ele%wall3d(:) array 
+          {index} is the index number in the ele%wall3d(:) array
                     The size of this array is obtained from "pipe ele:head".
           {who} is one of: "base", or "table".
         Example:
           pipe ele:wall3d 3@1>>7|model 2 base
         This gives element number 7 in branch 1 of universe 3.
-        
+
         Examples
         --------
         Example: 1
@@ -3507,66 +3726,86 @@ class Tao(TaoCore):
           which: model
           index: 1
           who: table
-        
-        """
-        cmd = f'pipe ele:wall3d {ele_id}|{which} {index} {who}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ele_wall3d', cmd_type='string_list')
 
-    
-    def evaluate(self, expression, *, flags='-array_out', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe ele:wall3d {ele_id}|{which} {index} {who}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ele_wall3d", cmd_type="string_list"
+        )
+
+    def evaluate(
+        self, expression, *, flags="-array_out", verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Output the value of an expression. The result may be a vector.
-        
+
         Parameters
         ----------
         expression
         flags : default=-array_out
             If -array_out, the output will be available in the tao_c_interface_com%c_real.
-        
+
         Returns
         -------
         string_list
             if '-array_out' not in flags
         real_array
             if '-array_out' in flags
-        
+
         Notes
         -----
         Command syntax:
           pipe evaluate {flags} {expression}
-        
+
         Where:
           Optional {flags} are:
-              -array_out : If present, the output will be available in the 
+              -array_out : If present, the output will be available in the
                             tao_c_interface_com%c_real array.
           {expression} is expression to be evaluated.
-        
+
         Example:
           pipe evaluate 3+data::cbar.11[1:10]|model
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
            expression: data::cbar.11[1:10]|model
-        
-        """
-        cmd = f'pipe evaluate {flags} {expression}'
-        if verbose: print(cmd)
-        if '-array_out' not in flags:
-            return self.__execute(cmd, as_dict, raises, method_name='evaluate', cmd_type='string_list')
-        if '-array_out' in flags:
-            return self.__execute(cmd, as_dict, raises, method_name='evaluate', cmd_type='real_array')
 
-    
-    def em_field(self, ele_id, x, y, z, t_or_z, *, which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe evaluate {flags} {expression}"
+        if verbose:
+            print(cmd)
+        if "-array_out" not in flags:
+            return self.__execute(
+                cmd, as_dict, raises, method_name="evaluate", cmd_type="string_list"
+            )
+        if "-array_out" in flags:
+            return self.__execute(
+                cmd, as_dict, raises, method_name="evaluate", cmd_type="real_array"
+            )
+
+    def em_field(
+        self,
+        ele_id,
+        x,
+        y,
+        z,
+        t_or_z,
+        *,
+        which="model",
+        verbose=False,
+        as_dict=True,
+        raises=True,
+    ):
+        """
+
         Output EM field at a given point generated by a given element.
-        
+
         Parameters
         ----------
         ele_id
@@ -3575,23 +3814,23 @@ class Tao(TaoCore):
         z
         t_or_z
         which : default=model
-        
+
         Returns
         -------
         dict
-        
+
         Notes
         -----
         Command syntax:
           pipe em_field {ele_id}|{which} {x} {y} {z} {t_or_z}
-        
+
         Where:
           {which} is one of: "model", "base" or "design"
           {x}, {y}  -- Transverse coords.
           {z}       -- Longitudinal coord with respect to entrance end of element.
-          {t_or_z}  -- time or phase space z depending if lattice is setup for 
+          {t_or_z}  -- time or phase space z depending if lattice is setup for
                     --   absolute time tracking.
-        
+
         Examples
         --------
         Example: 1
@@ -3603,397 +3842,429 @@ class Tao(TaoCore):
            y: 0
            z: 0
            t_or_z: 0
-        
-        """
-        cmd = f'pipe em_field {ele_id}|{which} {x} {y} {z} {t_or_z}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='em_field', cmd_type='string_list')
 
-    
+        """
+        cmd = f"pipe em_field {ele_id}|{which} {x} {y} {z} {t_or_z}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="em_field", cmd_type="string_list"
+        )
+
     def enum(self, enum_name, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output list of possible values for enumerated numbers.
-        
+
         Parameters
         ----------
         enum_name
-        
+
         Returns
         -------
         list of dict
-        
+
         Notes
         -----
         Command syntax:
           pipe enum {enum_name}
-        
+
         Example:
           pipe enum tracking_method
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
            enum_name: tracking_method
-        
-        """
-        cmd = f'pipe enum {enum_name}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='enum', cmd_type='string_list')
 
-    
+        """
+        cmd = f"pipe enum {enum_name}"
+        if verbose:
+            print(cmd)
+        return self.__execute(cmd, as_dict, raises, method_name="enum", cmd_type="string_list")
+
     def floor_plan(self, graph, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output (x,y) points and other information that can be used for drawing a floor_plan.
-        
+
         Parameters
         ----------
         graph
-        
+
         Returns
         -------
         list of dict
-        
+
         Notes
         -----
         Command syntax:
           pipe floor_plan {graph}
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching
          args:
            graph: r13.g
-        
-        """
-        cmd = f'pipe floor_plan {graph}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='floor_plan', cmd_type='string_list')
 
-    
+        """
+        cmd = f"pipe floor_plan {graph}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="floor_plan", cmd_type="string_list"
+        )
+
     def floor_orbit(self, graph, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output (x, y) coordinates for drawing the particle orbit on a floor plan.
-        
+
         Parameters
         ----------
         graph
-        
+
         Returns
         -------
         list of dict
-        
+
         Notes
         -----
         Command syntax:
           pipe floor_orbit {graph}
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_floor_orbit
          args:
-           graph: r33.g 
-        
-        """
-        cmd = f'pipe floor_orbit {graph}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='floor_orbit', cmd_type='string_list')
+           graph: r33.g
 
-    
+        """
+        cmd = f"pipe floor_orbit {graph}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="floor_orbit", cmd_type="string_list"
+        )
+
     def tao_global(self, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output global parameters.
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe global
-        
+
         Output syntax is parameter list form. See documentation at the beginning of this file.
-        
+
         Note: The follow is intentionally left out:
           optimizer_allow_user_abort
           quiet
           single_step
           prompt_color
           prompt_string
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
-        
-        """
-        cmd = f'pipe global'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='tao_global', cmd_type='string_list')
 
-    
+        """
+        cmd = "pipe global"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="tao_global", cmd_type="string_list"
+        )
+
     def global_optimization(self, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output optimization parameters.
         Also see global:opti_de.
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe global:optimization
-        
+
         Output syntax is parameter list form. See documentation at the beginning of this file.
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
-        
-        """
-        cmd = f'pipe global:optimization'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='global_optimization', cmd_type='string_list')
 
-    
+        """
+        cmd = "pipe global:optimization"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="global_optimization", cmd_type="string_list"
+        )
+
     def global_opti_de(self, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output DE optimization parameters.
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe global:opti_de
-        
+
         Output syntax is parameter list form. See documentation at the beginning of this file.
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
-        
-        """
-        cmd = f'pipe global:opti_de'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='global_opti_de', cmd_type='string_list')
 
-    
+        """
+        cmd = "pipe global:opti_de"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="global_opti_de", cmd_type="string_list"
+        )
+
     def help(self, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output list of "help xxx" topics
-        
+
         Returns
         -------
         str
-        
+
         Notes
         -----
         Command syntax:
           pipe help
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
-        
-        """
-        cmd = f'pipe help'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='help', cmd_type='string_list')
 
-    
+        """
+        cmd = "pipe help"
+        if verbose:
+            print(cmd)
+        return self.__execute(cmd, as_dict, raises, method_name="help", cmd_type="string_list")
+
     def inum(self, who, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output list of possible values for an INUM parameter.
         For example, possible index numbers for the branches of a lattice.
-        
+
         Parameters
         ----------
         who
-        
+
         Returns
         -------
         list of int
-        
+
         Notes
         -----
         Command syntax:
           pipe inum {who}
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
            who: ix_universe
-        
-        """
-        cmd = f'pipe inum {who}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='inum', cmd_type='string_list')
 
-    
+        """
+        cmd = f"pipe inum {who}"
+        if verbose:
+            print(cmd)
+        return self.__execute(cmd, as_dict, raises, method_name="inum", cmd_type="string_list")
+
     def lat_calc_done(self, branch_name, *, verbose=False, as_dict=True, raises=True):
         """
-        
-        Output if a lattice recalculation has been proformed since the last 
+
+        Output if a lattice recalculation has been proformed since the last
           time "pipe lat_calc_done" was called.
-        
+
         Parameters
         ----------
         branch_name
-        
+
         Returns
         -------
         bool
-        
+
         Notes
         -----
         Command syntax:
           pipe lat_calc_done
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
            branch_name: 1@0
-        
-        """
-        cmd = f'pipe lat_calc_done'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='lat_calc_done', cmd_type='string_list')
 
-    
-    def lat_ele_list(self, *, branch_name='', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = "pipe lat_calc_done"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="lat_calc_done", cmd_type="string_list"
+        )
+
+    def lat_ele_list(self, *, branch_name="", verbose=False, as_dict=True, raises=True):
+        """
+
         Output lattice element list.
-        
+
         Parameters
         ----------
         branch_name : optional
-        
+
         Returns
         -------
         list of str of element names
-        
+
         Notes
         -----
         Command syntax:
           pipe lat_ele_list {branch_name}
-        
+
         {branch_name} should have the form:
           {ix_uni}@{ix_branch}
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
            branch_name: 1@0
-        
-        """
-        cmd = f'pipe lat_ele_list {branch_name}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='lat_ele_list', cmd_type='string_list')
 
-    
-    def lat_header(self, *, ix_uni='', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe lat_ele_list {branch_name}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="lat_ele_list", cmd_type="string_list"
+        )
+
+    def lat_header(self, *, ix_uni="", verbose=False, as_dict=True, raises=True):
+        """
+
         Output lattice "header" info like the lattice and machine names.
-        
+
         Parameters
         ----------
         ix_uni : optional
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe lat_header {ix_uni}
-        
+
         Output syntax is parameter list form. See documentation at the beginning of this file.
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
            ix_uni: 1
-        
-        """
-        cmd = f'pipe lat_header {ix_uni}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='lat_header', cmd_type='string_list')
 
-    
-    def lat_branch_list(self, *, ix_uni='', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe lat_header {ix_uni}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="lat_header", cmd_type="string_list"
+        )
+
+    def lat_branch_list(self, *, ix_uni="", verbose=False, as_dict=True, raises=True):
+        """
+
         Output lattice branch list
-        
+
         Parameters
         ----------
         ix_uni : optional
-        
+
         Returns
         -------
         list of dict
-        
+
         Notes
         -----
         Command syntax:
           pipe lat_branch_list {ix_uni}
-        
+
         Output syntax:
           branch_index;branch_name;n_ele_track;n_ele_max
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
            ix_uni: 1
-        
-        """
-        cmd = f'pipe lat_branch_list {ix_uni}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='lat_branch_list', cmd_type='string_list')
 
-    
-    def lat_list(self, elements, who, *, ix_uni='', ix_branch='', which='model', flags='-array_out -track_only', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe lat_branch_list {ix_uni}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="lat_branch_list", cmd_type="string_list"
+        )
+
+    def lat_list(
+        self,
+        elements,
+        who,
+        *,
+        ix_uni="",
+        ix_branch="",
+        which="model",
+        flags="-array_out -track_only",
+        verbose=False,
+        as_dict=True,
+        raises=True,
+    ):
+        """
+
         Output list of parameters at ends of lattice elements
-        
+
         Parameters
         ----------
         elements
@@ -4002,7 +4273,7 @@ class Tao(TaoCore):
         ix_branch : optional
         which : default=model
         flags : optional, default=-array_out -track_only
-        
+
         Returns
         -------
         string_list
@@ -4010,27 +4281,27 @@ class Tao(TaoCore):
         integer_array
             if '-array_out' in flags and who in ['orbit.state', 'ele.ix_ele']
         real_array
-            if ('-array_out' in flags) or ('real:' in who) 
-        
+            if ('-array_out' in flags) or ('real:' in who)
+
         Notes
         -----
         Command syntax:
           pipe lat_list {flags} {ix_uni}@{ix_branch}>>{elements}|{which} {who}
-        
+
         Where:
          Optional {flags} are:
-          -no_slaves   - If present, multipass_slave and super_slave elements will not 
+          -no_slaves   - If present, multipass_slave and super_slave elements will not
                        -   be matched to.
           -track_only  - If present, lord elements will not be matched to.
-          -index_order - If present, order elements by element index instead of the 
+          -index_order - If present, order elements by element index instead of the
                        -   standard s-position.
-          -array_out   - If present, the output will be available in the 
-            tao_c_interface_com%c_real or tao_c_interface_com%c_integer arrays. 
+          -array_out   - If present, the output will be available in the
+            tao_c_interface_com%c_real or tao_c_interface_com%c_integer arrays.
             See the code below for when %c_real vs %c_integer is used.
             Note: Only a single {who} item permitted when -array_out is present.
-        
+
           {which} is one of: "model", "base" or "design"
-        
+
           {who} is a comma deliminated list of:
             orbit.floor.x, orbit.floor.y, orbit.floor.z    ! Floor coords at particle orbit.
             orbit.spin.1, orbit.spin.2, orbit.spin.3,
@@ -4050,155 +4321,165 @@ class Tao(TaoCore):
             ele.vec0      ! Output: vec0(1), ... vec0(6)
             ele.c_mat     ! Output: c_mat11, c_mat12, c_mat21, c_mat22.
             ele.gamma_c   ! Parameter associated with coupling c-matrix.
-            ele.XXX       ! Where XXX is a Bmad syntax element attribute. 
+            ele.XXX       ! Where XXX is a Bmad syntax element attribute.
                           !   EG: ele.beta_a, ele.k1, etc.
-        
+
           {elements} is a string to match element names to.
             Use "*" to match to all elements.
-        
+
         Examples:
           pipe lat_list -track 3@0>>Q*|base ele.s,orbit.vec.2
-          pipe lat_list 3@0>>Q*|base real:ele.s    
-        
+          pipe lat_list 3@0>>Q*|base real:ele.s
+
         Also see: "pipe ele:param"
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
-           ix_uni: 1  
-           ix_branch: 0 
-           elements: Q* 
+           ix_uni: 1
+           ix_branch: 0
+           elements: Q*
            which: model
            who: orbit.floor.x
-        
+
         Example: 2
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
-           ix_uni: 1  
-           ix_branch: 0 
-           elements: Q* 
+           ix_uni: 1
+           ix_branch: 0
+           elements: Q*
            which: design
            who: ele.ix_ele
-        
-        """
-        cmd = f'pipe lat_list {flags} {ix_uni}@{ix_branch}>>{elements}|{which} {who}'
-        if verbose: print(cmd)
-        if ('-array_out' not in flags) or (who in ['ele.name', 'ele.key']):
-            return self.__execute(cmd, as_dict, raises, method_name='lat_list', cmd_type='string_list')
-        if '-array_out' in flags and who in ['orbit.state', 'ele.ix_ele']:
-            return self.__execute(cmd, as_dict, raises, method_name='lat_list', cmd_type='integer_array')
-        if ('-array_out' in flags) or ('real:' in who) :
-            return self.__execute(cmd, as_dict, raises, method_name='lat_list', cmd_type='real_array')
 
-    
+        """
+        cmd = f"pipe lat_list {flags} {ix_uni}@{ix_branch}>>{elements}|{which} {who}"
+        if verbose:
+            print(cmd)
+        if ("-array_out" not in flags) or (who in ["ele.name", "ele.key"]):
+            return self.__execute(
+                cmd, as_dict, raises, method_name="lat_list", cmd_type="string_list"
+            )
+        if "-array_out" in flags and who in ["orbit.state", "ele.ix_ele"]:
+            return self.__execute(
+                cmd, as_dict, raises, method_name="lat_list", cmd_type="integer_array"
+            )
+        if ("-array_out" in flags) or ("real:" in who):
+            return self.__execute(
+                cmd, as_dict, raises, method_name="lat_list", cmd_type="real_array"
+            )
+
     def lat_param_units(self, param_name, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output units of a parameter associated with a lattice or lattice element.
-        
+
         Parameters
         ----------
         param_name
-        
+
         Returns
         -------
         str
-        
+
         Notes
         -----
         Command syntax:
           pipe lat_param_units {param_name}
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
-           param_name: L   
-        
-        """
-        cmd = f'pipe lat_param_units {param_name}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='lat_param_units', cmd_type='string_list')
+           param_name: L
 
-    
+        """
+        cmd = f"pipe lat_param_units {param_name}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="lat_param_units", cmd_type="string_list"
+        )
+
     def lord_control(self, ele_id, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output lord information for a given slave element.
-        
+
         Parameters
         ----------
         ele_id
-        
+
         Notes
         -----
         Command syntax:
           pipe lord_control {ele_id}
-        
+
         Where:
           {ele_id} is the slave element.
-        
+
         Example:
           pipe lord_control 2@1>>q01w
-        
+
         The output is a number of lines with each line giving the information:
             Lord-index;Lord-name;Lord-type;Attribute-controlled;Control-expression;Value
-        
+
         Note: The last three fields will only be non-blank for ramper, overlay and group lords with
         the value field being blank for rampers.
-        
+
         Note: For control expressed as a set of knot points (as opposed to an expression),
         the control-expression will be "knots".
-        
-        Note: The Value field is the contribution to the slave attribute value due to the lord. 
-        
+
+        Note: The Value field is the contribution to the slave attribute value due to the lord.
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
            ele_id: sex_20w
-        
-        """
-        cmd = f'pipe lord_control {ele_id}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='lord_control', cmd_type='string_list')
 
-    
+        """
+        cmd = f"pipe lord_control {ele_id}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="lord_control", cmd_type="string_list"
+        )
+
     def matrix(self, ele1_id, ele2_id, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output matrix value from the exit end of one element to the exit end of the other.
-        
+
         Parameters
         ----------
         ele1_id
         ele2_id
-        
+
         Returns
         -------
         dict with keys:
             'mat6' : np.array of shape (6,6)
             'vec6' : np.array of shape(6)
-        
+
         Notes
         -----
         Command syntax:
           pipe matrix {ele1_id} {ele2_id}
-        
+
         Where:
           {ele1_id} is the start element.
           {ele2_id} is the end element.
         If {ele2_id} = {ele1_id}, the 1-turn transfer map is computed.
-        Note: {ele2_id} should just be an element name or index without universe, 
+        Note: {ele2_id} should just be an element name or index without universe,
               branch, or model/base/design specification.
-        
+
         Example:
           pipe matrix 2@1>>q01w|design q02w
-        
+
         Examples
         --------
         Example: 1
@@ -4206,73 +4487,87 @@ class Tao(TaoCore):
          args:
            ele1_id: 1@0>>q01w|design
            ele2_id: q02w
-        
-        """
-        cmd = f'pipe matrix {ele1_id} {ele2_id}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='matrix', cmd_type='string_list')
 
-    
+        """
+        cmd = f"pipe matrix {ele1_id} {ele2_id}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="matrix", cmd_type="string_list"
+        )
+
     def merit(self, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output merit value.
-        
+
         Returns
         -------
         merit: float
             Value of the merit function
-        
+
         Notes
         -----
         Command syntax:
           pipe merit
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
-        
-        """
-        cmd = f'pipe merit'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='merit', cmd_type='string_list')
 
-    
-    def orbit_at_s(self, *, ix_uni='', ele='', s_offset='', which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = "pipe merit"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="merit", cmd_type="string_list"
+        )
+
+    def orbit_at_s(
+        self,
+        *,
+        ix_uni="",
+        ele="",
+        s_offset="",
+        which="model",
+        verbose=False,
+        as_dict=True,
+        raises=True,
+    ):
+        """
+
         Output twiss at given s position.
-        
+
         Parameters
         ----------
         ix_uni : optional
         ele : optional
         s_offset : optional
         which : default=model
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe orbit_at_s {ix_uni}@{ele}->{s_offset}|{which}
-        
+
         Where:
           {ix_uni}   - Universe index. Defaults to s%global%default_universe.
-          {ele}      - Element name or index. 
+          {ele}      - Element name or index.
                          Default at the Beginning element at start of branch 0.
-          {s_offset} - Offset of the evaluation point from the downstream end of ele. 
+          {s_offset} - Offset of the evaluation point from the downstream end of ele.
                          Default is 0. If {s_offset} is present, the preceeding "->" sign
-                         must be present. EG: Something like "23|model" will {which} is 
+                         must be present. EG: Something like "23|model" will {which} is
                          one of: "model", "base" or "design".
-        
+
         Example:
           pipe orbit_at_s Q10->0.4|model   ! Orbit at 0.4 meters from Q10 element exit end in model lattice.
-        
+
         Examples
         --------
         Example: 1
@@ -4282,186 +4577,200 @@ class Tao(TaoCore):
            ele: 10
            s_offset: 0.7
            which: model
-        
-        """
-        cmd = f'pipe orbit_at_s {ix_uni}@{ele}->{s_offset}|{which}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='orbit_at_s', cmd_type='string_list')
 
-    
+        """
+        cmd = f"pipe orbit_at_s {ix_uni}@{ele}->{s_offset}|{which}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="orbit_at_s", cmd_type="string_list"
+        )
+
     def place_buffer(self, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output the place command buffer and reset the buffer.
         The contents of the buffer are the place commands that the user has issued.
         See the Tao manual for more details.
-        
+
         Returns
         -------
         list of dict
-        
+
         Notes
         -----
         Command syntax:
           pipe place_buffer
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
-        
-        """
-        cmd = f'pipe place_buffer'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='place_buffer', cmd_type='None')
 
-    
+        """
+        cmd = "pipe place_buffer"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="place_buffer", cmd_type="None"
+        )
+
     def plot_curve(self, curve_name, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output curve information for a plot.
-        
+
         Parameters
         ----------
         curve_name
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe plot_curve {curve_name}
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching
          args:
            curve_name: r13.g.a
-        
-        """
-        cmd = f'pipe plot_curve {curve_name}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='plot_curve', cmd_type='string_list')
 
-    
+        """
+        cmd = f"pipe plot_curve {curve_name}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="plot_curve", cmd_type="string_list"
+        )
+
     def plot_graph(self, graph_name, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output graph info.
-        
+
         Parameters
         ----------
         graph_name
-        
+
         Returns
         -------
         dict
-        
+
         Notes
         -----
         Command syntax:
           pipe plot_graph {graph_name}
-        
+
         {graph_name} is in the form:
           {p_name}.{g_name}
         where
           {p_name} is the plot region name if from a region or the plot name if a template plot.
           This name is obtained from the pipe plot_list command.
           {g_name} is the graph name obtained from the pipe plot1 command.
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching
          args:
            graph_name: beta.g
-        
-        """
-        cmd = f'pipe plot_graph {graph_name}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='plot_graph', cmd_type='string_list')
 
-    
+        """
+        cmd = f"pipe plot_graph {graph_name}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="plot_graph", cmd_type="string_list"
+        )
+
     def plot_histogram(self, curve_name, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output plot histogram info.
-        
+
         Parameters
         ----------
         curve_name
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe plot_histogram {curve_name}
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching
          args:
            curve_name: r33.g.x
-        
-        """
-        cmd = f'pipe plot_histogram {curve_name}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='plot_histogram', cmd_type='string_list')
 
-    
-    def plot_lat_layout(self, ix_uni: 1, ix_branch: 0, *, verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe plot_histogram {curve_name}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="plot_histogram", cmd_type="string_list"
+        )
+
+    def plot_lat_layout(
+        self, ix_uni: 1, ix_branch: 0, *, verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Output plot Lat_layout info
-        
+
         Parameters
         ----------
         ix_uni: 1
         ix_branch: 0
-        
+
         Returns
         -------
         list of dict
-        
+
         Notes
         -----
         Command syntax:
           pipe plot_lat_layout {ix_uni}@{ix_branch}
-        
+
         Note: The returned list of element positions is not ordered in increasing
               longitudinal position.
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
            ix_uni: 1
-           ix_branch: 0 
-        
-        """
-        cmd = f'pipe plot_lat_layout {ix_uni}@{ix_branch}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='plot_lat_layout', cmd_type='string_list')
+           ix_branch: 0
 
-    
+        """
+        cmd = f"pipe plot_lat_layout {ix_uni}@{ix_branch}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="plot_lat_layout", cmd_type="string_list"
+        )
+
     def plot_list(self, r_or_g, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output list of plot templates or plot regions.
-        
+
         Parameters
         ----------
         r_or_g
-        
+
         Returns
         -------
         if r_or_g == 't'
@@ -4473,62 +4782,74 @@ class Tao(TaoCore):
                 plot_name
                 visible
                 x1, x2, y1, y1
-        
+
         Notes
         -----
         Command syntax:
           pipe plot_list {r_or_g}
-        
+
         where "{r/g}" is:
           "r"      ! list regions of the form ix;region_name;plot_name;visible;x1;x2;y1;y2
           "t"      ! list template plots of the form ix;name
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
            r_or_g: r
-        
-        """
-        cmd = f'pipe plot_list {r_or_g}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='plot_list', cmd_type='string_list')
 
-    
-    def plot_template_manage(self, template_location, template_name, *, n_graph='-1', graph_names='', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe plot_list {r_or_g}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="plot_list", cmd_type="string_list"
+        )
+
+    def plot_template_manage(
+        self,
+        template_location,
+        template_name,
+        *,
+        n_graph="-1",
+        graph_names="",
+        verbose=False,
+        as_dict=True,
+        raises=True,
+    ):
+        """
+
         Template plot creation or destruction.
-        
+
         Parameters
         ----------
         template_location
         template_name
         n_graph : default=-1
         graph_names : default=
-        
+
         Returns
         -------
         None
-        
+
         Notes
         -----
         Command syntax:
           pipe plot_template_manage {template_location}^^{template_name}^^
                                  {n_graph}^^{graph_names}
-        
+
         Where:
-          {template_location} - Location to place or delete a template plot. 
+          {template_location} - Location to place or delete a template plot.
                                   Use "@Tnnn" syntax for the location.
-          {template_name}     - The name of the template plot. 
+          {template_name}     - The name of the template plot.
                                   If deleting a plot this name is immaterial.
-          {n_graph}           - The number of associated graphs. 
+          {n_graph}           - The number of associated graphs.
                                   If set to -1 then any existing template plot is deleted.
           {graph_names}       - Names of the graphs. graph_names should be in the form:
                                     graph1_name^^graph2_name^^...^^graphN_name
                                   where N=n_graph names
-        
+
         Examples
         --------
         Example: 1
@@ -4538,38 +4859,42 @@ class Tao(TaoCore):
            template_name: beta
            n_graph: 2
            graph_names: g1^^g2
-        
-        """
-        cmd = f'pipe plot_template_manage {template_location}^^{template_name}^^{n_graph}^^{graph_names}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='plot_template_manage', cmd_type='None')
 
-    
-    def plot_curve_manage(self, graph_name, curve_index, curve_name, *, verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe plot_template_manage {template_location}^^{template_name}^^{n_graph}^^{graph_names}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="plot_template_manage", cmd_type="None"
+        )
+
+    def plot_curve_manage(
+        self, graph_name, curve_index, curve_name, *, verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Template plot curve creation/destruction
-        
+
         Parameters
         ----------
         graph_name
         curve_index
         curve_name
-        
+
         Returns
         -------
         None
-        
+
         Notes
         -----
         Command syntax:
           pipe plot_curve_manage {graph_name}^^{curve_index}^^{curve_name}
-        
+
         If {curve_index} corresponds to an existing curve then this curve is deleted.
         In this case the {curve_name} is ignored and does not have to be present.
         If {curve_index} does not not correspond to an existing curve, {curve_index}
         must be one greater than the number of curves.
-        
+
         Examples
         --------
         Example: 1
@@ -4578,38 +4903,42 @@ class Tao(TaoCore):
            graph_name: beta.g
            curve_index: 1
            curve_name: r13.g.a
-        
-        """
-        cmd = f'pipe plot_curve_manage {graph_name}^^{curve_index}^^{curve_name}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='plot_curve_manage', cmd_type='None')
 
-    
-    def plot_graph_manage(self, plot_name, graph_index, graph_name, *, verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe plot_curve_manage {graph_name}^^{curve_index}^^{curve_name}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="plot_curve_manage", cmd_type="None"
+        )
+
+    def plot_graph_manage(
+        self, plot_name, graph_index, graph_name, *, verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Template plot graph creation/destruction
-        
+
         Parameters
         ----------
         plot_name
         graph_index
         graph_name
-        
+
         Returns
         -------
         None
-        
+
         Notes
         -----
         Command syntax:
           pipe plot_graph_manage {plot_name}^^{graph_index}^^{graph_name}
-        
+
         If {graph_index} corresponds to an existing graph then this graph is deleted.
         In this case the {graph_name} is ignored and does not have to be present.
         If {graph_index} does not not correspond to an existing graph, {graph_index}
         must be one greater than the number of graphs.
-        
+
         Examples
         --------
         Example: 1
@@ -4618,46 +4947,58 @@ class Tao(TaoCore):
            plot_name: beta
            graph_index: 1
            graph_name: beta.g
-        
-        """
-        cmd = f'pipe plot_graph_manage {plot_name}^^{graph_index}^^{graph_name}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='plot_graph_manage', cmd_type='None')
 
-    
-    def plot_line(self, region_name, graph_name, curve_name, *, x_or_y='', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe plot_graph_manage {plot_name}^^{graph_index}^^{graph_name}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="plot_graph_manage", cmd_type="None"
+        )
+
+    def plot_line(
+        self,
+        region_name,
+        graph_name,
+        curve_name,
+        *,
+        x_or_y="",
+        verbose=False,
+        as_dict=True,
+        raises=True,
+    ):
+        """
+
         Output points used to construct the "line" associated with a plot curve.
-        
+
         Parameters
         ----------
         region_name
         graph_name
         curve_name
         x_or_y : optional
-        
+
         Returns
         -------
         string_list
             if x_or_y == ''
         real_array
             if x_or_y != ''
-        
+
         Notes
         -----
         Command syntax:
           pipe plot_line {region_name}.{graph_name}.{curve_name} {x_or_y}
-        
-        Optional {x-or-y} may be set to "x" or "y" to get the smooth line points x or y 
+
+        Optional {x-or-y} may be set to "x" or "y" to get the smooth line points x or y
         component put into the tao_c_interface_com%c_real array buffer.
-        Note: The plot must come from a region, and not a template, since no template plots 
+        Note: The plot must come from a region, and not a template, since no template plots
               have associated line data.
         Examples:
           pipe plot_line r13.g.a   ! String array output.
           pipe plot_line r13.g.a x ! x-component of line points put in array buffer.
           pipe plot_line r13.g.a y ! y-component of line points put in array buffer.
-        
+
         Examples
         --------
         Example: 1
@@ -4667,7 +5008,7 @@ class Tao(TaoCore):
            graph_name: g
            curve_name: a
            x_or_y:
-        
+
         Example: 2
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_plot_line -external_plotting
          args:
@@ -4675,51 +5016,65 @@ class Tao(TaoCore):
            graph_name: g
            curve_name: a
            x_or_y: y
-        
-        """
-        cmd = f'pipe plot_line {region_name}.{graph_name}.{curve_name} {x_or_y}'
-        if verbose: print(cmd)
-        if x_or_y == '':
-            return self.__execute(cmd, as_dict, raises, method_name='plot_line', cmd_type='string_list')
-        if x_or_y != '':
-            return self.__execute(cmd, as_dict, raises, method_name='plot_line', cmd_type='real_array')
 
-    
-    def plot_symbol(self, region_name, graph_name, curve_name, x_or_y, *, verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe plot_line {region_name}.{graph_name}.{curve_name} {x_or_y}"
+        if verbose:
+            print(cmd)
+        if x_or_y == "":
+            return self.__execute(
+                cmd, as_dict, raises, method_name="plot_line", cmd_type="string_list"
+            )
+        if x_or_y != "":
+            return self.__execute(
+                cmd, as_dict, raises, method_name="plot_line", cmd_type="real_array"
+            )
+
+    def plot_symbol(
+        self,
+        region_name,
+        graph_name,
+        curve_name,
+        x_or_y,
+        *,
+        verbose=False,
+        as_dict=True,
+        raises=True,
+    ):
+        """
+
         Output locations to draw symbols for a plot curve.
-        
+
         Parameters
         ----------
         region_name
         graph_name
         curve_name
         x_or_y
-        
+
         Returns
         -------
         string_list
             if x_or_y == ''
         real_array
             if x_or_y != ''
-        
+
         Notes
         -----
         Command syntax:
           pipe plot_symbol {region_name}.{graph_name}.{curve_name} {x_or_y}
-        
-        Optional {x_or_y} may be set to "x" or "y" to get the symbol x or y 
+
+        Optional {x_or_y} may be set to "x" or "y" to get the symbol x or y
         positions put into the real array buffer.
-        Note: The plot must come from a region, and not a template, 
+        Note: The plot must come from a region, and not a template,
               since no template plots have associated symbol data.
         Examples:
           pipe plot_symbol r13.g.a       ! String array output.
-          pipe plot_symbol r13.g.a x     ! x-component of the symbol positions 
+          pipe plot_symbol r13.g.a x     ! x-component of the symbol positions
                                              loaded into the real array buffer.
-          pipe plot_symbol r13.g.a y     ! y-component of the symbol positions 
+          pipe plot_symbol r13.g.a y     ! y-component of the symbol positions
                                              loaded into the real array buffer.
-        
+
         Examples
         --------
         Example: 1
@@ -4728,8 +5083,8 @@ class Tao(TaoCore):
            region_name: r13
            graph_name: g
            curve_name: a
-           x_or_y: 
-        
+           x_or_y:
+
         Example: 2
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_plot_line -external_plotting
          args:
@@ -4737,141 +5092,160 @@ class Tao(TaoCore):
            graph_name: g
            curve_name: a
            x_or_y: y
-        
-        """
-        cmd = f'pipe plot_symbol {region_name}.{graph_name}.{curve_name} {x_or_y}'
-        if verbose: print(cmd)
-        if x_or_y == '':
-            return self.__execute(cmd, as_dict, raises, method_name='plot_symbol', cmd_type='string_list')
-        if x_or_y != '':
-            return self.__execute(cmd, as_dict, raises, method_name='plot_symbol', cmd_type='real_array')
 
-    
+        """
+        cmd = f"pipe plot_symbol {region_name}.{graph_name}.{curve_name} {x_or_y}"
+        if verbose:
+            print(cmd)
+        if x_or_y == "":
+            return self.__execute(
+                cmd, as_dict, raises, method_name="plot_symbol", cmd_type="string_list"
+            )
+        if x_or_y != "":
+            return self.__execute(
+                cmd, as_dict, raises, method_name="plot_symbol", cmd_type="real_array"
+            )
+
     def plot_transfer(self, from_plot, to_plot, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output transfer plot parameters from the "from plot" to the "to plot" (or plots).
-        
+
         Parameters
         ----------
         from_plot
         to_plot
-        
+
         Returns
         -------
         None
-        
+
         Notes
         -----
         Command syntax:
           pipe plot_transfer {from_plot} {to_plot}
-        
+
         To avoid confusion, use "@Tnnn" and "@Rnnn" syntax for {from_plot}.
-        If {to_plot} is not present and {from_plot} is a template plot, the "to plots" 
-         are the equivalent region plots with the same name. And vice versa 
+        If {to_plot} is not present and {from_plot} is a template plot, the "to plots"
+         are the equivalent region plots with the same name. And vice versa
          if {from_plot} is a region plot.
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching
          args:
            from_plot: r13
-           to_plot: r23 
-        
-        """
-        cmd = f'pipe plot_transfer {from_plot} {to_plot}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='plot_transfer', cmd_type='None')
+           to_plot: r23
 
-    
+        """
+        cmd = f"pipe plot_transfer {from_plot} {to_plot}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="plot_transfer", cmd_type="None"
+        )
+
     def plot1(self, name, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output info on a given plot.
-        
+
         Parameters
         ----------
         name
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe plot1 {name}
-        
+
         {name} should be the region name if the plot is associated with a region.
         Output syntax is parameter list form. See documentation at the beginning of this file.
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching
          args:
            name: beta
-        
-        """
-        cmd = f'pipe plot1 {name}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='plot1', cmd_type='string_list')
 
-    
+        """
+        cmd = f"pipe plot1 {name}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="plot1", cmd_type="string_list"
+        )
+
     def ptc_com(self, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output Ptc_com structure components.
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe ptc_com
-        
+
         Examples
         --------
         Example: 1
-         init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init 
+         init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
-        
-        """
-        cmd = f'pipe ptc_com'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ptc_com', cmd_type='string_list')
 
-    
-    def ring_general(self, *, ix_uni='', ix_branch='', which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = "pipe ptc_com"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ptc_com", cmd_type="string_list"
+        )
+
+    def ring_general(
+        self,
+        *,
+        ix_uni="",
+        ix_branch="",
+        which="model",
+        verbose=False,
+        as_dict=True,
+        raises=True,
+    ):
+        """
+
         Output lattice branch with closed geometry info (emittances, etc.)
-        
+
         Parameters
         ----------
         ix_uni : optional
         ix_branch : optional
         which : default=model
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe ring_general {ix_uni}@{ix_branch}|{which}
-        
+
         where {which} is one of:
           model
           base
           design
         Example:
           pipe ring_general 1@0|model
-        
+
         Examples
         --------
         Example: 1
@@ -4880,82 +5254,88 @@ class Tao(TaoCore):
             ix_uni: 1
             ix_branch: 0
             which: model
-        
-        """
-        cmd = f'pipe ring_general {ix_uni}@{ix_branch}|{which}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='ring_general', cmd_type='string_list')
 
-    
+        """
+        cmd = f"pipe ring_general {ix_uni}@{ix_branch}|{which}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="ring_general", cmd_type="string_list"
+        )
+
     def shape_list(self, who, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output lat_layout or floor_plan shapes list
-        
+
         Parameters
         ----------
         who
-        
+
         Returns
         -------
         list of dict
-        
+
         Notes
         -----
         Command syntax:
           pipe shape_list {who}
-        
+
         {who} is one of:
           lat_layout
           floor_plan
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
-           who: floor_plan  
-        
-        """
-        cmd = f'pipe shape_list {who}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='shape_list', cmd_type='string_list')
+           who: floor_plan
 
-    
-    def shape_manage(self, who, index, add_or_delete, *, verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe shape_list {who}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="shape_list", cmd_type="string_list"
+        )
+
+    def shape_manage(
+        self, who, index, add_or_delete, *, verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Element shape creation or destruction
-        
+
         Parameters
         ----------
         who
         index
         add_or_delete
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe shape_manage {who} {index} {add_or_delete}
-        
+
         {who} is one of:
           lat_layout
           floor_plan
         {add_or_delete} is one of:
-          add     -- Add a shape at {index}. 
+          add     -- Add a shape at {index}.
                      Shapes with higher index get moved up one to make room.
-          delete  -- Delete shape at {index}. 
+          delete  -- Delete shape at {index}.
                      Shapes with higher index get moved down one to fill the gap.
-        
+
         Example:
           pipe shape_manage floor_plan 2 add
         Note: After adding a shape use "pipe shape_set" to set shape parameters.
         This is important since an added shape is in a ill-defined state.
-        
+
         Examples
         --------
         Example: 1
@@ -4964,74 +5344,80 @@ class Tao(TaoCore):
            who: floor_plan
            index: 1
            add_or_delete: add
-        
-        """
-        cmd = f'pipe shape_manage {who} {index} {add_or_delete}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='shape_manage', cmd_type='string_list')
 
-    
-    def shape_pattern_list(self, *, ix_pattern='', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe shape_manage {who} {index} {add_or_delete}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="shape_manage", cmd_type="string_list"
+        )
+
+    def shape_pattern_list(self, *, ix_pattern="", verbose=False, as_dict=True, raises=True):
+        """
+
         Output list of shape patterns or shape pattern points
-        
+
         Parameters
         ----------
         ix_pattern : optional
-        
+
         Returns
         -------
         list of dict
-        
+
         Notes
         -----
         Command syntax:
           pipe shape_pattern_list {ix_pattern}
-        
+
         If optional {ix_pattern} index is omitted then list all the patterns.
         If {ix_pattern} is present, list points of given pattern.
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_shape
          args:
-           ix_pattern: 
-        
-        """
-        cmd = f'pipe shape_pattern_list {ix_pattern}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='shape_pattern_list', cmd_type='string_list')
+           ix_pattern:
 
-    
-    def shape_pattern_manage(self, ix_pattern, pat_name, pat_line_width, *, verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe shape_pattern_list {ix_pattern}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="shape_pattern_list", cmd_type="string_list"
+        )
+
+    def shape_pattern_manage(
+        self, ix_pattern, pat_name, pat_line_width, *, verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Add or remove shape pattern
-        
+
         Parameters
         ----------
         ix_pattern
         pat_name
         pat_line_width
-        
+
         Returns
         -------
         None
-        
+
         Notes
         -----
         Command syntax:
           pipe shape_pattern_manage {ix_pattern}^^{pat_name}^^{pat_line_width}
-        
+
         Where:
-          {ix_pattern}      -- Pattern index. Patterns with higher indexes will be moved up 
+          {ix_pattern}      -- Pattern index. Patterns with higher indexes will be moved up
                                               if adding a pattern and down if deleting.
           {pat_name}        -- Pattern name.
-          {pat_line_width}  -- Line width. Integer. If set to "delete" then section 
+          {pat_line_width}  -- Line width. Integer. If set to "delete" then section
                                                     will be deleted.
-        
+
         Examples
         --------
         Example: 1
@@ -5040,40 +5426,44 @@ class Tao(TaoCore):
            ix_pattern : 1
            pat_name : new_pat
            pat_line_width : 1
-        
-        """
-        cmd = f'pipe shape_pattern_manage {ix_pattern}^^{pat_name}^^{pat_line_width}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='shape_pattern_manage', cmd_type='None')
 
-    
-    def shape_pattern_point_manage(self, ix_pattern, ix_point, s, x, *, verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe shape_pattern_manage {ix_pattern}^^{pat_name}^^{pat_line_width}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="shape_pattern_manage", cmd_type="None"
+        )
+
+    def shape_pattern_point_manage(
+        self, ix_pattern, ix_point, s, x, *, verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Add or remove shape pattern point
-        
+
         Parameters
         ----------
         ix_pattern
         ix_point
         s
         x
-        
+
         Returns
         -------
         None
-        
+
         Notes
         -----
         Command syntax:
           pipe shape_pattern_point_manage {ix_pattern}^^{ix_point}^^{s}^^{x}
-        
+
         Where:
           {ix_pattern}      -- Pattern index.
           {ix_point}        -- Point index. Points of higher indexes will be moved up
                                             if adding a point and down if deleting.
           {s}, {x}          -- Point location. If {s} is "delete" then delete the point.
-        
+
         Examples
         --------
         Example: 1
@@ -5083,18 +5473,36 @@ class Tao(TaoCore):
            ix_point: 1
            s: 0
            x: 0
-        
-        """
-        cmd = f'pipe shape_pattern_point_manage {ix_pattern}^^{ix_point}^^{s}^^{x}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='shape_pattern_point_manage', cmd_type='None')
 
-    
-    def shape_set(self, who, shape_index, ele_name, shape, color, shape_size, type_label, shape_draw, multi_shape, line_width, *, verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe shape_pattern_point_manage {ix_pattern}^^{ix_point}^^{s}^^{x}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="shape_pattern_point_manage", cmd_type="None"
+        )
+
+    def shape_set(
+        self,
+        who,
+        shape_index,
+        ele_name,
+        shape,
+        color,
+        shape_size,
+        type_label,
+        shape_draw,
+        multi_shape,
+        line_width,
+        *,
+        verbose=False,
+        as_dict=True,
+        raises=True,
+    ):
+        """
+
         Set lat_layout or floor_plan shape parameters.
-        
+
         Parameters
         ----------
         who
@@ -5107,22 +5515,22 @@ class Tao(TaoCore):
         shape_draw
         multi_shape
         line_width
-        
+
         Returns
         -------
         None
-        
+
         Notes
         -----
         Command syntax:
           pipe shape_set {who}^^{shape_index}^^{ele_name}^^{shape}^^{color}^^
                            {shape_size}^^{type_label}^^{shape_draw}^^
                            {multi_shape}^^{line_width}
-        
+
         {who} is one of:
           lat_layout
           floor_plan
-        
+
         Examples
         --------
         Example: 1
@@ -5138,199 +5546,218 @@ class Tao(TaoCore):
            shape_draw:
            multi_shape:
            line_width:
-        
-        """
-        cmd = f'pipe shape_set {who}^^{shape_index}^^{ele_name}^^{shape}^^{color}^^{shape_size}^^{type_label}^^{shape_draw}^^{multi_shape}^^{line_width}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='shape_set', cmd_type='None')
 
-    
+        """
+        cmd = f"pipe shape_set {who}^^{shape_index}^^{ele_name}^^{shape}^^{color}^^{shape_size}^^{type_label}^^{shape_draw}^^{multi_shape}^^{line_width}"
+        if verbose:
+            print(cmd)
+        return self.__execute(cmd, as_dict, raises, method_name="shape_set", cmd_type="None")
+
     def show(self, line, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output the output from a show command.
-        
+
         Parameters
         ----------
         line
-        
+
         Returns
         -------
         list of str
             This is raw list of strings from tao, as parsing is not currently
             supported.
-        
+
         Notes
         -----
         Command syntax:
           pipe show {line}
-        
+
         {line} is the string to pass through to the show command.
         Example:
           pipe show lattice -pipe
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
            line: -pipe
-        
-        """
-        cmd = f'pipe show {line}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='show', cmd_type='string_list')
 
-    
+        """
+        cmd = f"pipe show {line}"
+        if verbose:
+            print(cmd)
+        return self.__execute(cmd, as_dict, raises, method_name="show", cmd_type="string_list")
+
     def slave_control(self, ele_id, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output slave information for a given lord element.
-        
+
         Parameters
         ----------
         ele_id
-        
+
         Notes
         -----
         Command syntax:
           pipe slave_control {ele_id}
-        
+
         Where:
           {ele_id} is the lord element.
-        
+
         Example:
           pipe slave_control 2@1>>q01w
-        
+
         The output is a number of lines with each line giving the information:
             Slave-branch;Slave-index;Slave-name;Slave-type;Attribute-controlled;Control-expression;Value
-        
+
         Note: The last three fields will only be non-blank for ramper, overlay and group lords with
         the value field being blank for ramper lords.
-        
+
         Note: For control expressed as a set of knot points (as opposed to an expression),
         the control-expression will be "knots".
-        
+
         Note: The Value field is the contribution to the slave attribute value due to the lord.
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
            ele_id: ASYM_IR
-        
-        """
-        cmd = f'pipe slave_control {ele_id}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='slave_control', cmd_type='string_list')
 
-    
+        """
+        cmd = f"pipe slave_control {ele_id}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="slave_control", cmd_type="string_list"
+        )
+
     def space_charge_com(self, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output space_charge_com structure parameters.
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe space_charge_com
-        
+
         Output syntax is parameter list form. See documentation at the beginning of this file.
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
-        
-        """
-        cmd = f'pipe space_charge_com'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='space_charge_com', cmd_type='string_list')
 
-    
+        """
+        cmd = "pipe space_charge_com"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="space_charge_com", cmd_type="string_list"
+        )
+
     def species_to_int(self, species_str, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Convert species name to corresponding integer
-        
+
         Parameters
         ----------
         species_str
-        
+
         Returns
         -------
         int
-        
+
         Notes
         -----
         Command syntax:
           pipe species_to_int {species_str}
-        
+
         Example:
           pipe species_to_int CO2++
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
            species_str: electron
-        
-        """
-        cmd = f'pipe species_to_int {species_str}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='species_to_int', cmd_type='string_list')
 
-    
+        """
+        cmd = f"pipe species_to_int {species_str}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="species_to_int", cmd_type="string_list"
+        )
+
     def species_to_str(self, species_int, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Convert species integer id to corresponding
-        
+
         Parameters
         ----------
         species_int
-        
+
         Returns
         -------
         str
-        
+
         Notes
         -----
         Command syntax:
           pipe species_to_str {species_int}
-        
+
         Example:
           pipe species_to_str -1     ! Returns 'Electron'
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
            species_int: -1
-        
-        """
-        cmd = f'pipe species_to_str {species_int}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='species_to_str', cmd_type='string_list')
 
-    
-    def spin_invariant(self, who, *, ix_uni='', ix_branch='', which='model', flags='-array_out', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe species_to_str {species_int}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="species_to_str", cmd_type="string_list"
+        )
+
+    def spin_invariant(
+        self,
+        who,
+        *,
+        ix_uni="",
+        ix_branch="",
+        which="model",
+        flags="-array_out",
+        verbose=False,
+        as_dict=True,
+        raises=True,
+    ):
+        """
+
         Output closed orbit spin axes n0, l0, or m0 at the ends of all lattice elements in a branch.
         n0, l0, and m0 are solutions of the T-BMT equation.
-        n0 is periodic while l0 and m0 are not. At the beginning of the branch, the orientation of the 
+        n0 is periodic while l0 and m0 are not. At the beginning of the branch, the orientation of the
         l0 or m0 axes in the plane perpendicular to the n0 axis is chosen a bit arbitrarily.
         See the Bmad manual for more details.
-        
+
         Parameters
         ----------
         who
@@ -5338,22 +5765,22 @@ class Tao(TaoCore):
         ix_branch : optional
         which : default=model
         flags : default=-array_out
-        
+
         Returns
         -------
         string_list
             if '-array_out' not in flags
         real_array
             if '-array_out' in flags
-        
+
         Notes
         -----
         Command syntax:
           pipe spin_invariant {flags} {who} {ix_uni}@{ix_branch}|{which}
-        
+
         Where:
           {flags}       - Optional flags (currently there is only one):
-                            -array_out  If present, the output will be available in 
+                            -array_out  If present, the output will be available in
                                                         the tao_c_interface_com%c_real.
           {who}         - One of: l0, n0, or m0
           {ix_uni}      - A universe index. Defaults to s%global%default_universe.
@@ -5362,51 +5789,64 @@ class Tao(TaoCore):
                              model
                              base
                              design
-        
+
         Example:
           pipe spin_invariant 1@0|model
-        
+
         Note: This command is under development. If you want to use please contact David Sagan.
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
-         args: 
+         args:
            who: l0
            ix_uni: 1
            ix_branch: 0
            which: model
-        
-        """
-        cmd = f'pipe spin_invariant {flags} {who} {ix_uni}@{ix_branch}|{which}'
-        if verbose: print(cmd)
-        if '-array_out' not in flags:
-            return self.__execute(cmd, as_dict, raises, method_name='spin_invariant', cmd_type='string_list')
-        if '-array_out' in flags:
-            return self.__execute(cmd, as_dict, raises, method_name='spin_invariant', cmd_type='real_array')
 
-    
-    def spin_polarization(self, *, ix_uni='', ix_branch='', which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe spin_invariant {flags} {who} {ix_uni}@{ix_branch}|{which}"
+        if verbose:
+            print(cmd)
+        if "-array_out" not in flags:
+            return self.__execute(
+                cmd, as_dict, raises, method_name="spin_invariant", cmd_type="string_list"
+            )
+        if "-array_out" in flags:
+            return self.__execute(
+                cmd, as_dict, raises, method_name="spin_invariant", cmd_type="real_array"
+            )
+
+    def spin_polarization(
+        self,
+        *,
+        ix_uni="",
+        ix_branch="",
+        which="model",
+        verbose=False,
+        as_dict=True,
+        raises=True,
+    ):
+        """
+
         Output spin polarization information
-        
+
         Parameters
         ----------
         ix_uni : optional
         ix_branch : optional
         which : default=model
-        
+
         Returns
         -------
         dict
-        
+
         Notes
         -----
         Command syntax:
           pipe spin_polarization {ix_uni}@{ix_branch}|{which}
-        
+
         Where:
           {ix_uni} is a universe index. Defaults to s%global%default_universe.
           {ix_branch} is a branch index. Defaults to s%global%default_branch.
@@ -5414,32 +5854,44 @@ class Tao(TaoCore):
             model
             base
             design
-        
+
         Example:
           pipe spin_polarization 1@0|model
-        
+
         Note: This command is under development. If you want to use please contact David Sagan.
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
-         args: 
+         args:
            ix_uni: 1
            ix_branch: 0
            which: model
-        
-        """
-        cmd = f'pipe spin_polarization {ix_uni}@{ix_branch}|{which}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='spin_polarization', cmd_type='string_list')
 
-    
-    def spin_resonance(self, *, ix_uni='', ix_branch='', which='model', ref_ele='0', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe spin_polarization {ix_uni}@{ix_branch}|{which}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="spin_polarization", cmd_type="string_list"
+        )
+
+    def spin_resonance(
+        self,
+        *,
+        ix_uni="",
+        ix_branch="",
+        which="model",
+        ref_ele="0",
+        verbose=False,
+        as_dict=True,
+        raises=True,
+    ):
+        """
+
         Output spin resonance information
-        
+
         Parameters
         ----------
         ix_uni : optional
@@ -5447,16 +5899,16 @@ class Tao(TaoCore):
         which : default=model
         ref_ele : default=0
             Reference element to calculate at.
-        
+
         Returns
         -------
         dict
-        
+
         Notes
         -----
         Command syntax:
           pipe spin_resonance {ix_uni}@{ix_branch}|{which} {ref_ele}
-        
+
         Where:
           {ix_uni} is a universe index. Defaults to s%global%default_universe.
           {ix_branch} is a lattice branch index. Defaults to s%global%default_branch.
@@ -5464,86 +5916,92 @@ class Tao(TaoCore):
           {ref_ele} is an element name or index.
         This will return a string_list with the following fields:
           spin_tune                   -- Spin tune
-          dq_X_sum, dq_X_diff         -- Tune sum Q_spin+Q_mode and tune difference 
+          dq_X_sum, dq_X_diff         -- Tune sum Q_spin+Q_mode and tune difference
                                            Q_spin-Q_mode for modes X = a, b, and c.
-          xi_res_X_sum, xi_res_X_diff -- The linear spin/orbit sum and difference resonance 
-                                           strengths for X = a, b, and c modes.  
-        
+          xi_res_X_sum, xi_res_X_diff -- The linear spin/orbit sum and difference resonance
+                                           strengths for X = a, b, and c modes.
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
-         args: 
+         args:
            ix_uni: 1
            ix_branch: 0
            which: model
-        
-        """
-        cmd = f'pipe spin_resonance {ix_uni}@{ix_branch}|{which} {ref_ele}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='spin_resonance', cmd_type='string_list')
 
-    
+        """
+        cmd = f"pipe spin_resonance {ix_uni}@{ix_branch}|{which} {ref_ele}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="spin_resonance", cmd_type="string_list"
+        )
+
     def super_universe(self, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output super_Universe parameters.
-        
+
         Returns
         -------
         dict
-        
+
         Notes
         -----
         Command syntax:
           pipe super_universe
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
-         args: 
-        
-        """
-        cmd = f'pipe super_universe'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='super_universe', cmd_type='string_list')
+         args:
 
-    
-    def taylor_map(self, ele1_id, ele2_id, *, order='1', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = "pipe super_universe"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="super_universe", cmd_type="string_list"
+        )
+
+    def taylor_map(
+        self, ele1_id, ele2_id, *, order="1", verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Output Taylor map between two points.
-        
+
         Parameters
         ----------
         ele1_id
         ele2_id
         order : default=1
-        
+
         Returns
         -------
         dict of dict of taylor terms:
             {2: { (3,0,0,0,0,0)}: 4.56, ...
                 corresponding to: px_out = 4.56 * x_in^3
-        
+
         Notes
         -----
         Command syntax:
           pipe taylor_map {ele1_id} {ele2_id} {order}
-        
+
         Where:
           {ele1_id}   - The start element.
           {ele2_id}   - The end element.
-          {order}     - The map order. Default is order set in the lattice file. 
-                          {order} cannot be larger than what is set by the lattice file. 
-        
+          {order}     - The map order. Default is order set in the lattice file.
+                          {order} cannot be larger than what is set by the lattice file.
+
         If {ele2_id} = {ele1_id}, the 1-turn transfer map is computed.
-        Note: {ele2_id} should just be an element name or index without universe, 
+        Note: {ele2_id} should just be an element name or index without universe,
               branch, or model/base/design specification.
         Example:
           pipe taylor_map 2@1>>q01w|design q02w  2
-        
+
         Examples
         --------
         Example: 1
@@ -5552,138 +6010,172 @@ class Tao(TaoCore):
            ele1_id: 1@0>>q01w|design
            ele2_id: q02w
            order: 1
-        
-        """
-        cmd = f'pipe taylor_map {ele1_id} {ele2_id} {order}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='taylor_map', cmd_type='string_list')
 
-    
-    def twiss_at_s(self, *, ix_uni='', ele='', s_offset='', which='model', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe taylor_map {ele1_id} {ele2_id} {order}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="taylor_map", cmd_type="string_list"
+        )
+
+    def twiss_at_s(
+        self,
+        *,
+        ix_uni="",
+        ele="",
+        s_offset="",
+        which="model",
+        verbose=False,
+        as_dict=True,
+        raises=True,
+    ):
+        """
+
         Output twiss parameters at given s position.
-        
+
         Parameters
         ----------
         ix_uni : optional
         ele : optional
         s_offset : optional
         which : default=model
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe twiss_at_s {ix_uni}@{ele}->{s_offset}|{which}
-        
+
         Where:
           {ix_uni}    - A universe index. Defaults to s%global%default_universe.
           {ele}       - An element name or index. Default is the Beginning element of branch 0.
           {s_offset}  - Evaluation point offset from the downstream end of ele. Default is 0.
-                          If {s_offset} is present, "->" must also be present. 
+                          If {s_offset} is present, "->" must also be present.
           {which}     - One of: "model", "base" or "design".
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
-         args: 
+         args:
            ix_uni: 1
            ele: 10
            s_offset: 0.7
-           which: model 
-        
-        """
-        cmd = f'pipe twiss_at_s {ix_uni}@{ele}->{s_offset}|{which}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='twiss_at_s', cmd_type='string_list')
+           which: model
 
-    
+        """
+        cmd = f"pipe twiss_at_s {ix_uni}@{ele}->{s_offset}|{which}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="twiss_at_s", cmd_type="string_list"
+        )
+
     def universe(self, ix_uni, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output universe info.
-        
+
         Parameters
         ----------
         ix_uni
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe universe {ix_uni}
-        
+
         Use "pipe global" to get the number of universes.
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
-         args: 
+         args:
            ix_uni: 1
-        
-        """
-        cmd = f'pipe universe {ix_uni}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='universe', cmd_type='string_list')
 
-    
-    def var(self, var, *, slaves='', verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe universe {ix_uni}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="universe", cmd_type="string_list"
+        )
+
+    def var(self, var, *, slaves="", verbose=False, as_dict=True, raises=True):
+        """
+
         Output parameters of a given variable.
-        
+
         Parameters
         ----------
         var
         slaves : optional
-        
+
         Returns
         -------
         dict, or list of dict
             "slaves" mode will be a list of dicts.
             Normal mode will be a dict.
-        
+
         Notes
         -----
         Command syntax:
           pipe var {var} {slaves}
-        
+
         Note: use "pipe var_general" to get a list of variables.
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching
-         args: 
+         args:
            var: quad[1]
            slaves:
-        
+
         Example: 2
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching
-         args: 
+         args:
            var: quad[1]
            slaves: slaves
-        
-        """
-        cmd = f'pipe var {var} {slaves}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='var', cmd_type='string_list')
 
-    
-    def var_create(self, var_name, ele_name, attribute, universes, weight, step, low_lim, high_lim, merit_type, good_user, key_bound, key_delta, *, verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe var {var} {slaves}"
+        if verbose:
+            print(cmd)
+        return self.__execute(cmd, as_dict, raises, method_name="var", cmd_type="string_list")
+
+    def var_create(
+        self,
+        var_name,
+        ele_name,
+        attribute,
+        universes,
+        weight,
+        step,
+        low_lim,
+        high_lim,
+        merit_type,
+        good_user,
+        key_bound,
+        key_delta,
+        *,
+        verbose=False,
+        as_dict=True,
+        raises=True,
+    ):
+        """
+
         Create a single variable
-        
+
         Parameters
         ----------
         var_name
@@ -5698,22 +6190,22 @@ class Tao(TaoCore):
         good_user
         key_bound
         key_delta
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe var_create {var_name}^^{ele_name}^^{attribute}^^{universes}^^
                             {weight}^^{step}^^{low_lim}^^{high_lim}^^{merit_type}^^
                             {good_user}^^{key_bound}^^{key_delta}
-        
+
         {var_name} is something like "kick[5]".
-        Before using var_create, setup the appropriate v1_var array using 
+        Before using var_create, setup the appropriate v1_var array using
         the "pipe var_v1_create" command.
-        
+
         Examples
         --------
         Example: 1
@@ -5727,257 +6219,475 @@ class Tao(TaoCore):
            step: 0.001
            low_lim: -10
            high_lim: 10
-           merit_type: 
+           merit_type:
            good_user: T
            key_bound: T
-           key_delta: 0.01 
-        
-        """
-        cmd = f'pipe var_create {var_name}^^{ele_name}^^{attribute}^^{universes}^^{weight}^^{step}^^{low_lim}^^{high_lim}^^{merit_type}^^{good_user}^^{key_bound}^^{key_delta}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='var_create', cmd_type='string_list')
+           key_delta: 0.01
 
-    
+        """
+        cmd = f"pipe var_create {var_name}^^{ele_name}^^{attribute}^^{universes}^^{weight}^^{step}^^{low_lim}^^{high_lim}^^{merit_type}^^{good_user}^^{key_bound}^^{key_delta}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="var_create", cmd_type="string_list"
+        )
+
     def var_general(self, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output list of all variable v1 arrays
-        
+
         Returns
         -------
         list of dict
-        
+
         Notes
         -----
         Command syntax:
           pipe var_general
-        
+
         Output syntax:
           {v1_var name};{v1_var%v lower bound};{v1_var%v upper bound}
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
-        
-        """
-        cmd = f'pipe var_general'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='var_general', cmd_type='string_list')
 
-    
+        """
+        cmd = "pipe var_general"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="var_general", cmd_type="string_list"
+        )
+
     def var_v_array(self, v1_var, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output list of variables for a given data_v1.
-        
+
         Parameters
         ----------
         v1_var
-        
+
         Returns
         -------
         list of dict
-        
+
         Notes
         -----
         Command syntax:
           pipe var_v_array {v1_var}
-        
+
         Example:
           pipe var_v_array quad_k1
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
            v1_var: quad_k1
-        
-        """
-        cmd = f'pipe var_v_array {v1_var}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='var_v_array', cmd_type='string_list')
 
-    
+        """
+        cmd = f"pipe var_v_array {v1_var}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="var_v_array", cmd_type="string_list"
+        )
+
     def var_v1_array(self, v1_var, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output list of variables in a given variable v1 array
-        
+
         Parameters
         ----------
         v1_var
-        
+
         Returns
         -------
         dict
-        
+
         Notes
         -----
         Command syntax:
           pipe var_v1_array {v1_var}
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
-           v1_var: quad_k1 
-        
-        """
-        cmd = f'pipe var_v1_array {v1_var}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='var_v1_array', cmd_type='string_list')
+           v1_var: quad_k1
 
-    
-    def var_v1_create(self, v1_name, n_var_min, n_var_max, *, verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe var_v1_array {v1_var}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="var_v1_array", cmd_type="string_list"
+        )
+
+    def var_v1_create(
+        self, v1_name, n_var_min, n_var_max, *, verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Create a v1 variable structure along with associated var array.
-        
+
         Parameters
         ----------
         v1_name
         n_var_min
         n_var_max
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe var_v1_create {v1_name} {n_var_min} {n_var_max}
-        
+
         {n_var_min} and {n_var_max} are the lower and upper bounds of the var
         Example:
           pipe var_v1_create quad_k1 0 45
         This example creates a v1 var structure called "quad_k1" with an associated
         variable array that has the range [0, 45].
-        
+
         Use the "pipe var_create" and "set variable" commands to set variable parameters.
         Note: When setting multiple variable parameters, first set
           set global lattice_calc_on = F")
-        to prevent Tao trying to evaluate the 
+        to prevent Tao trying to evaluate the
         partially created variable and generating unwanted error messages.
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
-           v1_name: quad_k1 
-           n_var_min: 0 
-           n_var_max: 45 
-        
-        """
-        cmd = f'pipe var_v1_create {v1_name} {n_var_min} {n_var_max}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='var_v1_create', cmd_type='string_list')
+           v1_name: quad_k1
+           n_var_min: 0
+           n_var_max: 45
 
-    
+        """
+        cmd = f"pipe var_v1_create {v1_name} {n_var_min} {n_var_max}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="var_v1_create", cmd_type="string_list"
+        )
+
     def var_v1_destroy(self, v1_datum, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Destroy a v1 var structure along with associated var sub-array.
-        
+
         Parameters
         ----------
         v1_datum
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe var_v1_destroy {v1_datum}
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
            v1_datum: quad_k1
-        
-        """
-        cmd = f'pipe var_v1_destroy {v1_datum}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='var_v1_destroy', cmd_type='string_list')
 
-    
-    def wall3d_radius(self, ix_uni, ix_branch, s_position, angle, *, verbose=False, as_dict=True, raises=True):
         """
-        
+        cmd = f"pipe var_v1_destroy {v1_datum}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="var_v1_destroy", cmd_type="string_list"
+        )
+
+    def wall3d_radius(
+        self, ix_uni, ix_branch, s_position, angle, *, verbose=False, as_dict=True, raises=True
+    ):
+        """
+
         Output vaccum chamber wall radius for given s-position and angle in (x,y) plane.
         The radius is with respect to the local wall origin which may not be the (x,y) = (0,0) origin.
-        
+
         Parameters
         ----------
         ix_uni : ""
         ix_branch : ""
         s_position
         angle
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe wall3d_radius {ix_uni}@{ix_branch} {s_position} {angle}
-        
+
         Where:
           {ix_uni} is a universe index. Defaults to s%global%default_universe.
-          {ix_branch} is a lattice branch index. 
+          {ix_branch} is a lattice branch index.
           {s_position} is the s-position to evaluate at.
           {angle} is the angle to evaluate at.
-        
-        """
-        cmd = f'pipe wall3d_radius {ix_uni}@{ix_branch} {s_position} {angle}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='wall3d_radius', cmd_type='string_list')
 
-    
+        """
+        cmd = f"pipe wall3d_radius {ix_uni}@{ix_branch} {s_position} {angle}"
+        if verbose:
+            print(cmd)
+        return self.__execute(
+            cmd, as_dict, raises, method_name="wall3d_radius", cmd_type="string_list"
+        )
+
     def wave(self, who, *, verbose=False, as_dict=True, raises=True):
         """
-        
+
         Output Wave analysis info.
-        
+
         Parameters
         ----------
         who
-        
+
         Returns
         -------
         string_list
-        
+
         Notes
         -----
         Command syntax:
           pipe wave {who}
-        
+
         Where {who} is one of:
           params
           loc_header
           locations
           plot1, plot2, plot3
-        
+
         Examples
         --------
         Example: 1
          init: -init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init
          args:
            who: params
-        
-        """
-        cmd = f'pipe wave {who}'
-        if verbose: print(cmd)
-        return self.__execute(cmd, as_dict, raises, method_name='wave', cmd_type='string_list')
 
-    _autocomplete_usage_ = {'alias': [('alias <alias_name> <string>', '')], 'call': [('call <filename> <arg_list>', ''), ('call -no_calc <arg_list>', ''), ('call -ptc <filename>', '')], 'change': [('change -update element <element_list> <attribute> prefix> <number>', ''), ('change -silent variable <name>[<locations>] <prefix> <number>', ''), ('change n@particle_start <coordinate> prefix> <number>', ''), ('change -branch <branch_list> -listing -mask <veto_list> tune dQa dQb', ''), ('change -branch <branch_list> z_tune dQz', '')], 'clear': [('clear maps', '')], 'clip': [('clip -gang <where> \\{<limit1> \\{<limit2>\\}\\}', '')], 'create': [('create data d2_name d1_name[ix_min:ix_max] ...', '')], 'cut_ring': [('cut_ring -particle_start -static -zero', '')], 'continue': [('continue', '')], 'do/enddo command file looping': [], 'exit': [('exit', '')], 'derivative': [('derivative', '')], 'fixer': [('fixer activate <fixer>', ''), ('fixer save <fixer> <parameters>', ''), ('fixer write <fixer>', '')], 'flatten': [('flatten <optimizer>', '')], 'help': [('help <command> \\{<subcommand>\\}', '')], 'pause': [('pause <time>', 'Pause time in seconds.')], 'pipe': [('pipe -append <file_name> -noprint <subcommand> <arguments>', ''), ('pipe -write <file_name> -noprint <subcommand> <arguments>', '')], 'place': [('place -no_buffer <region> <template>', ''), ('place <region> none', ''), ('place * none', '')], 'ptc': [('ptc init', 'Init associated PTC layout.'), ('ptc reslice', '')], 'python': [('python', '')], 'quit': [('quit', '')], 'read': [('read lattice -silent -universes <universe-list> <file_name>', ''), ('read ptc <file_name>', '')], 'reinitialize': [('reinitialize beam', ''), ('reinitialize data', ''), ('reinitialize tao -clear command line optional arguments', '')], 'restore': [('restore data  <data_name> <locations>', ''), ('restore var <var_name> <locations>', '')], 'run_optimizer': [('run_optimizer <optimizer>', '')], 'scale': [('scale -exact -gang -include_wall -nogang', '')], 'set': [('set global prompt_color = <value>', ''), ('set beam n@<parameter> = <value>', ''), ('set beam 2@track_start = q10w', 'Set the tracking start at element Q10W in universe 2.'), ('set beam_init n@<parameter> = <value>', ''), ('set beam_init 3@center(2) = 0.004', 'Set px center of beam for universe 3.'), ('set bmad_com <parameter> = <value>', ''), ('set bmad_com radiation_fluctuations_on = T', 'Turn on synchrotron radiation fluctuations.'), ('set branch <branch-id> <parameter> = <value>', ''), ('set branch 2@0 live_branch = F', 'Suppress calculations for branch \\# 0 of universe 2.'), ('set calculate <on/off>', ''), ('set calc on', 'Sets lattice_calc_on to True'), ('set curve <curve> <parameter> = <value>', ''), ('set curve top.x.c1 ix_universe = 2', 'Set universe number for curve.'), ('set data -silent <data_name>|<component> = <value>', ''), ('set data *|ref = *|meas', 'Set ref data = measured in current universe.'), ('set default <parameter> = <value>', ''), ('set default universe = 3', ''), ('set dynamic_aperture n@<parameter> = <value>', ''), ('set dy 2@n_angle = 20', 'Set number of scan points for universe 2.'), ('set -update element <element_list> <attribute> = <value>', ''), ('set ele rfcav::* is_on = F', 'Turn off all rfcavity elements the viewed universe.'), ('set floor_plan <parameter> = <value>', ''), ('set floor_plan ele_shape(2)%draw = F', 'Veto drawing of ele_shape(2)'), ('set geodesic_lm <parameter> = <value>', ''), ('set geodesic_lm method = 10', ''), ('set global <parameter> = <value>', ''), ('set global n_opti_loops = 30', 'Set number of optimization cycles'), ('set global n_threads = 1', 'Use only a single thread'), ('set graph <graph> <parameter> = <value>', ''), ('set plot parameter', '\\sref{s:set.plot}'), ('set graph orbit.x component = model - design', 'Plot orbit (model - design).'), ('set key <key> = <command>', ''), ('set key h = veto var *', ''), ('set lat_layout <parameter> = <value>', ''), ('set lat_layout ele_shape(2)%draw = F', 'Veto drawing of shape \\#2'), ('set lattice n@<destination_lat> = <source_lat>', ''), ('set lattice *@model = design', 'Set the model lattice to the design in'), ('set opti_de_param <parameter> = <value>', ''), ('set opti_de_param binomial_cross = T', 'Use binomial crossovers'), ('set particle_start n@<coordinate> = <value>', ''), ('set particle_start 2@x = 0.001', 'Set beginning x position in universe 2 to 1 mm.'), ('set plot <plot_or_region> <parameter> = <value>', ''), ('set plot orbit visible = F', 'Hide orbit plot'), ('set plot_page <parameter> = <value1> <value2>', ''), ("set plot_page title = 'XYZ'", 'Set plot page title string'), ('set ptc_com <parameter> = <value>', ''), ('set bmad_com taylor_order = ...', ''), ('set ptc_com exact_model = F', 'Non-exact is not as accurate but faster.'), ('set ran_state = <random_number_generator_state>', ''), ('set region <parameter> = <value>', ''), ('set region r13 y2 = 0.3', 'Set y2 parameter of region r13'), ('set space_charge_com <parameter> = <value>', ''), ('set space_charge_com n_bin = 30', 'Set number of bins used in the csr calc.'), ('set symbolic_number <name> = <value>', ''), ('set sym aa = 23.4 * pi', 'Define the symbol "aa"'), ('set tune -branch <branch_list> -listing -mask <veto_list> <Qa> <Qb>', ''), ('set tune -mask *,~qf_\\%\\%,~qd_\\% 0.23 0.45', ''), ('set tune -mask qd* 0.45 0.67', 'Use all quads except with name starting with "qd".'), ('set universe <what_universe> <on/off>', ''), ('set universe <what_universe> twiss_calc  and', ''), ('set universe [1,3] off', 'Set universes 1 and 3 off.'), ('set variable <var_name>|<parameter> = <value>', ''), ('set var quad_k1|weight = 0.1', 'Set quad_k1 weights.'), ('set wave <parameter> = <value>', ''), ('set wave ix_a = 15 27', 'Set A-region to span from datum #15 to #27'), ('set z_tune <Qz>', ''), ('set z_tune 0.023', '')], 'show': [('show -append <file_name> -noprint -no_err_out <subcommand>', ''), ('show -write <file_name> -noprint -no_err_out <subcommand>', '')], 'single_mode': [('single_mode', '')], 'spawn': [('spawn <shell_command>', '')], 'use': [('use data  <data_name>', ''), ('use var <var_name>', '')], 'veto': [('veto data <data_name> <locations>', ''), ('veto var <var_name> <locations>', '')], 'view': [('view <universe-index>', '')], 'wave': [('wave <curve-or-data_type> <plot_location>', '')], 'write': [('write beam -ascii -floor_position -at <element_list> <file_name>', ''), ('write beam -at *', 'Output beam at every element.'), ('write blender <file_name>', 'Write a blender script (Same as 3d_model).'), ('write bmad -format <type> <file_name>', ''), ('write bmad -format one lat.bmad', 'Single lattice file lat.bmad created.'), ('write bunch_comb -branch <ix_branch>  -centroid -ix_bunch <ix_bunch>', ''), ('write bunch_c -uni 2 -cent', 'Centroid type table for universe 2'), ('write covariance_matrix file_name', 'Write the covariance and alpha matrices'), ('write derivative_matrix file_name', 'Write the \\vn{dModel_Data/dVar} matrix.'), ('write digested <file_name>', 'Write a digested Bmad lattice file of the model.'), ('write elegant <file_name>', 'Elegant lattice file using the model lattice.'), ('write field -nmax <nx_max>, <ny_max> <nz_max> -nmin <nx_min>, <ny_min> <nz_min>', ''), ('write field -ele Q1 -dr 0.01 0.02 0.05 -nmax 30 20, 200', ''), ('write gif <file_name>', 'Create a gif file of the plot window.'), ('write hard', 'Print the plot window to a printer.'), ('write mad8 <file_name>', 'Write a MAD-8 lattice file of the model'), ('write madx <file_name>', 'Write a MAD-X lattice file of the model'), ('write matrix -branch <branch> -single -from_start -combined', ''), ('write mat -uni 3 -br 1', 'Write matrices from universe 3, branch 1.'), ('write namelist -append -data -plot -variable file_name', ''), ('write opal <file_name>', 'Write a OPAL lattice file of the model'), ('write pdf -scale <scale> <file_name>', ''), ('write plot_commands <file_name>', ''), ('write plot p1.tao', 'Write plotting commands to p1.tao.'), ('write ps -scale <scale> <file_name>', ''), ('write ptc -all -old -branch <name_or_index <file_name>', ''), ('write sad <file_name>', 'Write a SAD lattice file of the model'), ('write spin_mat8 -l_axis <lx> <ly> <lz> -branch <name_or_index> <file_name>', ''), ('write spin -l 1 0 0', 'l-axis is (1, 0, 0).'), ('write variable -good_opt_only -tao_format <file_name>', ''), ('write var -good this_var.dat', 'Write to file "this_var.dat".'), ('write xsif <file_name>', 'Write an XSIF lattice file of the model')], 'x_axis': [('x_axis <where> <axis_type>', '')], 'x_scale': [('x_scale -exact -gang -nogang -include_wall <where> \\{<value1> <value2>\\}', '')], 'xy_scale': [('xy_scale -include_wall <where> \\{<bound1> <bound2>\\}\\}', '')]}
+        """
+        cmd = f"pipe wave {who}"
+        if verbose:
+            print(cmd)
+        return self.__execute(cmd, as_dict, raises, method_name="wave", cmd_type="string_list")
+
+    _autocomplete_usage_ = {
+        "alias": [("alias <alias_name> <string>", "")],
+        "call": [
+            ("call <filename> <arg_list>", ""),
+            ("call -no_calc <arg_list>", ""),
+            ("call -ptc <filename>", ""),
+        ],
+        "change": [
+            ("change -update element <element_list> <attribute> prefix> <number>", ""),
+            ("change -silent variable <name>[<locations>] <prefix> <number>", ""),
+            ("change n@particle_start <coordinate> prefix> <number>", ""),
+            ("change -branch <branch_list> -listing -mask <veto_list> tune dQa dQb", ""),
+            ("change -branch <branch_list> z_tune dQz", ""),
+        ],
+        "clear": [("clear maps", "")],
+        "clip": [("clip -gang <where> \\{<limit1> \\{<limit2>\\}\\}", "")],
+        "create": [("create data d2_name d1_name[ix_min:ix_max] ...", "")],
+        "cut_ring": [("cut_ring -particle_start -static -zero", "")],
+        "continue": [("continue", "")],
+        "do/enddo command file looping": [],
+        "exit": [("exit", "")],
+        "derivative": [("derivative", "")],
+        "fixer": [
+            ("fixer activate <fixer>", ""),
+            ("fixer save <fixer> <parameters>", ""),
+            ("fixer write <fixer>", ""),
+        ],
+        "flatten": [("flatten <optimizer>", "")],
+        "help": [("help <command> \\{<subcommand>\\}", "")],
+        "pause": [("pause <time>", "Pause time in seconds.")],
+        "pipe": [
+            ("pipe -append <file_name> -noprint <subcommand> <arguments>", ""),
+            ("pipe -write <file_name> -noprint <subcommand> <arguments>", ""),
+        ],
+        "place": [
+            ("place -no_buffer <region> <template>", ""),
+            ("place <region> none", ""),
+            ("place * none", ""),
+        ],
+        "ptc": [("ptc init", "Init associated PTC layout."), ("ptc reslice", "")],
+        "python": [("python", "")],
+        "quit": [("quit", "")],
+        "read": [
+            ("read lattice -silent -universes <universe-list> <file_name>", ""),
+            ("read ptc <file_name>", ""),
+        ],
+        "reinitialize": [
+            ("reinitialize beam", ""),
+            ("reinitialize data", ""),
+            ("reinitialize tao -clear command line optional arguments", ""),
+        ],
+        "restore": [
+            ("restore data  <data_name> <locations>", ""),
+            ("restore var <var_name> <locations>", ""),
+        ],
+        "run_optimizer": [("run_optimizer <optimizer>", "")],
+        "scale": [("scale -exact -gang -include_wall -nogang", "")],
+        "set": [
+            ("set global prompt_color = <value>", ""),
+            ("set beam n@<parameter> = <value>", ""),
+            (
+                "set beam 2@track_start = q10w",
+                "Set the tracking start at element Q10W in universe 2.",
+            ),
+            ("set beam_init n@<parameter> = <value>", ""),
+            ("set beam_init 3@center(2) = 0.004", "Set px center of beam for universe 3."),
+            ("set bmad_com <parameter> = <value>", ""),
+            (
+                "set bmad_com radiation_fluctuations_on = T",
+                "Turn on synchrotron radiation fluctuations.",
+            ),
+            ("set branch <branch-id> <parameter> = <value>", ""),
+            (
+                "set branch 2@0 live_branch = F",
+                "Suppress calculations for branch \\# 0 of universe 2.",
+            ),
+            ("set calculate <on/off>", ""),
+            ("set calc on", "Sets lattice_calc_on to True"),
+            ("set curve <curve> <parameter> = <value>", ""),
+            ("set curve top.x.c1 ix_universe = 2", "Set universe number for curve."),
+            ("set data -silent <data_name>|<component> = <value>", ""),
+            ("set data *|ref = *|meas", "Set ref data = measured in current universe."),
+            ("set default <parameter> = <value>", ""),
+            ("set default universe = 3", ""),
+            ("set dynamic_aperture n@<parameter> = <value>", ""),
+            ("set dy 2@n_angle = 20", "Set number of scan points for universe 2."),
+            ("set -update element <element_list> <attribute> = <value>", ""),
+            (
+                "set ele rfcav::* is_on = F",
+                "Turn off all rfcavity elements the viewed universe.",
+            ),
+            ("set floor_plan <parameter> = <value>", ""),
+            ("set floor_plan ele_shape(2)%draw = F", "Veto drawing of ele_shape(2)"),
+            ("set geodesic_lm <parameter> = <value>", ""),
+            ("set geodesic_lm method = 10", ""),
+            ("set global <parameter> = <value>", ""),
+            ("set global n_opti_loops = 30", "Set number of optimization cycles"),
+            ("set global n_threads = 1", "Use only a single thread"),
+            ("set graph <graph> <parameter> = <value>", ""),
+            ("set plot parameter", "\\sref{s:set.plot}"),
+            ("set graph orbit.x component = model - design", "Plot orbit (model - design)."),
+            ("set key <key> = <command>", ""),
+            ("set key h = veto var *", ""),
+            ("set lat_layout <parameter> = <value>", ""),
+            ("set lat_layout ele_shape(2)%draw = F", "Veto drawing of shape \\#2"),
+            ("set lattice n@<destination_lat> = <source_lat>", ""),
+            ("set lattice *@model = design", "Set the model lattice to the design in"),
+            ("set opti_de_param <parameter> = <value>", ""),
+            ("set opti_de_param binomial_cross = T", "Use binomial crossovers"),
+            ("set particle_start n@<coordinate> = <value>", ""),
+            (
+                "set particle_start 2@x = 0.001",
+                "Set beginning x position in universe 2 to 1 mm.",
+            ),
+            ("set plot <plot_or_region> <parameter> = <value>", ""),
+            ("set plot orbit visible = F", "Hide orbit plot"),
+            ("set plot_page <parameter> = <value1> <value2>", ""),
+            ("set plot_page title = 'XYZ'", "Set plot page title string"),
+            ("set ptc_com <parameter> = <value>", ""),
+            ("set bmad_com taylor_order = ...", ""),
+            ("set ptc_com exact_model = F", "Non-exact is not as accurate but faster."),
+            ("set ran_state = <random_number_generator_state>", ""),
+            ("set region <parameter> = <value>", ""),
+            ("set region r13 y2 = 0.3", "Set y2 parameter of region r13"),
+            ("set space_charge_com <parameter> = <value>", ""),
+            ("set space_charge_com n_bin = 30", "Set number of bins used in the csr calc."),
+            ("set symbolic_number <name> = <value>", ""),
+            ("set sym aa = 23.4 * pi", 'Define the symbol "aa"'),
+            ("set tune -branch <branch_list> -listing -mask <veto_list> <Qa> <Qb>", ""),
+            ("set tune -mask *,~qf_\\%\\%,~qd_\\% 0.23 0.45", ""),
+            (
+                "set tune -mask qd* 0.45 0.67",
+                'Use all quads except with name starting with "qd".',
+            ),
+            ("set universe <what_universe> <on/off>", ""),
+            ("set universe <what_universe> twiss_calc  and", ""),
+            ("set universe [1,3] off", "Set universes 1 and 3 off."),
+            ("set variable <var_name>|<parameter> = <value>", ""),
+            ("set var quad_k1|weight = 0.1", "Set quad_k1 weights."),
+            ("set wave <parameter> = <value>", ""),
+            ("set wave ix_a = 15 27", "Set A-region to span from datum #15 to #27"),
+            ("set z_tune <Qz>", ""),
+            ("set z_tune 0.023", ""),
+        ],
+        "show": [
+            ("show -append <file_name> -noprint -no_err_out <subcommand>", ""),
+            ("show -write <file_name> -noprint -no_err_out <subcommand>", ""),
+        ],
+        "single_mode": [("single_mode", "")],
+        "spawn": [("spawn <shell_command>", "")],
+        "use": [("use data  <data_name>", ""), ("use var <var_name>", "")],
+        "veto": [
+            ("veto data <data_name> <locations>", ""),
+            ("veto var <var_name> <locations>", ""),
+        ],
+        "view": [("view <universe-index>", "")],
+        "wave": [("wave <curve-or-data_type> <plot_location>", "")],
+        "write": [
+            ("write beam -ascii -floor_position -at <element_list> <file_name>", ""),
+            ("write beam -at *", "Output beam at every element."),
+            ("write blender <file_name>", "Write a blender script (Same as 3d_model)."),
+            ("write bmad -format <type> <file_name>", ""),
+            ("write bmad -format one lat.bmad", "Single lattice file lat.bmad created."),
+            ("write bunch_comb -branch <ix_branch>  -centroid -ix_bunch <ix_bunch>", ""),
+            ("write bunch_c -uni 2 -cent", "Centroid type table for universe 2"),
+            ("write covariance_matrix file_name", "Write the covariance and alpha matrices"),
+            ("write derivative_matrix file_name", "Write the \\vn{dModel_Data/dVar} matrix."),
+            ("write digested <file_name>", "Write a digested Bmad lattice file of the model."),
+            ("write elegant <file_name>", "Elegant lattice file using the model lattice."),
+            (
+                "write field -nmax <nx_max>, <ny_max> <nz_max> -nmin <nx_min>, <ny_min> <nz_min>",
+                "",
+            ),
+            ("write field -ele Q1 -dr 0.01 0.02 0.05 -nmax 30 20, 200", ""),
+            ("write gif <file_name>", "Create a gif file of the plot window."),
+            ("write hard", "Print the plot window to a printer."),
+            ("write mad8 <file_name>", "Write a MAD-8 lattice file of the model"),
+            ("write madx <file_name>", "Write a MAD-X lattice file of the model"),
+            ("write matrix -branch <branch> -single -from_start -combined", ""),
+            ("write mat -uni 3 -br 1", "Write matrices from universe 3, branch 1."),
+            ("write namelist -append -data -plot -variable file_name", ""),
+            ("write opal <file_name>", "Write a OPAL lattice file of the model"),
+            ("write pdf -scale <scale> <file_name>", ""),
+            ("write plot_commands <file_name>", ""),
+            ("write plot p1.tao", "Write plotting commands to p1.tao."),
+            ("write ps -scale <scale> <file_name>", ""),
+            ("write ptc -all -old -branch <name_or_index <file_name>", ""),
+            ("write sad <file_name>", "Write a SAD lattice file of the model"),
+            ("write spin_mat8 -l_axis <lx> <ly> <lz> -branch <name_or_index> <file_name>", ""),
+            ("write spin -l 1 0 0", "l-axis is (1, 0, 0)."),
+            ("write variable -good_opt_only -tao_format <file_name>", ""),
+            ("write var -good this_var.dat", 'Write to file "this_var.dat".'),
+            ("write xsif <file_name>", "Write an XSIF lattice file of the model"),
+        ],
+        "x_axis": [("x_axis <where> <axis_type>", "")],
+        "x_scale": [
+            ("x_scale -exact -gang -nogang -include_wall <where> \\{<value1> <value2>\\}", "")
+        ],
+        "xy_scale": [("xy_scale -include_wall <where> \\{<bound1> <bound2>\\}\\}", "")],
+    }
