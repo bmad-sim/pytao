@@ -1127,10 +1127,6 @@ def parse_lord_control(lines, cmd=""):
     """
     Input line format:
       Lord-index;Lord-name;Lord-type;Attribute-controlled;Control-expression;Value
-
-    Returns:
-      list[dict]: [{"index": int, "name": str, "key": str,
-                    "attribute": str, "expression": str, "value": float|None}, ...]
     """
     return _parse_by_keys_to_types(
         lines,
