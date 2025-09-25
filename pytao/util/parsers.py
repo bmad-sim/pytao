@@ -1145,10 +1145,6 @@ def parse_slave_control(lines, cmd=""):
     """
     Input line format:
       Slave-branch;Slave-index;Slave-name;Slave-type;Attribute-controlled;Control-expression;Value
-
-    Returns:
-      list[dict]: [{"branch": int, "index": int, "name": str, "key": str,
-                    "attribute": str, "expression": str, "value": float|None}, ...]
     """
     return _parse_by_keys_to_types(
         lines,
