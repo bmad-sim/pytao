@@ -1129,17 +1129,17 @@ def parse_lord_control(lines, cmd=""):
       Lord-index;Lord-name;Lord-type;Attribute-controlled;Control-expression;Value
 
     Returns:
-      list[dict]: [{"index": int, "name": str, "type": str,
-                    "attribute": str, "control": str, "value": float|None}, ...]
+      list[dict]: [{"index": int, "name": str, "key": str,
+                    "attribute": str, "expression": str, "value": float|None}, ...]
     """
     return _parse_by_keys_to_types(
         lines,
         {
             "index": int,
             "name": str,
-            "type": str,
+            "key": str,
             "attribute": str,
-            "control": str,
+            "expression": str,
             "value": FloatOrNone,
         },
     )
@@ -1151,8 +1151,8 @@ def parse_slave_control(lines, cmd=""):
       Slave-branch;Slave-index;Slave-name;Slave-type;Attribute-controlled;Control-expression;Value
 
     Returns:
-      list[dict]: [{"branch": int, "index": int, "name": str, "type": str,
-                    "attribute": str, "control": str, "value": float|None}, ...]
+      list[dict]: [{"branch": int, "index": int, "name": str, "key": str,
+                    "attribute": str, "expression": str, "value": float|None}, ...]
     """
     return _parse_by_keys_to_types(
         lines,
@@ -1160,9 +1160,9 @@ def parse_slave_control(lines, cmd=""):
             "branch": int,
             "index": int,
             "name": str,
-            "type": str,
+            "key": str,
             "attribute": str,
-            "control": str,
+            "expression": str,
             "value": FloatOrNone,
         },
     )
