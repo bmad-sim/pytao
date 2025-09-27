@@ -72,6 +72,15 @@ Start pytao's GUI from the command-line with:
 pytao-gui -init tao.init
 ```
 
+## Release process
+
+To release a new PyTao version with updated bindings for the Fortran functions:
+
+1. Activate a conda environment with `bmad` installed with the target version
+2. Double-check that bmad is updated in the environment via `conda list |grep bmad`
+3. Run `bash scripts/bump_minimum_version.sh`
+4. Commit, push, merge PR, tag, ...
+
 ## License
 
 [GNU General Public License](LICENSE)
