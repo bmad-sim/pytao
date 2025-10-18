@@ -546,10 +546,11 @@ def parse_pytype(type, val):
         return parse_bool(val)
 
     if type in ["INT", "INUM"]:
-        return int(val)
+        return int(val or 0)
 
     if type == "REAL":
-        return float(val)
+        # Note that some pipe commands may return any empty value instead of 0
+        return float(val or 0)
 
     if type == "COMPLEX":
         return complex(*(float(v) for v in val))
