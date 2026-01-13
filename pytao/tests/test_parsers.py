@@ -8,6 +8,7 @@ from .. import AnyTao
 from ..tao_ctypes.util import parse_tao_python_data
 from .conftest import ensure_successful_parsing
 from .test_interface_commands import new_tao
+from ..util.parsers import parse_derivative
 
 
 @pytest.mark.parametrize(
@@ -567,8 +568,6 @@ def test_parse_wall3d_radius(caplog, tao_cls: Type[AnyTao]):
 
 def test_parse_derivative_single_universe():
     """Test parse_derivative with a single universe and simple matrix."""
-    from ..util.parsers import parse_derivative
-
     # Single universe (iu=1) with 3 data points and 5 variables
     lines = [
         "1;1;1;1.0;2.0;3.0;4.0;5.0",
@@ -597,8 +596,6 @@ def test_parse_derivative_single_universe():
 
 def test_parse_derivative_multiple_universes():
     """Test parse_derivative with multiple universes."""
-    from ..util.parsers import parse_derivative
-
     lines = [
         "1;1;1;1.0;2.0",
         "1;2;1;3.0;4.0",
@@ -626,8 +623,6 @@ def test_parse_derivative_multiple_universes():
 
 def test_parse_derivative_chunked_variables():
     """Test parse_derivative when variables are split across multiple lines (>10 vars)."""
-    from ..util.parsers import parse_derivative
-
     # Single data point with 15 variables split into two lines
     # First line: variables 1-10, second line: variables 11-15
     lines = [
@@ -645,8 +640,6 @@ def test_parse_derivative_chunked_variables():
 
 def test_parse_derivative_sparse_matrix():
     """Test parse_derivative with non-contiguous data indices."""
-    from ..util.parsers import parse_derivative
-
     # Data indices 1, 3, 5 (not all consecutive)
     lines = [
         "1;1;1;1.0;2.0",
@@ -671,8 +664,6 @@ def test_parse_derivative_sparse_matrix():
 
 def test_parse_derivative_complex_chunking():
     """Test parse_derivative with multiple data points and chunked variables."""
-    from ..util.parsers import parse_derivative
-
     # 2 data points, 12 variables each (chunked into 10 + 2)
     lines = [
         "1;1;1;1.0;2.0;3.0;4.0;5.0;6.0;7.0;8.0;9.0;10.0",
@@ -696,8 +687,6 @@ def test_parse_derivative_complex_chunking():
 
 def test_parse_derivative_mixed_universes_and_chunking():
     """Test parse_derivative with multiple universes and chunked variables."""
-    from ..util.parsers import parse_derivative
-
     lines = [
         # Universe 1: 1 data point, 11 variables
         "1;1;1;1.0;2.0;3.0;4.0;5.0;6.0;7.0;8.0;9.0;10.0",
