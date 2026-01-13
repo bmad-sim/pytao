@@ -1,8 +1,8 @@
+from collections import defaultdict
+from typing import Dict, List, Optional
 import ast
 import datetime
 import logging
-from typing import Dict, List, Optional
-
 import numpy as np
 
 from ..tao_ctypes.util import parse_bool, parse_tao_python_data
@@ -116,6 +116,7 @@ def parse_data_d_array(lines, cmd=""):
     return result
 
 
+
 def parse_derivative(lines, cmd=""):
     """
     Parses the output of tao python derivative
@@ -132,36 +133,36 @@ def parse_derivative(lines, cmd=""):
         with dModel_dVar as the value:
             np.ndarray with shape (n_data, n_var)
     """
-    universes = {}
+    # Calculate matrix bounds
+    universes_bounds: dict[int, tuple[int, int]] = defaultdict(lambda: (0, 0))
+    for ln in lines:
+        # Parse the line
+        cells = ln.split(';')
+        iu = int(cells[0])  # Universe index
+        id = int(cells[1])  # Data index
+        iv0 = int(cells[2])  # Starting index of variables
+        nv = len(cells) - 3  # Number of vars
+        
+        # Update the bounds of the derivative mat
+        cur_bnd = universes_bounds[iu]
+        universes_bounds[iu] = (max(cur_bnd[0], id), max(cur_bnd[0], iv0+nv-1))
 
-    # Build up matrices
-    for line in lines:
-        x = line.split(";")
-        if len(x) <= 1:
-            continue
-        iu = int(x[0])
+    # Contruct derivative matrices (fill with NaN to indicate values not filled by Bmad)
+    universe = {iu: np.full(bnd, np.nan) for iu, bnd in universes_bounds.items()}
 
-        if iu not in universes:
-            # new universe
-            rows = universes[iu] = []
-            rowdat = []
-            row_id = int(x[1])
+    # Fill in matrices
+    for ln in lines:
+        # Parse the line
+        cells = ln.split(';')
+        iu = int(cells[0])  # Universe index
+        id = int(cells[1])  # Data index
+        iv0 = int(cells[2])  # Starting index of variables
+        nv = len(cells) - 3  # Number of vars
+        
+        # Populate matrix
+        universe[iu][id-1, iv0-1:iv0+nv-1] = [float(x) for x in cells[3:]]
 
-        if int(x[1]) == row_id:
-            # accumulate more data
-            rowdat += x[3:]
-        else:
-            # Finish row
-            rows.append(rowdat)
-            rowdat = x[3:]
-            row_id = int(x[1])
-
-    # cast to float
-    out = {}
-    for iu, vals in universes.items():
-        out[iu] = np.array(vals).astype(float)
-
-    return out
+    return universe
 
 
 def parse_ele_control_var(lines, cmd=""):
