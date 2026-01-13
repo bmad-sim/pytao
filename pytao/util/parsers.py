@@ -145,7 +145,7 @@ def parse_derivative(lines, cmd=""):
         
         # Update the bounds of the derivative mat
         cur_bnd = universes_bounds[iu]
-        universes_bounds[iu] = (max(cur_bnd[0], id), max(cur_bnd[0], iv0+nv-1))
+        universes_bounds[iu] = (max(cur_bnd[0], id), max(cur_bnd[1], iv0+nv-1))
 
     # Contruct derivative matrices (fill with NaN to indicate values not filled by Bmad)
     universe = {iu: np.full(bnd, np.nan) for iu, bnd in universes_bounds.items()}
