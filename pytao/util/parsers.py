@@ -5,7 +5,11 @@ import datetime
 import logging
 import numpy as np
 
-from ..tao_ctypes.util import parse_bool, parse_tao_python_data
+from ..tao_ctypes.util import (
+    parse_bool,
+    parse_tao_python_data,
+    capture_messages_from_functions,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -132,6 +136,10 @@ def parse_derivative(lines, cmd=""):
         with dModel_dVar as the value:
             np.ndarray with shape (n_data, n_var)
     """
+    # Filter messages
+    lines = capture_messages_from_functions(lines)
+    lines = [ln for ln in lines if ln and len(ln.split(";")) > 3]
+
     # Calculate matrix bounds
     universes_bounds: dict[int, tuple[int, int]] = defaultdict(lambda: (0, 0))
     for ln in lines:
