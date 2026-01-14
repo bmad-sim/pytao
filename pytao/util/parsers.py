@@ -1,11 +1,15 @@
+from collections import defaultdict
+from typing import Dict, List, Optional
 import ast
 import datetime
 import logging
-from typing import Dict, List, Optional
-
 import numpy as np
 
-from ..tao_ctypes.util import parse_bool, parse_tao_python_data
+from ..tao_ctypes.util import (
+    parse_bool,
+    parse_tao_python_data,
+    capture_messages_from_functions,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -132,36 +136,40 @@ def parse_derivative(lines, cmd=""):
         with dModel_dVar as the value:
             np.ndarray with shape (n_data, n_var)
     """
-    universes = {}
+    # Filter messages
+    lines, _ = capture_messages_from_functions(lines)
+    lines = [ln for ln in lines if ln and len(ln.split(";")) > 3]
 
-    # Build up matrices
-    for line in lines:
-        x = line.split(";")
-        if len(x) <= 1:
-            continue
-        iu = int(x[0])
+    # Calculate matrix bounds
+    universes_bounds: dict[int, tuple[int, int]] = defaultdict(lambda: (0, 0))
+    for ln in lines:
+        # Parse the line
+        cells = ln.split(";")
+        iu = int(cells[0])  # Universe index
+        id = int(cells[1])  # Data index
+        iv0 = int(cells[2])  # Starting index of variables
+        nv = len(cells) - 3  # Number of vars
 
-        if iu not in universes:
-            # new universe
-            rows = universes[iu] = []
-            rowdat = []
-            row_id = int(x[1])
+        # Update the bounds of the derivative mat
+        cur_bnd = universes_bounds[iu]
+        universes_bounds[iu] = (max(cur_bnd[0], id), max(cur_bnd[1], iv0 + nv - 1))
 
-        if int(x[1]) == row_id:
-            # accumulate more data
-            rowdat += x[3:]
-        else:
-            # Finish row
-            rows.append(rowdat)
-            rowdat = x[3:]
-            row_id = int(x[1])
+    # Contruct derivative matrices (fill with NaN to indicate values not filled by Bmad)
+    universe = {iu: np.full(bnd, np.nan) for iu, bnd in universes_bounds.items()}
 
-    # cast to float
-    out = {}
-    for iu, vals in universes.items():
-        out[iu] = np.array(vals).astype(float)
+    # Fill in matrices
+    for ln in lines:
+        # Parse the line
+        cells = ln.split(";")
+        iu = int(cells[0])  # Universe index
+        id = int(cells[1])  # Data index
+        iv0 = int(cells[2])  # Starting index of variables
+        nv = len(cells) - 3  # Number of vars
 
-    return out
+        # Populate matrix
+        universe[iu][id - 1, iv0 - 1 : iv0 + nv - 1] = [float(x) for x in cells[3:]]
+
+    return universe
 
 
 def parse_ele_control_var(lines, cmd=""):
