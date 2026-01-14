@@ -137,7 +137,7 @@ def parse_derivative(lines, cmd=""):
             np.ndarray with shape (n_data, n_var)
     """
     # Filter messages
-    lines = capture_messages_from_functions(lines)
+    lines, _ = capture_messages_from_functions(lines)
     lines = [ln for ln in lines if ln and len(ln.split(";")) > 3]
 
     # Calculate matrix bounds
