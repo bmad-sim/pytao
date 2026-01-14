@@ -116,7 +116,6 @@ def parse_data_d_array(lines, cmd=""):
     return result
 
 
-
 def parse_derivative(lines, cmd=""):
     """
     Parses the output of tao python derivative
@@ -137,15 +136,15 @@ def parse_derivative(lines, cmd=""):
     universes_bounds: dict[int, tuple[int, int]] = defaultdict(lambda: (0, 0))
     for ln in lines:
         # Parse the line
-        cells = ln.split(';')
+        cells = ln.split(";")
         iu = int(cells[0])  # Universe index
         id = int(cells[1])  # Data index
         iv0 = int(cells[2])  # Starting index of variables
         nv = len(cells) - 3  # Number of vars
-        
+
         # Update the bounds of the derivative mat
         cur_bnd = universes_bounds[iu]
-        universes_bounds[iu] = (max(cur_bnd[0], id), max(cur_bnd[1], iv0+nv-1))
+        universes_bounds[iu] = (max(cur_bnd[0], id), max(cur_bnd[1], iv0 + nv - 1))
 
     # Contruct derivative matrices (fill with NaN to indicate values not filled by Bmad)
     universe = {iu: np.full(bnd, np.nan) for iu, bnd in universes_bounds.items()}
@@ -153,14 +152,14 @@ def parse_derivative(lines, cmd=""):
     # Fill in matrices
     for ln in lines:
         # Parse the line
-        cells = ln.split(';')
+        cells = ln.split(";")
         iu = int(cells[0])  # Universe index
         id = int(cells[1])  # Data index
         iv0 = int(cells[2])  # Starting index of variables
         nv = len(cells) - 3  # Number of vars
-        
+
         # Populate matrix
-        universe[iu][id-1, iv0-1:iv0+nv-1] = [float(x) for x in cells[3:]]
+        universe[iu][id - 1, iv0 - 1 : iv0 + nv - 1] = [float(x) for x in cells[3:]]
 
     return universe
 

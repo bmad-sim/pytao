@@ -586,11 +586,13 @@ def test_parse_derivative_single_universe():
     assert result[1].shape == (3, 5)
 
     # Check values
-    expected = np.array([
-        [1.0, 2.0, 3.0, 4.0, 5.0],
-        [6.0, 7.0, 8.0, 9.0, 10.0],
-        [11.0, 12.0, 13.0, 14.0, 15.0],
-    ])
+    expected = np.array(
+        [
+            [1.0, 2.0, 3.0, 4.0, 5.0],
+            [6.0, 7.0, 8.0, 9.0, 10.0],
+            [11.0, 12.0, 13.0, 14.0, 15.0],
+        ]
+    )
     np.testing.assert_array_equal(result[1], expected)
 
 
@@ -616,9 +618,7 @@ def test_parse_derivative_multiple_universes():
 
     # Check values
     np.testing.assert_array_equal(result[1], np.array([[1.0, 2.0], [3.0, 4.0]]))
-    np.testing.assert_array_equal(
-        result[2], np.array([[5.0, 6.0], [7.0, 8.0], [9.0, 10.0]])
-    )
+    np.testing.assert_array_equal(result[2], np.array([[5.0, 6.0], [7.0, 8.0], [9.0, 10.0]]))
 
 
 def test_parse_derivative_chunked_variables():
@@ -633,8 +633,9 @@ def test_parse_derivative_chunked_variables():
     result = parse_derivative(lines)
 
     assert result[1].shape == (1, 15)
-    expected = np.array([[1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0,
-                         11.0, 12.0, 13.0, 14.0, 15.0]])
+    expected = np.array(
+        [[1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0]]
+    )
     np.testing.assert_array_equal(result[1], expected)
 
 
@@ -681,7 +682,9 @@ def test_parse_derivative_complex_chunking():
     np.testing.assert_array_equal(result[1][0, :], expected_row1)
 
     # Check second row
-    expected_row2 = np.array([21.0, 22.0, 23.0, 24.0, 25.0, 26.0, 27.0, 28.0, 29.0, 30.0, 31.0, 32.0])
+    expected_row2 = np.array(
+        [21.0, 22.0, 23.0, 24.0, 25.0, 26.0, 27.0, 28.0, 29.0, 30.0, 31.0, 32.0]
+    )
     np.testing.assert_array_equal(result[1][1, :], expected_row2)
 
 
