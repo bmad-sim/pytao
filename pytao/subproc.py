@@ -19,7 +19,7 @@ import numpy as np
 from typing_extensions import Literal, NotRequired, TypedDict, override
 
 from .interface_commands import Tao, TaoStartup
-from .tao_ctypes.util import error_filter_context, TaoCommandError, TaoInitializationError
+from .tao_ctypes.util import TaoCommandError, TaoInitializationError, error_filter_context
 
 logger = logging.getLogger(__name__)
 
@@ -372,10 +372,11 @@ class _TaoPipe:
             result = _get_result(received, raises=raises, initializing=cmd == "init")
             return received["tao_output"], result
         except BrokenPipeError:
-            raise TaoCommandError(
-                f"Tao command {cmd}({argument!r}) was unable to complete as the subprocess "
-                f"has already exited."
-            )
+            if cmd != "quit":
+                raise TaoCommandError(
+                    f"Tao command {cmd}({argument!r}) was unable to complete as the subprocess "
+                    f"has already exited."
+                )
 
     def send_receive_custom(self, func: Callable, kwargs: Dict[str, SupportedKwarg]):
         """
