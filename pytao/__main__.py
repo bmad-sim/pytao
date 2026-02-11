@@ -1,4 +1,4 @@
-from .cli import main_python, main_ipython
+from .cli import main_ipython, main_python
 
 try:
     import IPython  # noqa

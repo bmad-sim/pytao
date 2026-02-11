@@ -1,9 +1,10 @@
 import code
 import os
 import pathlib
-import pytest
 import sys
 from unittest.mock import MagicMock, Mock, patch
+
+import pytest
 
 from ..cli import (
     PytaoArgs,

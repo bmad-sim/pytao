@@ -6,16 +6,15 @@ import matplotlib.pyplot as plt
 import pytest
 
 from .. import SubprocessTao, Tao, TaoStartup, filter_tao_messages_context
-
 from ..plotting import mpl
 from ..plotting.curves import TaoCurveSettings
 from .conftest import (
+    REUSE_SUBPROCESS,
     BackendName,
     get_example,
     get_packaged_example,
     get_regression_test,
     test_artifacts,
-    REUSE_SUBPROCESS,
 )
 
 logger = logging.getLogger(__name__)

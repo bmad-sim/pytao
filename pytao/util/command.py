@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from typing import Literal, Union
-
 import shlex
+from typing import Literal, Union
 
 Quiet = Literal["all", "warnings"]
 

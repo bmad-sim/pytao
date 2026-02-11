@@ -9,10 +9,12 @@ from .parameters import (
     tao_parameter,
     tao_parameter_dict,
 )
+from .paths import normalize_path
 
 __all__ = [
-    "lat_element",
     "InvalidParamError",
+    "lat_element",
+    "normalize_path",
     "str_to_tao_param",
     "tao_parameter",
     "tao_parameter_dict",

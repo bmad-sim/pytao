@@ -1,11 +1,16 @@
+from __future__ import annotations
+
 import atexit
 import contextlib
+import datetime
 import logging
 import os
 import pathlib
+import time
 from typing import Generator, Iterable, List, Optional, Type, TypeVar
 
 import matplotlib
+import pydantic
 import pytest
 from typing_extensions import Literal
 
@@ -13,6 +18,7 @@ from .. import SubprocessTao, Tao, TaoStartup
 from ..tao_ctypes.util import filter_output_lines
 
 matplotlib.use("Agg")
+logger = logging.getLogger(__name__)
 
 test_root = pathlib.Path(__file__).parent.resolve()
 packaged_examples_root = test_root / "input_files"
@@ -238,3 +244,62 @@ def use_subprocess(
     request: pytest.FixtureRequest,
 ) -> bool:
     return request.param
+
+
+@contextlib.contextmanager
+def no_pytao_debug_logging():
+    subproc_logger = logging.getLogger("pytao.subproc")
+    initial_level = subproc_logger.level
+    subproc_logger.setLevel("ERROR")
+    yield
+    subproc_logger.setLevel(initial_level)
+
+
+class TimedSection(pydantic.BaseModel):
+    description: str
+    start_dt: datetime.datetime
+    end_dt: datetime.datetime | None
+    elapsed: float | None
+
+    @property
+    def tdelta(self) -> datetime.timedelta:
+        """Time delta from start to finish."""
+        assert self.end_dt is not None
+        return self.end_dt - self.start_dt
+
+    def __str__(self) -> str:
+        return f"""
+{self.description}
+  Start: {self.start_dt}
+    End: {self.end_dt}
+Elapsed: {self.elapsed:.1f} sec ({self.tdelta})
+    """.strip()
+
+
+@contextlib.contextmanager
+def timed_section(description: str = "", level: int = logging.INFO):
+    """
+    Context manager for timing a code section and logging the duration.
+
+    Parameters
+    ----------
+    description : str, default=""
+        Description of the timed section.
+
+    Yields
+    ------
+    TimedSection
+        An object containing the start time, end time, and elapsed time of the
+        timed section.
+    """
+    t0 = time.monotonic()
+    start_dt = datetime.datetime.now()
+
+    section = TimedSection(
+        description=description, start_dt=start_dt, end_dt=None, elapsed=None
+    )
+    yield section
+    section.end_dt = datetime.datetime.now()
+    section.elapsed = time.monotonic() - t0
+
+    logger.log(level, f"{description} took {section.elapsed:.1f} sec")

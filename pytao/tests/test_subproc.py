@@ -17,7 +17,6 @@ def test_crash_and_recovery() -> None:
     with SubprocessTao(init=init) as tao:
         # tao.init("-init regression_tests/pipe_test/tao.init_plot_line -external_plotting")
         bunch1 = tao.bunch1(ele_id="end", coordinate="x", which="model", ix_bunch="1")
-        print("bunch1=", bunch1)
 
         assert tao._subproc_pipe_ is not None
 

@@ -13,6 +13,7 @@ import pydantic
 
 if typing.TYPE_CHECKING:
     from tqdm import tqdm
+
     from . import Tao
 
 
