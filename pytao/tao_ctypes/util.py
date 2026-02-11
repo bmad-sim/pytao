@@ -3,6 +3,7 @@ from __future__ import annotations
 import contextlib
 import contextvars
 import importlib
+import logging
 import sys
 import textwrap
 from dataclasses import dataclass, field
@@ -155,6 +156,36 @@ class TaoCommandError(TaoExceptionWithOutput, RuntimeError):
 CaptureByLevel = Dict[TaoMessageLevel, FrozenSet[str]]
 
 
+def split_error_messages(
+    messages: List[TaoMessage],
+) -> Tuple[List[TaoMessage], List[TaoMessage]]:
+    regular, errors = [], []
+    for msg in messages:
+        if msg.level in error_message_levels:
+            errors.append(msg)
+        else:
+            regular.append(msg)
+
+    return regular, errors
+
+
+def raise_for_error_messages(cmd: str, lines: List[str], errors: List[TaoMessage]):
+    functions = ", ".join(sorted(set(error.function for error in errors)))
+    error_lines = "\n\n".join(
+        "\n".join(
+            (
+                f"{error.level.capitalize()} in {error.function}:",
+                textwrap.indent(error.message, "  "),
+            )
+        )
+        for error in errors
+    )
+    raise TaoCommandError(
+        f"Command: {cmd!r} causes errors in the function(s): {functions}\n\n{error_lines}",
+        tao_output="\n".join(lines),
+    )
+
+
 @dataclass
 class TaoErrorFilterContext:
     """
@@ -194,21 +225,20 @@ class TaoErrorFilterContext:
             by_command={key: frozenset(value) for key, value in (by_command or {}).items()},
         )
 
-    def check_output(self, cmd: str, lines: List[str]):
+    def filter_messages(self, cmd: str, all_messages: list[TaoMessage]):
         """
-        Check Tao output using the filter context.
+        Remove context-filtered messages from the list.
 
         Parameters
         ----------
         cmd : str
             The Tao command used to get the output.
-        lines : List[str]
-            The Tao output lines.
+        all_messages : list[TaoMessage]
 
         Returns
         -------
         list of TaoMessage
-            Messages found in the output, excluding those filtered out.
+            Filtered tao messages.
         """
         cmd = cmd.strip()
         if not cmd:
@@ -223,29 +253,15 @@ class TaoErrorFilterContext:
                 and message.function not in by_command
             )
 
-        messages = [
-            message
-            for message in capture_messages_from_functions(lines)[1]
-            if should_include(message)
-        ]
+        return [message for message in all_messages if should_include(message)]
 
-        errors = [message for message in messages if message.level in error_message_levels]
+    def check_output(self, cmd: str, lines: List[str]):
+        lines, all_messages = capture_messages_from_functions(lines)
+        messages = self.filter_messages(cmd, all_messages)
+
+        _regular, errors = split_error_messages(messages)
         if errors:
-            functions = ", ".join(sorted(set(error.function for error in errors)))
-            error_lines = "\n\n".join(
-                "\n".join(
-                    (
-                        f"{error.level.capitalize()} in {error.function}:",
-                        textwrap.indent(error.message, "  "),
-                    )
-                )
-                for error in errors
-            )
-            raise TaoCommandError(
-                f"Command: {cmd} causes errors in the function(s): {functions}\n\n{error_lines}",
-                tao_output="\n".join(lines),
-            )
-        return messages
+            raise_for_error_messages(cmd, lines, errors)
 
 
 @dataclass
@@ -259,6 +275,15 @@ class TaoMessage:
     @property
     def level_number(self) -> int:
         return all_message_levels.index(self.level)
+
+    def __str__(self) -> str:
+        return f"[{self.level} {self.function}] {self.message}"
+
+    @property
+    def log_level(self) -> int:
+        if self.level in error_message_levels:
+            return logging.ERROR
+        return logging.DEBUG
 
 
 def filter_tao_messages(

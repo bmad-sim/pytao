@@ -7,6 +7,7 @@ import pathlib
 import shutil
 import tempfile
 import textwrap
+import warnings
 from ctypes.util import find_library
 from typing import TYPE_CHECKING, List, Optional, Tuple, Type, Union
 
@@ -21,6 +22,9 @@ from .util import (
     TaoInitializationError,
     TaoMessage,
     TaoSharedLibraryNotFoundError,
+    capture_messages_from_functions,
+    error_message_levels,
+    raise_for_error_messages,
 )
 
 if TYPE_CHECKING:
@@ -397,7 +401,9 @@ class TaoCore:
             )
         return output
 
-    def _check_output_lines(self, cmd: str, lines: List[str]) -> Optional[List[TaoMessage]]:
+    def _check_output_lines(
+        self, cmd: str, lines: List[str], raises: bool = False
+    ) -> Tuple[List[str], List[TaoMessage]]:
         """
         Check Tao output for errors respecting the current capture context.
 
@@ -409,15 +415,15 @@ class TaoCore:
             Tao output lines for `cmd`.
         """
         ctx = util.error_filter_context.get()
+        lines, all_messages = capture_messages_from_functions(lines)
         if ctx is not None:
-            return ctx.check_output(cmd, lines)
+            all_messages = ctx.filter_messages(cmd, all_messages)
 
-        err = util.error_in_lines(lines)
-        if err:
-            raise TaoCommandError(
-                f"Command: {cmd} causes error: {err}",
-                tao_output="\n".join(lines),
-            )
+        errors = [msg for msg in all_messages if msg.level in error_message_levels]
+        if errors and raises:
+            raise_for_error_messages(cmd, lines, errors)
+
+        return lines, all_messages
 
     def cmd(self, cmd, raises=True) -> List[str]:
         """
@@ -427,6 +433,8 @@ class TaoCore:
         ----------
         cmd : str
             Command string
+        remove_messages : bool, default=False
+            Filter out Tao error and status messages.
         raises : bool, default=True
             Raise an exception of [ERROR or [FATAL is detected in the output
 
@@ -441,10 +449,10 @@ class TaoCore:
         self.so_lib.tao_c_command(cmd.encode("utf-8"))
 
         try:
-            if not raises:
-                return self.get_output(reset=False)
             lines = self.get_output(reset=False)
-            self._check_output_lines(cmd, lines)
+            if not raises:
+                return lines
+            self._check_output_lines(cmd, lines, raises=True)
             return lines
         finally:
             self.reset_output()
@@ -491,7 +499,7 @@ class TaoCore:
             return np.array([], dtype=dtype)
 
         try:
-            self._check_output_lines(cmd, self.get_output(reset=False))
+            self._check_output_lines(cmd, self.get_output(reset=False), raises=True)
         except TaoCommandError:
             if raises:
                 raise
@@ -524,6 +532,24 @@ class TaoCore:
             return self._get_array(cmd=cmd, dtype=float, raises=raises)
         finally:
             self.reset_output()
+
+    def _maybe_raise_for_message(self, cmd: str, lines: list[str], messages: list[TaoMessage]):
+        if any(msg.level in error_message_levels for msg in messages):
+            error_lines = "\n".join(
+                str(msg) for msg in messages if msg.level in error_message_levels
+            )
+            raise TaoCommandError(
+                "\n".join(
+                    (
+                        f"Command: {cmd!r} caused these error(s). Suppress this with 'raises=False':",
+                        f"\n{error_lines}",
+                    )
+                ),
+                tao_output="\n".join(lines),
+            )
+
+    def _log(self, cmd: str, message: TaoMessage) -> None:
+        logger.log(message.log_level, str(message))
 
     def cmd_integer(self, cmd: str, raises: bool = True) -> Optional[np.ndarray]:
         """
@@ -643,8 +669,12 @@ def init_libtao(user_path: str = "") -> Tuple[ctypes.CDLL, str]:
         Path to the shared library.
     """
     so_lib_file = None
+    user_path = user_path or os.getenv("PYTAO_LIB_PATH", "")
     if user_path:
-        so_lib_file = user_path
+        if os.path.isdir(user_path):
+            so_lib_file = find_libtao(user_path)
+        else:
+            so_lib_file = user_path
     else:
         ACC_ROOT_DIR = os.getenv("ACC_ROOT_DIR", "")
         if ACC_ROOT_DIR:
@@ -690,6 +720,12 @@ class TaoModel(TaoCore):
         auto_configure=True,  # Should be disables if inheriting.
     ):
         # NOTE: SUPER is being called from configure(...)
+
+        warnings.warn(
+            "The 'TaoModel' class is deprecated and will be removed in a future version. " "",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
         # Save init
 

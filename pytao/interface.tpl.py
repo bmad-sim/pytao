@@ -16,7 +16,10 @@ from typing_extensions import Literal, override
 
 from . import pbar
 from .tao_ctypes.core import TaoCore, TaoInitializationError
-from .tao_ctypes.util import TaoCommandError, parse_tao_python_data
+from .tao_ctypes.util import (
+    TaoCommandError,
+    parse_tao_python_data,
+)
 from .util import parsers as _pytao_parsers
 from .util.command import Quiet, make_tao_init
 from .util.parameters import tao_parameter_dict
@@ -659,7 +662,7 @@ class Tao(TaoCore):
         as_dict: bool = True,
         raises: bool = True,
         method_name=None,
-        cmd_type: str = "string_list",
+        cmd_type: Literal["string_list", "real_array", "integer_array"] = "string_list",
     ):
         """
 
@@ -686,25 +689,30 @@ class Tao(TaoCore):
         Result from running tao. The type of data depends on configuration, but is generally a list of strings, a dict, or a
         numpy array.
         """
-        func_for_type = {
-            "string_list": self.cmd,
-            "real_array": self.cmd_real,
-            "integer_array": self.cmd_integer,
-        }
-        func = func_for_type.get(cmd_type, self.cmd)
-        raw_output = func(cmd, raises=raises)
+
+        if cmd_type == "real_array":
+            raw_output = self.cmd_real(cmd, raises=raises)
+        elif cmd_type == "integer_array":
+            raw_output = self.cmd_integer(cmd, raises=raises)
+        else:
+            cmd_output = self.cmd(cmd, raises=False)
+            raw_output, messages = self._check_output_lines(cmd, cmd_output, raises=raises)
+
+            for msg in messages:
+                self._log(cmd, msg)
+
         special_parser = getattr(_pytao_parsers, f"parse_{method_name}", None)
         try:
             if special_parser and callable(special_parser):
                 return special_parser(raw_output, cmd=cmd)
-            if "string" not in cmd_type:
+            if isinstance(raw_output, np.ndarray):
                 return raw_output
             if as_dict:
                 return parse_tao_python_data(raw_output)
             return tao_parameter_dict(raw_output)
         except Exception as ex:
             if raises:
-                ex.tao_output = raw_output
+                setattr(ex, "tao_output", raw_output)
                 raise
             logger.exception(
                 "Failed to parse string data with custom parser. Returning raw value."

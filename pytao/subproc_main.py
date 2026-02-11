@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import contextlib
-from functools import partial
 import logging
 import sys
 import traceback
@@ -66,17 +65,19 @@ def _tao_subprocess(output_fifo_filename: str) -> None:
             if tao is None:
                 raise TaoCommandError("Tao object not yet initialized")
 
+            if command == "function":
+                return run_custom_function(message, arg)
+
             try:
                 func = {
                     "cmd": tao.cmd,
                     "cmd_real": tao.cmd_real,
                     "cmd_integer": tao.cmd_integer,
-                    "function": partial(run_custom_function, message),
                 }[command]
             except KeyError:
                 raise RuntimeError(f"Unexpected Tao subprocess command: {command}")
 
-            return func(arg)
+            return func(arg, raises=False)
 
     def make_response(message) -> SubprocessResult:
         try:
