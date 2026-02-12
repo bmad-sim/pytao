@@ -11,12 +11,11 @@ from typing import (
     Literal,
     TypedDict,
     Union,
-    Unpack,
     overload,
 )
 
 import numpy as np
-from typing_extensions import override
+from typing_extensions import override, Unpack
 
 from . import pbar
 from .core import AnyPath, TaoCore, TaoInitializationError, TaoStartup
