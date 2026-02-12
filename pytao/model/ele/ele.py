@@ -1059,6 +1059,7 @@ def get_comb(
     ele: AnyElementID,
     which: Which = "model",
     *,
+    head: tao_classes.ElementHead | None = None,
     comb: Comb | None = None,
 ) -> Comb:
     """
@@ -1081,9 +1082,9 @@ def get_comb(
     """
     ele = to_ele(ele)
     if comb is None:
-        comb = Comb.from_tao(tao)
-
-    head = get_head(tao=tao, ele=ele, which=which)
+        comb = Comb.from_tao(tao, which=which)
+    if head is None:
+        head = get_head(tao=tao, ele=ele, which=which)
     return comb.slice_by_s(head.s_start, head.s)
 
 
@@ -1752,11 +1753,8 @@ class Element(pydantic.BaseModel, extra="forbid"):
 
     @_pytao_stats.time_decorator
     def _fill_comb(self, tao: pytao.Tao, comb_data: Comb | None):
-        if comb_data is None:
-            comb_data = Comb.from_tao(tao, which=self.which)
-        self.comb = comb_data.slice_by_s(
-            self.head.s_start,
-            self.head.s,
+        self.comb = get_comb(
+            tao=tao, ele=self.ele, which=self.which, head=self.head, comb=comb_data
         )
 
     @_pytao_stats.time_decorator
