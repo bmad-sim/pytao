@@ -7,6 +7,7 @@ from .. import AnyTao
 from ..util.parsers import parse_tao_python_data
 from .conftest import ensure_successful_parsing
 from .test_interface_commands import new_tao
+from ..util.parsers import parse_derivative
 
 
 @pytest.mark.parametrize(
@@ -562,3 +563,149 @@ def test_parse_wall3d_radius(caplog, tao_cls: type[AnyTao]):
         assert len(radius["origin"]) == 3
         assert len(radius["perpendicular"]) == 3
         assert isinstance(radius["wall_radius"], float)
+
+
+def test_parse_derivative_single_universe():
+    """Test parse_derivative with a single universe and simple matrix."""
+    # Single universe (iu=1) with 3 data points and 5 variables
+    lines = [
+        "1;1;1;1.0;2.0;3.0;4.0;5.0",
+        "1;2;1;6.0;7.0;8.0;9.0;10.0",
+        "1;3;1;11.0;12.0;13.0;14.0;15.0",
+    ]
+
+    result = parse_derivative(lines)
+
+    # Check structure
+    assert isinstance(result, dict)
+    assert 1 in result
+    assert isinstance(result[1], np.ndarray)
+
+    # Check shape (3 data points x 5 variables)
+    assert result[1].shape == (3, 5)
+
+    # Check values
+    expected = np.array(
+        [
+            [1.0, 2.0, 3.0, 4.0, 5.0],
+            [6.0, 7.0, 8.0, 9.0, 10.0],
+            [11.0, 12.0, 13.0, 14.0, 15.0],
+        ]
+    )
+    np.testing.assert_array_equal(result[1], expected)
+
+
+def test_parse_derivative_multiple_universes():
+    """Test parse_derivative with multiple universes."""
+    lines = [
+        "1;1;1;1.0;2.0",
+        "1;2;1;3.0;4.0",
+        "2;1;1;5.0;6.0",
+        "2;2;1;7.0;8.0",
+        "2;3;1;9.0;10.0",
+    ]
+
+    result = parse_derivative(lines)
+
+    # Check both universes exist
+    assert 1 in result
+    assert 2 in result
+
+    # Check shapes
+    assert result[1].shape == (2, 2)
+    assert result[2].shape == (3, 2)
+
+    # Check values
+    np.testing.assert_array_equal(result[1], np.array([[1.0, 2.0], [3.0, 4.0]]))
+    np.testing.assert_array_equal(result[2], np.array([[5.0, 6.0], [7.0, 8.0], [9.0, 10.0]]))
+
+
+def test_parse_derivative_chunked_variables():
+    """Test parse_derivative when variables are split across multiple lines (>10 vars)."""
+    # Single data point with 15 variables split into two lines
+    # First line: variables 1-10, second line: variables 11-15
+    lines = [
+        "1;1;1;1.0;2.0;3.0;4.0;5.0;6.0;7.0;8.0;9.0;10.0",
+        "1;1;11;11.0;12.0;13.0;14.0;15.0",
+    ]
+
+    result = parse_derivative(lines)
+
+    assert result[1].shape == (1, 15)
+    expected = np.array(
+        [[1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0]]
+    )
+    np.testing.assert_array_equal(result[1], expected)
+
+
+def test_parse_derivative_sparse_matrix():
+    """Test parse_derivative with non-contiguous data indices."""
+    # Data indices 1, 3, 5 (not all consecutive)
+    lines = [
+        "1;1;1;1.0;2.0",
+        "1;3;1;3.0;4.0",
+        "1;5;1;5.0;6.0",
+    ]
+
+    result = parse_derivative(lines)
+
+    # Matrix should be sized for max data index (5)
+    assert result[1].shape == (5, 2)
+
+    # Check that specified rows have values
+    np.testing.assert_array_equal(result[1][0, :], np.array([1.0, 2.0]))
+    np.testing.assert_array_equal(result[1][2, :], np.array([3.0, 4.0]))
+    np.testing.assert_array_equal(result[1][4, :], np.array([5.0, 6.0]))
+
+    # Check that unspecified rows are NaN
+    assert np.isnan(result[1][1, 0])
+    assert np.isnan(result[1][3, 0])
+
+
+def test_parse_derivative_complex_chunking():
+    """Test parse_derivative with multiple data points and chunked variables."""
+    # 2 data points, 12 variables each (chunked into 10 + 2)
+    lines = [
+        "1;1;1;1.0;2.0;3.0;4.0;5.0;6.0;7.0;8.0;9.0;10.0",
+        "1;1;11;11.0;12.0",
+        "1;2;1;21.0;22.0;23.0;24.0;25.0;26.0;27.0;28.0;29.0;30.0",
+        "1;2;11;31.0;32.0",
+    ]
+
+    result = parse_derivative(lines)
+
+    assert result[1].shape == (2, 12)
+
+    # Check first row
+    expected_row1 = np.array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0])
+    np.testing.assert_array_equal(result[1][0, :], expected_row1)
+
+    # Check second row
+    expected_row2 = np.array(
+        [21.0, 22.0, 23.0, 24.0, 25.0, 26.0, 27.0, 28.0, 29.0, 30.0, 31.0, 32.0]
+    )
+    np.testing.assert_array_equal(result[1][1, :], expected_row2)
+
+
+def test_parse_derivative_mixed_universes_and_chunking():
+    """Test parse_derivative with multiple universes and chunked variables."""
+    lines = [
+        # Universe 1: 1 data point, 11 variables
+        "1;1;1;1.0;2.0;3.0;4.0;5.0;6.0;7.0;8.0;9.0;10.0",
+        "1;1;11;11.0",
+        # Universe 2: 2 data points, 3 variables each
+        "2;1;1;21.0;22.0;23.0",
+        "2;2;1;24.0;25.0;26.0",
+    ]
+
+    result = parse_derivative(lines)
+
+    # Check universe 1
+    assert result[1].shape == (1, 11)
+    expected_u1 = np.array([[1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0]])
+    np.testing.assert_array_equal(result[1], expected_u1)
+
+    # Check universe 2
+    assert result[2].shape == (2, 3)
+    expected_u2 = np.array([[21.0, 22.0, 23.0], [24.0, 25.0, 26.0]])
+    np.testing.assert_array_equal(result[2], expected_u2)
