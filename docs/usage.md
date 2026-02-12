@@ -8,7 +8,6 @@ Start up JupyterLab as you would normally:
 
 ```bash
 jupyter lab
-
 ```
 
 And then use PyTao, enabling your preferred plotting backend:
@@ -85,6 +84,21 @@ Tao(
 
 Note that `quiet` mode may cause portions of PyTao to function improperly. See
 upstream [issue](https://github.com/bmad-sim/bmad-ecosystem/issues/1380).
+
+### `SubprocessTao` - Tao in a subprocess
+
+If you wish to load multiple lattices at the same time, consider using `SubprocessTao`.
+It can be used in the same way as the `Tao` class.
+
+Use this form when possible:
+
+```python
+with SubprocessTao(lattice_file) as tao:
+    print(tao.cmd("show lat"))
+```
+
+Once the `with` block ends, the subprocess will automatically be closed and cleaned up.
+For manual lifetime control, use `tao.close_subprocess()`.
 
 ## PyTao on the command-line
 

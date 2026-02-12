@@ -23,6 +23,14 @@ docstrings from the `tao_python_cmd.f90`. At the root of this codebase there
 is a script called `generate_interface_commands.py` which outputs this module
 and also automated tests based on the examples defined on the docstrings.
 
-.. automodule:: pytao.interface_commands
+.. automodule:: pytao.tao
+   :members:
+   :noindex:
+
+
+An interface which shares the same methods as `Tao` but performs all operations
+in a subprocess is also available.
+
+.. automodule:: pytao.subproc
    :members:
    :noindex:
