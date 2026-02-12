@@ -6,7 +6,6 @@ from unittest.mock import MagicMock, Mock, patch
 
 import pytest
 
-from ..core import register_input_transformer
 from ..cli import (
     PytaoArgs,
     init,
@@ -14,6 +13,7 @@ from ..cli import (
     main_python,
     split_pytao_tao_args,
 )
+from ..core import register_input_transformer
 
 
 def test_split_args_basic():

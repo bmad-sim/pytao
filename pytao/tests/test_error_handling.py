@@ -4,6 +4,8 @@ from ..errors import (
     TaoCommandError,
     error_filter_context,
     filter_tao_messages,
+)
+from ..errors import (
     filter_tao_messages_context as filter_ctx,
 )
 

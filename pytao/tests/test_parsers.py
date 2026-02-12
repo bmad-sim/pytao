@@ -4,8 +4,8 @@ from typing import Type
 import numpy as np
 import pytest
 
-from ..util.parsers import parse_tao_python_data
 from .. import AnyTao
+from ..util.parsers import parse_tao_python_data
 from .conftest import ensure_successful_parsing
 from .test_interface_commands import new_tao
 

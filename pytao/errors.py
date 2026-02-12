@@ -5,7 +5,7 @@ import contextvars
 import logging
 import textwrap
 from dataclasses import dataclass, field
-from typing import Dict, FrozenSet, Iterable, List, Literal, Optional, Tuple, Set
+from typing import Dict, FrozenSet, Iterable, List, Literal, Optional, Set, Tuple
 
 TaoMessageLevel = Literal[
     "INFO",  # Informational message
