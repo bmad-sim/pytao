@@ -10,7 +10,7 @@ import os
 import re
 import sys
 
-from .core import TaoCore
+from .tao import Tao
 from .tao_pexpect import tao_io
 
 
@@ -112,12 +112,12 @@ class tao_interface:
         # Check for shared library (and set up self.ctypes_pipe)
         lib_found = False
         try:
-            self.ctypes_pipe = TaoCore(so_lib=so_lib)
+            self.ctypes_pipe = Tao(init=init_args, so_lib=so_lib)
             lib_found = True
         except OSError:  # so_lib not found
             if LIB_DIR is not None:
                 try:
-                    self.ctypes_pipe = TaoCore(so_lib=LIB_DIR + "libtao.so")
+                    self.ctypes_pipe = Tao(init=init_args, so_lib=LIB_DIR + "libtao.so")
                     lib_found = True
                     if mode == "ctypes":
                         self.exe_lib_warnings += "Note: could not find " + so_lib
@@ -126,7 +126,7 @@ class tao_interface:
                     pass  # will continue below
             if not lib_found:
                 try:
-                    self.ctypes_pipe = TaoCore(so_lib="")
+                    self.ctypes_pipe = Tao(so_lib="")
                     lib_found = True
                     if mode == "ctypes":
                         self.exe_lib_warnings += "Note: could not find " + so_lib
@@ -165,9 +165,6 @@ class tao_interface:
                 self.pexpect_pipe = tao_io(
                     init_args=init_args, tao_exe=tao_exe, expect_str=expect_str
                 )
-            if mode == "ctypes":
-                for line in self.ctypes_pipe.init(init_args):
-                    print(line)
             if mode == "failed":
                 self.exe_lib_warnings += (
                     "FATAL: could not locate Tao shared library or executable.\n"
