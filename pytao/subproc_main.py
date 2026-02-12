@@ -7,6 +7,8 @@ import traceback
 
 import numpy as np
 
+from .core import TaoCommandError
+from .errors import filter_tao_messages_context
 from .subproc import (
     SubprocessErrorResult,
     SubprocessRequest,
@@ -19,8 +21,7 @@ from .subproc import (
     write_pickled_data,
 )
 from .tao import Tao
-from .tao_ctypes.core import TaoCommandError
-from .tao_ctypes.util import filter_tao_messages_context, import_by_name
+from .util import import_by_name
 
 logger = logging.getLogger(__name__)
 

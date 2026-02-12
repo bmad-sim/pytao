@@ -4,9 +4,9 @@ Provides miscellaneous windows needed in the GUI for tao
 
 import tkinter as tk
 
-from ..util.parameters import str_to_tao_param
 from .tao_base_windows import tao_list_window, tao_parameter_window
 from .tao_set import tao_set
+from .util import str_to_tao_param
 
 # ----------------------------------------------------
 # Global Variables window

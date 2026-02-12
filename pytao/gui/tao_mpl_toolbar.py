@@ -7,7 +7,7 @@ from matplotlib import rcParams
 from matplotlib.backends.backend_tkagg import NavigationToolbar2Tk
 from matplotlib.widgets import Slider
 
-from ..util.parameters import str_to_tao_param
+from .util import str_to_tao_param
 
 # ---------------------------------------------
 # Note: Help and recalculate buttons are commented out since later version of matplotlib/tkinter will not

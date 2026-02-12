@@ -1,32 +1,9 @@
-"""
-This module defines the tao_parameter class, which stores the value of a single parameter in tao.
-Also defined are a few functions for parsing data into a single tao_parameter or a dictionary of tao_parameters
-"""
-
-from collections import OrderedDict
-
-tao_startup_param_list = [
-    "beam_file;FILE;T;",
-    "beam_init_position_file;FILE;T;",
-    "beam_track_data_file;FILE;T;",
-    "building_wall_file;FILE;T;",
-    "data_file;FILE;T;",
-    "hook_init_file;FILE;T;",
-    "init_file;FILE;T;",
-    "noinit;LOGIC;T;F",
-    "lattice_file;FILE;T;",
-    "plot_file;FILE;T;",
-    "startup_file;FILE;T;",
-    "noplot;LOGIC;T;F",
-    "var_file;FILE;T;",
-    "slice_lattice;FILE;T;",
-    "disable_smooth_line_calc;LOGIC;T;F",
-    "log_startup;LOGIC;T;F",
-    "no_stopping;LOGIC;T;F",
-    "rf_on;LOGIC;T;F",
-]
-
-# -------------------------------------------------
+class InvalidParamError(Exception):
+    """
+    Provides an exception for when a param_string is improperly formatted
+    Examples of improper formatting include: not enough semicolons
+    (3 minimum), bad sub-parameter formatting (for STRUCTs), etc
+    """
 
 
 class tao_parameter:
@@ -117,40 +94,6 @@ class tao_parameter:
         return None
 
 
-#
-
-
-class InvalidParamError(Exception):
-    """
-    Provides an exception for when a param_string is improperly formatted
-    Examples of improper formatting include: not enough semicolons
-    (3 minimum), bad sub-parameter formatting (for STRUCTs), etc
-    """
-
-    pass
-
-
-# An item in the parameter list is a string that looks like:
-
-
-def tao_parameter_dict(param_list):
-    """
-    Takes a list of strings, each string looks something like: 'param_name;STR;T;abcd'
-    and returns a dictionary with keys being the param_name.
-    Blank strings will be ignored.
-    """
-    this_dict = OrderedDict()
-    for param_str in param_list:
-        if param_str.strip() == "":
-            continue
-        v = param_str.split(";")
-        this_dict[v[0]] = str_to_tao_param(param_str)
-    return this_dict
-
-
-#
-
-
 def str_to_tao_param(param_str):
     """
     Takes a parameter string (EG: 'param_name;STR;T;abcd')
@@ -199,5 +142,16 @@ def str_to_tao_param(param_str):
     return tao_parameter(v[0], v[1], v[2], v[3], sub_param)
 
 
-# -------------------------------------------------
-tao_startup_param_dict = tao_parameter_dict(tao_startup_param_list)
+def tao_parameter_dict(param_list):
+    """
+    Takes a list of strings, each string looks something like: 'param_name;STR;T;abcd'
+    and returns a dictionary with keys being the param_name.
+    Blank strings will be ignored.
+    """
+    this_dict = {}
+    for param_str in param_list:
+        if param_str.strip() == "":
+            continue
+        v = param_str.split(";")
+        this_dict[v[0]] = str_to_tao_param(param_str)
+    return this_dict

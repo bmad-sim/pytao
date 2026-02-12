@@ -2,7 +2,7 @@ from typing import List, Set
 
 import pytest
 
-from ..tao_ctypes.util import TaoMessage, capture_messages_from_functions, filter_output_lines
+from ..errors import TaoMessage, capture_messages_from_functions, filter_output_lines
 
 
 @pytest.mark.parametrize(

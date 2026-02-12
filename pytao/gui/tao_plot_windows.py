@@ -9,7 +9,6 @@ from matplotlib.backend_bases import key_press_handler
 from matplotlib.backends._backend_tk import FigureManagerTk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-from ..util.parameters import str_to_tao_param, tao_parameter_dict
 from .tao_base_windows import (
     Tao_Popup,
     Tao_Toplevel,
@@ -24,6 +23,7 @@ from .tao_mpl_toolbar import taotoolbar
 from .tao_set import tao_set
 from .tao_widget import tk_tao_parameter
 from .taoplot import taoplot
+from .util import str_to_tao_param, tao_parameter_dict
 
 # -----------------------------------------------------
 # Plot placing window

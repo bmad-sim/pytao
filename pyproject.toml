@@ -6,7 +6,7 @@ requires = ["setuptools>=60", "setuptools_scm[toml]>=8.0"]
 name = "pytao"
 description = "PyTao is the Python interface for Bmad's Tao"
 readme = { file = "README.md", content-type = "text/markdown" }
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = []
 dynamic = ["version"]
 keywords = []
@@ -63,7 +63,7 @@ file = "LICENSE"
 extend-include = ["*.ipynb", "_version.py", "versioneer.py"]
 line-length = 95
 indent-width = 4
-target-version = "py39"
+target-version = "py310"
 
 [tool.ruff.lint]
 # select = [
@@ -79,8 +79,8 @@ ignore = []
 
 [tool.pytest.ini_options]
 addopts = "--cov=pytao/"
-log_cli_level = "info"
-log_level = "debug"
+log_cli_level = "INFO"
+log_level = "DEBUG"
 testpaths = ["pytao/tests"]
 
 [tool.setuptools_scm]

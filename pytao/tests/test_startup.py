@@ -1,7 +1,7 @@
 import pytest
 
+from ..core import TaoInitializationError
 from .. import Tao, TaoStartup
-from ..tao_ctypes.core import TaoInitializationError
 
 
 def test_examples_can_init(tao_example: TaoStartup) -> None:

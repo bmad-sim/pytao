@@ -42,7 +42,7 @@ from bokeh.plotting import figure
 from pydantic.dataclasses import dataclass
 from typing_extensions import NotRequired, TypedDict
 
-from ..tao_ctypes.core import AnyPath, TaoCommandError
+from ..core import AnyPath, TaoCommandError
 from . import floor_plan_shapes, pgplot, util
 from .curves import CurveIndexToCurve, PlotCurveLine, PlotCurveSymbols, TaoCurveSettings
 from .fields import ElementField

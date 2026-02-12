@@ -1,11 +1,12 @@
+from __future__ import annotations
+
 import ast
+import dataclasses
 import datetime
 import logging
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 import numpy as np
-
-from ..tao_ctypes.util import parse_bool, parse_tao_python_data
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +20,15 @@ class FloatOrNone:
     """Type marker for values that should be parsed as float or None if empty."""
 
     pass
+
+
+@dataclasses.dataclass
+class PipeData:
+    name: str
+    type: str
+    settable: bool
+    data: Any
+    units: str | None
 
 
 # Helpers
@@ -35,6 +45,184 @@ def _parse_str_bool(s):
         return False
     else:
         raise ValueError("Unknown bool: " + s)
+
+
+def chunks(lst, n):
+    """Yield successive n-sized chunks from lst."""
+    for i in range(0, len(lst), n):
+        yield lst[i : i + n]
+
+
+def parse_bool(s):
+    x = s.upper()[0]
+    if x == "T":
+        return True
+    elif x == "F":
+        return False
+    else:
+        raise ValueError("Unknown bool: " + s)
+
+
+def parse_tao_lat_ele_list(lines):
+    """
+    returns mapping of names to index
+
+    TODO: if elements are duplicated, this returns only the last one.
+
+    Example:
+    ixlist = parse_tao_lat_ele_list(tao.cmd('python lat_ele_list 1@0'))
+    """
+    ix = {}
+    for line in lines:
+        index, name = line.split(";")
+        ix[name] = int(index)
+    return ix
+
+
+def parse_pytype(type, val):
+    """
+    Parses the various types from `tao_pipe_cmd`
+
+    INT         - Integer number
+    INT_ARR     - Integer array.
+    REAL        - Real number
+    REAL_ARR    - Real array
+    COMPLEX     - Complex number (Re;Im)
+    LOGIC       - Logical: "T" or "F".
+    INUM        - Integer whose allowed values can be obtained using the "pipe inum" command.
+    ENUM        - String whose allowed values can be obtained using the "pipe enum" command.
+    ENUM_ARR    - Array of enums.
+    FILE        - Name of file.
+    CRYSTAL     - Crystal name string. EG: "Si(111)"
+    DAT_TYPE    - Data type string. EG: "orbit.x"
+    DAT_TYPE_Z  - Data type string if plot%x_axis_type = 'data'. Otherwise is a data_type_z enum.
+    SPECIES     - Species name string. EG: "H2SO4++"
+    ELE_PARAM   - Lattice element parameter string. EG "K1"
+    STR         - String that does not fall into one of the above string categories.
+    STR_ARR     - String array
+    STRUCT      - Structure. In this case {component_value} is of the form:
+                    {name1};{type1};{value1};{name2}
+    """
+
+    if type in [
+        "STR_ARR",
+        "ENUM_ARR",
+    ]:
+        return val
+
+    if type == "INT_ARR":
+        return np.array(val).astype(int)
+
+    if type == "REAL_ARR":
+        return np.array(val).astype(float)
+
+    if isinstance(val, list):
+        if len(val) == 1:
+            val = val[0]
+
+    if type in [
+        "STR",
+        "ENUM",
+        "FILE",
+        "CRYSTAL",
+        "COMPONENT",
+        "DAT_TYPE",
+        "DAT_TYPE_Z",
+        "SPECIES",
+        "ELE_PARAM",
+    ]:
+        return val
+
+    if type == "LOGIC":
+        return parse_bool(val)
+
+    if type in ["INT", "INUM"]:
+        return int(val or 0)
+
+    if type == "REAL":
+        # Note that some pipe commands may return any empty value instead of 0
+        return float(val or 0)
+
+    if type == "COMPLEX":
+        return complex(*(float(v) for v in val))
+
+    if type == "STRUCT":
+        return {name: parse_pytype(t1, v1) for name, t1, v1 in chunks(val, 3)}
+
+    # Not found
+    raise ValueError("Unknown type: " + type)
+
+
+def _parse_tao_python_data1(line, clean_key=True):
+    sline = line.split(";")
+    name, type, settable = sline[0:3]
+    component_value = sline[3:]
+
+    # Parse
+    dat = parse_pytype(type, component_value)
+
+    if clean_key:
+        name = name.replace(".", "_")
+
+    return name, type, settable.upper() == "T", dat
+
+
+def parse_tao_python_data1(line, clean_key=True):
+    """
+    Parses most common data output from a Tao>python command
+    <component_name>;<type>;<is_variable>;<component_value>
+
+    and returns a dict
+    Example:
+        eta_x;REAL;F;  9.0969865321048662E+00
+    parses to:
+        {'eta_x':9.0969865321048662E+00}
+
+    If clean key, the key will be cleaned up by replacing '.' with '_' for use as class attributes.
+
+    See: tao_python_cmd.f90
+    """
+    name, type, settable, dat = _parse_tao_python_data1(line, clean_key)
+    # note: for back-compatibility
+    return {name: dat}
+
+
+def parse_tao_python_data(lines, clean_key=True):
+    """
+    returns dict with data
+    """
+    dat = {}
+    for line in lines:
+        dat.update(parse_tao_python_data1(line, clean_key))
+
+    return dat
+
+
+def parse_tao_python_data_with_units(lines, clean_key=True):
+    """
+    returns dict with data
+    """
+    data = {}
+
+    for line in lines:
+        name, type_, settable, dat = _parse_tao_python_data1(line, clean_key=clean_key)
+        data[name] = PipeData(
+            name=name,
+            type=type_,
+            settable=settable,
+            data=dat,
+            units=None,
+        )
+
+    for key in list(data):
+        if "units#" not in key:
+            continue
+
+        units = data.pop(key)
+        key = key.removeprefix("units#")
+        if key in data:
+            data[key].units = units.data
+    return data
 
 
 # Column names and types for parse_data_d_array

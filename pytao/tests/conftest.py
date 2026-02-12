@@ -14,8 +14,8 @@ import pydantic
 import pytest
 from typing_extensions import Literal
 
+from ..errors import filter_output_lines
 from .. import SubprocessTao, Tao, TaoStartup
-from ..tao_ctypes.util import filter_output_lines
 
 matplotlib.use("Agg")
 logger = logging.getLogger(__name__)

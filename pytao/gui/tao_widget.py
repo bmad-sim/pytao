@@ -7,8 +7,8 @@ parameter in tao
 import tkinter as tk
 from tkinter import filedialog, ttk
 
-from ..util.parameters import str_to_tao_param, tao_parameter
 from .data_type_list import data_type_list
+from .util import str_to_tao_param, tao_parameter
 
 # from .tao_data_windows import tao_new_data_window, tao_d1_data_window
 

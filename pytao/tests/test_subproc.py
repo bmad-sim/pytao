@@ -7,9 +7,9 @@ import numpy as np
 import pytest
 
 from .. import SubprocessTao
-from ..interface_commands import Tao
+from ..errors import TaoCommandError
 from ..subproc import SupportedKwarg, TaoDisconnectedError
-from ..tao_ctypes.util import TaoCommandError
+from ..tao import Tao
 
 
 def test_crash_and_recovery() -> None:

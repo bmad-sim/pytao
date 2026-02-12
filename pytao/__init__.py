@@ -6,17 +6,15 @@ pytao also has some pre-defined constructs for dealing with data from tao
 in the util package.
 """
 
-from .subproc import AnyTao, SubprocessTao
-from .tao import Tao
-from .tao_ctypes import TaoModel, run_tao
-from .tao_ctypes.core import (
+from .core import (
     TaoCommandError,
     TaoInitializationError,
     TaoSharedLibraryNotFoundError,
     TaoStartup,
 )
-from .tao_ctypes.evaluate import evaluate_tao
-from .tao_ctypes.util import TaoException, filter_tao_messages, filter_tao_messages_context
+from .errors import TaoException, filter_tao_messages, filter_tao_messages_context
+from .subproc import AnyTao, SubprocessTao
+from .tao import Tao
 from .tao_interface import tao_interface
 from .tao_pexpect import tao_io
 
@@ -32,13 +30,10 @@ __all__ = [
     "TaoCommandError",
     "TaoException",
     "TaoInitializationError",
-    "TaoModel",
     "TaoSharedLibraryNotFoundError",
     "TaoStartup",
-    "evaluate_tao",
     "filter_tao_messages",
     "filter_tao_messages_context",
-    "run_tao",
     "tao_interface",
     "tao_io",
 ]

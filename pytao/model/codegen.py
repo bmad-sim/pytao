@@ -20,7 +20,7 @@ import numpy as np
 import pydantic
 
 import pytao
-import pytao.tao_ctypes.util
+import pytao.util
 import pytao.util.parsers as custom_parsers
 from pytao import SubprocessTao, filter_tao_messages_context
 
@@ -774,7 +774,7 @@ class TaoParameter(pydantic.BaseModel):
 
         if type_ not in valid_parameter_types:
             raise InvalidParameterTypeError(type_)
-        data = pytao.tao_ctypes.util.parse_pytype(type_, component_value)
+        data = pytao.util.parse_pytype(type_, component_value)
         return cls.from_tao(param_name, type_, can_vary, data)
 
 
@@ -1107,7 +1107,7 @@ class TaoCommandAndResult(pydantic.BaseModel):
         try:
             parser = getattr(custom_parsers, f"parse_{tao_cmd}")
         except AttributeError:
-            res = pytao.tao_ctypes.util.parse_tao_python_data(lines, clean_key=True)
+            res = pytao.util.parse_tao_python_data(lines, clean_key=True)
         else:
             res = parser(lines, cmd=cmd)
 

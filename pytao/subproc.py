@@ -18,9 +18,9 @@ from typing import Any, Callable, Dict, List, Optional, Union, cast
 import numpy as np
 from typing_extensions import Literal, NotRequired, TypedDict, override
 
+from .core import TaoStartup
+from .errors import TaoCommandError, TaoInitializationError, error_filter_context
 from .tao import Tao
-from .tao_ctypes.core import TaoStartup
-from .tao_ctypes.util import TaoCommandError, TaoInitializationError, error_filter_context
 
 logger = logging.getLogger(__name__)
 

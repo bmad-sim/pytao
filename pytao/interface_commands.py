@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import logging
 
-from .tao_ctypes.core import TaoCore
+from .core import TaoCore
 
 logger = logging.getLogger(__name__)
 

@@ -10,7 +10,7 @@ import os
 import re
 import sys
 
-from .tao_ctypes import TaoCore
+from .core import TaoCore
 from .tao_pexpect import tao_io
 
 

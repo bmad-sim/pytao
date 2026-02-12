@@ -7,7 +7,7 @@ import logging
 import os
 import sys
 
-from pytao.tao_ctypes.util import TaoInitializationError
+from pytao.errors import TaoInitializationError
 
 from .subproc import SubprocessTao
 from .tao import Tao

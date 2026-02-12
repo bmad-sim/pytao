@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.path import Path
 
-from ..util.parameters import str_to_tao_param
+from .util import str_to_tao_param
 
 
 def mpl_color(x):
