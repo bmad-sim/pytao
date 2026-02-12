@@ -16,8 +16,10 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Type, Union
 import numpy as np
 import pydantic
 from pydantic import ConfigDict, dataclasses
+from typing_extensions import Literal
 
 from .. import tao_ctypes
+from ..util import parsers as _pytao_parsers
 from ..util.command import Quiet, make_tao_init
 from ..util.parameters import tao_parameter_dict
 from . import util
@@ -29,12 +31,13 @@ from .util import (
     TaoSharedLibraryNotFoundError,
     capture_messages_from_functions,
     error_message_levels,
+    parse_tao_python_data,
     raise_for_error_messages,
 )
 
 if TYPE_CHECKING:
-    from ..interface_commands import Tao
     from ..subproc import SubprocessTao
+    from ..tao import Tao
 
     AnyTao = Union["Tao", SubprocessTao]
 
@@ -433,6 +436,69 @@ class TaoCore:
             raise_for_error_messages(cmd, lines, errors)
 
         return lines, all_messages
+
+    def _execute(
+        self,
+        cmd: str,
+        as_dict: bool = True,
+        raises: bool = True,
+        method_name=None,
+        cmd_type: Literal["string_list", "real_array", "integer_array"] = "string_list",
+    ):
+        """
+
+        A wrapper to handle commonly used options when running a command through tao.
+
+        Parameters
+        ----------
+        cmd : str
+            The command to run
+        as_dict : bool, optional
+            Return string data as a dict? by default True
+        raises : bool, optional
+            Raise exception on tao errors? by default True
+        method_name : str/None, optional
+            Name of the caller. Required for custom parsers for commands, by
+            default None
+        cmd_type : str, optional
+            The type of data returned by tao in its common memory, by default
+            "string_list"
+
+        Returns
+        -------
+        Any
+        Result from running tao. The type of data depends on configuration, but is generally a list of strings, a dict, or a
+        numpy array.
+        """
+
+        if cmd_type == "real_array":
+            raw_output = self.cmd_real(cmd, raises=raises)
+        elif cmd_type == "integer_array":
+            raw_output = self.cmd_integer(cmd, raises=raises)
+        else:
+            cmd_output = self.cmd(cmd, raises=False)
+            raw_output, messages = self._check_output_lines(cmd, cmd_output, raises=raises)
+
+            for msg in messages:
+                self._log(cmd, msg)
+
+        special_parser = getattr(_pytao_parsers, f"parse_{method_name}", None)
+        try:
+            if special_parser and callable(special_parser):
+                return special_parser(raw_output, cmd=cmd)
+            if isinstance(raw_output, np.ndarray):
+                return raw_output
+            if as_dict:
+                return parse_tao_python_data(raw_output)
+            return tao_parameter_dict(raw_output)
+        except Exception as ex:
+            if raises:
+                setattr(ex, "tao_output", raw_output)
+                raise
+            logger.exception(
+                "Failed to parse string data with custom parser. Returning raw value."
+            )
+            return raw_output
 
     def cmd(self, cmd, raises=True) -> List[str]:
         """

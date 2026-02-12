@@ -13,8 +13,8 @@ from pydantic import Field
 from typing_extensions import Self
 
 import pytao
-
 from pytao.tao_ctypes.util import PipeData, parse_tao_python_data_with_units
+
 from ...util import normalize_path
 from .. import _generated as tao_classes
 from ..base import TaoModel, _check_equality

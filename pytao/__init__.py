@@ -6,13 +6,14 @@ pytao also has some pre-defined constructs for dealing with data from tao
 in the util package.
 """
 
-from .interface_commands import Tao, TaoStartup
 from .subproc import AnyTao, SubprocessTao
+from .tao import Tao
 from .tao_ctypes import TaoModel, run_tao
 from .tao_ctypes.core import (
     TaoCommandError,
     TaoInitializationError,
     TaoSharedLibraryNotFoundError,
+    TaoStartup,
 )
 from .tao_ctypes.evaluate import evaluate_tao
 from .tao_ctypes.util import TaoException, filter_tao_messages, filter_tao_messages_context

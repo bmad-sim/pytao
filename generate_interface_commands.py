@@ -186,11 +186,11 @@ def generate_method_code(command_str, docs, method, command, returns):
                 parser_docs = NumpyDocString(special_parser.__doc__)
                 docs["Returns"] = parser_docs["Returns"]
             code_list.append(
-                f"return self.__execute(cmd, as_dict, raises, method_name='{method}', cmd_type='{tp}')"
+                f"return self._execute(cmd, as_dict, raises, method_name='{method}', cmd_type='{tp}')"
             )
         else:
             code_list.append(
-                f"{r.desc[0]}:\n    return self.__execute(cmd, as_dict, raises, method_name='{method}', cmd_type='{tp}')"
+                f"{r.desc[0]}:\n    return self._execute(cmd, as_dict, raises, method_name='{method}', cmd_type='{tp}')"
             )
     return "\n".join(code_list)
 

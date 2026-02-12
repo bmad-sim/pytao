@@ -9,8 +9,8 @@ import sys
 
 from pytao.tao_ctypes.util import TaoInitializationError
 
-from .interface_commands import Tao
 from .subproc import SubprocessTao
+from .tao import Tao
 
 logger = logging.getLogger("pytao")
 

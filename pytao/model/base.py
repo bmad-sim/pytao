@@ -18,7 +18,6 @@ import pydantic
 from pydantic.fields import FieldInfo
 from typing_extensions import Self
 
-
 from .types import ArgumentType
 
 try:
