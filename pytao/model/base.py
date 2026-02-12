@@ -132,8 +132,11 @@ class TaoModel(
         cmd_kwargs = dict(cls._tao_command_default_args_)
         cmd_kwargs.update(**kwargs)
 
-        cmd = getattr(tao, cls._tao_command_attr_)
-        data = cmd(**cmd_kwargs)
+        if cls._tao_command_attr_.startswith("pipe "):
+            data = tao.cmd(cls._tao_command_attr_.format(**cmd_kwargs))
+        else:
+            cmd = getattr(tao, cls._tao_command_attr_)
+            data = cmd(**cmd_kwargs)
         data = cls._process_tao_data(data)
         return cls(command_args=cmd_kwargs, **data)
 

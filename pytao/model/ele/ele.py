@@ -14,6 +14,7 @@ from typing_extensions import Self
 
 import pytao
 
+from pytao.tao_ctypes.util import PipeData, parse_tao_python_data_with_units
 from ...util import normalize_path
 from .. import _generated as tao_classes
 from ..base import TaoModel, _check_equality
@@ -724,31 +725,6 @@ def get_multipoles(
         # perf: it's ambiguous, so choose a general class
         return tao_classes.ElementMultipoles.model_validate(multipoles)
     return adapter.validate_python(multipoles)
-
-
-def _extract_gen_attribs(data: dict[str, Any]) -> dict[str, Attr]:
-    """
-    Extracts general attribute units from the provided Tao output data dictionary.
-
-    Parameters
-    ----------
-    cls : type[pydantic.BaseModel]
-        The Pydantic model class type.
-    data : dict[str, Any]
-        The data dictionary containing attributes and their values.
-
-    Returns
-    -------
-    dict of str to GeneralAttribute
-        Attribute name to units.
-    """
-    attrs = {}
-    for key, value in data.items():
-        if "units#" in key:
-            continue
-        units = data.get(f"units#{key}") or None
-        attrs[key] = Attr(value=value, units=units)
-    return attrs
 
 
 @_catch_element_not_found_error
@@ -1529,20 +1505,20 @@ AnyElementMultipoles = (
 )
 
 
-class Attr(pydantic.BaseModel, extra="forbid"):
-    value: str | int | float
-    units: str | None = None
-
-
 class GeneralAttributes(TaoModel, extra="allow"):
-    _tao_command_attr_: ClassVar[str] = "ele_gen_attribs"
+    # Note: hacky workaround here so we can inspect if attributes can be set
+    _tao_command_attr_: ClassVar[str] = "pipe ele:gen_attribs {ele_id}"
     _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
 
-    attrs: dict[str, Attr]
+    attrs: dict[str, PipeData]
 
     @classmethod
     def _process_tao_data(cls, data) -> dict:
-        return {"attrs": _extract_gen_attribs(data)}
+        return {"attrs": parse_tao_python_data_with_units(data)}
+
+    # @property
+    # def settable_fields(self) -> dict[str, FieldInfo]:
+    #     raise NotImplementedError()
 
 
 class Element(pydantic.BaseModel, extra="forbid"):

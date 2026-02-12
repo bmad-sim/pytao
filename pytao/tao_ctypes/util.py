@@ -2,15 +2,26 @@ from __future__ import annotations
 
 import contextlib
 import contextvars
+import dataclasses
 import importlib
 import logging
 import sys
 import textwrap
 from dataclasses import dataclass, field
-from typing import Dict, FrozenSet, Iterable, List, Optional, Set, Tuple
+from typing import Any, Dict, FrozenSet, Iterable, List, Optional, Set, Tuple
 
 import numpy as np
 from typing_extensions import Literal
+
+
+@dataclasses.dataclass
+class PipeData:
+    name: str
+    type: str
+    settable: bool
+    data: Any
+    units: str | None
+
 
 TaoMessageLevel = Literal[
     "INFO",  # Informational message
@@ -587,6 +598,20 @@ def parse_pytype(type, val):
     raise ValueError("Unknown type: " + type)
 
 
+def _parse_tao_python_data1(line, clean_key=True):
+    sline = line.split(";")
+    name, type, settable = sline[0:3]
+    component_value = sline[3:]
+
+    # Parse
+    dat = parse_pytype(type, component_value)
+
+    if clean_key:
+        name = name.replace(".", "_")
+
+    return name, type, settable.upper() == "T", dat
+
+
 def parse_tao_python_data1(line, clean_key=True):
     """
     Parses most common data output from a Tao>python command
@@ -602,18 +627,8 @@ def parse_tao_python_data1(line, clean_key=True):
 
     See: tao_python_cmd.f90
     """
-    dat = {}
-
-    sline = line.split(";")
-    name, type, setable = sline[0:3]
-    component_value = sline[3:]
-
-    # Parse
-    dat = parse_pytype(type, component_value)
-
-    if clean_key:
-        name = name.replace(".", "_")
-
+    name, type, settable, dat = _parse_tao_python_data1(line, clean_key)
+    # note: for back-compatibility
     return {name: dat}
 
 
@@ -626,6 +641,33 @@ def parse_tao_python_data(lines, clean_key=True):
         dat.update(parse_tao_python_data1(line, clean_key))
 
     return dat
+
+
+def parse_tao_python_data_with_units(lines, clean_key=True):
+    """
+    returns dict with data
+    """
+    data = {}
+
+    for line in lines:
+        name, type_, settable, dat = _parse_tao_python_data1(line, clean_key=clean_key)
+        data[name] = PipeData(
+            name=name,
+            type=type_,
+            settable=settable,
+            data=dat,
+            units=None,
+        )
+
+    for key in list(data):
+        if "units#" not in key:
+            continue
+
+        units = data.pop(key)
+        key = key.removeprefix("units#")
+        if key in data:
+            data[key].units = units.data
+    return data
 
 
 def simple_lat_table(tao, ix_universe=1, ix_branch=0, which="model", who="twiss"):
