@@ -1530,11 +1530,7 @@ class taoplot:
                             # draw sbend edges if bend angle is nonzero
                     # draw sbend element
 
-                    if (
-                        ele_name != ""
-                        and color != ""
-                        and np.sin(((angEnd + angStart) / 2)) > 0
-                    ):
+                    if ele_name != "" and color != "" and np.sin((angEnd + angStart) / 2) > 0:
                         gSubPlotForFloorPlan.text(
                             x1 + (x2 - x1) / 2 - 1.3 * off1 * np.sin(angStart),
                             y1 + (y2 - y1) / 2 + 1.3 * off1 * np.cos(angStart),
@@ -1548,9 +1544,7 @@ class taoplot:
                         )
 
                     elif (
-                        ele_name != ""
-                        and color != ""
-                        and np.sin(((angEnd + angStart) / 2)) <= 0
+                        ele_name != "" and color != "" and np.sin((angEnd + angStart) / 2) <= 0
                     ):
                         gSubPlotForFloorPlan.text(
                             x1 + (x2 - x1) / 2 - 1.3 * off1 * np.sin(angStart),

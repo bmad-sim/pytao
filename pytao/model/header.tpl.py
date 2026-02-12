@@ -9,7 +9,6 @@ import logging
 from typing import (
     Any,  # noqa: F401
     ClassVar,  # noqa: F401
-    Sequence,  # noqa: F401
 )
 
 from pydantic import Field  # noqa: F401

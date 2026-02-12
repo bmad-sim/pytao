@@ -2,10 +2,7 @@ from __future__ import annotations
 
 import math
 from typing import (
-    List,
     Literal,
-    Optional,
-    Tuple,
     Union,
 )
 
@@ -22,16 +19,16 @@ _dcls_config = pydantic.ConfigDict()
 
 @dataclasses.dataclass(config=_dcls_config)
 class PlotPatchBase:
-    edgecolor: Optional[str] = None
-    facecolor: Optional[str] = None
-    color: Optional[str] = None
-    linewidth: Optional[float] = None
-    linestyle: Optional[str] = None
-    antialiased: Optional[bool] = None
-    hatch: Optional[str] = None
+    edgecolor: str | None = None
+    facecolor: str | None = None
+    color: str | None = None
+    linewidth: float | None = None
+    linestyle: str | None = None
+    antialiased: bool | None = None
+    hatch: str | None = None
     fill: bool = True
-    capstyle: Optional[str] = None
-    joinstyle: Optional[str] = None
+    capstyle: str | None = None
+    joinstyle: str | None = None
     alpha: float = 1.0
 
     @property
@@ -62,7 +59,7 @@ class PlotPatchRectangle(PlotPatchBase):
     width: float = 0.0
     height: float = 0.0
     angle: float = 0.0
-    rotation_point: Union[Literal["xy", "center"], Point] = "xy"
+    rotation_point: Literal["xy", "center"] | Point = "xy"
 
     @property
     def center(self) -> Point:
@@ -147,7 +144,7 @@ class PlotPatchCircle(PlotPatchBase):
 
 @dataclasses.dataclass(config=_dcls_config)
 class PlotPatchPolygon(PlotPatchBase):
-    vertices: List[Point] = Field(default_factory=list)
+    vertices: list[Point] = Field(default_factory=list)
 
 
 @dataclasses.dataclass(config=_dcls_config)
@@ -160,8 +157,8 @@ class PlotPatchEllipse(PlotPatchBase):
 
 @dataclasses.dataclass(config=_dcls_config)
 class PlotPatchSbend(PlotPatchBase):
-    spline1: Tuple[Point, Point, Point] = Field(default_factory=tuple)
-    spline2: Tuple[Point, Point, Point] = Field(default_factory=tuple)
+    spline1: tuple[Point, Point, Point] = Field(default_factory=tuple)
+    spline2: tuple[Point, Point, Point] = Field(default_factory=tuple)
 
 
 PlotPatch = Union[

@@ -1400,11 +1400,11 @@ class tao_ele_browser(tao_lattice_window):
         elif len(names) < len(range(ix_min, ix_max + 1)):
             # Not enough names
             message = "You have not selected enough element names for "
-            message += self.name + "[{}]".format(str(ix_min)) + " through "
-            message += self.name + "[{}]".format(str(ix_max)) + ".  "
+            message += self.name + f"[{str(ix_min)}]" + " through "
+            message += self.name + f"[{str(ix_max)}]" + ".  "
             message += "Would you like to repeat the names to fill "
-            message += self.name + "[{}]".format(str(ix_min)) + " through "
-            message += self.name + "[{}]".format(str(ix_max)) + "?"
+            message += self.name + f"[{str(ix_min)}]" + " through "
+            message += self.name + f"[{str(ix_max)}]" + "?"
             ans = messagebox.askokcancel("Too few elements", message, parent=self)
             if not ans:
                 return

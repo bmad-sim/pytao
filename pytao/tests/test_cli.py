@@ -148,7 +148,7 @@ def test_main_python_script(tmp_path: pathlib.Path):
     """Test Python backend with script execution"""
 
     fn = tmp_path / "test.py"
-    with open(fn, "wt") as fp:
+    with open(fn, "w") as fp:
         print("print('script')", file=fp)
 
     with patch.object(code, "InteractiveConsole", Mock()):

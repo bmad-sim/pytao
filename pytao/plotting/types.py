@@ -1,60 +1,48 @@
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
 from typing_extensions import NotRequired, TypedDict
 
-FloorOrbitInfo = TypedDict(
-    "FloorOrbitInfo",
-    {
-        "branch_index": int,
-        "index": int,
-        "ele_key": str,
-        "axis": str,
-        "orbits": List[float],
-    },
-)
-BuildingWallGraphInfo = TypedDict(
-    "BuildingWallGraphInfo",
-    {
-        "index": int,
-        "point": int,
-        "offset_x": float,
-        "offset_y": float,
-        "radius": float,
-    },
-)
 
-BuildingWallInfo = TypedDict(
-    "BuildingWallInfo",
-    {
-        "index": int,
-        "name": str,
-        "constraint": str,
-        "shape": str,
-        "color": str,
-        "line_width": float,
-    },
-)
-BuildingWallGlobalInfo = TypedDict(
-    "BuildingWallGlobalInfo",
-    {
-        "index": int,
-        "z": float,
-        "x": float,
-        "radius": float,
-        "z_center": float,
-        "x_center": float,
-    },
-)
+class FloorOrbitInfo(TypedDict):
+    branch_index: int
+    index: int
+    ele_key: str
+    axis: str
+    orbits: List[float]
 
-WaveParams = TypedDict(
-    "WaveParams",
-    {
-        "ix_a1": float,
-        "ix_a2": float,
-        "ix_b1": float,
-        "ix_b2": float,
-    },
-)
+
+class BuildingWallGraphInfo(TypedDict):
+    index: int
+    point: int
+    offset_x: float
+    offset_y: float
+    radius: float
+
+
+class BuildingWallInfo(TypedDict):
+    index: int
+    name: str
+    constraint: str
+    shape: str
+    color: str
+    line_width: float
+
+
+class BuildingWallGlobalInfo(TypedDict):
+    index: int
+    z: float
+    x: float
+    radius: float
+    z_center: float
+    x_center: float
+
+
+class WaveParams(TypedDict):
+    ix_a1: float
+    ix_a2: float
+    ix_b1: float
+    ix_b2: float
+
 
 PlotCurveLineInfo = TypedDict(
     "PlotCurveLineInfo",
@@ -111,21 +99,18 @@ PlotCurveInfo = TypedDict(
 )
 
 
-PlotRegionInfo = TypedDict(
-    "PlotRegionInfo",
-    {
-        "num_graphs": int,
-        # "graph[1]": str,
-        "name": str,
-        "description": str,
-        "x_axis_type": str,
-        "autoscale_x": bool,
-        "autoscale_y": bool,
-        "autoscale_gang_x": bool,
-        "autoscale_gang_y": bool,
-        "n_curve_pts": int,
-    },
-)
+class PlotRegionInfo(TypedDict):
+    num_graphs: int
+    # "graph[1]": str,
+    name: str
+    description: str
+    x_axis_type: str
+    autoscale_x: bool
+    autoscale_y: bool
+    autoscale_gang_x: bool
+    autoscale_gang_y: bool
+    n_curve_pts: int
+
 
 PlotGraphInfo = TypedDict(
     "PlotGraphInfo",
@@ -216,94 +201,81 @@ PlotGraphInfo = TypedDict(
 )
 
 
-PlotHistogramInfo = TypedDict(
-    "PlotHistogramInfo",
-    {
-        "center": float,
-        "density_normalized": bool,
-        "maximum": float,
-        "minimum": float,
-        "number": float,
-        "weight_by_charge": bool,
-        "width": float,
-    },
-)
+class PlotHistogramInfo(TypedDict):
+    center: float
+    density_normalized: bool
+    maximum: float
+    minimum: float
+    number: float
+    weight_by_charge: bool
+    width: float
 
-PlotLatLayoutInfo = TypedDict(
-    "PlotLatLayoutInfo",
-    {
-        "ix_branch": int,
-        "ix_ele": int,
-        "ele_s_start": float,
-        "ele_s_end": float,
-        "line_width": float,
-        "shape": str,
-        "y1": float,
-        "y2": float,
-        "color": str,
-        "label_name": str,
-    },
-)
 
-FloorPlanElementInfo = TypedDict(
-    "FloorPlanElementInfo",
-    {
-        "branch_index": int,
-        "color": str,
-        "ele_key": str,
-        "end1_r1": float,
-        "end1_r2": float,
-        "end1_theta": float,
-        "end2_r1": float,
-        "end2_r2": float,
-        "end2_theta": float,
-        "index": int,
-        "label_name": str,
-        "line_width": float,
-        "shape": str,
-        "y1": float,
-        "y2": float,
-        # Only for sbend
-        "ele_l": NotRequired[float],
-        "ele_angle": NotRequired[float],
-        "ele_e1": NotRequired[float],
-        "ele_e": NotRequired[float],
-    },
-)
+class PlotLatLayoutInfo(TypedDict):
+    ix_branch: int
+    ix_ele: int
+    ele_s_start: float
+    ele_s_end: float
+    line_width: float
+    shape: str
+    y1: float
+    y2: float
+    color: str
+    label_name: str
 
-PlotPage = TypedDict(
-    "PlotPage",
-    {
-        "title_string": str,
-        "title__x": float,
-        "title_y": float,
-        "title_units": str,
-        "title_justify": str,
-        "subtitle_string": str,
-        "subtitle__x": float,
-        "subtitle_y": float,
-        "subtitle_units": str,
-        "subtitle_justify": str,
-        "size": list,
-        "n_curve_pts": int,
-        "border": list,
-        "text_height": float,
-        "main_title_text_scale": float,
-        "graph_title_text_scale": float,
-        "axis_number_text_scale": float,
-        "axis_label_text_scale": float,
-        "key_table_text_scale": float,
-        "legend_text_scale": float,
-        "floor_plan_shape_scale": float,
-        "floor_plan_text_scale": float,
-        "lat_layout_shape_scale": float,
-        "lat_layout_text_scale": float,
-        "delete_overlapping_plots": str,
-        "draw_graph_title_suffix": str,
-        "curve_legend_line_len": float,
-        "curve_legend_text_offset": float,
-    },
-)
+
+class FloorPlanElementInfo(TypedDict):
+    branch_index: int
+    color: str
+    ele_key: str
+    end1_r1: float
+    end1_r2: float
+    end1_theta: float
+    end2_r1: float
+    end2_r2: float
+    end2_theta: float
+    index: int
+    label_name: str
+    line_width: float
+    shape: str
+    y1: float
+    y2: float
+    # Only for sbend
+    ele_l: NotRequired[float]
+    ele_angle: NotRequired[float]
+    ele_e1: NotRequired[float]
+    ele_e: NotRequired[float]
+
+
+class PlotPage(TypedDict):
+    title_string: str
+    title__x: float
+    title_y: float
+    title_units: str
+    title_justify: str
+    subtitle_string: str
+    subtitle__x: float
+    subtitle_y: float
+    subtitle_units: str
+    subtitle_justify: str
+    size: list
+    n_curve_pts: int
+    border: list
+    text_height: float
+    main_title_text_scale: float
+    graph_title_text_scale: float
+    axis_number_text_scale: float
+    axis_label_text_scale: float
+    key_table_text_scale: float
+    legend_text_scale: float
+    floor_plan_shape_scale: float
+    floor_plan_text_scale: float
+    lat_layout_shape_scale: float
+    lat_layout_text_scale: float
+    delete_overlapping_plots: str
+    draw_graph_title_suffix: str
+    curve_legend_line_len: float
+    curve_legend_text_offset: float
 
 
 FloatVariableInfo = TypedDict(
@@ -347,22 +319,18 @@ FloatVariableInfo = TypedDict(
 )
 
 
-Point = Tuple[float, float]
-Limit = Tuple[float, float]
+Point = tuple[float, float]
+Limit = tuple[float, float]
 OptionalLimit = Optional[Limit]
 
 
-ShapeListInfo = TypedDict(
-    "ShapeListInfo",
-    {
-        "shape_index": int,
-        "ele_name": str,
-        "shape": str,
-        "color": str,
-        "shape_size": float,
-        "type_label": str,
-        "shape_draw": bool,
-        "multi_shape": bool,
-        "line_width": int,
-    },
-)
+class ShapeListInfo(TypedDict):
+    shape_index: int
+    ele_name: str
+    shape: str
+    color: str
+    shape_size: float
+    type_label: str
+    shape_draw: bool
+    multi_shape: bool
+    line_width: int

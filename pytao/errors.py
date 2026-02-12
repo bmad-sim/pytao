@@ -4,8 +4,9 @@ import contextlib
 import contextvars
 import logging
 import textwrap
+from collections.abc import Iterable
 from dataclasses import dataclass, field
-from typing import Dict, FrozenSet, Iterable, List, Literal, Optional, Set, Tuple
+from typing import Literal
 
 TaoMessageLevel = Literal[
     "INFO",  # Informational message
@@ -44,19 +45,19 @@ class TaoExceptionWithOutput(TaoException):
         self.tao_output = tao_output
 
     @property
-    def errors(self) -> List[TaoMessage]:
+    def errors(self) -> list[TaoMessage]:
         """All Tao messages marked error, fatal, or abort."""
         return self.get_errors()
 
     @property
-    def messages(self) -> List[TaoMessage]:
+    def messages(self) -> list[TaoMessage]:
         """All Tao messages found from any level."""
         return self.get_messages(all_message_levels)
 
     def get_errors(
         self,
         exclude_functions: Iterable[str] = (),
-    ) -> List[TaoMessage]:
+    ) -> list[TaoMessage]:
         """
         Get all Tao messages marked error, fatal, or abort.
 
@@ -78,7 +79,7 @@ class TaoExceptionWithOutput(TaoException):
         self,
         levels: Iterable[TaoMessageLevel] = (),
         exclude_functions: Iterable[str] = (),
-    ) -> List[TaoMessage]:
+    ) -> list[TaoMessage]:
         """
         Get all Tao messages marked with the specified levels.
 
@@ -103,12 +104,12 @@ class TaoExceptionWithOutput(TaoException):
         return [message for message in messages if message.function not in exclude_functions]
 
 
-CaptureByLevel = Dict[TaoMessageLevel, FrozenSet[str]]
+CaptureByLevel = dict[TaoMessageLevel, frozenset[str]]
 
 
 def split_error_messages(
-    messages: List[TaoMessage],
-) -> Tuple[List[TaoMessage], List[TaoMessage]]:
+    messages: list[TaoMessage],
+) -> tuple[list[TaoMessage], list[TaoMessage]]:
     regular, errors = [], []
     for msg in messages:
         if msg.level in error_message_levels:
@@ -119,8 +120,8 @@ def split_error_messages(
     return regular, errors
 
 
-def raise_for_error_messages(cmd: str, lines: List[str], errors: List[TaoMessage]):
-    functions = ", ".join(sorted(set(error.function for error in errors)))
+def raise_for_error_messages(cmd: str, lines: list[str], errors: list[TaoMessage]):
+    functions = ", ".join(sorted({error.function for error in errors}))
     error_lines = "\n\n".join(
         "\n".join(
             (
@@ -155,18 +156,18 @@ class TaoErrorFilterContext:
         functions.
     """
 
-    functions: FrozenSet[str] = field(default_factory=frozenset)
+    functions: frozenset[str] = field(default_factory=frozenset)
     by_level: CaptureByLevel = field(default_factory=dict)
-    by_command: Dict[str, FrozenSet[str]] = field(default_factory=dict)
+    by_command: dict[str, frozenset[str]] = field(default_factory=dict)
 
     @classmethod
     def from_user(
         cls,
-        functions: Optional[Iterable[str]] = None,
-        by_level: Optional[Dict[TaoMessageLevel, Iterable[str]]] = None,
-        by_command: Optional[Dict[str, Iterable[str]]] = None,
+        functions: Iterable[str] | None = None,
+        by_level: dict[TaoMessageLevel, Iterable[str]] | None = None,
+        by_command: dict[str, Iterable[str]] | None = None,
     ) -> TaoErrorFilterContext:
-        def fix_by_level(items: Dict[TaoMessageLevel, Iterable[str]]) -> CaptureByLevel:
+        def fix_by_level(items: dict[TaoMessageLevel, Iterable[str]]) -> CaptureByLevel:
             return {level: frozenset(functions) for level, functions in items.items()}
 
         return cls(
@@ -205,7 +206,7 @@ class TaoErrorFilterContext:
 
         return [message for message in all_messages if should_include(message)]
 
-    def check_output(self, cmd: str, lines: List[str]):
+    def check_output(self, cmd: str, lines: list[str]):
         lines, all_messages = capture_messages_from_functions(lines)
         messages = self.filter_messages(cmd, all_messages)
 
@@ -254,12 +255,12 @@ class TaoCommandError(TaoExceptionWithOutput, RuntimeError):
     tao_output: str
 
 
-error_filter_context: contextvars.ContextVar[Optional[TaoErrorFilterContext]] = (
+error_filter_context: contextvars.ContextVar[TaoErrorFilterContext | None] = (
     contextvars.ContextVar("error_filter_context", default=None)
 )
 
 
-def filter_output_lines(lines: List[str], exclude: Set[str]) -> List[str]:
+def filter_output_lines(lines: list[str], exclude: set[str]) -> list[str]:
     """
     Filter Tao output text lines.
 
@@ -351,9 +352,9 @@ class TaoMessage:
 
 def filter_tao_messages(
     *,
-    functions: Optional[Iterable[str]] = None,
-    by_level: Optional[Dict[TaoMessageLevel, Iterable[str]]] = None,
-    by_command: Optional[Dict[str, Iterable[str]]] = None,
+    functions: Iterable[str] | None = None,
+    by_level: dict[TaoMessageLevel, Iterable[str]] | None = None,
+    by_command: dict[str, Iterable[str]] | None = None,
 ) -> TaoErrorFilterContext:
     """
     Filter out Tao messages originating from specific Fortran functions.
@@ -393,9 +394,9 @@ def filter_tao_messages(
 @contextlib.contextmanager
 def filter_tao_messages_context(
     *,
-    functions: Optional[Iterable[str]] = None,
-    by_level: Optional[Dict[TaoMessageLevel, Iterable[str]]] = None,
-    by_command: Optional[Dict[str, Iterable[str]]] = None,
+    functions: Iterable[str] | None = None,
+    by_level: dict[TaoMessageLevel, Iterable[str]] | None = None,
+    by_command: dict[str, Iterable[str]] | None = None,
 ):
     """
     Filter out Tao messages originating from specific Fortran functions.
@@ -433,9 +434,9 @@ def filter_tao_messages_context(
 
 
 def capture_messages_from_functions(
-    lines: List[str],
+    lines: list[str],
     levels: Iterable[TaoMessageLevel] = all_message_levels,
-) -> Tuple[List[str], List[TaoMessage]]:
+) -> tuple[list[str], list[TaoMessage]]:
     """
     Capture Tao output text lines.
 
@@ -452,7 +453,7 @@ def capture_messages_from_functions(
     """
     out_lines = []
     message = None
-    messages: List[TaoMessage] = []
+    messages: list[TaoMessage] = []
     for line in lines:
         if message is not None:
             if not line.strip() or line[0].isspace():

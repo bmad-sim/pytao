@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import time
-from typing import Any, Callable, Dict, Generator
+from collections.abc import Callable, Generator
+from typing import Any
 
 import numpy as np
 import pytest
@@ -41,7 +42,7 @@ def tao_custom_command(tao: Tao, value: Any):
 
 
 @pytest.fixture(scope="module")
-def subproc_tao() -> Generator[SubprocessTao, None, None]:
+def subproc_tao() -> Generator[SubprocessTao]:
     with SubprocessTao(
         init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/csr_beam_tracking/tao.init",
         noplot=True,
@@ -111,7 +112,7 @@ def subproc_tao() -> Generator[SubprocessTao, None, None]:
 def test_custom_command(
     subproc_tao: SubprocessTao,
     func: Callable,
-    kwargs: Dict[str, SupportedKwarg],
+    kwargs: dict[str, SupportedKwarg],
     expected_result: Any,
 ) -> None:
     res = subproc_tao.subprocess_call(func, **kwargs)

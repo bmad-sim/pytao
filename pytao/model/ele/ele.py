@@ -2149,7 +2149,7 @@ class Lattice(pydantic.BaseModel):
             with gzip.open(fname, "rt", encoding="utf-8") as fp:
                 data = json.load(fp)
         else:
-            with open(fname, "rt") as fp:
+            with open(fname) as fp:
                 data = json.load(fp)
 
         return cls(**data, filename=pathlib.Path(filename))
@@ -2168,5 +2168,5 @@ class Lattice(pydantic.BaseModel):
             with gzip.open(fname, "wt", encoding="utf-8") as fp:
                 json.dump(data, fp, indent=indent)
         else:
-            with open(fname, "wt") as fp:
+            with open(fname, "w") as fp:
                 json.dump(data, fp, indent=indent)

@@ -1,12 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from typing import (
-    Dict,
-    List,
     Literal,
-    Optional,
-    Sequence,
-    Union,
 )
 
 import pydantic
@@ -17,8 +13,8 @@ _dcls_config = pydantic.ConfigDict()
 
 @dataclasses.dataclass(config=_dcls_config)
 class PlotCurveLine:
-    xs: List[float]
-    ys: List[float]
+    xs: list[float]
+    ys: list[float]
     color: str = "black"
     linestyle: str = "solid"
     linewidth: float = 1.0
@@ -26,8 +22,8 @@ class PlotCurveLine:
 
 @dataclasses.dataclass(config=_dcls_config)
 class PlotCurveSymbols:
-    xs: List[float]
-    ys: List[float]
+    xs: list[float]
+    ys: list[float]
     color: str
     markerfacecolor: str
     markersize: float
@@ -38,9 +34,9 @@ class PlotCurveSymbols:
 
 @dataclasses.dataclass(config=_dcls_config)
 class PlotHistogram:
-    xs: List[float]
-    bins: Union[int, Sequence[float], str, None]
-    weights: List[float]
+    xs: list[float]
+    bins: int | Sequence[float] | str | None
+    weights: list[float]
     histtype: Literal["bar", "barstacked", "step", "stepfilled"]
     color: str
 
@@ -96,48 +92,48 @@ class TaoCurveSettings(pydantic.BaseModel, extra="forbid", validate_assignment=T
         Draw the symbol index number curve%ix_symb?
     """
 
-    ele_ref_name: Optional[str] = pydantic.Field(
+    ele_ref_name: str | None = pydantic.Field(
         default=None,
         max_length=40,
         description="Reference element.",
     )
-    ix_ele_ref: Optional[int] = pydantic.Field(
+    ix_ele_ref: int | None = pydantic.Field(
         default=None,
         description="Index in lattice of reference element.",
     )
-    component: Optional[str] = pydantic.Field(
+    component: str | None = pydantic.Field(
         default=None,
         max_length=60,
         description="Who to plot. Eg: 'meas - design'",
     )
-    ix_branch: Optional[int] = pydantic.Field(
+    ix_branch: int | None = pydantic.Field(
         default=None,
     )
-    ix_bunch: Optional[int] = pydantic.Field(
+    ix_bunch: int | None = pydantic.Field(
         default=None,
         description="Bunch to plot.",
     )
-    ix_universe: Optional[int] = pydantic.Field(
+    ix_universe: int | None = pydantic.Field(
         default=None,
         description="Universe where data is. -1 => use s%global%default_universe",
     )
-    symbol_every: Optional[int] = pydantic.Field(
+    symbol_every: int | None = pydantic.Field(
         default=None,
         description="Symbol every how many points.",
     )
-    y_axis_scale_factor: Optional[float] = pydantic.Field(
+    y_axis_scale_factor: float | None = pydantic.Field(
         default=None,
         description="y-axis conversion from internal to plotting units.",
     )
-    draw_line: Optional[bool] = pydantic.Field(
+    draw_line: bool | None = pydantic.Field(
         default=None,
         description="Draw a line through the data points?",
     )
-    draw_symbols: Optional[bool] = pydantic.Field(
+    draw_symbols: bool | None = pydantic.Field(
         default=None,
         description="Draw a symbol at the data points?",
     )
-    draw_symbol_index: Optional[bool] = pydantic.Field(
+    draw_symbol_index: bool | None = pydantic.Field(
         default=None,
         description="Draw the symbol index number curve%ix_symb?",
     )
@@ -147,7 +143,7 @@ class TaoCurveSettings(pydantic.BaseModel, extra="forbid", validate_assignment=T
         region_name: str,
         graph_name: str,
         curve_index: int,
-    ) -> List[str]:
+    ) -> list[str]:
         return [
             f"set curve {region_name}.{graph_name}.c{curve_index} {key} = {value}"
             for key, value in self.model_dump().items()
@@ -155,4 +151,4 @@ class TaoCurveSettings(pydantic.BaseModel, extra="forbid", validate_assignment=T
         ]
 
 
-CurveIndexToCurve = Dict[int, TaoCurveSettings]
+CurveIndexToCurve = dict[int, TaoCurveSettings]

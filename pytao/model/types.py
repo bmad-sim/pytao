@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Annotated, Sequence
+from collections.abc import Sequence
+from typing import Annotated
 
 import numpy as np
 import pydantic

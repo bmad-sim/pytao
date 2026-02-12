@@ -379,7 +379,7 @@ class tk_tao_parameter:
         elif self.param.type == "DAT_TYPE":
             self.tk_var.set(tao_param.value)
             if self._data_source in ["data", "var"]:
-                self._mvar.set((self.tk_var.get()))
+                self._mvar.set(self.tk_var.get())
                 self._mvar_old = self._mvar.get()  # Tracks changes in self._mvar
                 self._s_refresh()
             else:

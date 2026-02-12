@@ -4,11 +4,11 @@ import contextlib
 import logging
 import re
 import textwrap
+from collections.abc import Generator
 from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    Generator,
     NamedTuple,
     cast,
 )
@@ -185,7 +185,7 @@ class TaoSettableModel(TaoModel):
         }
 
     @property
-    def _all_attributes_to_set(self) -> Generator[SetField, None, None]:
+    def _all_attributes_to_set(self) -> Generator[SetField]:
         for attr, fld in self.settable_fields.items():
             value = getattr(self, attr)
 
@@ -200,7 +200,7 @@ class TaoSettableModel(TaoModel):
                 for index, val in enumerate(value):
                     yield SetField(attr, index, fld, val)
 
-    def _get_changed_attributes(self, tao: Tao) -> Generator[SetField, None, None]:
+    def _get_changed_attributes(self, tao: Tao) -> Generator[SetField]:
         current = self.query(tao)
 
         for attr, index, fld, value in self._all_attributes_to_set:

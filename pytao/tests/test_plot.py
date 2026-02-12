@@ -220,11 +220,11 @@ def test_plot_update(plot_backend: BackendName):
 
 
 default_options = sorted(
-    set(
+    {
         attr
         for attr in dir(mpl._Defaults)
         if not attr.startswith("_") and attr not in {"get_size_for_class"}
-    )
+    }
 )
 
 

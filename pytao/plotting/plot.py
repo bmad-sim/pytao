@@ -4,17 +4,12 @@ import logging
 import math
 import typing
 from abc import ABC, abstractmethod
+from collections.abc import Sequence
 from functools import partial
 from typing import (
     Any,
     ClassVar,
-    Dict,
-    List,
-    Optional,
-    Sequence,
-    Set,
-    Tuple,
-    Type,
+    Literal,
     TypeVar,
     Union,
     cast,
@@ -24,7 +19,6 @@ import numpy as np
 import pydantic.dataclasses as dataclasses
 from pydantic import ConfigDict
 from pydantic.fields import Field
-from typing_extensions import Literal
 
 from . import floor_plan_shapes, layout_shapes, pgplot
 from .curves import (
@@ -87,7 +81,7 @@ class AllPlotRegionsInUseError(Exception):
 T = TypeVar("T")
 
 
-def _clean_pytao_output(dct: dict, typ: Type[T]) -> T:
+def _clean_pytao_output(dct: dict, typ: type[T]) -> T:
     return {key: dct.get(key, None) for key in typ.__required_keys__}
 
 
@@ -138,9 +132,9 @@ class GraphBase:
     # The name of the placed graph.
     graph_name: str
     # The template used to create this graph.
-    template_name: Optional[str] = None
+    template_name: str | None = None
     # The index of this graph after placing a template
-    template_graph_index: Optional[int] = None
+    template_graph_index: int | None = None
     # The Tao-specified x- and y-limits.
     xlim: Point = _point_field
     ylim: Point = _point_field
@@ -200,10 +194,10 @@ class GraphBase:
 @dataclasses.dataclass(config=_dcls_config)
 class PlotCurve:
     info: PlotCurveInfo
-    line: Optional[PlotCurveLine]
-    symbol: Optional[PlotCurveSymbols]
-    histogram: Optional[PlotHistogram] = None
-    patches: Optional[List[PlotPatch]] = None
+    line: PlotCurveLine | None
+    symbol: PlotCurveSymbols | None
+    histogram: PlotHistogram | None = None
+    patches: list[PlotPatch] | None = None
 
     @property
     def legend_label(self) -> str:
@@ -222,7 +216,7 @@ class PlotCurve:
         graph_name: str,
         curve_name: str,
         *,
-        graph_type: Optional[str] = None,
+        graph_type: str | None = None,
     ) -> PlotCurve:
         full_name = f"{region_name}.{graph_name}.{curve_name}"
         curve_info = cast(PlotCurveInfo, tao.plot_curve(full_name))
@@ -275,10 +269,10 @@ class PlotCurve:
         cls,
         graph_type: str,
         curve_info: PlotCurveInfo,
-        points: List[Point],
-        symbol_points: List[Point],
-        histogram_info: Optional[PlotHistogramInfo] = None,
-        wave_params: Optional[WaveParams] = None,
+        points: list[Point],
+        symbol_points: list[Point],
+        histogram_info: PlotHistogramInfo | None = None,
+        wave_params: WaveParams | None = None,
     ) -> PlotCurve:
         line_color = pgplot.mpl_color(curve_info["line"]["color"])
         # TODO: line^pattern typo?
@@ -424,9 +418,9 @@ class PlotCurve:
 @dataclasses.dataclass(config=_dcls_config)
 class BasicGraph(GraphBase):
     graph_type: ClassVar[str] = "basic"
-    curves: List[PlotCurve] = Field(default_factory=list)
+    curves: list[PlotCurve] = Field(default_factory=list)
 
-    def clamp_x_range(self, x0: Optional[float], x1: Optional[float]) -> Tuple[float, float]:
+    def clamp_x_range(self, x0: float | None, x1: float | None) -> tuple[float, float]:
         if x0 is None:
             x0 = self.get_x_range()[0]
         if x1 is None:
@@ -443,7 +437,7 @@ class BasicGraph(GraphBase):
             return True
         return self.info["x_label"].lower().replace(" ", "") in {"s[m]", "s(m)"}
 
-    def get_x_range(self) -> Tuple[float, float]:
+    def get_x_range(self) -> tuple[float, float]:
         return (self.info["x_min"], self.info["x_max"])
 
     def get_num_points(self) -> int:
@@ -459,9 +453,9 @@ class BasicGraph(GraphBase):
         region_name: str,
         graph_name: str,
         *,
-        info: Optional[PlotGraphInfo] = None,
-        template_name: Optional[str] = None,
-        template_graph_index: Optional[int] = None,
+        info: PlotGraphInfo | None = None,
+        template_name: str | None = None,
+        template_graph_index: int | None = None,
     ) -> BasicGraph:
         if info is None:
             info = get_plot_graph_info(tao, region_name, graph_name)
@@ -479,7 +473,7 @@ class BasicGraph(GraphBase):
             raise GraphInvalidError(f"Graph not valid: {info['why_invalid']}")
 
         curve_keys = [f"curve[{idx}]" for idx in range(1, info["num_curves"] + 1)]
-        all_curve_names: List[str] = [info.pop(key) for key in curve_keys]
+        all_curve_names: list[str] = [info.pop(key) for key in curve_keys]
 
         curves = []
         for curve_name in all_curve_names:
@@ -512,8 +506,8 @@ class BasicGraph(GraphBase):
 @dataclasses.dataclass(config=_dcls_config)
 class LatticeLayoutElement:
     info: PlotLatLayoutInfo
-    shape: Optional[layout_shapes.AnyLayoutShape]
-    annotations: List[PlotAnnotation]
+    shape: layout_shapes.AnyLayoutShape | None
+    annotations: list[PlotAnnotation]
     color: str
     width: float
 
@@ -533,7 +527,7 @@ class LatticeLayoutElement:
         shape: str,
         name: str,
         y2_floor: float,
-    ) -> Tuple[Optional[layout_shapes.AnyLayoutShape], List[PlotAnnotation]]:
+    ) -> tuple[layout_shapes.AnyLayoutShape | None, list[PlotAnnotation]]:
         assert s2 > s1
         if name:
             annotations = [
@@ -586,7 +580,7 @@ class LatticeLayoutElement:
         x_min: float,
         x_max: float,
         y2_floor: float,
-    ) -> Tuple[Optional[layout_shapes.AnyWrappedLayoutShape], List[PlotAnnotation]]:
+    ) -> tuple[layout_shapes.AnyWrappedLayoutShape | None, list[PlotAnnotation]]:
         """
         Element is wrapped around the lattice ends, and s1 >= s2.
 
@@ -700,7 +694,7 @@ class LatticeLayoutElement:
 @dataclasses.dataclass(config=_dcls_config)
 class LatticeLayoutGraph(GraphBase):
     graph_type: ClassVar[str] = "lat_layout"
-    elements: List[LatticeLayoutElement] = Field(default_factory=list)
+    elements: list[LatticeLayoutElement] = Field(default_factory=list)
     border_xlim: Point = _point_field
     universe: int = 0
     branch: int = 0
@@ -729,11 +723,11 @@ class LatticeLayoutGraph(GraphBase):
         region_name: str = "lat_layout",
         graph_name: str = "g",
         *,
-        branch: Optional[int] = None,
-        info: Optional[PlotGraphInfo] = None,
-        plot_page: Optional[PlotPage] = None,
-        template_name: Optional[str] = None,
-        template_graph_index: Optional[int] = None,
+        branch: int | None = None,
+        info: PlotGraphInfo | None = None,
+        plot_page: PlotPage | None = None,
+        template_name: str | None = None,
+        template_graph_index: int | None = None,
     ) -> LatticeLayoutGraph:
         if info is None:
             try:
@@ -767,7 +761,7 @@ class LatticeLayoutGraph(GraphBase):
                 logger.error(f"Failed to plot layout: {ex}")
                 raise
 
-        all_elem_info = cast(List[PlotLatLayoutInfo], all_elem_info)
+        all_elem_info = cast(list[PlotLatLayoutInfo], all_elem_info)
 
         ele_y2s = [elem["y2"] for elem in all_elem_info]
         y2_floor = -max(ele_y2s) if ele_y2s else 0.0  # Note negative sign
@@ -803,8 +797,8 @@ class FloorPlanElement:
     branch_index: int
     index: int
     info: FloorPlanElementInfo
-    annotations: List[PlotAnnotation]
-    shape: Optional[floor_plan_shapes.AnyFloorPlanShape]
+    annotations: list[PlotAnnotation]
+    shape: floor_plan_shapes.AnyFloorPlanShape | None
 
     @property
     def name(self) -> str:
@@ -880,7 +874,7 @@ class FloorPlanElement:
     ) -> FloorPlanElement:
         ele_key = ele_key.lower()
 
-        annotations: List[PlotAnnotation] = []
+        annotations: list[PlotAnnotation] = []
 
         if ":" in shape:
             _shape_prefix, shape = shape.split(":", 1)
@@ -940,7 +934,7 @@ class FloorPlanElement:
 
         if label_name and color:
             annotation_angle = math.degrees((angle_end + angle_start) / 2)
-            if np.sin(((angle_end + angle_start) / 2)) > 0:
+            if np.sin((angle_end + angle_start) / 2) > 0:
                 annotation_angle += -90
                 align = "right"
             else:
@@ -971,8 +965,8 @@ class FloorPlanElement:
 
 
 def sort_building_wall_graph_info(
-    info: List[BuildingWallGraphInfo],
-) -> Dict[int, Dict[int, BuildingWallGraphInfo]]:
+    info: list[BuildingWallGraphInfo],
+) -> dict[int, dict[int, BuildingWallGraphInfo]]:
     res = {}
     for item in info:
         index = item["index"]
@@ -983,15 +977,15 @@ def sort_building_wall_graph_info(
 
 @dataclasses.dataclass(config=_dcls_config)
 class BuildingWalls:
-    building_wall_graph: List[BuildingWallGraphInfo] = Field(default_factory=list)
-    lines: List[PlotCurveLine] = Field(default_factory=list)
-    patches: List[PlotPatch] = Field(default_factory=list)
+    building_wall_graph: list[BuildingWallGraphInfo] = Field(default_factory=list)
+    lines: list[PlotCurveLine] = Field(default_factory=list)
+    patches: list[PlotPatch] = Field(default_factory=list)
 
     @classmethod
     def from_info(
         cls,
-        building_wall_graph: List[BuildingWallGraphInfo],
-        wall_list: List[BuildingWallInfo],
+        building_wall_graph: list[BuildingWallGraphInfo],
+        wall_list: list[BuildingWallInfo],
     ) -> BuildingWalls:
         walls = sort_building_wall_graph_info(building_wall_graph)
         wall_info_by_index = {info["index"]: info for info in wall_list}
@@ -1034,7 +1028,7 @@ class BuildingWalls:
 
 @dataclasses.dataclass(config=_dcls_config)
 class FloorOrbits:
-    info: List[FloorOrbitInfo]
+    info: list[FloorOrbitInfo]
     curve: PlotCurveSymbols
 
     @classmethod
@@ -1046,7 +1040,7 @@ class FloorOrbits:
         color: str,
     ) -> FloorOrbits:
         floor_orbit_info = cast(
-            List[FloorOrbitInfo],
+            list[FloorOrbitInfo],
             tao.floor_orbit(f"{region_name}.{graph_name}"),
         )
 
@@ -1076,8 +1070,8 @@ class FloorOrbits:
 class FloorPlanGraph(GraphBase):
     graph_type: ClassVar[str] = "floor_plan"
     building_walls: BuildingWalls = Field(default_factory=BuildingWalls)
-    floor_orbits: Optional[FloorOrbits] = None
-    elements: List[FloorPlanElement] = Field(default_factory=list)
+    floor_orbits: FloorOrbits | None = None
+    elements: list[FloorPlanElement] = Field(default_factory=list)
 
     @property
     def is_s_plot(self) -> bool:
@@ -1090,10 +1084,10 @@ class FloorPlanGraph(GraphBase):
         region_name: str,
         graph_name: str,
         *,
-        info: Optional[PlotGraphInfo] = None,
-        plot_page: Optional[PlotPage] = None,
-        template_name: Optional[str] = None,
-        template_graph_index: Optional[int] = None,
+        info: PlotGraphInfo | None = None,
+        plot_page: PlotPage | None = None,
+        template_name: str | None = None,
+        template_graph_index: int | None = None,
     ) -> FloorPlanGraph:
         full_name = f"{region_name}.{graph_name}"
         if info is None:
@@ -1107,7 +1101,7 @@ class FloorPlanGraph(GraphBase):
             raise ValueError(f"Incorrect graph type: {graph_type} for {cls.__name__}")
 
         elem_infos = cast(
-            List[FloorPlanElementInfo],
+            list[FloorPlanElementInfo],
             tao.floor_plan(full_name),
         )
         elements = [
@@ -1120,10 +1114,10 @@ class FloorPlanGraph(GraphBase):
         ]
         building_walls = BuildingWalls.from_info(
             building_wall_graph=cast(
-                List[BuildingWallGraphInfo],
+                list[BuildingWallGraphInfo],
                 tao.building_wall_graph(full_name),
             ),
-            wall_list=cast(List[BuildingWallInfo], tao.building_wall_list()),
+            wall_list=cast(list[BuildingWallInfo], tao.building_wall_list()),
         )
         floor_orbits = None
         if float(info["floor_plan_orbit_scale"]) != 0:
@@ -1167,8 +1161,8 @@ def make_graph(
     tao: Tao,
     region_name: str,
     graph_name: str,
-    template_name: Optional[str] = None,
-    template_graph_index: Optional[int] = None,
+    template_name: str | None = None,
+    template_graph_index: int | None = None,
 ) -> AnyGraph:
     graph_info = get_plot_graph_info(tao, region_name, graph_name)
     graph_type = graph_info["graph^type"]
@@ -1198,7 +1192,7 @@ def get_plot_graph_info(tao: Tao, region_name: str, graph_name: str) -> PlotGrap
     return cast(PlotGraphInfo, tao.plot_graph(f"{region_name}.{graph_name}"))
 
 
-def find_unused_plot_region(tao: Tao, skip: Set[str]) -> str:
+def find_unused_plot_region(tao: Tao, skip: set[str]) -> str:
     for info in tao.plot_list("r"):
         region_name = info["region"]
         if region_name not in skip and not info["plot_name"]:
@@ -1218,8 +1212,8 @@ class GraphManager(ABC):
     _key_: ClassVar[str] = "GraphManager"
 
     tao: Tao
-    regions: Dict[str, List[AnyGraph]]
-    _to_place: Dict[str, str]
+    regions: dict[str, list[AnyGraph]]
+    _to_place: dict[str, str]
     layout_template: str = "lat_layout"
     floor_plan_template: str = "floor_plan"
 
@@ -1246,7 +1240,7 @@ class GraphManager(ABC):
                 self._to_place[region] = graph
 
     @property
-    def to_place(self) -> Dict[str, str]:
+    def to_place(self) -> dict[str, str]:
         """Graphs to place - region name to graph name."""
         self._update_place_buffer()
         return self._to_place
@@ -1299,7 +1293,7 @@ class GraphManager(ABC):
         *,
         ignore_invalid: bool = True,
         ignore_unsupported: bool = True,
-    ) -> Dict[str, List[AnyGraph]]:
+    ) -> dict[str, list[AnyGraph]]:
         """
         Place all graphs in the place buffer.
 
@@ -1341,7 +1335,7 @@ class GraphManager(ABC):
         template_name: str,
         ignore_invalid: bool = True,
         ignore_unsupported: bool = True,
-    ) -> List[AnyGraph]:
+    ) -> list[AnyGraph]:
         """
         Query information about already-placed graphs in a given region.
 
@@ -1398,7 +1392,7 @@ class GraphManager(ABC):
     def _place(
         self,
         template_name: str,
-        region_name: Optional[str] = None,
+        region_name: str | None = None,
     ) -> str:
         if region_name is None:
             region_name = self.get_region_to_place_template(template_name)
@@ -1422,9 +1416,9 @@ class GraphManager(ABC):
         self,
         template_name: str,
         *,
-        region_name: Optional[str] = None,
+        region_name: str | None = None,
         ignore_invalid: bool = True,
-    ) -> List[AnyGraph]:
+    ) -> list[AnyGraph]:
         """
         Place `template_name` in `region_name`.
 
@@ -1477,11 +1471,11 @@ class GraphManager(ABC):
 
     def prepare_grid_by_names(
         self,
-        template_names: List[str],
-        curves: Optional[List[CurveIndexToCurve]] = None,
-        settings: Optional[List[TaoGraphSettings]] = None,
-        xlim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
-        ylim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
+        template_names: list[str],
+        curves: list[CurveIndexToCurve] | None = None,
+        settings: list[TaoGraphSettings] | None = None,
+        xlim: OptionalLimit | Sequence[OptionalLimit] = None,
+        ylim: OptionalLimit | Sequence[OptionalLimit] = None,
     ):
         """
         Prepare multiple graphs for a grid plot.
@@ -1551,15 +1545,15 @@ class GraphManager(ABC):
         self,
         template_name: str,
         *,
-        region_name: Optional[str] = None,
-        settings: Optional[TaoGraphSettings] = None,
-        curves: Optional[Dict[int, TaoCurveSettings]] = None,
+        region_name: str | None = None,
+        settings: TaoGraphSettings | None = None,
+        curves: dict[int, TaoCurveSettings] | None = None,
         ignore_unsupported: bool = True,
         ignore_invalid: bool = True,
         place: bool = True,
-        xlim: Optional[Limit] = None,
-        ylim: Optional[Limit] = None,
-    ) -> List[AnyGraph]:
+        xlim: Limit | None = None,
+        ylim: Limit | None = None,
+    ) -> list[AnyGraph]:
         """
         Prepare a graph for plotting.
 
@@ -1616,9 +1610,9 @@ class GraphManager(ABC):
     def configure_curves(
         self,
         region_name: str,
-        settings: Dict[int, TaoCurveSettings],
+        settings: dict[int, TaoCurveSettings],
         *,
-        graph_name: Optional[str] = None,
+        graph_name: str | None = None,
     ):
         """
         Configure curves in a region.
@@ -1651,7 +1645,7 @@ class GraphManager(ABC):
         region_name: str,
         settings: TaoGraphSettings,
         *,
-        graph_name: Optional[str] = None,
+        graph_name: str | None = None,
     ):
         """
         Configure graph settings for a region.
@@ -1682,7 +1676,7 @@ class GraphManager(ABC):
 
     def plot_all(
         self,
-        grid: Optional[Tuple[int, int]] = None,
+        grid: tuple[int, int] | None = None,
         include_layout: bool = False,
         **kwargs,
     ):
@@ -1712,8 +1706,8 @@ class GraphManager(ABC):
         self,
         region_name: str,
         graph_name: str,
-        template_name: Optional[str] = None,
-        template_graph_index: Optional[int] = None,
+        template_name: str | None = None,
+        template_graph_index: int | None = None,
     ) -> AnyGraph:
         """
         Create a graph instance from an already-placed graph.
@@ -1746,25 +1740,25 @@ class GraphManager(ABC):
         self,
         template: str,
         *,
-        region_name: Optional[str] = None,
+        region_name: str | None = None,
         include_layout: bool = True,
-        settings: Optional[TaoGraphSettings] = None,
-        xlim: Optional[Limit] = None,
-        ylim: Optional[Limit] = None,
+        settings: TaoGraphSettings | None = None,
+        xlim: Limit | None = None,
+        ylim: Limit | None = None,
     ) -> Any:
         pass
 
     @abstractmethod
     def plot_grid(
         self,
-        templates: List[str],
-        grid: Tuple[int, int],
+        templates: list[str],
+        grid: tuple[int, int],
         *,
         include_layout: bool = False,
-        curves: Optional[List[Dict[int, TaoCurveSettings]]] = None,
-        settings: Optional[List[TaoGraphSettings]] = None,
-        xlim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
-        ylim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
+        curves: list[dict[int, TaoCurveSettings]] | None = None,
+        settings: list[TaoGraphSettings] | None = None,
+        xlim: OptionalLimit | Sequence[OptionalLimit] = None,
+        ylim: OptionalLimit | Sequence[OptionalLimit] = None,
     ) -> Any:
         pass
 
@@ -1773,7 +1767,7 @@ class GraphManager(ABC):
         self,
         ele_id: str,
         *,
-        colormap: Optional[str] = None,
+        colormap: str | None = None,
         radius: float = 0.015,
         num_points: int = 100,
     ) -> Any:

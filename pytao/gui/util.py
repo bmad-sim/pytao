@@ -1,4 +1,4 @@
-from ..util.parameters import str_to_tao_param, tao_parameter_dict, tao_parameter
+from ..util.parameters import str_to_tao_param, tao_parameter, tao_parameter_dict
 
 __all__ = ["str_to_tao_param", "tao_parameter_dict", "tao_parameter"]
 

@@ -270,11 +270,11 @@ def test_bokeh_floor_orbits(
 
 
 default_options = sorted(
-    set(
+    {
         attr
         for attr in dir(_Defaults)
         if not attr.startswith("_") and attr not in {"get_size_for_class"}
-    )
+    }
 )
 
 

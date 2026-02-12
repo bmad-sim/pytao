@@ -1,8 +1,7 @@
 from dataclasses import asdict
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Literal
 
 import pydantic
-from typing_extensions import Literal
 
 from .types import Limit
 
@@ -44,14 +43,14 @@ class QuickPlotPoint:
 
     x: float
     y: float
-    units: Optional[str] = pydantic.Field(max_length=16, default=None)
+    units: str | None = pydantic.Field(max_length=16, default=None)
 
     def get_commands(
         self,
         region_name: str,
         graph_name: str,
         parent_name: str,
-    ) -> List[str]:
+    ) -> list[str]:
         """
         Get command strings to apply these settings with Tao.
 
@@ -76,7 +75,7 @@ class QuickPlotPoint:
         ]
 
 
-QuickPlotPointTuple = Tuple[float, float, str]
+QuickPlotPointTuple = tuple[float, float, str]
 
 
 @pydantic.dataclasses.dataclass
@@ -97,14 +96,14 @@ class QuickPlotRectangle:
     x2: float
     y1: float
     y2: float
-    units: Optional[str] = pydantic.Field(default=None, max_length=16)
+    units: str | None = pydantic.Field(default=None, max_length=16)
 
     def get_commands(
         self,
         region_name: str,
         graph_name: str,
         parent_name: str,
-    ) -> List[str]:
+    ) -> list[str]:
         """
         Get command strings to apply these settings with Tao.
 
@@ -129,7 +128,7 @@ class QuickPlotRectangle:
         ]
 
 
-QuickPlotRectangleTuple = Tuple[float, float, float, float, str]
+QuickPlotRectangleTuple = tuple[float, float, float, float, str]
 
 
 class TaoAxisSettings(pydantic.BaseModel, extra="forbid", validate_assignment=True):
@@ -192,34 +191,34 @@ class TaoAxisSettings(pydantic.BaseModel, extra="forbid", validate_assignment=Tr
         Draw the numbers.
     """
 
-    bounds: Optional[Literal["zero_at_end", "zero_symmetric", "general", "exact"]] = None
-    min: Optional[float] = None
-    max: Optional[float] = None
-    number_offset: Optional[float] = None
-    label_offset: Optional[float] = None
-    major_tick_len: Optional[float] = None
-    minor_tick_len: Optional[float] = None
-    label_color: Optional[str] = pydantic.Field(max_length=16, default=None)
-    major_div: Optional[int] = None
-    major_div_nominal: Optional[int] = None
-    minor_div: Optional[int] = None
-    minor_div_max: Optional[int] = None
-    places: Optional[int] = None
-    tick_side: Optional[Literal[-1, 0, 1]] = None
-    number_side: Optional[Literal[-1, 1]] = None
-    label: Optional[str] = pydantic.Field(max_length=80, default=None)
-    type: Optional[Literal["log", "linear"]] = None
-    draw_label: Optional[bool] = None
-    draw_numbers: Optional[bool] = None
+    bounds: Literal["zero_at_end", "zero_symmetric", "general", "exact"] | None = None
+    min: float | None = None
+    max: float | None = None
+    number_offset: float | None = None
+    label_offset: float | None = None
+    major_tick_len: float | None = None
+    minor_tick_len: float | None = None
+    label_color: str | None = pydantic.Field(max_length=16, default=None)
+    major_div: int | None = None
+    major_div_nominal: int | None = None
+    minor_div: int | None = None
+    minor_div_max: int | None = None
+    places: int | None = None
+    tick_side: Literal[-1, 0, 1] | None = None
+    number_side: Literal[-1, 1] | None = None
+    label: str | None = pydantic.Field(max_length=80, default=None)
+    type: Literal["log", "linear"] | None = None
+    draw_label: bool | None = None
+    draw_numbers: bool | None = None
 
-    scale: Optional[Tuple[float, float]] = None
-    scale_gang: Optional[bool] = None
+    scale: tuple[float, float] | None = None
+    scale_gang: bool | None = None
 
     def get_commands(
         self,
         region_name: str,
         axis_name: str,
-    ) -> List[str]:
+    ) -> list[str]:
         """
         Get command strings to apply these settings with Tao.
 
@@ -323,23 +322,23 @@ class TaoFloorPlanSettings(pydantic.BaseModel, extra="forbid", validate_assignme
     view : One of {"xy", "xz", "yx", "yz", "zx", "zy"}
     """
 
-    correct_distortion: Optional[bool] = None
-    size_is_absolute: Optional[bool] = None
-    draw_only_first_pass: Optional[bool] = None
-    flip_label_side: Optional[bool] = None
-    rotation: Optional[float] = None
-    orbit_scale: Optional[float] = None
-    orbit_color: Optional[str] = None
-    orbit_lattice: Optional[Literal["model", "design", "base"]] = None
-    orbit_pattern: Optional[str] = None
-    orbit_width: Optional[int] = None
-    view: Optional[Literal["xy", "xz", "yx", "yz", "zx", "zy"]] = None
+    correct_distortion: bool | None = None
+    size_is_absolute: bool | None = None
+    draw_only_first_pass: bool | None = None
+    flip_label_side: bool | None = None
+    rotation: float | None = None
+    orbit_scale: float | None = None
+    orbit_color: str | None = None
+    orbit_lattice: Literal["model", "design", "base"] | None = None
+    orbit_pattern: str | None = None
+    orbit_width: int | None = None
+    view: Literal["xy", "xz", "yx", "yz", "zx", "zy"] | None = None
 
     def get_commands(
         self,
         region_name: str,
         graph_name: str,
-    ) -> List[str]:
+    ) -> list[str]:
         """
         Get command strings to apply these settings with Tao.
 
@@ -533,47 +532,47 @@ class TaoGraphSettings(pydantic.BaseModel, extra="forbid", validate_assignment=T
         `curve(N)%y_axis_scale_factor`.
     """
 
-    text_legend: Dict[int, str] = pydantic.Field(default_factory=dict)
-    allow_wrap_around: Optional[bool] = None
-    box: Dict[int, int] = pydantic.Field(
+    text_legend: dict[int, str] = pydantic.Field(default_factory=dict)
+    allow_wrap_around: bool | None = None
+    box: dict[int, int] = pydantic.Field(
         default_factory=dict,
         description="Defines which box the plot is put in.",
     )
-    commands: Optional[List[str]] = None
-    component: Optional[str] = None
-    clip: Optional[bool] = None
-    curve_legend_origin: Optional[Union[QuickPlotPoint, QuickPlotPointTuple]] = None
-    draw_axes: Optional[bool] = None
-    draw_title: Optional[bool] = None
-    draw_curve_legend: Optional[bool] = None
-    draw_grid: Optional[bool] = None
-    draw_only_good_user_data_or_vars: Optional[bool] = None
-    floor_plan: Optional[TaoFloorPlanSettings] = None
-    ix_universe: Optional[int] = None
-    ix_branch: Optional[int] = None
-    margin: Optional[Union[QuickPlotRectangle, QuickPlotRectangleTuple]] = None
-    name: Optional[str] = None
-    scale_margin: Optional[Union[QuickPlotRectangle, QuickPlotRectangleTuple]] = None
-    symbol_size_scale: Optional[float] = None
-    text_legend_origin: Optional[Union[QuickPlotRectangle, QuickPlotRectangleTuple]] = None
-    title: Optional[str] = None
-    type: Optional[str] = None
-    x: Optional[TaoAxisSettings] = None
-    x2: Optional[TaoAxisSettings] = None
-    y: Optional[TaoAxisSettings] = None
-    y2: Optional[TaoAxisSettings] = None
-    y2_mirrors_y: Optional[bool] = None
-    x_axis_scale_factor: Optional[float] = None
+    commands: list[str] | None = None
+    component: str | None = None
+    clip: bool | None = None
+    curve_legend_origin: QuickPlotPoint | QuickPlotPointTuple | None = None
+    draw_axes: bool | None = None
+    draw_title: bool | None = None
+    draw_curve_legend: bool | None = None
+    draw_grid: bool | None = None
+    draw_only_good_user_data_or_vars: bool | None = None
+    floor_plan: TaoFloorPlanSettings | None = None
+    ix_universe: int | None = None
+    ix_branch: int | None = None
+    margin: QuickPlotRectangle | QuickPlotRectangleTuple | None = None
+    name: str | None = None
+    scale_margin: QuickPlotRectangle | QuickPlotRectangleTuple | None = None
+    symbol_size_scale: float | None = None
+    text_legend_origin: QuickPlotRectangle | QuickPlotRectangleTuple | None = None
+    title: str | None = None
+    type: str | None = None
+    x: TaoAxisSettings | None = None
+    x2: TaoAxisSettings | None = None
+    y: TaoAxisSettings | None = None
+    y2: TaoAxisSettings | None = None
+    y2_mirrors_y: bool | None = None
+    x_axis_scale_factor: float | None = None
 
     # 'set plot':
-    n_curve_points: Optional[int] = None
+    n_curve_points: int | None = None
 
     def get_commands(
         self,
         region_name: str,
         graph_name: str,
         graph_type: str,
-    ) -> List[str]:
+    ) -> list[str]:
         """
         Get command strings to apply these settings with Tao.
 
@@ -646,25 +645,25 @@ class TaoGraphSettings(pydantic.BaseModel, extra="forbid", validate_assignment=T
         return result
 
     @property
-    def xlim(self) -> Optional[Limit]:
+    def xlim(self) -> Limit | None:
         if self.x is None:
             return None
         return self.x.scale
 
     @xlim.setter
-    def xlim(self, xlim: Optional[Limit]):
+    def xlim(self, xlim: Limit | None):
         if self.x is None:
             self.x = TaoAxisSettings()
         self.x.scale = xlim
 
     @property
-    def ylim(self) -> Optional[Limit]:
+    def ylim(self) -> Limit | None:
         if self.y is None:
             return None
         return self.y.scale
 
     @ylim.setter
-    def ylim(self, ylim: Optional[Limit]):
+    def ylim(self, ylim: Limit | None):
         if self.y is None:
             self.y = TaoAxisSettings()
         self.y.scale = ylim

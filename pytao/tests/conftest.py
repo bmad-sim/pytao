@@ -7,12 +7,12 @@ import logging
 import os
 import pathlib
 import time
-from typing import Generator, Iterable, List, Optional, Type, TypeVar
+from collections.abc import Generator, Iterable
+from typing import Literal, TypeVar
 
 import matplotlib
 import pydantic
 import pytest
-from typing_extensions import Literal
 
 from .. import SubprocessTao, Tao, TaoStartup
 from ..errors import filter_output_lines
@@ -39,7 +39,7 @@ def rootdir():
 
 @pytest.fixture
 def config_file(rootdir):
-    return open(f"{rootdir}/test_files/iris_config.yml", "r")
+    return open(f"{rootdir}/test_files/iris_config.yml")
 
 
 @pytest.fixture(autouse=True)
@@ -62,7 +62,7 @@ def ensure_successful_parsing(caplog):
 
 @contextlib.contextmanager
 def error_filter_context(tao: Tao, exclude: Iterable[str]):
-    def get_output(reset: bool = True) -> List[str]:
+    def get_output(reset: bool = True) -> list[str]:
         lines = orig_get_output(reset=reset)
         return filter_output_lines(lines, exclude=set(exclude))
 
@@ -186,7 +186,7 @@ def tao_cls(request: pytest.FixtureRequest):
 T = TypeVar("T", bound=Tao)
 
 
-_subproc_tao: Optional[SubprocessTao] = None
+_subproc_tao: SubprocessTao | None = None
 
 
 def _clean_subproc_tao():
@@ -206,12 +206,12 @@ def _get_reusable_subprocess_tao(init, **kwargs) -> SubprocessTao:
 
 @contextlib.contextmanager
 def new_tao(
-    tao_cls: Type[T],
+    tao_cls: type[T],
     init: str = "",
     plot: bool = False,
     external_plotting: bool = True,
     **kwargs,
-) -> Generator[T, None, None]:
+) -> Generator[T]:
     # init = os.path.expandvars(init)
     if external_plotting:
         init = " ".join((init, "-external_plotting"))

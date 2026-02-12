@@ -13,10 +13,11 @@ import sys
 import tempfile
 import threading
 import typing
-from typing import Any, Callable, Dict, List, Optional, Union, cast
+from collections.abc import Callable
+from typing import Any, Literal, Optional, Union, cast
 
 import numpy as np
-from typing_extensions import Literal, NotRequired, TypedDict, override
+from typing_extensions import NotRequired, TypedDict, override
 
 from .core import TaoStartup
 from .errors import TaoCommandError, TaoInitializationError, error_filter_context
@@ -41,7 +42,7 @@ SupportedKwarg = Union[float, int, str, bool, bytes, dict, list, tuple, set, np.
 class SubprocessRequest(TypedDict):
     command: Command
     arg: str
-    kwargs: NotRequired[Dict[str, Any]]
+    kwargs: NotRequired[dict[str, Any]]
     capture_ctx: NotRequired[dict]
 
 
@@ -144,7 +145,7 @@ class SerializedArray(typing.TypedDict):
     """Representation of a serialized numpy array as a picklable dict."""
 
     __type__: typing.Literal["array"]
-    shape: typing.Tuple[int, ...]
+    shape: tuple[int, ...]
     dtype: np.dtype
     data: bytes
 
@@ -245,11 +246,11 @@ class _TaoPipe:
 
     _init_queue: queue.Queue
     _subproc: subprocess.Popen
-    _fifo: Optional[io.BufferedReader]
-    _subprocess_monitor_thread: Optional[threading.Thread]
-    _subprocess_env: Dict[str, str]
+    _fifo: io.BufferedReader | None
+    _subprocess_monitor_thread: threading.Thread | None
+    _subprocess_env: dict[str, str]
 
-    def __init__(self, env: Dict[str, str]):
+    def __init__(self, env: dict[str, str]):
         self._init_queue = queue.Queue(maxsize=1)
         self._subprocess_env = env.copy()
         self._subproc = self._init_subprocess()
@@ -379,7 +380,7 @@ class _TaoPipe:
                     f"has already exited."
                 )
 
-    def send_receive_custom(self, func: Callable, kwargs: Dict[str, SupportedKwarg]):
+    def send_receive_custom(self, func: Callable, kwargs: dict[str, SupportedKwarg]):
         """
         Run a custom function in the subprocess and retrieve its result.
 
@@ -418,10 +419,10 @@ class _TaoPipe:
 
 @contextlib.contextmanager
 def subprocess_timeout_context(
-    taos: List[SubprocessTao],
+    taos: list[SubprocessTao],
     timeout: float,
     *,
-    timeout_hook: Optional[Callable[[], None]] = None,
+    timeout_hook: Callable[[], None] | None = None,
 ):
     """
     Context manager to set a timeout for a block of SubprocessTao calls.
@@ -534,9 +535,9 @@ class SubprocessTao(Tao):
         That is, `tao.close_subprocess()` and `tao.init()`.
     """
 
-    _subproc_pipe_: Optional[_TaoPipe]
+    _subproc_pipe_: _TaoPipe | None
 
-    def __init__(self, *args, env: Optional[Dict[str, str]] = None, **kwargs):
+    def __init__(self, *args, env: dict[str, str] | None = None, **kwargs):
         self._subproc_pipe_ = None
         self.subprocess_env = dict(env if env is not None else os.environ)
 
@@ -650,19 +651,19 @@ class SubprocessTao(Tao):
         return self._send_command_through_pipe("init", startup.tao_init, raises=True)
 
     @override
-    def cmd(self, cmd: str, raises: bool = True) -> List[str]:
+    def cmd(self, cmd: str, raises: bool = True) -> list[str]:
         """Runs a command, and returns the output."""
         res = self._send_command_through_pipe("cmd", cmd, raises=raises)
-        return cast(List[str], res)
+        return cast(list[str], res)
 
     @override
-    def cmd_real(self, cmd: str, raises: bool = True) -> Optional[np.ndarray]:
+    def cmd_real(self, cmd: str, raises: bool = True) -> np.ndarray | None:
         """Runs a command, and returns a floating point array."""
         res = self._send_command_through_pipe("cmd_real", cmd, raises=raises)
         return cast(Optional[np.ndarray], res)
 
     @override
-    def cmd_integer(self, cmd: str, raises: bool = True) -> Optional[np.ndarray]:
+    def cmd_integer(self, cmd: str, raises: bool = True) -> np.ndarray | None:
         """Runs a command, and returns an integer array."""
         res = self._send_command_through_pipe("cmd_integer", cmd, raises=raises)
         return cast(Optional[np.ndarray], res)

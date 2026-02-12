@@ -9,12 +9,11 @@ import shlex
 import textwrap
 from ctypes.util import find_library
 from dataclasses import asdict
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Type, Union
+from typing import TYPE_CHECKING, Any, Literal, Union
 
 import numpy as np
 import pydantic
 from pydantic import ConfigDict, dataclasses
-from typing_extensions import Literal
 
 from .errors import (
     TaoCommandError,
@@ -198,7 +197,7 @@ def register_input_transformer(prefix: str = "`"):
     ip.input_transformers_post.append(tao_transform)
 
 
-def _tao_line_cell_magic(tao_instance: Tao, line: str, cell: Optional[str] = None):
+def _tao_line_cell_magic(tao_instance: Tao, line: str, cell: str | None = None):
     """
     Execute Tao commands in IPython as line or cell magic.
 
@@ -356,42 +355,42 @@ class TaoStartup:
     so_lib: str = pydantic.Field(default="", kw_only=False)
 
     # pytao specific
-    plot: Union[str, bool] = "tao"
-    metadata: Dict[str, Any] = pydantic.Field(default_factory=dict)
-    env: Optional[Dict[str, str]] = None  # only for subprocesses
+    plot: str | bool = "tao"
+    metadata: dict[str, Any] = pydantic.Field(default_factory=dict)
+    env: dict[str, str] | None = None  # only for subprocesses
 
     # All remaining flags:
-    beam_file: Optional[AnyPath] = None
-    beam_init_position_file: Optional[AnyPath] = None
-    building_wall_file: Optional[AnyPath] = None
+    beam_file: AnyPath | None = None
+    beam_init_position_file: AnyPath | None = None
+    building_wall_file: AnyPath | None = None
     command: str = ""
-    data_file: Optional[AnyPath] = None
+    data_file: AnyPath | None = None
     debug: bool = False
     disable_smooth_line_calc: bool = False
     external_plotting: bool = False
-    geometry: Union[str, Tuple[int, int]] = ""
-    hook_init_file: Optional[AnyPath] = None
-    init_file: Optional[AnyPath] = None
-    lattice_file: Optional[AnyPath] = None
+    geometry: str | tuple[int, int] = ""
+    hook_init_file: AnyPath | None = None
+    init_file: AnyPath | None = None
+    lattice_file: AnyPath | None = None
     log_startup: bool = False
     no_stopping: bool = False
     noinit: bool = False
     noplot: bool = False
     nostartup: bool = False
     no_rad_int: bool = False
-    plot_file: Optional[AnyPath] = None
+    plot_file: AnyPath | None = None
     prompt_color: str = ""
     reverse: bool = False
     rf_on: bool = False
-    quiet: Union[bool, Quiet] = False
+    quiet: bool | Quiet = False
     slice_lattice: str = ""
     start_branch_at: str = ""
-    startup_file: Optional[AnyPath] = None
+    startup_file: AnyPath | None = None
     symbol_import: bool = False
-    var_file: Optional[AnyPath] = None
+    var_file: AnyPath | None = None
 
     @property
-    def tao_class_params(self) -> Dict[str, Any]:
+    def tao_class_params(self) -> dict[str, Any]:
         """Parameters used to initialize Tao or make a new Tao instance."""
         # TODO: handle abbreviated/shortened keys from the user
         init_parts = self.init.split()
@@ -480,8 +479,8 @@ class TaoCore:
     tao = tao_ctypes.Tao("command line args here...")
     """
 
-    _init_output: List[str]
-    _last_output: List[str]
+    _init_output: list[str]
+    _last_output: list[str]
     so_lib: ctypes.CDLL
     so_lib_file: str
     _ctypes_initialized_: bool = False
@@ -503,15 +502,15 @@ class TaoCore:
         self.so_lib, self.so_lib_file = init_libtao(user_path=so_lib)
 
     @property
-    def init_output(self) -> List[str]:
+    def init_output(self) -> list[str]:
         """Output from the latest Tao initialization."""
         return list(self._init_output)
 
     @property
-    def last_output(self) -> List[str]:
+    def last_output(self) -> list[str]:
         return list(self._last_output)
 
-    def get_output(self, reset=True) -> List[str]:
+    def get_output(self, reset=True) -> list[str]:
         """
         Returns a list of output strings.
 
@@ -542,7 +541,7 @@ class TaoCore:
         """
         self.so_lib.tao_c_out_io_buffer_reset()
 
-    def _init_or_reinit(self, cmd: str) -> Tuple[int, List[str]]:
+    def _init_or_reinit(self, cmd: str) -> tuple[int, list[str]]:
         """
         Initialize (or reinitialize) Tao with `cmd`.
 
@@ -578,7 +577,7 @@ class TaoCore:
         self._init_output = output
         return errno, output
 
-    def _init_or_raise(self, cmd: str) -> List[str]:
+    def _init_or_raise(self, cmd: str) -> list[str]:
         """
         Initialize (or reinitialize) Tao with `cmd`.
 
@@ -610,8 +609,8 @@ class TaoCore:
         return output
 
     def _check_output_lines(
-        self, cmd: str, lines: List[str], raises: bool = False
-    ) -> Tuple[List[str], List[TaoMessage]]:
+        self, cmd: str, lines: list[str], raises: bool = False
+    ) -> tuple[list[str], list[TaoMessage]]:
         """
         Check Tao output for errors respecting the current capture context.
 
@@ -696,7 +695,7 @@ class TaoCore:
             )
             return raw_output
 
-    def cmd(self, cmd, raises=True) -> List[str]:
+    def cmd(self, cmd, raises=True) -> list[str]:
         """
         Runs a command, and returns the text output.
 
@@ -731,9 +730,9 @@ class TaoCore:
     def _get_array(
         self,
         cmd: str,
-        dtype: Union[Type[float], Type[int]],
+        dtype: type[float] | type[int],
         raises: bool,
-    ) -> Optional[np.ndarray]:
+    ) -> np.ndarray | None:
         """
         Get an array directly from Tao (without string parsing).
 
@@ -784,7 +783,7 @@ class TaoCore:
         array = np.ctypeslib.as_array((ctypes_type * num_elements).from_address(ptr))
         return array.copy()
 
-    def cmd_real(self, cmd: str, raises: bool = True) -> Optional[np.ndarray]:
+    def cmd_real(self, cmd: str, raises: bool = True) -> np.ndarray | None:
         """
         Get real array output.
 
@@ -822,7 +821,7 @@ class TaoCore:
     def _log(self, cmd: str, message: TaoMessage) -> None:
         logger.log(message.log_level, str(message))
 
-    def cmd_integer(self, cmd: str, raises: bool = True) -> Optional[np.ndarray]:
+    def cmd_integer(self, cmd: str, raises: bool = True) -> np.ndarray | None:
         """
         Get integer array output.
 
@@ -923,7 +922,7 @@ def _configure_cdll(so_lib: ctypes.CDLL) -> None:
     so_lib.tao_c_out_io_buffer_reset.restype = None
 
 
-def init_libtao(user_path: str = "") -> Tuple[ctypes.CDLL, str]:
+def init_libtao(user_path: str = "") -> tuple[ctypes.CDLL, str]:
     """
     Find the libtao shared library and initialize it.
 
@@ -969,7 +968,7 @@ def init_libtao(user_path: str = "") -> Tuple[ctypes.CDLL, str]:
     return so_lib, so_lib_file
 
 
-def make_tao_init(init: str, *, quiet: Union[bool, Quiet] = False, **kwargs) -> str:
+def make_tao_init(init: str, *, quiet: bool | Quiet = False, **kwargs) -> str:
     """
     Make Tao init string based on optional flags/command-line arguments.
 

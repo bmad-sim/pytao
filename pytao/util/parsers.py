@@ -4,7 +4,7 @@ import ast
 import dataclasses
 import datetime
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import numpy as np
 
@@ -605,10 +605,10 @@ def fix_value(value: str, typ: type):
 
 
 def _parse_by_keys_to_types(
-    lines: List[str],
-    key_to_type: Dict[str, type],
-    ensure_count: Optional[bool] = None,
-) -> List[dict]:
+    lines: list[str],
+    key_to_type: dict[str, type],
+    ensure_count: bool | None = None,
+) -> list[dict]:
     """
     Parse Tao command output, with predetermined field names and associated types.
 
@@ -651,7 +651,7 @@ def _parse_by_keys_to_types(
     ]
 
 
-def _get_cmd_args(cmd: str) -> List[str]:
+def _get_cmd_args(cmd: str) -> list[str]:
     """
     Get command arguments.
 

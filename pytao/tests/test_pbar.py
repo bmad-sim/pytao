@@ -1,12 +1,10 @@
-from typing import Type
-
 import numpy as np
 
 from .. import AnyTao
 from .test_interface_commands import new_tao
 
 
-def test_get_active_beam_track_element(tao_cls: Type[AnyTao]):
+def test_get_active_beam_track_element(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall"
     ) as tao:
@@ -42,7 +40,7 @@ def set_gaussian(
     tao.cmd("set global lattice_calc_on = T")
 
 
-def test_cli_progress_bar(tao_cls: Type[AnyTao]):
+def test_cli_progress_bar(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall"
     ) as tao:
@@ -51,7 +49,7 @@ def test_cli_progress_bar(tao_cls: Type[AnyTao]):
         tao.track_beam(use_progress_bar=True)
 
 
-def test_cli_progress_bar_track_start(tao_cls: Type[AnyTao]):
+def test_cli_progress_bar_track_start(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall"
     ) as tao:

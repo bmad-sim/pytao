@@ -8,16 +8,12 @@ import pathlib
 import time
 import typing
 from abc import ABC, abstractmethod
+from collections.abc import Sequence
 from typing import (
     ClassVar,
-    Dict,
     Generic,
-    List,
     NamedTuple,
     Optional,
-    Sequence,
-    Tuple,
-    Type,
     TypeVar,
     Union,
     cast,
@@ -120,10 +116,10 @@ class _Defaults:
     @classmethod
     def get_size_for_class(
         cls,
-        typ: Type[AnyBokehGraph],
-        user_width: Optional[int] = None,
-        user_height: Optional[int] = None,
-    ) -> Tuple[int, int]:
+        typ: type[AnyBokehGraph],
+        user_width: int | None = None,
+        user_height: int | None = None,
+    ) -> tuple[int, int]:
         default = {
             BokehBasicGraph: (cls.width, cls.height),
             BokehLatticeLayoutGraph: (cls.width, cls.layout_height),
@@ -133,25 +129,25 @@ class _Defaults:
 
 
 def set_defaults(
-    width: Optional[int] = None,
-    height: Optional[int] = None,
-    stacked_height: Optional[int] = None,
-    layout_height: Optional[int] = None,
-    palette: Optional[str] = None,
-    show_bokeh_logo: Optional[bool] = None,
-    tools: Optional[str] = None,
-    grid_toolbar_location: Optional[str] = None,
-    lattice_layout_tools: Optional[str] = None,
-    floor_plan_tools: Optional[str] = None,
-    floor_plan_annotate_elements: Optional[bool] = None,
-    layout_font_size: Optional[str] = None,
-    floor_plan_font_size: Optional[str] = None,
-    limit_scale_factor: Optional[float] = None,
-    max_data_points: Optional[int] = None,
-    variables_per_row: Optional[int] = None,
-    show_sliders: Optional[bool] = None,
-    line_width_scale: Optional[float] = None,
-    floor_line_width_scale: Optional[float] = None,
+    width: int | None = None,
+    height: int | None = None,
+    stacked_height: int | None = None,
+    layout_height: int | None = None,
+    palette: str | None = None,
+    show_bokeh_logo: bool | None = None,
+    tools: str | None = None,
+    grid_toolbar_location: str | None = None,
+    lattice_layout_tools: str | None = None,
+    floor_plan_tools: str | None = None,
+    floor_plan_annotate_elements: bool | None = None,
+    layout_font_size: str | None = None,
+    floor_plan_font_size: str | None = None,
+    limit_scale_factor: float | None = None,
+    max_data_points: int | None = None,
+    variables_per_row: int | None = None,
+    show_sliders: bool | None = None,
+    line_width_scale: float | None = None,
+    floor_line_width_scale: float | None = None,
 ):
     """
     Change defaults used for Bokeh plots.
@@ -261,11 +257,11 @@ def _get_curve_data(curve: PlotCurve) -> CurveData:
     return data
 
 
-def _get_graph_data(graph) -> List[CurveData]:
+def _get_graph_data(graph) -> list[CurveData]:
     return [_get_curve_data(curve) for curve in graph.curves]
 
 
-def share_x_axes(figs: List[figure]):
+def share_x_axes(figs: list[figure]):
     if not figs:
         return
     fig0, *others = figs
@@ -281,12 +277,12 @@ class BGraphAndFigure(NamedTuple):
 T_Tool = TypeVar("T_Tool", bound=bokeh.models.Tool)
 
 
-def get_tool_from_figure(fig: figure, tool_cls: Type[T_Tool]) -> Optional[T_Tool]:
+def get_tool_from_figure(fig: figure, tool_cls: type[T_Tool]) -> T_Tool | None:
     tools = [tool for tool in fig.tools if isinstance(tool, tool_cls)]
     return tools[0] if tools else None
 
 
-def link_crosshairs(figs: List[figure]):
+def link_crosshairs(figs: list[figure]):
     first, *rest = figs
     crosshair = get_tool_from_figure(first, bokeh.models.CrosshairTool)
     if crosshair is None:
@@ -305,10 +301,10 @@ def link_crosshairs(figs: List[figure]):
 
 
 def share_common_x_axes(
-    pairs: List[BGraphAndFigure],
+    pairs: list[BGraphAndFigure],
     crosshairs: bool = True,
-) -> List[List[BGraphAndFigure]]:
-    res: List[List[BGraphAndFigure]] = []
+) -> list[list[BGraphAndFigure]]:
+    res: list[list[BGraphAndFigure]] = []
 
     s_plots = []
     for pair in pairs:
@@ -318,7 +314,7 @@ def share_common_x_axes(
     if s_plots:
         res.append(s_plots)
 
-    by_xlabel: Dict[str, List[BGraphAndFigure]] = {}
+    by_xlabel: dict[str, list[BGraphAndFigure]] = {}
     for pair in pairs:
         if pair in s_plots:
             continue
@@ -341,8 +337,8 @@ def _plot_curve_symbols(
     fig: figure,
     symbol: PlotCurveSymbols,
     name: str,
-    source: Optional[ColumnDataSource] = None,
-    legend_label: Optional[str] = None,
+    source: ColumnDataSource | None = None,
+    legend_label: str | None = None,
 ):
     marker = pgplot.bokeh_symbols.get(symbol.marker, "dot")
     if not marker:
@@ -378,8 +374,8 @@ def _plot_curve_symbols(
 def _plot_curve_line(
     fig: figure,
     line: PlotCurveLine,
-    name: Optional[str] = None,
-    source: Optional[ColumnDataSource] = None,
+    name: str | None = None,
+    source: ColumnDataSource | None = None,
     line_width_scale: float = 1.0,
 ):
     if source is None:
@@ -432,8 +428,8 @@ def _plot_curve(
 def _plot_patch_arc(
     fig: figure,
     patch: PlotPatchArc,
-    source: Optional[ColumnDataSource] = None,
-    linewidth: Optional[float] = None,
+    source: ColumnDataSource | None = None,
+    linewidth: float | None = None,
 ):
     if source is None:
         source = ColumnDataSource(data={})
@@ -482,7 +478,7 @@ def _plot_sbend_patch(fig: figure, patch: PlotPatchSbend):
 
 def _draw_layout_elems(
     fig: figure,
-    elems: List[LatticeLayoutElement],
+    elems: list[LatticeLayoutElement],
     skip_labels: bool = True,
     line_width_scale: float = 1.0,
 ):
@@ -495,7 +491,7 @@ def _draw_layout_elems(
         "line_width": [],
         "color": [],
     }
-    rectangles: List[Tuple[LatticeLayoutElement, LayoutShape, PlotPatchRectangle]] = []
+    rectangles: list[tuple[LatticeLayoutElement, LayoutShape, PlotPatchRectangle]] = []
 
     _draw_annotations(
         fig,
@@ -561,7 +557,7 @@ def _draw_layout_elems(
 
 def _draw_annotations(
     fig: figure,
-    name_to_annotations: Dict[str, List[PlotAnnotation]],
+    name_to_annotations: dict[str, list[PlotAnnotation]],
     *,
     font_size: str,
     skip_labels: bool = False,
@@ -611,7 +607,7 @@ def _draw_annotations(
 
 def _draw_floor_plan_shapes(
     fig: figure,
-    elems: List[FloorPlanElement],
+    elems: list[FloorPlanElement],
     line_width_scale: float = 1.0,
 ):
     polygon_data = {
@@ -686,7 +682,7 @@ def _draw_floor_plan_shapes(
         )
 
 
-def _patch_rect_to_points(patch: PlotPatchRectangle) -> Tuple[List[float], List[float]]:
+def _patch_rect_to_points(patch: PlotPatchRectangle) -> tuple[list[float], list[float]]:
     mpl_patch = matplotlib.patches.Rectangle(
         xy=patch.xy,
         width=patch.width,
@@ -705,8 +701,8 @@ def _patch_rect_to_points(patch: PlotPatchRectangle) -> Tuple[List[float], List[
 
 def _draw_limit_border(
     fig: figure,
-    xlim: Tuple[float, float],
-    ylim: Tuple[float, float],
+    xlim: tuple[float, float],
+    ylim: tuple[float, float],
     alpha: float = 1.0,
 ):
     width = xlim[1] - xlim[0]
@@ -720,8 +716,8 @@ def _draw_limit_border(
 def _plot_patch(
     fig: figure,
     patch: PlotPatch,
-    line_width: Optional[float] = None,
-    source: Optional[ColumnDataSource] = None,
+    line_width: float | None = None,
+    source: ColumnDataSource | None = None,
 ):
     if source is None:
         source = ColumnDataSource()
@@ -788,7 +784,7 @@ def _plot_patch(
     raise NotImplementedError(f"{type(patch).__name__}")
 
 
-def _fields_to_data_source(fields: List[ElementField], x_scale: float = 1.0):
+def _fields_to_data_source(fields: list[ElementField], x_scale: float = 1.0):
     return ColumnDataSource(
         data={
             "ele_id": [field.ele_id for field in fields],
@@ -807,23 +803,23 @@ class BokehGraphBase(ABC, Generic[TGraph]):
     manager: GraphManager
     graph: TGraph
     sizing_mode: SizingModeType
-    width: Optional[int]
-    height: Optional[int]
-    aspect_ratio: Optional[float]
-    x_range: Optional[bokeh.models.Range]
-    y_range: Optional[bokeh.models.Range]
+    width: int | None
+    height: int | None
+    aspect_ratio: float | None
+    x_range: bokeh.models.Range | None
+    y_range: bokeh.models.Range | None
 
     def __init__(
         self,
         manager: GraphManager,
         graph: TGraph,
         sizing_mode: SizingModeType,
-        aspect_ratio: Optional[float] = None,  # w/h
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        x_range: Optional[bokeh.models.Range] = None,
-        y_range: Optional[bokeh.models.Range] = None,
-        limit_scale_factor: Optional[float] = None,
+        aspect_ratio: float | None = None,  # w/h
+        width: int | None = None,
+        height: int | None = None,
+        x_range: bokeh.models.Range | None = None,
+        y_range: bokeh.models.Range | None = None,
+        limit_scale_factor: float | None = None,
     ) -> None:
         self.graph = graph
         self.manager = manager
@@ -840,7 +836,7 @@ class BokehGraphBase(ABC, Generic[TGraph]):
             *util.apply_factor_to_limits(*graph.ylim, limit_scale_factor)
         )
 
-    def create_widgets(self, fig: figure) -> List[bokeh.models.UIElement]:
+    def create_widgets(self, fig: figure) -> list[bokeh.models.UIElement]:
         return []
 
     @abstractmethod
@@ -862,9 +858,9 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
         manager: GraphManager,
         graph: LatticeLayoutGraph,
         sizing_mode: SizingModeType = "inherit",
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        aspect_ratio: Optional[float] = None,  # w/h
+        width: int | None = None,
+        height: int | None = None,
+        aspect_ratio: float | None = None,  # w/h
     ) -> None:
         super().__init__(
             manager=manager,
@@ -879,8 +875,8 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
         self,
         fig: figure,
         *,
-        widgets: Optional[List[bokeh.models.Widget]] = None,
-        tao: Optional[Tao] = None,
+        widgets: list[bokeh.models.Widget] | None = None,
+        tao: Tao | None = None,
     ) -> None:
         if tao is None:
             return
@@ -888,7 +884,7 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
     def create_figure(
         self,
         *,
-        tools: Optional[str] = None,
+        tools: str | None = None,
         toolbar_location: str = "above",
     ) -> figure:
         if tools is None:
@@ -958,19 +954,19 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
 class BokehBasicGraph(BokehGraphBase[BasicGraph]):
     graph_type: ClassVar[str] = "basic"
     graph: BasicGraph
-    curve_data: List[CurveData]
+    curve_data: list[CurveData]
     num_points: int
-    view_x_range: Tuple[float, float]
+    view_x_range: tuple[float, float]
 
     def __init__(
         self,
         manager: GraphManager,
         graph: BasicGraph,
         sizing_mode: SizingModeType = "inherit",
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        aspect_ratio: Optional[float] = None,  # w/h
-        variables: Optional[List[Variable]] = None,
+        width: int | None = None,
+        height: int | None = None,
+        aspect_ratio: float | None = None,  # w/h
+        variables: list[Variable] | None = None,
     ) -> None:
         super().__init__(
             manager=manager,
@@ -989,7 +985,7 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
     def tao(self) -> Tao:
         return self.manager.tao
 
-    def _disable_widgets(self, widgets: List[bokeh.models.Widget]) -> None:
+    def _disable_widgets(self, widgets: list[bokeh.models.Widget]) -> None:
         for widget in widgets:
             if hasattr(widget, "disabled"):
                 widget.disabled = True
@@ -1000,7 +996,7 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
         self,
         fig: figure,
         *,
-        widgets: Optional[List[bokeh.models.Widget]] = None,
+        widgets: list[bokeh.models.Widget] | None = None,
     ) -> None:
         try:
             self.tao.cmd("set global lattice_calc_on = F")
@@ -1044,7 +1040,7 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
     def create_figure(
         self,
         *,
-        tools: Optional[str] = None,
+        tools: str | None = None,
         toolbar_location: str = "above",
         sizing_mode: SizingModeType = "inherit",
     ) -> figure:
@@ -1072,7 +1068,7 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
         return fig
 
 
-def get_hoverable_renderers(fig: figure) -> List[bokeh.models.GlyphRenderer]:
+def get_hoverable_renderers(fig: figure) -> list[bokeh.models.GlyphRenderer]:
     return [rend for rend in list(fig.renderers) if any(rend.data_source.data.get("name", []))]
 
 
@@ -1085,8 +1081,8 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         manager: GraphManager,
         graph: FloorPlanGraph,
         sizing_mode: SizingModeType = "inherit",
-        width: Optional[int] = None,
-        height: Optional[int] = None,
+        width: int | None = None,
+        height: int | None = None,
     ) -> None:
         super().__init__(
             manager=manager,
@@ -1103,7 +1099,7 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
     def create_figure(
         self,
         *,
-        tools: Optional[str] = None,
+        tools: str | None = None,
         toolbar_location: str = "above",
         sizing_mode: SizingModeType = "inherit",
     ) -> figure:
@@ -1180,7 +1176,7 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         _draw_limit_border(fig, graph.xlim, graph.ylim, alpha=0.1)
         return fig
 
-    def create_widgets(self, fig: figure) -> List[bokeh.models.UIElement]:
+    def create_widgets(self, fig: figure) -> list[bokeh.models.UIElement]:
         controls = []
         try:
             (orbits,) = fig.select("floor_orbits")
@@ -1204,19 +1200,19 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
 AnyBokehGraph = Union[BokehBasicGraph, BokehLatticeLayoutGraph, BokehFloorPlanGraph]
 
 
-UIGridLayoutList = List[Optional[bokeh.models.UIElement]]
+UIGridLayoutList = list[Optional[bokeh.models.UIElement]]
 
 
 class BokehAppState:
-    pairs: List[BGraphAndFigure]
-    layout_pairs: List[BGraphAndFigure]
-    grid: List[UIGridLayoutList]
+    pairs: list[BGraphAndFigure]
+    layout_pairs: list[BGraphAndFigure]
+    grid: list[UIGridLayoutList]
 
     def __init__(
         self,
-        pairs: List[BGraphAndFigure],
-        layout_pairs: List[BGraphAndFigure],
-        grid: List[UIGridLayoutList],
+        pairs: list[BGraphAndFigure],
+        layout_pairs: list[BGraphAndFigure],
+        grid: list[UIGridLayoutList],
     ) -> None:
         self.pairs = pairs
         self.layout_pairs = layout_pairs
@@ -1224,8 +1220,8 @@ class BokehAppState:
 
     def to_gridplot(
         self,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
+        width: int | None = None,
+        height: int | None = None,
         **kwargs,
     ) -> bokeh.models.GridPlot:
         if not _Defaults.show_bokeh_logo:
@@ -1242,14 +1238,14 @@ class BokehAppState:
         return gridplot
 
     @property
-    def figures(self) -> List[figure]:
+    def figures(self) -> list[figure]:
         return [pair.fig for pair in [*self.pairs, *self.layout_pairs]]
 
     def to_html(
         self,
-        title: Optional[str] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
+        title: str | None = None,
+        width: int | None = None,
+        height: int | None = None,
     ) -> str:
         layout = self.to_gridplot(width=width, height=height)
         return bokeh.embed.file_html(models=layout, title=title)
@@ -1258,17 +1254,17 @@ class BokehAppState:
         self,
         filename: AnyPath = "",
         *,
-        title: Optional[str] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-    ) -> Optional[pathlib.Path]:
+        title: str | None = None,
+        width: int | None = None,
+        height: int | None = None,
+    ) -> pathlib.Path | None:
         title = title or self.pairs[0].bgraph.graph.title or f"plot-{time.time()}"
         if not filename:
             filename = f"{title}.html"
         if not pathlib.Path(filename).suffix:
             filename = f"{filename}.html"
         source = self.to_html(title=title, width=width, height=height)
-        with open(filename, "wt") as fp:
+        with open(filename, "w") as fp:
             fp.write(source)
         return pathlib.Path(filename)
 
@@ -1294,35 +1290,35 @@ class BokehAppCreator:
     callbacks resulting from user interaction.
     """
 
-    manager: Union[BokehGraphManager, NotebookGraphManager]
-    graphs: List[AnyGraph]
-    bgraphs: List[AnyBokehGraph]
-    share_x: Optional[bool]
-    variables: List[Variable]
-    grid: Tuple[int, int]
-    width: Optional[int]
-    height: Optional[int]
+    manager: BokehGraphManager | NotebookGraphManager
+    graphs: list[AnyGraph]
+    bgraphs: list[AnyBokehGraph]
+    share_x: bool | None
+    variables: list[Variable]
+    grid: tuple[int, int]
+    width: int | None
+    height: int | None
     include_layout: bool
-    layout_height: Optional[int]
-    xlim: List[OptionalLimit]
-    ylim: List[OptionalLimit]
-    figures: List[figure]
-    graph_sizing_mode: Optional[SizingModeType]
+    layout_height: int | None
+    xlim: list[OptionalLimit]
+    ylim: list[OptionalLimit]
+    figures: list[figure]
+    graph_sizing_mode: SizingModeType | None
 
     def __init__(
         self,
-        manager: Union[BokehGraphManager, NotebookGraphManager],
-        graphs: List[AnyGraph],
-        share_x: Optional[bool] = None,
+        manager: BokehGraphManager | NotebookGraphManager,
+        graphs: list[AnyGraph],
+        share_x: bool | None = None,
         include_variables: bool = False,
-        grid: Optional[Tuple[int, int]] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
+        grid: tuple[int, int] | None = None,
+        width: int | None = None,
+        height: int | None = None,
         include_layout: bool = False,
-        graph_sizing_mode: Optional[SizingModeType] = None,
-        layout_height: Optional[int] = None,
-        xlim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
-        ylim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
+        graph_sizing_mode: SizingModeType | None = None,
+        layout_height: int | None = None,
+        xlim: OptionalLimit | Sequence[OptionalLimit] = None,
+        ylim: OptionalLimit | Sequence[OptionalLimit] = None,
     ) -> None:
         if not len(graphs):
             raise ValueError("BokehAppCreator requires 1 or more graph")
@@ -1370,12 +1366,12 @@ class BokehAppCreator:
         self,
         filename: AnyPath = "",
         *,
-        title: Optional[str] = None,
-    ) -> Optional[pathlib.Path]:
+        title: str | None = None,
+    ) -> pathlib.Path | None:
         state = self.create_state()
         state.save(filename=filename, title=title, width=self.width, height=self.height)
 
-    def _create_figures(self) -> Tuple[List[BGraphAndFigure], List[BGraphAndFigure]]:
+    def _create_figures(self) -> tuple[list[BGraphAndFigure], list[BGraphAndFigure]]:
         bgraphs = [self.manager.to_bokeh_graph(graph) for graph in self.graphs]
         figures = [
             bgraph.create_figure(
@@ -1415,9 +1411,9 @@ class BokehAppCreator:
 
     def _grid_figures(
         self,
-        pairs: List[BGraphAndFigure],
-        layout_pairs: List[BGraphAndFigure],
-    ) -> List[UIGridLayoutList]:
+        pairs: list[BGraphAndFigure],
+        layout_pairs: list[BGraphAndFigure],
+    ) -> list[UIGridLayoutList]:
         nrows, ncols = self.grid
         rows = [[] for _ in range(nrows)]
         rows_cols = [(row, col) for row in range(nrows) for col in range(ncols)]
@@ -1577,7 +1573,7 @@ class BokehAppCreator:
         if not state.pairs:
             return
 
-        widget_models: List[bokeh.layouts.UIElement] = []
+        widget_models: list[bokeh.layouts.UIElement] = []
         if self.variables:
             widget_models.append(self.create_variable_widgets(state))
 
@@ -1600,7 +1596,7 @@ class BokehAppCreator:
             toolbar_options={} if _Defaults.show_bokeh_logo else {"logo": None},
         )
 
-        all_elems: List[bokeh.models.UIElement] = [*widget_models, gridplot]
+        all_elems: list[bokeh.models.UIElement] = [*widget_models, gridplot]
         return bokeh.layouts.column(all_elems)
 
     def create_full_app(self):
@@ -1649,9 +1645,9 @@ class Variable:
         self,
         tao: Tao,
         status_label: bokeh.models.PreText,
-        pairs: List[BGraphAndFigure],
+        pairs: list[BGraphAndFigure],
         show_sliders: bool,
-    ) -> List[bokeh.models.UIElement]:
+    ) -> list[bokeh.models.UIElement]:
         spinner = self.create_spinner(tao, status_label, pairs)
 
         if not show_sliders:
@@ -1677,7 +1673,7 @@ class Variable:
         self,
         tao: Tao,
         status_label: bokeh.models.PreText,
-        pairs: List[BGraphAndFigure],
+        pairs: list[BGraphAndFigure],
     ) -> bokeh.models.Spinner:
         spinner = bokeh.models.Spinner(
             title=self.name,
@@ -1705,7 +1701,7 @@ class Variable:
         )
 
     @classmethod
-    def from_tao_all(cls, tao: Tao, *, parameter: str = "model") -> List[Variable]:
+    def from_tao_all(cls, tao: Tao, *, parameter: str = "model") -> list[Variable]:
         return [
             cls.from_tao(
                 tao=tao,
@@ -1724,7 +1720,7 @@ class Variable:
         *,
         tao: Tao,
         status_label: bokeh.models.PreText,
-        pairs: List[BGraphAndFigure],
+        pairs: list[BGraphAndFigure],
     ):
         status_label.text = ""
 
@@ -1796,20 +1792,20 @@ class BokehGraphManager(GraphManager):
 
     def plot_grid(
         self,
-        templates: List[str],
-        grid: Tuple[int, int],
+        templates: list[str],
+        grid: tuple[int, int],
         *,
         include_layout: bool = False,
-        share_x: Optional[bool] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        figsize: Optional[Tuple[int, int]] = None,
-        layout_height: Optional[int] = None,
-        xlim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
-        ylim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
-        curves: Optional[List[CurveIndexToCurve]] = None,
-        settings: Optional[List[TaoGraphSettings]] = None,
-        save: Union[bool, str, pathlib.Path, None] = None,
+        share_x: bool | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        figsize: tuple[int, int] | None = None,
+        layout_height: int | None = None,
+        xlim: OptionalLimit | Sequence[OptionalLimit] = None,
+        ylim: OptionalLimit | Sequence[OptionalLimit] = None,
+        curves: list[CurveIndexToCurve] | None = None,
+        settings: list[TaoGraphSettings] | None = None,
+        save: bool | str | pathlib.Path | None = None,
     ):
         """
         Plot graphs on a grid with Bokeh.
@@ -1889,19 +1885,19 @@ class BokehGraphManager(GraphManager):
         self,
         template: str,
         *,
-        region_name: Optional[str] = None,
+        region_name: str | None = None,
         include_layout: bool = True,
-        sizing_mode: Optional[SizingModeType] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        layout_height: Optional[int] = None,
-        share_x: Optional[bool] = None,
-        xlim: Optional[Tuple[float, float]] = None,
-        ylim: Optional[Tuple[float, float]] = None,
-        save: Union[bool, str, pathlib.Path, None] = None,
-        curves: Optional[Dict[int, TaoCurveSettings]] = None,
-        settings: Optional[TaoGraphSettings] = None,
-    ) -> Tuple[List[AnyGraph], BokehAppCreator]:
+        sizing_mode: SizingModeType | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        layout_height: int | None = None,
+        share_x: bool | None = None,
+        xlim: tuple[float, float] | None = None,
+        ylim: tuple[float, float] | None = None,
+        save: bool | str | pathlib.Path | None = None,
+        curves: dict[int, TaoCurveSettings] | None = None,
+        settings: TaoGraphSettings | None = None,
+    ) -> tuple[list[AnyGraph], BokehAppCreator]:
         """
         Plot a graph with Bokeh.
 
@@ -1985,13 +1981,13 @@ class BokehGraphManager(GraphManager):
         self,
         ele_id: str,
         *,
-        colormap: Optional[str] = None,
+        colormap: str | None = None,
         radius: float = 0.015,
         num_points: int = 100,
         x_scale: float = 1.0,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        save: Union[bool, str, pathlib.Path, None] = None,
+        width: int | None = None,
+        height: int | None = None,
+        save: bool | str | pathlib.Path | None = None,
     ):
         """
         Plot field information for a given element.
@@ -2062,21 +2058,21 @@ class NotebookGraphManager(BokehGraphManager):
 
     def plot_grid(
         self,
-        templates: List[str],
-        grid: Tuple[int, int],
+        templates: list[str],
+        grid: tuple[int, int],
         *,
-        curves: Optional[List[CurveIndexToCurve]] = None,
-        settings: Optional[List[TaoGraphSettings]] = None,
+        curves: list[CurveIndexToCurve] | None = None,
+        settings: list[TaoGraphSettings] | None = None,
         include_layout: bool = False,
-        share_x: Optional[bool] = None,
+        share_x: bool | None = None,
         vars: bool = False,
-        figsize: Optional[Tuple[int, int]] = None,
-        layout_height: Optional[int] = None,
-        xlim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
-        ylim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        save: Union[bool, str, pathlib.Path, None] = None,
+        figsize: tuple[int, int] | None = None,
+        layout_height: int | None = None,
+        xlim: OptionalLimit | Sequence[OptionalLimit] = None,
+        ylim: OptionalLimit | Sequence[OptionalLimit] = None,
+        width: int | None = None,
+        height: int | None = None,
+        save: bool | str | pathlib.Path | None = None,
     ):
         """
         Plot graphs on a grid with Bokeh.
@@ -2146,21 +2142,21 @@ class NotebookGraphManager(BokehGraphManager):
         self,
         template: str,
         *,
-        region_name: Optional[str] = None,
+        region_name: str | None = None,
         include_layout: bool = True,
-        sizing_mode: Optional[SizingModeType] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        layout_height: Optional[int] = None,
-        share_x: Optional[bool] = None,
+        sizing_mode: SizingModeType | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        layout_height: int | None = None,
+        share_x: bool | None = None,
         vars: bool = False,
-        xlim: Optional[Limit] = None,
-        ylim: Optional[Limit] = None,
+        xlim: Limit | None = None,
+        ylim: Limit | None = None,
         notebook_handle: bool = False,
-        save: Union[bool, str, pathlib.Path, None] = None,
-        curves: Optional[Dict[int, TaoCurveSettings]] = None,
-        settings: Optional[TaoGraphSettings] = None,
-    ) -> Tuple[List[AnyGraph], BokehAppCreator]:
+        save: bool | str | pathlib.Path | None = None,
+        curves: dict[int, TaoCurveSettings] | None = None,
+        settings: TaoGraphSettings | None = None,
+    ) -> tuple[list[AnyGraph], BokehAppCreator]:
         """
         Plot a graph with Bokeh.
 
@@ -2234,13 +2230,13 @@ class NotebookGraphManager(BokehGraphManager):
         self,
         ele_id: str,
         *,
-        colormap: Optional[str] = None,
+        colormap: str | None = None,
         radius: float = 0.015,
         num_points: int = 100,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
+        width: int | None = None,
+        height: int | None = None,
         x_scale: float = 1.0,
-        save: Union[bool, str, pathlib.Path, None] = None,
+        save: bool | str | pathlib.Path | None = None,
     ):
         """
         Plot field information for a given element.
