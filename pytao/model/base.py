@@ -5,6 +5,7 @@ import logging
 import re
 import textwrap
 from typing import (
+    TYPE_CHECKING,
     Any,
     ClassVar,
     Generator,
@@ -17,7 +18,6 @@ import pydantic
 from pydantic.fields import FieldInfo
 from typing_extensions import Self
 
-from pytao import Tao
 
 from .types import ArgumentType
 
@@ -25,6 +25,10 @@ try:
     from rich.pretty import pretty_repr
 except ImportError:
     pretty_repr = repr
+
+
+if TYPE_CHECKING:
+    from pytao import Tao
 
 logger = logging.getLogger(__name__)
 

@@ -2,12 +2,13 @@
 from __future__ import annotations
 
 import logging
+import typing
 from typing import ClassVar, cast
 
 import pydantic
 from typing_extensions import Self, override
 
-from .. import Tao, TaoStartup
+from ..tao_ctypes.core import TaoStartup
 from ._generated import (
     Beam,
     BeamInit,
@@ -17,9 +18,10 @@ from ._generated import (
     TaoModel,
     TaoSettableModel,
 )
-from ._generated import (
-    logger as _tao_pystructs_logger,
-)
+from ._generated import logger as _tao_pystructs_logger
+
+if typing.TYPE_CHECKING:
+    from pytao import Tao
 
 logger = logging.getLogger(__name__)
 # make auto-generated log messages come from this module
