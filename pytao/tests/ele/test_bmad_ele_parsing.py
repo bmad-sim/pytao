@@ -140,7 +140,7 @@ from pytao.model.ele import ElementID, ElementIntersection, ElementList, Element
         ),
         pytest.param(
             ElementID(
-                ele_id="my duck",
+                ele_id="'my duck'",
                 key="alias",
                 universe=None,
                 branch=None,
@@ -494,7 +494,7 @@ def test_element_range(
                 negated=False,
             ),
             ElementID(
-                ele_id="my duck",
+                ele_id="'my duck'",
                 key="alias",
                 universe=None,
                 branch=None,
@@ -599,7 +599,7 @@ def test_element_intersection(
                 negated=False,
             ),
             ElementID(
-                ele_id="my duck",
+                ele_id="'my duck'",
                 key="alias",
                 universe=None,
                 branch=None,

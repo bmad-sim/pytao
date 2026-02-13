@@ -280,7 +280,7 @@ class ElementID(pydantic.BaseModel, extra="forbid"):
         if self.key is not None:
             parts.append(f"{self.key}::")
 
-        if " " in self.ele_id:
+        if " " in self.ele_id and not self.ele_id.startswith("'"):
             parts.append(f"'{self.ele_id}'")
         else:
             parts.append(self.ele_id)
@@ -440,9 +440,6 @@ class ElementID(pydantic.BaseModel, extra="forbid"):
 
         if ele_id is None:
             raise ValueError("No element ID found in the string")
-
-        if ele_id.startswith("'") and ele_id.endswith("'"):
-            ele_id = ele_id[1:-1]
 
         return cls(
             ele_id=ele_id,
