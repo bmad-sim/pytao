@@ -98,7 +98,10 @@ def test_global_nthreads(tao: SubprocessTao) -> None:
     print(repr(glob))
 
     orig_nthreads = glob.n_threads
-    glob.n_threads = orig_nthreads + 1
+    if orig_nthreads > 1:
+        glob.n_threads = 1
+    else:
+        glob.n_threads = 2
 
     assert f"set global n_threads = {glob.n_threads}" in glob.set_commands
     try:
