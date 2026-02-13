@@ -5,21 +5,23 @@ import gzip
 import json
 import pathlib
 import re
-from typing import Any, ClassVar, Literal, cast
+from typing import TYPE_CHECKING, Any, ClassVar, Literal, cast
 
 import numpy as np
 import pydantic
 from pydantic import Field
 from typing_extensions import Self
 
-import pytao
-from pytao.util.parsers import PipeData, parse_tao_python_data_with_units
-
+from ...errors import TaoCommandError
 from ...util import normalize_path
+from ...util.parsers import PipeData, parse_tao_python_data_with_units
 from .. import _generated as tao_classes
 from ..base import TaoModel, _check_equality
 from .comb import Comb
 from .time_stats import _pytao_stats
+
+if TYPE_CHECKING:
+    from pytao import Tao
 
 
 class ElementNotFoundError(Exception):
@@ -429,6 +431,7 @@ class ElementID(pydantic.BaseModel, extra="forbid"):
             ele_id, remaining = remaining, ""
 
         branch = _maybe_int(branch)
+        universe = _maybe_int(universe)
         if match_number is not None:
             match_number = int(match_number)
 
@@ -486,7 +489,7 @@ ChamberWallWho = Literal["x", "y"]
 FloorWhere = Literal["beginning", "center", "end"]
 
 
-def _maybe_reraise(ele: str, ex: pytao.TaoCommandError):
+def _maybe_reraise(ele: str, ex: TaoCommandError):
     if "Cannot locate element" not in str(ex):
         raise
 
@@ -503,14 +506,14 @@ def _catch_element_not_found_error(func):
     def wrapped(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except pytao.TaoCommandError as ex:
+        except TaoCommandError as ex:
             _maybe_reraise(kwargs.get("ele", None), ex)
 
     return wrapped
 
 
 def get_element_index(
-    tao: pytao.Tao,
+    tao: Tao,
     ele: AnyElementID,
 ) -> int:
     """
@@ -518,8 +521,8 @@ def get_element_index(
 
     Parameters
     ----------
-    tao : pytao.Tao
-        The pytao Tao instance.
+    tao : Tao
+        The Tao instance.
     ele : str or ElementID
         The element as a string or ElementID.
 
@@ -541,7 +544,7 @@ def get_element_index(
 
 @_catch_element_not_found_error
 def get_head(
-    tao: pytao.Tao,
+    tao: Tao,
     ele: AnyElementID,
     which: Which = "model",
 ) -> tao_classes.ElementHead:
@@ -550,7 +553,7 @@ def get_head(
 
     Parameters
     ----------
-    tao : pytao.Tao
+    tao : Tao
         The Tao object instance.
     ele : str or ElementID
         The element identifier, either as a string or an ElementID object.
@@ -566,7 +569,7 @@ def get_head(
 
 @_catch_element_not_found_error
 def get_twiss(
-    tao: pytao.Tao,
+    tao: Tao,
     ele: AnyElementID,
     which: Which = "model",
 ) -> tao_classes.ElementTwiss:
@@ -575,7 +578,7 @@ def get_twiss(
 
     Parameters
     ----------
-    tao : pytao.Tao
+    tao : Tao
         The Tao object instance.
     ele : str or ElementID
         The element identifier, either as a string or an ElementID object.
@@ -592,7 +595,7 @@ def get_twiss(
 
 @_catch_element_not_found_error
 def get_orbit(
-    tao: pytao.Tao,
+    tao: Tao,
     ele: AnyElementID,
     which: Which = "model",
 ) -> tao_classes.ElementOrbit:
@@ -601,7 +604,7 @@ def get_orbit(
 
     Parameters
     ----------
-    tao : pytao.Tao
+    tao : Tao
         The Tao object instance.
     ele : str or ElementID
         The element identifier, either as a string or an ElementID object.
@@ -618,7 +621,7 @@ def get_orbit(
 
 @_catch_element_not_found_error
 def get_lord_slave(
-    tao: pytao.Tao,
+    tao: Tao,
     ele: AnyElementID,
     which: Which = "model",
 ) -> list[tao_classes.ElementLordSlave]:
@@ -627,7 +630,7 @@ def get_lord_slave(
 
     Parameters
     ----------
-    tao : pytao.Tao
+    tao : Tao
         The Tao instance.
     ele : str or ElementID
         The element identifier, either as a string or an ElementID object.
@@ -644,7 +647,7 @@ def get_lord_slave(
 
 @_catch_element_not_found_error
 def get_chamber_wall(
-    tao: pytao.Tao,
+    tao: Tao,
     ele: AnyElementID,
     index: int,
     who: ChamberWallWho,
@@ -655,7 +658,7 @@ def get_chamber_wall(
 
     Parameters
     ----------
-    tao : pytao.Tao
+    tao : Tao
         The Tao instance.
     ele : str or ElementID
         The identifier of the element. This can be a string or an ElementID instance.
@@ -679,7 +682,7 @@ def get_chamber_wall(
 
 @_catch_element_not_found_error
 def get_wall3d_base(
-    tao: pytao.Tao,
+    tao: Tao,
     ele: AnyElementID,
     index: int,
     which: Which = "model",
@@ -689,7 +692,7 @@ def get_wall3d_base(
 
     Parameters
     ----------
-    tao : pytao.Tao
+    tao : Tao
         The Tao instance.
     ele : str or ElementID
         The identifier of the element. Can be a string name or an ElementID object.
@@ -714,7 +717,7 @@ def get_wall3d_base(
 
 @_catch_element_not_found_error
 def get_wall3d_table(
-    tao: pytao.Tao,
+    tao: Tao,
     ele: AnyElementID,
     index: int,
     which: Which = "model",
@@ -724,7 +727,7 @@ def get_wall3d_table(
 
     Parameters
     ----------
-    tao : pytao.Tao
+    tao : Tao
         The Tao instance.
     ele : str or ElementID
         The element identifier, either as a string or an ElementID.
@@ -746,7 +749,7 @@ def get_wall3d_table(
 
 @_catch_element_not_found_error
 def get_multipoles(
-    tao: pytao.Tao,
+    tao: Tao,
     ele: AnyElementID,
     which: Which = "model",
 ) -> AnyElementMultipoles | None:
@@ -755,7 +758,7 @@ def get_multipoles(
 
     Parameters
     ----------
-    tao : pytao.Tao
+    tao : Tao
         The Tao object.
     ele : str or ElementID
         The identifier of the element. Can be a string name or an ElementID object.
@@ -782,7 +785,7 @@ def get_multipoles(
 
 @_catch_element_not_found_error
 def get_bunch_params(
-    tao: pytao.Tao,
+    tao: Tao,
     ele: AnyElementID,
     which: Which = "model",
 ) -> tao_classes.ElementBunchParams:
@@ -791,7 +794,7 @@ def get_bunch_params(
 
     Parameters
     ----------
-    tao : pytao.Tao
+    tao : Tao
         Tao instance.
     ele : str or ElementID
         Identifier for the element, either as a string or an ElementID object.
@@ -807,7 +810,7 @@ def get_bunch_params(
 
 @_catch_element_not_found_error
 def get_photon_base(
-    tao: pytao.Tao,
+    tao: Tao,
     ele: AnyElementID,
     which: Which = "model",
 ) -> tao_classes.ElementPhotonBase:
@@ -816,7 +819,7 @@ def get_photon_base(
 
     Parameters
     ----------
-    tao : pytao.Tao
+    tao : Tao
         Tao instance.
     ele : str or ElementID
         Identifier for the element, either as a string or an ElementID object.
@@ -833,7 +836,7 @@ def get_photon_base(
 
 @_catch_element_not_found_error
 def get_photon_material(
-    tao: pytao.Tao,
+    tao: Tao,
     ele: AnyElementID,
     which: Which = "model",
 ) -> tao_classes.ElementPhotonMaterial:
@@ -842,7 +845,7 @@ def get_photon_material(
 
     Parameters
     ----------
-    tao : pytao.Tao
+    tao : Tao
         The Tao instance.
     ele : str or ElementID
         The identifier of the element.
@@ -861,7 +864,7 @@ def get_photon_material(
 
 @_catch_element_not_found_error
 def get_photon_curvature(
-    tao: pytao.Tao,
+    tao: Tao,
     ele: AnyElementID,
     which: Which = "model",
 ) -> tao_classes.ElementPhotonCurvature:
@@ -870,7 +873,7 @@ def get_photon_curvature(
 
     Parameters
     ----------
-    tao : pytao.Tao
+    tao : Tao
         The Tao instance.
     ele : str or ElementID
         The element identifier.
@@ -889,7 +892,7 @@ def get_photon_curvature(
 
 @_catch_element_not_found_error
 def get_grid_field_base(
-    tao: pytao.Tao,
+    tao: Tao,
     ele: AnyElementID,
     index: int,
     which: Which = "model",
@@ -899,7 +902,7 @@ def get_grid_field_base(
 
     Parameters
     ----------
-    tao : pytao.Tao
+    tao : Tao
         The Tao instance.
     ele : str or ElementID
         The element identifier, either as a string or an ElementID object.
@@ -919,7 +922,7 @@ def get_grid_field_base(
 
 @_catch_element_not_found_error
 def get_grid_field_points(
-    tao: pytao.Tao,
+    tao: Tao,
     ele: AnyElementID,
     index: int,
     which: Which = "model",
@@ -929,7 +932,7 @@ def get_grid_field_points(
 
     Parameters
     ----------
-    tao : pytao.Tao
+    tao : Tao
         The Tao instance.
     ele : str or ElementID
         The element identifier, either as a string or an ElementID object.
@@ -951,7 +954,7 @@ def get_grid_field_points(
 
 @_catch_element_not_found_error
 def get_wake_base(
-    tao: pytao.Tao,
+    tao: Tao,
     ele: AnyElementID,
     which: Which = "model",
 ) -> tao_classes.ElementWakeBase:
@@ -960,7 +963,7 @@ def get_wake_base(
 
     Parameters
     ----------
-    tao : pytao.Tao
+    tao : Tao
         The Tao instance.
     ele : str or ElementID
         The identifier of the element whose wake base is to be retrieved.
@@ -977,7 +980,7 @@ def get_wake_base(
 
 @_catch_element_not_found_error
 def get_wake_sr_long(
-    tao: pytao.Tao,
+    tao: Tao,
     ele: AnyElementID,
     which: Which = "model",
 ) -> tao_classes.ElementWakeSrLong:
@@ -986,7 +989,7 @@ def get_wake_sr_long(
 
     Parameters
     ----------
-    tao : pytao.Tao
+    tao : Tao
         The Tao instance.
     ele : str or ElementID
         The element identifier.
@@ -1003,7 +1006,7 @@ def get_wake_sr_long(
 
 @_catch_element_not_found_error
 def get_wake_sr_trans(
-    tao: pytao.Tao,
+    tao: Tao,
     ele: AnyElementID,
     which: Which = "model",
 ) -> tao_classes.ElementWakeSrTrans:
@@ -1013,7 +1016,7 @@ def get_wake_sr_trans(
 
     Parameters
     ----------
-    tao : pytao.Tao
+    tao : Tao
         The Tao instance.
     ele : str or ElementID
         The element identifier, which can be either a string or an ElementID instance.
@@ -1032,7 +1035,7 @@ def get_wake_sr_trans(
 
 @_catch_element_not_found_error
 def get_mat6(
-    tao: pytao.Tao,
+    tao: Tao,
     ele: AnyElementID,
     which: Which = "model",
 ) -> tao_classes.ElementMat6:
@@ -1041,7 +1044,7 @@ def get_mat6(
 
     Parameters
     ----------
-    tao : pytao.Tao
+    tao : Tao
         An instance of the Tao class.
     ele : str or ElementID
         The identifier of the element. This can be a string or an ElementID object.
@@ -1057,7 +1060,7 @@ def get_mat6(
 
 @_catch_element_not_found_error
 def get_mat6_vec0(
-    tao: pytao.Tao,
+    tao: Tao,
     ele: AnyElementID,
     which: Which = "model",
 ) -> tao_classes.ElementMat6Vec0:
@@ -1066,7 +1069,7 @@ def get_mat6_vec0(
 
     Parameters
     ----------
-    tao : pytao.Tao
+    tao : Tao
         The Tao instance.
     ele : str or ElementID
         The identifier of the element.
@@ -1083,7 +1086,7 @@ def get_mat6_vec0(
 
 @_catch_element_not_found_error
 def get_mat6_error(
-    tao: pytao.Tao,
+    tao: Tao,
     ele: AnyElementID,
     which: Which = "model",
 ) -> tao_classes.ElementMat6Error:
@@ -1092,7 +1095,7 @@ def get_mat6_error(
 
     Parameters
     ----------
-    tao : pytao.Tao
+    tao : Tao
         The Tao instance.
     ele : str or ElementID
         The identifier of the element for which to retrieve the error matrix.
@@ -1108,7 +1111,7 @@ def get_mat6_error(
 
 @_catch_element_not_found_error
 def get_comb(
-    tao: pytao.Tao,
+    tao: Tao,
     ele: AnyElementID,
     which: Which = "model",
     *,
@@ -1120,7 +1123,7 @@ def get_comb(
 
     Parameters
     ----------
-    tao : pytao.Tao
+    tao : Tao
         The Tao instance.
     ele : str or ElementID
         The identifier of the element for which to retrieve the error matrix.
@@ -1259,7 +1262,7 @@ class ElementFloor(pydantic.BaseModel, extra="forbid"):
     @classmethod
     def from_tao(
         cls,
-        tao: pytao.Tao,
+        tao: Tao,
         ele: AnyElementID,
         *,
         which: Which,
@@ -1304,7 +1307,7 @@ class ElementFloorAll(pydantic.BaseModel, extra="forbid"):
     @classmethod
     def from_tao(
         cls,
-        tao: pytao.Tao,
+        tao: Tao,
         ele: AnyElementID,
         *,
         which: Which,
@@ -1345,7 +1348,7 @@ class ElementChamberWall(pydantic.BaseModel, extra="forbid"):
     @classmethod
     def from_tao(
         cls,
-        tao: pytao.Tao,
+        tao: Tao,
         ele: AnyElementID,
         index: int,
         *,
@@ -1382,7 +1385,7 @@ class ElementWall3D(tao_classes.ElementWall3DBase, extra="forbid"):
     @classmethod
     def from_tao(
         cls,
-        tao: pytao.Tao,
+        tao: Tao,
         ele: AnyElementID,
         index: int,
         *,
@@ -1428,7 +1431,7 @@ class ElementPhoton(tao_classes.ElementPhotonBase, extra="forbid"):
     @classmethod
     def from_tao(
         cls,
-        tao: pytao.Tao,
+        tao: Tao,
         ele: AnyElementID,
         *,
         which: Which,
@@ -1470,7 +1473,7 @@ class ElementMat6(
     @classmethod
     def from_tao(
         cls,
-        tao: pytao.Tao,
+        tao: Tao,
         ele: AnyElementID,
         *,
         which: Which,
@@ -1500,7 +1503,7 @@ class ElementGridField(tao_classes.ElementGridField, extra="forbid"):
     @classmethod
     def from_tao(
         cls,
-        tao: pytao.Tao,
+        tao: Tao,
         ele: AnyElementID,
         index: int,
         *,
@@ -1530,7 +1533,7 @@ class ElementWake(tao_classes.ElementWakeBase, extra="forbid"):
     @classmethod
     def from_tao(
         cls,
-        tao: pytao.Tao,
+        tao: Tao,
         ele: AnyElementID,
         *,
         which: Which,
@@ -1664,7 +1667,7 @@ class Element(pydantic.BaseModel, extra="forbid"):
     @classmethod
     def from_tao(
         cls,
-        tao: pytao.Tao,
+        tao: Tao,
         ele: AnyElementID,
         *,
         which: Which = "model",
@@ -1698,7 +1701,7 @@ class Element(pydantic.BaseModel, extra="forbid"):
 
         Parameters
         ----------
-        tao : pytao.Tao
+        tao : Tao
             The Tao instance.
         ele : int, str, or ElementID
             The element identifier.
@@ -1789,29 +1792,29 @@ class Element(pydantic.BaseModel, extra="forbid"):
         return instance
 
     @_pytao_stats.time_decorator
-    def _fill_head(self, tao: pytao.Tao):
+    def _fill_head(self, tao: Tao):
         self.head = get_head(tao=tao, ele=self.ele, which=self.which)
 
     @_pytao_stats.time_decorator
-    def _fill_attrs(self, tao: pytao.Tao):
+    def _fill_attrs(self, tao: Tao):
         self.attrs = GeneralAttributes.from_tao(tao=tao, ele_id=self.ele, which=self.which)
 
     @_pytao_stats.time_decorator
-    def _fill_bunch_params(self, tao: pytao.Tao):
+    def _fill_bunch_params(self, tao: Tao):
         self.bunch_params = get_bunch_params(tao=tao, ele=self.ele, which=self.which)
 
     @_pytao_stats.time_decorator
-    def _fill_floor(self, tao: pytao.Tao):
+    def _fill_floor(self, tao: Tao):
         self.floor = ElementFloorAll.from_tao(tao=tao, ele=self.ele, which=self.which)
 
     @_pytao_stats.time_decorator
-    def _fill_comb(self, tao: pytao.Tao, comb_data: Comb | None):
+    def _fill_comb(self, tao: Tao, comb_data: Comb | None):
         self.comb = get_comb(
             tao=tao, ele=self.ele, which=self.which, head=self.head, comb=comb_data
         )
 
     @_pytao_stats.time_decorator
-    def _fill_control_vars(self, tao: pytao.Tao):
+    def _fill_control_vars(self, tao: Tao):
         if self.head.has_control:
             self.control_vars = cast(
                 dict[str, float], tao.ele_control_var(ele_id=self.ele, which=self.which)
@@ -1820,40 +1823,44 @@ class Element(pydantic.BaseModel, extra="forbid"):
             self.control_vars = None
 
     @_pytao_stats.time_decorator
-    def _fill_lord_slave(self, tao: pytao.Tao):
+    def _fill_lord_slave(self, tao: Tao):
         if self.head.has_lord_slave:
             self.lord_slave = get_lord_slave(tao=tao, ele=self.ele, which=self.which)
         else:
             self.lord_slave = None
 
     @_pytao_stats.time_decorator
-    def _fill_photon(self, tao: pytao.Tao):
+    def _fill_photon(self, tao: Tao):
         if self.head.has_photon:
             self.photon = ElementPhoton.from_tao(tao=tao, ele=self.ele, which=self.which)
         else:
             self.photon = None
 
     @_pytao_stats.time_decorator
-    def _fill_orbit(self, tao: pytao.Tao):
+    def _fill_orbit(self, tao: Tao):
         self.orbit = get_orbit(tao=tao, ele=self.ele, which=self.which)
 
     @_pytao_stats.time_decorator
-    def _fill_twiss(self, tao: pytao.Tao):
+    def _fill_twiss(self, tao: Tao):
         if self.head.has_twiss:
             self.twiss = get_twiss(tao=tao, ele=self.ele, which=self.which)
         else:
             self.twiss = None
 
     @_pytao_stats.time_decorator
-    def _fill_multipoles(self, tao: pytao.Tao):
-        self.multipoles = get_multipoles(tao=tao, ele=self.ele)
+    def _fill_multipoles(self, tao: Tao):
+        self.multipoles = get_multipoles(tao=tao, ele=self.ele, which=self.which)
 
     @_pytao_stats.time_decorator
-    def _fill_wall3d(self, tao: pytao.Tao, fill_table: bool):
+    def _fill_wall3d(self, tao: Tao, fill_table: bool):
         if self.head.has_wall3d > 0:
             self.wall3d = [
                 ElementWall3D.from_tao(
-                    tao=tao, index=index, ele=self.ele, which=self.which, fill_table=fill_table
+                    tao=tao,
+                    index=index,
+                    ele=self.ele,
+                    which=self.which,
+                    fill_table=fill_table,
                 )
                 for index in range(1, self.head.has_wall3d + 1)
             ]
@@ -1861,7 +1868,7 @@ class Element(pydantic.BaseModel, extra="forbid"):
             self.wall3d = None
 
     @_pytao_stats.time_decorator
-    def _fill_chamber_walls(self, tao: pytao.Tao):
+    def _fill_chamber_walls(self, tao: Tao):
         if self.head.has_wall3d > 0:
             self.chamber_walls = [
                 ElementChamberWall.from_tao(
@@ -1873,7 +1880,7 @@ class Element(pydantic.BaseModel, extra="forbid"):
             self.chamber_walls = None
 
     @_pytao_stats.time_decorator
-    def _fill_grid_field(self, tao: pytao.Tao, points: bool = False):
+    def _fill_grid_field(self, tao: Tao, points: bool = False):
         if self.head.num_grid_field > 0:
             self.grid_field = [
                 ElementGridField.from_tao(
@@ -1889,14 +1896,14 @@ class Element(pydantic.BaseModel, extra="forbid"):
             self.grid_field = None
 
     @_pytao_stats.time_decorator
-    def _fill_mat6(self, tao: pytao.Tao):
+    def _fill_mat6(self, tao: Tao):
         if self.head.has_mat6:
             self.mat6 = ElementMat6.from_tao(tao=tao, ele=self.ele, which=self.which)
         else:
             self.mat6 = None
 
     @_pytao_stats.time_decorator
-    def _fill_wake(self, tao: pytao.Tao):
+    def _fill_wake(self, tao: Tao):
         if self.head.has_wake:
             self.wake = ElementWake.from_tao(tao=tao, ele=self.ele, which=self.which)
         else:
@@ -1904,7 +1911,7 @@ class Element(pydantic.BaseModel, extra="forbid"):
 
     def fill(
         self,
-        tao: pytao.Tao,
+        tao: Tao,
         *,
         head: bool = True,
         attrs: bool = True,
@@ -1933,7 +1940,7 @@ class Element(pydantic.BaseModel, extra="forbid"):
 
         Parameters
         ----------
-        tao : pytao.Tao
+        tao : Tao
             The Tao instance to retrieve information from.
         head : bool, default=True
             Update the head attribute.
@@ -2059,7 +2066,7 @@ class Lattice(pydantic.BaseModel):
     @classmethod
     def from_tao_eles(
         cls,
-        tao: pytao.Tao,
+        tao: Tao,
         eles: list[AnyElementID],
         *,
         which: Which = "model",
@@ -2072,7 +2079,7 @@ class Lattice(pydantic.BaseModel):
 
         Parameters
         ----------
-        tao : pytao.Tao
+        tao : Tao
         eles : list of int, str, or ElementID
             Element names, indices, or identifiers.
         which : "base", "model", or "design", default="model"
@@ -2101,7 +2108,7 @@ class Lattice(pydantic.BaseModel):
     @classmethod
     def from_tao_unique(
         cls,
-        tao: pytao.Tao,
+        tao: Tao,
         *,
         which: Which = "model",
         track_start: ElementID | str | int | None = None,
@@ -2113,7 +2120,7 @@ class Lattice(pydantic.BaseModel):
 
         Parameters
         ----------
-        tao : pytao.Tao
+        tao : Tao
         which : "base", "model", or "design", default="model"
         track_start : str, optional
             The first element to get information from (inclusive).  Defaults to
@@ -2145,7 +2152,7 @@ class Lattice(pydantic.BaseModel):
     @classmethod
     def from_tao_tracking(
         cls,
-        tao: pytao.Tao,
+        tao: Tao,
         *,
         track_start: ElementID | str | int | None = None,
         track_end: ElementID | str | int | None = None,
@@ -2159,7 +2166,7 @@ class Lattice(pydantic.BaseModel):
 
         Parameters
         ----------
-        tao : pytao.Tao
+        tao : Tao
         which : "base", "model", or "design", default="model"
         track_start : str, optional
             The first element to get information from (inclusive).  Defaults to

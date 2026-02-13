@@ -6,8 +6,6 @@ import numpy as np
 from pmd_beamphysics.species import mass_of
 from typing_extensions import Self
 
-import pytao
-
 from ..base import TaoModel
 from ..types import FloatSequence
 
@@ -283,17 +281,17 @@ class Comb(TaoModel, extra="allow"):
     twiss_phi_x: FloatSequence
     twiss_phi_y: FloatSequence
 
-    def query(self, tao: pytao.Tao) -> Self:
+    def query(self, tao: Tao) -> Self:
         return self.from_tao(tao)
 
     @classmethod
-    def from_tao(cls: type[Self], tao: pytao.Tao, **kwargs) -> Self:
+    def from_tao(cls: type[Self], tao: Tao, **kwargs) -> Self:
         """
         Create a Comb instance from Tao.
 
         Parameters
         ----------
-        tao : pytao.Tao
+        tao : Tao
         **kwargs : dict
             Additional keyword arguments to pass to `comb_data_from_tao`.
 
