@@ -450,7 +450,7 @@ class ElementID(pydantic.BaseModel, extra="forbid"):
 
     @classmethod
     def from_tao_any(
-        cls, value: str
+        cls, value: str, *, split_range: bool = False
     ) -> ElementID | ElementList | ElementIntersection | ElementRange:
         """
         Create the most appropriate instance of an Element class for the given
@@ -468,7 +468,7 @@ class ElementID(pydantic.BaseModel, extra="forbid"):
         """
         if "," in value:
             return ElementList.from_tao(value)
-        if ":" in value.replace("::", " "):
+        if split_range and ":" in value.replace("::", " "):
             return ElementRange.from_tao(value)
         if "&" in value:
             return ElementIntersection.from_tao(value)
