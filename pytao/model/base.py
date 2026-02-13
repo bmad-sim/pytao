@@ -23,7 +23,7 @@ from .types import ArgumentType
 try:
     from rich.pretty import pretty_repr
 except ImportError:
-    pretty_repr = repr
+    pretty_repr = None
 
 
 if TYPE_CHECKING:
@@ -147,7 +147,9 @@ class TaoModel(
         return _check_equality(self, other)
 
     def __repr__(self):
-        return pretty_repr(self)
+        if pretty_repr is not None:
+            return pretty_repr(self)
+        return super().__repr__()
 
 
 class SetField(NamedTuple):
