@@ -4,10 +4,9 @@ import numpy as np
 import pytest
 
 from .. import AnyTao
-from ..util.parsers import parse_tao_python_data
+from ..util.parsers import parse_derivative, parse_tao_python_data
 from .conftest import ensure_successful_parsing
 from .test_interface_commands import new_tao
-from ..util.parsers import parse_derivative
 
 
 @pytest.mark.parametrize(

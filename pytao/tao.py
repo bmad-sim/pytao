@@ -15,7 +15,7 @@ from typing import (
 )
 
 import numpy as np
-from typing_extensions import override, Unpack
+from typing_extensions import Unpack, override
 
 from . import pbar
 from .core import AnyPath, TaoCore, TaoInitializationError, TaoStartup

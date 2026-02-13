@@ -126,6 +126,8 @@ def get_example(name: str) -> TaoStartup:
         )
     if name == "x_axis_param_plot":
         pytest.skip("'x_axis_param_plot' example fails saying no data is in range")
+    if name == "driving_terms" and REUSE_SUBPROCESS:
+        pytest.skip("driving_terms is unstable with reinitialization")
 
     nostartup = name in {
         # "multi_turn_orbit",
