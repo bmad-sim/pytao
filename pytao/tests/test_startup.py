@@ -1,6 +1,6 @@
 import pytest
 
-from .. import Tao, TaoStartup
+from .. import Tao, TaoStartup, SubprocessTao
 from ..core import TaoInitializationError
 
 
@@ -116,8 +116,8 @@ use, fodo1
 
 
 def test_startup_from_lattice_contents() -> None:
-    tao = Tao.from_lattice_contents(fodo_lattice)
-    names = [tao.ele_head(ele_id)["name"] for ele_id in tao.unique_ele_ids()]
+    with SubprocessTao.from_lattice_contents(fodo_lattice) as tao:
+        names = [tao.ele_head(ele_id)["name"] for ele_id in tao.unique_ele_ids()]
     assert names == [
         "BEGINNING",
         "K1",
