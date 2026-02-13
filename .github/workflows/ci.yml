@@ -45,5 +45,5 @@ jobs:
           fi
 
           echo -e '## Test results\n\n```' >> "$GITHUB_STEP_SUMMARY"
-          pytest -v --cov=pytao/ pytao/tests 2>&1 | tee -a "$GITHUB_STEP_SUMMARY"
+          pytest -v -x --cov=pytao/ pytao/tests 2>&1 | tee -a "$GITHUB_STEP_SUMMARY"
           echo '```' >> "$GITHUB_STEP_SUMMARY"
