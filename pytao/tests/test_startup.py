@@ -116,7 +116,7 @@ use, fodo1
 
 
 def test_startup_from_lattice_contents() -> None:
-    with SubprocessTao.from_lattice_contents(fodo_lattice) as tao:
+    with SubprocessTao.from_lattice_contents(fodo_lattice, noplot=True) as tao:
         names = [tao.ele_head(ele_id)["name"] for ele_id in tao.unique_ele_ids()]
     assert names == [
         "BEGINNING",
