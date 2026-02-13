@@ -1,4 +1,4 @@
-import pkgutil
+import importlib.util
 import sys
 
 
@@ -12,7 +12,7 @@ def module_check():
     upgrade = False
     required = ["tkinter", "pexpect", "matplotlib"]
     for mod in required:
-        if pkgutil.find_loader(mod) is None:
+        if importlib.util.find_spec(mod) is None:
             missing.append(mod)
     # Check matplotlib version
     if "matplotlib" not in missing:
