@@ -75,6 +75,53 @@ def _maybe_int(value: str | None) -> str | int | None:
         return value
 
 
+class ElementRange(pydantic.BaseModel, extra="forbid"):
+    """
+    Multiple Tao elements.
+    """
+
+    start: ElementID
+    end: ElementID
+
+    @classmethod
+    def from_tao(cls, value: str) -> ElementRange:
+        """
+        Convert a Tao representation of comma-delimited elements to an
+        ElementList.
+
+        Parameters
+        ----------
+        value : str
+
+        Returns
+        -------
+        ElementList or ElementRange
+        """
+        if ":" not in value:
+            raise ValueError(f"No colon delimiter found in element identifier {value!r}")
+
+        ele_id = ElementID.from_tao(value)
+        ele1, ele2 = ele_id.ele_id.split(":")
+
+        common = ele_id.model_dump()
+        common.pop("ele_id")
+
+        return cls(
+            start=ElementID(ele_id=ele1, **common),
+            end=ElementID(ele_id=ele2, **common),
+        )
+
+    def as_id(self) -> ElementID:
+        common = self.start.model_dump()
+        common.pop("ele_id")
+        return ElementID(ele_id=f"{self.start.ele_id}:{self.end.ele_id}", **common)
+
+    @property
+    def tao_string(self) -> str:
+        """This element list represented in Tao command-line interface string form."""
+        return self.as_id().tao_string
+
+
 class ElementList(pydantic.BaseModel, extra="forbid"):
     """
     Multiple Tao elements.
@@ -97,7 +144,7 @@ class ElementList(pydantic.BaseModel, extra="forbid"):
         ElementList
         """
         if "," not in value:
-            raise ValueError("No comma delimiter found in element identifier {value!r}")
+            raise ValueError(f"No comma delimiter found in element identifier {value!r}")
         return cls(elements=tuple(ElementID.from_tao(part) for part in value.split(",")))
 
     @property
@@ -142,7 +189,7 @@ class ElementID(pydantic.BaseModel, extra="forbid"):
 
     An element "name" (which can match to multiple elements) in Tao can be of the form
     ```
-    {~}{branch>>}{key::}ele_id{##N}{+/-offset}
+    {~}{uni@}{branch>>}{key::}ele_id{##N}{+/-offset}
     ```
 
     where
@@ -151,6 +198,7 @@ class ElementID(pydantic.BaseModel, extra="forbid"):
     | ----------- | ----------------------------------------------------------------------------------------------- |
     | `~`         | Negation character. See below.                                                                  |
     | `key`       | Optional key name ("quadrupole", "sbend", etc.)                                                 |
+    | `uni`       | Index of universe.
     | `branch`    | Name or index of branch. May contain the wild cards `*` and `%`.                                |
     | `ele_id`    | Name or index of element. May contain the wild cards `*` and `%`.                               |
     |             | If a name and no branch is given, all branches are searched.                                    |
@@ -353,6 +401,7 @@ class ElementID(pydantic.BaseModel, extra="forbid"):
                 return remaining.split(delim, 1)
             return None, remaining
 
+        universe, remaining = split_next("@")
         branch, remaining = split_next(">>")
         key, remaining = split_next("::")
 
@@ -400,7 +449,9 @@ class ElementID(pydantic.BaseModel, extra="forbid"):
         )
 
     @classmethod
-    def from_tao_any(cls, value: str) -> ElementID | ElementList | ElementIntersection:
+    def from_tao_any(
+        cls, value: str
+    ) -> ElementID | ElementList | ElementIntersection | ElementRange:
         """
         Create the most appropriate instance of an Element class for the given
         Tao element string.
@@ -417,6 +468,8 @@ class ElementID(pydantic.BaseModel, extra="forbid"):
         """
         if "," in value:
             return ElementList.from_tao(value)
+        if ":" in value.replace("::", " "):
+            return ElementRange.from_tao(value)
         if "&" in value:
             return ElementIntersection.from_tao(value)
         return cls.from_tao(value)
