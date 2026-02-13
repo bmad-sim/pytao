@@ -72,7 +72,7 @@ elements.extend(
 @pytest.fixture(scope="module")
 def _tao() -> SubprocessTao:
     with SubprocessTao(
-        init_file="/Users/klauer/Repos/bmad/regression_tests/pipe_test/tao.init_wall3d",
+        init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall3d",
         noplot=True,
     ) as tao:
         yield tao
