@@ -389,21 +389,24 @@ class ElementID(pydantic.BaseModel, extra="forbid"):
         match_offset = None
         negated = False
 
-        if "::" in value and ">>" in value:
+        if "@" not in value and "::" in value and ">>" in value:
             if value.index("::") < value.index(">>"):
                 return cls.from_tao_old_syntax(value)
         remaining = value
-
-        if remaining.startswith("~"):
-            negated = True
-            remaining = remaining[1:]
 
         def split_next(delim: str) -> tuple[str, str] | tuple[None, str]:
             if delim in remaining:
                 return remaining.split(delim, 1)
             return None, remaining
 
+        # Universe prefix *first*, then negation, then branch/key (mirroring
+        # lat_ele_locator).
         universe, remaining = split_next("@")
+
+        if remaining.startswith("~"):
+            negated = True
+            remaining = remaining[1:]
+
         branch, remaining = split_next(">>")
         key, remaining = split_next("::")
 
