@@ -15,6 +15,3 @@ dependencies:
   - pydantic >=2
   - tqdm
   - pip
-  - pip:
-      # Install pytao from here.
-      - .

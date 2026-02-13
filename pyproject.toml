@@ -7,7 +7,16 @@ name = "pytao"
 description = "PyTao is the Python interface for Bmad's Tao"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.10"
-dependencies = []
+dependencies = [
+  "h5py",
+  "ipython",
+  "matplotlib",
+  "numpy",
+  "openpmd-beamphysics",
+  "pexpect",
+  "pydantic>=2",
+  "tqdm",
+]
 dynamic = ["version"]
 keywords = []
 authors = [
@@ -31,19 +40,7 @@ pytao = "pytao.cli:main"
 pytao-gui = "pytao.gui.__main__:main"
 
 [project.optional-dependencies]
-# Currently it's expected that users install via conda;
-# however, a pip-based installation should work as well.
-# `pip install .[all]`
-all = [
-  "h5py",
-  "ipython",
-  "matplotlib",
-  "numpy",
-  "openpmd-beamphysics",
-  "pexpect",
-  "pydantic>=2",
-  "tqdm",
-]
+all = []
 test = ["pytest", "pytest-cov"]
 
 [project.urls]
