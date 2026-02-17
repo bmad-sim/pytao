@@ -24,7 +24,7 @@ class FloatOrNone:
 
 
 @dataclasses.dataclass
-class PipeData:
+class Attr:
     name: str
     type: str
     settable: bool
@@ -207,7 +207,7 @@ def parse_tao_python_data_with_units(lines, clean_key=True):
 
     for line in lines:
         name, type_, settable, dat = _parse_tao_python_data1(line, clean_key=clean_key)
-        data[name] = PipeData(
+        data[name] = Attr(
             name=name,
             type=type_,
             settable=settable,

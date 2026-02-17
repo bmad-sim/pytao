@@ -7,6 +7,20 @@ from .config import (
     TaoGlobal,
     TaylorMap,
 )
+from .ele import (
+    Comb,
+    Element,
+    ElementIntersection,
+    ElementList,
+    ElementRange,
+    ElementID,
+    Lattice,
+    AnyElementID,
+    Which,
+    PhotonWho,
+    ChamberWallWho,
+    FloorWhere,
+)
 
 __all__ = [
     "Beam",
@@ -16,4 +30,16 @@ __all__ = [
     "TaoConfig",
     "TaoGlobal",
     "TaylorMap",
+    "Comb",
+    "Element",
+    "ElementIntersection",
+    "ElementList",
+    "ElementRange",
+    "ElementID",
+    "Lattice",
+    "AnyElementID",
+    "Which",
+    "PhotonWho",
+    "ChamberWallWho",
+    "FloorWhere",
 ]

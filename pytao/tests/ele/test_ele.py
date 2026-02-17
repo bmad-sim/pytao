@@ -151,6 +151,7 @@ def test_element_fill(tao: SubprocessTao, ele_id: str):
     if ele.head.num_grid_field:
         assert ele.grid_field is not None
         assert len(ele.grid_field) == ele.head.num_grid_field
+        assert ele.grid_field[0].points is not None
         assert len(ele.grid_field[0].points)
     if ele.head.has_wall3d:
         assert ele.chamber_walls is not None
@@ -232,7 +233,7 @@ def pytao_stats():
 
 
 def test_cbeta_unique(cbeta_ffag_tao: SubprocessTao, pytao_stats: _PytaoStatistics):
-    lat = Lattice.from_tao_unique(cbeta_ffag_tao, fill_common=True)
+    lat = Lattice.from_tao_unique(cbeta_ffag_tao, defaults=True)
     print("Total elements:", len(lat.elements))
 
     assert len(lat.by_element_index) == len(lat.elements)
@@ -241,7 +242,7 @@ def test_cbeta_unique(cbeta_ffag_tao: SubprocessTao, pytao_stats: _PytaoStatisti
 
 
 def test_cbeta_tracking(cbeta_ffag_tao: SubprocessTao, pytao_stats: _PytaoStatistics):
-    lat = Lattice.from_tao_tracking(cbeta_ffag_tao, fill_common=True)
+    lat = Lattice.from_tao_tracking(cbeta_ffag_tao, defaults=True)
     print("Total elements:", len(lat.elements))
 
     assert len(lat.by_element_index) == len(lat.elements)
@@ -304,7 +305,7 @@ def test_lattice_write(
         print()
         with timed_section(description="Lattice.from_tao_tracking"):
             lat = Lattice.from_tao_tracking(
-                cbeta_ffag_tao, fill_common=True, track_end=10, comb=True
+                cbeta_ffag_tao, defaults=True, track_end=10, comb=True
             )
 
     print()

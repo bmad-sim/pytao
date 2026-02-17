@@ -5,7 +5,6 @@ import functools
 import time
 
 import pydantic
-from pydantic import Field
 
 
 class _PytaoStatisticsCall(pydantic.BaseModel):
@@ -20,22 +19,22 @@ class _PytaoStatisticsCall(pydantic.BaseModel):
 
 
 class _PytaoStatistics(pydantic.BaseModel):
-    head: _PytaoStatisticsCall = Field(default_factory=_PytaoStatisticsCall)
-    attrs: _PytaoStatisticsCall = Field(default_factory=_PytaoStatisticsCall)
-    bunch_params: _PytaoStatisticsCall = Field(default_factory=_PytaoStatisticsCall)
-    comb: _PytaoStatisticsCall = Field(default_factory=_PytaoStatisticsCall)
-    control_vars: _PytaoStatisticsCall = Field(default_factory=_PytaoStatisticsCall)
-    floor: _PytaoStatisticsCall = Field(default_factory=_PytaoStatisticsCall)
-    lord_slave: _PytaoStatisticsCall = Field(default_factory=_PytaoStatisticsCall)
-    photon: _PytaoStatisticsCall = Field(default_factory=_PytaoStatisticsCall)
-    orbit: _PytaoStatisticsCall = Field(default_factory=_PytaoStatisticsCall)
-    twiss: _PytaoStatisticsCall = Field(default_factory=_PytaoStatisticsCall)
-    grid_field: _PytaoStatisticsCall = Field(default_factory=_PytaoStatisticsCall)
-    mat6: _PytaoStatisticsCall = Field(default_factory=_PytaoStatisticsCall)
-    chamber_walls: _PytaoStatisticsCall = Field(default_factory=_PytaoStatisticsCall)
-    wall3d: _PytaoStatisticsCall = Field(default_factory=_PytaoStatisticsCall)
-    multipoles: _PytaoStatisticsCall = Field(default_factory=_PytaoStatisticsCall)
-    wake: _PytaoStatisticsCall = Field(default_factory=_PytaoStatisticsCall)
+    head: _PytaoStatisticsCall = _PytaoStatisticsCall()
+    attrs: _PytaoStatisticsCall = _PytaoStatisticsCall()
+    bunch_params: _PytaoStatisticsCall = _PytaoStatisticsCall()
+    comb: _PytaoStatisticsCall = _PytaoStatisticsCall()
+    control_vars: _PytaoStatisticsCall = _PytaoStatisticsCall()
+    floor: _PytaoStatisticsCall = _PytaoStatisticsCall()
+    lord_slave: _PytaoStatisticsCall = _PytaoStatisticsCall()
+    photon: _PytaoStatisticsCall = _PytaoStatisticsCall()
+    orbit: _PytaoStatisticsCall = _PytaoStatisticsCall()
+    twiss: _PytaoStatisticsCall = _PytaoStatisticsCall()
+    grid_field: _PytaoStatisticsCall = _PytaoStatisticsCall()
+    mat6: _PytaoStatisticsCall = _PytaoStatisticsCall()
+    chamber_walls: _PytaoStatisticsCall = _PytaoStatisticsCall()
+    wall3d: _PytaoStatisticsCall = _PytaoStatisticsCall()
+    multipoles: _PytaoStatisticsCall = _PytaoStatisticsCall()
+    wake: _PytaoStatisticsCall = _PytaoStatisticsCall()
 
     @property
     def by_name(self):

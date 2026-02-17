@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 import functools
 import gzip
 import json
@@ -14,7 +15,7 @@ from typing_extensions import Self
 
 from ...errors import TaoCommandError
 from ...util import normalize_path
-from ...util.parsers import PipeData, parse_tao_python_data_with_units
+from ...util.parsers import Attr, parse_tao_python_data_with_units
 from .. import _generated as tao_classes
 from ..base import TaoModel, _check_equality
 from .comb import Comb
@@ -1567,7 +1568,14 @@ class GeneralAttributes(TaoModel, extra="allow"):
     _tao_command_attr_: ClassVar[str] = "pipe ele:gen_attribs {ele_id}"
     _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
 
-    attrs: dict[str, PipeData]
+    attrs: dict[str, Attr]
+
+    def __getitem__(self, key: str) -> Attr:
+        # TODO: GeneralAttributes -> RootModel and then fully override __iter__
+        return self.attrs[key]
+
+    def __setitem__(self, key: str, value) -> None:
+        self.attrs[key].data = value
 
     @classmethod
     def _process_tao_data(cls, data) -> dict:
@@ -1576,6 +1584,11 @@ class GeneralAttributes(TaoModel, extra="allow"):
     # @property
     # def settable_fields(self) -> dict[str, FieldInfo]:
     #     raise NotImplementedError()
+
+
+@dataclass
+class FillDefault:
+    attr: str
 
 
 class Element(pydantic.BaseModel, extra="forbid"):
@@ -1621,11 +1634,31 @@ class Element(pydantic.BaseModel, extra="forbid"):
         List of 3D walls.
     """
 
+    DEFAULTS: ClassVar[set[str]] = {
+        "attrs",
+        "bunch_params",
+        "chamber_walls",
+        # "comb",
+        "control_vars",
+        "floor",
+        "grid_field",
+        # "grid_field_points",
+        "lord_slave",
+        "mat6",
+        "multipoles",
+        "orbit",
+        "photon",
+        "twiss",
+        "wake",
+        "wall3d",
+        # "wall3d_table",
+    }
+
     ele: str = pydantic.Field(frozen=True)
     which: Which = pydantic.Field(frozen=True)
 
     head: tao_classes.ElementHead
-    attrs: GeneralAttributes | None
+    attrs: GeneralAttributes | None = None
     bunch_params: tao_classes.ElementBunchParams | None = None
     chamber_walls: list[ElementChamberWall] | None = None
     comb: Comb | None = None
@@ -1671,33 +1704,63 @@ class Element(pydantic.BaseModel, extra="forbid"):
         ele: AnyElementID,
         *,
         which: Which = "model",
-        fill_common: bool = False,
+        defaults: bool = True,
         # Individually fillable elements:
-        attrs: bool | None = None,
-        bunch_params: bool | None = None,
-        chamber_walls: bool | None = None,
-        comb: bool | None = False,
-        control_vars: bool | None = None,
-        floor: bool | None = None,
-        grid_field: bool | None = None,
-        grid_field_points: bool | None = False,
-        lord_slave: bool | None = None,
-        mat6: bool | None = None,
-        multipoles: bool | None = None,
-        orbit: bool | None = None,
-        photon: bool | None = None,
-        twiss: bool | None = None,
-        wake: bool | None = None,
-        wall3d: bool | None = None,
-        wall3d_table: bool | None = False,
+        attrs: bool | FillDefault = FillDefault("attrs"),
+        bunch_params: bool | FillDefault = FillDefault("bunch_params"),
+        chamber_walls: bool | FillDefault = FillDefault("chamber_walls"),
+        comb: bool | FillDefault = FillDefault("comb"),
+        control_vars: bool | FillDefault = FillDefault("control_vars"),
+        floor: bool | FillDefault = FillDefault("floor"),
+        grid_field: bool | FillDefault = FillDefault("grid_field"),
+        grid_field_points: bool | FillDefault = FillDefault("grid_field_points"),
+        lord_slave: bool | FillDefault = FillDefault("lord_slave"),
+        mat6: bool | FillDefault = FillDefault("mat6"),
+        multipoles: bool | FillDefault = FillDefault("multipoles"),
+        orbit: bool | FillDefault = FillDefault("orbit"),
+        photon: bool | FillDefault = FillDefault("photon"),
+        twiss: bool | FillDefault = FillDefault("twiss"),
+        wake: bool | FillDefault = FillDefault("wake"),
+        wall3d: bool | FillDefault = FillDefault("wall3d"),
+        wall3d_table: bool | FillDefault = FillDefault("wall3d_table"),
         comb_data: Comb | None = None,
     ):
         """
-        Create an Element by querying Tao.
+        Create an `Element` by querying Tao.
 
-        Use `fill_common` to fill the most commonly-used element information.
-        Individual attributes may be opted out by passing `False`,
-        or opted in by passing `True`.
+        Use `defaults` to fill the most commonly-used element information.
+        To disregard the defaults, individual items may be excluded by passing
+        `False`, or included by passing `True`.
+
+        Notes
+        -----
+
+        Defaults for the data to query are set as follows:
+
+        >>> from pytao.model import Element
+        >>> print(Element.DEFAULTS)
+        {'attrs', 'bunch_params', 'chamber_walls', 'control_vars', 'floor',
+        'grid_field', 'lord_slave', 'mat6', 'multipoles', 'orbit', 'photon',
+        'twiss', 'wake', 'wall3d'}
+
+        With the following, the default will change to only query `attrs`:
+
+        >>> Element.DEFAULTS = {"attrs"}
+
+        Examples
+        --------
+
+        Get an Element with the defaults (loads attrs, twiss, orbit, etc.):
+        >>> ele = Element.from_tao(tao, "1")
+
+        Get an Element but skip orbit calculations:
+        >>> ele = Element.from_tao(tao, "1", orbit=False)
+
+        Get an Element AND add comb data (usually off):
+        >>> ele = Element.from_tao(tao, "1", comb=True)
+
+        Get a minimal Element (disable everything explicit):
+        >>> ele = Element.from_tao(tao, "1", defaults=False)
 
         Parameters
         ----------
@@ -1706,65 +1769,61 @@ class Element(pydantic.BaseModel, extra="forbid"):
         ele : int, str, or ElementID
             The element identifier.
         which : "base", "model", or "design", optional
-            Specifies which model to use, by default "model".
-        fill_common : bool, default=False
-            Fill all common attributes.
-        attrs : bool or None, default=None
+            Specifies which Tao lattice to use, by default "model".
+        defaults : bool, default=True
+            Fill default items.  Defaults are set by name in `Element.DEFAULTS`.
+        attrs : bool, optional
             Fill general attributes.
-        bunch_params : bool or None, default=None
+        bunch_params : bool, optional
             Fill bunch parameters.
-        chamber_walls : bool or None, default=None
+        chamber_walls : bool, optional
             Fill chamber wall data.
-        comb : bool or None, default=False
+        comb : bool, default=False
             Fill comb data.  If available, pass in `comb_data` as well to avoid
             querying Tao again for the full comb data.
-        comb_data : Comb or None, default=None
+        comb_data : Comb or None, optional
             Only relevant if `comb=True`.
             If available, provide `comb_data` to avoid querying Tao again for
             the full comb data.
-        control_vars : bool or None, default=None
+        control_vars : bool, optional
             Fill control variables.
-        floor : bool or None, default=None
+        floor : bool, optional
             Fill floor data.
-        grid_field : bool or None, default=None
+        grid_field : bool, optional
             Fill grid field data.
-        grid_field_points : bool or None, default=False
+        grid_field_points : bool, default=False
             Fill grid field points data.
-        lord_slave : bool or None, default=None
+        lord_slave : bool, optional
             Fill lord-slave relationships.
-        mat6 : bool or None, default=None
+        mat6 : bool, optional
             Fill mat6 data.
-        multipoles : bool or None, default=None
-            Fill multipoles data.
-        orbit : bool or None, default=None
+        multipoles : bool, optional
+            Fill multipole data.
+        orbit : bool, optional
             Fill orbit data.
-        photon : bool or None, default=None
+        photon : bool, optional
             Fill photon data.
-        twiss : bool or None, default=None
+        twiss : bool, optional
             Fill twiss parameters.
-        wake : bool or None, default=None
+        wake : bool, optional
             Fill wake data.
-        wall3d : bool or None, default=None
+        wall3d : bool, optional
             Fill 3D wall data.
-        wall3d_table : bool or None, default=None
+        wall3d_table : bool, optional
             Fill 3D wall table data.
         """
         ele = to_ele(ele)
 
         head = get_head(tao=tao, ele=ele, which=which)
+        instance = cls(which=which, head=head, ele=ele)
 
-        instance = cls(
-            which=which,
-            head=head,
-            ele=ele,
-            attrs=None,
-            lord_slave=None,
-        )
+        def should_fill(flag: bool | FillDefault):
+            if flag is True or flag is False:
+                return flag
+            if not isinstance(flag, FillDefault):
+                raise ValueError(f"Unexpected flag: {flag}")
 
-        def should_fill(flag: bool | None):
-            if flag is False:
-                return False
-            return flag or fill_common
+            return defaults and (flag.attr in cls.DEFAULTS)
 
         instance.fill(
             tao,
@@ -2011,8 +2070,13 @@ class Element(pydantic.BaseModel, extra="forbid"):
             self._fill_orbit(tao)
         if twiss and should_update(self.twiss):
             self._fill_twiss(tao)
-        if grid_field and should_update(self.grid_field):
-            self._fill_grid_field(tao, points=grid_field_points)
+        if grid_field or grid_field_points:
+            if self.grid_field is None:
+                have_points = False
+            else:
+                have_points = any(fld.points is not None for fld in self.grid_field)
+            if should_update(self.grid_field) or (not have_points and grid_field_points):
+                self._fill_grid_field(tao, points=grid_field_points)
         if mat6 and should_update(self.mat6):
             self._fill_mat6(tao)
         if chamber_walls and should_update(self.chamber_walls):
