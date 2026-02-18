@@ -124,8 +124,12 @@ def test_element_unfilled(tao: SubprocessTao, ele_id: str):
 
 
 def test_tao_ele_method(tao: SubprocessTao, ele_id: str):
+    ele = tao.ele(ele_id, which="model", attrs=True)
+    assert ele.attrs is not None
+
     (ele,) = tao.eles(ele_id, which="model", attrs=True)
     assert ele.attrs is not None
+
     eles = tao.eles([ele_id, ele_id], which="model", attrs=True)
     assert len(eles) == 2
     assert eles[0] == eles[1]
