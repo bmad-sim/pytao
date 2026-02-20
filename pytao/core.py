@@ -438,9 +438,12 @@ class TaoStartup:
         """Create a new Tao instance and run it using these settings."""
         params = self.tao_class_params
         if use_subprocess:
-            from ..subproc import SubprocessTao
+            from .subproc import SubprocessTao
 
             return SubprocessTao(**params, env=self.env)
+
+        from .tao import Tao
+
         return Tao(**params)
 
     @contextlib.contextmanager
@@ -458,7 +461,7 @@ class TaoStartup:
         try:
             yield tao
         finally:
-            from ..subproc import SubprocessTao
+            from .subproc import SubprocessTao
 
             if isinstance(tao, SubprocessTao):
                 tao.close_subprocess()
