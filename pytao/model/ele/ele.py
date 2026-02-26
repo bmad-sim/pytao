@@ -1577,6 +1577,33 @@ class GeneralAttributes(TaoModel, extra="allow"):
     def __setitem__(self, key: str, value) -> None:
         self.attrs[key].data = value
 
+    @pydantic.model_validator(mode="wrap")
+    @classmethod
+    def _discriminator_validator(
+        cls, value: Any, handler: pydantic.ValidatorFunctionWrapHandler
+    ) -> Any:
+        if isinstance(value, dict):
+            units = value.get("units", None)
+            if isinstance(units, dict) and "settable" not in units:
+                # Support an older version of attribute storage, where each
+                # element key had its own attribute class
+                value = dict(value)
+                value.pop("units")
+                attrs = {
+                    key: {
+                        "name": key,
+                        "data": value,
+                        "units": units.get(key),
+                        "type": "unknown",
+                        "settable": False,
+                    }
+                    for key, value in value.items()
+                    if key not in {"command_args"}
+                }
+                return handler({"attrs": attrs})
+
+        return handler(value)
+
     @classmethod
     def _process_tao_data(cls, data) -> dict:
         return {"attrs": parse_tao_python_data_with_units(data)}
