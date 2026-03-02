@@ -207,79 +207,79 @@ def comb_data_from_tao(tao: Tao, ix_branch: int = 0):
 
 
 class Comb(TaoModel, extra="allow"):
-    charge_live: FloatSequence
-    cov_p__p: FloatSequence
-    cov_px__p: FloatSequence
-    cov_px__px: FloatSequence
-    cov_px__py: FloatSequence
-    cov_px__y: FloatSequence
-    cov_px__z: FloatSequence
-    cov_py__p: FloatSequence
-    cov_py__py: FloatSequence
-    cov_py__z: FloatSequence
-    cov_x__p: FloatSequence
-    cov_x__px: FloatSequence
-    cov_x__py: FloatSequence
-    cov_x__x: FloatSequence
-    cov_x__y: FloatSequence
-    cov_x__z: FloatSequence
-    cov_y__p: FloatSequence
-    cov_y__py: FloatSequence
-    cov_y__y: FloatSequence
-    cov_y__z: FloatSequence
-    cov_z__p: FloatSequence
-    cov_z__z: FloatSequence
-    ix_ele: FloatSequence
-    mean_delta: FloatSequence
-    mean_energy: FloatSequence
-    mean_p: FloatSequence
-    mean_px: FloatSequence
-    mean_py: FloatSequence
-    mean_t: FloatSequence
-    mean_x: FloatSequence
-    mean_y: FloatSequence
-    mean_z: FloatSequence
-    n_particle_live: FloatSequence
-    n_particle_lost_in_ele: FloatSequence
-    norm_emit_x: FloatSequence
-    norm_emit_y: FloatSequence
-    p0c: FloatSequence
-    rel_max_delta: FloatSequence
-    rel_max_px: FloatSequence
-    rel_max_py: FloatSequence
-    rel_max_x: FloatSequence
-    rel_max_y: FloatSequence
-    rel_max_z: FloatSequence
-    rel_min_delta: FloatSequence
-    rel_min_px: FloatSequence
-    rel_min_py: FloatSequence
-    rel_min_x: FloatSequence
-    rel_min_y: FloatSequence
-    rel_min_z: FloatSequence
-    s: FloatSequence
-    sigma_delta: FloatSequence
-    sigma_p: FloatSequence
-    sigma_px: FloatSequence
-    sigma_py: FloatSequence
-    sigma_x: FloatSequence
-    sigma_y: FloatSequence
-    sigma_z: FloatSequence
-    twiss_alpha_a: FloatSequence
-    twiss_alpha_b: FloatSequence
-    twiss_alpha_x: FloatSequence
-    twiss_alpha_y: FloatSequence
-    twiss_beta_a: FloatSequence
-    twiss_beta_b: FloatSequence
-    twiss_beta_x: FloatSequence
-    twiss_beta_y: FloatSequence
-    twiss_eta_a: FloatSequence
-    twiss_eta_b: FloatSequence
-    twiss_eta_x: FloatSequence
-    twiss_eta_y: FloatSequence
-    twiss_phi_a: FloatSequence
-    twiss_phi_b: FloatSequence
-    twiss_phi_x: FloatSequence
-    twiss_phi_y: FloatSequence
+    charge_live: FloatSequence = []
+    cov_p__p: FloatSequence = []
+    cov_px__p: FloatSequence = []
+    cov_px__px: FloatSequence = []
+    cov_px__py: FloatSequence = []
+    cov_px__y: FloatSequence = []
+    cov_px__z: FloatSequence = []
+    cov_py__p: FloatSequence = []
+    cov_py__py: FloatSequence = []
+    cov_py__z: FloatSequence = []
+    cov_x__p: FloatSequence = []
+    cov_x__px: FloatSequence = []
+    cov_x__py: FloatSequence = []
+    cov_x__x: FloatSequence = []
+    cov_x__y: FloatSequence = []
+    cov_x__z: FloatSequence = []
+    cov_y__p: FloatSequence = []
+    cov_y__py: FloatSequence = []
+    cov_y__y: FloatSequence = []
+    cov_y__z: FloatSequence = []
+    cov_z__p: FloatSequence = []
+    cov_z__z: FloatSequence = []
+    ix_ele: FloatSequence = []
+    mean_delta: FloatSequence = []
+    mean_energy: FloatSequence = []
+    mean_p: FloatSequence = []
+    mean_px: FloatSequence = []
+    mean_py: FloatSequence = []
+    mean_t: FloatSequence = []
+    mean_x: FloatSequence = []
+    mean_y: FloatSequence = []
+    mean_z: FloatSequence = []
+    n_particle_live: FloatSequence = []
+    n_particle_lost_in_ele: FloatSequence = []
+    norm_emit_x: FloatSequence = []
+    norm_emit_y: FloatSequence = []
+    p0c: FloatSequence = []
+    rel_max_delta: FloatSequence = []
+    rel_max_px: FloatSequence = []
+    rel_max_py: FloatSequence = []
+    rel_max_x: FloatSequence = []
+    rel_max_y: FloatSequence = []
+    rel_max_z: FloatSequence = []
+    rel_min_delta: FloatSequence = []
+    rel_min_px: FloatSequence = []
+    rel_min_py: FloatSequence = []
+    rel_min_x: FloatSequence = []
+    rel_min_y: FloatSequence = []
+    rel_min_z: FloatSequence = []
+    s: FloatSequence = []
+    sigma_delta: FloatSequence = []
+    sigma_p: FloatSequence = []
+    sigma_px: FloatSequence = []
+    sigma_py: FloatSequence = []
+    sigma_x: FloatSequence = []
+    sigma_y: FloatSequence = []
+    sigma_z: FloatSequence = []
+    twiss_alpha_a: FloatSequence = []
+    twiss_alpha_b: FloatSequence = []
+    twiss_alpha_x: FloatSequence = []
+    twiss_alpha_y: FloatSequence = []
+    twiss_beta_a: FloatSequence = []
+    twiss_beta_b: FloatSequence = []
+    twiss_beta_x: FloatSequence = []
+    twiss_beta_y: FloatSequence = []
+    twiss_eta_a: FloatSequence = []
+    twiss_eta_b: FloatSequence = []
+    twiss_eta_x: FloatSequence = []
+    twiss_eta_y: FloatSequence = []
+    twiss_phi_a: FloatSequence = []
+    twiss_phi_b: FloatSequence = []
+    twiss_phi_x: FloatSequence = []
+    twiss_phi_y: FloatSequence = []
 
     def query(self, tao: Tao) -> Self:
         return self.from_tao(tao)
@@ -333,3 +333,20 @@ class Comb(TaoModel, extra="allow"):
 
         data = {key: fix_value(value) for key, value in self.model_dump().items()}
         return type(self)(**data)
+
+
+def combine_combs(combs: typing.Sequence[Comb]) -> Comb:
+    """Combine the given combs into a single one."""
+    attrs = set(Comb.model_fields) - {"command_args"}
+    res = Comb()
+
+    for comb in combs:
+        for attr in attrs:
+            getattr(res, attr).extend(getattr(comb, attr))
+
+    order = np.argsort(res.s)
+    for attr in attrs:
+        value = getattr(res, attr)
+
+        setattr(res, attr, np.asarray(value)[order])
+    return res

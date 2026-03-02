@@ -1400,11 +1400,13 @@ class ElementWall3D(tao_classes.ElementWall3DBase, extra="forbid"):
         if fill_table:
             table = get_wall3d_table(tao, ele, index, which=which)
 
+        data = base.model_dump()
+        data.pop("__class_name__")
         return cls(
             which=which,
             index=index,
             table=table,
-            **base.model_dump(),
+            **data,
         )
 
 
@@ -1440,11 +1442,13 @@ class ElementPhoton(tao_classes.ElementPhotonBase, extra="forbid"):
         ele = to_ele(ele)
 
         base = get_photon_base(tao, ele, which=which)
+        data = base.model_dump()
+        data.pop("__class_name__")
         return cls(
             which=which,
             curvature=get_photon_curvature(tao, ele, which=which),
             material=get_photon_material(tao, ele, which=which),
-            **base.model_dump(),
+            **data,
         )
 
 
@@ -1490,10 +1494,8 @@ class ElementMat6(
             **vec0.model_dump(),
             **err.model_dump(),
         }
-        return cls(
-            which=which,
-            **args,
-        )
+        args.pop("__class_name__")
+        return cls(which=which, **args)
 
 
 class ElementGridField(tao_classes.ElementGridField, extra="forbid"):
@@ -1518,10 +1520,13 @@ class ElementGridField(tao_classes.ElementGridField, extra="forbid"):
             points = get_grid_field_points(tao, ele, which=which, index=index)
         else:
             points = None
+
+        data = base.model_dump()
+        data.pop("__class_name__")
         return cls(
             which=which,
             points=points,
-            **base.model_dump(),
+            **data,
         )
 
 
@@ -1548,11 +1553,14 @@ class ElementWake(tao_classes.ElementWakeBase, extra="forbid"):
             sr_long = get_wake_sr_long(tao, ele, which=which)
         if base.has_sr_trans:
             sr_trans = get_wake_sr_trans(tao, ele, which=which)
+
+        data = base.model_dump()
+        data.pop("__class_name__")
         return cls(
             which=which,
             sr_long=sr_long,
             sr_trans=sr_trans,
-            **base.model_dump(),
+            **data,
         )
 
 
