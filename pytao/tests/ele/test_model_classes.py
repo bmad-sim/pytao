@@ -1,4 +1,5 @@
 from __future__ import annotations
+import pathlib
 
 import pytest
 
@@ -24,6 +25,18 @@ def test_tao_config(tao: SubprocessTao) -> None:
 
     assert config.set(tao, allow_errors=False)
     assert TaoConfig.from_tao(tao).beam_init.a_emit == 1.0
+
+
+def test_tao_config_write_read(tao: SubprocessTao, tmp_path: pathlib.Path) -> None:
+    config = TaoConfig.from_tao(tao)
+
+    dest = tmp_path / "info.json"
+    config.write(dest)
+    config.write(dest)  # write twice to check the backup mechanism
+    assert len(list(tmp_path.glob("*.json"))) == 2
+
+    restored = config.from_file(dest)
+    assert config == restored
 
 
 def test_beam_init(tao: SubprocessTao) -> None:

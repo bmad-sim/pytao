@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import contextlib
+import datetime
+import json
 import logging
 import re
+import pathlib
 import textwrap
 from collections.abc import Generator
 from typing import (
@@ -10,6 +13,7 @@ from typing import (
     Any,
     ClassVar,
     NamedTuple,
+    TypeVar,
     cast,
 )
 
@@ -30,6 +34,8 @@ if TYPE_CHECKING:
     from pytao import Tao
 
 logger = logging.getLogger(__name__)
+
+DEFAULT_DATEFMT = "%Y%m%d_%H%M%S"
 
 
 def _check_equality(obj1: Any, obj2: Any) -> bool:
@@ -129,7 +135,7 @@ class TaoModel(
         Parameters
         ----------
         tao : Tao
-        **kwargs :
+        **kwargs
             Keyword arguments to pass to the relevant ``tao`` command.
         """
         cmd_kwargs = dict(cls._tao_command_default_args_)
@@ -142,6 +148,82 @@ class TaoModel(
             data = cmd(**cmd_kwargs)
         data = cls._process_tao_data(data)
         return cls(command_args=cmd_kwargs, **data)
+
+    def write(
+        self,
+        filename: str | pathlib.Path,
+        *,
+        exclude_defaults: bool = True,
+        backup_existing: bool = True,
+        datefmt: str = DEFAULT_DATEFMT,
+    ):
+        """
+        Write the model data to a file in JSON or YAML format.
+
+        Parameters
+        ----------
+        filename : str or pathlib.Path
+            The path to the file where the model data should be written.
+            The file format is determined by the extension.
+        """
+
+        return dump_model(
+            filename,
+            self,
+            exclude_defaults=exclude_defaults,
+            backup_existing=backup_existing,
+            datefmt=datefmt,
+        )
+
+    @classmethod
+    def from_file(cls, filename: str | pathlib.Path) -> Self:
+        """
+        Load Tao model data from a previously-written file.
+
+        Parameters
+        ----------
+        filename : str or pathlib.Path
+
+        Returns
+        -------
+        TaoModel
+        """
+        # res.filename = pathlib.Path(filename).resolve()
+        return load_model(pathlib.Path(filename).resolve(), cls)
+
+    @classmethod
+    def _get_all_subclasses(cls) -> set[type[Self]]:
+        all_subs = set(cls.__subclasses__())
+        for subclass in list(all_subs):
+            all_subs.update(subclass._get_all_subclasses())
+        return all_subs
+
+    @pydantic.model_serializer(mode="wrap")
+    def _serialize_with_class_name(
+        self, handler: pydantic.SerializerFunctionWrapHandler
+    ) -> dict[str, Any]:
+        result = handler(self)
+        if isinstance(result, dict):
+            result["__class_name__"] = type(self).__name__
+        return result
+
+    @pydantic.model_validator(mode="wrap")
+    @classmethod
+    def _discriminator_validator(
+        cls, value: Any, handler: pydantic.ValidatorFunctionWrapHandler
+    ) -> Any:
+        if isinstance(value, dict) and "__class_name__" in value:
+            value_copy = dict(value)
+            clsname = value_copy.pop("__class_name__")
+            if cls.__name__ == clsname:
+                return handler(value_copy)
+
+            registry = {sub.__name__: sub for sub in {cls} | cls._get_all_subclasses()}
+            if clsname in registry:
+                return registry[clsname].model_validate(value_copy)
+            raise ValueError(f"Unable to find '{clsname}' subclass of {cls.__name__}.")
+
+        return handler(value)
 
     def __eq__(self, other) -> bool:
         return _check_equality(self, other)
@@ -375,3 +457,84 @@ class TaoSettableModel(TaoModel):
             tao.cmd(cmd)
         yield pre_state
         pre_state.set(tao)
+
+
+T = TypeVar("T", bound=pydantic.BaseModel)
+
+
+def load_model(filename: str | pathlib.Path, cls: type[T]) -> T:
+    """
+    Read the model from a file in JSON or YAML format.
+
+    Parameters
+    ----------
+    filename : str or pathlib.Path
+        The path to the file where the model data should be written.
+        The file format is determined by the extension.
+    model : pydantic.BaseModel
+    """
+    fname = pathlib.Path(filename)
+    with fname.open("rb") as fp:
+        if fname.suffix.lower() in (".yml", ".yaml"):
+            import yaml  # NOTE: yaml is not a required dependency
+
+            data = yaml.safe_load(fp)
+        else:
+            data = json.load(fp)
+    return cls.model_validate(data)
+
+
+def date_coded_rename(
+    dest: pathlib.Path, datefmt: str = DEFAULT_DATEFMT
+) -> pathlib.Path | None:
+    """
+    Rename a destination path, adding a date-coded name suffix.
+
+    This is used in place of overwriting files, saving backups of the previous
+    data.
+    """
+    if not dest.exists():
+        return None
+
+    dt = datetime.datetime.now().strftime(datefmt)
+    backup_fn = f"{dest.stem}-{dt}{dest.suffix}"
+    dest.rename(dest.with_name(backup_fn))
+    return dest
+
+
+def dump_model(
+    filename: str | pathlib.Path,
+    model: pydantic.BaseModel,
+    *,
+    exclude_defaults: bool = True,
+    backup_existing: bool = True,
+    datefmt: str = DEFAULT_DATEFMT,
+):
+    """
+    Write the model data to a file in JSON or YAML format.
+
+    Parameters
+    ----------
+    filename : str or pathlib.Path
+        The path to the file where the model data should be written.
+        The file format is determined by the extension.
+    model : pydantic.BaseModel
+    """
+    fname = pathlib.Path(filename)
+    data = model.model_dump(
+        exclude_defaults=exclude_defaults,
+        exclude_computed_fields=True,
+        mode="json",
+    )
+
+    if backup_existing:
+        date_coded_rename(fname, datefmt=datefmt)
+
+    with fname.open("wt") as fp:
+        if fname.suffix.lower() in (".yml", ".yaml"):
+            import yaml  # NOTE: yaml is not a required dependency
+
+            yaml.safe_dump(data, fp)
+        else:
+            json.dump(data, fp, indent=4)
+    return data
