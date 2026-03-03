@@ -4,6 +4,7 @@ import contextlib
 import datetime
 import json
 import logging
+import os
 import re
 import pathlib
 import textwrap
@@ -12,6 +13,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
+    Iterable,
     NamedTuple,
     TypeVar,
     cast,
@@ -20,7 +22,7 @@ from typing import (
 import numpy as np
 import pydantic
 from pydantic.fields import FieldInfo
-from typing_extensions import Self
+from typing_extensions import Self, override
 
 from .types import ArgumentType
 
@@ -36,6 +38,13 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 DEFAULT_DATEFMT = "%Y%m%d_%H%M%S"
+
+FILTER_TAB_COMPLETION: bool = os.environ.get("PYTAO_FILTER_TAB", "y").lower() in ("y",)
+
+
+def toggle_tab_completion_filtering(enabled: bool):
+    global FILTER_TAB_COMPLETION
+    FILTER_TAB_COMPLETION = enabled
 
 
 def _check_equality(obj1: Any, obj2: Any) -> bool:
@@ -95,8 +104,82 @@ def _check_equality(obj1: Any, obj2: Any) -> bool:
     return bool(obj1 == obj2)
 
 
-class TaoModel(
+class TaoBaseModel(
     pydantic.BaseModel,
+    validate_assignment=True,
+    validate_by_name=True,  # Alias or attribute name for validation is OK
+):
+    """
+    A helper base class which allows for creating/updating an instance with Tao objects.
+    """
+
+    def write(
+        self,
+        filename: str | pathlib.Path,
+        *,
+        exclude_defaults: bool = True,
+        backup_existing: bool = True,
+        datefmt: str = DEFAULT_DATEFMT,
+    ):
+        """
+        Write the model data to a file in JSON or YAML format.
+
+        Parameters
+        ----------
+        filename : str or pathlib.Path
+            The path to the file where the model data should be written.
+            The file format is determined by the extension.
+        """
+
+        return dump_model(
+            filename,
+            self,
+            exclude_defaults=exclude_defaults,
+            backup_existing=backup_existing,
+            datefmt=datefmt,
+        )
+
+    @classmethod
+    def from_file(cls, filename: str | pathlib.Path) -> Self:
+        """
+        Load Tao model data from a previously-written file.
+
+        Parameters
+        ----------
+        filename : str or pathlib.Path
+
+        Returns
+        -------
+        TaoModel
+        """
+        return load_model(pathlib.Path(filename).resolve(), cls)
+
+    @classmethod
+    def _get_all_subclasses(cls) -> set[type[Self]]:
+        all_subs = set(cls.__subclasses__())
+        for subclass in list(all_subs):
+            all_subs.update(subclass._get_all_subclasses())
+        return all_subs
+
+    def __eq__(self, other) -> bool:
+        return _check_equality(self, other)
+
+    def __repr__(self):
+        if pretty_repr is not None:
+            return pretty_repr(self)
+        return super().__repr__()
+
+    @override
+    def __dir__(self) -> Iterable[str]:
+        if not FILTER_TAB_COMPLETION:
+            return super().__dir__()
+
+        attrs = set(super().__dir__()) - set(dir(pydantic.BaseModel))
+        return [attr for attr in attrs if not attr.startswith("_")]
+
+
+class TaoModel(
+    TaoBaseModel,
     str_strip_whitespace=True,  # Strip whitespace from strings
     str_min_length=0,  # We can't write empty strings currently
     validate_assignment=True,
@@ -149,55 +232,6 @@ class TaoModel(
         data = cls._process_tao_data(data)
         return cls(command_args=cmd_kwargs, **data)
 
-    def write(
-        self,
-        filename: str | pathlib.Path,
-        *,
-        exclude_defaults: bool = True,
-        backup_existing: bool = True,
-        datefmt: str = DEFAULT_DATEFMT,
-    ):
-        """
-        Write the model data to a file in JSON or YAML format.
-
-        Parameters
-        ----------
-        filename : str or pathlib.Path
-            The path to the file where the model data should be written.
-            The file format is determined by the extension.
-        """
-
-        return dump_model(
-            filename,
-            self,
-            exclude_defaults=exclude_defaults,
-            backup_existing=backup_existing,
-            datefmt=datefmt,
-        )
-
-    @classmethod
-    def from_file(cls, filename: str | pathlib.Path) -> Self:
-        """
-        Load Tao model data from a previously-written file.
-
-        Parameters
-        ----------
-        filename : str or pathlib.Path
-
-        Returns
-        -------
-        TaoModel
-        """
-        # res.filename = pathlib.Path(filename).resolve()
-        return load_model(pathlib.Path(filename).resolve(), cls)
-
-    @classmethod
-    def _get_all_subclasses(cls) -> set[type[Self]]:
-        all_subs = set(cls.__subclasses__())
-        for subclass in list(all_subs):
-            all_subs.update(subclass._get_all_subclasses())
-        return all_subs
-
     @pydantic.model_serializer(mode="wrap")
     def _serialize_with_class_name(
         self, handler: pydantic.SerializerFunctionWrapHandler
@@ -224,14 +258,6 @@ class TaoModel(
             raise ValueError(f"Unable to find '{clsname}' subclass of {cls.__name__}.")
 
         return handler(value)
-
-    def __eq__(self, other) -> bool:
-        return _check_equality(self, other)
-
-    def __repr__(self):
-        if pretty_repr is not None:
-            return pretty_repr(self)
-        return super().__repr__()
 
 
 class SetField(NamedTuple):

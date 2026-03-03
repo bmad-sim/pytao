@@ -17,7 +17,7 @@ from ...errors import TaoCommandError
 from ...util import normalize_path
 from ...util.parsers import Attr, parse_tao_python_data_with_units
 from .. import _generated as tao_classes
-from ..base import TaoModel, _check_equality
+from ..base import TaoBaseModel, TaoModel, _check_equality
 from .comb import Comb
 from .time_stats import _pytao_stats
 
@@ -1145,7 +1145,7 @@ def get_comb(
     return comb.slice_by_s(head.s_start, head.s)
 
 
-class ElementFloorPosition(pydantic.BaseModel, extra="forbid"):
+class ElementFloorPosition(TaoBaseModel, extra="forbid"):
     """
     Represents the position and orientation of an element on the floor in a 3D space.
 
@@ -1176,7 +1176,7 @@ class ElementFloorPosition(pydantic.BaseModel, extra="forbid"):
     wmat: list[list[float]] = Field(default_factory=list)
 
 
-class ElementFloorItem(pydantic.BaseModel, extra="forbid"):
+class ElementFloorItem(TaoBaseModel, extra="forbid"):
     """
     Element floor plan reference and actual position.
 
@@ -1235,7 +1235,7 @@ ELE_FLOOR_SLAVE_KEY_RE = re.compile(
 )
 
 
-class ElementFloor(pydantic.BaseModel, extra="forbid"):
+class ElementFloor(TaoBaseModel, extra="forbid"):
     """
     Represents the floor position of an element.
 
@@ -1283,7 +1283,7 @@ class ElementFloor(pydantic.BaseModel, extra="forbid"):
         )
 
 
-class ElementFloorAll(pydantic.BaseModel, extra="forbid"):
+class ElementFloorAll(TaoBaseModel, extra="forbid"):
     """
     Element floor positions based on optical trajectory - at its beginning,
     center, or end.
@@ -1326,7 +1326,7 @@ class ElementFloorAll(pydantic.BaseModel, extra="forbid"):
         )
 
 
-class ElementChamberWall(pydantic.BaseModel, extra="forbid"):
+class ElementChamberWall(TaoBaseModel, extra="forbid"):
     """
     Represents a chamber wall element in the lattice.
 
@@ -1626,7 +1626,7 @@ class FillDefault:
     attr: str
 
 
-class Element(pydantic.BaseModel, extra="forbid"):
+class Element(TaoBaseModel, extra="forbid"):
     """
     Represents a Tao element with various attributes used in simulations.
 
@@ -2124,7 +2124,7 @@ class Element(pydantic.BaseModel, extra="forbid"):
             self._fill_wake(tao)
 
 
-class Lattice(pydantic.BaseModel):
+class Lattice(TaoBaseModel):
     """
     A class representing a Bmad Lattice.
 
