@@ -19,10 +19,13 @@ from typing import (
     cast,
 )
 
+import h5py
 import numpy as np
 import pydantic
 from pydantic.fields import FieldInfo
 from typing_extensions import Self, override
+
+from .hdf import restore_from_hdf5_file, store_in_hdf5_file
 
 from .types import ArgumentType
 
@@ -490,7 +493,7 @@ T = TypeVar("T", bound=pydantic.BaseModel)
 
 def load_model(filename: str | pathlib.Path, cls: type[T]) -> T:
     """
-    Read the model from a file in JSON or YAML format.
+    Read the model from a file in JSON, YAML, or custom HDF5 format.
 
     Parameters
     ----------
@@ -500,6 +503,18 @@ def load_model(filename: str | pathlib.Path, cls: type[T]) -> T:
     model : pydantic.BaseModel
     """
     fname = pathlib.Path(filename)
+
+    if fname.suffix.lower() in (".h5", ".hdf5"):
+        with h5py.File(fname) as h5g:
+            res = restore_from_hdf5_file(h5g)
+
+        if not isinstance(res, cls):
+            raise TypeError(
+                f"Unexpected class returned from restore process. Expected {cls.__name__} "
+                f"got {type(res).__name__}"
+            )
+        return res
+
     with fname.open("rb") as fp:
         if fname.suffix.lower() in (".yml", ".yaml"):
             import yaml  # NOTE: yaml is not a required dependency
@@ -537,7 +552,7 @@ def dump_model(
     datefmt: str = DEFAULT_DATEFMT,
 ):
     """
-    Write the model data to a file in JSON or YAML format.
+    Write the model data to a file in JSON, YAML, or custom HDF5 format.
 
     Parameters
     ----------
@@ -547,15 +562,20 @@ def dump_model(
     model : pydantic.BaseModel
     """
     fname = pathlib.Path(filename)
+
+    if backup_existing:
+        date_coded_rename(fname, datefmt=datefmt)
+
+    if fname.suffix.lower() in (".h5", ".hdf5"):
+        with h5py.File(fname, "w") as h5g:
+            store_in_hdf5_file(h5g, model)
+        return
+
     data = model.model_dump(
         exclude_defaults=exclude_defaults,
         exclude_computed_fields=True,
         mode="json",
     )
-
-    if backup_existing:
-        date_coded_rename(fname, datefmt=datefmt)
-
     with fname.open("wt") as fp:
         if fname.suffix.lower() in (".yml", ".yaml"):
             import yaml  # NOTE: yaml is not a required dependency

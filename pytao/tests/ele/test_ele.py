@@ -295,6 +295,8 @@ def test_lattice_track_start(cbeta_ffag_tao: SubprocessTao, pytao_stats: _PytaoS
         pytest.param(False, ".json", id="json-with-defaults"),
         pytest.param(True, ".json.gz", id="json-gz-no-defaults"),
         pytest.param(False, ".json.gz", id="json-gz-with-defaults"),
+        pytest.param(True, ".h5", id="h5-no-defaults"),
+        pytest.param(False, ".h5", id="h5-with-defaults"),
         # pytest.param(True, ".yaml", id="yaml-no-defaults"),
         # pytest.param(False, ".yaml", id="yaml-with-defaults"),
     ],
@@ -314,14 +316,19 @@ def test_lattice_write(
 
     print()
     fn = tmp_path / f"lattice{extension}"
+    t0 = time.monotonic()
     with timed_section(description="lat.write"):
         lat.write(fn, exclude_defaults=exclude_defaults)
+    t1 = time.monotonic()
 
     print()
     with timed_section(description="Lattice.from_file"):
         round_tripped = Lattice.from_file(fn)
+    t2 = time.monotonic()
     assert round_tripped.filename == fn
 
+    print("Save time:", t1 - t0)
+    print("Load time:", t2 - t1)
     with open(fn, "rb") as fp:
         num_bytes = len(fp.read())
 
