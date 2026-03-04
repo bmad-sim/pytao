@@ -5,6 +5,7 @@ import code
 import dataclasses
 import logging
 import os
+import shlex
 import sys
 
 from pytao.errors import TaoInitializationError
@@ -17,6 +18,7 @@ logger = logging.getLogger("pytao")
 
 @dataclasses.dataclass
 class PytaoArgs:
+    command: str | None = None  # overrides the Tao one
     pycommand: str | None = None
     pylog: str | None = None
     pyplot: str | None = None
@@ -71,6 +73,11 @@ def create_argparser() -> argparse.ArgumentParser:
         epilog=DESCRIPTION,
         prog="pytao",
         formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "-command",
+        type=str,
+        help="Command to send to Tao on initialization. (Intercepts Tao -command)",
     )
     parser.add_argument(
         "--pyplot",
@@ -128,7 +135,7 @@ def create_argparser() -> argparse.ArgumentParser:
 def split_pytao_tao_args(args: list[str]) -> tuple[PytaoArgs, str]:
     parser = create_argparser()
     pytao, tao = parser.parse_known_intermixed_args(args, namespace=PytaoArgs())
-    return pytao, " ".join(tao)
+    return pytao, shlex.join(tao)
 
 
 def _get_implied_init_args(init_args: str) -> str:
@@ -177,8 +184,11 @@ def init(ipython: bool):
         startup_message = f"Initializing Tao object with: {implied_init_args}"
         print_header(ipython=ipython, startup_message=startup_message, plot=plot)
 
-    tao_cls = SubprocessTao if python_args.pysubprocess else Tao
+    if python_args.pylog:
+        logger.setLevel(python_args.pylog)
+        logging.basicConfig()
 
+    tao_cls = SubprocessTao if python_args.pysubprocess else Tao
     try:
         tao = tao_cls(init=init_args, plot=plot)
     except TaoInitializationError as ex:
@@ -194,9 +204,9 @@ def init(ipython: bool):
         user_ns["plt"] = plt
         plt.ion()
 
-    if python_args.pylog:
-        logger.setLevel(python_args.pylog)
-        logging.basicConfig()
+    if python_args.command:
+        for line in tao.cmd(python_args.command, raises=False):
+            print(line)
 
     return python_args, user_ns
 

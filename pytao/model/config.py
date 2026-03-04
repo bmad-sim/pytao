@@ -105,7 +105,15 @@ class TaoConfig(TaoSettableModel):
             directory.mkdir(exist_ok=True, parents=True)
         sh_file = directory / f"{prefix}.sh"
         cmd_file = directory / f"{prefix}.cmd"
-        cmd_file.write_text("\n".join(self.set_commands))
+
+        set_commands = [
+            *(["set global plot_on = F"] if self.globals.plot_on else []),
+            *(["set global lattice_calc_on = F"] if self.globals.lattice_calc_on else []),
+            *self.set_commands,
+            *(["set global plot_on = T"] if self.globals.plot_on else []),
+            *(["set global lattice_calc_on = T"] if self.globals.lattice_calc_on else []),
+        ]
+        cmd_file.write_text("\n".join(set_commands))
 
         if tao is None:
             # No Tao instance - reuse the existing lattice on disk
