@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 import code
-import copy
 import logging
 import os
 import sys
@@ -30,11 +29,17 @@ class PytaoArgs(TaoStartup):
     pyquiet: bool = False
     pysubprocess: bool = True
 
+    @classmethod
+    def from_cli_args(cls, args: list[str] | None = None, exit_on_error: bool = False):
+        parser = create_pytao_argparser()
+        parser.exit_on_error = exit_on_error
+        return parser.parse_args(args, namespace=cls())
+
 
 DESCRIPTION = ""
 
 
-def create_argparser() -> argparse.ArgumentParser:
+def create_pytao_argparser() -> argparse.ArgumentParser:
     parser = TaoArgumentParser(
         description="PyTao command-line interface",
         epilog=DESCRIPTION,
@@ -97,15 +102,16 @@ def create_argparser() -> argparse.ArgumentParser:
     return parser
 
 
-def _get_implied_init_args(init_args: PytaoArgs) -> PytaoArgs:
-    if not init_args.lattice_file and not init_args.init_file:
-        init_args = copy.deepcopy(init_args)
-        init_args.init_file = "tao.init"
+def _get_implied_init_args(args: PytaoArgs) -> PytaoArgs:
+    if not args.lattice_file and not args.init_file:
+        args.init_file = "tao.init"
+    if args.pyplot != "tao":
+        args.external_plotting = True
 
-    return init_args
+    return args
 
 
-def print_header(ipython: bool, startup_message: str, plot: str = "") -> None:
+def print_header(ipython: bool, startup_message: str, plot: str | None = "") -> None:
     print("-" * len(startup_message))
     print(startup_message)
     print()
@@ -133,16 +139,14 @@ def print_header(ipython: bool, startup_message: str, plot: str = "") -> None:
         print("  tao.plot('beta', save='beta.html')`")
 
 
-def init(argv, ipython: bool):
-    parser = create_argparser()
-    args = parser.parse_args(argv, namespace=PytaoArgs())
-
-    plot = os.environ.get("PYTAO_PLOT", args.pyplot or "tao").lower()
+def init(argv, ipython: bool, exit_on_error=True):
+    args = PytaoArgs.from_cli_args(argv[1:], exit_on_error=exit_on_error)
+    args.pyplot = os.environ.get("PYTAO_PLOT", args.pyplot or "tao").lower()
 
     args = _get_implied_init_args(args)
     if not args.pyquiet:
         startup_message = f"Initializing Tao object with: {args.tao_init}"
-        print_header(ipython=ipython, startup_message=startup_message, plot=plot)
+        print_header(ipython=ipython, startup_message=startup_message, plot=args.pyplot)
 
     if args.pylog:
         logger.setLevel(args.pylog)
@@ -152,12 +156,12 @@ def init(argv, ipython: bool):
         tao = args.run(use_subprocess=args.pysubprocess)
     except TaoInitializationError as ex:
         if "Tao will not be able to initialize with the following settings:" in str(ex):
-            create_argparser().print_help()
+            create_pytao_argparser().print_help()
             sys.exit(1)
         raise
 
     user_ns: dict[str, Any] = {"tao": tao}
-    if plot == "mpl":
+    if args.pyplot == "mpl":
         import matplotlib.pyplot as plt
 
         user_ns["plt"] = plt
@@ -190,7 +194,7 @@ def main_ipython():
     import IPython
     from traitlets.config import Config
 
-    args, user_ns = init(sys.argv[1:], ipython=True)
+    args, user_ns = init(sys.argv, ipython=True)
 
     ipy_argv = ["--no-banner"]
     if args.pyinteractive:

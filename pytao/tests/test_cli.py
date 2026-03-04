@@ -1,7 +1,10 @@
 import code
+import contextlib
 import os
 import pathlib
 import sys
+from collections.abc import Generator
+from typing import Any
 from unittest.mock import MagicMock, Mock, patch
 
 import pytest
@@ -11,25 +14,23 @@ from ..cli import (
     init,
     main_ipython,
     main_python,
-    split_pytao_tao_args,
 )
 from ..core import register_input_transformer
 
 
 def test_split_args_basic():
-    args = ["--pyplot", "mpl", "tao_command", "-args"]
-    pytao_args, tao_args = split_pytao_tao_args(args)
-
-    assert pytao_args.pyplot == "mpl"
-    assert tao_args == "tao_command -args"
+    args = PytaoArgs.from_cli_args(["--pyplot", "mpl", "-init", "init.foo", "-noplot"])
+    assert args.pyplot == "mpl"
+    assert args.init_file == "init.foo"
+    assert args.noplot
 
 
 def test_split_args_common():
-    args = ["--pyplot", "mpl", "-noplot", "-args", "-lat", "latfile"]
-    pytao_args, tao_args = split_pytao_tao_args(args)
+    args = PytaoArgs.from_cli_args(["--pyplot", "mpl", "-noplot", "-lat", "latfile"])
 
-    assert pytao_args.pyplot == "mpl"
-    assert tao_args == "-noplot -args -lat latfile"
+    assert args.pyplot == "mpl"
+    assert args.lattice_file == "latfile"
+    assert args.noplot
 
 
 def test_split_args_all_options():
@@ -42,75 +43,113 @@ def test_split_args_all_options():
         "print('hello')",
         "--pylog",
         "DEBUG",
-        "tao_command",
+        "-init",
+        "fooinit",
     ]
-    pytao_args, tao_args = split_pytao_tao_args(args)
+    args = PytaoArgs.from_cli_args(args)
 
-    assert pytao_args.pyplot == "bokeh"
-    assert pytao_args.pyscript == "script.py"
-    assert pytao_args.pycommand == "print('hello')"
-    assert pytao_args.pylog == "DEBUG"
-    assert pytao_args.pysubprocess is True
-    assert tao_args == "tao_command"
+    assert args.pyplot == "bokeh"
+    assert args.pyscript == "script.py"
+    assert args.pycommand == "print('hello')"
+    assert args.pylog == "DEBUG"
+    assert args.pysubprocess is True
+    assert args.init_file == "fooinit"
 
 
-@patch("pytao.cli.SubprocessTao")
-@patch("pytao.cli.Tao")
-def test_init_regular_tao(mock_tao, mock_subprocess_tao):
+@pytest.fixture
+def mock_tao_startup() -> Generator[tuple[MagicMock, dict[str, Any]], None, None]:
+    """
+    Fixture that patches TaoStartup.run and TaoStartup.run_context.
+
+    Returns
+    -------
+    Tuple[MagicMock, dict[str, Any]]
+        A tuple containing the mock Tao instance, and a dictionary that captures
+        the populated `TaoStartup` instance and the arguments passed to the methods.
+    """
+    mock_tao = MagicMock()
+    call_info: dict[str, Any] = {}
+
+    def fake_run(self, use_subprocess: bool = False) -> MagicMock:
+        call_info["self"] = self
+        call_info["use_subprocess"] = use_subprocess
+        call_info["method"] = "run"
+        return mock_tao
+
+    @contextlib.contextmanager
+    def fake_run_context(self, use_subprocess: bool = False):
+        call_info["self"] = self
+        call_info["use_subprocess"] = use_subprocess
+        call_info["method"] = "run_context"
+        yield mock_tao
+
+    with (
+        patch("pytao.startup.TaoStartup.run", autospec=True, side_effect=fake_run),
+        patch(
+            "pytao.startup.TaoStartup.run_context", autospec=True, side_effect=fake_run_context
+        ),
+    ):
+        yield mock_tao, call_info
+
+
+def test_init_regular_tao(mock_tao_startup):
     """Test initialization with regular Tao"""
-    mock_instance = MagicMock()
-    mock_tao.return_value = mock_instance
-    with patch.object(sys, "argv", ["pytao", "--pyplot", "mpl", "--pyno-subprocess"]):
-        python_args, user_ns = init(ipython=False)
+    mock_instance, call_info = mock_tao_startup
 
-        assert python_args.pyplot == "mpl"
-        assert "tao" in user_ns
-        assert user_ns["tao"] == mock_instance
-        assert "plt" in user_ns
-        mock_tao.assert_called_once()
-        mock_subprocess_tao.assert_not_called()
+    python_args, user_ns = init(
+        ["pytao", "--pyplot", "mpl", "--pyno-subprocess"], ipython=False
+    )
+
+    assert python_args.pyplot == "mpl"
+    assert "tao" in user_ns
+    assert user_ns["tao"] == mock_instance
+    assert "plt" in user_ns
+
+    # Assert TaoStartup execution details
+    assert "self" in call_info, "TaoStartup.run was never called!"
+    assert call_info["use_subprocess"] is False, "Expected regular Tao, not SubprocessTao"
 
 
-@patch("pytao.cli.SubprocessTao")
-@patch("pytao.cli.Tao")
-def test_init_subprocess_tao(mock_tao, mock_subprocess_tao):
+def test_init_subprocess_tao(mock_tao_startup):
     """Test initialization with Subprocess Tao"""
-    mock_instance = MagicMock()
-    mock_subprocess_tao.return_value = mock_instance
+    mock_instance, call_info = mock_tao_startup
 
-    with patch.object(sys, "argv", ["pytao"]):
-        python_args, user_ns = init(ipython=True)
+    python_args, user_ns = init(["pytao"], ipython=True)
 
-        assert python_args.pysubprocess is True
-        assert "tao" in user_ns
-        assert user_ns["tao"] == mock_instance
-        mock_subprocess_tao.assert_called_once()
-        mock_tao.assert_not_called()
+    assert python_args.pysubprocess is True
+    assert "tao" in user_ns
+    assert user_ns["tao"] == mock_instance
+
+    # Assert TaoStartup execution details
+    assert "self" in call_info, "TaoStartup.run was never called!"
+    assert call_info["use_subprocess"] is True, "Expected SubprocessTao to be requested"
 
 
-@patch("pytao.cli.SubprocessTao")
 @patch.dict(os.environ, {"PYTAO_PLOT": "bokeh"})
-def test_init_env_plot_backend(mock_tao):
+def test_init_env_plot_backend(mock_tao_startup):
     """Test plot backend from environment variable"""
-    with patch.object(sys, "argv", ["pytao"]):
-        mock_tao.return_value = MagicMock()
+    mock_instance, call_info = mock_tao_startup
 
-        init(ipython=False)
+    init(["pytao"], ipython=False)
 
-        mock_tao.assert_called_with(init="", plot="bokeh")
+    assert "self" in call_info, "TaoStartup.run was never called!"
+    startup_instance = call_info["self"]
+
+    params = startup_instance.tao_class_params
+    assert startup_instance.pyplot == "bokeh"
+    assert params["init_file"] == "tao.init"  # default
 
 
-@patch("pytao.cli.SubprocessTao")
 @patch("logging.basicConfig")
-def test_init_logging(mock_logging, mock_tao):
+def test_init_logging(mock_logging, mock_tao_startup):
     """Test logging configuration"""
-    mock_tao.return_value = MagicMock()
+    mock_instance, call_info = mock_tao_startup
 
-    with patch.object(sys, "argv", ["pytao", "--pylog", "DEBUG"]):
-        python_args, _ = init(ipython=False)
+    python_args, _ = init(["pytao", "--pylog", "DEBUG"], ipython=False)
 
-        assert python_args.pylog == "DEBUG"
-        mock_logging.assert_called_once()
+    assert python_args.pylog == "DEBUG"
+    mock_logging.assert_called_once()
+    assert "self" in call_info, "TaoStartup.run was never called!"
 
 
 @patch("pytao.cli.init")

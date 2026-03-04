@@ -4,7 +4,7 @@ import contextlib
 import logging
 import pathlib
 import shlex
-from dataclasses import InitVar, asdict
+from dataclasses import InitVar, asdict, fields
 from typing import TYPE_CHECKING, Any, Literal, Union
 
 import pydantic
@@ -397,10 +397,11 @@ class TaoStartup:
     def tao_class_params(self) -> dict[str, Any]:
         """Parameters used to initialize Tao or make a new Tao instance."""
         # init_parts = self.init.split()
+        field_names = [fld.name for fld in fields(TaoStartup)]
         params = {
             key: value
             for key, value in asdict(self).items()
-            if value != getattr(type(self), key, None)
+            if value != getattr(type(self), key, None) and key in field_names
         }
         # params["init"] = self.init
         params.pop("metadata")
