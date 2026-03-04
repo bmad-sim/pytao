@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 from __future__ import annotations
 
+import copy
 import logging
+import pathlib
 import typing
 from typing import ClassVar, cast
 
@@ -61,6 +63,74 @@ class TaoConfig(TaoSettableModel):
     beam: Beam = pydantic.Field(default_factory=Beam)
     globals: TaoGlobal = pydantic.Field(default_factory=TaoGlobal)
     settings_by_element: dict[str, dict[str, str]] = pydantic.Field(default_factory=dict)
+
+    def write_bash_loader_script(
+        self,
+        directory: pathlib.Path | str,
+        prefix: str = "run_tao",
+        *,
+        mkdir: bool = True,
+        tao: Tao | None = None,
+        lat_name: str | None = None,
+        shebang: str = "/usr/bin/env bash",
+        tao_binary: str = "tao",
+    ) -> tuple[pathlib.Path, pathlib.Path]:
+        """
+        Write a loader script to launch Tao with these startup parameters.
+
+        Parameters
+        ----------
+        directory : pathlib.Path
+            Directory where the generated scripts will be saved.
+        prefix : str, optional
+            Filename prefix for the generated scripts. By default "run_tao".
+        mkdir : bool, optional
+            If True, creates the directory and its parents if they do not exist.
+            By default True.
+        tao : Tao or None, optional
+            If passed in, the Tao lattice will also be exported relative
+            to the directory with `lat_name` as the name.
+        lat_name : str or None, optional
+            The lattice filename to write, if `tao` is specified.
+            Defaults to ``"{prefix}.lat.bmad"``.
+
+        Returns
+        -------
+        tuple[pathlib.Path, pathlib.Path]
+            A tuple containing the paths to the generated bash shell script
+            (`sh_file`) and the Tao command file (`cmd_file`).
+        """
+        directory = pathlib.Path(directory).expanduser().resolve()
+        if mkdir:
+            directory.mkdir(exist_ok=True, parents=True)
+        sh_file = directory / f"{prefix}.sh"
+        cmd_file = directory / f"{prefix}.cmd"
+        cmd_file.write_text("\n".join(self.set_commands))
+
+        if tao is None:
+            # No Tao instance - reuse the existing lattice on disk
+            startup = self.startup
+        else:
+            # Tao instance - write lattice to disk with 'write bmad'
+            if lat_name is None:
+                lat_name = f"{prefix}.lat.bmad"
+
+            startup = copy.deepcopy(self.startup)
+            startup.init_file = None
+            startup.lattice_file = lat_name
+
+            full_lat_path = directory / lat_name
+            if mkdir:
+                full_lat_path.parent.mkdir(exist_ok=True, parents=True)
+            tao.cmd(f"write bmad '{full_lat_path}'")
+
+        lines = [
+            f"#!{shebang}",
+            f'{tao_binary} {startup.tao_init} -command "call {cmd_file.name}" "$@"',
+        ]
+
+        sh_file.write_text("\n".join(lines))
+        return sh_file, cmd_file
 
     @classmethod
     @override

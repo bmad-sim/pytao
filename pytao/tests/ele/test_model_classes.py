@@ -39,6 +39,32 @@ def test_tao_config_write_read(tao: SubprocessTao, tmp_path: pathlib.Path) -> No
     assert config == restored
 
 
+@pytest.mark.parametrize(
+    ("with_tao",),
+    [
+        pytest.param(True, id="with-tao"),
+        pytest.param(False, id="without-tao"),
+    ],
+)
+def test_tao_config_shell_script(
+    tao: SubprocessTao, tmp_path: pathlib.Path, with_tao: bool
+) -> None:
+    config = TaoConfig.from_tao(tao)
+
+    config.write_bash_loader_script(
+        tmp_path,
+        prefix="foo",
+        tao=tao if with_tao else None,
+    )
+    assert (tmp_path / "foo.sh").exists()
+    assert (tmp_path / "foo.cmd").exists()
+
+    if with_tao:
+        assert (tmp_path / "foo.lat.bmad").exists()
+    else:
+        assert not (tmp_path / "foo.lat.bmad").exists()
+
+
 def test_beam_init(tao: SubprocessTao) -> None:
     beam_init = BeamInit.from_tao(tao)
     print(repr(beam_init))
