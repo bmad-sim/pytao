@@ -92,7 +92,7 @@ else:
             """Create a new Tao instance and run it using these settings."""
             params = self.tao_class_params
             if use_subprocess:
-                return _get_reusable_subprocess_tao(**params)
+                return _get_reusable_subprocess_tao("", **params)
             return Tao(**params)
 
         @contextlib.contextmanager
@@ -196,13 +196,13 @@ def _clean_subproc_tao():
         _subproc_tao.close_subprocess()
 
 
-def _get_reusable_subprocess_tao(**kwargs) -> SubprocessTao:
+def _get_reusable_subprocess_tao(init: str, **kwargs) -> SubprocessTao:
     global _subproc_tao
     if _subproc_tao is None or not _subproc_tao.subprocess_alive:
         atexit.register(_clean_subproc_tao)
-        _subproc_tao = SubprocessTao(**kwargs)
+        _subproc_tao = SubprocessTao(init=init, **kwargs)
     else:
-        _subproc_tao.init(**kwargs)
+        _subproc_tao.init(init, **kwargs)
     return _subproc_tao
 
 
@@ -228,6 +228,7 @@ def new_tao(
     yield tao
     if hasattr(tao, "close_subprocess") and not REUSE_SUBPROCESS:
         print("Closing tao subprocess")
+        assert isinstance(tao, SubprocessTao)
         tao.close_subprocess()
 
 
