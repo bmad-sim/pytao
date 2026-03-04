@@ -19,7 +19,7 @@ from typing import Any, Literal, Optional, Union, cast
 import numpy as np
 from typing_extensions import NotRequired, TypedDict, override
 
-from .core import TaoStartup
+from .startup import TaoStartup
 from .errors import TaoCommandError, TaoInitializationError, error_filter_context
 from .tao import Tao
 

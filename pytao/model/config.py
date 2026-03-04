@@ -10,7 +10,7 @@ from typing import ClassVar, cast
 import pydantic
 from typing_extensions import Self, override
 
-from ..core import TaoStartup
+from ..startup import TaoStartup
 from ._generated import (
     Beam,
     BeamInit,

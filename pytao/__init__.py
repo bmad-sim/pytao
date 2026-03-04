@@ -6,11 +6,11 @@ pytao also has some pre-defined constructs for dealing with data from tao
 in the util package.
 """
 
+from .startup import TaoStartup
 from .core import (
     TaoCommandError,
     TaoInitializationError,
     TaoSharedLibraryNotFoundError,
-    TaoStartup,
 )
 from .errors import TaoException, filter_tao_messages, filter_tao_messages_context
 from .subproc import AnyTao, SubprocessTao

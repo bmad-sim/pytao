@@ -1,7 +1,10 @@
+from argparse import ArgumentError
 import pytest
 
-from .. import Tao, TaoStartup, SubprocessTao
-from ..core import TaoInitializationError
+from ..tao import Tao
+from ..subproc import SubprocessTao
+from ..errors import TaoInitializationError
+from ..startup import TaoStartup
 
 
 def test_examples_can_init(tao_example: TaoStartup) -> None:
@@ -25,6 +28,7 @@ def test_regression_tests_can_init(tao_regression_test: TaoStartup) -> None:
 )
 def test_can_init(startup: TaoStartup) -> None:
     assert startup.can_initialize
+    assert startup.init_file or startup.lattice_file
 
 
 @pytest.mark.parametrize(
@@ -128,3 +132,71 @@ def test_startup_from_lattice_contents() -> None:
         "Q2",
         "END",
     ]
+
+
+@pytest.mark.parametrize(
+    "cli_args, expected_attribute, expected_value",
+    [
+        pytest.param(["-debug"], "debug", True, id="flag_debug_is_true"),
+        pytest.param(["--debug"], "debug", False, id="flag_debug_negated_is_false"),
+        pytest.param(
+            ["-lattice_file", "my_lattice.bmad"],
+            "lattice_file",
+            "my_lattice.bmad",
+            id="string_arg_lattice_file",
+        ),
+        pytest.param(
+            ["-la", "my_lattice.bmad"],
+            "lattice_file",
+            "my_lattice.bmad",
+            id="string_short_lattice",
+        ),
+        pytest.param(
+            ["-lat", "my_lattice.bmad"],
+            "lattice_file",
+            "my_lattice.bmad",
+            id="string_short_lattice",
+        ),
+        pytest.param(
+            ["-geometry", "1024x768"], "geometry", "1024x768", id="string_arg_geometry"
+        ),
+        pytest.param([], "prompt_color", "blue", id="default_arg_prompt_color"),
+        pytest.param(
+            ["-prompt_color", "red"], "prompt_color", "red", id="override_arg_prompt_color"
+        ),
+        pytest.param(["-quiet", "warnings"], "quiet", "warnings", id="choices_arg_quiet"),
+        pytest.param([], "rf_on", True, id="default_flag_rf_on_is_true"),
+        pytest.param(["--rf_on"], "rf_on", False, id="negated_flag_rf_on_is_false"),
+    ],
+)
+def test_tao_parser_mapping_to_dataclass(
+    cli_args: list[str], expected_attribute: str, expected_value
+):
+    parsed_dataclass = TaoStartup.from_cli_args(cli_args)
+    actual_value = getattr(parsed_dataclass, expected_attribute)
+    assert actual_value == expected_value
+
+
+def test_tao_parser_unsupported_choice():
+    with pytest.raises(ArgumentError):
+        TaoStartup.from_cli_args(["-quiet", "invalid_level"])
+
+
+@pytest.mark.parametrize(
+    "cli_args, expected_quiet",
+    [
+        pytest.param(["-quiet"], "all", id="-quiet"),
+        pytest.param(["-quiet", "all"], "all", id="-quiet all"),
+        pytest.param(["-quiet", "warnings"], "warnings", id="-quiet warnings"),
+        pytest.param([], False, id="no-quiet"),
+    ],
+    ids=[
+        "implicit_all",
+        "explicit_all",
+        "explicit_warnings",
+        "blank_returns_none",
+    ],
+)
+def test_quiet_parsing(cli_args: list[str], expected_quiet: str | None):
+    res = TaoStartup.from_cli_args(cli_args)
+    assert res.quiet == expected_quiet
