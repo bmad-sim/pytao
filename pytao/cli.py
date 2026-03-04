@@ -169,7 +169,8 @@ def init(argv, ipython: bool, exit_on_error=True):
 
     if args.command:
         for line in tao.cmd(args.command, raises=False):
-            print(line)
+            if args.quiet != "all":
+                print(line)
 
     return args, user_ns
 
