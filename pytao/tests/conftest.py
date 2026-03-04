@@ -196,13 +196,13 @@ def _clean_subproc_tao():
         _subproc_tao.close_subprocess()
 
 
-def _get_reusable_subprocess_tao(init, **kwargs) -> SubprocessTao:
+def _get_reusable_subprocess_tao(**kwargs) -> SubprocessTao:
     global _subproc_tao
     if _subproc_tao is None or not _subproc_tao.subprocess_alive:
         atexit.register(_clean_subproc_tao)
-        _subproc_tao = SubprocessTao(init, **kwargs)
+        _subproc_tao = SubprocessTao(**kwargs)
     else:
-        _subproc_tao.init(init, **kwargs)
+        _subproc_tao.init(**kwargs)
     return _subproc_tao
 
 
