@@ -10,6 +10,8 @@ from typing import TYPE_CHECKING, Any, Literal, Union
 import pydantic
 from pydantic import ConfigDict, TypeAdapter, dataclasses
 
+from .errors import TaoInvalidArgumentsError
+
 if TYPE_CHECKING:
     from .subproc import SubprocessTao
     from .tao import Tao
@@ -89,7 +91,7 @@ class TaoArgumentParser(argparse.ArgumentParser):
 
 
 def create_tao_cli_parser(
-    parser: argparse.ArgumentParser | None = None,
+    parser: argparse.ArgumentParser | None = None, **kwargs
 ) -> argparse.ArgumentParser:
     """
     Creates an ArgumentParser configured for Tao command line options.
@@ -106,6 +108,7 @@ def create_tao_cli_parser(
             description="Tao command line parser.",
             add_help=False,
             formatter_class=argparse.RawTextHelpFormatter,
+            **kwargs,
         )
 
     def add_bool_arg(name: str, help_text: str, default: bool = False):
@@ -389,9 +392,16 @@ class TaoStartup:
 
     @classmethod
     def from_cli_args(cls, args: list[str] | None = None, exit_on_error: bool = False):
-        parser = create_tao_cli_parser()
-        parser.exit_on_error = exit_on_error
-        return parser.parse_args(args, namespace=cls())
+        parser = create_tao_cli_parser(exit_on_error=exit_on_error)
+        try:
+            return parser.parse_args(args, namespace=cls())
+        except Exception as ex:
+            arg_str = shlex.join(args if args else [])
+            raise TaoInvalidArgumentsError(
+                f"Invalid 'init' arguments passed: {arg_str!r}\n"
+                f"See `tao` or `pytao --help` for appropriate options and flags.\n"
+                f"{ex}"
+            ) from ex
 
     @property
     def tao_class_params(self) -> dict[str, Any]:

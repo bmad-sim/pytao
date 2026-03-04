@@ -232,6 +232,12 @@ class TaoInitializationError(TaoExceptionWithOutput, RuntimeError):
     tao_output: str
 
 
+class TaoInvalidArgumentsError(TaoInitializationError):
+    # A bit of back-compat, but this isn't really what we want
+    # as there is no Tao output here.
+    pass
+
+
 class TaoSharedLibraryNotFoundError(TaoException, RuntimeError):
     """The Tao shared library (i.e., libtao.so) was not found."""
 

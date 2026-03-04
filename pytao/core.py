@@ -280,19 +280,6 @@ class TaoCore:
     so_lib_file: str
     _ctypes_initialized_: bool = False
 
-    def __init__(self, init="", so_lib=""):
-        self._init_shared_library(so_lib=so_lib)
-
-        if not init:
-            raise TaoInitializationError(
-                "pytao now requires an `init` string in order to initialize a new Tao object."
-            )
-        self._init_output = self.init(init)
-        try:
-            self.register_cell_magic()
-        except Exception:
-            pass
-
     def _init_shared_library(self, so_lib: str) -> None:
         self.so_lib, self.so_lib_file = init_libtao(user_path=so_lib)
 

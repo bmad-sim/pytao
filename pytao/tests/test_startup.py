@@ -1,10 +1,9 @@
-from argparse import ArgumentError
 import pytest
 
-from ..tao import Tao
-from ..subproc import SubprocessTao
-from ..errors import TaoInitializationError
+from ..errors import TaoInitializationError, TaoInvalidArgumentsError
 from ..startup import TaoStartup
+from ..subproc import SubprocessTao
+from ..tao import Tao
 
 
 def test_examples_can_init(tao_example: TaoStartup) -> None:
@@ -178,7 +177,7 @@ def test_tao_parser_mapping_to_dataclass(
 
 
 def test_tao_parser_unsupported_choice():
-    with pytest.raises(ArgumentError):
+    with pytest.raises(TaoInvalidArgumentsError):
         TaoStartup.from_cli_args(["-quiet", "invalid_level"])
 
 
