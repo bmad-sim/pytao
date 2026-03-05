@@ -89,6 +89,18 @@ class TaoArgumentParser(argparse.ArgumentParser):
 
         return super().parse_known_args(expanded_args, namespace)  # type: ignore
 
+    @override
+    def parse_args(self, args=None, namespace=None):
+        try:
+            return super().parse_args(args, namespace)
+        except SystemExit as ex:
+            if self.exit_on_error:
+                raise
+            # Python 3.10 and 3.11 only seem to hit this scenario. We
+            # eat the exception here and reraise with an appropriate
+            # one.
+            raise argparse.ArgumentError(argument=None, message=str(ex)) from None
+
 
 def create_tao_cli_parser(
     parser: argparse.ArgumentParser | None = None, **kwargs
