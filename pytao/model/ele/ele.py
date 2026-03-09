@@ -4,7 +4,7 @@ import functools
 import pathlib
 import re
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, ClassVar, Literal, cast
+from typing import TYPE_CHECKING, Any, ClassVar, Literal, Self, cast
 
 import numpy as np
 import pydantic
@@ -13,7 +13,7 @@ from pydantic import Field
 from ...errors import TaoCommandError
 from ...util.parsers import Attr, parse_tao_python_data_with_units
 from .. import _generated as tao_classes
-from ..base import TaoBaseModel, TaoModel, _check_equality
+from ..base import ArchiveFormat, TaoBaseModel, TaoModel, _check_equality
 from .comb import Comb
 from .time_stats import _pytao_stats
 
@@ -2294,3 +2294,25 @@ class Lattice(TaoBaseModel):
             twiss=twiss,
             **kwargs,
         )
+
+    @classmethod
+    def from_file(
+        cls,
+        filename: str | pathlib.Path,
+        *,
+        format: ArchiveFormat | None = None,
+    ) -> Self:
+        """
+        Load Tao model data from a previously-written file.
+
+        Parameters
+        ----------
+        filename : str or pathlib.Path
+
+        Returns
+        -------
+        Lattice
+        """
+        lat = super().from_file(filename, format=format)
+        lat.filename = pathlib.Path(filename)
+        return lat

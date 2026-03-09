@@ -150,6 +150,7 @@ class TaoBaseModel(
     def from_file(
         cls,
         filename: str | pathlib.Path,
+        *,
         format: ArchiveFormat | None = None,
     ) -> Self:
         """
@@ -550,7 +551,7 @@ def load_model(
             data = yaml.safe_load(fp)
     elif format == "json.gz":
         with gzip.open(fname, "rb") as fp:
-            data = fp.read()
+            data = orjson.loads(fp.read())
     elif format == "json":
         data = orjson.loads(fname.read_bytes())
     else:
