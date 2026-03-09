@@ -4,11 +4,12 @@ import functools
 import pathlib
 import re
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, ClassVar, Literal, Self, cast
+from typing import TYPE_CHECKING, Any, ClassVar, Literal, cast
 
 import numpy as np
 import pydantic
 from pydantic import Field
+from typing_extensions import Self
 
 from ...errors import TaoCommandError
 from ...util.parsers import Attr, parse_tao_python_data_with_units
