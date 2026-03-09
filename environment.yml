@@ -10,6 +10,7 @@ dependencies:
   - bmad >=20250421
   - openPMD-beamphysics
   - numpy
+  - orjson
   - h5py
   - pexpect
   - pydantic >=2

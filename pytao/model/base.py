@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import contextlib
 import datetime
-import json
+import orjson
+import gzip
 import logging
 import os
 import re
@@ -14,6 +15,7 @@ from typing import (
     Any,
     ClassVar,
     Iterable,
+    Literal,
     NamedTuple,
     TypeVar,
     cast,
@@ -123,6 +125,7 @@ class TaoBaseModel(
         exclude_defaults: bool = True,
         backup_existing: bool = True,
         datefmt: str = DEFAULT_DATEFMT,
+        format: ArchiveFormat | None = None,
     ):
         """
         Write the model data to a file in JSON or YAML format.
@@ -140,10 +143,15 @@ class TaoBaseModel(
             exclude_defaults=exclude_defaults,
             backup_existing=backup_existing,
             datefmt=datefmt,
+            format=format,
         )
 
     @classmethod
-    def from_file(cls, filename: str | pathlib.Path) -> Self:
+    def from_file(
+        cls,
+        filename: str | pathlib.Path,
+        format: ArchiveFormat | None = None,
+    ) -> Self:
         """
         Load Tao model data from a previously-written file.
 
@@ -155,7 +163,7 @@ class TaoBaseModel(
         -------
         TaoModel
         """
-        return load_model(pathlib.Path(filename).resolve(), cls)
+        return load_model(pathlib.Path(filename).resolve(), cls, format=format)
 
     @classmethod
     def _get_all_subclasses(cls) -> set[type[Self]]:
@@ -489,9 +497,27 @@ class TaoSettableModel(TaoModel):
 
 
 T = TypeVar("T", bound=pydantic.BaseModel)
+ArchiveFormat = Literal["yaml", "json.gz", "json", "hdf5"]
 
 
-def load_model(filename: str | pathlib.Path, cls: type[T]) -> T:
+def format_from_filename(fn: pathlib.Path) -> ArchiveFormat:
+    if fn.suffix.lower() in (".yml", ".yaml"):
+        return "yaml"
+    if fn.suffix.lower() in (".h5", ".hdf5"):
+        return "hdf5"
+
+    suffixes = [suffix.lower() for suffix in fn.suffixes][-2:]
+    if suffixes == [".json", ".gz"]:
+        return "json.gz"
+    return "json"
+
+
+def load_model(
+    filename: str | pathlib.Path,
+    cls: type[T],
+    *,
+    format: ArchiveFormat | None = None,
+) -> T:
     """
     Read the model from a file in JSON, YAML, or custom HDF5 format.
 
@@ -504,7 +530,9 @@ def load_model(filename: str | pathlib.Path, cls: type[T]) -> T:
     """
     fname = pathlib.Path(filename)
 
-    if fname.suffix.lower() in (".h5", ".hdf5"):
+    format = format or format_from_filename(fname)
+
+    if format == "hdf5":
         with h5py.File(fname) as h5g:
             res = restore_from_hdf5_file(h5g)
 
@@ -515,18 +543,23 @@ def load_model(filename: str | pathlib.Path, cls: type[T]) -> T:
             )
         return res
 
-    with fname.open("rb") as fp:
-        if fname.suffix.lower() in (".yml", ".yaml"):
-            import yaml  # NOTE: yaml is not a required dependency
+    if format == "yaml":
+        import yaml  # NOTE: yaml is not a required dependency
 
+        with open(fname, "rt") as fp:
             data = yaml.safe_load(fp)
-        else:
-            data = json.load(fp)
+    elif format == "json.gz":
+        with gzip.open(fname, "rb") as fp:
+            data = fp.read()
+    elif format == "json":
+        data = orjson.loads(fname.read_bytes())
+    else:
+        raise NotImplementedError(format)
     return cls.model_validate(data)
 
 
 def date_coded_rename(
-    dest: pathlib.Path, datefmt: str = DEFAULT_DATEFMT
+    dest: pathlib.Path, datefmt: str = "%Y%m%d_%H%M%S"
 ) -> pathlib.Path | None:
     """
     Rename a destination path, adding a date-coded name suffix.
@@ -550,6 +583,7 @@ def dump_model(
     exclude_defaults: bool = True,
     backup_existing: bool = True,
     datefmt: str = DEFAULT_DATEFMT,
+    format: ArchiveFormat | None = None,
 ):
     """
     Write the model data to a file in JSON, YAML, or custom HDF5 format.
@@ -563,10 +597,12 @@ def dump_model(
     """
     fname = pathlib.Path(filename)
 
+    format = format or format_from_filename(fname)
+
     if backup_existing:
         date_coded_rename(fname, datefmt=datefmt)
 
-    if fname.suffix.lower() in (".h5", ".hdf5"):
+    if format == "hdf5":
         with h5py.File(fname, "w") as h5g:
             store_in_hdf5_file(h5g, model)
         return
@@ -576,11 +612,20 @@ def dump_model(
         exclude_computed_fields=True,
         mode="json",
     )
-    with fname.open("wt") as fp:
-        if fname.suffix.lower() in (".yml", ".yaml"):
+    if format == "yaml":
+        with fname.open("wt") as fp:
             import yaml  # NOTE: yaml is not a required dependency
 
             yaml.safe_dump(data, fp)
+    elif format in ("json.gz", "json"):
+        dumped = orjson.dumps(data)
+
+        if format == "json.gz":
+            with gzip.open(fname, "wb") as fp:
+                fp.write(dumped)
         else:
-            json.dump(data, fp, indent=4)
+            pathlib.Path(fname).write_bytes(dumped)
+    else:
+        raise NotImplementedError(format)
+
     return data

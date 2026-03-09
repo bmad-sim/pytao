@@ -6,13 +6,13 @@ Borrowed/adapted from LUME-Genesis v4.
 
 from __future__ import annotations
 
-import json
 import logging
 import pathlib
 from typing import Any, Dict, Optional, Tuple, Union
 
 import h5py
 import numpy as np
+import orjson
 import pydantic
 from pmd_beamphysics import ParticleGroup
 from pmd_beamphysics.units import pmd_unit
@@ -151,7 +151,7 @@ def _hdf5_store_dict(group: h5py.Group, data, encoding: str, depth=0) -> None:
 
     key_to_h5_key, h5_key_to_key = _hdf5_make_key_map(data)
     if key_to_h5_key:
-        group.attrs["__python_key_map__"] = json.dumps(h5_key_to_key).encode(encoding)
+        group.attrs["__python_key_map__"] = orjson.dumps(h5_key_to_key)
 
     for key, value in data.items():
         h5_key = key_to_h5_key.get(key, key)
@@ -295,7 +295,7 @@ def _hdf5_restore_dict(item: Union[h5py.Group, h5py.Dataset, Any], encoding: str
         res_by_hdf5_key[key] = value
 
     key_map_json = item.attrs.get("__python_key_map__", None)
-    key_map = json.loads(key_map_json) if key_map_json else {}
+    key_map = orjson.loads(key_map_json) if key_map_json else {}
     if not key_map:
         return res_by_hdf5_key
 

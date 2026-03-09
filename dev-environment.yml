@@ -13,6 +13,7 @@ dependencies:
   - matplotlib
   - numpy
   - h5py
+  - orjson
   - pexpect
   - pydantic >=2
   - tqdm

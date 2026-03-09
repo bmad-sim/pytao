@@ -13,6 +13,7 @@ dependencies = [
   "matplotlib",
   "numpy",
   "openpmd-beamphysics",
+  "orjson",
   "pexpect",
   "pydantic>=2",
   "tqdm",

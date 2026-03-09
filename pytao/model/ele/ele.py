@@ -1,20 +1,16 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 import functools
-import gzip
-import json
 import pathlib
 import re
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, ClassVar, Literal, cast
 
 import numpy as np
 import pydantic
 from pydantic import Field
-from typing_extensions import Self
 
 from ...errors import TaoCommandError
-from ...util import normalize_path
 from ...util.parsers import Attr, parse_tao_python_data_with_units
 from .. import _generated as tao_classes
 from ..base import TaoBaseModel, TaoModel, _check_equality
@@ -2298,32 +2294,3 @@ class Lattice(TaoBaseModel):
             twiss=twiss,
             **kwargs,
         )
-
-    @classmethod
-    def from_file(cls: type[Self], filename: str | pathlib.Path) -> Self:
-        fname = normalize_path(filename)
-        if fname.suffix.lower() == ".gz":
-            with gzip.open(fname, "rt", encoding="utf-8") as fp:
-                data = json.load(fp)
-        else:
-            with open(fname) as fp:
-                data = json.load(fp)
-
-        return cls(**data, filename=pathlib.Path(filename))
-
-    def write(
-        self,
-        filename: str | pathlib.Path,
-        *,
-        exclude_defaults: bool = False,
-        indent: int | str | None = None,
-    ) -> None:
-        fname = normalize_path(filename)
-        data = self.model_dump(exclude_defaults=exclude_defaults)
-
-        if fname.suffix.lower() == ".gz":
-            with gzip.open(fname, "wt", encoding="utf-8") as fp:
-                json.dump(data, fp, indent=indent)
-        else:
-            with open(fname, "w") as fp:
-                json.dump(data, fp, indent=indent)

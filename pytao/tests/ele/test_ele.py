@@ -8,6 +8,7 @@ import pytest
 import pytao
 from pytao import SubprocessTao
 from pytao.model.ele import Element, Lattice
+from pytao.model.base import format_from_filename
 from pytao.model.ele.time_stats import _PytaoStatistics, get_pytao_statistics
 
 from ..conftest import no_pytao_debug_logging, timed_section
@@ -353,3 +354,41 @@ def test_lattice_write(
         assert clean_json(round_tripped.model_dump_json(indent=1)) == clean_json(
             lat.model_dump_json(indent=1)
         )
+
+
+@pytest.mark.parametrize(
+    "filename, expected_format",
+    [
+        ("config.yml", "yaml"),
+        ("config.yaml", "yaml"),
+        ("CONFIG.YML", "yaml"),
+        ("data.h5", "hdf5"),
+        ("data.hdf5", "hdf5"),
+        ("DATA.HDF5", "hdf5"),
+        ("archive.json.gz", "json.gz"),
+        ("ARCHIVE.JSON.GZ", "json.gz"),
+        ("data.json", "json"),
+        ("DATA.JSON", "json"),
+        ("unknown.txt", "json"),
+        ("no_extension", "json"),
+        ("multiple.ext.json.gz", "json.gz"),
+    ],
+    ids=[
+        "yaml_short_extension",
+        "yaml_long_extension",
+        "yaml_uppercase_extension",
+        "hdf5_short_extension",
+        "hdf5_long_extension",
+        "hdf5_uppercase_extension",
+        "json_gz_standard",
+        "json_gz_uppercase",
+        "json_standard",
+        "json_uppercase",
+        "fallback_unknown_extension_to_json",
+        "fallback_no_extension_to_json",
+        "json_gz_with_multiple_prior_extensions",
+    ],
+)
+def test_format_from_filename(filename: str, expected_format: str) -> None:
+    fn_path = pathlib.Path(filename)
+    assert format_from_filename(fn_path) == expected_format
