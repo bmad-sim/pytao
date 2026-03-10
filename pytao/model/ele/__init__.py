@@ -1,6 +1,11 @@
 from __future__ import annotations
 
-from .comb import Comb
+from .comb import (
+    Comb,
+    combine_combs,
+    load_combs_from_lattice_data,
+    load_combs_from_lattice_file,
+)
 from .ele import (
     AnyElementID,
     ChamberWallWho,
@@ -27,6 +32,7 @@ from .ele import (
     Lattice,
     PhotonWho,
     Which,
+    to_ele,
 )
 
 __all__ = [
@@ -56,4 +62,8 @@ __all__ = [
     "Lattice",
     "PhotonWho",
     "Which",
+    "combine_combs",
+    "load_combs_from_lattice_data",
+    "load_combs_from_lattice_file",
+    "to_ele",
 ]

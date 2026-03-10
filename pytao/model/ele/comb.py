@@ -1,12 +1,13 @@
 from __future__ import annotations
 
+import pathlib
 import typing
 
 import numpy as np
 from pmd_beamphysics.species import mass_of
 from typing_extensions import Self
 
-from ..base import TaoModel
+from ..base import TaoModel, load_model_data
 from ..types import FloatSequence
 
 if typing.TYPE_CHECKING:
@@ -350,3 +351,26 @@ def combine_combs(combs: typing.Sequence[Comb]) -> Comb:
 
         setattr(res, attr, np.asarray(value)[order])
     return res
+
+
+def load_combs_from_lattice_data(lat_data) -> Comb:
+    comb_data = {}
+    for ele in lat_data["elements"]:
+        if "comb" in ele:
+            for key, value in ele["comb"].items():
+                if isinstance(value, list):
+                    comb_data.setdefault(key, [])
+                    comb_data[key].extend(value)
+    return Comb(**comb_data)
+
+
+def load_combs_from_lattice_file(fn: pathlib.Path):
+    data = load_model_data(fn)
+
+    from .. import Lattice
+
+    if isinstance(data, Lattice):
+        # Loaded from HDF5
+        return combine_combs([ele.comb for ele in data.elements if ele.comb is not None])
+    # Otherwise, just raw lattice data
+    return load_combs_from_lattice_data(data)
