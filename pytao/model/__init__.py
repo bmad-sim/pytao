@@ -32,7 +32,15 @@ from ._generated import (
     SpaceChargeCom,
     TaoGlobal,
 )
-from .base import TaoBaseModel, TaoModel, TaoSettableModel
+from .base import (
+    ArchiveFormat,
+    TaoBaseModel,
+    TaoModel,
+    TaoSettableModel,
+    load_model_data,
+    load_model,
+    dump_model,
+)
 from .config import TaoConfig, TaylorMap
 from .ele import (
     AnyElementID,
@@ -67,6 +75,7 @@ from .types import FloatSequence, IntSequence, ArgumentType
 
 __all__ = [
     "AnyElementID",
+    "ArchiveFormat",
     "ArgumentType",
     "Beam",
     "BeamInit",
@@ -129,4 +138,7 @@ __all__ = [
     "TaoSettableModel",
     "TaylorMap",
     "Which",
+    "dump_model",
+    "load_model",
+    "load_model_data",
 ]

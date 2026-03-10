@@ -135,6 +135,15 @@ class TaoBaseModel(
         filename : str or pathlib.Path
             The path to the file where the model data should be written.
             The file format is determined by the extension.
+        exclude_defaults : bool, optional
+            Exclude model defaults from the output. Defaults to True.
+        backup_existing : bool, optional
+            If a file exists at the target, rename it using `datefmt` as a backup.
+            Defaults to True.
+        datefmt : str, optional
+            The date format for the backup file.
+        format : ArchiveFormat or None, optional
+            File format.  If not specified, determined by file extension.
         """
 
         return dump_model(
@@ -513,6 +522,46 @@ def format_from_filename(fn: pathlib.Path) -> ArchiveFormat:
     return "json"
 
 
+def load_model_data(
+    filename: str | pathlib.Path,
+    *,
+    format: ArchiveFormat | None = None,
+):
+    """
+    Read the model from a file in JSON, YAML, or custom HDF5 format.
+
+    For HDF5 format, the deserialized class instance will be returned.
+    For JSON and YAML, the underlying model data will be returned.
+
+    Parameters
+    ----------
+    filename : str or pathlib.Path
+        The path to the file where the model data should be written.
+        The file format is determined by the extension.
+    format : ArchiveFormat or None, optional
+        File format.  If not specified, determined by file extension.
+    """
+    fname = pathlib.Path(filename)
+
+    format = format or format_from_filename(fname)
+
+    if format == "hdf5":
+        with h5py.File(fname) as h5g:
+            return restore_from_hdf5_file(h5g)
+
+    if format == "yaml":
+        import yaml  # NOTE: yaml is not a required dependency
+
+        with open(fname, "rt") as fp:
+            return yaml.safe_load(fp)
+    elif format == "json.gz":
+        with gzip.open(fname, "rb") as fp:
+            return orjson.loads(fp.read())
+    elif format == "json":
+        return orjson.loads(fname.read_bytes())
+    raise NotImplementedError(format)
+
+
 def load_model(
     filename: str | pathlib.Path,
     cls: type[T],
@@ -528,34 +577,18 @@ def load_model(
         The path to the file where the model data should be written.
         The file format is determined by the extension.
     model : pydantic.BaseModel
+
+    format : ArchiveFormat or None, optional
+        File format.  If not specified, determined by file extension.
     """
-    fname = pathlib.Path(filename)
-
-    format = format or format_from_filename(fname)
-
-    if format == "hdf5":
-        with h5py.File(fname) as h5g:
-            res = restore_from_hdf5_file(h5g)
-
-        if not isinstance(res, cls):
+    data = load_model_data(filename, format=format)
+    if isinstance(data, pydantic.BaseModel):
+        if not isinstance(data, cls):
             raise TypeError(
                 f"Unexpected class returned from restore process. Expected {cls.__name__} "
-                f"got {type(res).__name__}"
+                f"got {type(data).__name__}"
             )
-        return res
-
-    if format == "yaml":
-        import yaml  # NOTE: yaml is not a required dependency
-
-        with open(fname, "rt") as fp:
-            data = yaml.safe_load(fp)
-    elif format == "json.gz":
-        with gzip.open(fname, "rb") as fp:
-            data = orjson.loads(fp.read())
-    elif format == "json":
-        data = orjson.loads(fname.read_bytes())
-    else:
-        raise NotImplementedError(format)
+        return data
     return cls.model_validate(data)
 
 
@@ -595,6 +628,16 @@ def dump_model(
         The path to the file where the model data should be written.
         The file format is determined by the extension.
     model : pydantic.BaseModel
+
+    exclude_defaults : bool, optional
+        Exclude model defaults from the output. Defaults to True.
+    backup_existing : bool, optional
+        If a file exists at the target, rename it using `datefmt` as a backup.
+        Defaults to True.
+    datefmt : str, optional
+        The date format for the backup file.
+    format : ArchiveFormat or None, optional
+        File format.  If not specified, determined by file extension.
     """
     fname = pathlib.Path(filename)
 
