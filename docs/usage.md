@@ -151,14 +151,6 @@ Consider these alternatives:
    plt.show()
    ```
 
-## PyTao (deprecated/experimental) GUI
-
-Start the experimental (and mostly unsupported/deprecated) GUI by using the following:
-
-```bash
-pytao-gui -init_file "$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init"
-```
-
 ## Notes about Bokeh on JupyterHub
 
 If you are using PyTao with Bokeh on your computer and are running JupyterLab

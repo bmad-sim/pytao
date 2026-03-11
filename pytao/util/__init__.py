@@ -1,7 +1,4 @@
-"""
-This package contains some useful classes for dealing with data from tao
-"""
-
+from __future__ import annotations
 from . import parsers
 from .importing import import_by_name
 from .paths import normalize_path

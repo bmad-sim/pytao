@@ -38,7 +38,6 @@ classifiers = [
 
 [project.scripts]
 pytao = "pytao.cli:main"
-pytao-gui = "pytao.gui.__main__:main"
 
 [project.optional-dependencies]
 all = []
@@ -84,3 +83,4 @@ testpaths = ["pytao/tests"]
 
 [tool.setuptools_scm]
 version_file = "pytao/_version.py"
+fallback_version = "0.0.0.dev0"
