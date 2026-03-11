@@ -11,6 +11,8 @@ nav:
 
   - Examples:
       - examples/basic.ipynb
+      - examples/elements.ipynb
+      - examples/config.ipynb
       - examples/plot-matplotlib.ipynb
       - examples/plot-bokeh.ipynb
       - examples/plot-bokeh-vars.ipynb
@@ -26,6 +28,9 @@ nav:
   - API:
       - Tao: api/tao.md
       - SubprocessTao: api/subprocesstao.md
+      - Model Base Classes: api/model.md
+      - TaoConfig: api/config.md
+      - Lattice / Element: api/element.md
       - Plotting: api/plot.md
       - Matplotlib: api/plot-mpl.md
       - Bokeh: api/plot-bokeh.md
