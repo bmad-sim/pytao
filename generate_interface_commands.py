@@ -365,7 +365,7 @@ def test_{clean_method}_{test_name}(caplog, tao_cls):
 
     if shutil.which("ruff"):
         os.system(f'ruff format "{CMDS_OUTPUT}" "{TEST_OUTPUT}"')
-        os.system(f'ruff check --fix "{CMDS_OUTPUT}" "{TEST_OUTPUT}"')
+        os.system(f'ruff check --extend-select=I --fix "{CMDS_OUTPUT}" "{TEST_OUTPUT}"')
 
 
 if __name__ == "__main__":
