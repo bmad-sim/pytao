@@ -142,20 +142,29 @@ class TaoConfig(TaoSettableModel):
 
     @classmethod
     @override
-    def from_tao(cls, tao: Tao, **kwargs) -> TaoConfig:
+    def from_tao(cls, tao: Tao, ix_uni: str = "", ix_branch: str = "", **kwargs) -> TaoConfig:
         """
-        Create this structure by querying Tao for its current values.
+        Get a configuration object representing the state of Tao.
 
         Parameters
         ----------
         tao : Tao
+
+        ix_branch : str, optional
+            Branch index, by default ""
+        ix_uni : str, optional
+            Universe index, by default ""
+
+        Returns
+        -------
+        TaoConfig
         """
         return cls(
             startup=tao.init_settings,
             com=BmadCom.from_tao(tao, **kwargs),
             space_charge_com=SpaceChargeCom.from_tao(tao, **kwargs),
-            beam_init=BeamInit.from_tao(tao, **kwargs),
-            beam=Beam.from_tao(tao, **kwargs),
+            beam_init=BeamInit.from_tao(tao, ix_uni=ix_uni, ix_branch=ix_branch, **kwargs),
+            beam=Beam.from_tao(tao, ix_uni=ix_uni, ix_branch=ix_branch, **kwargs),
             globals=TaoGlobal.from_tao(tao, **kwargs),
         )
 
