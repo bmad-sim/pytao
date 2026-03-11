@@ -2135,7 +2135,7 @@ class Element(TaoBaseModel, extra="forbid"):
 
 class Lattice(TaoBaseModel):
     """
-    A class representing a Bmad Lattice.
+    A Bmad Lattice, or more commonly a single branch of a full lattice.
 
     Attributes
     ----------
@@ -2221,6 +2221,8 @@ class Lattice(TaoBaseModel):
         which: Which = "model",
         track_start: ElementID | str | int | None = None,
         track_end: ElementID | str | int | None = None,
+        ix_branch: str = "",
+        ix_uni: str = "",
         **kwargs,
     ):
         """
@@ -2238,6 +2240,10 @@ class Lattice(TaoBaseModel):
             The last element to get information from (inclusive).  Defaults to
             the last element in the lattice.
             This does not need to be a unique element itself.
+        ix_branch : str, optional
+            Branch index, by default ""
+        ix_uni : str, optional
+            Universe index, by default ""
         **kwargs : dict
             Additional keyword arguments passed to `Element.from_tao`.
 
@@ -2246,7 +2252,13 @@ class Lattice(TaoBaseModel):
         Lattice
         """
         indices: list[int] = [
-            int(idx) for idx in tao.lat_list("*", "ele.ix_ele", flags="-no_slaves")
+            int(idx)
+            for idx in cast(
+                list,
+                tao.lat_list(
+                    "*", "ele.ix_ele", flags="-no_slaves", ix_branch=ix_branch, ix_uni=ix_uni
+                ),
+            )
         ]
         ix_start = get_element_index(tao, track_start) if track_start else 0
         ix_end = get_element_index(tao, track_end) if track_end else max(indices)
@@ -2267,6 +2279,8 @@ class Lattice(TaoBaseModel):
         which: Which = "model",
         orbit: bool = True,
         twiss: bool = True,
+        ix_branch: str = "",
+        ix_uni: str = "",
         **kwargs,
     ):
         """
@@ -2286,6 +2300,10 @@ class Lattice(TaoBaseModel):
             Orbit information is included by default.
         twiss : bool, default=True
             Twiss information is included by default.
+        ix_branch : str, optional
+            Branch index, by default ""
+        ix_uni : str, optional
+            Universe index, by default ""
         **kwargs : dict
             Additional keyword arguments passed to `Element.from_tao`.
 
@@ -2295,7 +2313,13 @@ class Lattice(TaoBaseModel):
         """
 
         indices: list[int] = [
-            int(idx) for idx in tao.lat_list("*", "ele.ix_ele", flags="-track_only")
+            int(idx)
+            for idx in cast(
+                list,
+                tao.lat_list(
+                    "*", "ele.ix_ele", flags="-track_only", ix_branch=ix_branch, ix_uni=ix_uni
+                ),
+            )
         ]
         ix_start = get_element_index(tao, track_start) if track_start else 0
         ix_end = get_element_index(tao, track_end) if track_end else max(indices)
