@@ -126,6 +126,8 @@ class TaoBaseModel(
         backup_existing: bool = True,
         datefmt: str = DEFAULT_DATEFMT,
         format: ArchiveFormat | None = None,
+        indent: bool = False,
+        sort_keys: bool = False,
     ):
         """
         Write the model data to a file in JSON or YAML format.
@@ -144,6 +146,10 @@ class TaoBaseModel(
             The date format for the backup file.
         format : ArchiveFormat or None, optional
             File format.  If not specified, determined by file extension.
+        indent : bool, optional
+            Indent the output, if applicable based on the file format.
+        sort_keys : bool, optional
+            Sort the output keys, if applicable based on the file format.
         """
 
         return dump_model(
@@ -153,6 +159,8 @@ class TaoBaseModel(
             backup_existing=backup_existing,
             datefmt=datefmt,
             format=format,
+            indent=indent,
+            sort_keys=sort_keys,
         )
 
     @classmethod
@@ -618,6 +626,8 @@ def dump_model(
     backup_existing: bool = True,
     datefmt: str = DEFAULT_DATEFMT,
     format: ArchiveFormat | None = None,
+    indent: bool = False,
+    sort_keys: bool = False,
 ):
     """
     Write the model data to a file in JSON, YAML, or custom HDF5 format.
@@ -638,6 +648,10 @@ def dump_model(
         The date format for the backup file.
     format : ArchiveFormat or None, optional
         File format.  If not specified, determined by file extension.
+    indent : bool, optional
+        Indent the output, if applicable based on the file format.
+    sort_keys : bool, optional
+        Sort the output keys, if applicable based on the file format.
     """
     fname = pathlib.Path(filename)
 
@@ -662,7 +676,12 @@ def dump_model(
 
             yaml.safe_dump(data, fp)
     elif format in ("json.gz", "json"):
-        dumped = orjson.dumps(data)
+        options = 0
+        if indent:
+            options |= orjson.OPT_INDENT_2
+        if sort_keys:
+            options |= orjson.OPT_SORT_KEYS
+        dumped = orjson.dumps(data, option=options)
 
         if format == "json.gz":
             with gzip.open(fname, "wb") as fp:
