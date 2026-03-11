@@ -110,7 +110,7 @@ def generate_params(params):
     This method uses the NumpyDocString Parameter class to introspect for
     optional flags.
 
-    `verbose` and `as_dict`, `raises` are always keyword arguments defaulting to True`.
+    `verbose`, `raises` are always keyword arguments defaulting to True`.
 
     Parameters
     ----------
@@ -121,7 +121,7 @@ def generate_params(params):
     -------
     strq
        The list of arguments properly formatted.
-       E.g.: tao, s, *, ix_uni="1", ix_branch="0", which="model", verbose=False, as_dict=True
+       E.g.: tao, s, *, ix_uni="1", ix_branch="0", which="model", verbose=False
     """
 
     args = ["self"]
@@ -143,7 +143,6 @@ def generate_params(params):
             args.append(name)
 
     kwargs.append("verbose=False")
-    kwargs.append("as_dict=True")
     kwargs.append("raises=True")
 
     return ", ".join(args + ["*"] + kwargs)
@@ -171,7 +170,7 @@ def generate_method_code(command_str, docs, method, command, returns):
     -------
     str
        The list of arguments properly formatted.
-       E.g.: tao, *, flags="", ix_uni, ix_branch, elements, which, who, verbose=True, as_dict=True, raises=True
+       E.g.: tao, *, flags="", ix_uni, ix_branch, elements, which, who, verbose=True, raises=True
     """
     code_list = [f"cmd = f'{command_str}'"]
     code_list.append("if verbose: print(cmd)")
@@ -186,11 +185,11 @@ def generate_method_code(command_str, docs, method, command, returns):
                 parser_docs = NumpyDocString(special_parser.__doc__)
                 docs["Returns"] = parser_docs["Returns"]
             code_list.append(
-                f"return self._execute(cmd, as_dict, raises, method_name='{method}', cmd_type='{tp}')"
+                f"return self._execute(cmd, raises, method_name='{method}', cmd_type='{tp}')"
             )
         else:
             code_list.append(
-                f"{r.desc[0]}:\n    return self._execute(cmd, as_dict, raises, method_name='{method}', cmd_type='{tp}')"
+                f"{r.desc[0]}:\n    return self._execute(cmd, raises, method_name='{method}', cmd_type='{tp}')"
             )
     return "\n".join(code_list)
 

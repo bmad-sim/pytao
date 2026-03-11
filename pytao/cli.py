@@ -107,6 +107,7 @@ def _get_implied_init_args(args: PytaoArgs) -> PytaoArgs:
         args.init_file = "tao.init"
     if args.pyplot != "tao":
         args.external_plotting = True
+        args.noplot = True
 
     return args
 

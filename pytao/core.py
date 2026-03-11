@@ -21,7 +21,7 @@ from .errors import (
     raise_for_error_messages,
 )
 from .util import parsers as _pytao_parsers
-from .util.parameters import tao_parameter_dict
+# from .util.parameters import tao_parameter_dict
 
 if TYPE_CHECKING:
     from .subproc import SubprocessTao
@@ -417,7 +417,6 @@ class TaoCore:
     def _execute(
         self,
         cmd: str,
-        as_dict: bool = True,
         raises: bool = True,
         method_name=None,
         cmd_type: Literal["string_list", "real_array", "integer_array"] = "string_list",
@@ -430,15 +429,13 @@ class TaoCore:
         ----------
         cmd : str
             The command to run
-        as_dict : bool, optional
-            Return string data as a dict? by default True
         raises : bool, optional
-            Raise exception on tao errors? by default True
+            Raise exception on tao errors? Default is True.
         method_name : str/None, optional
-            Name of the caller. Required for custom parsers for commands, by
-            default None
+            Name of the caller. Required for custom parsers for commands.
+            Default is None.
         cmd_type : str, optional
-            The type of data returned by tao in its common memory, by default
+            The type of data returned by Tao in its common memory, by default
             "string_list"
 
         Returns
@@ -460,14 +457,13 @@ class TaoCore:
                 self._log(cmd, msg)
 
         special_parser = getattr(_pytao_parsers, f"parse_{method_name}", None)
+
         try:
             if special_parser and callable(special_parser):
                 return special_parser(raw_output, cmd=cmd)
             if isinstance(raw_output, np.ndarray):
                 return raw_output
-            if as_dict:
-                return _pytao_parsers.parse_tao_python_data(raw_output)
-            return tao_parameter_dict(raw_output)
+            return _pytao_parsers.parse_tao_python_data(raw_output)
         except Exception as ex:
             if raises:
                 setattr(ex, "tao_output", raw_output)
