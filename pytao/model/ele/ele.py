@@ -1572,15 +1572,23 @@ class GeneralAttributes(TaoModel, extra="allow"):
     # Note: hacky workaround here so we can inspect if attributes can be set
     _tao_command_attr_: ClassVar[str] = "pipe ele:gen_attribs {ele_id}"
     _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    _tao_attr_map_: ClassVar[dict[str, str]] = {
+        # Every attribute except for "L" is lowercase - by request
+        "l": "L",
+    }
 
     attrs: dict[str, Attr]
 
+    @classmethod
+    def _fix_key_case(cls, key: str) -> str:
+        return cls._tao_attr_map_.get(key.lower(), key.lower())
+
     def __getitem__(self, key: str) -> Attr:
         # TODO: GeneralAttributes -> RootModel and then fully override __iter__
-        return self.attrs[key]
+        return self.attrs[self._fix_key_case(key)]
 
     def __setitem__(self, key: str, value) -> None:
-        self.attrs[key].data = value
+        self.attrs[self._fix_key_case(key)].data = value
 
     @pydantic.model_validator(mode="wrap")
     @classmethod
@@ -1611,7 +1619,11 @@ class GeneralAttributes(TaoModel, extra="allow"):
 
     @classmethod
     def _process_tao_data(cls, data) -> dict:
-        return {"attrs": parse_tao_python_data_with_units(data)}
+        attrs_by_key = {
+            cls._fix_key_case(attr): value
+            for attr, value in parse_tao_python_data_with_units(data).items()
+        }
+        return {"attrs": attrs_by_key}
 
     # @property
     # def settable_fields(self) -> dict[str, FieldInfo]:

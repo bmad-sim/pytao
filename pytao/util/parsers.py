@@ -5,7 +5,7 @@ import dataclasses
 import datetime
 import logging
 from collections import defaultdict
-from typing import Any
+from typing import Any, TypeVar
 
 import numpy as np
 
@@ -23,6 +23,9 @@ class FloatOrNone:
     pass
 
 
+T = TypeVar("T", bound=str | int | float | bool)
+
+
 @dataclasses.dataclass
 class Attr:
     name: str
@@ -30,6 +33,10 @@ class Attr:
     settable: bool
     data: Any
     units: str | None
+
+    def as_type(self, cls: type[T]) -> T:
+        """Cast the data to the given type. Supports str, int, bool, or float."""
+        return cls(self.data)
 
 
 # Helpers
