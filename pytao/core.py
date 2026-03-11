@@ -422,7 +422,6 @@ class TaoCore:
         cmd_type: Literal["string_list", "real_array", "integer_array"] = "string_list",
     ):
         """
-
         A wrapper to handle commonly used options when running a command through tao.
 
         Parameters
