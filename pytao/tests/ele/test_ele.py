@@ -117,7 +117,7 @@ def ele_id(tao: SubprocessTao) -> SubprocessTao:
 def test_element_unfilled(tao: SubprocessTao, ele_id: str):
     ele = Element.from_tao(tao, ele_id, which="model", attrs=True)
     assert ele.which == "model"
-    assert ele.ele == ele_id
+    assert ele.ele_id == ele_id
 
     # Make sure tao gives back the same element given our ElementID
     id = ele.id

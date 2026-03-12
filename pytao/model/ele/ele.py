@@ -1665,7 +1665,7 @@ class Element(TaoBaseModel, extra="forbid"):
 
     Attributes
     ----------
-    ele : str
+    ele_id : str
         The element name or identifier.
     which : "base", "model", or "design"
     head : ElementHead
@@ -1720,7 +1720,11 @@ class Element(TaoBaseModel, extra="forbid"):
         # "wall3d_table",
     }
 
-    ele: str = pydantic.Field(frozen=True)
+    ele_id: str = pydantic.Field(
+        frozen=True,
+        # back-compat for old attribute name
+        validation_alias=pydantic.AliasChoices("ele_id", "ele"),
+    )
     which: Which = pydantic.Field(frozen=True)
 
     head: tao_classes.ElementHead
@@ -1756,8 +1760,8 @@ class Element(TaoBaseModel, extra="forbid"):
             key=self.head.key,
             universe=self.head.universe,
             branch=self.head.ix_branch,
-            # match_number=self.ele.match_number,
-            # match_offset=self.ele.match_offset,
+            # match_number=self.ele_id.match_number,
+            # match_offset=self.ele_id.match_offset,
         )
 
     def __eq__(self, other) -> bool:
@@ -1926,31 +1930,31 @@ class Element(TaoBaseModel, extra="forbid"):
 
     @_pytao_stats.time_decorator
     def _fill_head(self, tao: Tao):
-        self.head = get_head(tao=tao, ele=self.ele, which=self.which)
+        self.head = get_head(tao=tao, ele=self.ele_id, which=self.which)
 
     @_pytao_stats.time_decorator
     def _fill_attrs(self, tao: Tao):
-        self.attrs = GeneralAttributes.from_tao(tao=tao, ele_id=self.ele, which=self.which)
+        self.attrs = GeneralAttributes.from_tao(tao=tao, ele_id=self.ele_id, which=self.which)
 
     @_pytao_stats.time_decorator
     def _fill_bunch_params(self, tao: Tao):
-        self.bunch_params = get_bunch_params(tao=tao, ele=self.ele, which=self.which)
+        self.bunch_params = get_bunch_params(tao=tao, ele=self.ele_id, which=self.which)
 
     @_pytao_stats.time_decorator
     def _fill_floor(self, tao: Tao):
-        self.floor = ElementFloorAll.from_tao(tao=tao, ele=self.ele, which=self.which)
+        self.floor = ElementFloorAll.from_tao(tao=tao, ele=self.ele_id, which=self.which)
 
     @_pytao_stats.time_decorator
     def _fill_comb(self, tao: Tao, comb_data: Comb | None):
         self.comb = get_comb(
-            tao=tao, ele=self.ele, which=self.which, head=self.head, comb=comb_data
+            tao=tao, ele=self.ele_id, which=self.which, head=self.head, comb=comb_data
         )
 
     @_pytao_stats.time_decorator
     def _fill_control_vars(self, tao: Tao):
         if self.head.has_control:
             self.control_vars = cast(
-                dict[str, float], tao.ele_control_var(ele_id=self.ele, which=self.which)
+                dict[str, float], tao.ele_control_var(ele_id=self.ele_id, which=self.which)
             )
         else:
             self.control_vars = None
@@ -1958,31 +1962,31 @@ class Element(TaoBaseModel, extra="forbid"):
     @_pytao_stats.time_decorator
     def _fill_lord_slave(self, tao: Tao):
         if self.head.has_lord_slave:
-            self.lord_slave = get_lord_slave(tao=tao, ele=self.ele, which=self.which)
+            self.lord_slave = get_lord_slave(tao=tao, ele=self.ele_id, which=self.which)
         else:
             self.lord_slave = None
 
     @_pytao_stats.time_decorator
     def _fill_photon(self, tao: Tao):
         if self.head.has_photon:
-            self.photon = ElementPhoton.from_tao(tao=tao, ele=self.ele, which=self.which)
+            self.photon = ElementPhoton.from_tao(tao=tao, ele=self.ele_id, which=self.which)
         else:
             self.photon = None
 
     @_pytao_stats.time_decorator
     def _fill_orbit(self, tao: Tao):
-        self.orbit = get_orbit(tao=tao, ele=self.ele, which=self.which)
+        self.orbit = get_orbit(tao=tao, ele=self.ele_id, which=self.which)
 
     @_pytao_stats.time_decorator
     def _fill_twiss(self, tao: Tao):
         if self.head.has_twiss:
-            self.twiss = get_twiss(tao=tao, ele=self.ele, which=self.which)
+            self.twiss = get_twiss(tao=tao, ele=self.ele_id, which=self.which)
         else:
             self.twiss = None
 
     @_pytao_stats.time_decorator
     def _fill_multipoles(self, tao: Tao):
-        self.multipoles = get_multipoles(tao=tao, ele=self.ele, which=self.which)
+        self.multipoles = get_multipoles(tao=tao, ele=self.ele_id, which=self.which)
 
     @_pytao_stats.time_decorator
     def _fill_wall3d(self, tao: Tao, fill_table: bool):
@@ -1991,7 +1995,7 @@ class Element(TaoBaseModel, extra="forbid"):
                 ElementWall3D.from_tao(
                     tao=tao,
                     index=index,
-                    ele=self.ele,
+                    ele=self.ele_id,
                     which=self.which,
                     fill_table=fill_table,
                 )
@@ -2005,7 +2009,7 @@ class Element(TaoBaseModel, extra="forbid"):
         if self.head.has_wall3d > 0:
             self.chamber_walls = [
                 ElementChamberWall.from_tao(
-                    tao=tao, index=index, ele=self.ele, which=self.which
+                    tao=tao, index=index, ele=self.ele_id, which=self.which
                 )
                 for index in range(1, self.head.has_wall3d + 1)
             ]
@@ -2018,7 +2022,7 @@ class Element(TaoBaseModel, extra="forbid"):
             self.grid_field = [
                 ElementGridField.from_tao(
                     tao=tao,
-                    ele=self.ele,
+                    ele=self.ele_id,
                     which=self.which,
                     index=index,
                     fill_points=points,
@@ -2031,14 +2035,14 @@ class Element(TaoBaseModel, extra="forbid"):
     @_pytao_stats.time_decorator
     def _fill_mat6(self, tao: Tao):
         if self.head.has_mat6:
-            self.mat6 = ElementMat6.from_tao(tao=tao, ele=self.ele, which=self.which)
+            self.mat6 = ElementMat6.from_tao(tao=tao, ele=self.ele_id, which=self.which)
         else:
             self.mat6 = None
 
     @_pytao_stats.time_decorator
     def _fill_wake(self, tao: Tao):
         if self.head.has_wake:
-            self.wake = ElementWake.from_tao(tao=tao, ele=self.ele, which=self.which)
+            self.wake = ElementWake.from_tao(tao=tao, ele=self.ele_id, which=self.which)
         else:
             self.wake = None
 
