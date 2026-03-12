@@ -109,6 +109,19 @@ def _check_equality(obj1: Any, obj2: Any) -> bool:
     return bool(obj1 == obj2)
 
 
+def _strip_metadata(data: Any, remove_keys: set[str]) -> Any:
+    """Recursively remove metadata keys from nested dicts/lists."""
+    if isinstance(data, dict):
+        return {
+            key: _strip_metadata(value, remove_keys)
+            for key, value in data.items()
+            if key not in remove_keys
+        }
+    if isinstance(data, list):
+        return [_strip_metadata(item, remove_keys) for item in data]
+    return data
+
+
 class TaoBaseModel(
     pydantic.BaseModel,
     validate_assignment=True,
@@ -205,6 +218,27 @@ class TaoBaseModel(
 
         attrs = set(super().__dir__()) - set(dir(pydantic.BaseModel))
         return [attr for attr in attrs if not attr.startswith("_")]
+
+    def to_dict(self, include_metadata: bool = False, **kwargs) -> dict[str, Any]:
+        """
+        Serialize the model to a dictionary.
+
+        Parameters
+        ----------
+        include_metadata : bool, optional
+            If True, includes base metadata fields like `command_args` and
+            `__class_name__` in the serialized output. Default is False.
+        **kwargs
+            Additional arguments to pass to Pydantic's `model_dump`.
+
+        Returns
+        -------
+        dict[str, Any]
+        """
+        res = self.model_dump(**kwargs)
+        if include_metadata:
+            return res
+        return _strip_metadata(res, {"__class_name__", "command_args"})
 
 
 class TaoModel(
