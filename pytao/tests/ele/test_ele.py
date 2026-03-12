@@ -3,6 +3,8 @@ import pathlib
 import time
 from typing import NamedTuple
 
+import numpy as np
+import numpy.testing
 import pytest
 
 import pytao
@@ -392,3 +394,56 @@ def test_lattice_write(
 def test_format_from_filename(filename: str, expected_format: str) -> None:
     fn_path = pathlib.Path(filename)
     assert format_from_filename(fn_path) == expected_format
+
+
+def test_sr_wake_longitudinal():
+    LAT = """
+
+    beginning[beta_a] = 1
+    beginning[beta_b] = 1
+    beginning[e_tot] = 1e6
+    parameter[geometry] = open
+
+    p1: pipe, L = 1,
+    ! AC Resistive wall wakefield
+    ! Adapted from SLAC-PUB-10707
+    !    Material        : copper-slac-pub-10707
+    !    Conductivity    : 65000000.0 S/m
+    !    Relaxation time : 2.7e-14 s
+    !    Geometry        : round
+    !    Radius          : 0.1 m
+    !    s₀              : 9.347497493596404e-05  m
+    !    Γ               : 0.086594260886886 
+    sr_wake =  
+    {z_scale=1, amp_scale=1, scale_with_length=True, z_max=100,
+    longitudinal = {3595020714472.61, 7562.955649662248, 19650.316202011512, 0.25, none}}
+
+    lat: line = (p1)
+
+    use, lat
+    """
+    with SubprocessTao.from_lattice_contents(LAT, noplot=True) as tao:
+        wake = tao.ele("p1").wake
+        assert wake is not None
+        assert wake.sr_long is not None
+        numpy.testing.assert_allclose(
+            np.asarray(wake.sr_long.table[0][:-1]),
+            [
+                3595020714472.61,
+                7562.955649662248,
+                19650.316202011512,
+                0.25,
+                # "none",
+            ],
+        )
+        assert wake.sr_long.table[0][-1] == "none"
+        assert len(wake.sr_long.table) == 1
+
+
+def test_sr_wake_transverse():
+    pytest.skip("segfault - see upstream issue")
+    with SubprocessTao(
+        lattice_file="$ACC_ROOT_DIR/regression_tests/wake_test/wake_test.bmad", noplot=True
+    ) as tao:
+        tao.ele("p1").wake
+        # TODO value comparison

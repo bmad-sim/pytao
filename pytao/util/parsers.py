@@ -1765,6 +1765,6 @@ def parse_ele_wake(lines, cmd=""):
             except ValueError:
                 return str(value)
 
-        return [fix_maybe_none(value) for line in lines for value in line.split(";")]
+        return [[fix_maybe_none(value) for value in line.split(";")] for line in lines]
 
     return parse_tao_python_data(lines)

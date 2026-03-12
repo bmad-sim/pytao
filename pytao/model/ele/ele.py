@@ -1559,7 +1559,7 @@ class ElementSrWakeData(TaoModel):
     _tao_command_attr_: ClassVar[str] = "ele_wake"
     _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
     z_ref: float = 0.0
-    table: list[str | float] = []
+    table: list[list[str | float]] = []
 
     @classmethod
     def from_tao(
