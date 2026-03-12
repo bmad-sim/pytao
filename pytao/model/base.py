@@ -584,7 +584,7 @@ def load_model(
     filename : str or pathlib.Path
         The path to the file where the model data should be written.
         The file format is determined by the extension.
-    model : pydantic.BaseModel
+    cls : pydantic.BaseModel class
 
     format : ArchiveFormat or None, optional
         File format.  If not specified, determined by file extension.
