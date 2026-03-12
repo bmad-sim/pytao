@@ -1740,6 +1740,14 @@ class Element(TaoBaseModel, extra="forbid"):
     wake: ElementWake | None = None
     wall3d: list[ElementWall3D] | None = None
 
+    def value(self, key: str):
+        """Get the value of a general attribute by name."""
+        if self.attrs is None:
+            raise ValueError(
+                "`attrs` is unavailable. Fill it first using the Tao object (see `Element.fill`)"
+            )
+        return self.attrs[key].data
+
     @property
     def id(self) -> ElementID:
         """The fully-qualified ElementID, including universe/branch/key."""
