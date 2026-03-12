@@ -15,6 +15,7 @@ from ...errors import TaoCommandError
 from ...util.parsers import Attr, parse_tao_python_data_with_units
 from .. import _generated as tao_classes
 from ..base import ArchiveFormat, TaoBaseModel, TaoModel
+from ..types import NDArray
 from .comb import Comb
 from .time_stats import _pytao_stats
 
@@ -1168,7 +1169,7 @@ class ElementFloorPosition(TaoBaseModel, extra="forbid"):
     theta: float = 0.0
     phi: float = 0.0
     psi: float = 0.0
-    wmat: list[list[float]] = Field(default_factory=list)
+    wmat: NDArray  # NOTE: no default to avoid serialization issues
 
 
 class ElementFloorItem(TaoBaseModel, extra="forbid"):
@@ -1183,8 +1184,8 @@ class ElementFloorItem(TaoBaseModel, extra="forbid"):
         The actual position on the floor plan.
     """
 
-    reference: ElementFloorPosition = Field(default_factory=ElementFloorPosition)
-    actual: ElementFloorPosition = Field(default_factory=ElementFloorPosition)
+    reference: ElementFloorPosition = ElementFloorPosition(wmat=np.zeros((3, 3)))
+    actual: ElementFloorPosition = ElementFloorPosition(wmat=np.zeros((3, 3)))
 
     @staticmethod
     def from_tao_output(output: dict[str, np.ndarray]) -> dict[int, ElementFloorItem]:
@@ -1447,50 +1448,37 @@ class ElementPhoton(tao_classes.ElementPhotonBase, extra="forbid"):
         )
 
 
-class ElementMat6(
-    tao_classes.ElementMat6,
-    tao_classes.ElementMat6Vec0,
-    tao_classes.ElementMat6Error,
-    extra="forbid",
-):
+class ElementMat6(TaoModel, extra="forbid"):
     """
     Linear transfer map (mat6) data.
 
     Attributes
     ----------
-    data_1 : sequence of floats
-    data_2 : sequence of floats
-    data_3 : sequence of floats
-    data_4 : sequence of floats
-    data_5 : sequence of floats
-    data_6 : sequence of floats
-    vec0 : sequence of floats
+    mat6 : NDArray of shape (6, 6)
+    vec0 : NDArray
     symplectic_error : float
     """
 
     which: Which = pydantic.Field(frozen=True)
 
-    def __repr_args__(self):
-        return [
-            ("mat6", self.mat6),
-            ("vec0", self.vec0),
-            ("symplectic_error", self.symplectic_error),
-            ("which", self.which),
-        ]
+    vec0: NDArray
+    mat6: NDArray
+    symplectic_error: float = Field(default=0.0, frozen=True)
 
-    @property
-    def mat6(self) -> np.ndarray:
-        return np.asarray(
-            [self.data_1, self.data_2, self.data_3, self.data_4, self.data_5, self.data_6],
-        )
+    @pydantic.model_validator(mode="before")
+    @classmethod
+    def _handle_legacy_raw_data(cls, data: Any) -> Any:
+        """Convert legacy `data_*` keys to a unified `mat6` NDArray."""
+        if not isinstance(data, dict):
+            return data
 
-    # NOTE: mat6 isn't modifiable, so we don't really need a setter.
-    # @mat6.setter
-    # def mat6(self, value: Sequence[Sequence[float]]) -> None:
-    #     mat6 = np.asarray(value)
-    #     if mat6.shape != (6, 6):
-    #         raise ValueError(f"Unexpected mat6 shape: {mat6.shape} should be (6, 6)")
-    #     (self.data_1, self.data_2, self.data_3, self.data_4, self.data_5, self.data_6) = mat6
+        legacy_keys = ["data_1", "data_2", "data_3", "data_4", "data_5", "data_6"]
+
+        if "mat6" not in data:
+            mat6_raw = [data.pop(k, [0.0] * 6) for k in legacy_keys]
+            data["mat6"] = np.asarray(mat6_raw, dtype=float)
+
+        return data
 
     @classmethod
     def from_tao(
@@ -1502,17 +1490,19 @@ class ElementMat6(
     ):
         ele = to_ele_id(ele)
 
-        mat6 = get_mat6(tao, ele, which=which)
+        base = get_mat6(tao, ele, which=which)
         vec0 = get_mat6_vec0(tao, ele, which=which)
         err = get_mat6_error(tao, ele, which=which)
 
-        args = {
-            **mat6.model_dump(),
-            **vec0.model_dump(),
-            **err.model_dump(),
-        }
-        args.pop("__class_name__")
-        return cls(which=which, **args)
+        mat6 = np.asarray(
+            [base.data_1, base.data_2, base.data_3, base.data_4, base.data_5, base.data_6],
+        )
+        return cls(
+            which=which,
+            mat6=mat6,
+            vec0=np.asarray(vec0.vec0),
+            symplectic_error=err.symplectic_error,
+        )
 
 
 class ElementGridField(tao_classes.ElementGridField, extra="forbid"):
