@@ -8,8 +8,6 @@ from .core import (
 from .errors import TaoException, filter_tao_messages, filter_tao_messages_context
 from .subproc import AnyTao, SubprocessTao
 from .tao import Tao
-from .tao_interface import tao_interface
-from .tao_pexpect import tao_io
 
 try:
     from ._version import __version__
@@ -27,6 +25,4 @@ __all__ = [
     "TaoStartup",
     "filter_tao_messages",
     "filter_tao_messages_context",
-    "tao_interface",
-    "tao_io",
 ]
