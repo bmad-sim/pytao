@@ -8,6 +8,7 @@ nav:
   - Installation: installation.md
 
   - Usage: usage.md
+  - Releases: release_notes.md
 
   - Examples:
       - examples/basic.ipynb
