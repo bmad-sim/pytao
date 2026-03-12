@@ -981,7 +981,7 @@ def get_wake_sr_long(
     tao: Tao,
     ele: AnyElementID,
     which: Which = "model",
-) -> tao_classes.ElementWakeSrLong:
+) -> ElementSrWakeData:
     """
     Get the short-range longitudinal wake of a specific element in the Tao model.
 
@@ -998,8 +998,8 @@ def get_wake_sr_long(
     tao_classes.ElementWakeSrLong
         The short-range longitudinal wake of the specified element.
     """
-    ele = to_ele(ele)
-    return tao_classes.ElementWakeSrLong.from_tao(tao, ele_id=ele, which=which, who="sr_long")
+    ele = to_ele_id(ele)
+    return ElementSrWakeData.from_tao(tao, ele=ele, which=which, who="longitudinal")
 
 
 @_catch_element_not_found_error
@@ -1007,7 +1007,7 @@ def get_wake_sr_trans(
     tao: Tao,
     ele: AnyElementID,
     which: Which = "model",
-) -> tao_classes.ElementWakeSrTrans:
+) -> ElementSrWakeData:
     """
     Retrieve the short-range transverse wakefield response of a specified
     element in a Tao model.
@@ -1025,10 +1025,8 @@ def get_wake_sr_trans(
     tao_classes.ElementWakeSrTrans
         The transverse wakefield response of the specified element.
     """
-    ele = to_ele(ele)
-    return tao_classes.ElementWakeSrTrans.from_tao(
-        tao, ele_id=ele, which=which, who="sr_trans"
-    )
+    ele = to_ele_id(ele)
+    return ElementSrWakeData.from_tao(tao, ele=ele, which=which, who="transverse")
 
 
 @_catch_element_not_found_error
@@ -1549,11 +1547,61 @@ class ElementGridField(tao_classes.ElementGridField, extra="forbid"):
         )
 
 
+class ElementSrWakeData(TaoModel):
+    """
+    Per-element short-range wake data - may be longitudinal or transverse.
+
+    Attributes
+    ----------
+    z_ref : float
+    """
+
+    _tao_command_attr_: ClassVar[str] = "ele_wake"
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    z_ref: float = 0.0
+    table: list[str | float] = []
+
+    @classmethod
+    def from_tao(
+        cls,
+        tao: Tao,
+        ele: AnyElementID,
+        *,
+        which: Which,
+        who: Literal["longitudinal", "transverse"],
+    ):
+        ele_id = to_ele_id(ele)
+        if who == "longitudinal":
+            tao_who = "sr_long"
+        else:
+            tao_who = "sr_trans"
+
+        base_data: dict = tao.ele_wake(ele_id, who=tao_who, which=which)  #  type: ignore
+        table_data: list = tao.ele_wake(ele_id, who=f"{tao_who}_table", which=which)  # type: ignore
+        return cls(**base_data, table=table_data)
+
+
 class ElementWake(tao_classes.ElementWakeBase, extra="forbid"):
     which: Which = pydantic.Field(frozen=True)
 
-    sr_long: tao_classes.ElementWakeSrLong | None = None
-    sr_trans: tao_classes.ElementWakeSrTrans | None = None
+    sr_long: ElementSrWakeData | None = None
+    sr_trans: ElementSrWakeData | None = None
+    lr_mode: list[str | float] | None = None
+
+    @pydantic.field_validator("sr_long", "sr_trans", mode="before")
+    @classmethod
+    def _migrate_sr_wake(cls, value: Any) -> Any:
+        if isinstance(value, dict):
+            cls_name = value.get("__class_name__")
+            if cls_name in ("ElementWakeSrLong", "ElementWakeSrTrans"):
+                value_copy = dict(value)
+                value_copy["__class_name__"] = "ElementSrWakeData"
+                return value_copy
+
+        if isinstance(value, (tao_classes.ElementWakeSrLong, tao_classes.ElementWakeSrTrans)):
+            return ElementSrWakeData(z_ref=value.z_ref)
+
+        return value
 
     @classmethod
     def from_tao(
@@ -1568,10 +1616,13 @@ class ElementWake(tao_classes.ElementWakeBase, extra="forbid"):
         base = get_wake_base(tao, ele, which=which)
         sr_long = None
         sr_trans = None
+        lr_mode = None
         if base.has_sr_long:
             sr_long = get_wake_sr_long(tao, ele, which=which)
         if base.has_sr_trans:
             sr_trans = get_wake_sr_trans(tao, ele, which=which)
+        if base.has_lr_mode:
+            lr_mode: list[str | float] = tao.ele_wake(ele, which=which, who="lr_mode_table")  # type: ignore
 
         data = base.model_dump()
         data.pop("__class_name__")
@@ -1579,6 +1630,7 @@ class ElementWake(tao_classes.ElementWakeBase, extra="forbid"):
             which=which,
             sr_long=sr_long,
             sr_trans=sr_trans,
+            lr_mode=lr_mode,
             **data,
         )
 

@@ -1746,3 +1746,25 @@ def parse_show_version(lines, cmd=""):
     except ValueError:
         logger.warning("Failed to parse version output: %s", lines)
         return None
+
+
+def parse_ele_wake(lines, cmd=""):
+    """
+    Parse ele:wake data.
+
+    Returns
+    -------
+    dict, or list of dict
+    """
+    args = _get_cmd_args(cmd)
+    if args[1].lower() in {"sr_long_table", "lr_mode_table", "sr_trans_table"}:
+
+        def fix_maybe_none(value):
+            try:
+                return fix_value(value, float)
+            except ValueError:
+                return str(value)
+
+        return [fix_maybe_none(value) for line in lines for value in line.split(";")]
+
+    return parse_tao_python_data(lines)
