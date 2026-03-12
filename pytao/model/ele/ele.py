@@ -14,7 +14,7 @@ from typing_extensions import Self
 from ...errors import TaoCommandError
 from ...util.parsers import Attr, parse_tao_python_data_with_units
 from .. import _generated as tao_classes
-from ..base import ArchiveFormat, TaoBaseModel, TaoModel, _check_equality
+from ..base import ArchiveFormat, TaoBaseModel, TaoModel
 from .comb import Comb
 from .time_stats import _pytao_stats
 
@@ -1744,14 +1744,6 @@ class Element(TaoBaseModel, extra="forbid"):
     wake: ElementWake | None = None
     wall3d: list[ElementWall3D] | None = None
 
-    def value(self, key: str):
-        """Get the value of a general attribute by name."""
-        if self.attrs is None:
-            raise ValueError(
-                "`attrs` is unavailable. Fill it first using the Tao object (see `Element.fill`)"
-            )
-        return self.attrs[key].data
-
     @property
     def id(self) -> ElementID:
         """The fully-qualified ElementID, including universe/branch/key."""
@@ -1763,9 +1755,6 @@ class Element(TaoBaseModel, extra="forbid"):
             # match_number=self.ele_id.match_number,
             # match_offset=self.ele_id.match_offset,
         )
-
-    def __eq__(self, other) -> bool:
-        return _check_equality(self, other)
 
     @property
     def name(self) -> str:
@@ -2165,6 +2154,34 @@ class Element(TaoBaseModel, extra="forbid"):
             self._fill_multipoles(tao)
         if wake and should_update(self.wake):
             self._fill_wake(tao)
+
+    def value(self, key: str):
+        """Get the value of a general attribute by name."""
+        if self.attrs is None:
+            raise ValueError(
+                "`attrs` is unavailable. Fill it first using the Tao object (see `Element.fill`)"
+            )
+        return self.attrs[key].data
+
+    @property
+    def vec0(self):
+        """0th order transport vector."""
+        if self.mat6 is None:
+            raise ValueError(
+                "`mat6` is unavailable. Fill it first using the Tao object (see `Element.fill`)"
+            )
+
+        return self.mat6.vec0
+
+    @property
+    def symplectic_error(self) -> float:
+        """Symplectic error."""
+        if self.mat6 is None:
+            raise ValueError(
+                "`mat6` is unavailable. Fill it first using the Tao object (see `Element.fill`)"
+            )
+
+        return self.mat6.symplectic_error
 
 
 class Lattice(TaoBaseModel):
