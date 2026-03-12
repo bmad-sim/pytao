@@ -1472,6 +1472,28 @@ class ElementMat6(
 
     which: Which = pydantic.Field(frozen=True)
 
+    def __repr_args__(self):
+        return [
+            ("mat6", self.mat6),
+            ("vec0", self.vec0),
+            ("symplectic_error", self.symplectic_error),
+            ("which", self.which),
+        ]
+
+    @property
+    def mat6(self) -> np.ndarray:
+        return np.asarray(
+            [self.data_1, self.data_2, self.data_3, self.data_4, self.data_5, self.data_6],
+        )
+
+    # NOTE: mat6 isn't modifiable, so we don't really need a setter.
+    # @mat6.setter
+    # def mat6(self, value: Sequence[Sequence[float]]) -> None:
+    #     mat6 = np.asarray(value)
+    #     if mat6.shape != (6, 6):
+    #         raise ValueError(f"Unexpected mat6 shape: {mat6.shape} should be (6, 6)")
+    #     (self.data_1, self.data_2, self.data_3, self.data_4, self.data_5, self.data_6) = mat6
+
     @classmethod
     def from_tao(
         cls,
