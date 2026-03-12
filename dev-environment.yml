@@ -4,25 +4,26 @@ channels:
   - conda-forge
 dependencies:
   - python >=3.10
-  - openPMD-beamphysics
-  - numpydoc
   - bmad >=20260309
   - bokeh
-  - jupyterlab>3
+  - h5py
+  - httpcore >=1.0.9 # addresses a typing issue when launching jupyter lab
   - ipywidgets
+  - jupyterlab>3
   - matplotlib
   - numpy
-  - h5py
+  - numpydoc
+  - openPMD-beamphysics
   - orjson
   - pydantic >=2
   - tqdm
   # Developer
+  - mkdocs
+  - mkdocs-jupyter
+  - mkdocs-material
+  - mkdocstrings
+  - mkdocstrings-python
   - pygments
   - pytest
   - pytest-cov
-  - mkdocs
-  - mkdocstrings
-  - mkdocs-material
-  - mkdocs-jupyter
-  - mkdocstrings-python
   - pip

@@ -4,14 +4,15 @@ channels:
   - conda-forge
 dependencies:
   - python >=3.10
+  - bmad >=20260309
+  - h5py
+  - httpcore >=1.0.9 # addresses a typing issue when launching jupyter lab
   - ipykernel
   - ipywidgets
   - jupyterlab
-  - bmad >=20260309
-  - openPMD-beamphysics
   - numpy
+  - openPMD-beamphysics
   - orjson
-  - h5py
   - pydantic >=2
   - tqdm
   - pip
