@@ -30,7 +30,7 @@ class EmptyElementNameError(Exception):
     pass
 
 
-def to_ele(ele: AnyElementID) -> str:
+def to_ele_id(ele: AnyElementID) -> str:
     """
     Convert input to its string representation.
 
@@ -561,7 +561,7 @@ def get_head(
     -------
     tao_classes.ElementHead
     """
-    ele = to_ele(ele)
+    ele = to_ele_id(ele)
     return tao_classes.ElementHead.from_tao(tao, ele_id=ele, which=which)
 
 
@@ -587,7 +587,7 @@ def get_twiss(
     tao_classes.ElementTwiss
         The Twiss parameters of the specified element.
     """
-    ele = to_ele(ele)
+    ele = to_ele_id(ele)
     return tao_classes.ElementTwiss.from_tao(tao, ele_id=ele, which=which)
 
 
@@ -613,7 +613,7 @@ def get_orbit(
     tao_classes.ElementOrbit
         The orbit of the specified element in the Tao model.
     """
-    ele = to_ele(ele)
+    ele = to_ele_id(ele)
     return tao_classes.ElementOrbit.from_tao(tao, ele_id=ele, which=which)
 
 
@@ -638,7 +638,7 @@ def get_lord_slave(
     -------
     list of ElementLordSlave
     """
-    ele = to_ele(ele)
+    ele = to_ele_id(ele)
     adapter = pydantic.TypeAdapter("list[tao_classes.ElementLordSlave]")
     return adapter.validate_python(tao.ele_lord_slave(ele_id=ele))
 
@@ -671,7 +671,7 @@ def get_chamber_wall(
     list of ElementChamberWall
         A list of ElementChamberWall objects containing the chamber wall data for the specified element.
     """
-    ele = to_ele(ele)
+    ele = to_ele_id(ele)
     adapter = pydantic.TypeAdapter("list[tao_classes.ElementChamberWall]")
     return adapter.validate_python(
         tao.ele_chamber_wall(ele_id=ele, index=index, which=which, who=who)
@@ -703,7 +703,7 @@ def get_wall3d_base(
     tao_classes.ElementWall3DBase
         The 3D wall base information of the specified element.
     """
-    ele = to_ele(ele)
+    ele = to_ele_id(ele)
     return tao_classes.ElementWall3DBase.from_tao(
         tao,
         ele_id=ele,
@@ -738,7 +738,7 @@ def get_wall3d_table(
     list[tao_classes.ElementWall3DTable]
         A list of ElementWall3DTable objects for the specified element.
     """
-    ele = to_ele(ele)
+    ele = to_ele_id(ele)
     adapter = pydantic.TypeAdapter("list[tao_classes.ElementWall3DTable]")
     return adapter.validate_python(
         tao.ele_wall3d(ele_id=ele, index=index, which=which, who="table")
@@ -767,7 +767,7 @@ def get_multipoles(
     AnyElementMultipoles or None
         The multipole coefficients for the specified element, or None if not found.
     """
-    ele = to_ele(ele)
+    ele = to_ele_id(ele)
 
     multipoles: dict = tao.ele_multipoles(ele_id=ele, which=which)
     adapter = pydantic.TypeAdapter(AnyElementMultipoles)
@@ -802,7 +802,7 @@ def get_bunch_params(
     -------
     tao_classes.ElementBunchParams
     """
-    ele = to_ele(ele)
+    ele = to_ele_id(ele)
     return tao_classes.ElementBunchParams.from_tao(tao, ele_id=ele, which=which)
 
 
@@ -828,7 +828,7 @@ def get_photon_base(
     tao_classes.ElementPhotonBase
         The photon base of the specified element.
     """
-    ele = to_ele(ele)
+    ele = to_ele_id(ele)
     return tao_classes.ElementPhotonBase.from_tao(tao, ele_id=ele, which=which, who="base")
 
 
@@ -854,7 +854,7 @@ def get_photon_material(
     tao_classes.ElementPhotonMaterial
         The photon material properties of the specified element.
     """
-    ele = to_ele(ele)
+    ele = to_ele_id(ele)
     return tao_classes.ElementPhotonMaterial.from_tao(
         tao, ele_id=ele, which=which, who="material"
     )
@@ -882,7 +882,7 @@ def get_photon_curvature(
     tao_classes.ElementPhotonCurvature
         The photon curvature of the specified element.
     """
-    ele = to_ele(ele)
+    ele = to_ele_id(ele)
     return tao_classes.ElementPhotonCurvature.from_tao(
         tao, ele_id=ele, which=which, who="curvature"
     )
@@ -912,7 +912,7 @@ def get_grid_field_base(
     -------
     tao_classes.ElementGridField
     """
-    ele = to_ele(ele)
+    ele = to_ele_id(ele)
     return tao_classes.ElementGridField.from_tao(
         tao, ele_id=ele, which=which, index=index, who="base"
     )
@@ -943,7 +943,7 @@ def get_grid_field_points(
     list of ElementGridFieldPoints
         A list of ElementGridFieldPoints corresponding to the specified element.
     """
-    ele = to_ele(ele)
+    ele = to_ele_id(ele)
     adapter = pydantic.TypeAdapter("list[tao_classes.ElementGridFieldPoints]")
     return adapter.validate_python(
         tao.ele_grid_field(ele_id=ele, which=which, index=index, who="points")
@@ -972,7 +972,7 @@ def get_wake_base(
     tao_classes.ElementWakeBase
         The wake base of the specified Tao element.
     """
-    ele = to_ele(ele)
+    ele = to_ele_id(ele)
     return tao_classes.ElementWakeBase.from_tao(tao, ele_id=ele, which=which, who="base")
 
 
@@ -1050,7 +1050,7 @@ def get_mat6(
     -------
     tao_classes.ElementMat6
     """
-    ele = to_ele(ele)
+    ele = to_ele_id(ele)
     return tao_classes.ElementMat6.from_tao(tao, ele_id=ele, which=which, who="mat6")
 
 
@@ -1076,7 +1076,7 @@ def get_mat6_vec0(
     tao_classes.ElementMat6Vec0
         The 6-vector associated with the specified element.
     """
-    ele = to_ele(ele)
+    ele = to_ele_id(ele)
     return tao_classes.ElementMat6Vec0.from_tao(tao, ele_id=ele, which=which, who="vec0")
 
 
@@ -1101,7 +1101,7 @@ def get_mat6_error(
     -------
     tao_classes.ElementMat6Error
     """
-    ele = to_ele(ele)
+    ele = to_ele_id(ele)
     return tao_classes.ElementMat6Error.from_tao(tao, ele_id=ele, which=which, who="err")
 
 
@@ -1132,7 +1132,7 @@ def get_comb(
     -------
     tao_classes.ElementMat6Error
     """
-    ele = to_ele(ele)
+    ele = to_ele_id(ele)
     if comb is None:
         comb = Comb.from_tao(tao, which=which)
     if head is None:
@@ -1264,7 +1264,7 @@ class ElementFloor(TaoBaseModel, extra="forbid"):
         which: Which,
         where: FloorWhere = "end",
     ):
-        ele = to_ele(ele)
+        ele = to_ele_id(ele)
         floor = tao.ele_floor(ele, which=which, where=where)
         by_slave = ElementFloorItem.from_tao_output(floor)
 
@@ -1308,7 +1308,7 @@ class ElementFloorAll(TaoBaseModel, extra="forbid"):
         *,
         which: Which,
     ):
-        ele = to_ele(ele)
+        ele = to_ele_id(ele)
         beginning = ElementFloor.from_tao(tao, ele=ele, which=which, where="beginning")
         center = ElementFloor.from_tao(tao, ele=ele, which=which, where="center")
         end = ElementFloor.from_tao(tao, ele=ele, which=which, where="end")
@@ -1350,7 +1350,7 @@ class ElementChamberWall(TaoBaseModel, extra="forbid"):
         *,
         which: Which,
     ):
-        ele = to_ele(ele)
+        ele = to_ele_id(ele)
 
         return cls(
             which=which,
@@ -1388,7 +1388,7 @@ class ElementWall3D(tao_classes.ElementWall3DBase, extra="forbid"):
         which: Which,
         fill_table: bool = False,
     ):
-        ele = to_ele(ele)
+        ele = to_ele_id(ele)
 
         base = get_wall3d_base(tao, ele, index, which=which)
         table = None
@@ -1434,7 +1434,7 @@ class ElementPhoton(tao_classes.ElementPhotonBase, extra="forbid"):
         *,
         which: Which,
     ):
-        ele = to_ele(ele)
+        ele = to_ele_id(ele)
 
         base = get_photon_base(tao, ele, which=which)
         data = base.model_dump()
@@ -1500,7 +1500,7 @@ class ElementMat6(
         *,
         which: Which,
     ):
-        ele = to_ele(ele)
+        ele = to_ele_id(ele)
 
         mat6 = get_mat6(tao, ele, which=which)
         vec0 = get_mat6_vec0(tao, ele, which=which)
@@ -1530,7 +1530,7 @@ class ElementGridField(tao_classes.ElementGridField, extra="forbid"):
         which: Which,
         fill_points: bool = False,
     ):
-        ele = to_ele(ele)
+        ele = to_ele_id(ele)
 
         base = get_grid_field_base(tao, ele, which=which, index=index)
         if fill_points:
@@ -1611,7 +1611,7 @@ class ElementWake(tao_classes.ElementWakeBase, extra="forbid"):
         *,
         which: Which,
     ):
-        ele = to_ele(ele)
+        ele = to_ele_id(ele)
 
         base = get_wake_base(tao, ele, which=which)
         sr_long = None
@@ -1931,7 +1931,7 @@ class Element(TaoBaseModel, extra="forbid"):
         wall3d_table : bool, optional
             Fill 3D wall table data.
         """
-        ele = to_ele(ele)
+        ele = to_ele_id(ele)
 
         head = get_head(tao=tao, ele=ele, which=which)
         instance = cls(which=which, head=head, ele=ele)

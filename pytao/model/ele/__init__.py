@@ -32,7 +32,7 @@ from .ele import (
     Lattice,
     PhotonWho,
     Which,
-    to_ele,
+    to_ele_id,
 )
 
 __all__ = [
@@ -65,5 +65,5 @@ __all__ = [
     "combine_combs",
     "load_combs_from_lattice_data",
     "load_combs_from_lattice_file",
-    "to_ele",
+    "to_ele_id",
 ]
