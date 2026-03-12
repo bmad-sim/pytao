@@ -12,7 +12,6 @@ dependencies:
   - numpy
   - orjson
   - h5py
-  - pexpect
   - pydantic >=2
   - tqdm
   - pip
