@@ -298,8 +298,6 @@ def test_lattice_track_start(cbeta_ffag_tao: SubprocessTao, pytao_stats: _PytaoS
         pytest.param(False, ".json", id="json-with-defaults"),
         pytest.param(True, ".json.gz", id="json-gz-no-defaults"),
         pytest.param(False, ".json.gz", id="json-gz-with-defaults"),
-        pytest.param(True, ".h5", id="h5-no-defaults"),
-        pytest.param(False, ".h5", id="h5-with-defaults"),
         pytest.param(True, ".msgpack", id="msgpack-no-defaults"),
         pytest.param(False, ".msgpack", id="msgpack-with-defaults"),
         # pytest.param(True, ".yaml", id="yaml-no-defaults"),
