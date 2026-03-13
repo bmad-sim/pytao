@@ -13,6 +13,10 @@ dependencies:
   - numpy
   - openPMD-beamphysics
   - orjson
+  # conda-based install pending macos arm64 availability: https://github.com/conda-forge/ormsgpack-feedstock/pull/20
+  # - ormsgpack
   - pydantic >=2
   - tqdm
   - pip
+  - pip:
+      - ormsgpack >=1.12.2

@@ -549,10 +549,12 @@ class TaoSettableModel(TaoModel):
 
 
 T = TypeVar("T", bound=pydantic.BaseModel)
-ArchiveFormat = Literal["yaml", "json.gz", "json", "hdf5"]
+ArchiveFormat = Literal["yaml", "json.gz", "json", "hdf5", "msgpack"]
 
 
 def format_from_filename(fn: pathlib.Path) -> ArchiveFormat:
+    if fn.suffix.lower() in (".msgpack", ".mpk"):
+        return "msgpack"
     if fn.suffix.lower() in (".yml", ".yaml"):
         return "yaml"
     if fn.suffix.lower() in (".h5", ".hdf5"):
@@ -596,6 +598,10 @@ def load_model_data(
 
         with open(fname, "rt") as fp:
             return yaml.safe_load(fp)
+    elif format == "msgpack":
+        import ormsgpack
+
+        return ormsgpack.unpackb(fname.read_bytes())
     elif format == "json.gz":
         with gzip.open(fname, "rb") as fp:
             return orjson.loads(fp.read())
@@ -709,6 +715,11 @@ def dump_model(
             import yaml  # NOTE: yaml is not a required dependency
 
             yaml.safe_dump(data, fp)
+    elif format == "msgpack":
+        import ormsgpack
+
+        dumped = ormsgpack.packb(data, option=ormsgpack.OPT_SERIALIZE_NUMPY)
+        pathlib.Path(fname).write_bytes(dumped)
     elif format in ("json.gz", "json"):
         options = 0
         if indent:
