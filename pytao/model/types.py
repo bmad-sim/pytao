@@ -7,8 +7,8 @@ from typing import Annotated, Any, Union
 import numpy as np
 import pydantic
 import pydantic_core
-from pmd_beamphysics import ParticleGroup
-from pmd_beamphysics.units import pmd_unit
+from beamphysics import ParticleGroup
+from beamphysics.units import pmd_unit
 from typing_extensions import NotRequired, TypedDict
 
 

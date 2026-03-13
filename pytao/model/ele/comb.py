@@ -4,7 +4,7 @@ import pathlib
 import typing
 
 import numpy as np
-from pmd_beamphysics.species import mass_of
+from beamphysics.species import mass_of
 from typing_extensions import Self
 
 from ..base import ArchiveFormat, TaoModel, load_model_data

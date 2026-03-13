@@ -11,7 +11,7 @@ dependencies:
   - ipywidgets
   - jupyterlab
   - numpy
-  - openPMD-beamphysics
+  - openPMD-beamphysics >=0.14.1
   - orjson
   # conda-based install pending macos arm64 availability: https://github.com/conda-forge/ormsgpack-feedstock/pull/20
   # - ormsgpack

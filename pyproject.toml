@@ -12,7 +12,7 @@ dependencies = [
   "ipython",
   "matplotlib",
   "numpy",
-  "openpmd-beamphysics",
+  "openpmd-beamphysics>=0.14.1",
   "orjson",
   "ormsgpack>=1.12.2",
   "pydantic>=2",
