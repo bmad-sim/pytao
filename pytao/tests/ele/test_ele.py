@@ -9,8 +9,8 @@ import pytest
 
 import pytao
 from pytao import SubprocessTao
-from pytao.model.ele import Element, Lattice
 from pytao.model.base import format_from_filename
+from pytao.model.ele import Element, Lattice
 from pytao.model.ele.time_stats import _PytaoStatistics, get_pytao_statistics
 
 from ..conftest import no_pytao_debug_logging, timed_section
@@ -428,9 +428,71 @@ def test_sr_wake_longitudinal():
 
 
 def test_sr_wake_transverse():
-    pytest.skip("segfault - see upstream issue")
     with SubprocessTao(
         lattice_file="$ACC_ROOT_DIR/regression_tests/wake_test/wake_test.bmad", noplot=True
     ) as tao:
-        tao.ele("p1").wake
-        # TODO value comparison
+        wake = tao.ele("p1").wake
+
+        assert wake is not None
+
+        assert wake.has_lr_mode is True
+        assert wake.has_sr_long is True
+        assert wake.has_sr_trans is True
+        np.testing.assert_allclose(wake.lr_amp_scale, 1.0)
+        np.testing.assert_allclose(wake.lr_freq_spread, 0.0)
+        assert wake.lr_self_wake_on is True
+        np.testing.assert_allclose(wake.lr_time_scale, 1.0)
+        np.testing.assert_allclose(wake.sr_amp_scale, 1.2)
+        assert wake.sr_scale_with_length is True
+        np.testing.assert_allclose(wake.sr_z_max, 1.2)
+        np.testing.assert_allclose(wake.sr_z_scale, 0.9)
+        assert wake.which == "model"
+
+        assert wake.sr_long is not None
+        assert wake.sr_trans is not None
+        assert wake.sr_long.table is not None
+        assert wake.sr_trans.table is not None
+        # sr_long checks
+        np.testing.assert_allclose(wake.sr_long.z_ref, 0.0)
+        np.testing.assert_allclose(
+            np.asarray([row[:4] for row in wake.sr_long.table]),
+            [
+                [-826660.0, 26.6, 46089.2, 0.251300244],
+                [176400.0, 19.7, -9746.59, 0.582700147],
+                [-415510.0, 16.8, -73.1528, 0.583992007],
+                [724890.0, 11.2, -1672.137, 0.488863029],
+            ],
+        )
+        assert [row[4] for row in wake.sr_long.table] == [
+            "x_trailing",
+            "y_leading",
+            "none",
+            "none",
+        ]
+
+        # sr_trans checks
+        np.testing.assert_allclose(wake.sr_trans.z_ref, 0.0)
+        np.testing.assert_allclose(
+            np.asarray([row[:4] for row in wake.sr_trans.table]),
+            [
+                [-82666000000000.0, 26.6, 46089.2, 0.251300244],
+                [176400000000000.0, 19.7, -9746.59, 0.582700147],
+                [-4155100000000000.0, 16.8, -73.1528, 0.583992007],
+            ],
+        )
+        assert [row[4:] for row in wake.sr_trans.table] == [
+            ["None", "leading"],
+            ["Y_Axis", "trailing"],
+            ["None", "leading"],
+        ]
+
+        assert wake.lr_mode == []
+
+
+def test_lr_mode_table():
+    pytest.skip("TODO")
+
+    with SubprocessTao(
+        lattice_file="$ACC_ROOT_DIR/regression_tests/wake_test/wake_test.bmad", noplot=True
+    ) as tao:
+        _wake = tao.ele("q").wake

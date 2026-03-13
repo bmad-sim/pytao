@@ -1767,7 +1767,7 @@ def parse_ele_wake(lines, cmd=""):
             try:
                 return fix_value(value, float)
             except ValueError:
-                return str(value)
+                return str(value).strip()
 
         return [[fix_maybe_none(value) for value in line.split(";")] for line in lines]
 
