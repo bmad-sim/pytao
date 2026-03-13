@@ -55,7 +55,11 @@ These models can be queried from Tao, modified in Python, and applied back.
   ```
 
 - **Serialization** — all models support `.write()` / `.from_file()` for JSON,
-  `.json.gz`, HDF5, and YAML. `orjson` is used for fast JSON serialization.
+  `.json.gz`, msgpack, and YAML.
+  [`ormsgpack`](https://github.com/ormsgpack/ormsgpack) is used for the
+  (recommended and fastest) serialization method [msgpack](https://msgpack.org),
+  while `orjson` is used for faster-than-stdlib
+  JSON serialization. These are both new requirements.
 
 - **Code generation** — `TaoGlobal`, `BeamInit`, etc. are auto-generated from
   Bmad/Tao structure definitions (`scripts/structs.json`) via `model/codegen.py`.

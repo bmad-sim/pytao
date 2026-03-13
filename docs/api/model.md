@@ -1,13 +1,13 @@
 # Model Base Classes
 
-The model base classes provide serialization (JSON, JSON.GZ, HDF5, YAML),
+The model base classes provide serialization (JSON, JSON.GZ, msgpack, YAML),
 equality checking, and (for settable models) the ability to generate
 and apply Tao `set` commands.
 
 ## TaoBaseModel
 
 Common base for all PyTao Pydantic models. Provides `write()` and `from_file()`
-for serialization to JSON, compressed JSON (`.json.gz`), HDF5, and YAML.
+for serialization to JSON, compressed JSON (`.json.gz`), msgpack, and YAML.
 
 ::: pytao.model.TaoBaseModel
 

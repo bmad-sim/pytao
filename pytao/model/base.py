@@ -21,13 +21,10 @@ from typing import (
     cast,
 )
 
-import h5py
 import numpy as np
 import pydantic
 from pydantic.fields import FieldInfo
 from typing_extensions import Self, override
-
-from .hdf import restore_from_hdf5_file, store_in_hdf5_file
 
 from .types import ArgumentType
 
@@ -549,7 +546,7 @@ class TaoSettableModel(TaoModel):
 
 
 T = TypeVar("T", bound=pydantic.BaseModel)
-ArchiveFormat = Literal["yaml", "json.gz", "json", "hdf5", "msgpack"]
+ArchiveFormat = Literal["yaml", "json.gz", "json", "msgpack"]
 
 
 def format_from_filename(fn: pathlib.Path) -> ArchiveFormat:
@@ -557,8 +554,6 @@ def format_from_filename(fn: pathlib.Path) -> ArchiveFormat:
         return "msgpack"
     if fn.suffix.lower() in (".yml", ".yaml"):
         return "yaml"
-    if fn.suffix.lower() in (".h5", ".hdf5"):
-        return "hdf5"
 
     suffixes = [suffix.lower() for suffix in fn.suffixes][-2:]
     if suffixes == [".json", ".gz"]:
@@ -572,10 +567,7 @@ def load_model_data(
     format: ArchiveFormat | None = None,
 ):
     """
-    Read the model from a file in JSON, YAML, or custom HDF5 format.
-
-    For HDF5 format, the deserialized class instance will be returned.
-    For JSON and YAML, the underlying model data will be returned.
+    Read the raw model data from a file in JSON, YAML, or msgpack format.
 
     Parameters
     ----------
@@ -588,10 +580,6 @@ def load_model_data(
     fname = pathlib.Path(filename)
 
     format = format or format_from_filename(fname)
-
-    if format == "hdf5":
-        with h5py.File(fname) as h5g:
-            return restore_from_hdf5_file(h5g)
 
     if format == "yaml":
         import yaml  # NOTE: yaml is not a required dependency
@@ -617,7 +605,7 @@ def load_model(
     format: ArchiveFormat | None = None,
 ) -> T:
     """
-    Read the model from a file in JSON, YAML, or custom HDF5 format.
+    Read the model from a file in JSON, YAML, or msgpack format.
 
     Parameters
     ----------
@@ -670,7 +658,7 @@ def dump_model(
     sort_keys: bool = False,
 ):
     """
-    Write the model data to a file in JSON, YAML, or custom HDF5 format.
+    Write the model data to a file in JSON, YAML, or msgpack format.
 
     Parameters
     ----------
@@ -699,11 +687,6 @@ def dump_model(
 
     if backup_existing:
         date_coded_rename(fname, datefmt=datefmt)
-
-    if format == "hdf5":
-        with h5py.File(fname, "w") as h5g:
-            store_in_hdf5_file(h5g, model)
-        return
 
     data = model.model_dump(
         exclude_defaults=exclude_defaults,
