@@ -74,6 +74,7 @@ target-version = "py310"
 #   "F",
 # ]
 ignore = []
+exclude = ["scripts/cppbmad", "scripts/bmad"]
 
 [tool.pytest.ini_options]
 addopts = "--cov=pytao/"

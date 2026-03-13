@@ -1757,7 +1757,11 @@ def parse_ele_wake(lines, cmd=""):
     dict, or list of dict
     """
     args = _get_cmd_args(cmd)
-    if args[1].lower() in {"sr_long_table", "lr_mode_table", "sr_trans_table"}:
+    if len(args) > 1 and args[1].lower() in {
+        "sr_long_table",
+        "lr_mode_table",
+        "sr_trans_table",
+    }:
 
         def fix_maybe_none(value):
             try:

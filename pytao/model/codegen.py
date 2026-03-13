@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import ast
 import importlib.util
+import logging
 import os
 import pathlib
 import re
@@ -22,16 +23,16 @@ import pydantic
 import pytao
 import pytao.util
 import pytao.util.parsers as custom_parsers
+from pytao.util.parsers import parse_pytype, parse_tao_python_data
 from pytao import SubprocessTao, filter_tao_messages_context
 
-# from .generated import tao_structs, bmad_structs
+logger = logging.getLogger(__name__)
 DefaultType = (
     bool | int | str | float | complex | Sequence[float] | Sequence[int] | Sequence[str] | None
 )
 
 AnyPath = pathlib.Path | str
 MODULE_PATH = pathlib.Path(__file__).resolve().parent
-dataclasses_template = MODULE_PATH / "tao_pystructs.j2"
 header_filename = MODULE_PATH / "header.tpl.py"
 
 ParameterType = Literal[
@@ -81,7 +82,9 @@ param_type_to_python_type = {
     "ELE_PARAM": PythonType(type="str", default="", default_factory=None),
     "COMPLEX": PythonType(type="complex", default=0j, default_factory=None),
 }
-TaoParameterValueBasic = str | int | float | list[float] | list[int] | list[str]
+TaoParameterValueBasic = (
+    str | int | float | complex | list[float] | list[int] | list[str] | list[complex]
+)
 TaoParameterValue = TaoParameterValueBasic | dict[str, TaoParameterValueBasic]
 
 
@@ -774,7 +777,7 @@ class TaoParameter(pydantic.BaseModel):
 
         if type_ not in valid_parameter_types:
             raise InvalidParameterTypeError(type_)
-        data = pytao.util.parse_pytype(type_, component_value)
+        data = parse_pytype(type_, component_value)
         return cls.from_tao(param_name, type_, can_vary, data)
 
 
@@ -1107,7 +1110,7 @@ class TaoCommandAndResult(pydantic.BaseModel):
         try:
             parser = getattr(custom_parsers, f"parse_{tao_cmd}")
         except AttributeError:
-            res = pytao.util.parse_tao_python_data(lines, clean_key=True)
+            res = parse_tao_python_data(lines, clean_key=True)
         else:
             res = parser(lines, cmd=cmd)
 
@@ -1115,10 +1118,13 @@ class TaoCommandAndResult(pydantic.BaseModel):
         for line in lines:
             if not line.strip():
                 continue
+
             try:
                 param = TaoParameter.from_str(line)
-            except Exception:
-                pass
+            except Exception as ex:
+                logger.warning(
+                    "Failed to parse parameter in cmd=%r line=%r: %s", cmd, line, ex
+                )
             else:
                 normal_params[param.name] = param
 
