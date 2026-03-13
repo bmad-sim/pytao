@@ -6,10 +6,10 @@ This file is auto-generated; do not hand-edit it.
 from __future__ import annotations
 
 import logging
-from collections.abc import Sequence
 from typing import (
     Any,
     ClassVar,
+    Sequence,
 )
 
 from pydantic import Field
@@ -140,7 +140,7 @@ class BeamInit(TaoSettableModel):
     random_engine : str
         Or 'quasi'. Random number engine to use.
     random_gauss_converter : str
-        Or 'quick'. Uniform to gauss conversion method.
+        Or 'quick' or 'exact'. Uniform to gauss conversion method.
     random_sigma_cutoff : float
         Cut-off in sigmas.
     renorm_center : bool
@@ -265,7 +265,8 @@ class BeamInit(TaoSettableModel):
         default="pseudo", description="Or 'quasi'. Random number engine to use."
     )
     random_gauss_converter: str = Field(
-        default="exact", description="Or 'quick'. Uniform to gauss conversion method."
+        default="ziggurat",
+        description="Or 'quick' or 'exact'. Uniform to gauss conversion method.",
     )
     random_sigma_cutoff: float = Field(default=-1.0, description="Cut-off in sigmas.")
     renorm_center: bool = Field(default=True, description="Renormalize centroid?")
@@ -1482,11 +1483,11 @@ class ElementPhotonMaterial(TaoModel):
 
     _tao_command_attr_: ClassVar[str] = "ele_photon"
     _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
-    f0_m1: complex | None = Field(default=None, alias="F0_m1")
-    f0_m2: complex = Field(default=0j, alias="F0_m2")
-    f_h: complex = Field(default=0j, alias="F_H")
-    f_hbar: complex = Field(default=0j, alias="F_Hbar")
-    sqrt_f_h_f_hbar: complex = Field(default=0j, alias="Sqrt(F_H*F_Hbar)")
+    f0_m1: complex | None = Field(default=None, alias="F0_m1", frozen=True)
+    f0_m2: complex = Field(default=0j, alias="F0_m2", frozen=True)
+    f_h: complex = Field(default=0j, alias="F_H", frozen=True)
+    f_hbar: complex = Field(default=0j, alias="F_Hbar", frozen=True)
+    sqrt_f_h_f_hbar: complex = Field(default=0j, alias="Sqrt(F_H*F_Hbar)", frozen=True)
 
 
 class ElementTwiss(TaoModel):
