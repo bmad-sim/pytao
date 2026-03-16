@@ -618,13 +618,6 @@ def load_model(
         File format.  If not specified, determined by file extension.
     """
     data = load_model_data(filename, format=format)
-    if isinstance(data, pydantic.BaseModel):
-        if not isinstance(data, cls):
-            raise TypeError(
-                f"Unexpected class returned from restore process. Expected {cls.__name__} "
-                f"got {type(data).__name__}"
-            )
-        return data
     return cls.model_validate(data)
 
 
