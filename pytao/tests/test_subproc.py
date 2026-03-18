@@ -8,7 +8,11 @@ import numpy as np
 import pytest
 
 from .. import SubprocessTao
-from ..errors import TaoCommandError
+from ..errors import (
+    TaoCommandError,
+    capture_messages_from_functions,
+    filter_tao_messages_context,
+)
 from ..subproc import SupportedKwarg, TaoDisconnectedError
 from ..tao import Tao
 
@@ -23,7 +27,7 @@ def test_crash_and_recovery() -> None:
 
         with pytest.raises(TaoDisconnectedError):
             # Close the pipe earlier than expected
-            tao._subproc_pipe_.send_receive("quit", "", raises=True)
+            tao._subproc_pipe_.send_receive("quit", "", propagate_exceptions=True)
         time.sleep(0.5)
 
         print("Re-initializing:")
@@ -158,3 +162,55 @@ def test_custom_command_timeout_success(subproc_tao: SubprocessTao) -> None:
     with subproc_tao.timeout(10.0):
         res = subproc_tao.subprocess_call(tao_custom_command, value=1)
         assert res == 2
+
+
+def _tao_cmd_raises(tao: Tao, cmd: str):
+    """Run a command with raises=True inside the subprocess."""
+    return tao.cmd(cmd, raises=True)
+
+
+def test_error_filter_context_cmd(subproc_tao: SubprocessTao) -> None:
+    bad_cmd = "sho ele 100000"
+
+    with pytest.raises(TaoCommandError):
+        subproc_tao.cmd(bad_cmd)
+
+    res = subproc_tao.cmd(bad_cmd, raises=False)
+    assert not res
+    print(subproc_tao._last_output)
+    func_names = [msg.function for msg in subproc_tao.last_messages]
+
+    assert "lat_ele1_locator" in func_names
+
+    with filter_tao_messages_context(functions=func_names):
+        result = subproc_tao.cmd(bad_cmd, raises=True)
+        assert not result
+        # assert not subproc_tao.last_output
+
+
+def test_error_filter_context_cmd_real(subproc_tao: SubprocessTao) -> None:
+    arr = subproc_tao.lat_list("*", "ele.s")
+    assert isinstance(arr, np.ndarray)
+    assert len(arr) > 0
+
+    with pytest.raises(TaoCommandError):
+        subproc_tao.evaluate("1/0", raises=True)
+
+    func_names = [msg.function for msg in subproc_tao.last_messages]
+
+    str_list: list[str] = subproc_tao.lat_list("*", "ele.s", flags="-track_only")
+    assert isinstance(str_list, list)
+
+    arr = subproc_tao.lat_list("*", "ele.s")
+    assert isinstance(arr, np.ndarray)
+
+    assert len(str_list) == len(arr)
+
+    with filter_tao_messages_context(functions=func_names):
+        # no 'with raises' block here, as we're filtering it
+        output = subproc_tao.evaluate("1/0", raises=True)
+        # output still not really useful, but that's OK I suppose.
+        assert isinstance(output, np.ndarray)
+        assert output.shape == (0,)
+        assert "Divide by zero" in subproc_tao.last_messages[0].message
+        assert "Invalid expression" in subproc_tao.last_messages[1].message

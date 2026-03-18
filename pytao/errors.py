@@ -398,6 +398,16 @@ def filter_tao_messages(
 
 
 @contextlib.contextmanager
+def _with_context(ctx: TaoErrorFilterContext):
+    prev = error_filter_context.get()
+    try:
+        error_filter_context.set(ctx)
+        yield ctx
+    finally:
+        error_filter_context.set(prev)
+
+
+@contextlib.contextmanager
 def filter_tao_messages_context(
     *,
     functions: Iterable[str] | None = None,
@@ -431,12 +441,8 @@ def filter_tao_messages_context(
         by_level=by_level,
         by_command=by_command,
     )
-    prev = error_filter_context.get()
-    try:
-        error_filter_context.set(ctx)
+    with _with_context(ctx):
         yield ctx
-    finally:
-        error_filter_context.set(prev)
 
 
 def capture_messages_from_functions(

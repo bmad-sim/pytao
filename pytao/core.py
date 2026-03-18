@@ -260,20 +260,6 @@ def _tao_line_cell_magic(tao_instance: Tao, line: str, cell: str | None = None):
 
 
 class TaoCore:
-    """
-    Class to run and interact with Tao. Requires libtao shared object.
-
-    Setup:
-
-    import os
-    import sys
-    TAO_PYTHON_DIR=os.environ['ACC_ROOT_DIR'] + '/tao/python'
-    sys.path.insert(0, TAO_PYTHON_DIR)
-
-    import tao_ctypes
-    tao = tao_ctypes.Tao("command line args here...")
-    """
-
     _init_output: list[str]
     _last_output: list[str]
     so_lib: ctypes.CDLL
@@ -290,7 +276,13 @@ class TaoCore:
 
     @property
     def last_output(self) -> list[str]:
-        return list(self._last_output)
+        output, _messages = capture_messages_from_functions(self._last_output)
+        return output
+
+    @property
+    def last_messages(self) -> list[TaoMessage]:
+        _, messages = capture_messages_from_functions(self._last_output)
+        return messages
 
     def get_output(self, reset=True) -> list[str]:
         """
@@ -460,7 +452,7 @@ class TaoCore:
         try:
             if special_parser and callable(special_parser):
                 return special_parser(raw_output, cmd=cmd)
-            if isinstance(raw_output, np.ndarray):
+            if isinstance(raw_output, np.ndarray) or raw_output is None:
                 return raw_output
             return _pytao_parsers.parse_tao_python_data(raw_output)
         except Exception as ex:
@@ -497,12 +489,48 @@ class TaoCore:
 
         try:
             lines = self.get_output(reset=False)
-            if not raises:
-                return lines
-            self._check_output_lines(cmd, lines, raises=True)
+            if raises:
+                self._check_output_lines(cmd, lines, raises=True)
             return lines
         finally:
             self.reset_output()
+
+    def _read_array(self, dtype: type[float] | type[int]) -> np.ndarray:
+        """
+        Read the array from Tao's shared memory.
+
+        No error checking is performed.  Does not reset the output buffer.
+
+        Parameters
+        ----------
+        dtype : type
+            The data type - float or int.
+
+        Returns
+        -------
+        np.ndarray
+        """
+        if dtype is float:
+            ctypes_type = ctypes.c_double
+            num_elements = self.so_lib.tao_c_real_array_size()
+            get_array = self.so_lib.tao_c_get_real_array
+        elif dtype is int:
+            ctypes_type = ctypes.c_int32
+            num_elements = self.so_lib.tao_c_integer_array_size()
+            get_array = self.so_lib.tao_c_get_integer_array
+        else:
+            raise ValueError(f"Unsupported dtype: {dtype}")
+
+        if num_elements == 0:
+            return np.array([], dtype=dtype)
+
+        # This is a pointer to the scratch space of (num_elements * dtype)
+        get_array.restype = ctypes.POINTER(ctypes_type * num_elements)
+        ptr = ctypes.addressof(get_array().contents)
+
+        # Extract array data
+        array = np.ctypeslib.as_array((ctypes_type * num_elements).from_address(ptr))
+        return array.copy()
 
     def _get_array(
         self,
@@ -531,20 +559,6 @@ class TaoCore:
             The array.  None is only returned if `raises=False` and an error
             is detected in the output.
         """
-        if dtype is float:
-            ctypes_type = ctypes.c_double
-            num_elements = self.so_lib.tao_c_real_array_size()
-            get_array = self.so_lib.tao_c_get_real_array
-        elif dtype is int:
-            ctypes_type = ctypes.c_int32
-            num_elements = self.so_lib.tao_c_integer_array_size()
-            get_array = self.so_lib.tao_c_get_integer_array
-        else:
-            raise ValueError(f"Unsupported dtype: {dtype}")
-
-        if num_elements == 0:
-            return np.array([], dtype=dtype)
-
         try:
             self._check_output_lines(cmd, self.get_output(reset=False), raises=True)
         except TaoCommandError:
@@ -552,13 +566,7 @@ class TaoCore:
                 raise
             return None
 
-        # This is a pointer to the scratch space of (num_elements * dtype)
-        get_array.restype = ctypes.POINTER(ctypes_type * num_elements)
-        ptr = ctypes.addressof(get_array().contents)
-
-        # Extract array data
-        array = np.ctypeslib.as_array((ctypes_type * num_elements).from_address(ptr))
-        return array.copy()
+        return self._read_array(dtype)
 
     def cmd_real(self, cmd: str, raises: bool = True) -> np.ndarray | None:
         """

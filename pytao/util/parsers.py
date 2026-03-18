@@ -162,6 +162,9 @@ def parse_pytype(type, val):
 
 
 def _parse_tao_python_data1(line, clean_key=True):
+    if line == "INVALID":
+        raise ValueError("Tao reports the requested data is invalid")
+
     sline = line.split(";")
     name, type, settable = sline[0:3]
     component_value = sline[3:]
