@@ -1576,7 +1576,7 @@ class ElementWake(tao_classes.ElementWakeBase, extra="forbid"):
 
     sr_long: ElementSrWakeData | None = None
     sr_trans: ElementSrWakeData | None = None
-    lr_mode: list[str | float] | None = None
+    lr_mode: list[list[str | float]] | None = None
 
     @pydantic.field_validator("sr_long", "sr_trans", mode="before")
     @classmethod
@@ -1612,7 +1612,9 @@ class ElementWake(tao_classes.ElementWakeBase, extra="forbid"):
         if base.has_sr_trans:
             sr_trans = get_wake_sr_trans(tao, ele, which=which)
         if base.has_lr_mode:
-            lr_mode: list[str | float] = tao.ele_wake(ele, which=which, who="lr_mode_table")  # type: ignore
+            lr_mode: list[list[str | float]] = tao.ele_wake(
+                ele, which=which, who="lr_mode_table"
+            )  # type: ignore
 
         data = base.model_dump()
         data.pop("__class_name__")

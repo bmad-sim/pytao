@@ -490,9 +490,20 @@ def test_sr_wake_transverse():
 
 
 def test_lr_mode_table():
-    pytest.skip("TODO")
-
     with SubprocessTao(
         lattice_file="$ACC_ROOT_DIR/regression_tests/wake_test/wake_test.bmad", noplot=True
     ) as tao:
-        _wake = tao.ele("q").wake
+        lr_mode = tao.ele("q").wake.lr_mode
+        assert lr_mode is not None
+
+        np.testing.assert_allclose(
+            np.asarray([row[:4] for row in lr_mode]),
+            [
+                [200000.0, 0.1, 62831853071.7959, 2.0],
+                [300000.0, 0.2, 47123889803.8469, 3.0],
+                [400000.0, 0.3, 41887902047.8639, 4.0],
+            ],
+        )
+
+        np.testing.assert_allclose(float(lr_mode[0][4]), 0.7)
+        assert [row[4] for row in lr_mode[1:]] == ["none", "none"]
