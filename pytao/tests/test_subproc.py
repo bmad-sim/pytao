@@ -8,11 +8,7 @@ import numpy as np
 import pytest
 
 from .. import SubprocessTao
-from ..errors import (
-    TaoCommandError,
-    capture_messages_from_functions,
-    filter_tao_messages_context,
-)
+from ..errors import TaoCommandError, filter_tao_messages_context
 from ..subproc import SupportedKwarg, TaoDisconnectedError
 from ..tao import Tao
 
