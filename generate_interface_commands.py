@@ -8,13 +8,99 @@ import os
 import re
 import shutil
 import sys
+import types
+import typing
 
+import numpy as np
 from numpydoc.docscrape import NumpyDocString
 
 from pytao.util import parsers
 
 CMDS_OUTPUT = "./pytao/interface_commands.py"
 TEST_OUTPUT = "./pytao/tests/test_interface_commands.py"
+
+_CMD_TYPE_TO_RETURN: dict[str, str] = {
+    "string_list": "dict[str, Any]",
+    "real_array": "np.ndarray",
+    "integer_array": "np.ndarray",
+    "None": "None",
+}
+
+
+def _format_type_hint(tp: type) -> str:
+    """Convert a runtime type object back to a source-code annotation string."""
+    if tp is type(None):
+        return "None"
+
+    if tp is Ellipsis or tp is type(Ellipsis):
+        return "..."
+
+    origin = typing.get_origin(tp)
+    args = typing.get_args(tp)
+
+    if origin is types.UnionType or origin is typing.Union:
+        return " | ".join(_format_type_hint(a) for a in args)
+
+    # Generic aliases: list[X], dict[X, Y], tuple[X, ...], etc.
+    if origin is not None:
+        origin_name = getattr(origin, "__name__", str(origin))
+        if args:
+            inner = ", ".join(_format_type_hint(a) for a in args)
+            return f"{origin_name}[{inner}]"
+        return origin_name
+
+    if tp is np.ndarray:
+        return "np.ndarray"
+
+    if tp in (int, float, str, bool):
+        return tp.__name__
+
+    if tp is typing.Any:
+        return "Any"
+
+    if hasattr(tp, "__name__"):
+        module = getattr(tp, "__module__", "")
+        name = tp.__name__
+        # Qualify types from stdlib modules that need a module prefix
+        if module == "datetime":
+            return f"datetime.{name}"
+        return name
+
+    return str(tp)
+
+
+def get_return_annotation(method: str, returns: list) -> str | None:
+    """
+    Determine the return type annotation string for a generated method.
+
+    1. If a special parser exists with a return annotation, use it.
+    2. Otherwise, infer from the cmd_type(s) in the Returns block.
+    """
+    special_parser = getattr(parsers, f"parse_{method}", None)
+    if special_parser is not None:
+        try:
+            hints = typing.get_type_hints(special_parser)
+        except Exception:
+            hints = {}
+        ret = hints.get("return")
+        if ret is not None:
+            return _format_type_hint(ret)
+
+    # Fallback: derive from cmd_type values in the Returns block
+    result_types: set[str] = set()
+    for r in returns:
+        tp = "string_list"
+        if r.type and "??" not in r.type:
+            tp = r.type
+        mapped = _CMD_TYPE_TO_RETURN.get(tp, "dict[str, Any]")
+        result_types.add(mapped)
+
+    if not result_types:
+        return None
+    if len(result_types) == 1:
+        return result_types.pop()
+    return " | ".join(sorted(result_types))
+
 
 tao_docs = os.path.join(os.getenv("ACC_ROOT_DIR", "../bmad"), "tao", "doc")
 
@@ -260,8 +346,10 @@ def write_interface_commands():
             print(f"***Error generating code for: {method}. Exception was: {ex}")
             raise
 
+        annotation = get_return_annotation(clean_method, np_docs["Returns"])
+        annotation_str = f" -> {annotation}" if annotation else ""
         method_template = f"""
-    def {clean_method}({params}):
+    def {clean_method}({params}){annotation_str}:
 {add_tabs('"""', 2)}
 {add_tabs(str(np_docs), 2)}
 {add_tabs('"""', 2)}

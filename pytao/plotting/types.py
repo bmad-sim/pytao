@@ -1,40 +1,16 @@
-from typing import List, Optional
+from typing import Optional
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import TypedDict
 
-
-class FloorOrbitInfo(TypedDict):
-    branch_index: int
-    index: int
-    ele_key: str
-    axis: str
-    orbits: List[float]
-
-
-class BuildingWallGraphInfo(TypedDict):
-    index: int
-    point: int
-    offset_x: float
-    offset_y: float
-    radius: float
-
-
-class BuildingWallInfo(TypedDict):
-    index: int
-    name: str
-    constraint: str
-    shape: str
-    color: str
-    line_width: float
-
-
-class BuildingWallGlobalInfo(TypedDict):
-    index: int
-    z: float
-    x: float
-    radius: float
-    z_center: float
-    x_center: float
+from ..util.parser_types import (  # noqa: F401
+    BuildingWallGlobalInfo,
+    BuildingWallGraphInfo,
+    BuildingWallInfo,
+    FloorOrbitInfo,
+    FloorPlanElementInfo,
+    PlotLatLayoutInfo,
+    ShapeListInfo,
+)
 
 
 class WaveParams(TypedDict):
@@ -211,42 +187,6 @@ class PlotHistogramInfo(TypedDict):
     width: float
 
 
-class PlotLatLayoutInfo(TypedDict):
-    ix_branch: int
-    ix_ele: int
-    ele_s_start: float
-    ele_s_end: float
-    line_width: float
-    shape: str
-    y1: float
-    y2: float
-    color: str
-    label_name: str
-
-
-class FloorPlanElementInfo(TypedDict):
-    branch_index: int
-    color: str
-    ele_key: str
-    end1_r1: float
-    end1_r2: float
-    end1_theta: float
-    end2_r1: float
-    end2_r2: float
-    end2_theta: float
-    index: int
-    label_name: str
-    line_width: float
-    shape: str
-    y1: float
-    y2: float
-    # Only for sbend
-    ele_l: NotRequired[float]
-    ele_angle: NotRequired[float]
-    ele_e1: NotRequired[float]
-    ele_e: NotRequired[float]
-
-
 class PlotPage(TypedDict):
     title_string: str
     title__x: float
@@ -322,15 +262,3 @@ FloatVariableInfo = TypedDict(
 Point = tuple[float, float]
 Limit = tuple[float, float]
 OptionalLimit = Optional[Limit]
-
-
-class ShapeListInfo(TypedDict):
-    shape_index: int
-    ele_name: str
-    shape: str
-    color: str
-    shape_size: float
-    type_label: str
-    shape_draw: bool
-    multi_shape: bool
-    line_width: int
