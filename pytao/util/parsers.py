@@ -1766,3 +1766,11 @@ def parse_ele_wake(lines, cmd=""):
         return [[fix_maybe_none(value) for value in line.split(";")] for line in lines]
 
     return parse_tao_python_data(lines)
+
+
+def parse_evaluate(lines, cmd=""):
+    """Parse 'evaluate' output."""
+    if isinstance(lines, np.ndarray):
+        return lines
+
+    return [float(line.rsplit(";")[1]) for line in lines]
