@@ -100,7 +100,7 @@ These models can be queried from Tao, modified in Python, and applied back.
 
 - More consistent error handling between `SubprocessTao` and `Tao`:
   Tao messages from pipe command output are handled consistently between
-  the subprocess and ctypes variants.
+  the regular Tao and the subprocess variant.
 - Filtered messages from pipe commands are redirected to Python logging.
 - Added `PYTAO_LIB_PATH` environment variable to force PyTao to use a
   specific `libtao.so`.
@@ -113,12 +113,15 @@ These models can be queried from Tao, modified in Python, and applied back.
 - Better support for `pip`-based (PyPI) installs with proper dependency
   listings.
 - Import cleanups and fixes throughout the codebase.
+- Type annotations for auto-generated Tao `pipe` interface routines.
+- Small performance improvements in subprocess
 - Subprocess tests reuse a single `SubprocessTao` instance by default
   (set `TAO_REUSE_SUBPROCESS=1`), speeding up CI.
 
 ## Backward Incompatible Changes
 
 - **Python 3.10+ is now required.**
+- **Bmad >=20260317** is also now required for all features to behave as designed.
 - Removed legacy `tao_interface` and `tao_pexpect`.
 - Removed `pytao-gui` entrypoint and `pytao.gui` submodule.
 - Removed the largely defunct `as_dict` parameter from all interface commands.
