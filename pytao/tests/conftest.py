@@ -107,6 +107,7 @@ def get_packaged_example(name: str) -> TaoStartup:
         init_file=init_file,
         # nostartup=nostartup,
         metadata={"name": name},
+        noplot=True,
     )
     print(f"Packaged example {name}: {startup.tao_init}")
     return startup
@@ -153,6 +154,7 @@ def get_regression_test(name: str) -> TaoStartup:
         init_file=init_file,
         nostartup=nostartup,
         metadata={"name": init_file.name},
+        noplot=True,
     )
 
 
