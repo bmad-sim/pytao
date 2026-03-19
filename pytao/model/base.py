@@ -23,6 +23,8 @@ from typing import (
 
 import numpy as np
 import pydantic
+from beamphysics import ParticleGroup
+from beamphysics.units import pmd_unit
 from pydantic.fields import FieldInfo
 from typing_extensions import Self, override
 
@@ -589,7 +591,8 @@ def load_model_data(
     elif format == "msgpack":
         import ormsgpack
 
-        return ormsgpack.unpackb(fname.read_bytes())
+        data = ormsgpack.unpackb(fname.read_bytes(), option=ormsgpack.OPT_NON_STR_KEYS)
+        return _msgpack_restore_ndarrays(data)
     elif format == "json.gz":
         with gzip.open(fname, "rb") as fp:
             return orjson.loads(fp.read())
@@ -681,6 +684,22 @@ def dump_model(
     if backup_existing:
         date_coded_rename(fname, datefmt=datefmt)
 
+    if format == "msgpack":
+        import ormsgpack
+
+        data = model.model_dump(
+            exclude_defaults=exclude_defaults,
+            exclude_computed_fields=True,
+            mode="python",
+        )
+        dumped = ormsgpack.packb(
+            data,
+            default=_msgpack_default,
+            option=ormsgpack.OPT_NON_STR_KEYS,
+        )
+        pathlib.Path(fname).write_bytes(dumped)
+        return data
+
     data = model.model_dump(
         exclude_defaults=exclude_defaults,
         exclude_computed_fields=True,
@@ -691,11 +710,6 @@ def dump_model(
             import yaml  # NOTE: yaml is not a required dependency
 
             yaml.safe_dump(data, fp)
-    elif format == "msgpack":
-        import ormsgpack
-
-        dumped = ormsgpack.packb(data, option=ormsgpack.OPT_SERIALIZE_NUMPY)
-        pathlib.Path(fname).write_bytes(dumped)
     elif format in ("json.gz", "json"):
         options = 0
         if indent:
@@ -713,3 +727,49 @@ def dump_model(
         raise NotImplementedError(format)
 
     return data
+
+
+_MSGPACK_NDARRAY_MARKER = "__ndarray__"
+
+
+def _msgpack_default(obj: Any) -> Any:
+    """Fallback serializer for types ormsgpack doesn't handle natively."""
+    # NOTE: this is borrowed from LUME-Genesis archiving, and ideally should be
+    # kept in sync
+    if isinstance(obj, pmd_unit):
+        return {
+            "unitSI": obj.unitSI,
+            "unitSymbol": obj.unitSymbol,
+            "unitDimension": tuple(obj.unitDimension),
+        }
+    if isinstance(obj, ParticleGroup):
+        return obj.data
+    if isinstance(obj, np.ndarray):
+        if obj.ndim == 0:
+            return obj.item()
+        arr = np.ascontiguousarray(obj)
+        return {
+            _MSGPACK_NDARRAY_MARKER: arr.tobytes(),
+            "dtype": str(arr.dtype),
+            "shape": list(arr.shape),
+        }
+    if isinstance(obj, np.generic):
+        return obj.item()
+    if isinstance(obj, pathlib.Path):
+        return str(obj)
+    raise TypeError(f"Type is not msgpack serializable: {type(obj).__name__}")
+
+
+def _msgpack_restore_ndarrays(obj: Any) -> Any:
+    """Restore numpy arrays from the ``__ndarray__`` marker dicts."""
+    # NOTE: this is borrowed from LUME-Genesis archiving, and ideally should be
+    # kept in sync
+    if isinstance(obj, dict):
+        if _MSGPACK_NDARRAY_MARKER in obj:
+            return np.frombuffer(obj[_MSGPACK_NDARRAY_MARKER], dtype=obj["dtype"]).reshape(
+                obj["shape"]
+            )
+        return {key: _msgpack_restore_ndarrays(value) for key, value in obj.items()}
+    if isinstance(obj, list):
+        return [_msgpack_restore_ndarrays(item) for item in obj]
+    return obj
