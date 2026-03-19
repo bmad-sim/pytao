@@ -20,6 +20,7 @@ import pydantic.dataclasses as dataclasses
 from pydantic import ConfigDict
 from pydantic.fields import Field
 
+from ..errors import TaoCommandError
 from . import floor_plan_shapes, layout_shapes, pgplot
 from .curves import (
     CurveIndexToCurve,
@@ -232,7 +233,7 @@ class PlotCurve:
                     tao.plot_line(region_name, graph_name, curve_name, x_or_y="y"),
                 )
             )
-        except RuntimeError:
+        except TaoCommandError:
             points = []
 
         try:
@@ -242,7 +243,7 @@ class PlotCurve:
                     tao.plot_symbol(region_name, graph_name, curve_name, x_or_y="y"),
                 )
             )
-        except RuntimeError:
+        except TaoCommandError:
             symbol_points = []
 
         if graph_type is None:
@@ -732,7 +733,7 @@ class LatticeLayoutGraph(GraphBase):
         if info is None:
             try:
                 info = get_plot_graph_info(tao, region_name, graph_name)
-            except RuntimeError:
+            except ValueError:
                 raise NoLayoutError(f"No layout named {region_name}.{graph_name}") from None
 
         if plot_page is None:
@@ -748,7 +749,7 @@ class LatticeLayoutGraph(GraphBase):
         branch = info["-1^ix_branch"]
         try:
             all_elem_info = tao.plot_lat_layout(ix_uni=universe, ix_branch=branch)
-        except RuntimeError as ex:
+        except Exception as ex:
             if branch != -1:
                 raise
 
@@ -757,7 +758,7 @@ class LatticeLayoutGraph(GraphBase):
             )
             try:
                 all_elem_info = tao.plot_lat_layout(ix_uni=universe, ix_branch=0)
-            except RuntimeError:
+            except Exception:
                 logger.error(f"Failed to plot layout: {ex}")
                 raise
 
@@ -1462,10 +1463,7 @@ class GraphManager(ABC):
         region_name : str, optional
             Defaults to '*', which is all regions.
         """
-        try:
-            self.tao.cmd(f"place -no_buffer {region_name} none")
-        except RuntimeError as ex:
-            logger.warning(f"Region clear failed: {ex}")
+        self.tao.cmd(f"place -no_buffer {region_name} none", raises=False)
 
         self._clear_region(region_name)
 

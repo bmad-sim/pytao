@@ -26,6 +26,10 @@ class TaoException(Exception):
     pass
 
 
+class TaoDataInvalidError(ValueError, TaoException):
+    pass
+
+
 class TaoExceptionWithOutput(TaoException):
     """
     A Tao Exception that includes command-line output.

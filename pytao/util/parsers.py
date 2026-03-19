@@ -8,6 +8,7 @@ from collections import defaultdict
 from typing import Any, TypeVar
 
 import numpy as np
+from ..errors import TaoDataInvalidError
 
 logger = logging.getLogger(__name__)
 
@@ -163,7 +164,7 @@ def parse_pytype(type, val):
 
 def _parse_tao_python_data1(line, clean_key=True):
     if line == "INVALID":
-        raise ValueError("Tao reports the requested data is invalid")
+        raise TaoDataInvalidError("Data unavailable - Tao marked it as INVALID")
 
     sline = line.split(";")
     name, type, settable = sline[0:3]
@@ -651,6 +652,8 @@ def _parse_by_keys_to_types(
 
     if ensure_count:
         for line in lines:
+            if line == "INVALID":
+                raise TaoDataInvalidError("Data unavailable - Tao marked it as INVALID")
             assert len(key_to_type) == len(line.split(";"))
 
     return [
@@ -1394,19 +1397,7 @@ def parse_plot_graph(lines, cmd=""):
     -------
     dict
     """
-    # This should work, but there are issues with truncation causing failures.
-    # See: https://github.com/bmad-sim/bmad-ecosystem/issues/1018
-    # If that issue isn't resolved, we may want to pre-process the data
-    # to at least get something back.
-    try:
-        return parse_tao_python_data(lines)
-    except ValueError:
-        logger.warning(
-            "python plot_graph output failed to parse.  See linked issue "
-            "and consider upgrading if possible. "
-            "https://github.com/bmad-sim/bmad-ecosystem/issues/1018"
-        )
-        return lines
+    return parse_tao_python_data(lines)
 
 
 def parse_plot_line(lines, cmd=""):
