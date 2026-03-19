@@ -775,9 +775,7 @@ def parse_building_wall_graph(lines, cmd="") -> list[BuildingWallGraphInfo]:
     )
 
 
-def parse_constraints(
-    lines, cmd=""
-) -> list[ConstraintDataInfo] | list[ConstraintVarInfo] | None:
+def parse_constraints(lines, cmd="") -> list[ConstraintDataInfo] | list[ConstraintVarInfo]:
     """
     Parse constraints results.
 
@@ -820,6 +818,9 @@ def parse_constraints(
                 # "merit_dvar": float,
             },
         )
+    raise NotImplementedError(
+        f"parse_constraints: unsupported argument {args!r} (expected 'data' or 'var')"
+    )
 
 
 def parse_data_d1_array(lines, cmd="") -> list[DataD1ArrayInfo]:
@@ -855,7 +856,7 @@ def parse_data_d2_array(lines, cmd="") -> list[str]:
     return lines
 
 
-def parse_data_parameter(lines, cmd="") -> list[DataParameterLineInfo] | None:
+def parse_data_parameter(lines, cmd="") -> list[DataParameterLineInfo]:
     """
     Parse parameter_1 results.
 
@@ -865,7 +866,9 @@ def parse_data_parameter(lines, cmd="") -> list[DataParameterLineInfo] | None:
     """
     args = _get_cmd_args(cmd)
     if len(args) < 2:
-        return
+        raise NotImplementedError(
+            f"parse_data_parameter: expected at least 2 arguments, got {args!r}"
+        )
     expected_type = {
         "data_type": str,
         "ele_name": str,
