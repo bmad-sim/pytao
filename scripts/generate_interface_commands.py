@@ -16,8 +16,9 @@ from numpydoc.docscrape import NumpyDocString
 
 from pytao.util import parsers
 
-CMDS_OUTPUT = "./pytao/interface_commands.py"
-TEST_OUTPUT = "./pytao/tests/test_interface_commands.py"
+CMDS_OUTPUT = "../pytao/interface_commands.py"
+TEST_OUTPUT = "../pytao/tests/test_interface_commands.py"
+TEMPLATE_FN = "../pytao/interface.tpl.py"
 
 _CMD_TYPE_TO_RETURN: dict[str, str] = {
     "string_list": "dict[str, Any]",
@@ -307,7 +308,7 @@ def read_interface_commands():
 
 
 def read_interface_template():
-    with open("pytao/interface.tpl.py", "r") as f:
+    with open(TEMPLATE_FN, "r") as f:
         return f.read()
 
 
