@@ -286,13 +286,18 @@ class Comb(TaoModel, extra="allow"):
         return self.from_tao(tao)
 
     @classmethod
-    def from_tao(cls: type[Self], tao: Tao, **kwargs) -> Self:
+    def from_tao(
+        cls: type[Self], tao: Tao, *, check_ds_save: bool = True, ix_branch: int = 0, **kwargs
+    ) -> Self:
         """
         Create a Comb instance from Tao.
 
         Parameters
         ----------
         tao : Tao
+
+        ix_branch : int, optional
+
         **kwargs : dict
             Additional keyword arguments to pass to `comb_data_from_tao`.
 
@@ -300,7 +305,11 @@ class Comb(TaoModel, extra="allow"):
         -------
         Comb
         """
-        return cls(**comb_data_from_tao(tao, **kwargs))
+        if check_ds_save:
+            if tao.beam(ix_branch)["ds_save"] <= 0:
+                return cls()
+
+        return cls(**comb_data_from_tao(tao, ix_branch=ix_branch, **kwargs))
 
     def slice_by_s(self, s_start: float, s_end: float, *, inclusive: bool = True) -> Comb:
         """
