@@ -65,3 +65,21 @@ def test_update_plot_shape_by_name():
     new_shape.pop("shape")
 
     assert orig_shape == new_shape
+
+
+def test_update_plot_shape_all_attributes():
+    example = get_example("optics_matching")
+    tao = example.run(use_subprocess=True)
+
+    tao.update_plot_shapes(
+        layout=True,
+        ele_name="quadrupole::*",
+        type_label="name",
+        color="red",
+        shape_size=1.5,
+        shape_draw=True,
+        line_width=2,
+    )
+    (shape,) = (s for s in tao.shape_list("lat_layout") if s["ele_name"] == "quadrupole::*")
+    assert shape["type_label"] == "name"
+    assert shape["color"] == "red"

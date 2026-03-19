@@ -9,8 +9,17 @@ import pytest
 
 from .. import SubprocessTao
 from ..errors import TaoCommandError, filter_tao_messages_context
-from ..subproc import SupportedKwarg, TaoDisconnectedError
+from ..subproc import SubprocessErrorResult, SupportedKwarg, TaoDisconnectedError, _get_result
 from ..tao import Tao
+
+
+def test_context_manager_alive():
+    with SubprocessTao(
+        init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/csr_beam_tracking/tao.init",
+        noplot=True,
+    ) as tao:
+        assert tao.subprocess_alive
+    assert not tao.subprocess_alive
 
 
 def test_crash_and_recovery() -> None:
@@ -210,3 +219,65 @@ def test_error_filter_context_cmd_real(subproc_tao: SubprocessTao) -> None:
         assert output.shape == (0,)
         assert "Divide by zero" in subproc_tao.last_messages[0].message
         assert "Invalid expression" in subproc_tao.last_messages[1].message
+
+
+def test_get_result_error_no_propagate():
+    value: SubprocessErrorResult = {
+        "error": "some error",
+        "error_cls": "ValueError",
+        "traceback": "traceback here",
+        "tao_output": "some output",
+    }
+    result = _get_result(value, propagate_exceptions=False)
+    assert result == "some output"
+
+
+def test_get_result_error_propagate():
+    value: SubprocessErrorResult = {
+        "error": "boom",
+        "error_cls": "RuntimeError",
+        "traceback": "tb",
+        "tao_output": "out",
+    }
+    with pytest.raises(TaoCommandError, match="boom"):
+        _get_result(value, propagate_exceptions=True)
+
+
+def test_subprocess_call_after_close():
+    def dummy(tao_obj):
+        return 1
+
+    with SubprocessTao(
+        init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/csr_beam_tracking/tao.init",
+        noplot=True,
+    ) as tao:
+        tao.close_subprocess()
+        with pytest.raises(TaoDisconnectedError):
+            tao.subprocess_call(dummy)
+
+
+def test_send_receive_custom_not_callable():
+    with SubprocessTao(
+        init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/csr_beam_tracking/tao.init",
+        noplot=True,
+    ) as tao:
+        pipe = tao._subproc_pipe_
+        assert pipe is not None
+        with pytest.raises(ValueError, match="not callable"):
+            pipe.send_receive_custom("not_callable", {})  # type: ignore
+
+
+def test_send_receive_custom_main_module():
+    def local_func():
+        pass
+
+    local_func.__module__ = "__main__"
+
+    with SubprocessTao(
+        init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/csr_beam_tracking/tao.init",
+        noplot=True,
+    ) as tao:
+        pipe = tao._subproc_pipe_
+        assert pipe is not None
+        with pytest.raises(ValueError, match="not in an importable module"):
+            pipe.send_receive_custom(local_func, {})

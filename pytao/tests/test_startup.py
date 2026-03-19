@@ -1,9 +1,11 @@
 import pytest
 
 from ..errors import TaoInitializationError, TaoInvalidArgumentsError
+from ..model.ele.ele import ElementNotFoundError
 from ..startup import TaoStartup
 from ..subproc import SubprocessTao
 from ..tao import Tao
+from .conftest import get_regression_test
 
 
 def test_examples_can_init(tao_example: TaoStartup) -> None:
@@ -199,3 +201,80 @@ def test_tao_parser_unsupported_choice():
 def test_quiet_parsing(cli_args: list[str], expected_quiet: str | None):
     res = TaoStartup.from_cli_args(cli_args)
     assert res.quiet == expected_quiet
+
+
+@pytest.fixture(scope="module")
+def tao():
+    startup = get_regression_test("tao.init_optics_matching")
+    with startup.run_context(use_subprocess=False) as tao:
+        yield tao
+
+
+@pytest.fixture
+def tao_mpl():
+    startup = get_regression_test("tao.init_optics_matching")
+    startup.plot = "mpl"
+    with startup.run_context(use_subprocess=False) as tao:
+        yield tao
+
+
+def test_tao_repr(tao: Tao):
+    r = repr(tao)
+    assert "Tao" in r
+    assert "so_lib=" in r
+
+
+def test_tao_cmds(tao: Tao):
+    results = tao.cmds(["show ele 0", "show ele 1"])
+    assert isinstance(results, list)
+    assert len(results) == 2
+
+
+def test_tao_cmds_no_suppress(tao: Tao):
+    results = tao.cmds(
+        ["show ele 0"],
+        suppress_lattice_calc=False,
+        suppress_plotting=False,
+    )
+    assert len(results) == 1
+
+
+def test_tao_version(tao: Tao):
+    v = tao.version()
+    assert v is not None
+
+
+def test_invalid_backend_key(tao: Tao):
+    with pytest.raises(NotImplementedError):
+        tao._get_graph_manager_by_key("nonexistent")
+
+
+def test_invalid_user_backend(tao_mpl):
+    with pytest.raises(ValueError, match="Unsupported backend"):
+        tao_mpl._get_user_specified_backend("nonexistent")
+
+
+def test_update_plot_shapes_no_who(tao_mpl):
+    with pytest.raises(ValueError, match="Must specify"):
+        tao_mpl.update_plot_shapes(layout=False, floor=False)
+
+
+def test_matplotlib_property(tao_mpl):
+    manager = tao_mpl.matplotlib
+    assert manager is not None
+
+
+def test_plot_manager_property(tao_mpl):
+    manager = tao_mpl.plot_manager
+    assert manager is tao_mpl.matplotlib
+
+
+def test_element_not_found(tao: Tao):
+    with pytest.raises(ElementNotFoundError):
+        tao.ele("nonexistent_element_12345")
+
+
+def test_evaluate_string_list(tao: Tao):
+    result = tao.evaluate("lat::sigma.x[0:5]", flags="")
+    assert result is not None
+    assert len(result) == 6
