@@ -458,7 +458,11 @@ class TaoCore:
         except Exception as ex:
             if raises:
                 setattr(ex, "tao_output", raw_output)
-                raise
+                if isinstance(ex, TaoCommandError):
+                    raise
+                new_ex = TaoCommandError(f"Failed to parse output from command {cmd!r}: {ex}")
+                setattr(new_ex, "inner_exc", ex)
+                raise new_ex from ex
             logger.exception(
                 "Failed to parse string data with custom parser. Returning raw value."
             )

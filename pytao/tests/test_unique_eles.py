@@ -1,6 +1,7 @@
 import pytest
 
 from .. import AnyTao
+from ..errors import TaoCommandError
 from .test_interface_commands import new_tao
 
 
@@ -36,6 +37,6 @@ def test_unique_eles_missing(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall"
     ) as tao:
-        with pytest.raises(ValueError):
+        with pytest.raises(TaoCommandError):
             # this doesn't make it to sending a command -> inum must be int
             tao.unique_ele_ids("foo")
