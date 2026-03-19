@@ -1680,7 +1680,7 @@ def parse_var_v1_array(lines, cmd="") -> dict[str, VarV1ArrayDataInfo]:
     return res
 
 
-def parse_lat_list(lines, cmd="") -> list[str]:
+def parse_lat_list(lines, cmd="") -> np.ndarray | list[float]:
     """
     Parse lat_list results.
 
