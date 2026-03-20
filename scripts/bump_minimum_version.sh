@@ -40,7 +40,7 @@ echo "* Bmad 'show version': $datetime"
 cd $SCRIPT_DIR/.. || exit 1
 
 "$SED" -i -e "s/^\(\s*_min_tao_version =\).*/\1 ${datetime}/" pytao/interface.tpl.py
-"$SED" -i -e "s/^\(\s*- bmad\) \s*.*/\1 >=${bmad_conda_version}/" environment.yml dev-environment.yml
+"$SED" -i -e "s/^\(\s*- bmad\) \s*.*/\1 >=${bmad_conda_version}/" environment.yml
 
 cd $SCRIPT_DIR || exit 1
 python generate_interface_commands.py

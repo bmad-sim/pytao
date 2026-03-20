@@ -15,7 +15,7 @@ runs:
         activate-environment: pytao-dev
         use-mamba: true
         channels: conda-forge
-        environment-file: dev-environment.yml
+        environment-file: environment.yml
         python-version: ${{ inputs.python-version }}
         conda-remove-defaults: true
 
