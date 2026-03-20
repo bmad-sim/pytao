@@ -1,19 +1,31 @@
 # conda env create -f environment.yml
-name: pytao
+name: pytao-dev
 channels:
   - conda-forge
 dependencies:
   - python >=3.10
   - bmad >=20260317
+  - bokeh
   - h5py
   - httpcore >=1.0.9 # addresses a typing issue when launching jupyter lab
-  - ipykernel
   - ipywidgets
-  - jupyterlab
+  - jupyterlab>3
+  - matplotlib
   - numpy
+  - numpydoc
   - openPMD-beamphysics >=0.14.1
   - orjson
   - ormsgpack
   - pydantic >=2
+  - rich
   - tqdm
+  # Developer
+  - mkdocs
+  - mkdocs-jupyter
+  - mkdocs-material
+  - mkdocstrings
+  - mkdocstrings-python
+  - pygments
+  - pytest
+  - pytest-cov
   - pip

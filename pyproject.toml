@@ -16,6 +16,7 @@ dependencies = [
   "orjson",
   "ormsgpack>=1.12.2",
   "pydantic>=2",
+  "rich",
   "tqdm",
 ]
 dynamic = ["version"]
