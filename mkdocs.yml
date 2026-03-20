@@ -8,9 +8,12 @@ nav:
   - Installation: installation.md
 
   - Usage: usage.md
+  - Releases: release_notes.md
 
   - Examples:
       - examples/basic.ipynb
+      - examples/elements.ipynb
+      - examples/config.ipynb
       - examples/plot-matplotlib.ipynb
       - examples/plot-bokeh.ipynb
       - examples/plot-bokeh-vars.ipynb
@@ -18,7 +21,6 @@ nav:
       - examples/bunch.ipynb
       - examples/special_parsers.ipynb
       - examples/fodo.ipynb
-      - examples/advanced.ipynb
       - examples/beam_track_progress_bar.ipynb
 
   - Dev:
@@ -27,6 +29,9 @@ nav:
   - API:
       - Tao: api/tao.md
       - SubprocessTao: api/subprocesstao.md
+      - Model Base Classes: api/model.md
+      - TaoConfig: api/config.md
+      - Lattice / Element: api/element.md
       - Plotting: api/plot.md
       - Matplotlib: api/plot-mpl.md
       - Bokeh: api/plot-bokeh.md

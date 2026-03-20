@@ -1,17 +1,56 @@
-from collections import defaultdict
-from typing import Dict, List, Optional
+from __future__ import annotations
+
 import ast
+import dataclasses
 import datetime
 import logging
-import numpy as np
+from collections import defaultdict
+from typing import Any, TypeVar
 
-from ..tao_ctypes.util import (
-    parse_bool,
-    parse_tao_python_data,
-    capture_messages_from_functions,
+from .parser_types import (
+    BuildingWallGlobalInfo,
+    BuildingWallGraphInfo,
+    BuildingWallInfo,
+    ConstraintDataInfo,
+    ConstraintVarInfo,
+    DataD1ArrayInfo,
+    DataDArrayInfo,
+    DataParameterLineInfo,
+    EleChamberWallInfo,
+    EleGenGradMapDerivInfo,
+    EleGridFieldPointInfo,
+    EleLordSlaveInfo,
+    EleSpinTaylorInfo,
+    EmFieldResult,
+    EnumInfo,
+    FloorOrbitInfo,
+    FloorPlanElementInfo,
+    LatBranchListInfo,
+    LordControlInfo,
+    MatrixResult,
+    PlaceBufferInfo,
+    PlotLatLayoutInfo,
+    PlotLineInfo,
+    PlotListRegionInfo,
+    PlotSymbolInfo,
+    ShapeListInfo,
+    ShapePatternNameInfo,
+    ShapePatternPointInfo,
+    SlaveControlInfo,
+    SpinInvariantInfo,
+    VarGeneralInfo,
+    VarSlaveInfo,
+    VarV1ArrayDataInfo,
+    VarVArrayLineResult,
 )
 
+import numpy as np
+from ..errors import TaoDataInvalidError
+
 logger = logging.getLogger(__name__)
+
+
+FieldType = int | float | bool | str | complex | np.ndarray | dict[str, "FieldType"]
 
 
 class Settings:
@@ -23,6 +62,22 @@ class FloatOrNone:
     """Type marker for values that should be parsed as float or None if empty."""
 
     pass
+
+
+T = TypeVar("T", bound=str | int | float | bool)
+
+
+@dataclasses.dataclass
+class Attr:
+    name: str
+    type: str
+    settable: bool
+    data: Any
+    units: str | None
+
+    def as_type(self, cls: type[T]) -> T:
+        """Cast the data to the given type. Supports str, int, bool, or float."""
+        return cls(self.data)
 
 
 # Helpers
@@ -39,6 +94,181 @@ def _parse_str_bool(s):
         return False
     else:
         raise ValueError("Unknown bool: " + s)
+
+
+def chunks(lst, n):
+    """Yield successive n-sized chunks from lst."""
+    for i in range(0, len(lst), n):
+        yield lst[i : i + n]
+
+
+def parse_bool(s) -> bool:
+    x = s.upper()[0]
+    if x == "T":
+        return True
+    elif x == "F":
+        return False
+    else:
+        raise ValueError("Unknown bool: " + s)
+
+
+def parse_tao_lat_ele_list(lines) -> dict[str, int]:
+    """
+    returns mapping of names to index
+
+    TODO: if elements are duplicated, this returns only the last one.
+
+    Example:
+    ixlist = parse_tao_lat_ele_list(tao.cmd('python lat_ele_list 1@0'))
+    """
+    ix = {}
+    for line in lines:
+        index, name = line.split(";")
+        ix[name] = int(index)
+    return ix
+
+
+def parse_pytype(type, val: str) -> FieldType:
+    """
+    Parses the various types from `tao_pipe_cmd`
+
+    INT         - Integer number
+    INT_ARR     - Integer array.
+    REAL        - Real number
+    REAL_ARR    - Real array
+    COMPLEX     - Complex number (Re;Im)
+    LOGIC       - Logical: "T" or "F".
+    INUM        - Integer whose allowed values can be obtained using the "pipe inum" command.
+    ENUM        - String whose allowed values can be obtained using the "pipe enum" command.
+    ENUM_ARR    - Array of enums.
+    FILE        - Name of file.
+    CRYSTAL     - Crystal name string. EG: "Si(111)"
+    DAT_TYPE    - Data type string. EG: "orbit.x"
+    DAT_TYPE_Z  - Data type string if plot%x_axis_type = 'data'. Otherwise is a data_type_z enum.
+    SPECIES     - Species name string. EG: "H2SO4++"
+    ELE_PARAM   - Lattice element parameter string. EG "K1"
+    STR         - String that does not fall into one of the above string categories.
+    STR_ARR     - String array
+    STRUCT      - Structure. In this case {component_value} is of the form:
+                    {name1};{type1};{value1};{name2}
+    """
+
+    if type in [
+        "STR_ARR",
+        "ENUM_ARR",
+    ]:
+        return val
+
+    if type == "INT_ARR":
+        return np.array(val).astype(int)
+
+    if type == "REAL_ARR":
+        return np.array(val).astype(float)
+
+    if isinstance(val, list):
+        if len(val) == 1:
+            val = val[0]
+
+    if type in [
+        "STR",
+        "ENUM",
+        "FILE",
+        "CRYSTAL",
+        "COMPONENT",
+        "DAT_TYPE",
+        "DAT_TYPE_Z",
+        "SPECIES",
+        "ELE_PARAM",
+    ]:
+        return val
+
+    if type == "LOGIC":
+        return parse_bool(val)
+
+    if type in ["INT", "INUM"]:
+        return int(val or 0)
+
+    if type == "REAL":
+        # Note that some pipe commands may return any empty value instead of 0
+        return float(val or 0)
+
+    if type == "COMPLEX":
+        return complex(*(float(v) for v in val))
+
+    if type == "STRUCT":
+        return {name: parse_pytype(t1, v1) for name, t1, v1 in chunks(val, 3)}
+
+    # Not found
+    raise ValueError("Unknown type: " + type)
+
+
+def _parse_tao_python_data1(line, clean_key=True):
+    """
+    Parses most common data output from a Tao>python command
+    <component_name>;<type>;<is_variable>;<component_value>
+
+    and returns a dict
+    Example:
+        eta_x;REAL;F;  9.0969865321048662E+00
+    parses to:
+        {'eta_x':9.0969865321048662E+00}
+
+    If clean key, the key will be cleaned up by replacing '.' with '_' for use as class attributes.
+
+    See: tao_python_cmd.f90
+    """
+    if line == "INVALID":
+        raise TaoDataInvalidError("Data unavailable - Tao marked it as INVALID")
+
+    sline = line.split(";")
+    name, type, settable = sline[0:3]
+    component_value = sline[3:]
+
+    dat = parse_pytype(type, component_value)
+
+    if clean_key:
+        name = name.replace(".", "_")
+
+    return name, type, settable.upper() == "T", dat
+
+
+def parse_tao_python_data(lines, clean_key=True) -> dict[str, Any]:
+    """
+    returns dict with data
+    """
+    dat = {}
+    for line in lines:
+        name, _type, _settable, value = _parse_tao_python_data1(line, clean_key)
+        dat[name] = value
+
+    return dat
+
+
+def parse_tao_python_data_with_units(lines, clean_key=True):
+    """
+    returns dict with data
+    """
+    data = {}
+
+    for line in lines:
+        name, type_, settable, dat = _parse_tao_python_data1(line, clean_key=clean_key)
+        data[name] = Attr(
+            name=name,
+            type=type_,
+            settable=settable,
+            data=dat,
+            units=None,
+        )
+
+    for key in list(data):
+        if "units#" not in key:
+            continue
+
+        units = data.pop(key)
+        key = key.removeprefix("units#")
+        if key in data:
+            data[key].units = units.data
+    return data
 
 
 # Column names and types for parse_data_d_array
@@ -76,7 +306,7 @@ DATA_D_TYPES = [
 ]
 
 
-def parse_data_d_array(lines, cmd=""):
+def parse_data_d_array(lines, cmd="") -> list[DataDArrayInfo]:
     """
     Parses the output of the 'python data_d_array' command into a list of dicts.
 
@@ -120,7 +350,7 @@ def parse_data_d_array(lines, cmd=""):
     return result
 
 
-def parse_derivative(lines, cmd=""):
+def parse_derivative(lines, cmd="") -> dict[int, np.ndarray]:
     """
     Parses the output of tao python derivative
 
@@ -136,8 +366,6 @@ def parse_derivative(lines, cmd=""):
         with dModel_dVar as the value:
             np.ndarray with shape (n_data, n_var)
     """
-    # Filter messages
-    lines, _ = capture_messages_from_functions(lines)
     lines = [ln for ln in lines if ln and len(ln.split(";")) > 3]
 
     # Calculate matrix bounds
@@ -172,7 +400,7 @@ def parse_derivative(lines, cmd=""):
     return universe
 
 
-def parse_ele_control_var(lines, cmd=""):
+def parse_ele_control_var(lines, cmd="") -> dict[str, float]:
     """
     Parses the output of tao python ele_control_var
 
@@ -199,7 +427,7 @@ def parse_ele_control_var(lines, cmd=""):
     return d
 
 
-def parse_lat_ele_list(lines, cmd=""):
+def parse_lat_ele_list(lines, cmd="") -> list[str]:
     """
     Parses the output of tao python lat_ele_list
 
@@ -217,7 +445,7 @@ def parse_lat_ele_list(lines, cmd=""):
     return [s.split(";")[1] for s in lines]
 
 
-def parse_matrix(lines, cmd=""):
+def parse_matrix(lines, cmd="") -> MatrixResult:
     """
     Parses the output of a tao python matix
 
@@ -235,10 +463,10 @@ def parse_matrix(lines, cmd=""):
 
     """
     m7 = np.array([[float(x) for x in line.split(";")[1:]] for line in lines])
-    return {"mat6": m7[:, 0:6], "vec0": m7[:, 6]}
+    return MatrixResult(mat6=m7[:, 0:6], vec0=m7[:, 6])
 
 
-def parse_merit(lines, cmd=""):
+def parse_merit(lines, cmd="") -> float:
     """
     Parses the output of a tao python merit
 
@@ -256,7 +484,7 @@ def parse_merit(lines, cmd=""):
     return float(lines[0])
 
 
-def parse_plot_list(lines, cmd=""):
+def parse_plot_list(lines, cmd="") -> dict[str, int] | list[PlotListRegionInfo]:
     """
     Parses the output of the `python plot_list` command.
 
@@ -288,36 +516,35 @@ def parse_plot_list(lines, cmd=""):
 
     if nv == 2:
         # Template
-        output = {}
+        template_output: dict[str, int] = {}
         for line in lines:
             ix, name = line.split(";")
-            output[name] = int(ix)
+            template_output[name] = int(ix)
+        return template_output
 
-    elif nv == 8:
-        # Region8
-        output = []
+    if nv == 8:
+        # Region
+        region_output: list[PlotListRegionInfo] = []
         for line in lines:
             ix, region_name, plot_name, visible, x1, x2, y1, y2 = line.split(";")
-            output.append(
-                {
-                    "region": region_name,
-                    "ix": int(ix),
-                    "plot_name": plot_name,
-                    "visible": _parse_str_bool(visible),
-                    "x1": float(x1),
-                    "x2": float(x2),
-                    "y1": float(y1),
-                    "y2": float(y2),
-                }
+            region_output.append(
+                PlotListRegionInfo(
+                    region=region_name,
+                    ix=int(ix),
+                    plot_name=plot_name,
+                    visible=_parse_str_bool(visible),
+                    x1=float(x1),
+                    x2=float(x2),
+                    y1=float(y1),
+                    y2=float(y2),
+                )
             )
+        return region_output
 
-    else:
-        raise ValueError(f"Cannot parse {lines[0]}")
-
-    return output
+    raise ValueError(f"Cannot parse {lines[0]}")
 
 
-def parse_spin_invariant(lines, cmd=""):
+def parse_spin_invariant(lines, cmd="") -> np.ndarray | list[SpinInvariantInfo]:
     """
     Reshape the (3*n) shaped array output of `spin_invariant`
     to be (n, 3)
@@ -339,7 +566,7 @@ def parse_spin_invariant(lines, cmd=""):
     )
 
 
-def parse_taylor_map(lines, cmd=""):
+def parse_taylor_map(lines, cmd="") -> dict[int, dict[tuple[int, ...], float]]:
     """
     Parses the output of the `python taylor_map` command.
 
@@ -366,9 +593,9 @@ def parse_taylor_map(lines, cmd=""):
     return tt
 
 
-def parse_var_v_array_line(line, cmd=""):
+def parse_var_v_array_line(line, cmd="") -> VarVArrayLineResult:
     v = line.split(";")
-    out = dict(
+    return VarVArrayLineResult(
         ix_v1=int(v[0]),
         var_attrib_name=v[1],
         meas_value=float(v[2]),
@@ -378,10 +605,9 @@ def parse_var_v_array_line(line, cmd=""):
         good_user=_parse_str_bool(v[6]),
         weight=float(v[7]),
     )
-    return out
 
 
-def parse_var_v_array(lines, cmd=""):
+def parse_var_v_array(lines, cmd="") -> list[VarVArrayLineResult]:
     """
     Parses the output of `python var_v_array` into a list of dicts
 
@@ -425,10 +651,10 @@ def fix_value(value: str, typ: type):
 
 
 def _parse_by_keys_to_types(
-    lines: List[str],
-    key_to_type: Dict[str, type],
-    ensure_count: Optional[bool] = None,
-) -> List[dict]:
+    lines: list[str],
+    key_to_type: dict[str, type],
+    ensure_count: bool | None = None,
+) -> list[Any]:
     """
     Parse Tao command output, with predetermined field names and associated types.
 
@@ -458,6 +684,8 @@ def _parse_by_keys_to_types(
 
     if ensure_count:
         for line in lines:
+            if line == "INVALID":
+                raise TaoDataInvalidError("Data unavailable - Tao marked it as INVALID")
             assert len(key_to_type) == len(line.split(";"))
 
     return [
@@ -471,7 +699,7 @@ def _parse_by_keys_to_types(
     ]
 
 
-def _get_cmd_args(cmd: str) -> List[str]:
+def _get_cmd_args(cmd: str) -> list[str]:
     """
     Get command arguments.
 
@@ -490,7 +718,9 @@ def _get_cmd_args(cmd: str) -> List[str]:
     return args
 
 
-def parse_building_wall_list(lines, cmd=""):
+def parse_building_wall_list(
+    lines, cmd=""
+) -> list[BuildingWallGlobalInfo] | list[BuildingWallInfo]:
     """
     Parse building_wall_list results.
 
@@ -525,7 +755,7 @@ def parse_building_wall_list(lines, cmd=""):
     )
 
 
-def parse_building_wall_graph(lines, cmd=""):
+def parse_building_wall_graph(lines, cmd="") -> list[BuildingWallGraphInfo]:
     """
     Parse building_wall_graph results.
 
@@ -545,7 +775,7 @@ def parse_building_wall_graph(lines, cmd=""):
     )
 
 
-def parse_constraints(lines, cmd=""):
+def parse_constraints(lines, cmd="") -> list[ConstraintDataInfo] | list[ConstraintVarInfo]:
     """
     Parse constraints results.
 
@@ -588,9 +818,12 @@ def parse_constraints(lines, cmd=""):
                 # "merit_dvar": float,
             },
         )
+    raise NotImplementedError(
+        f"parse_constraints: unsupported argument {args!r} (expected 'data' or 'var')"
+    )
 
 
-def parse_data_d1_array(lines, cmd=""):
+def parse_data_d1_array(lines, cmd="") -> list[DataD1ArrayInfo]:
     """
     Parse data_d1_array results.
 
@@ -612,7 +845,7 @@ def parse_data_d1_array(lines, cmd=""):
     )
 
 
-def parse_data_d2_array(lines, cmd=""):
+def parse_data_d2_array(lines, cmd="") -> list[str]:
     """
     Parse data_d2_array results.
 
@@ -623,7 +856,7 @@ def parse_data_d2_array(lines, cmd=""):
     return lines
 
 
-def parse_data_parameter(lines, cmd=""):
+def parse_data_parameter(lines, cmd="") -> list[DataParameterLineInfo]:
     """
     Parse parameter_1 results.
 
@@ -633,7 +866,9 @@ def parse_data_parameter(lines, cmd=""):
     """
     args = _get_cmd_args(cmd)
     if len(args) < 2:
-        return
+        raise NotImplementedError(
+            f"parse_data_parameter: expected at least 2 arguments, got {args!r}"
+        )
     expected_type = {
         "data_type": str,
         "ele_name": str,
@@ -680,17 +915,17 @@ def parse_data_parameter(lines, cmd=""):
         "useit_opt": bool,
     }.get(args[1], str)
 
-    def fix_line(line):
+    def fix_line(line) -> DataParameterLineInfo:
         index, *values = line.split(";")
-        return {
-            "index": int(index),
-            "data": [fix_value(val, expected_type) for val in values],
-        }
+        return DataParameterLineInfo(
+            index=int(index),
+            data=[fix_value(val, expected_type) for val in values],
+        )
 
     return [fix_line(line) for line in lines]
 
 
-def parse_datum_has_ele(lines, cmd=""):
+def parse_datum_has_ele(lines, cmd="") -> str | None:
     """
     Parse datum_has_ele results.
 
@@ -702,7 +937,7 @@ def parse_datum_has_ele(lines, cmd=""):
     return lines[0] if lines else None
 
 
-def parse_ele_chamber_wall(lines, cmd=""):
+def parse_ele_chamber_wall(lines, cmd="") -> list[EleChamberWallInfo]:
     """
     Parse ele_chamber_wall results.
 
@@ -716,7 +951,7 @@ def parse_ele_chamber_wall(lines, cmd=""):
     )
 
 
-def parse_ele_elec_multipoles(lines, cmd=""):
+def parse_ele_elec_multipoles(lines, cmd="") -> dict[str, Any]:
     """
     Parse ele_elec_multipoles results.
 
@@ -739,7 +974,7 @@ def parse_ele_elec_multipoles(lines, cmd=""):
     }
 
 
-def parse_ele_grid_field(lines, cmd=""):
+def parse_ele_grid_field(lines, cmd="") -> list[EleGridFieldPointInfo] | dict[str, Any]:
     """
     Parse ele_grid_field results.
 
@@ -753,23 +988,23 @@ def parse_ele_grid_field(lines, cmd=""):
     args = _get_cmd_args(cmd)
     if args[-1].lower() == "points":
 
-        def parse_point_line(line: str):
+        def parse_point_line(line: str) -> EleGridFieldPointInfo:
             parts = line.split(";")
             i, j, k = (int(part) for part in parts[:3])
             data = [ast.literal_eval(part.strip()) for part in parts[3:]]
-            return {
-                "i": i,
-                "j": j,
-                "k": k,
-                "data": data,
-            }
+            return EleGridFieldPointInfo(
+                i=i,
+                j=j,
+                k=k,
+                data=data,
+            )
 
         return [parse_point_line(line) for line in lines]
 
     return parse_tao_python_data(lines)
 
 
-def parse_ele_gen_grad_map(lines, cmd=""):
+def parse_ele_gen_grad_map(lines, cmd="") -> list[EleGenGradMapDerivInfo] | dict[str, Any]:
     """
     Parse ele_gen_grad_map results.
 
@@ -795,7 +1030,7 @@ def parse_ele_gen_grad_map(lines, cmd=""):
     return parse_tao_python_data(lines)
 
 
-def parse_ele_lord_slave(lines, cmd=""):
+def parse_ele_lord_slave(lines, cmd="") -> list[EleLordSlaveInfo]:
     """
     Parse ele_lord_slave results.
 
@@ -815,7 +1050,7 @@ def parse_ele_lord_slave(lines, cmd=""):
     )
 
 
-def parse_ele_multipoles(lines, cmd=""):
+def parse_ele_multipoles(lines, cmd="") -> dict[str, Any]:
     """
     Parse ele_multipoles results.
 
@@ -839,7 +1074,7 @@ def parse_ele_multipoles(lines, cmd=""):
     }
 
 
-def parse_ele_taylor(lines, cmd=""):
+def parse_ele_taylor(lines, cmd="") -> dict[str, Any]:
     """
     Parse ele_taylor results.
 
@@ -891,7 +1126,7 @@ def parse_ele_taylor(lines, cmd=""):
     }
 
 
-def parse_ele_spin_taylor(lines, cmd=""):
+def parse_ele_spin_taylor(lines, cmd="") -> list[EleSpinTaylorInfo]:
     """
     Parse ele_spin_taylor results.
 
@@ -915,7 +1150,7 @@ def parse_ele_spin_taylor(lines, cmd=""):
     )
 
 
-def parse_ele_wall3d(lines, cmd=""):
+def parse_ele_wall3d(lines, cmd="") -> list[dict[str, Any]] | dict[str, Any]:
     """
     Parse ele_wall3d results.
 
@@ -963,7 +1198,7 @@ def parse_ele_wall3d(lines, cmd=""):
     return parse_tao_python_data(lines)
 
 
-def parse_em_field(lines, cmd=""):
+def parse_em_field(lines, cmd="") -> EmFieldResult:
     """
     Parse em_field results.
 
@@ -984,7 +1219,7 @@ def parse_em_field(lines, cmd=""):
     )[0]
 
 
-def parse_enum(lines, cmd=""):
+def parse_enum(lines, cmd="") -> list[EnumInfo]:
     """
     Parse enum results.
 
@@ -1001,7 +1236,7 @@ def parse_enum(lines, cmd=""):
     )
 
 
-def parse_floor_plan(lines, cmd=""):
+def parse_floor_plan(lines, cmd="") -> list[FloorPlanElementInfo]:
     """
     Parse floor_plan results.
 
@@ -1037,7 +1272,7 @@ def parse_floor_plan(lines, cmd=""):
     )
 
 
-def parse_floor_orbit(lines, cmd=""):
+def parse_floor_orbit(lines, cmd="") -> list[FloorOrbitInfo]:
     """
     Parse floor_orbit results.
 
@@ -1063,7 +1298,7 @@ def parse_floor_orbit(lines, cmd=""):
     return res
 
 
-def parse_help(lines, cmd=""):
+def parse_help(lines, cmd="") -> str:
     """
     Parse help information.
 
@@ -1074,7 +1309,7 @@ def parse_help(lines, cmd=""):
     return "\n".join(lines)
 
 
-def parse_inum(lines, cmd=""):
+def parse_inum(lines, cmd="") -> list[int]:
     """
     Parse list of possible values for INUM.
 
@@ -1085,7 +1320,7 @@ def parse_inum(lines, cmd=""):
     return [int(num) for num in lines]
 
 
-def parse_lat_calc_done(lines, cmd=""):
+def parse_lat_calc_done(lines, cmd="") -> bool:
     """
     Parse lat_calc_done results.
 
@@ -1096,7 +1331,7 @@ def parse_lat_calc_done(lines, cmd=""):
     return parse_bool(lines[0])
 
 
-def parse_lat_branch_list(lines, cmd=""):
+def parse_lat_branch_list(lines, cmd="") -> list[LatBranchListInfo]:
     """
     Parse lat_branch_list results.
 
@@ -1115,7 +1350,7 @@ def parse_lat_branch_list(lines, cmd=""):
     )
 
 
-def parse_lat_param_units(lines, cmd=""):
+def parse_lat_param_units(lines, cmd="") -> str:
     """
     Parse lat_param_units results.
 
@@ -1131,7 +1366,7 @@ def _value_float_or_none(s: str):
     return None if s == "" else float(s)
 
 
-def parse_lord_control(lines, cmd=""):
+def parse_lord_control(lines, cmd="") -> list[LordControlInfo]:
     """
     Input line format:
       Lord-index;Lord-name;Lord-type;Attribute-controlled;Control-expression;Value
@@ -1149,7 +1384,7 @@ def parse_lord_control(lines, cmd=""):
     )
 
 
-def parse_slave_control(lines, cmd=""):
+def parse_slave_control(lines, cmd="") -> list[SlaveControlInfo]:
     """
     Input line format:
       Slave-branch;Slave-index;Slave-name;Slave-type;Attribute-controlled;Control-expression;Value
@@ -1168,7 +1403,7 @@ def parse_slave_control(lines, cmd=""):
     )
 
 
-def parse_plot_lat_layout(lines, cmd=""):
+def parse_plot_lat_layout(lines, cmd="") -> list[PlotLatLayoutInfo]:
     """
     Parse plot_lat_layout results.
 
@@ -1193,7 +1428,7 @@ def parse_plot_lat_layout(lines, cmd=""):
     )
 
 
-def parse_plot_graph(lines, cmd=""):
+def parse_plot_graph(lines, cmd="") -> dict[str, Any]:
     """
     Parse plot_graph results.
 
@@ -1201,22 +1436,10 @@ def parse_plot_graph(lines, cmd=""):
     -------
     dict
     """
-    # This should work, but there are issues with truncation causing failures.
-    # See: https://github.com/bmad-sim/bmad-ecosystem/issues/1018
-    # If that issue isn't resolved, we may want to pre-process the data
-    # to at least get something back.
-    try:
-        return parse_tao_python_data(lines)
-    except ValueError:
-        logger.warning(
-            "python plot_graph output failed to parse.  See linked issue "
-            "and consider upgrading if possible. "
-            "https://github.com/bmad-sim/bmad-ecosystem/issues/1018"
-        )
-        return lines
+    return parse_tao_python_data(lines)
 
 
-def parse_plot_line(lines, cmd=""):
+def parse_plot_line(lines, cmd="") -> list[PlotLineInfo] | np.ndarray:
     """
     Parse plot_line results.
 
@@ -1237,7 +1460,7 @@ def parse_plot_line(lines, cmd=""):
     )
 
 
-def parse_plot_symbol(lines, cmd=""):
+def parse_plot_symbol(lines, cmd="") -> list[PlotSymbolInfo] | np.ndarray:
     """
     Parse plot_symbol results.
 
@@ -1258,7 +1481,7 @@ def parse_plot_symbol(lines, cmd=""):
     )
 
 
-def parse_shape_list(lines, cmd=""):
+def parse_shape_list(lines, cmd="") -> list[ShapeListInfo]:
     """
     Parse shape_list results.
 
@@ -1284,7 +1507,9 @@ def parse_shape_list(lines, cmd=""):
     )
 
 
-def parse_shape_pattern_list(lines, cmd=""):
+def parse_shape_pattern_list(
+    lines, cmd=""
+) -> list[ShapePatternNameInfo] | list[ShapePatternPointInfo]:
     """
     Parse shape_pattern_list results.
 
@@ -1310,7 +1535,7 @@ def parse_shape_pattern_list(lines, cmd=""):
     )
 
 
-def parse_show(lines, cmd=""):
+def parse_show(lines, cmd="") -> list[str]:
     """
     Parse show results.
 
@@ -1323,7 +1548,7 @@ def parse_show(lines, cmd=""):
     return lines  # raise NotImplementedError()
 
 
-def parse_species_to_int(lines, cmd=""):
+def parse_species_to_int(lines, cmd="") -> int:
     """
     Parse species_to_int results.
 
@@ -1334,7 +1559,7 @@ def parse_species_to_int(lines, cmd=""):
     return int(lines[0])
 
 
-def parse_species_to_str(lines, cmd=""):
+def parse_species_to_str(lines, cmd="") -> str:
     """
     Parse species_to_str results.
 
@@ -1345,7 +1570,7 @@ def parse_species_to_str(lines, cmd=""):
     return lines[0]
 
 
-def parse_spin_polarization(lines, cmd=""):
+def parse_spin_polarization(lines, cmd="") -> dict[str, Any]:
     """
     Parse spin_polarization results.
 
@@ -1353,13 +1578,10 @@ def parse_spin_polarization(lines, cmd=""):
     -------
     dict
     """
-    lines = [
-        line for line in lines if "[INFO]" not in line and "note: setting" not in line.lower()
-    ]
     return parse_tao_python_data(lines)
 
 
-def parse_spin_resonance(lines, cmd=""):
+def parse_spin_resonance(lines, cmd="") -> dict[str, Any]:
     """
     Parse spin_resonance results.
 
@@ -1367,17 +1589,10 @@ def parse_spin_resonance(lines, cmd=""):
     -------
     dict
     """
-    # Filter lines as INFO/notes may appear in output
-    return parse_tao_python_data(
-        [
-            line
-            for line in lines
-            if "[INFO]" not in line and "note: setting" not in line.lower()
-        ]
-    )
+    return parse_tao_python_data(lines)
 
 
-def parse_super_universe(lines, cmd=""):
+def parse_super_universe(lines, cmd="") -> dict[str, Any]:
     """
     Parse super_universe results.
 
@@ -1398,7 +1613,7 @@ def parse_super_universe(lines, cmd=""):
     return parse_tao_python_data([fix_line(line) for line in lines])
 
 
-def parse_var(lines, cmd=""):
+def parse_var(lines, cmd="") -> dict[str, Any] | list[VarSlaveInfo]:
     """
     Parse var results.
 
@@ -1422,7 +1637,7 @@ def parse_var(lines, cmd=""):
     return parse_tao_python_data(lines)
 
 
-def parse_var_general(lines, cmd=""):
+def parse_var_general(lines, cmd="") -> list[VarGeneralInfo]:
     """
     Parse var_general results.
 
@@ -1441,7 +1656,7 @@ def parse_var_general(lines, cmd=""):
     )
 
 
-def parse_var_v1_array(lines, cmd=""):
+def parse_var_v1_array(lines, cmd="") -> dict[str, VarV1ArrayDataInfo]:
     """
     Parse var_v1_array results.
 
@@ -1468,7 +1683,7 @@ def parse_var_v1_array(lines, cmd=""):
     return res
 
 
-def parse_lat_list(lines, cmd=""):
+def parse_lat_list(lines, cmd="") -> np.ndarray | list[float]:
     """
     Parse lat_list results.
 
@@ -1479,7 +1694,7 @@ def parse_lat_list(lines, cmd=""):
     return lines
 
 
-def parse_place_buffer(lines, cmd=""):
+def parse_place_buffer(lines, cmd="") -> list[PlaceBufferInfo]:
     """
     Parse place_buffer results.
 
@@ -1496,7 +1711,7 @@ def parse_place_buffer(lines, cmd=""):
     )
 
 
-def parse_show_plot_page(lines, cmd=""):
+def parse_show_plot_page(lines, cmd="") -> dict[str, Any]:
     """
     Parse 'show plot_page' output.
 
@@ -1543,7 +1758,7 @@ def parse_show_plot_page(lines, cmd=""):
     return {key.replace("%", "_"): value for key, value in result.items()}
 
 
-def parse_show_version(lines, cmd=""):
+def parse_show_version(lines, cmd="") -> datetime.datetime | None:
     """
     Parse 'show version' output.
 
@@ -1556,3 +1771,37 @@ def parse_show_version(lines, cmd=""):
     except ValueError:
         logger.warning("Failed to parse version output: %s", lines)
         return None
+
+
+def parse_ele_wake(lines, cmd="") -> dict[str, Any] | list[list]:
+    """
+    Parse ele:wake data.
+
+    Returns
+    -------
+    dict, or list of dict
+    """
+    args = _get_cmd_args(cmd)
+    if len(args) > 1 and args[1].lower() in {
+        "sr_long_table",
+        "lr_mode_table",
+        "sr_trans_table",
+    }:
+
+        def fix_maybe_none(value):
+            try:
+                return fix_value(value, float)
+            except ValueError:
+                return str(value).strip()
+
+        return [[fix_maybe_none(value) for value in line.split(";")] for line in lines]
+
+    return parse_tao_python_data(lines)
+
+
+def parse_evaluate(lines, cmd="") -> np.ndarray | list[float]:
+    """Parse 'evaluate' output."""
+    if isinstance(lines, np.ndarray):
+        return lines
+
+    return [float(line.rsplit(";")[1]) for line in lines]

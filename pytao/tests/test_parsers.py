@@ -1,14 +1,12 @@
 from datetime import datetime
-from typing import Type
 
 import numpy as np
 import pytest
 
 from .. import AnyTao
-from ..tao_ctypes.util import parse_tao_python_data
+from ..util.parsers import parse_derivative, parse_tao_python_data
 from .conftest import ensure_successful_parsing
 from .test_interface_commands import new_tao
-from ..util.parsers import parse_derivative
 
 
 @pytest.mark.parametrize(
@@ -59,7 +57,7 @@ def test_parse_line(type: str, value: str, expected):
             assert parsed_value == expected
 
 
-def test_building_wall_list_1(tao_cls: Type[AnyTao]):
+def test_building_wall_list_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall"
     ) as tao:
@@ -73,7 +71,7 @@ def test_building_wall_list_1(tao_cls: Type[AnyTao]):
         }
 
 
-def test_building_wall_list_2(tao_cls: Type[AnyTao]):
+def test_building_wall_list_2(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall"
     ) as tao:
@@ -87,7 +85,7 @@ def test_building_wall_list_2(tao_cls: Type[AnyTao]):
         }
 
 
-def test_building_wall_graph_1(tao_cls: Type[AnyTao]):
+def test_building_wall_graph_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls,
         init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall",
@@ -102,7 +100,7 @@ def test_building_wall_graph_1(tao_cls: Type[AnyTao]):
         }
 
 
-def test_constraints_1(tao_cls: Type[AnyTao]):
+def test_constraints_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls,
         init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
@@ -110,21 +108,21 @@ def test_constraints_1(tao_cls: Type[AnyTao]):
         tao.constraints(who="data")
 
 
-def test_constraints_2(tao_cls: Type[AnyTao]):
+def test_constraints_2(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
         tao.constraints(who="var")
 
 
-def test_data_d2_array_1(tao_cls: Type[AnyTao]):
+def test_data_d2_array_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
         assert "orbit" in tao.data_d2_array(ix_uni="1")
 
 
-def test_data_parameter_1(tao_cls: Type[AnyTao]):
+def test_data_parameter_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls,
         init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
@@ -135,7 +133,7 @@ def test_data_parameter_1(tao_cls: Type[AnyTao]):
         )
 
 
-def test_datum_has_ele_1(tao_cls: Type[AnyTao]):
+def test_datum_has_ele_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls,
         init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
@@ -148,7 +146,7 @@ def test_datum_has_ele_1(tao_cls: Type[AnyTao]):
         }
 
 
-def test_ele_chamber_wall_1(tao_cls: Type[AnyTao]):
+def test_ele_chamber_wall_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall3d"
     ) as tao:
@@ -162,7 +160,7 @@ def test_ele_chamber_wall_1(tao_cls: Type[AnyTao]):
         }
 
 
-def test_ele_grid_field_points(tao_cls: Type[AnyTao]):
+def test_ele_grid_field_points(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls,
         init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_grid",
@@ -179,14 +177,14 @@ def test_ele_grid_field_points(tao_cls: Type[AnyTao]):
         }
 
 
-def test_ele_elec_multipoles_1(tao_cls: Type[AnyTao]):
+def test_ele_elec_multipoles_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
         assert "data" in tao.ele_elec_multipoles(ele_id="1@0>>1", which="model")
 
 
-def test_ele_gen_grad_map_1(tao_cls: Type[AnyTao]):
+def test_ele_gen_grad_map_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_em_field"
     ) as tao:
@@ -197,7 +195,7 @@ def test_ele_gen_grad_map_1(tao_cls: Type[AnyTao]):
         ) == {"i", "j", "k", "dz", "deriv"}
 
 
-def test_ele_lord_slave_1(tao_cls: Type[AnyTao]):
+def test_ele_lord_slave_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
@@ -210,7 +208,7 @@ def test_ele_lord_slave_1(tao_cls: Type[AnyTao]):
         }
 
 
-def test_ele_multipoles_1(tao_cls: Type[AnyTao]):
+def test_ele_multipoles_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
@@ -221,7 +219,7 @@ def test_ele_multipoles_1(tao_cls: Type[AnyTao]):
         assert "KnL" in res or "An" in res["data"][0]
 
 
-def test_ele_taylor_1(tao_cls: Type[AnyTao]):
+def test_ele_taylor_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_taylor"
     ) as tao:
@@ -231,7 +229,7 @@ def test_ele_taylor_1(tao_cls: Type[AnyTao]):
     assert res["data"][0]["index"] == 1
 
 
-def test_ele_spin_taylor_1(tao_cls: Type[AnyTao]):
+def test_ele_spin_taylor_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_spin"
     ) as tao:
@@ -249,7 +247,7 @@ def test_ele_spin_taylor_1(tao_cls: Type[AnyTao]):
     }
 
 
-def test_ele_wall3d_1(tao_cls: Type[AnyTao]):
+def test_ele_wall3d_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall3d"
     ) as tao:
@@ -258,7 +256,7 @@ def test_ele_wall3d_1(tao_cls: Type[AnyTao]):
     assert res[0]["section"] == 1
 
 
-def test_em_field_1(tao_cls: Type[AnyTao]):
+def test_em_field_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
@@ -266,7 +264,7 @@ def test_em_field_1(tao_cls: Type[AnyTao]):
     assert "B1" in res
 
 
-def test_enum_1(tao_cls: Type[AnyTao]):
+def test_enum_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
@@ -274,7 +272,7 @@ def test_enum_1(tao_cls: Type[AnyTao]):
     assert set(res[0].keys()) == {"number", "name"}
 
 
-def test_floor_plan_1(tao_cls: Type[AnyTao]):
+def test_floor_plan_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls,
         init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
@@ -284,7 +282,7 @@ def test_floor_plan_1(tao_cls: Type[AnyTao]):
     assert "branch_index" in res[0]
 
 
-def test_floor_orbit_1(tao_cls: Type[AnyTao]):
+def test_floor_orbit_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls,
         init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_floor_orbit",
@@ -299,14 +297,14 @@ def test_floor_orbit_1(tao_cls: Type[AnyTao]):
     assert "orbits" in res[0]
 
 
-def test_help_1(tao_cls: Type[AnyTao]):
+def test_help_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
         print(tao.help())
 
 
-def test_inum_1(tao_cls: Type[AnyTao]):
+def test_inum_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
@@ -316,28 +314,28 @@ def test_inum_1(tao_cls: Type[AnyTao]):
         assert isinstance(res[0], int)
 
 
-def test_lat_calc_done_1(tao_cls: Type[AnyTao]):
+def test_lat_calc_done_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
         assert tao.lat_calc_done(branch_name="1@0") in {True, False}
 
 
-def test_lat_branch_list_1(tao_cls: Type[AnyTao]):
+def test_lat_branch_list_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
         tao.lat_branch_list(ix_uni="1")
 
 
-def test_lat_param_units_1(tao_cls: Type[AnyTao]):
+def test_lat_param_units_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
         assert isinstance(tao.lat_param_units(param_name="L"), str)
 
 
-def test_lord_control(tao_cls: Type[AnyTao]):
+def test_lord_control(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
@@ -345,7 +343,7 @@ def test_lord_control(tao_cls: Type[AnyTao]):
         assert "key" in d_list[0]
 
 
-def test_slave_control(tao_cls: Type[AnyTao]):
+def test_slave_control(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
@@ -356,14 +354,14 @@ def test_slave_control(tao_cls: Type[AnyTao]):
         assert d_list[0]["value"] is None
 
 
-def test_plot_lat_layout_1(tao_cls: Type[AnyTao]):
+def test_plot_lat_layout_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
         assert "ix_ele" in tao.plot_lat_layout(ix_uni="1", ix_branch="0")[0]
 
 
-def test_plot_line_1(tao_cls: Type[AnyTao]):
+def test_plot_line_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls,
         init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_plot_line",
@@ -372,7 +370,7 @@ def test_plot_line_1(tao_cls: Type[AnyTao]):
     assert "x" in res[0]
 
 
-def test_plot_line_2(tao_cls: Type[AnyTao]):
+def test_plot_line_2(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls,
         init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_plot_line",
@@ -386,7 +384,7 @@ def test_plot_line_2(tao_cls: Type[AnyTao]):
         assert "index" in res[0]
 
 
-def test_plot_symbol_1(tao_cls: Type[AnyTao]):
+def test_plot_symbol_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls,
         init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_plot_line",
@@ -395,14 +393,14 @@ def test_plot_symbol_1(tao_cls: Type[AnyTao]):
     assert "index" in res[0]
 
 
-def test_shape_list_1(tao_cls: Type[AnyTao]):
+def test_shape_list_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
         assert "shape_index" in tao.shape_list(who="floor_plan")[0]
 
 
-def test_shape_pattern_list_1(tao_cls: Type[AnyTao]):
+def test_shape_pattern_list_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_shape"
     ) as tao:
@@ -413,27 +411,27 @@ def test_shape_pattern_list_1(tao_cls: Type[AnyTao]):
     }
 
 
-def test_show_1(tao_cls: Type[AnyTao]):
+def test_show_1(tao_cls: type[AnyTao]):
     pytest.skip("TODO")
     tao = new_tao(init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init")
     tao.show(line="-python")
 
 
-def test_species_to_int_1(tao_cls: Type[AnyTao]):
+def test_species_to_int_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
         assert isinstance(tao.species_to_int(species_str="electron"), int)
 
 
-def test_species_to_str_1(tao_cls: Type[AnyTao]):
+def test_species_to_str_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
         assert isinstance(tao.species_to_str(species_int="-1"), str)
 
 
-def test_spin_invariant_1(tao_cls: Type[AnyTao]):
+def test_spin_invariant_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
@@ -451,7 +449,7 @@ def test_spin_invariant_1(tao_cls: Type[AnyTao]):
         assert "index" in res[0]
 
 
-def test_spin_polarization_1(tao_cls: Type[AnyTao]):
+def test_spin_polarization_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
@@ -460,7 +458,7 @@ def test_spin_polarization_1(tao_cls: Type[AnyTao]):
     assert "anom_moment_times_gamma" in res
 
 
-def test_spin_resonance_1(tao_cls: Type[AnyTao]):
+def test_spin_resonance_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
@@ -469,7 +467,7 @@ def test_spin_resonance_1(tao_cls: Type[AnyTao]):
     assert "spin_tune" in res
 
 
-def test_super_universe_1(tao_cls: Type[AnyTao]):
+def test_super_universe_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
@@ -480,7 +478,7 @@ def test_super_universe_1(tao_cls: Type[AnyTao]):
     assert "n_var_used" in res
 
 
-def test_var_1(tao_cls: Type[AnyTao]):
+def test_var_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls,
         init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
@@ -490,7 +488,7 @@ def test_var_1(tao_cls: Type[AnyTao]):
     assert "weight" in res
 
 
-def test_var_2(tao_cls: Type[AnyTao]):
+def test_var_2(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls,
         init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
@@ -500,7 +498,7 @@ def test_var_2(tao_cls: Type[AnyTao]):
     assert "index" in res[0]
 
 
-def test_var_general_1(tao_cls: Type[AnyTao]):
+def test_var_general_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
@@ -509,7 +507,7 @@ def test_var_general_1(tao_cls: Type[AnyTao]):
     assert "name" in res[0]
 
 
-def test_var_v1_array_1(tao_cls: Type[AnyTao]):
+def test_var_v1_array_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
@@ -519,7 +517,7 @@ def test_var_v1_array_1(tao_cls: Type[AnyTao]):
     assert "name" in res["data"][0]
 
 
-def test_lat_list_from_chris(tao_cls: Type[AnyTao]):
+def test_lat_list_from_chris(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/bmad-doc/tao_examples/cesr/tao.init"
     ) as tao:
@@ -527,7 +525,7 @@ def test_lat_list_from_chris(tao_cls: Type[AnyTao]):
     assert isinstance(names[0], str)
 
 
-def test_plot_graph_1(tao_cls: Type[AnyTao]):
+def test_plot_graph_1(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls,
         init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
@@ -537,7 +535,7 @@ def test_plot_graph_1(tao_cls: Type[AnyTao]):
     assert "name" in res
 
 
-def test_parse_version(tao_cls: Type[AnyTao]):
+def test_parse_version(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls,
         init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
@@ -546,7 +544,7 @@ def test_parse_version(tao_cls: Type[AnyTao]):
     assert isinstance(res, datetime)
 
 
-def test_parse_wall3d_radius(caplog, tao_cls: Type[AnyTao]):
+def test_parse_wall3d_radius(caplog, tao_cls: type[AnyTao]):
     with ensure_successful_parsing(caplog):
         with new_tao(
             tao_cls,

@@ -4,7 +4,7 @@ inputs:
   python-version:
     description: Python version
     required: false
-    default: "3.9"
+    default: "3.10"
 runs:
   using: "composite"
   steps:
@@ -15,9 +15,14 @@ runs:
         activate-environment: pytao-dev
         use-mamba: true
         channels: conda-forge
-        environment-file: dev-environment.yml
+        environment-file: environment.yml
         python-version: ${{ inputs.python-version }}
         conda-remove-defaults: true
+
+    - name: Install PyTao
+      shell: bash -l {0}
+      run: |
+        python -m pip install -vv --no-deps -e .
 
     - name: Show the installed packages
       shell: bash -l {0}

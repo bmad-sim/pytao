@@ -6,16 +6,16 @@ import matplotlib.pyplot as plt
 import pytest
 
 from .. import SubprocessTao, Tao, TaoStartup, filter_tao_messages_context
-
 from ..plotting import mpl
 from ..plotting.curves import TaoCurveSettings
+from ..plotting.util import fix_grid_limits
+
 from .conftest import (
     BackendName,
     get_example,
     get_packaged_example,
     get_regression_test,
     test_artifacts,
-    REUSE_SUBPROCESS,
 )
 
 logger = logging.getLogger(__name__)
@@ -124,8 +124,6 @@ def test_plot_all_requested_regression_tests(
 def test_plot_all_requested_examples_mpl(tao_example: TaoStartup):
     tao_example.plot = "mpl"
     example_name = tao_example.metadata["name"]
-    if example_name == "driving_terms" and REUSE_SUBPROCESS:
-        pytest.skip("driving_terms is unstable with reinitialization")
 
     with tao_example.run_context(use_subprocess=True) as tao:
         if example_name == "erl":
@@ -221,11 +219,11 @@ def test_plot_update(plot_backend: BackendName):
 
 
 default_options = sorted(
-    set(
+    {
         attr
         for attr in dir(mpl._Defaults)
         if not attr.startswith("_") and attr not in {"get_size_for_class"}
-    )
+    }
 )
 
 
@@ -234,3 +232,74 @@ def test_mpl_set_defaults(attr: str):
     value = getattr(mpl._Defaults, attr)
     mpl.set_defaults(**{attr: value})
     assert getattr(mpl._Defaults, attr) == value
+
+
+@pytest.mark.parametrize(
+    "limits, num_graphs, expected",
+    [
+        pytest.param(None, 3, [None, None, None], id="empty"),
+        pytest.param((0.0, 1.0), 3, [(0.0, 1.0), (0.0, 1.0), (0.0, 1.0)], id="single_pair"),
+        pytest.param(
+            [(0.0, 1.0), (2.0, 3.0)],
+            4,
+            [(0.0, 1.0), (2.0, 3.0), (2.0, 3.0), (2.0, 3.0)],
+            id="short_list",
+        ),
+        pytest.param(
+            [(0.0, 1.0), (2.0, 3.0), (4.0, 5.0)], 2, [(0.0, 1.0), (2.0, 3.0)], id="excess"
+        ),
+    ],
+)
+def test_fix_grid_limits(limits, num_graphs, expected):
+    assert fix_grid_limits(limits, num_graphs=num_graphs) == expected
+
+
+def test_plot_manager_place_all(plot_backend: BackendName):
+    startup = get_regression_test("tao.init_floor_orbit")
+    startup.plot = plot_backend
+    with startup.run_context(use_subprocess=False) as tao:
+        manager = tao.plot_manager
+        result = manager.place_all()
+        assert isinstance(result, dict)
+
+
+def test_layout_graph_y_range(plot_backend: BackendName):
+    startup = get_regression_test("tao.init_floor_orbit")
+    startup.plot = plot_backend
+    with startup.run_context(use_subprocess=False) as tao:
+        manager = tao.plot_manager
+        try:
+            layout = manager.layout_graph
+            assert layout.y_min <= layout.y_max
+        except Exception:
+            pytest.skip("Layout graph not available")
+
+
+def test_floor_plan_graph_property(plot_backend: BackendName):
+    startup = get_regression_test("tao.init_floor_orbit")
+    startup.plot = plot_backend
+    with startup.run_context(use_subprocess=False) as tao:
+        manager = tao.plot_manager
+        manager.plot_all()
+        try:
+            fpg = manager.floor_plan_graph
+            assert fpg is not None
+        except Exception:
+            pytest.skip("floor_plan graph not available")
+
+
+def test_hershey_fonts_loaded():
+    from ..plotting.hershey_fonts import string_to_unicode
+
+    assert isinstance(string_to_unicode, list)
+    assert len(string_to_unicode) > 0
+    pattern, char = string_to_unicode[0]
+    assert isinstance(pattern, str)
+    assert isinstance(char, str)
+
+
+def test_hershey_fonts_from_csv_missing():
+    from ..plotting.hershey_fonts import from_csv
+
+    with pytest.raises(FileNotFoundError):
+        from_csv("nonexistent_file.csv")

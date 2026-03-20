@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 import contextlib
-import ctypes
-import dataclasses
 import io
 import logging
 import os
@@ -12,14 +10,15 @@ import subprocess
 import sys
 import tempfile
 import threading
-import typing
-from typing import Any, Callable, Dict, List, Optional, Union, cast
+from collections.abc import Callable
+from typing import Any, Literal, Optional, Union, cast
 
 import numpy as np
-from typing_extensions import Literal, NotRequired, TypedDict, override
+from typing_extensions import NotRequired, TypedDict, override
 
-from .interface_commands import Tao, TaoStartup
-from .tao_ctypes.util import error_filter_context, TaoCommandError, TaoInitializationError
+from .errors import TaoCommandError, TaoInitializationError
+from .startup import TaoStartup
+from .tao import Tao
 
 logger = logging.getLogger(__name__)
 
@@ -40,8 +39,7 @@ SupportedKwarg = Union[float, int, str, bool, bytes, dict, list, tuple, set, np.
 class SubprocessRequest(TypedDict):
     command: Command
     arg: str
-    kwargs: NotRequired[Dict[str, Any]]
-    capture_ctx: NotRequired[dict]
+    kwargs: NotRequired[dict[str, Any]]
 
 
 class SubprocessErrorResult(TypedDict):
@@ -65,133 +63,27 @@ class TaoDisconnectedError(Exception):
     pass
 
 
-def read_length_from_pipe(pipe) -> int:
-    """
-    Get the buffer length from the pipe.
-
-    Parameters
-    ----------
-    pipe : file-like object
-
-    Returns
-    -------
-    int
-        Buffer length.
-
-    Raises
-    ------
-    TaoDisconnectedError
-        If the pipe is closed and a length cannot be read.
-    """
-    length_bytes = pipe.read(ctypes.sizeof(ctypes.c_uint32))
-    if not length_bytes:
-        logger.debug("<- disconnected")
-        raise TaoDisconnectedError()
-    length = ctypes.c_uint32.from_buffer(bytearray(length_bytes))
-    return length.value
-
-
-def read_pickled_data(pipe):
-    """
-    Read pickled data from the pipe.
-
-    Parameters
-    ----------
-    pipe : file-like object
-
-    Returns
-    -------
-    dict
-        Deserialized data.  Numpy arrays are handled automatically.
-
-    Raises
-    ------
-    TaoDisconnectedError
-        If the pipe is closed and a length cannot be read.
-    """
-    length = read_length_from_pipe(pipe)
-    buffer = pipe.read(length)
-    if len(buffer) != length:
-        logger.debug("<- disconnected")
-        raise TaoDisconnectedError()
-    data = pickle.loads(buffer)
-    res = data.get("result", None)
-    if isinstance(res, dict) and "__type__" in res:
-        data["result"] = dict_to_array(cast(SerializedArray, res))
-    logger.debug(f"<- {data}")
-    return data
-
-
 def write_pickled_data(file, data):
-    """
-    Write pickled data to the file (named pipe / FIFO).
-
-    Parameters
-    ----------
-    file : file-like object
-    data :
-        Picklable data
-    """
-    logger.debug(f"-> {data}")
-    message_bytes = pickle.dumps(data) + b"\n"
-    to_write = bytes(ctypes.c_uint32(len(message_bytes))) + message_bytes
-    file.write(to_write)
+    """Write pickled data through the pipe."""
+    pickle.dump(data, file, protocol=pickle.HIGHEST_PROTOCOL)
     file.flush()
 
 
-class SerializedArray(typing.TypedDict):
-    """Representation of a serialized numpy array as a picklable dict."""
-
-    __type__: typing.Literal["array"]
-    shape: typing.Tuple[int, ...]
-    dtype: np.dtype
-    data: bytes
-
-
-def array_to_dict(arr: np.ndarray) -> SerializedArray:
-    return {
-        "__type__": "array",
-        "shape": arr.shape,
-        "dtype": arr.dtype,
-        "data": arr.tobytes(),
-    }
+def read_pickled_data(pipe):
+    """Read pickled data from the pipe."""
+    try:
+        return pickle.load(pipe)
+    except EOFError:
+        raise TaoDisconnectedError(
+            "Subprocess data transfer reached end of file (EOF)"
+        ) from None
 
 
-def deserialize_value(value: SupportedKwarg):
-    if isinstance(value, (float, int, str, bytes, bool)):
-        return value
-    if isinstance(value, dict):
-        if "__type__" in value:
-            return dict_to_array(cast(SerializedArray, value))
-        return {key: deserialize_value(value) for key, value in value.items()}
-    if isinstance(value, (list, tuple, set)):
-        return type(value)(deserialize_value(v) for v in value)
-    if isinstance(value, np.ndarray):
-        return value
-    raise ValueError(f"Unsupported data type for deserialization: {type(value)}")
-
-
-def serialize_value(value: Any):
-    if isinstance(value, (float, int, str, bytes)):
-        return value
-    if isinstance(value, dict):
-        return {key: serialize_value(value) for key, value in value.items()}
-    if isinstance(value, np.ndarray):
-        return array_to_dict(value)
-    if isinstance(value, (list, tuple, set)):
-        return type(value)(serialize_value(v) for v in value)
-    raise ValueError(f"Unsupported data type for serialization: {type(value)}")
-
-
-def dict_to_array(data: SerializedArray) -> np.ndarray:
-    """Deserialize a SerializedArray back to a np.ndarray."""
-    assert isinstance(data, dict)
-    assert data["__type__"] == "array"
-    arr = np.frombuffer(bytearray(data["data"]), dtype=data["dtype"])
-    return arr.reshape(data["shape"])
-
-
-def _get_result(value: SubprocessResult, raises: bool = True, initializing: bool = False):
+def _get_result(
+    value: SubprocessResult,
+    propagate_exceptions: bool = True,
+    initializing: bool = False,
+):
     """
     Pick out the result data from the subprocess return value.
 
@@ -199,15 +91,18 @@ def _get_result(value: SubprocessResult, raises: bool = True, initializing: bool
     ----------
     value : dict
         The deserialized dictionary result from the subprocess.
-    raises : bool, optional
-        Raise on errors.
+    propagate_exceptions : bool, optional
+        Re-raise Python exceptions from the subprocess (e.g.,
+        TaoInitializationError, uninitialized Tao). This does NOT
+        control Tao-level error checking of output lines — that is
+        handled separately by ``_check_output_lines`` in the parent.
+    initializing : bool, optional
+        If True, re-raised exceptions use TaoInitializationError.
 
     Returns
     -------
     result :
         The deserialized result of the command from the subprocess.
-    output : list of str
-        Tao's raw output.
     """
     if not isinstance(value, dict):
         raise ValueError(f"Unexpected result type: {type(value)}")
@@ -219,7 +114,7 @@ def _get_result(value: SubprocessResult, raises: bool = True, initializing: bool
         error_cls = value.get("error_cls")
         tb = value.get("traceback", "")
         tao_output = value.get("tao_output", "")
-        if raises:
+        if propagate_exceptions:
             err_cls = TaoInitializationError if initializing else TaoCommandError
             ex = err_cls(
                 f"Tao in subprocess raised {error_cls}: {error}",
@@ -244,11 +139,11 @@ class _TaoPipe:
 
     _init_queue: queue.Queue
     _subproc: subprocess.Popen
-    _fifo: Optional[io.BufferedReader]
-    _subprocess_monitor_thread: Optional[threading.Thread]
-    _subprocess_env: Dict[str, str]
+    _fifo: io.BufferedReader | None
+    _subprocess_monitor_thread: threading.Thread | None
+    _subprocess_env: dict[str, str]
 
-    def __init__(self, env: Dict[str, str]):
+    def __init__(self, env: dict[str, str]):
         self._init_queue = queue.Queue(maxsize=1)
         self._subprocess_env = env.copy()
         self._subproc = self._init_subprocess()
@@ -262,7 +157,7 @@ class _TaoPipe:
     def close(self) -> None:
         """Close the pipe."""
         try:
-            self.send_receive("quit", "", raises=False)
+            self.send_receive("quit", "", propagate_exceptions=False)
         except TaoDisconnectedError:
             pass
 
@@ -312,11 +207,8 @@ class _TaoPipe:
         """Send `cmd` with `argument` over the pipe."""
         assert self._subproc.stdin is not None
         req: SubprocessRequest = {"command": cmd, "arg": argument}
-        ctx = error_filter_context.get()
         if kwargs:
-            req["kwargs"] = serialize_value(kwargs)
-        if ctx is not None:
-            req["capture_ctx"] = dataclasses.asdict(ctx)
+            req["kwargs"] = kwargs
         return write_pickled_data(self._subproc.stdin, req)
 
     def _receive(self) -> SubprocessResult:
@@ -345,7 +237,7 @@ class _TaoPipe:
 
         return self._subproc
 
-    def send_receive(self, cmd: Command, argument: str, raises: bool):
+    def send_receive(self, cmd: Command, argument: str, propagate_exceptions: bool = True):
         """
         Send a command and receive a result through the pipe.
 
@@ -355,8 +247,8 @@ class _TaoPipe:
             The command class to send.
         argument : str
             The argument to send to the command.
-        raises : bool
-            Raise if the subprocess command raises or disconnects.
+        propagate_exceptions : bool
+            Re-raise Python exceptions from the subprocess.
 
         Returns
         -------
@@ -369,15 +261,21 @@ class _TaoPipe:
         try:
             self._send(cmd, argument)
             received = self._receive()
-            result = _get_result(received, raises=raises, initializing=cmd == "init")
+            result = _get_result(
+                received,
+                propagate_exceptions=propagate_exceptions,
+                initializing=cmd == "init",
+            )
             return received["tao_output"], result
         except BrokenPipeError:
+            if cmd == "quit":
+                return "", None
             raise TaoCommandError(
                 f"Tao command {cmd}({argument!r}) was unable to complete as the subprocess "
                 f"has already exited."
             )
 
-    def send_receive_custom(self, func: Callable, kwargs: Dict[str, SupportedKwarg]):
+    def send_receive_custom(self, func: Callable, kwargs: dict[str, SupportedKwarg]):
         """
         Run a custom function in the subprocess and retrieve its result.
 
@@ -405,8 +303,7 @@ class _TaoPipe:
         try:
             self._send("function", f"{func.__module__}.{func.__name__}", **kwargs)
             received = self._receive()
-            result = _get_result(received, raises=True)
-            return deserialize_value(result)
+            return _get_result(received, propagate_exceptions=True)
         except BrokenPipeError:
             raise TaoCommandError(
                 f"Function {func.__name__}() was unable to complete as the subprocess "
@@ -416,10 +313,10 @@ class _TaoPipe:
 
 @contextlib.contextmanager
 def subprocess_timeout_context(
-    taos: List[SubprocessTao],
+    taos: list[SubprocessTao],
     timeout: float,
     *,
-    timeout_hook: Optional[Callable[[], None]] = None,
+    timeout_hook: Callable[[], None] | None = None,
 ):
     """
     Context manager to set a timeout for a block of SubprocessTao calls.
@@ -532,26 +429,20 @@ class SubprocessTao(Tao):
         That is, `tao.close_subprocess()` and `tao.init()`.
     """
 
-    _subproc_pipe_: Optional[_TaoPipe]
+    _subproc_pipe_: _TaoPipe | None
 
-    def __init__(self, *args, env: Optional[Dict[str, str]] = None, **kwargs):
+    def __init__(self, *args, env: dict[str, str] | None = None, **kwargs):
         self._subproc_pipe_ = None
         self.subprocess_env = dict(env if env is not None else os.environ)
 
         try:
-            # There is a bit of spaghetti here:
-            # * super().__init__() calls
-            # * self.init() which wraps
-            # * self._init() which is defined below in this class, opening the subproc
             super().__init__(*args, **kwargs)
-        except Exception as ex:
-            # In case we don't make a usable SubprocessTao object, close the
-            # subprocess so it doesn't linger.
+        except Exception:
             try:
                 self.close_subprocess()
             except Exception:
                 pass
-            raise ex
+            raise
 
     @property
     def subprocess_alive(self) -> bool:
@@ -609,15 +500,42 @@ class SubprocessTao(Tao):
             pass
 
     def _send_command_through_pipe(self, command: Command, tao_cmdline: str, raises: bool):
+        """
+        Send a command to the subprocess and process the result.
+
+        The subprocess always runs Tao commands with ``raises=False``. All
+        Tao-level error checking is done here in the parent process via
+        ``_check_output_lines``, which respects the parent's
+        ``error_filter_context``.
+
+        Uncaught errors in the subprocess will be propagated regardless of
+        ``raises``.
+        """
         if not self.subprocess_alive:
             raise TaoDisconnectedError(
                 "Tao subprocess is no longer running. Make a new `SubprocessTao` "
                 "object or reinitialize with `.init()`."
             )
         assert self._subproc_pipe_ is not None
-        output, result = self._subproc_pipe_.send_receive(command, tao_cmdline, raises=raises)
+        output, result = self._subproc_pipe_.send_receive(command, tao_cmdline)
         output_lines = output.splitlines()
         self._last_output = output_lines
+
+        if command == "init":
+            raw_output, messages = self._check_output_lines(
+                tao_cmdline, output_lines, raises=False
+            )
+            for msg in messages:
+                self._log(tao_cmdline, msg)
+        else:
+            raw_output, messages = self._check_output_lines(
+                tao_cmdline, output_lines, raises=raises
+            )
+            for msg in messages:
+                self._log(tao_cmdline, msg)
+            if command == "cmd":
+                result = raw_output
+
         return result
 
     def subprocess_call(self, func: Callable, **kwargs):
@@ -648,24 +566,29 @@ class SubprocessTao(Tao):
         return self._send_command_through_pipe("init", startup.tao_init, raises=True)
 
     @override
-    def cmd(self, cmd: str, raises: bool = True) -> List[str]:
+    def cmd(self, cmd: str, raises: bool = True) -> list[str]:
         """Runs a command, and returns the output."""
-        res = self._send_command_through_pipe("cmd", cmd, raises=raises)
-        return cast(List[str], res)
+        return self._send_command_through_pipe("cmd", cmd, raises=raises)
 
     @override
-    def cmd_real(self, cmd: str, raises: bool = True) -> Optional[np.ndarray]:
+    def cmd_real(self, cmd: str, raises: bool = True) -> np.ndarray | None:
         """Runs a command, and returns a floating point array."""
-        res = self._send_command_through_pipe("cmd_real", cmd, raises=raises)
-        return cast(Optional[np.ndarray], res)
+        return cast(
+            Optional[np.ndarray],
+            self._send_command_through_pipe("cmd_real", cmd, raises=raises),
+        )
 
     @override
-    def cmd_integer(self, cmd: str, raises: bool = True) -> Optional[np.ndarray]:
+    def cmd_integer(self, cmd: str, raises: bool = True) -> np.ndarray | None:
         """Runs a command, and returns an integer array."""
-        res = self._send_command_through_pipe("cmd_integer", cmd, raises=raises)
-        return cast(Optional[np.ndarray], res)
+        return cast(
+            Optional[np.ndarray],
+            self._send_command_through_pipe("cmd_integer", cmd, raises=raises),
+        )
 
     def get_active_beam_track_element(self) -> int:
         """Get the active element index being tracked."""
-        res = self._send_command_through_pipe("get_active_beam_track_element", "", raises=True)
-        return cast(int, res)
+        return cast(
+            int,
+            self._send_command_through_pipe("get_active_beam_track_element", "", raises=True),
+        )

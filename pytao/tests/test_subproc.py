@@ -1,15 +1,25 @@
 from __future__ import annotations
 
 import time
-from typing import Any, Callable, Dict, Generator
+from collections.abc import Callable, Generator
+from typing import Any
 
 import numpy as np
 import pytest
 
 from .. import SubprocessTao
-from ..interface_commands import Tao
-from ..subproc import SupportedKwarg, TaoDisconnectedError
-from ..tao_ctypes.util import TaoCommandError
+from ..errors import TaoCommandError, filter_tao_messages_context
+from ..subproc import SubprocessErrorResult, SupportedKwarg, TaoDisconnectedError, _get_result
+from ..tao import Tao
+
+
+def test_context_manager_alive():
+    with SubprocessTao(
+        init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/csr_beam_tracking/tao.init",
+        noplot=True,
+    ) as tao:
+        assert tao.subprocess_alive
+    assert not tao.subprocess_alive
 
 
 def test_crash_and_recovery() -> None:
@@ -17,13 +27,12 @@ def test_crash_and_recovery() -> None:
     with SubprocessTao(init=init) as tao:
         # tao.init("-init regression_tests/pipe_test/tao.init_plot_line -external_plotting")
         bunch1 = tao.bunch1(ele_id="end", coordinate="x", which="model", ix_bunch="1")
-        print("bunch1=", bunch1)
 
         assert tao._subproc_pipe_ is not None
 
         with pytest.raises(TaoDisconnectedError):
             # Close the pipe earlier than expected
-            tao._subproc_pipe_.send_receive("quit", "", raises=True)
+            tao._subproc_pipe_.send_receive("quit", "", propagate_exceptions=True)
         time.sleep(0.5)
 
         print("Re-initializing:")
@@ -42,7 +51,7 @@ def tao_custom_command(tao: Tao, value: Any):
 
 
 @pytest.fixture(scope="module")
-def subproc_tao() -> Generator[SubprocessTao, None, None]:
+def subproc_tao() -> Generator[SubprocessTao]:
     with SubprocessTao(
         init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/csr_beam_tracking/tao.init",
         noplot=True,
@@ -112,7 +121,7 @@ def subproc_tao() -> Generator[SubprocessTao, None, None]:
 def test_custom_command(
     subproc_tao: SubprocessTao,
     func: Callable,
-    kwargs: Dict[str, SupportedKwarg],
+    kwargs: dict[str, SupportedKwarg],
     expected_result: Any,
 ) -> None:
     res = subproc_tao.subprocess_call(func, **kwargs)
@@ -158,3 +167,117 @@ def test_custom_command_timeout_success(subproc_tao: SubprocessTao) -> None:
     with subproc_tao.timeout(10.0):
         res = subproc_tao.subprocess_call(tao_custom_command, value=1)
         assert res == 2
+
+
+def _tao_cmd_raises(tao: Tao, cmd: str):
+    """Run a command with raises=True inside the subprocess."""
+    return tao.cmd(cmd, raises=True)
+
+
+def test_error_filter_context_cmd(subproc_tao: SubprocessTao) -> None:
+    bad_cmd = "sho ele 100000"
+
+    with pytest.raises(TaoCommandError):
+        subproc_tao.cmd(bad_cmd)
+
+    res = subproc_tao.cmd(bad_cmd, raises=False)
+    assert not res
+    print(subproc_tao._last_output)
+    func_names = [msg.function for msg in subproc_tao.last_messages]
+
+    assert "lat_ele1_locator" in func_names
+
+    with filter_tao_messages_context(functions=func_names):
+        result = subproc_tao.cmd(bad_cmd, raises=True)
+        assert not result
+        # assert not subproc_tao.last_output
+
+
+def test_error_filter_context_cmd_real(subproc_tao: SubprocessTao) -> None:
+    arr = subproc_tao.lat_list("*", "ele.s")
+    assert isinstance(arr, np.ndarray)
+    assert len(arr) > 0
+
+    with pytest.raises(TaoCommandError):
+        subproc_tao.evaluate("1/0", raises=True)
+
+    func_names = [msg.function for msg in subproc_tao.last_messages]
+
+    str_list: list[str] = subproc_tao.lat_list("*", "ele.s", flags="-track_only")
+    assert isinstance(str_list, list)
+
+    arr = subproc_tao.lat_list("*", "ele.s")
+    assert isinstance(arr, np.ndarray)
+
+    assert len(str_list) == len(arr)
+
+    with filter_tao_messages_context(functions=func_names):
+        # no 'with raises' block here, as we're filtering it
+        output = subproc_tao.evaluate("1/0", raises=True)
+        # output still not really useful, but that's OK I suppose.
+        assert isinstance(output, np.ndarray)
+        assert output.shape == (0,)
+        assert "Divide by zero" in subproc_tao.last_messages[0].message
+        assert "Invalid expression" in subproc_tao.last_messages[1].message
+
+
+def test_get_result_error_no_propagate():
+    value: SubprocessErrorResult = {
+        "error": "some error",
+        "error_cls": "ValueError",
+        "traceback": "traceback here",
+        "tao_output": "some output",
+    }
+    result = _get_result(value, propagate_exceptions=False)
+    assert result == "some output"
+
+
+def test_get_result_error_propagate():
+    value: SubprocessErrorResult = {
+        "error": "boom",
+        "error_cls": "RuntimeError",
+        "traceback": "tb",
+        "tao_output": "out",
+    }
+    with pytest.raises(TaoCommandError, match="boom"):
+        _get_result(value, propagate_exceptions=True)
+
+
+def test_subprocess_call_after_close():
+    def dummy(tao_obj):
+        return 1
+
+    with SubprocessTao(
+        init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/csr_beam_tracking/tao.init",
+        noplot=True,
+    ) as tao:
+        tao.close_subprocess()
+        with pytest.raises(TaoDisconnectedError):
+            tao.subprocess_call(dummy)
+
+
+def test_send_receive_custom_not_callable():
+    with SubprocessTao(
+        init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/csr_beam_tracking/tao.init",
+        noplot=True,
+    ) as tao:
+        pipe = tao._subproc_pipe_
+        assert pipe is not None
+        with pytest.raises(ValueError, match="not callable"):
+            pipe.send_receive_custom("not_callable", {})  # type: ignore
+
+
+def test_send_receive_custom_main_module():
+    def local_func():
+        pass
+
+    local_func.__module__ = "__main__"
+
+    with SubprocessTao(
+        init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/csr_beam_tracking/tao.init",
+        noplot=True,
+    ) as tao:
+        pipe = tao._subproc_pipe_
+        assert pipe is not None
+        with pytest.raises(ValueError, match="not in an importable module"):
+            pipe.send_receive_custom(local_func, {})

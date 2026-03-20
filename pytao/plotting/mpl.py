@@ -4,7 +4,8 @@ import functools
 import logging
 import pathlib
 import time
-from typing import ClassVar, Dict, List, Literal, Optional, Sequence, Tuple, Union
+from collections.abc import Sequence
+from typing import ClassVar, Literal
 
 import matplotlib.axes
 import matplotlib.axis
@@ -54,14 +55,14 @@ class _Defaults:
 
 
 def set_defaults(
-    layout_height: Optional[float] = None,
-    colormap: Optional[str] = None,
-    line_width_scale: Optional[float] = None,
-    floor_line_width_scale: Optional[float] = None,
-    figsize: Optional[Tuple[float, float]] = None,
-    width: Optional[float] = None,
-    height: Optional[float] = None,
-    dpi: Optional[int] = None,
+    layout_height: float | None = None,
+    colormap: str | None = None,
+    line_width_scale: float | None = None,
+    floor_line_width_scale: float | None = None,
+    figsize: tuple[float, float] | None = None,
+    width: float | None = None,
+    height: float | None = None,
+    dpi: int | None = None,
 ):
     """
     Set default values for Matplotlib plot settings.
@@ -110,8 +111,8 @@ def set_defaults(
 def setup_matplotlib_ticks(
     graph: AnyGraph,
     ax: matplotlib.axes.Axes,
-    user_xlim: Optional[Limit],
-    user_ylim: Optional[Limit],
+    user_xlim: Limit | None,
+    user_ylim: Limit | None,
 ) -> None:
     if user_xlim is None:
         _setup_matplotlib_xticks(graph, ax)
@@ -174,9 +175,9 @@ def setup_matplotlib_axis(graph: AnyGraph, ax: matplotlib.axes.Axes):
 
 
 def get_figsize(
-    figsize: Optional[Tuple[float, float]] = None,
-    width: Optional[float] = None,
-    height: Optional[float] = None,
+    figsize: tuple[float, float] | None = None,
+    width: float | None = None,
+    height: float | None = None,
 ):
     if figsize is not None:
         return figsize
@@ -206,7 +207,7 @@ def plot_annotation(annotation: PlotAnnotation, ax: matplotlib.axes.Axes):
 def plot_curve_line(
     curve: PlotCurveLine,
     ax: matplotlib.axes.Axes,
-    label: Optional[str] = None,
+    label: str | None = None,
     line_width_scale: float = 1.0,
 ):
     return ax.plot(
@@ -222,7 +223,7 @@ def plot_curve_line(
 def plot_curve_symbols(
     curve: PlotCurveSymbols,
     ax: matplotlib.axes.Axes,
-    label: Optional[str] = None,
+    label: str | None = None,
 ):
     return ax.plot(
         curve.xs,
@@ -357,7 +358,7 @@ def plot_patch(patch: PlotPatch, ax: matplotlib.axes.Axes, line_width_scale: flo
 def plot_layout_shape(
     shape: layout_shapes.AnyLayoutShape,
     ax: matplotlib.axes.Axes,
-    line_width_scale: Optional[float] = None,
+    line_width_scale: float | None = None,
 ):
     if line_width_scale is None:
         line_width_scale = _Defaults.line_width_scale
@@ -387,7 +388,7 @@ def plot_layout_shape(
 def plot_floor_plan_shape(
     shape: floor_plan_shapes.Shape,
     ax: matplotlib.axes.Axes,
-    line_width_scale: Optional[float] = None,
+    line_width_scale: float | None = None,
 ):
     if line_width_scale is None:
         line_width_scale = _Defaults.floor_line_width_scale
@@ -399,7 +400,7 @@ def plot_floor_plan_shape(
             plot_patch(patch, ax, line_width_scale=line_width_scale)
 
 
-def plot(graph: AnyGraph, ax: Optional[matplotlib.axes.Axes] = None) -> matplotlib.axes.Axes:
+def plot(graph: AnyGraph, ax: matplotlib.axes.Axes | None = None) -> matplotlib.axes.Axes:
     if ax is None:
         _, ax = plt.subplots()
 
@@ -477,22 +478,22 @@ class MatplotlibGraphManager(GraphManager):
 
     def plot_grid(
         self,
-        templates: List[str],
-        grid: Tuple[int, int],
+        templates: list[str],
+        grid: tuple[int, int],
         *,
         include_layout: bool = False,
-        figsize: Optional[Tuple[float, float]] = None,
+        figsize: tuple[float, float] | None = None,
         tight_layout: bool = True,
-        share_x: Union[bool, Literal["row", "col", "all"]] = "col",
-        layout_height: Optional[float] = None,
-        width: Optional[float] = None,
-        height: Optional[float] = None,
-        xlim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
-        ylim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
-        curves: Optional[List[Dict[int, TaoCurveSettings]]] = None,
-        settings: Optional[List[TaoGraphSettings]] = None,
-        save: Union[bool, str, pathlib.Path, None] = None,
-        axes: Optional[List[List[matplotlib.axes.Axes]]] = None,
+        share_x: bool | Literal["row", "col", "all"] = "col",
+        layout_height: float | None = None,
+        width: float | None = None,
+        height: float | None = None,
+        xlim: OptionalLimit | Sequence[OptionalLimit] = None,
+        ylim: OptionalLimit | Sequence[OptionalLimit] = None,
+        curves: list[dict[int, TaoCurveSettings]] | None = None,
+        settings: list[TaoGraphSettings] | None = None,
+        save: bool | str | pathlib.Path | None = None,
+        axes: list[list[matplotlib.axes.Axes]] | None = None,
     ):
         """
         Plot graphs on a grid with Matplotlib.
@@ -629,20 +630,20 @@ class MatplotlibGraphManager(GraphManager):
         self,
         template: str,
         *,
-        region_name: Optional[str] = None,
+        region_name: str | None = None,
         include_layout: bool = True,
         tight_layout: bool = True,
-        width: Optional[float] = None,
-        height: Optional[float] = None,
-        layout_height: Optional[float] = None,
-        figsize: Optional[Tuple[float, float]] = None,
+        width: float | None = None,
+        height: float | None = None,
+        layout_height: float | None = None,
+        figsize: tuple[float, float] | None = None,
         share_x: bool = True,
-        xlim: Optional[Limit] = None,
-        ylim: Optional[Limit] = None,
-        save: Union[bool, str, pathlib.Path, None] = None,
-        settings: Optional[TaoGraphSettings] = None,
-        curves: Optional[Dict[int, TaoCurveSettings]] = None,
-        axes: Optional[List[matplotlib.axes.Axes]] = None,
+        xlim: Limit | None = None,
+        ylim: Limit | None = None,
+        save: bool | str | pathlib.Path | None = None,
+        settings: TaoGraphSettings | None = None,
+        curves: dict[int, TaoCurveSettings] | None = None,
+        axes: list[matplotlib.axes.Axes] | None = None,
     ):
         """
         Plot a graph with Matplotlib.
@@ -778,15 +779,15 @@ class MatplotlibGraphManager(GraphManager):
         self,
         ele_id: str,
         *,
-        colormap: Optional[str] = None,
+        colormap: str | None = None,
         radius: float = 0.015,
         num_points: int = 100,
-        figsize: Optional[Tuple[float, float]] = None,
+        figsize: tuple[float, float] | None = None,
         width: int = 4,
         height: int = 4,
         x_scale: float = 1e3,
-        ax: Optional[matplotlib.axes.Axes] = None,
-        save: Union[bool, str, pathlib.Path, None] = None,
+        ax: matplotlib.axes.Axes | None = None,
+        save: bool | str | pathlib.Path | None = None,
     ):
         """
         Plot field information for a given element.

@@ -3,7 +3,7 @@ from __future__ import annotations
 import functools
 import logging
 import sys
-from typing import List, Optional, Sequence, Tuple, Union
+from collections.abc import Sequence
 
 import numpy as np
 
@@ -22,7 +22,7 @@ def circle_intersection(
     x2: float,
     y2: float,
     r: float,
-) -> Tuple[Tuple[float, float], Tuple[float, float]]:
+) -> tuple[tuple[float, float], tuple[float, float]]:
     """Get 2 intersection points of overlapping circles with equal radii."""
     dx = x2 - x1
     dy = y2 - y1
@@ -38,11 +38,11 @@ def circle_intersection(
     return (xs1, ys1), (xs2, ys2)
 
 
-Line = Tuple[float, float, float]
-Intersection = Tuple[float, float]
+Line = tuple[float, float, float]
+Intersection = tuple[float, float]
 
 
-def line(p1: Tuple[float, float], p2: Tuple[float, float]) -> Line:
+def line(p1: tuple[float, float], p2: tuple[float, float]) -> Line:
     """returns lines based on given points to be used with intersect"""
     p1x, p1y = p1
     p2x, p2y = p2
@@ -63,7 +63,7 @@ def intersect(L1: Line, L2: Line) -> Intersection:
     return x, y
 
 
-def apply_factor_to_limits(low: float, high: float, factor: float) -> Tuple[float, float]:
+def apply_factor_to_limits(low: float, high: float, factor: float) -> tuple[float, float]:
     center = (high + low) / 2
     span = factor * (high - low)
     return center - span / 2.0, center + span / 2.0
@@ -114,9 +114,9 @@ def select_graph_manager_class():
 
 
 def fix_grid_limits(
-    limits: Union[OptionalLimit, Sequence[OptionalLimit]],
+    limits: OptionalLimit | Sequence[OptionalLimit],
     num_graphs: int,
-) -> List[Optional[Limit]]:
+) -> list[Limit | None]:
     if not limits:
         return [None] * num_graphs
 

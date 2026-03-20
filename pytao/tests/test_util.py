@@ -1,8 +1,6 @@
-from typing import List, Set
-
 import pytest
 
-from ..tao_ctypes.util import TaoMessage, capture_messages_from_functions, filter_output_lines
+from ..errors import TaoMessage, capture_messages_from_functions, filter_output_lines
 
 
 @pytest.mark.parametrize(
@@ -65,9 +63,9 @@ from ..tao_ctypes.util import TaoMessage, capture_messages_from_functions, filte
     ],
 )
 def test_filter_lines(
-    lines: List[str],
-    functions_to_filter: Set[str],
-    expected_lines: List[str],
+    lines: list[str],
+    functions_to_filter: set[str],
+    expected_lines: list[str],
 ) -> None:
     assert filter_output_lines(lines, functions_to_filter) == expected_lines
 
@@ -135,8 +133,8 @@ def test_filter_lines(
     ],
 )
 def test_capture_messages_from_functions(
-    lines: List[str],
-    expected_lines: List[str],
-    expected_messages: List[TaoMessage],
+    lines: list[str],
+    expected_lines: list[str],
+    expected_messages: list[TaoMessage],
 ) -> None:
     assert capture_messages_from_functions(lines) == (expected_lines, expected_messages)

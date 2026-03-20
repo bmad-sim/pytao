@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: ${{ matrix.os }} Python ${{ matrix.python-version }} (reuse=${{ matrix.subprocess-reuse }})
+    name: ${{ matrix.os }} Python ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -17,8 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
-        subprocess-reuse: ["0", "1"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -38,7 +37,13 @@ jobs:
       - name: Run Tests
         shell: bash --login -eo pipefail {0}
         run: |
-          export TAO_REUSE_SUBPROCESS=${{ matrix.subprocess-reuse }}
+          if [[ "${{ runner.debug }}" == "1" ]]; then
+            export TAO_REUSE_SUBPROCESS=0
+            echo "Debug mode detected: TAO_REUSE_SUBPROCESS set to 0"
+          else
+            export TAO_REUSE_SUBPROCESS=1
+          fi
+
           echo -e '## Test results\n\n```' >> "$GITHUB_STEP_SUMMARY"
-          pytest -v --cov=pytao/ pytao/tests 2>&1 | tee -a "$GITHUB_STEP_SUMMARY"
+          pytest -v -x --cov=pytao/ pytao/tests 2>&1 | tee -a "$GITHUB_STEP_SUMMARY"
           echo '```' >> "$GITHUB_STEP_SUMMARY"

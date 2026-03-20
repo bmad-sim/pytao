@@ -1,10 +1,12 @@
 import pytest
 
-from ..tao_ctypes.util import (
+from ..errors import (
     TaoCommandError,
-    filter_tao_messages_context as filter_ctx,
-    filter_tao_messages,
     error_filter_context,
+    filter_tao_messages,
+)
+from ..errors import (
+    filter_tao_messages_context as filter_ctx,
 )
 
 

@@ -1,18 +1,24 @@
+from __future__ import annotations
+
 import atexit
 import contextlib
+import datetime
 import logging
 import os
 import pathlib
-from typing import Generator, Iterable, List, Optional, Type, TypeVar
+import time
+from collections.abc import Generator, Iterable
+from typing import Literal, TypeVar
 
 import matplotlib
+import pydantic
 import pytest
-from typing_extensions import Literal
 
 from .. import SubprocessTao, Tao, TaoStartup
-from ..tao_ctypes.util import filter_output_lines
+from ..errors import filter_output_lines
 
 matplotlib.use("Agg")
+logger = logging.getLogger(__name__)
 
 test_root = pathlib.Path(__file__).parent.resolve()
 packaged_examples_root = test_root / "input_files"
@@ -33,7 +39,7 @@ def rootdir():
 
 @pytest.fixture
 def config_file(rootdir):
-    return open(f"{rootdir}/test_files/iris_config.yml", "r")
+    return open(f"{rootdir}/test_files/iris_config.yml")
 
 
 @pytest.fixture(autouse=True)
@@ -56,7 +62,7 @@ def ensure_successful_parsing(caplog):
 
 @contextlib.contextmanager
 def error_filter_context(tao: Tao, exclude: Iterable[str]):
-    def get_output(reset: bool = True) -> List[str]:
+    def get_output(reset: bool = True) -> list[str]:
         lines = orig_get_output(reset=reset)
         return filter_output_lines(lines, exclude=set(exclude))
 
@@ -86,7 +92,7 @@ else:
             """Create a new Tao instance and run it using these settings."""
             params = self.tao_class_params
             if use_subprocess:
-                return _get_reusable_subprocess_tao(**params)
+                return _get_reusable_subprocess_tao("", **params)
             return Tao(**params)
 
         @contextlib.contextmanager
@@ -101,6 +107,7 @@ def get_packaged_example(name: str) -> TaoStartup:
         init_file=init_file,
         # nostartup=nostartup,
         metadata={"name": name},
+        noplot=True,
     )
     print(f"Packaged example {name}: {startup.tao_init}")
     return startup
@@ -120,6 +127,8 @@ def get_example(name: str) -> TaoStartup:
         )
     if name == "x_axis_param_plot":
         pytest.skip("'x_axis_param_plot' example fails saying no data is in range")
+    if name == "driving_terms" and REUSE_SUBPROCESS:
+        pytest.skip("driving_terms is unstable with reinitialization")
 
     nostartup = name in {
         # "multi_turn_orbit",
@@ -145,6 +154,7 @@ def get_regression_test(name: str) -> TaoStartup:
         init_file=init_file,
         nostartup=nostartup,
         metadata={"name": init_file.name},
+        noplot=True,
     )
 
 
@@ -180,7 +190,7 @@ def tao_cls(request: pytest.FixtureRequest):
 T = TypeVar("T", bound=Tao)
 
 
-_subproc_tao: Optional[SubprocessTao] = None
+_subproc_tao: SubprocessTao | None = None
 
 
 def _clean_subproc_tao():
@@ -188,11 +198,11 @@ def _clean_subproc_tao():
         _subproc_tao.close_subprocess()
 
 
-def _get_reusable_subprocess_tao(init, **kwargs) -> SubprocessTao:
+def _get_reusable_subprocess_tao(init: str, **kwargs) -> SubprocessTao:
     global _subproc_tao
     if _subproc_tao is None or not _subproc_tao.subprocess_alive:
         atexit.register(_clean_subproc_tao)
-        _subproc_tao = SubprocessTao(init, **kwargs)
+        _subproc_tao = SubprocessTao(init=init, **kwargs)
     else:
         _subproc_tao.init(init, **kwargs)
     return _subproc_tao
@@ -200,12 +210,12 @@ def _get_reusable_subprocess_tao(init, **kwargs) -> SubprocessTao:
 
 @contextlib.contextmanager
 def new_tao(
-    tao_cls: Type[T],
+    tao_cls: type[T],
     init: str = "",
     plot: bool = False,
     external_plotting: bool = True,
     **kwargs,
-) -> Generator[T, None, None]:
+) -> Generator[T]:
     # init = os.path.expandvars(init)
     if external_plotting:
         init = " ".join((init, "-external_plotting"))
@@ -220,6 +230,7 @@ def new_tao(
     yield tao
     if hasattr(tao, "close_subprocess") and not REUSE_SUBPROCESS:
         print("Closing tao subprocess")
+        assert isinstance(tao, SubprocessTao)
         tao.close_subprocess()
 
 
@@ -238,3 +249,62 @@ def use_subprocess(
     request: pytest.FixtureRequest,
 ) -> bool:
     return request.param
+
+
+@contextlib.contextmanager
+def no_pytao_debug_logging():
+    subproc_logger = logging.getLogger("pytao.subproc")
+    initial_level = subproc_logger.level
+    subproc_logger.setLevel("ERROR")
+    yield
+    subproc_logger.setLevel(initial_level)
+
+
+class TimedSection(pydantic.BaseModel):
+    description: str
+    start_dt: datetime.datetime
+    end_dt: datetime.datetime | None
+    elapsed: float | None
+
+    @property
+    def tdelta(self) -> datetime.timedelta:
+        """Time delta from start to finish."""
+        assert self.end_dt is not None
+        return self.end_dt - self.start_dt
+
+    def __str__(self) -> str:
+        return f"""
+{self.description}
+  Start: {self.start_dt}
+    End: {self.end_dt}
+Elapsed: {self.elapsed:.1f} sec ({self.tdelta})
+    """.strip()
+
+
+@contextlib.contextmanager
+def timed_section(description: str = "", level: int = logging.INFO):
+    """
+    Context manager for timing a code section and logging the duration.
+
+    Parameters
+    ----------
+    description : str, default=""
+        Description of the timed section.
+
+    Yields
+    ------
+    TimedSection
+        An object containing the start time, end time, and elapsed time of the
+        timed section.
+    """
+    t0 = time.monotonic()
+    start_dt = datetime.datetime.now()
+
+    section = TimedSection(
+        description=description, start_dt=start_dt, end_dt=None, elapsed=None
+    )
+    yield section
+    section.end_dt = datetime.datetime.now()
+    section.elapsed = time.monotonic() - t0
+
+    logger.log(level, f"{description} took {section.elapsed:.1f} sec")
