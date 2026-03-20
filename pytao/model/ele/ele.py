@@ -4,7 +4,7 @@ import functools
 import pathlib
 import re
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, ClassVar, Literal, cast
+from typing import TYPE_CHECKING, Any, ClassVar, Iterable, Literal, cast
 
 import numpy as np
 import pydantic
@@ -1822,6 +1822,14 @@ class Element(TaoBaseModel, extra="forbid"):
             # match_number=self.ele_id.match_number,
             # match_offset=self.ele_id.match_offset,
         )
+
+    def __repr_args__(self) -> Iterable[tuple[str | None, Any]]:
+        for key, value in super().__repr_args__():
+            if key == "attrs":
+                # Swap out 'attrs' with 'attribs' for just the repr
+                yield "attribs", self.attribs
+            else:
+                yield key, value
 
     @property
     def name(self) -> str:

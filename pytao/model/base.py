@@ -30,10 +30,7 @@ from typing_extensions import Self, override
 
 from .types import ArgumentType
 
-try:
-    from rich.pretty import pretty_repr
-except ImportError:
-    pretty_repr = None
+from rich.pretty import pretty_repr
 
 
 if TYPE_CHECKING:
@@ -206,9 +203,7 @@ class TaoBaseModel(
         return _check_equality(self, other)
 
     def __repr__(self):
-        if pretty_repr is not None:
-            return pretty_repr(self)
-        return super().__repr__()
+        return pretty_repr(self)
 
     @override
     def __dir__(self) -> Iterable[str]:
