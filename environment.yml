@@ -16,7 +16,7 @@ dependencies:
   - openPMD-beamphysics >=0.14.1
   - orjson
   - ormsgpack
-  - pydantic >=2
+  - pydantic >=2.12.5
   - rich
   - tqdm
   # Developer
