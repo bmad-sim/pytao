@@ -1634,6 +1634,29 @@ AnyElementMultipoles = (
 )
 
 
+class _AttributeDict(dict):
+    """
+    A dictionary-like container that allows for dotted attribute access.
+    """
+
+    def __getattr__(self, key: str) -> Any:
+        lkey = GeneralAttributes._tao_attr_map_.get(key.lower(), key.lower())
+        try:
+            return self[lkey]
+        except KeyError:
+            raise AttributeError(
+                f"'{self.__class__.__name__}' object has no attribute '{key}'"
+            )
+
+    def _ipython_key_completions_(self) -> list[str]:
+        return list(self.keys())
+
+    def __dir__(self) -> list[str]:
+        base_dir = set(super().__dir__())
+        key_dir = set(self.keys())
+        return sorted(base_dir | key_dir)
+
+
 class GeneralAttributes(TaoModel, extra="allow"):
     # Note: hacky workaround here so we can inspect if attributes can be set
     _tao_command_attr_: ClassVar[str] = "pipe ele:gen_attribs {ele_id}"
@@ -2199,13 +2222,20 @@ class Element(TaoBaseModel, extra="forbid"):
         if wake and should_update(self.wake):
             self._fill_wake(tao)
 
-    def value(self, key: str):
-        """Get the value of a general attribute by name."""
+    @property
+    def attribs(self) -> dict[str, Any]:
+        """General attributes - name to value dictionary."""
         if self.attrs is None:
             raise ValueError(
                 "`attrs` is unavailable. Fill it first using the Tao object (see `Element.fill`)"
             )
-        return self.attrs[key].data
+
+        attrmap = GeneralAttributes._tao_attr_map_
+        data = {
+            attrmap.get(attrib.name.lower(), attrib.name.lower()): attrib.data
+            for attrib in self.attrs.attrs.values()
+        }
+        return _AttributeDict(data)
 
     @property
     def vec0(self):
