@@ -211,12 +211,13 @@ class TaoErrorFilterContext:
         return [message for message in all_messages if should_include(message)]
 
     def check_output(self, cmd: str, lines: list[str]):
+        orig_lines = lines
         lines, all_messages = capture_messages_from_functions(lines)
         messages = self.filter_messages(cmd, all_messages)
 
         _regular, errors = split_error_messages(messages)
         if errors:
-            raise_for_error_messages(cmd, lines, errors)
+            raise_for_error_messages(cmd, orig_lines, errors)
 
 
 class TaoInitializationError(TaoExceptionWithOutput, RuntimeError):

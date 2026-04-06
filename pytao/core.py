@@ -395,6 +395,7 @@ class TaoCore:
         lines : List[str]
             Tao output lines for `cmd`.
         """
+        orig_lines = lines
         ctx = error_filter_context.get()
         lines, all_messages = capture_messages_from_functions(lines)
         if ctx is not None:
@@ -402,7 +403,7 @@ class TaoCore:
 
         errors = [msg for msg in all_messages if msg.level in error_message_levels]
         if errors and raises:
-            raise_for_error_messages(cmd, lines, errors)
+            raise_for_error_messages(cmd, orig_lines, errors)
 
         return lines, all_messages
 
