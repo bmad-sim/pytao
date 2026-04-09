@@ -11,6 +11,7 @@ import subprocess
 import sys
 import tempfile
 import threading
+import weakref
 from collections.abc import Callable
 from typing import Any, Literal, Optional, Union, cast
 
@@ -134,6 +135,18 @@ _BEAM_TRACK_SHM_FMT = "i"
 _BEAM_TRACK_SHM_SIZE = struct.calcsize(_BEAM_TRACK_SHM_FMT)
 
 
+def _cleanup_shm(shm: SharedMemory) -> None:
+    """weakref finalize callback to clean up shared memory."""
+    try:
+        shm.close()
+    except Exception:
+        pass
+    try:
+        shm.unlink()
+    except Exception:
+        pass
+
+
 class _TaoPipe:
     """
     Tao subprocess Pipe helper.
@@ -152,10 +165,11 @@ class _TaoPipe:
     def __init__(self, env: dict[str, str]):
         self._init_queue = queue.Queue(maxsize=1)
         self._subprocess_env = env.copy()
-        self._beam_track_shm = SharedMemory(
-            create=True, size=_BEAM_TRACK_SHM_SIZE, track=False
-        )
-        struct.pack_into(_BEAM_TRACK_SHM_FMT, self._beam_track_shm.buf, 0, -1)
+        shm = SharedMemory(create=True, size=_BEAM_TRACK_SHM_SIZE, track=False)
+        if shm.buf is not None:
+            struct.pack_into(_BEAM_TRACK_SHM_FMT, shm.buf, 0, -1)
+        self._beam_track_shm = shm
+        weakref.finalize(self, _cleanup_shm, shm)
         self._subproc = self._init_subprocess()
 
     @property
@@ -170,19 +184,21 @@ class _TaoPipe:
             self.send_receive("quit", "", propagate_exceptions=False)
         except TaoDisconnectedError:
             pass
-        self._close_beam_track_shm()
+        finally:
+            _cleanup_shm(self._beam_track_shm)
 
     def close_forcefully(self) -> None:
         """Close the pipe."""
-        self._subproc.terminate()
-        self._close_beam_track_shm()
-
-    def _close_beam_track_shm(self) -> None:
-        self._beam_track_shm.close()
-        self._beam_track_shm.unlink()
+        try:
+            self._subproc.terminate()
+        finally:
+            _cleanup_shm(self._beam_track_shm)
 
     def read_beam_track_element(self) -> int:
         """Read the active beam track element index from shared memory."""
+        if self._beam_track_shm.buf is None:
+            return -1
+
         return struct.unpack_from(_BEAM_TRACK_SHM_FMT, self._beam_track_shm.buf, 0)[0]
 
     def _tao_subprocess(self):
