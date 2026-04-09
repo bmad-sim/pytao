@@ -6,11 +6,13 @@ import logging
 import os
 import pickle
 import queue
+import struct
 import subprocess
 import sys
 import tempfile
 import threading
 from collections.abc import Callable
+from multiprocessing.shared_memory import SharedMemory
 from typing import Any, Literal, Optional, Union, cast
 
 import numpy as np
@@ -31,7 +33,6 @@ Command = Literal[
     "cmd_real",
     "cmd_integer",
     "function",
-    "get_active_beam_track_element",
 ]
 SupportedKwarg = Union[float, int, str, bool, bytes, dict, list, tuple, set, np.ndarray]
 
@@ -129,6 +130,10 @@ def _get_result(
     raise RuntimeError(f"Unexpected pipe response: {value}")
 
 
+_BEAM_TRACK_SHM_FMT = "i"
+_BEAM_TRACK_SHM_SIZE = struct.calcsize(_BEAM_TRACK_SHM_FMT)
+
+
 class _TaoPipe:
     """
     Tao subprocess Pipe helper.
@@ -142,10 +147,13 @@ class _TaoPipe:
     _fifo: io.BufferedReader | None
     _subprocess_monitor_thread: threading.Thread | None
     _subprocess_env: dict[str, str]
+    _beam_track_shm: SharedMemory
 
     def __init__(self, env: dict[str, str]):
         self._init_queue = queue.Queue(maxsize=1)
         self._subprocess_env = env.copy()
+        self._beam_track_shm = SharedMemory(create=True, size=_BEAM_TRACK_SHM_SIZE)
+        struct.pack_into(_BEAM_TRACK_SHM_FMT, self._beam_track_shm.buf, 0, -1)
         self._subproc = self._init_subprocess()
 
     @property
@@ -160,10 +168,20 @@ class _TaoPipe:
             self.send_receive("quit", "", propagate_exceptions=False)
         except TaoDisconnectedError:
             pass
+        self._close_beam_track_shm()
 
     def close_forcefully(self) -> None:
         """Close the pipe."""
         self._subproc.terminate()
+        self._close_beam_track_shm()
+
+    def _close_beam_track_shm(self) -> None:
+        self._beam_track_shm.close()
+        self._beam_track_shm.unlink()
+
+    def read_beam_track_element(self) -> int:
+        """Read the active beam track element index from shared memory."""
+        return struct.unpack_from(_BEAM_TRACK_SHM_FMT, self._beam_track_shm.buf, 0)[0]
 
     def _tao_subprocess(self):
         """Subprocess monitor thread.  Cleans up after the subprocess ends."""
@@ -178,6 +196,7 @@ class _TaoPipe:
                         "-m",
                         "pytao.subproc_main",
                         fifo_path,
+                        self._beam_track_shm.name,
                     ],
                     stdin=subprocess.PIPE,
                     env=self._subprocess_env,
@@ -243,7 +262,7 @@ class _TaoPipe:
 
         Parameters
         ----------
-        cmd : one of {"init", "cmd", "cmd_real", "cmd_integer", "quit", "function", "get_active_beam_track_element"}
+        cmd : one of {"init", "cmd", "cmd_real", "cmd_integer", "quit", "function"}
             The command class to send.
         argument : str
             The argument to send to the command.
@@ -587,8 +606,6 @@ class SubprocessTao(Tao):
         )
 
     def get_active_beam_track_element(self) -> int:
-        """Get the active element index being tracked."""
-        return cast(
-            int,
-            self._send_command_through_pipe("get_active_beam_track_element", "", raises=True),
-        )
+        """Get the active element index being tracked via shared memory."""
+        assert self._subproc_pipe_ is not None
+        return self._subproc_pipe_.read_beam_track_element()

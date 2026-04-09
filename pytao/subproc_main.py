@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import logging
+import struct
 import sys
+import threading
 import traceback
+from multiprocessing.shared_memory import SharedMemory
 
 from .core import TaoCommandError
 from .subproc import (
@@ -11,6 +14,7 @@ from .subproc import (
     SubprocessResult,
     SubprocessSuccessResult,
     TaoDisconnectedError,
+    _BEAM_TRACK_SHM_FMT,
     read_pickled_data,
     write_pickled_data,
 )
@@ -20,10 +24,27 @@ from .util import import_by_name
 logger = logging.getLogger(__name__)
 
 
-def _tao_subprocess(output_fifo_filename: str) -> None:
+def _beam_track_writer(
+    tao: Tao,
+    shm: SharedMemory,
+    stop_event: threading.Event,
+    rate: float = 0.05,
+) -> None:
+    """Daemon thread that writes the active beam track element to shared memory."""
+    try:
+        while not stop_event.is_set():
+            idx = tao.so_lib.tao_c_get_beam_track_element()
+            struct.pack_into(_BEAM_TRACK_SHM_FMT, shm.buf, 0, idx)
+            stop_event.wait(rate)
+    finally:
+        shm.close()
+
+
+def _tao_subprocess(output_fifo_filename: str, beam_track_shm_name: str) -> None:
     logger.debug("Tao subprocess handler started")
 
     tao = None
+    beam_track_stop = threading.Event()
 
     def run_custom_function(message: SubprocessRequest, *_):
         func_name = message["arg"]
@@ -42,15 +63,17 @@ def _tao_subprocess(output_fifo_filename: str) -> None:
         if command == "init":
             if tao is None:
                 tao = Tao(arg)
+                shm = SharedMemory(name=beam_track_shm_name, create=False)
+                threading.Thread(
+                    daemon=True,
+                    target=_beam_track_writer,
+                    args=(tao, shm, beam_track_stop),
+                ).start()
                 return tao.init_output
             return tao.init(arg)
 
         if tao is None:
             raise TaoCommandError("Tao object not yet initialized")
-
-        if command == "get_active_beam_track_element":
-            tao._last_output = []
-            return tao.get_active_beam_track_element()
 
         if command == "function":
             tao._last_output = []
@@ -103,15 +126,16 @@ def _tao_subprocess(output_fifo_filename: str) -> None:
 if __name__ == "__main__":
     try:
         output_fifo_filename = sys.argv[1]
+        beam_track_shm_name = sys.argv[2]
     except (IndexError, ValueError):
         print(
-            f"Usage: {sys.executable} {__file__} (output_file_descriptor)",
+            f"Usage: {sys.executable} {__file__} (output_fifo) (beam_track_shm_name)",
             file=sys.stderr,
         )
         exit(1)
 
     try:
-        _tao_subprocess(output_fifo_filename)
+        _tao_subprocess(output_fifo_filename, beam_track_shm_name)
     except (TaoDisconnectedError, OSError):
         exit(1)
     except KeyboardInterrupt:
