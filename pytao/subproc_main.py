@@ -5,17 +5,16 @@ import struct
 import sys
 import threading
 import traceback
-from multiprocessing import resource_tracker
-from multiprocessing.shared_memory import SharedMemory
 
+from ._shmem_compat import SharedMemory
 from .core import TaoCommandError
 from .subproc import (
+    _BEAM_TRACK_SHM_FMT,
     SubprocessErrorResult,
     SubprocessRequest,
     SubprocessResult,
     SubprocessSuccessResult,
     TaoDisconnectedError,
-    _BEAM_TRACK_SHM_FMT,
     read_pickled_data,
     write_pickled_data,
 )
@@ -64,9 +63,7 @@ def _tao_subprocess(output_fifo_filename: str, beam_track_shm_name: str) -> None
         if command == "init":
             if tao is None:
                 tao = Tao(arg)
-                shm = SharedMemory(name=beam_track_shm_name, create=False)
-                # Parent owns the shm lifecycle
-                resource_tracker.unregister(f"/{shm.name}", "shared_memory")
+                shm = SharedMemory(name=beam_track_shm_name, create=False, track=False)
                 threading.Thread(
                     daemon=True,
                     target=_beam_track_writer,

@@ -12,12 +12,12 @@ import sys
 import tempfile
 import threading
 from collections.abc import Callable
-from multiprocessing.shared_memory import SharedMemory
 from typing import Any, Literal, Optional, Union, cast
 
 import numpy as np
 from typing_extensions import NotRequired, TypedDict, override
 
+from ._shmem_compat import SharedMemory
 from .errors import TaoCommandError, TaoInitializationError
 from .startup import TaoStartup
 from .tao import Tao
@@ -152,7 +152,9 @@ class _TaoPipe:
     def __init__(self, env: dict[str, str]):
         self._init_queue = queue.Queue(maxsize=1)
         self._subprocess_env = env.copy()
-        self._beam_track_shm = SharedMemory(create=True, size=_BEAM_TRACK_SHM_SIZE)
+        self._beam_track_shm = SharedMemory(
+            create=True, size=_BEAM_TRACK_SHM_SIZE, track=False
+        )
         struct.pack_into(_BEAM_TRACK_SHM_FMT, self._beam_track_shm.buf, 0, -1)
         self._subproc = self._init_subprocess()
 
