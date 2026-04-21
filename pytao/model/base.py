@@ -562,6 +562,7 @@ def load_model_data(
     filename: str | pathlib.Path,
     *,
     format: ArchiveFormat | None = None,
+    raw: bool = False,
 ):
     """
     Read the raw model data from a file in JSON, YAML, or msgpack format.
@@ -573,6 +574,11 @@ def load_model_data(
         The file format is determined by the extension.
     format : ArchiveFormat or None, optional
         File format.  If not specified, determined by file extension.
+    raw : bool, optional
+        If False, any data not stored in its native format may be returned
+        as-is from the source format.  Specifically, when using the MessagePack
+        format, NDArray instances may be returned as an encoded dictionary.
+        If True, all conversions will be applied recursively to the data.
     """
     fname = pathlib.Path(filename)
 
@@ -587,7 +593,9 @@ def load_model_data(
         import ormsgpack
 
         data = ormsgpack.unpackb(fname.read_bytes(), option=ormsgpack.OPT_NON_STR_KEYS)
-        return _msgpack_restore_ndarrays(data)
+        if not raw:
+            _msgpack_restore_ndarrays(data)
+        return data
     elif format == "json.gz":
         with gzip.open(fname, "rb") as fp:
             return orjson.loads(fp.read())
@@ -615,7 +623,7 @@ def load_model(
     format : ArchiveFormat or None, optional
         File format.  If not specified, determined by file extension.
     """
-    data = load_model_data(filename, format=format)
+    data = load_model_data(filename, format=format, raw=True)
     return cls.model_validate(data)
 
 

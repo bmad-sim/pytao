@@ -9,9 +9,11 @@ import pytest
 
 import pytao
 from pytao import SubprocessTao
-from pytao.model.base import format_from_filename
+from pytao.model.base import TaoBaseModel, format_from_filename
 from pytao.model.ele import Element, Lattice
+from pytao.model.ele.ele import restore_raw_element_ndarrays
 from pytao.model.ele.time_stats import _PytaoStatistics, get_pytao_statistics
+from pytao.model.types import NDArray
 
 from ..conftest import no_pytao_debug_logging, timed_section
 
@@ -507,3 +509,130 @@ def test_lr_mode_table():
 
         np.testing.assert_allclose(float(lr_mode[0][4]), 0.7)
         assert [row[4] for row in lr_mode[1:]] == ["none", "none"]
+
+
+def _make_ndarray_dict(arr: np.ndarray) -> dict:
+    arr = np.ascontiguousarray(arr)
+    return {
+        "__ndarray__": arr.tobytes(),
+        "dtype": str(arr.dtype),
+        "shape": list(arr.shape),
+    }
+
+
+def test_raw_mat6_msgpack():
+    vec0 = np.array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0])
+    mat6 = np.eye(6)
+    ele = {
+        "mat6": {
+            "vec0": _make_ndarray_dict(vec0),
+            "mat6": _make_ndarray_dict(mat6),
+        }
+    }
+    restore_raw_element_ndarrays(ele)
+    assert isinstance(ele["mat6"]["vec0"], np.ndarray)
+    assert isinstance(ele["mat6"]["mat6"], np.ndarray)
+    np.testing.assert_array_equal(ele["mat6"]["vec0"], vec0)
+    np.testing.assert_array_equal(ele["mat6"]["mat6"], mat6)
+
+
+def test_raw_mat6_lists():
+    ele = {
+        "mat6": {
+            "vec0": [1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+            "mat6": [[1.0, 0.0], [0.0, 1.0]],
+        }
+    }
+    restore_raw_element_ndarrays(ele)
+    assert isinstance(ele["mat6"]["vec0"], np.ndarray)
+    assert isinstance(ele["mat6"]["mat6"], np.ndarray)
+    np.testing.assert_array_equal(ele["mat6"]["vec0"], [1.0, 2.0, 3.0, 4.0, 5.0, 6.0])
+    np.testing.assert_array_equal(ele["mat6"]["mat6"], [[1.0, 0.0], [0.0, 1.0]])
+
+
+def test_raw_floor_wmat_msgpack():
+    wmat = np.eye(3)
+    wmat_raw = _make_ndarray_dict(wmat)
+    ele = {
+        "floor": {
+            "beginning": {
+                "actual": {"wmat": dict(wmat_raw)},
+                "reference": {"wmat": dict(wmat_raw)},
+            },
+            "center": {
+                "actual": {"wmat": dict(wmat_raw)},
+            },
+            "end": {
+                "reference": {"wmat": dict(wmat_raw)},
+            },
+        }
+    }
+    restore_raw_element_ndarrays(ele)
+    for pos in ("beginning", "center", "end"):
+        for ref in ("actual", "reference"):
+            val = ele["floor"][pos].get(ref, {}).get("wmat")
+            if val is not None:
+                assert isinstance(val, np.ndarray)
+                np.testing.assert_array_equal(val, wmat)
+
+
+def test_raw_mat6_and_floor():
+    vec0 = np.array([0.0, 0.0])
+    mat = np.array([[1.0]])
+    wmat = np.eye(2)
+    ele = {
+        "mat6": {
+            "vec0": _make_ndarray_dict(vec0),
+            "mat6": _make_ndarray_dict(mat),
+        },
+        "floor": {
+            "beginning": {
+                "actual": {"wmat": _make_ndarray_dict(wmat)},
+            },
+        },
+    }
+    restore_raw_element_ndarrays(ele)
+    assert isinstance(ele["mat6"]["vec0"], np.ndarray)
+    assert isinstance(ele["mat6"]["mat6"], np.ndarray)
+    assert isinstance(ele["floor"]["beginning"]["actual"]["wmat"], np.ndarray)
+
+
+def test_raw_empty_dict():
+    ele = {}
+    restore_raw_element_ndarrays(ele)
+    assert ele == {}
+
+
+def test_raw_no_mat6_no_floor():
+    ele = {"name": "Q1", "head": {"key": "quadrupole"}}
+    restore_raw_element_ndarrays(ele)
+    assert ele == {"name": "Q1", "head": {"key": "quadrupole"}}
+
+
+def test_raw_already_ndarray():
+    vec = np.array([1.0, 2.0])
+    ele = {"mat6": {"vec0": vec}}
+    restore_raw_element_ndarrays(ele)
+    assert ele["mat6"]["vec0"] is vec
+
+
+class ArrHolder(TaoBaseModel):
+    arr: NDArray
+
+
+def test_ndarray_validate():
+    arr = np.asarray([1, 2, 3])
+    holder = ArrHolder(arr=arr)
+    holder.model_dump()
+
+    d = {"arr": _make_ndarray_dict(arr)}
+    restored = ArrHolder.model_validate(d)
+    assert holder == restored
+
+    d = {"arr": arr}
+    restored = ArrHolder.model_validate(d)
+    assert holder == restored
+
+    d = {"arr": arr.tolist()}
+    restored = ArrHolder.model_validate(d)
+    assert holder == restored

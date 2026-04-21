@@ -15,7 +15,7 @@ from ...errors import TaoCommandError
 from ...util.parsers import Attr, parse_tao_python_data_with_units
 from .. import _generated as tao_classes
 from ..base import ArchiveFormat, TaoBaseModel, TaoModel
-from ..types import NDArray
+from ..types import NDArray, _PydanticNDArray
 from .comb import Comb
 from .time_stats import _pytao_stats
 
@@ -2486,3 +2486,38 @@ class Lattice(TaoBaseModel):
         lat = super().from_file(filename, format=format)
         lat.filename = pathlib.Path(filename)
         return lat
+
+
+def restore_raw_element_ndarrays(ele: dict) -> None:
+    """
+    In-place restore ndarrays given a raw element dict.
+
+    Notes
+    -----
+    You will not typically need this routine. Normally, you will want to just use
+    `Lattice.from_file` which handles all of the validation and conversion
+    under the hood.
+
+    If you are after raw performance of loading the state of a lattice into memory
+    and you don't care about using the Element classes themselves, this function
+    may be of use to you.  This will reinflate `ndarray` instances from the raw
+    dictionaries so that you may use them as normal, with significantly less overhead
+    than the generic version.
+    """
+    mat6 = ele.get("mat6")
+    if mat6:
+        for key in ("vec0", "mat6"):
+            val = mat6.get(key)
+            if val is not None:
+                mat6[key] = _PydanticNDArray._pydantic_validate(val, None)
+
+    floor = ele.get("floor")
+    if floor:
+        for pos_data in (floor.get("beginning"), floor.get("center"), floor.get("end")):
+            if not pos_data:
+                continue
+            for ref_data in (pos_data.get("actual"), pos_data.get("reference")):
+                if ref_data and "wmat" in ref_data:
+                    ref_data["wmat"] = _PydanticNDArray._pydantic_validate(
+                        ref_data["wmat"], None
+                    )
