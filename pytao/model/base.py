@@ -756,15 +756,34 @@ def _msgpack_default(obj: Any) -> Any:
 
 
 def _msgpack_restore_ndarrays(obj: Any) -> Any:
-    """Restore numpy arrays from the ``__ndarray__`` marker dicts."""
-    # NOTE: this is borrowed from LUME-Genesis archiving, and ideally should be
-    # kept in sync
+    """Restore numpy arrays from ``__ndarray__`` marker dicts, in-place.
+
+    Walks the deserialized msgpack structure and replaces marker dicts
+    with actual numpy arrays.  Modifies containers in-place to avoid
+    rebuilding the entire tree (which is expensive for large lattice
+    dumps).
+    """
     if isinstance(obj, dict):
-        if _MSGPACK_NDARRAY_MARKER in obj:
-            return np.frombuffer(obj[_MSGPACK_NDARRAY_MARKER], dtype=obj["dtype"]).reshape(
-                obj["shape"]
-            )
-        return {key: _msgpack_restore_ndarrays(value) for key, value in obj.items()}
-    if isinstance(obj, list):
-        return [_msgpack_restore_ndarrays(item) for item in obj]
+        for key in obj:
+            value = obj[key]
+            if isinstance(value, dict):
+                if _MSGPACK_NDARRAY_MARKER in value:
+                    obj[key] = np.frombuffer(
+                        value[_MSGPACK_NDARRAY_MARKER], dtype=value["dtype"]
+                    ).reshape(value["shape"])
+                else:
+                    _msgpack_restore_ndarrays(value)
+            elif isinstance(value, list):
+                _msgpack_restore_ndarrays(value)
+    elif isinstance(obj, list):
+        for i, item in enumerate(obj):
+            if isinstance(item, dict):
+                if _MSGPACK_NDARRAY_MARKER in item:
+                    obj[i] = np.frombuffer(
+                        item[_MSGPACK_NDARRAY_MARKER], dtype=item["dtype"]
+                    ).reshape(item["shape"])
+                else:
+                    _msgpack_restore_ndarrays(item)
+            elif isinstance(item, list):
+                _msgpack_restore_ndarrays(item)
     return obj
