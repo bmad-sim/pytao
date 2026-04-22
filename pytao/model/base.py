@@ -95,12 +95,13 @@ def _check_equality(obj1: Any, obj2: Any) -> bool:
         )
 
     if isinstance(obj1, np.ndarray):
-        if not obj1.shape and not obj2.shape:
-            return True
-        return np.allclose(obj1, obj2)
+        if not obj1.shape:
+            # Empty arrays
+            return bool(not obj2.shape)
+        return np.array_equal(obj1, obj2)
 
     if isinstance(obj1, float):
-        return np.allclose(obj1, obj2)
+        return obj1 == obj2
 
     return bool(obj1 == obj2)
 
