@@ -73,8 +73,12 @@ class _PydanticParticleGroup:
     def _from_dict(data: ParticleData) -> ParticleGroup:
         return ParticleGroup(data=data)
 
-    def _as_dict(self) -> ParticleData:
-        return self.data
+    @staticmethod
+    def _as_dict(obj) -> dict:
+        return {
+            key: value.tolist() if isinstance(value, np.ndarray) else value
+            for key, value in obj.data.items()
+        }
 
     @classmethod
     def __get_pydantic_core_schema__(
@@ -111,11 +115,12 @@ class _PydanticPmdUnit:
             dim = tuple(dim)
         return pmd_unit(**dct, unitDimension=dim)
 
-    def _as_dict(self) -> dict[str, Any]:
+    @staticmethod
+    def _as_dict(obj: pmd_unit) -> dict[str, Any]:
         return {
-            "unitSI": self.unitSI,
-            "unitSymbol": self.unitSymbol,
-            "unitDimension": tuple(self.unitDimension),
+            "unitSI": obj.unitSI,
+            "unitSymbol": obj.unitSymbol,
+            "unitDimension": tuple(obj.unitDimension),
         }
 
     @classmethod

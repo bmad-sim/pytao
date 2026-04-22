@@ -1,14 +1,22 @@
 from __future__ import annotations
-import pathlib
 
+import operator
+import pathlib
+from typing import Generator
+
+import numpy as np
 import pytest
+from beamphysics import single_particle
+from beamphysics.units import pmd_unit
+from pydantic import TypeAdapter
 
 from pytao import SubprocessTao, TaoCommandError
 from pytao.model import Beam, BeamInit, SpaceChargeCom, TaoConfig, TaoGlobal
+from pytao.model.types import NDArray, PydanticParticleGroup, PydanticPmdUnit
 
 
 @pytest.fixture(scope="module")
-def tao() -> SubprocessTao:
+def tao() -> Generator[SubprocessTao, None, None]:
     with SubprocessTao(
         init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall3d", noplot=True
     ) as tao:
@@ -151,3 +159,32 @@ def test_global_nthreads(tao: SubprocessTao) -> None:
         raise
 
     assert TaoGlobal.from_tao(tao) == glob
+
+
+@pytest.mark.parametrize(
+    "type_annotation, obj, comparator",
+    [
+        pytest.param(
+            PydanticPmdUnit,
+            pmd_unit.from_symbol("m"),
+            operator.eq,
+            id="pmd_unit",
+        ),
+        pytest.param(
+            PydanticParticleGroup,
+            single_particle(),
+            operator.eq,
+            id="particlegroup",
+        ),
+        pytest.param(
+            NDArray,
+            np.array([[1, 2, 3], [4, 5, 6]]),
+            np.array_equal,
+            id="ndarray",
+        ),
+    ],
+)
+def test_json_serialization(type_annotation, obj, comparator):
+    adapter = TypeAdapter(type_annotation)
+    assert comparator(adapter.validate_python(adapter.dump_python(obj)), obj)
+    assert comparator(adapter.validate_json(adapter.dump_json(obj)), obj)
