@@ -562,6 +562,7 @@ def load_model_data(
     filename: str | pathlib.Path,
     *,
     format: ArchiveFormat | None = None,
+    raw: bool = False,
 ):
     """
     Read the raw model data from a file in JSON, YAML, or msgpack format.
@@ -573,6 +574,11 @@ def load_model_data(
         The file format is determined by the extension.
     format : ArchiveFormat or None, optional
         File format.  If not specified, determined by file extension.
+    raw : bool, optional
+        If False, any data not stored in its native format may be returned
+        as-is from the source format.  Specifically, when using the MessagePack
+        format, NDArray instances may be returned as an encoded dictionary.
+        If True, all conversions will be applied recursively to the data.
     """
     fname = pathlib.Path(filename)
 
@@ -587,7 +593,9 @@ def load_model_data(
         import ormsgpack
 
         data = ormsgpack.unpackb(fname.read_bytes(), option=ormsgpack.OPT_NON_STR_KEYS)
-        return _msgpack_restore_ndarrays(data)
+        if not raw:
+            _msgpack_restore_ndarrays(data)
+        return data
     elif format == "json.gz":
         with gzip.open(fname, "rb") as fp:
             return orjson.loads(fp.read())
@@ -615,7 +623,7 @@ def load_model(
     format : ArchiveFormat or None, optional
         File format.  If not specified, determined by file extension.
     """
-    data = load_model_data(filename, format=format)
+    data = load_model_data(filename, format=format, raw=True)
     return cls.model_validate(data)
 
 
@@ -756,15 +764,34 @@ def _msgpack_default(obj: Any) -> Any:
 
 
 def _msgpack_restore_ndarrays(obj: Any) -> Any:
-    """Restore numpy arrays from the ``__ndarray__`` marker dicts."""
-    # NOTE: this is borrowed from LUME-Genesis archiving, and ideally should be
-    # kept in sync
+    """Restore numpy arrays from ``__ndarray__`` marker dicts, in-place.
+
+    Walks the deserialized msgpack structure and replaces marker dicts
+    with actual numpy arrays.  Modifies containers in-place to avoid
+    rebuilding the entire tree (which is expensive for large lattice
+    dumps).
+    """
     if isinstance(obj, dict):
-        if _MSGPACK_NDARRAY_MARKER in obj:
-            return np.frombuffer(obj[_MSGPACK_NDARRAY_MARKER], dtype=obj["dtype"]).reshape(
-                obj["shape"]
-            )
-        return {key: _msgpack_restore_ndarrays(value) for key, value in obj.items()}
-    if isinstance(obj, list):
-        return [_msgpack_restore_ndarrays(item) for item in obj]
+        for key in obj:
+            value = obj[key]
+            if isinstance(value, dict):
+                if _MSGPACK_NDARRAY_MARKER in value:
+                    obj[key] = np.frombuffer(
+                        value[_MSGPACK_NDARRAY_MARKER], dtype=value["dtype"]
+                    ).reshape(value["shape"])
+                else:
+                    _msgpack_restore_ndarrays(value)
+            elif isinstance(value, list):
+                _msgpack_restore_ndarrays(value)
+    elif isinstance(obj, list):
+        for i, item in enumerate(obj):
+            if isinstance(item, dict):
+                if _MSGPACK_NDARRAY_MARKER in item:
+                    obj[i] = np.frombuffer(
+                        item[_MSGPACK_NDARRAY_MARKER], dtype=item["dtype"]
+                    ).reshape(item["shape"])
+                else:
+                    _msgpack_restore_ndarrays(item)
+            elif isinstance(item, list):
+                _msgpack_restore_ndarrays(item)
     return obj

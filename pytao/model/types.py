@@ -162,14 +162,21 @@ class _PydanticNDArray:
             ),
         )
 
+    #: Marker key used by msgpack serialization to identify ndarray dicts.
+    _MSGPACK_MARKER: str = "__ndarray__"
+
     @classmethod
     def _pydantic_validate(
         cls,
         value: Any | np.ndarray | Sequence | dict,
-        info: pydantic.ValidationInfo,
+        info: pydantic.ValidationInfo | None,
     ) -> np.ndarray:
         if isinstance(value, np.ndarray):
             return value
+        if isinstance(value, dict) and cls._MSGPACK_MARKER in value:
+            return np.frombuffer(value[cls._MSGPACK_MARKER], dtype=value["dtype"]).reshape(
+                value["shape"]
+            )
         if isinstance(value, Sequence):
             return np.asarray(value)
         raise ValueError(f"No conversion from {value!r} to numpy ndarray")
