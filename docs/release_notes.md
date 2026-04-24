@@ -1,3 +1,45 @@
+# Unreleased
+
+## New Features
+
+### Read-only optimization introspection (`pytao.optimize`)
+
+A new subpackage that reads a live `Tao` instance and reports its
+optimization setup as structured Python objects — the variables and datums
+Tao would use for optimization, plus their bounds, weights, and merit types.
+
+```python
+from pytao import Tao
+from pytao.optimize import TaoOptimizationProblem
+
+tao = Tao(init_file="tao.init", noplot=True)
+problem = TaoOptimizationProblem(tao)
+
+problem.n_var           # number of active optimization variables
+problem.n_data          # number of active datums
+problem.x0              # initial variable vector
+problem.bounds          # list of (low, high) tuples; ±inf allowed
+problem.weights         # per-datum merit weights
+problem.variables       # list[VariableInfo]
+problem.datums          # list[DatumInfo]
+```
+
+Highlights:
+
+- Filters to `useit_opt = True` entries, i.e. what Tao itself would pass to
+  its internal optimizers.
+- Translates Tao's ±1e30 "no limit" sentinels to ±inf so downstream
+  optimizer libraries see standard unbounded-side semantics.
+- Rejects negative weights at construction — catches a class of user errors
+  at the boundary rather than silently producing NaNs later.
+- `VariableInfo` and `DatumInfo` are frozen dataclasses suitable for tables,
+  serialisation, or passing between modules.
+
+This is the first slice of a larger Python-driven optimization workflow.
+Follow-up releases will add merit evaluation, Jacobian access, and SciPy
+adapters (`run_scipy_minimize`, `run_scipy_least_squares`). See the
+[optimization guide](optimize.md) for a walkthrough.
+
 # v1.0.0
 
 ## New Features
