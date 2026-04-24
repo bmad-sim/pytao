@@ -30,8 +30,13 @@ class FakeTao:
     var_v_array_rows: dict[str, list[dict[str, Any]]] = field(default_factory=dict)
     var_detail: dict[str, dict[str, Any]] = field(default_factory=dict)
     d2_names: list[str] = field(default_factory=list)
+    d2_names_by_universe: dict[int, list[str]] = field(default_factory=dict)
     d1_arrays: dict[str, list[dict[str, Any]]] = field(default_factory=dict)
     d_arrays: dict[tuple[str, str], list[dict[str, Any]]] = field(default_factory=dict)
+    d_arrays_by_universe: dict[tuple[int, str, str], list[dict[str, Any]]] = field(
+        default_factory=dict
+    )
+    default_universe: int = 1
 
     def var_general(self, *, raises: bool = True) -> list[dict[str, Any]]:  # noqa: ARG002
         return list(self.var_general_rows)
@@ -43,6 +48,8 @@ class FakeTao:
         return dict(self.var_detail[var])
 
     def data_d2_array(self, ix_uni: str = "", *, raises: bool = True):  # noqa: ARG002
+        if ix_uni and int(ix_uni) in self.d2_names_by_universe:
+            return list(self.d2_names_by_universe[int(ix_uni)])
         return list(self.d2_names)
 
     def data_d1_array(self, d2_datum: str, *, raises: bool = True):  # noqa: ARG002
@@ -58,7 +65,14 @@ class FakeTao:
         ix_uni: str = "",  # noqa: ARG002
         raises: bool = True,  # noqa: ARG002
     ):
+        if ix_uni:
+            key = (int(ix_uni), d2_name, d1_name)
+            if key in self.d_arrays_by_universe:
+                return list(self.d_arrays_by_universe[key])
         return list(self.d_arrays.get((d2_name, d1_name), []))
+
+    def tao_global(self, *, raises: bool = True) -> dict[str, Any]:  # noqa: ARG002
+        return {"default_universe": self.default_universe}
 
 
 def _make_var_detail(
@@ -404,3 +418,93 @@ def test_datum_info_is_frozen():
     )
     with pytest.raises(Exception):
         d.weight = 2.0  # type: ignore[misc]
+
+
+# ---- read-only snapshot contract ---------------------------------------
+
+
+def test_variables_is_immutable_tuple():
+    tao = _simple_problem_tao()
+    p = TaoOptimizationProblem(tao)
+    assert isinstance(p.variables, tuple)
+    with pytest.raises(AttributeError):
+        p.variables.append(p.variables[0])  # type: ignore[attr-defined]
+
+
+def test_datums_is_immutable_tuple():
+    tao = _simple_problem_tao()
+    p = TaoOptimizationProblem(tao)
+    assert isinstance(p.datums, tuple)
+    with pytest.raises(AttributeError):
+        p.datums.append(p.datums[0])  # type: ignore[attr-defined]
+
+
+# ---- universe selection -----------------------------------------------
+
+
+def test_universe_defaults_to_live_tao_global():
+    """When universe=None, snapshot pins to Tao's live default_universe."""
+    tao = _simple_problem_tao()
+    tao.default_universe = 3
+    # Put the only datum under universe 3 specifically; universe 1 has none.
+    tao.d2_names_by_universe = {3: ["twiss"]}
+    tao.d_arrays_by_universe = {(3, "twiss", "end"): tao.d_arrays[("twiss", "end")]}
+    tao.d_arrays = {}  # universe=1 sees nothing
+    p = TaoOptimizationProblem(tao)
+    assert p.universe == 3
+    assert p.n_data == 2
+
+
+def test_explicit_universe_overrides_default():
+    tao = _simple_problem_tao()
+    tao.default_universe = 1
+    # universe=2 sees a different set of datums.
+    tao.d2_names_by_universe = {2: ["twiss"]}
+    tao.d_arrays_by_universe = {
+        (
+            2,
+            "twiss",
+            "end",
+        ): [
+            {
+                "ix_d1": 1,
+                "data_type": "beta.a",
+                "merit_type": "target",
+                "ele_ref_name": "",
+                "ele_start_name": "",
+                "ele_name": "END",
+                "meas_value": 5.0,
+                "model_value": 4.0,
+                "design_value": 4.0,
+                "useit_opt": True,
+                "useit_plot": True,
+                "good_user": True,
+                "weight": 1.0,
+                "exists": True,
+            }
+        ]
+    }
+    p = TaoOptimizationProblem(tao, universe=2)
+    assert p.universe == 2
+    assert p.n_data == 1
+    assert p.datums[0].meas_value == 5.0
+
+
+def test_universe_falls_back_when_tao_global_missing(caplog):
+    """A Tao-like object without tao_global() falls back to universe=1."""
+
+    class MinimalFakeTao(FakeTao):
+        tao_global = None  # type: ignore[assignment]
+
+    tao = MinimalFakeTao()
+    simple = _simple_problem_tao()
+    tao.var_general_rows = simple.var_general_rows
+    tao.var_v_array_rows = simple.var_v_array_rows
+    tao.var_detail = simple.var_detail
+    tao.d2_names = simple.d2_names
+    tao.d1_arrays = simple.d1_arrays
+    tao.d_arrays = simple.d_arrays
+    with caplog.at_level("WARNING", logger="pytao.optimize.problem"):
+        p = TaoOptimizationProblem(tao)
+    assert p.universe == 1
+    assert any("does not expose tao_global" in rec.message for rec in caplog.records)

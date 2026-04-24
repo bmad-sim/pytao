@@ -13,9 +13,12 @@ from __future__ import annotations
 import logging
 import math
 from dataclasses import dataclass, field
-from typing import Any, Protocol
+from typing import TYPE_CHECKING, Any, Protocol
 
 import numpy as np
+
+if TYPE_CHECKING:
+    from ..tao import Tao
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +41,9 @@ class _TaoLike(Protocol):
     def data_d_array(
         self, d2_name: str, d1_name: str, *, ix_uni: str = "", raises: bool = True
     ) -> list[dict[str, Any]]: ...
+
+    # tao_global is used to resolve the live ``default_universe``; we read it
+    # via getattr so non-Tao test stubs that omit it still work.
 
 
 @dataclass(frozen=True)
@@ -137,15 +143,21 @@ class TaoOptimizationProblem:
     Parameters
     ----------
     tao : Tao
-        A live Tao instance. Any object satisfying the :class:`_TaoLike`
-        protocol also works, which is how the unit tests exercise the logic
-        without a real Tao binary.
-    universe : int, default=1
-        Universe index to query for datums. Tao allows multi-universe
-        optimization but most setups use a single universe.
+        A live Tao instance.
+    universe : int, optional
+        Universe index to query for datums. When omitted (``None``, the
+        default), the constructor reads Tao's live
+        ``s%global%default_universe`` and snapshots against that — matching
+        the behaviour of Tao's built-in data pipe commands. Pass an explicit
+        index for multi-universe sessions when you want to target a specific
+        universe.
 
     Notes
     -----
+    The returned object is a snapshot: :attr:`variables` and :attr:`datums`
+    are exposed as immutable tuples so the reported state stays consistent
+    with :attr:`x0`, :attr:`bounds`, and :attr:`weights`.
+
     Tao's merit function is
 
     .. math::
@@ -160,14 +172,16 @@ class TaoOptimizationProblem:
     evaluation will follow in subsequent slices.
     """
 
-    tao: _TaoLike
-    universe: int = 1
-    variables: list[VariableInfo] = field(init=False)
-    datums: list[DatumInfo] = field(init=False)
+    tao: "Tao"
+    universe: int | None = None
+    variables: tuple[VariableInfo, ...] = field(init=False)
+    datums: tuple[DatumInfo, ...] = field(init=False)
 
     def __post_init__(self) -> None:
-        self.variables = _collect_active_variables(self.tao)
-        self.datums = _collect_active_datums(self.tao, self.universe)
+        if self.universe is None:
+            self.universe = _resolve_default_universe(self.tao)
+        self.variables = tuple(_collect_active_variables(self.tao))
+        self.datums = tuple(_collect_active_datums(self.tao, self.universe))
         self._x0 = np.array([v.initial_value for v in self.variables], dtype=float)
         _validate_weights(self.variables, self.datums)
         if not self.variables:
@@ -243,7 +257,40 @@ def _finite_limit(value: float, sign: int) -> float:
     return float(value)
 
 
-def _validate_weights(variables: list[VariableInfo], datums: list[DatumInfo]) -> None:
+def _resolve_default_universe(tao: _TaoLike) -> int:
+    """
+    Read ``s%global%default_universe`` from a live Tao.
+
+    Falls back to universe 1 (with a warning) when the Tao-like object
+    doesn't expose ``tao_global`` — the two common cases being (a) a stubbed
+    fake in a unit test, (b) a future pytao where the helper has been
+    renamed. Falling back rather than raising keeps the old single-universe
+    default working for everything that worked before.
+    """
+    tao_global = getattr(tao, "tao_global", None)
+    if not callable(tao_global):
+        logger.warning(
+            "Tao instance does not expose tao_global(); falling back to "
+            "universe=1. Pass universe=... explicitly to silence this."
+        )
+        return 1
+    try:
+        globals_dict = tao_global()
+    except Exception as exc:  # pragma: no cover - defensive
+        logger.warning("tao_global() raised %s; falling back to universe=1.", exc)
+        return 1
+    default = globals_dict.get("default_universe")
+    if default is None:
+        logger.warning(
+            "tao_global() did not report default_universe; falling back to universe=1."
+        )
+        return 1
+    return int(default)
+
+
+def _validate_weights(
+    variables: tuple[VariableInfo, ...], datums: tuple[DatumInfo, ...]
+) -> None:
     """
     Reject negative weights at the boundary.
 

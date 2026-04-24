@@ -32,8 +32,12 @@ Highlights:
   optimizer libraries see standard unbounded-side semantics.
 - Rejects negative weights at construction — catches a class of user errors
   at the boundary rather than silently producing NaNs later.
-- `VariableInfo` and `DatumInfo` are frozen dataclasses suitable for tables,
-  serialisation, or passing between modules.
+- Multi-universe aware: with no argument, `TaoOptimizationProblem` reads
+  Tao's live `s%global%default_universe`; pass `universe=N` to pin the
+  snapshot to a specific universe.
+- `problem.variables` and `problem.datums` are immutable tuples of frozen
+  dataclasses, so the snapshot cannot drift out of sync with `x0`,
+  `bounds`, and `weights`.
 
 This is the first slice of a larger Python-driven optimization workflow.
 Follow-up releases will add merit evaluation, Jacobian access, and SciPy

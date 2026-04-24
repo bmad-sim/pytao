@@ -63,8 +63,27 @@ problem.variables           # list[VariableInfo]
 problem.datums              # list[DatumInfo]
 ```
 
-`VariableInfo` and `DatumInfo` are frozen dataclasses — safe to pass around,
-store in tables, or serialise without worrying about accidental mutation.
+`problem.variables` and `problem.datums` are tuples of frozen dataclasses, so
+the snapshot is immutable — no accidental `append`/`pop` can desynchronise
+it from the `x0`/`bounds`/`weights` arrays.
+
+## Multi-universe sessions
+
+By default, `TaoOptimizationProblem` reads Tao's live
+`s%global%default_universe` and snapshots against it — the same behaviour as
+Tao's own `pipe data_*` commands. That means in a single-universe session
+you don't need to think about universes at all, and in a multi-universe
+session the problem follows whatever universe was active when you built it.
+
+To target a specific universe explicitly:
+
+```python
+problem = TaoOptimizationProblem(tao, universe=2)
+```
+
+Useful when you want to inspect several universes side-by-side, or when a
+routine mutates Tao's default universe and you want the snapshot pinned to
+a known one.
 
 ## What's next
 
@@ -82,4 +101,6 @@ Each will ship as its own PR so reviewers can evaluate them independently.
 ## See also
 
 - [API reference](api/optimize.md)
-- Tao manual, chapter on optimization
+- [Tao manual — optimization chapter][tao-opt]
+
+[tao-opt]: https://www.classe.cornell.edu/bmad/tao_manual.pdf
