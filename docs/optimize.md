@@ -17,7 +17,7 @@ from pytao import Tao
 from pytao.optimize import TaoOptimizationProblem
 
 tao = Tao(init_file="tao.init", noplot=True)
-problem = TaoOptimizationProblem(tao)
+problem = TaoOptimizationProblem.from_tao(tao)
 
 print(f"{problem.n_var} active variables, {problem.n_data} active datums")
 
@@ -63,9 +63,12 @@ problem.variables           # list[VariableInfo]
 problem.datums              # list[DatumInfo]
 ```
 
-`problem.variables` and `problem.datums` are tuples of frozen dataclasses, so
-the snapshot is immutable — no accidental `append`/`pop` can desynchronise
-it from the `x0`/`bounds`/`weights` arrays.
+`problem.variables` and `problem.datums` are tuples of frozen Pydantic
+models (built on pytao's `TaoBaseModel`), so the snapshot is immutable —
+no accidental `append`/`pop` can desynchronise it from the
+`x0`/`bounds`/`weights` arrays. You also get JSON / YAML / msgpack
+round-tripping for free via the inherited `.write()` / `.from_file()`
+helpers.
 
 ## Multi-universe sessions
 
@@ -78,7 +81,7 @@ session the problem follows whatever universe was active when you built it.
 To target a specific universe explicitly:
 
 ```python
-problem = TaoOptimizationProblem(tao, universe=2)
+problem = TaoOptimizationProblem.from_tao(tao, universe=2)
 ```
 
 Useful when you want to inspect several universes side-by-side, or when a

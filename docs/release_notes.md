@@ -13,7 +13,7 @@ from pytao import Tao
 from pytao.optimize import TaoOptimizationProblem
 
 tao = Tao(init_file="tao.init", noplot=True)
-problem = TaoOptimizationProblem(tao)
+problem = TaoOptimizationProblem.from_tao(tao)
 
 problem.n_var           # number of active optimization variables
 problem.n_data          # number of active datums
@@ -32,12 +32,14 @@ Highlights:
   optimizer libraries see standard unbounded-side semantics.
 - Rejects negative weights at construction — catches a class of user errors
   at the boundary rather than silently producing NaNs later.
-- Multi-universe aware: with no argument, `TaoOptimizationProblem` reads
-  Tao's live `s%global%default_universe`; pass `universe=N` to pin the
-  snapshot to a specific universe.
-- `problem.variables` and `problem.datums` are immutable tuples of frozen
-  dataclasses, so the snapshot cannot drift out of sync with `x0`,
-  `bounds`, and `weights`.
+- Multi-universe aware: with no argument, `from_tao` reads Tao's live
+  `s%global%default_universe`; pass `universe=N` to pin the snapshot to
+  a specific universe.
+- Built on `TaoBaseModel` (Pydantic) — `problem.variables` and
+  `problem.datums` are immutable tuples of frozen models, so the
+  snapshot cannot drift out of sync with `x0`, `bounds`, and `weights`.
+  JSON / YAML / msgpack round-tripping comes for free via the standard
+  `.write()` / `.from_file()` helpers.
 
 This is the first slice of a larger Python-driven optimization workflow.
 Follow-up releases will add merit evaluation, Jacobian access, and SciPy

@@ -191,7 +191,7 @@ def _simple_problem_tao() -> FakeTao:
 
 def test_problem_extracts_only_active_variables():
     tao = _simple_problem_tao()
-    p = TaoOptimizationProblem(tao)
+    p = TaoOptimizationProblem.from_tao(tao)
     assert p.n_var == 2
     assert [v.name for v in p.variables] == ["quad[1]", "quad[2]"]
     assert p.variables[0].ele_name == "Q1"
@@ -201,7 +201,7 @@ def test_problem_extracts_only_active_variables():
 def test_problem_extracts_only_active_datums():
     tao = _simple_problem_tao()
     tao.d_arrays[("twiss", "end")][1]["useit_opt"] = False
-    p = TaoOptimizationProblem(tao)
+    p = TaoOptimizationProblem.from_tao(tao)
     assert p.n_data == 1
     assert p.datums[0].name == "twiss.end[1]"
 
@@ -209,7 +209,7 @@ def test_problem_extracts_only_active_datums():
 def test_variable_preserves_merit_and_attribute_metadata():
     tao = _simple_problem_tao()
     tao.var_detail["quad[1]"]["merit_type"] = "limit"
-    p = TaoOptimizationProblem(tao)
+    p = TaoOptimizationProblem.from_tao(tao)
     assert p.variables[0].merit_type == "limit"
     assert p.variables[0].attrib_name == "k1"
     assert p.variables[0].step == pytest.approx(1e-4)
@@ -218,35 +218,35 @@ def test_variable_preserves_merit_and_attribute_metadata():
 def test_datum_preserves_merit_type_and_weight():
     tao = _simple_problem_tao()
     tao.d_arrays[("twiss", "end")][0]["merit_type"] = "max"
-    p = TaoOptimizationProblem(tao)
+    p = TaoOptimizationProblem.from_tao(tao)
     assert p.datums[0].merit_type == "max"
     assert p.datums[0].weight == 10.0
 
 
 def test_unbounded_sentinels_become_inf():
     tao = _simple_problem_tao()
-    p = TaoOptimizationProblem(tao)
+    p = TaoOptimizationProblem.from_tao(tao)
     assert math.isinf(p.variables[1].low_lim) and p.variables[1].low_lim < 0
     assert math.isinf(p.variables[1].high_lim) and p.variables[1].high_lim > 0
 
 
 def test_finite_limits_preserved():
     tao = _simple_problem_tao()
-    p = TaoOptimizationProblem(tao)
+    p = TaoOptimizationProblem.from_tao(tao)
     assert p.variables[0].low_lim == -5.0
     assert p.variables[0].high_lim == 5.0
 
 
 def test_x0_matches_model_values():
     tao = _simple_problem_tao()
-    p = TaoOptimizationProblem(tao)
+    p = TaoOptimizationProblem.from_tao(tao)
     np.testing.assert_array_equal(p.x0, np.array([0.5, -0.3]))
 
 
 def test_x0_returns_copy_not_reference():
     """Mutating the returned x0 must not affect the problem's internal state."""
     tao = _simple_problem_tao()
-    p = TaoOptimizationProblem(tao)
+    p = TaoOptimizationProblem.from_tao(tao)
     x = p.x0
     x[0] = 999.0
     np.testing.assert_array_equal(p.x0, np.array([0.5, -0.3]))
@@ -254,7 +254,7 @@ def test_x0_returns_copy_not_reference():
 
 def test_bounds_and_bounds_array_shapes():
     tao = _simple_problem_tao()
-    p = TaoOptimizationProblem(tao)
+    p = TaoOptimizationProblem.from_tao(tao)
     assert p.bounds == [(-5.0, 5.0), (-math.inf, math.inf)]
     lb, ub = p.bounds_array
     assert lb.shape == (2,) and ub.shape == (2,)
@@ -264,13 +264,13 @@ def test_bounds_and_bounds_array_shapes():
 
 def test_weights_vector():
     tao = _simple_problem_tao()
-    p = TaoOptimizationProblem(tao)
+    p = TaoOptimizationProblem.from_tao(tao)
     np.testing.assert_array_equal(p.weights, [10.0, 100.0])
 
 
 def test_variable_names_order_stable():
     tao = _simple_problem_tao()
-    p = TaoOptimizationProblem(tao)
+    p = TaoOptimizationProblem.from_tao(tao)
     assert p.variable_names == ["quad[1]", "quad[2]"]
 
 
@@ -292,7 +292,7 @@ def test_multiple_v1_groups_are_all_enumerated():
     tao.var_detail["bend[1]"] = _make_var_detail(
         0.05, -math.inf, math.inf, ele_name="B1", attrib_name="angle"
     )
-    p = TaoOptimizationProblem(tao)
+    p = TaoOptimizationProblem.from_tao(tao)
     assert [v.v1_name for v in p.variables] == ["quad", "quad", "bend"]
     assert p.n_var == 3
 
@@ -318,7 +318,7 @@ def test_multiple_d1_and_d2_groups_enumerated():
             "exists": True,
         }
     ]
-    p = TaoOptimizationProblem(tao)
+    p = TaoOptimizationProblem.from_tao(tao)
     assert p.n_data == 3
     assert {d.d1_name for d in p.datums} == {"end", "max"}
 
@@ -331,7 +331,7 @@ def test_warns_when_no_active_variables(caplog):
     for row in tao.var_v_array_rows["quad"]:
         row["useit_opt"] = False
     with caplog.at_level("WARNING", logger="pytao.optimize.problem"):
-        TaoOptimizationProblem(tao)
+        TaoOptimizationProblem.from_tao(tao)
     assert any("no active variables" in rec.message for rec in caplog.records)
 
 
@@ -340,7 +340,7 @@ def test_warns_when_no_active_datums(caplog):
     for row in tao.d_arrays[("twiss", "end")]:
         row["useit_opt"] = False
     with caplog.at_level("WARNING", logger="pytao.optimize.problem"):
-        TaoOptimizationProblem(tao)
+        TaoOptimizationProblem.from_tao(tao)
     assert any("no active datums" in rec.message for rec in caplog.records)
 
 
@@ -351,20 +351,20 @@ def test_negative_datum_weight_is_rejected():
     tao = _simple_problem_tao()
     tao.d_arrays[("twiss", "end")][0]["weight"] = -1.0
     with pytest.raises(ValueError, match="negative weight"):
-        TaoOptimizationProblem(tao)
+        TaoOptimizationProblem.from_tao(tao)
 
 
 def test_negative_variable_weight_is_rejected():
     tao = _simple_problem_tao()
     tao.var_detail["quad[1]"]["weight"] = -2.0
     with pytest.raises(ValueError, match="negative weight"):
-        TaoOptimizationProblem(tao)
+        TaoOptimizationProblem.from_tao(tao)
 
 
 def test_zero_weight_is_accepted():
     tao = _simple_problem_tao()
     # Default weights are 0.0 on variables; make sure that's fine.
-    p = TaoOptimizationProblem(tao)
+    p = TaoOptimizationProblem.from_tao(tao)
     assert p.n_var == 2
 
 
@@ -425,7 +425,7 @@ def test_datum_info_is_frozen():
 
 def test_variables_is_immutable_tuple():
     tao = _simple_problem_tao()
-    p = TaoOptimizationProblem(tao)
+    p = TaoOptimizationProblem.from_tao(tao)
     assert isinstance(p.variables, tuple)
     with pytest.raises(AttributeError):
         p.variables.append(p.variables[0])  # type: ignore[attr-defined]
@@ -433,7 +433,7 @@ def test_variables_is_immutable_tuple():
 
 def test_datums_is_immutable_tuple():
     tao = _simple_problem_tao()
-    p = TaoOptimizationProblem(tao)
+    p = TaoOptimizationProblem.from_tao(tao)
     assert isinstance(p.datums, tuple)
     with pytest.raises(AttributeError):
         p.datums.append(p.datums[0])  # type: ignore[attr-defined]
@@ -450,7 +450,7 @@ def test_universe_defaults_to_live_tao_global():
     tao.d2_names_by_universe = {3: ["twiss"]}
     tao.d_arrays_by_universe = {(3, "twiss", "end"): tao.d_arrays[("twiss", "end")]}
     tao.d_arrays = {}  # universe=1 sees nothing
-    p = TaoOptimizationProblem(tao)
+    p = TaoOptimizationProblem.from_tao(tao)
     assert p.universe == 3
     assert p.n_data == 2
 
@@ -484,7 +484,7 @@ def test_explicit_universe_overrides_default():
             }
         ]
     }
-    p = TaoOptimizationProblem(tao, universe=2)
+    p = TaoOptimizationProblem.from_tao(tao, universe=2)
     assert p.universe == 2
     assert p.n_data == 1
     assert p.datums[0].meas_value == 5.0
@@ -505,6 +505,6 @@ def test_universe_falls_back_when_tao_global_missing(caplog):
     tao.d1_arrays = simple.d1_arrays
     tao.d_arrays = simple.d_arrays
     with caplog.at_level("WARNING", logger="pytao.optimize.problem"):
-        p = TaoOptimizationProblem(tao)
+        p = TaoOptimizationProblem.from_tao(tao)
     assert p.universe == 1
     assert any("does not expose tao_global" in rec.message for rec in caplog.records)

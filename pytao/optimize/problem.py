@@ -12,10 +12,13 @@ from __future__ import annotations
 
 import logging
 import math
-from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, Protocol
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
+from pydantic import ConfigDict
+from typing_extensions import Self
+
+from ..model.base import TaoBaseModel
 
 if TYPE_CHECKING:
     from ..tao import Tao
@@ -25,29 +28,12 @@ logger = logging.getLogger(__name__)
 
 # Finite sentinel used when Tao reports an unbounded side. Tao stores
 # ``low_lim`` / ``high_lim`` as plain Fortran reals and uses very large values
-# (±1e30) to mean "no limit". scipy's bounded solvers accept ±inf, so we
-# translate anything past this threshold to ±inf.
+# (±1e30) to mean "no limit". Bounded optimizer libraries expect ±inf, so we
+# translate anything past this threshold.
 _UNBOUNDED_THRESHOLD = 1e20
 
 
-class _TaoLike(Protocol):
-    """Structural type covering the bits of the Tao API we use for introspection."""
-
-    def var_general(self, *, raises: bool = True) -> list[dict[str, Any]]: ...
-    def var_v_array(self, v1_var: str, *, raises: bool = True) -> list[dict[str, Any]]: ...
-    def var(self, var: str, *, raises: bool = True) -> dict[str, Any]: ...
-    def data_d2_array(self, ix_uni: str = "", *, raises: bool = True) -> list[str]: ...
-    def data_d1_array(self, d2_datum: str, *, raises: bool = True) -> list[dict[str, Any]]: ...
-    def data_d_array(
-        self, d2_name: str, d1_name: str, *, ix_uni: str = "", raises: bool = True
-    ) -> list[dict[str, Any]]: ...
-
-    # tao_global is used to resolve the live ``default_universe``; we read it
-    # via getattr so non-Tao test stubs that omit it still work.
-
-
-@dataclass(frozen=True)
-class VariableInfo:
+class VariableInfo(TaoBaseModel):
     """
     Description of a single Tao optimization variable.
 
@@ -67,8 +53,7 @@ class VariableInfo:
     high_lim : float
         Upper bound; ``+inf`` if Tao reports no limit.
     step : float
-        Step size suggested by Tao (useful for finite-difference fallbacks
-        in downstream optimizers).
+        Step size suggested by Tao.
     weight : float
         Merit weight applied to limit-type variable violations.
     merit_type : str
@@ -79,6 +64,8 @@ class VariableInfo:
     attrib_name : str
         Attribute being varied (e.g. ``"k1"``).
     """
+
+    model_config = ConfigDict(frozen=True)
 
     name: str
     v1_name: str
@@ -93,8 +80,7 @@ class VariableInfo:
     attrib_name: str
 
 
-@dataclass(frozen=True)
-class DatumInfo:
+class DatumInfo(TaoBaseModel):
     """
     Description of a single Tao datum that contributes to the merit.
 
@@ -118,6 +104,8 @@ class DatumInfo:
         Merit weight (applied as ``weight * delta**2``).
     """
 
+    model_config = ConfigDict(frozen=True)
+
     name: str
     d2_name: str
     d1_name: str
@@ -130,34 +118,31 @@ class DatumInfo:
     weight: float
 
 
-@dataclass
-class TaoOptimizationProblem:
+class TaoOptimizationProblem(TaoBaseModel):
     """
     A snapshot of a Tao optimization problem, exposed for Python inspection.
 
-    Build one of these from a running :class:`~pytao.Tao` instance. The
-    constructor enumerates the active variables and datums (those with
-    ``useit_opt == True``), translates Tao's ``±1e30`` "no limit" sentinels to
-    ``±inf``, and validates that weights are non-negative.
+    Build one of these with :meth:`from_tao` from a running
+    :class:`~pytao.Tao` instance. The classmethod enumerates the active
+    variables and datums (those with ``useit_opt == True``), translates Tao's
+    ``±1e30`` "no limit" sentinels to ``±inf``, and validates that weights
+    are non-negative.
 
-    Parameters
+    Because this is a pure data snapshot, it supports everything other
+    :class:`~pytao.model.base.TaoBaseModel` subclasses do: round-trip via
+    JSON/YAML/msgpack, comparison, pretty printing.
+
+    Attributes
     ----------
-    tao : Tao
-        A live Tao instance.
-    universe : int, optional
-        Universe index to query for datums. When omitted (``None``, the
-        default), the constructor reads Tao's live
-        ``s%global%default_universe`` and snapshots against that — matching
-        the behaviour of Tao's built-in data pipe commands. Pass an explicit
-        index for multi-universe sessions when you want to target a specific
-        universe.
+    universe : int
+        Tao universe the snapshot was taken from.
+    variables : tuple of :class:`VariableInfo`
+        Active optimization variables.
+    datums : tuple of :class:`DatumInfo`
+        Active datums contributing to the merit.
 
     Notes
     -----
-    The returned object is a snapshot: :attr:`variables` and :attr:`datums`
-    are exposed as immutable tuples so the reported state stays consistent
-    with :attr:`x0`, :attr:`bounds`, and :attr:`weights`.
-
     Tao's merit function is
 
     .. math::
@@ -172,30 +157,49 @@ class TaoOptimizationProblem:
     evaluation will follow in subsequent slices.
     """
 
-    tao: "Tao"
-    universe: int | None = None
-    variables: tuple[VariableInfo, ...] = field(init=False)
-    datums: tuple[DatumInfo, ...] = field(init=False)
+    model_config = ConfigDict(frozen=True)
 
-    def __post_init__(self) -> None:
-        if self.universe is None:
-            self.universe = _resolve_default_universe(self.tao)
-        self.variables = tuple(_collect_active_variables(self.tao))
-        self.datums = tuple(_collect_active_datums(self.tao, self.universe))
-        self._x0 = np.array([v.initial_value for v in self.variables], dtype=float)
-        _validate_weights(self.variables, self.datums)
-        if not self.variables:
+    universe: int
+    variables: tuple[VariableInfo, ...]
+    datums: tuple[DatumInfo, ...]
+
+    @classmethod
+    def from_tao(cls, tao: "Tao", *, universe: int | None = None) -> Self:
+        """
+        Build a snapshot from a live Tao instance.
+
+        Parameters
+        ----------
+        tao : Tao
+            A live Tao instance.
+        universe : int, optional
+            Universe index to query for datums. When omitted (``None``, the
+            default), reads Tao's live ``s%global%default_universe`` and
+            snapshots against that — matching the behaviour of Tao's built-in
+            data pipe commands. Pass an explicit index for multi-universe
+            sessions when you want to target a specific universe.
+
+        Returns
+        -------
+        TaoOptimizationProblem
+        """
+        resolved = universe if universe is not None else _resolve_default_universe(tao)
+        variables = tuple(_collect_active_variables(tao))
+        datums = tuple(_collect_active_datums(tao, resolved))
+        _validate_weights(variables, datums)
+        if not variables:
             logger.warning(
                 "TaoOptimizationProblem built with no active variables "
                 "(check good_user / good_opt flags)."
             )
-        if not self.datums:
+        if not datums:
             logger.warning(
                 "TaoOptimizationProblem built with no active datums "
                 "(check good_user / good_opt flags)."
             )
+        return cls(universe=resolved, variables=variables, datums=datums)
 
-    # ---- static views ----------------------------------------------------
+    # ---- derived views ----------------------------------------------------
 
     @property
     def n_var(self) -> int:
@@ -210,7 +214,7 @@ class TaoOptimizationProblem:
     @property
     def x0(self) -> np.ndarray:
         """Initial variable vector captured at construction."""
-        return self._x0.copy()
+        return np.array([v.initial_value for v in self.variables], dtype=float)
 
     @property
     def variable_names(self) -> list[str]:
@@ -257,15 +261,13 @@ def _finite_limit(value: float, sign: int) -> float:
     return float(value)
 
 
-def _resolve_default_universe(tao: _TaoLike) -> int:
+def _resolve_default_universe(tao: "Tao") -> int:
     """
     Read ``s%global%default_universe`` from a live Tao.
 
-    Falls back to universe 1 (with a warning) when the Tao-like object
-    doesn't expose ``tao_global`` — the two common cases being (a) a stubbed
-    fake in a unit test, (b) a future pytao where the helper has been
-    renamed. Falling back rather than raising keeps the old single-universe
-    default working for everything that worked before.
+    Falls back to universe 1 (with a warning) when the Tao object doesn't
+    expose ``tao_global`` — keeps the pre-default behaviour working for any
+    object that happens to be missing the helper.
     """
     tao_global = getattr(tao, "tao_global", None)
     if not callable(tao_global):
@@ -312,12 +314,12 @@ def _validate_weights(
             )
 
 
-def _collect_active_variables(tao: _TaoLike) -> list[VariableInfo]:
+def _collect_active_variables(tao: "Tao") -> list[VariableInfo]:
     """Enumerate every ``useit_opt == True`` variable from Tao."""
     results: list[VariableInfo] = []
     for v1 in tao.var_general():
         v1_name = v1["name"]
-        rows = tao.var_v_array(v1_name)
+        rows: list[dict[str, Any]] = tao.var_v_array(v1_name)
         rows_sorted = sorted(rows, key=lambda r: int(r["ix_v1"]))
         for row in rows_sorted:
             if not row.get("useit_opt", False):
@@ -345,7 +347,7 @@ def _collect_active_variables(tao: _TaoLike) -> list[VariableInfo]:
     return results
 
 
-def _collect_active_datums(tao: _TaoLike, universe: int) -> list[DatumInfo]:
+def _collect_active_datums(tao: "Tao", universe: int) -> list[DatumInfo]:
     """Enumerate every ``useit_opt == True`` datum for ``universe``."""
     results: list[DatumInfo] = []
     for d2 in tao.data_d2_array(str(universe)):
@@ -355,7 +357,9 @@ def _collect_active_datums(tao: _TaoLike, universe: int) -> list[DatumInfo]:
         d2_ref = f"{universe}@{d2_name}"
         for d1 in tao.data_d1_array(d2_ref):
             d1_name = d1["name"] if isinstance(d1, dict) else d1
-            rows = tao.data_d_array(d2_name, d1_name, ix_uni=str(universe))
+            rows: list[dict[str, Any]] = tao.data_d_array(
+                d2_name, d1_name, ix_uni=str(universe)
+            )
             rows_sorted = sorted(rows, key=lambda r: int(r["ix_d1"]))
             for row in rows_sorted:
                 if not row.get("useit_opt", False):
