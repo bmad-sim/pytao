@@ -1777,6 +1777,12 @@ class SpaceChargeCom(TaoSettableModel):
     lsc_sigma_cutoff : float
         Cutoff for the 1-dim longitudinal SC calc. If a bin sigma is < cutoff
     * sigma_ave then ignore.
+    mesh_growth_factor : float
+        Fractional padding when growing SC mesh (default: 10%). Set to 0 for
+    tight-fit (no caching speedup).
+    mesh_shrink_factor : float
+        Fractional threshold for shrinking SC mesh (default: 10%). Mesh
+    shrinks when bunch fills < (1-this) of the mesh range.
     n_bin : int
         Number of bins used
     n_shield_images : int
@@ -1820,6 +1826,20 @@ class SpaceChargeCom(TaoSettableModel):
         description=(
             "Cutoff for the 1-dim longitudinal SC calc. If a bin sigma is < cutoff * "
             "sigma_ave then ignore."
+        ),
+    )
+    mesh_growth_factor: float = Field(
+        default=0.1,
+        description=(
+            "Fractional padding when growing SC mesh (default: 10%). Set to 0 for "
+            "tight-fit (no caching speedup)."
+        ),
+    )
+    mesh_shrink_factor: float = Field(
+        default=0.1,
+        description=(
+            "Fractional threshold for shrinking SC mesh (default: 10%). Mesh shrinks "
+            "when bunch fills < (1-this) of the mesh range."
         ),
     )
     n_bin: int = Field(default=0, description="Number of bins used")
