@@ -8,7 +8,7 @@ from beamphysics.species import mass_of
 from typing_extensions import Self
 
 from ..base import ArchiveFormat, TaoModel, load_model_data
-from ..types import FloatSequence
+from ..types import NDArray, empty_ndarray
 
 if typing.TYPE_CHECKING:
     from pytao import Tao
@@ -208,79 +208,79 @@ def comb_data_from_tao(tao: Tao, ix_branch: int = 0):
 
 
 class Comb(TaoModel, extra="allow"):
-    charge_live: FloatSequence = []
-    cov_p__p: FloatSequence = []
-    cov_px__p: FloatSequence = []
-    cov_px__px: FloatSequence = []
-    cov_px__py: FloatSequence = []
-    cov_px__y: FloatSequence = []
-    cov_px__z: FloatSequence = []
-    cov_py__p: FloatSequence = []
-    cov_py__py: FloatSequence = []
-    cov_py__z: FloatSequence = []
-    cov_x__p: FloatSequence = []
-    cov_x__px: FloatSequence = []
-    cov_x__py: FloatSequence = []
-    cov_x__x: FloatSequence = []
-    cov_x__y: FloatSequence = []
-    cov_x__z: FloatSequence = []
-    cov_y__p: FloatSequence = []
-    cov_y__py: FloatSequence = []
-    cov_y__y: FloatSequence = []
-    cov_y__z: FloatSequence = []
-    cov_z__p: FloatSequence = []
-    cov_z__z: FloatSequence = []
-    ix_ele: FloatSequence = []
-    mean_delta: FloatSequence = []
-    mean_energy: FloatSequence = []
-    mean_p: FloatSequence = []
-    mean_px: FloatSequence = []
-    mean_py: FloatSequence = []
-    mean_t: FloatSequence = []
-    mean_x: FloatSequence = []
-    mean_y: FloatSequence = []
-    mean_z: FloatSequence = []
-    n_particle_live: FloatSequence = []
-    n_particle_lost_in_ele: FloatSequence = []
-    norm_emit_x: FloatSequence = []
-    norm_emit_y: FloatSequence = []
-    p0c: FloatSequence = []
-    rel_max_delta: FloatSequence = []
-    rel_max_px: FloatSequence = []
-    rel_max_py: FloatSequence = []
-    rel_max_x: FloatSequence = []
-    rel_max_y: FloatSequence = []
-    rel_max_z: FloatSequence = []
-    rel_min_delta: FloatSequence = []
-    rel_min_px: FloatSequence = []
-    rel_min_py: FloatSequence = []
-    rel_min_x: FloatSequence = []
-    rel_min_y: FloatSequence = []
-    rel_min_z: FloatSequence = []
-    s: FloatSequence = []
-    sigma_delta: FloatSequence = []
-    sigma_p: FloatSequence = []
-    sigma_px: FloatSequence = []
-    sigma_py: FloatSequence = []
-    sigma_x: FloatSequence = []
-    sigma_y: FloatSequence = []
-    sigma_z: FloatSequence = []
-    twiss_alpha_a: FloatSequence = []
-    twiss_alpha_b: FloatSequence = []
-    twiss_alpha_x: FloatSequence = []
-    twiss_alpha_y: FloatSequence = []
-    twiss_beta_a: FloatSequence = []
-    twiss_beta_b: FloatSequence = []
-    twiss_beta_x: FloatSequence = []
-    twiss_beta_y: FloatSequence = []
-    twiss_eta_a: FloatSequence = []
-    twiss_eta_b: FloatSequence = []
-    twiss_eta_x: FloatSequence = []
-    twiss_eta_y: FloatSequence = []
-    twiss_phi_a: FloatSequence = []
-    twiss_phi_b: FloatSequence = []
-    twiss_phi_x: FloatSequence = []
-    twiss_phi_y: FloatSequence = []
+    charge_live: NDArray = empty_ndarray()
+    cov_p__p: NDArray = empty_ndarray()
+    cov_px__p: NDArray = empty_ndarray()
+    cov_px__px: NDArray = empty_ndarray()
+    cov_px__py: NDArray = empty_ndarray()
+    cov_px__y: NDArray = empty_ndarray()
+    cov_px__z: NDArray = empty_ndarray()
+    cov_py__p: NDArray = empty_ndarray()
+    cov_py__py: NDArray = empty_ndarray()
+    cov_py__z: NDArray = empty_ndarray()
+    cov_x__p: NDArray = empty_ndarray()
+    cov_x__px: NDArray = empty_ndarray()
+    cov_x__py: NDArray = empty_ndarray()
+    cov_x__x: NDArray = empty_ndarray()
+    cov_x__y: NDArray = empty_ndarray()
+    cov_x__z: NDArray = empty_ndarray()
+    cov_y__p: NDArray = empty_ndarray()
+    cov_y__py: NDArray = empty_ndarray()
+    cov_y__y: NDArray = empty_ndarray()
+    cov_y__z: NDArray = empty_ndarray()
+    cov_z__p: NDArray = empty_ndarray()
+    cov_z__z: NDArray = empty_ndarray()
+    ix_ele: NDArray = empty_ndarray()
+    mean_delta: NDArray = empty_ndarray()
+    mean_energy: NDArray = empty_ndarray()
+    mean_p: NDArray = empty_ndarray()
+    mean_px: NDArray = empty_ndarray()
+    mean_py: NDArray = empty_ndarray()
+    mean_t: NDArray = empty_ndarray()
+    mean_x: NDArray = empty_ndarray()
+    mean_y: NDArray = empty_ndarray()
+    mean_z: NDArray = empty_ndarray()
+    n_particle_live: NDArray = empty_ndarray()
+    n_particle_lost_in_ele: NDArray = empty_ndarray()
+    norm_emit_x: NDArray = empty_ndarray()
+    norm_emit_y: NDArray = empty_ndarray()
+    p0c: NDArray = empty_ndarray()
+    rel_max_delta: NDArray = empty_ndarray()
+    rel_max_px: NDArray = empty_ndarray()
+    rel_max_py: NDArray = empty_ndarray()
+    rel_max_x: NDArray = empty_ndarray()
+    rel_max_y: NDArray = empty_ndarray()
+    rel_max_z: NDArray = empty_ndarray()
+    rel_min_delta: NDArray = empty_ndarray()
+    rel_min_px: NDArray = empty_ndarray()
+    rel_min_py: NDArray = empty_ndarray()
+    rel_min_x: NDArray = empty_ndarray()
+    rel_min_y: NDArray = empty_ndarray()
+    rel_min_z: NDArray = empty_ndarray()
+    s: NDArray = empty_ndarray()
+    sigma_delta: NDArray = empty_ndarray()
+    sigma_p: NDArray = empty_ndarray()
+    sigma_px: NDArray = empty_ndarray()
+    sigma_py: NDArray = empty_ndarray()
+    sigma_x: NDArray = empty_ndarray()
+    sigma_y: NDArray = empty_ndarray()
+    sigma_z: NDArray = empty_ndarray()
+    twiss_alpha_a: NDArray = empty_ndarray()
+    twiss_alpha_b: NDArray = empty_ndarray()
+    twiss_alpha_x: NDArray = empty_ndarray()
+    twiss_alpha_y: NDArray = empty_ndarray()
+    twiss_beta_a: NDArray = empty_ndarray()
+    twiss_beta_b: NDArray = empty_ndarray()
+    twiss_beta_x: NDArray = empty_ndarray()
+    twiss_beta_y: NDArray = empty_ndarray()
+    twiss_eta_a: NDArray = empty_ndarray()
+    twiss_eta_b: NDArray = empty_ndarray()
+    twiss_eta_x: NDArray = empty_ndarray()
+    twiss_eta_y: NDArray = empty_ndarray()
+    twiss_phi_a: NDArray = empty_ndarray()
+    twiss_phi_b: NDArray = empty_ndarray()
+    twiss_phi_x: NDArray = empty_ndarray()
+    twiss_phi_y: NDArray = empty_ndarray()
 
     def query(self, tao: Tao) -> Self:
         return self.from_tao(tao)
@@ -309,7 +309,7 @@ class Comb(TaoModel, extra="allow"):
             if tao.beam(ix_branch)["ds_save"] <= 0:
                 return cls()
 
-        return cls(**comb_data_from_tao(tao, ix_branch=ix_branch, **kwargs))
+        return cls(**comb_data_from_tao(tao, ix_branch=ix_branch))
 
     def slice_by_s(self, s_start: float, s_end: float, *, inclusive: bool = True) -> Comb:
         """
@@ -350,15 +350,16 @@ def combine_combs(combs: typing.Sequence[Comb]) -> Comb:
     attrs = set(Comb.model_fields) - {"command_args"}
     res = Comb()
 
-    for comb in combs:
-        for attr in attrs:
-            getattr(res, attr).extend(getattr(comb, attr))
+    for attr in attrs:
+        parts = [getattr(comb, attr) for comb in combs]
+        setattr(res, attr, np.concat(parts))
 
     order = np.argsort(res.s)
     for attr in attrs:
         value = getattr(res, attr)
 
-        setattr(res, attr, np.asarray(value)[order])
+        if value.size:
+            setattr(res, attr, np.asarray(value)[order])
     return res
 
 

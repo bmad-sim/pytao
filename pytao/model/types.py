@@ -187,6 +187,32 @@ class _PydanticNDArray:
         raise ValueError(f"No conversion from {value!r} to numpy ndarray")
 
 
+_zeros = np.zeros(0)
+
+
+class _EmptyEqualityCheckNDArray(np.ndarray):
+    def __repr__(self):
+        return repr(_zeros)
+
+    def __str__(self):
+        return str(_zeros)
+
+    def __eq__(self, other):
+        # NOTE: this is strictly for equality checks when 'exclude_defaults" is
+        # set for pydantic.
+        if isinstance(other, np.ndarray):
+            if other.size == 0 and self.size == 0:
+                return True
+            return False
+        if np.isscalar(other):
+            return False
+        return len(other) == 0
+
+
+def empty_ndarray():
+    return np.zeros(0).view(_EmptyEqualityCheckNDArray)
+
+
 FloatSequence = Annotated[Sequence[float], pydantic.BeforeValidator(_sequence_helper)]
 IntSequence = Annotated[Sequence[int], pydantic.BeforeValidator(_sequence_to_list)]
 ArgumentType = int | float | str | IntSequence | FloatSequence

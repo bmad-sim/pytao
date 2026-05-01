@@ -61,6 +61,13 @@ def _check_equality(obj1: Any, obj2: Any) -> bool:
     -------
     bool
     """
+
+    # TODO: bring this fix back to lume-genesis
+    if isinstance(obj1, np.ndarray) or isinstance(obj2, np.ndarray):
+        if not (isinstance(obj1, np.ndarray) and isinstance(obj2, np.ndarray)):
+            return False
+        return obj1.shape == obj2.shape and np.array_equal(obj1, obj2)
+
     if not isinstance(obj1, type(obj2)):
         return False
 
@@ -93,12 +100,6 @@ def _check_equality(obj1: Any, obj2: Any) -> bool:
             _check_equality(obj1_value, obj2_value)
             for obj1_value, obj2_value in zip(obj1, obj2)
         )
-
-    if isinstance(obj1, np.ndarray):
-        if not obj1.shape:
-            # Empty arrays
-            return bool(not obj2.shape)
-        return np.array_equal(obj1, obj2)
 
     if isinstance(obj1, float):
         return obj1 == obj2
