@@ -38,6 +38,14 @@ from bokeh.plotting import figure
 from pydantic.dataclasses import dataclass
 from typing_extensions import NotRequired, TypedDict
 
+from pytao.plotting.modern_layout import (
+    BoxData,
+    MarkerData,
+    ModernLatticeLayoutGraph,
+    ModernLayoutConfig,
+    StemData,
+)
+
 from ..core import AnyPath, TaoCommandError
 from . import floor_plan_shapes, pgplot, util
 from .curves import CurveIndexToCurve, PlotCurveLine, PlotCurveSymbols, TaoCurveSettings
@@ -71,6 +79,7 @@ from .util import Limit, OptionalLimit, fix_grid_limits
 
 if typing.TYPE_CHECKING:
     from .. import Tao
+    from .modern_layout import LayoutSection
 
 
 logger = logging.getLogger(__name__)
@@ -112,6 +121,7 @@ class _Defaults:
     show_sliders: bool = True
     line_width_scale: float = 0.5
     floor_line_width_scale: float = 0.5
+    layout_style: ModernLayoutConfig | None = None
 
     @classmethod
     def get_size_for_class(
@@ -123,9 +133,13 @@ class _Defaults:
         default = {
             BokehBasicGraph: (cls.width, cls.height),
             BokehLatticeLayoutGraph: (cls.width, cls.layout_height),
+            BokehModernLatticeLayoutGraph: (cls.width, cls.layout_height),
             BokehFloorPlanGraph: (cls.width, cls.height),
         }[typ]
         return (user_width or default[0], user_height or default[1])
+
+
+_UNSET = object()
 
 
 def set_defaults(
@@ -148,6 +162,7 @@ def set_defaults(
     show_sliders: bool | None = None,
     line_width_scale: float | None = None,
     floor_line_width_scale: float | None = None,
+    layout_style: ModernLayoutConfig | None | object = _UNSET,
 ):
     """
     Change defaults used for Bokeh plots.
@@ -191,6 +206,12 @@ def set_defaults(
         Plot line width scaling factor applied to Tao's line width.
     floor_line_width_scale : float, default=0.5
         Floor plan line width scaling factor applied to Tao's line width.
+    layout_style : ModernLayoutConfig or None, optional
+        Modern-layout config used for ``lat_layout`` graphs.  When a
+        ``ModernLayoutConfig`` is supplied, every new ``GraphManager`` (and
+        any existing manager that hasn't pinned a per-instance value) will
+        render layouts via :class:`ModernLatticeLayoutGraph`. Pass ``None``
+        to revert to the Tao-driven lattice layout.
     """
 
     if width is not None:
@@ -231,6 +252,8 @@ def set_defaults(
         _Defaults.line_width_scale = float(line_width_scale)
     if floor_line_width_scale is not None:
         _Defaults.floor_line_width_scale = float(floor_line_width_scale)
+    if layout_style is not _UNSET:
+        _Defaults.layout_style = typing.cast("ModernLayoutConfig | None", layout_style)
     return {
         key: value
         for key, value in vars(_Defaults).items()
@@ -951,6 +974,227 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
         return fig
 
 
+class BokehModernLatticeLayoutGraph(BokehGraphBase[ModernLatticeLayoutGraph]):
+    """Bokeh adapter for ``ModernLatticeLayoutGraph``."""
+
+    graph_type: ClassVar[str] = "modern_lat_layout"
+    graph: ModernLatticeLayoutGraph
+
+    def __init__(
+        self,
+        manager: GraphManager,
+        graph: ModernLatticeLayoutGraph,
+        sizing_mode: SizingModeType = "inherit",
+        width: int | None = None,
+        height: int | None = None,
+        aspect_ratio: float | None = None,
+    ) -> None:
+        super().__init__(
+            manager=manager,
+            graph=graph,
+            sizing_mode=sizing_mode,
+            aspect_ratio=aspect_ratio,
+            width=width,
+            height=height,
+        )
+
+    def update_plot(
+        self,
+        fig: figure,
+        *,
+        widgets: list[bokeh.models.Widget] | None = None,
+        tao=None,
+    ) -> None:
+        if tao is None:
+            return
+
+    def create_figure(
+        self,
+        *,
+        tools: str | None = None,
+        toolbar_location: str = "above",
+    ) -> figure:
+        if tools is None:
+            tools = _Defaults.lattice_layout_tools
+
+        add_named_hover = isinstance(tools, str) and "hover" in tools.split(",")
+        if add_named_hover:
+            tools = ",".join(t for t in tools.split(",") if t != "hover")
+
+        graph = self.graph
+        fig = figure(
+            title=f"Lattice layout - {graph.data.branch_name}",
+            x_axis_label="s (m)",
+            toolbar_location=toolbar_location,
+            tools=tools,
+            aspect_ratio=self.aspect_ratio,
+            sizing_mode=self.sizing_mode,
+        )
+
+        box_zoom = get_tool_from_figure(fig, bokeh.models.BoxZoomTool)
+        if box_zoom is not None:
+            box_zoom.match_aspect = False
+
+        fig.yaxis.visible = False
+        fig.ygrid.visible = False
+
+        fig.line(
+            [graph.xlim[0], graph.xlim[1]],
+            [0, 0],
+            color="#333",
+            line_width=2,
+        )
+
+        _draw_modern_layout_sections(fig, graph.sections, graph.ylim[1])
+        _draw_modern_layout_stems(fig, graph.stems)
+        box_renderer = _draw_modern_layout_boxes(fig, graph.boxes)
+        marker_renderers = _draw_modern_layout_markers(fig, graph.markers)
+
+        if add_named_hover:
+            if box_renderer is not None:
+                fig.add_tools(
+                    bokeh.models.HoverTool(
+                        renderers=[box_renderer],
+                        tooltips=[
+                            ("type", "@type"),
+                            ("name", "@name"),
+                            ("s", "@s_start{0.000} → @s_end{0.000} m"),
+                            ("L", "@L{0.000} m"),
+                        ],
+                    )
+                )
+            if marker_renderers:
+                fig.add_tools(
+                    bokeh.models.HoverTool(
+                        renderers=marker_renderers,
+                        tooltips=[
+                            ("type", "@type"),
+                            ("name", "@name"),
+                            ("s", "@x{0.000} m"),
+                        ],
+                    )
+                )
+
+        if self.x_range is not None:
+            fig.x_range = self.x_range
+
+        fig.y_range = bokeh.models.Range1d(
+            start=graph.ylim[0], end=graph.ylim[1], bounds=graph.ylim
+        )
+        return fig
+
+
+def _draw_modern_layout_sections(
+    fig: figure, sections: list[LayoutSection], y_top: float
+) -> None:
+    if not sections:
+        return
+    label_data = {"x": [], "y": [], "text": []}
+    for sec in sections:
+        fig.add_layout(
+            bokeh.models.Span(
+                location=sec.s_min,
+                dimension="height",
+                line_color="#bbb",
+                line_dash="dashed",
+                line_width=1,
+                level="underlay",
+            )
+        )
+        label_data["x"].append(sec.s_min)
+        label_data["y"].append(y_top * 0.92)
+        label_data["text"].append(sec.name)
+    fig.add_layout(
+        bokeh.models.LabelSet(
+            x="x",
+            y="y",
+            text="text",
+            source=ColumnDataSource(label_data),
+            x_offset=3,
+            text_font_size="10px",
+            text_color="#888",
+            text_font_style="bold",
+        )
+    )
+
+
+def _draw_modern_layout_stems(fig: figure, stems: StemData):
+    if not stems["x0"]:
+        return None
+    return fig.segment(
+        x0="x0",
+        y0="y0",
+        x1="x1",
+        y1="y1",
+        color="color",
+        line_alpha=0.5,
+        line_width=1,
+        source=ColumnDataSource(dict(stems)),
+    )
+
+
+def _draw_modern_layout_boxes(fig: figure, boxes: BoxData):
+    if not boxes["left"]:
+        return None
+    return fig.quad(
+        left="left",
+        right="right",
+        top="top",
+        bottom="bottom",
+        color="color",
+        line_color=None,
+        fill_alpha=0.55,
+        source=ColumnDataSource(dict(boxes)),
+    )
+
+
+def _draw_modern_layout_markers(
+    fig: figure,
+    markers: dict[str, MarkerData],
+    *,
+    show_labels: bool = True,
+) -> list:
+    renderers = []
+    for shape, data in markers.items():
+        if not data["x"]:
+            continue
+        r = fig.scatter(
+            x="x",
+            y="y",
+            marker=shape,
+            color="color",
+            line_color="color",
+            size="size",
+            fill_alpha=1.0,
+            source=ColumnDataSource(dict(data)),
+        )
+        renderers.append(r)
+
+        if show_labels:
+            # Trailing portion of the name, after the first underscore — matches
+            # the convention in the reference HTML viewer.
+            label_src = ColumnDataSource(
+                {
+                    "x": list(data["x"]),
+                    "y": [y + 8 for y in data["y"]],
+                    "text": ["_".join(n.split("_")[1:]) for n in data["name"]],
+                    "color": list(data["color"]),
+                }
+            )
+            fig.add_layout(
+                bokeh.models.LabelSet(
+                    x="x",
+                    y="y",
+                    text="text",
+                    source=label_src,
+                    text_font_size="8px",
+                    text_color="color",
+                    text_align="center",
+                )
+            )
+    return renderers
+
+
 class BokehBasicGraph(BokehGraphBase[BasicGraph]):
     graph_type: ClassVar[str] = "basic"
     graph: BasicGraph
@@ -1197,7 +1441,12 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         return []
 
 
-AnyBokehGraph = Union[BokehBasicGraph, BokehLatticeLayoutGraph, BokehFloorPlanGraph]
+AnyBokehGraph = Union[
+    BokehBasicGraph,
+    BokehLatticeLayoutGraph,
+    BokehFloorPlanGraph,
+    BokehModernLatticeLayoutGraph,
+]
 
 
 UIGridLayoutList = list[Optional[bokeh.models.UIElement]]
@@ -1323,7 +1572,8 @@ class BokehAppCreator:
         if not len(graphs):
             raise ValueError("BokehAppCreator requires 1 or more graph")
 
-        if any(isinstance(graph, LatticeLayoutGraph) for graph in graphs):
+        layout_types: tuple[type, ...] = (LatticeLayoutGraph, ModernLatticeLayoutGraph)
+        if any(isinstance(graph, layout_types) for graph in graphs):
             include_layout = False
         elif not any(graph.is_s_plot for graph in graphs):
             include_layout = False
@@ -1433,7 +1683,9 @@ class BokehAppCreator:
             rows[row].append(fig)
 
         for pair in pairs + layout_pairs:
-            is_layout = isinstance(pair.bgraph, BokehLatticeLayoutGraph)
+            is_layout = isinstance(
+                pair.bgraph, (BokehLatticeLayoutGraph, BokehModernLatticeLayoutGraph)
+            )
             width, height = _Defaults.get_size_for_class(
                 type(pair.bgraph),
                 user_width=self.width,
@@ -1705,7 +1957,7 @@ class Variable:
         return [
             cls.from_tao(
                 tao=tao,
-                name=f'{var_info["name"]}[{idx}]',
+                name=f"{var_info['name']}[{idx}]",
                 parameter=parameter,
             )
             for var_info in tao.var_general()
@@ -1740,7 +1992,10 @@ class Variable:
             record_exception(ex)
 
         for pair in pairs:
-            if isinstance(pair.bgraph, (BokehBasicGraph, BokehLatticeLayoutGraph)):
+            if isinstance(
+                pair.bgraph,
+                (BokehBasicGraph, BokehLatticeLayoutGraph, BokehModernLatticeLayoutGraph),
+            ):
                 try:
                     pair.bgraph.update_plot(pair.fig)
                 except Exception as ex:
@@ -1768,6 +2023,9 @@ class BokehGraphManager(GraphManager):
     def configure(self, **kwargs):
         return set_defaults(**kwargs)
 
+    def _default_layout_style(self) -> ModernLayoutConfig | None:
+        return _Defaults.layout_style
+
     def to_bokeh_graph(self, graph: AnyGraph) -> AnyBokehGraph:
         """
         Create a Bokeh graph instance from the backend-agnostic AnyGraph version.
@@ -1786,6 +2044,8 @@ class BokehGraphManager(GraphManager):
             return BokehBasicGraph(self, graph)
         elif isinstance(graph, LatticeLayoutGraph):
             return BokehLatticeLayoutGraph(self, graph)
+        elif isinstance(graph, ModernLatticeLayoutGraph):
+            return BokehModernLatticeLayoutGraph(self, graph)
         elif isinstance(graph, FloorPlanGraph):
             return BokehFloorPlanGraph(self, graph)
         raise NotImplementedError(type(graph).__name__)

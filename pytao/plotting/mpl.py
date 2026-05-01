@@ -4,6 +4,7 @@ import functools
 import logging
 import pathlib
 import time
+import typing
 from collections.abc import Sequence
 from typing import ClassVar, Literal
 
@@ -21,6 +22,13 @@ import numpy as np
 from . import floor_plan_shapes, layout_shapes, pgplot
 from .curves import PlotCurveLine, PlotCurveSymbols, PlotHistogram, TaoCurveSettings
 from .fields import ElementField
+from .modern_layout import (
+    BoxData,
+    MarkerData,
+    ModernLatticeLayoutGraph,
+    ModernLayoutConfig,
+    StemData,
+)
 from .patches import (
     PlotPatch,
     PlotPatchArc,
@@ -52,6 +60,10 @@ class _Defaults:
     line_width_scale: float = 0.5
     floor_line_width_scale: float = 0.5
     colormap: str = "PRGn_r"
+    layout_style: ModernLayoutConfig | None = None
+
+
+_UNSET = object()
 
 
 def set_defaults(
@@ -63,6 +75,7 @@ def set_defaults(
     width: float | None = None,
     height: float | None = None,
     dpi: int | None = None,
+    layout_style: ModernLayoutConfig | None | object = _UNSET,
 ):
     """
     Set default values for Matplotlib plot settings.
@@ -85,6 +98,11 @@ def set_defaults(
         Height of the figure in inches. Default is as-configured in matplotlib rcParams.
     dpi : int, optional
         Dots per inch for the figure. Default is as-configured in matplotlib rcParams.
+    layout_style : ModernLayoutConfig or None, optional
+        Modern-layout config used for ``lat_layout`` graphs. When a
+        ``ModernLayoutConfig`` is supplied, layouts render via
+        :class:`ModernLatticeLayoutGraph`. Pass ``None`` to revert to the
+        Tao-driven lattice layout.
     """
 
     if layout_height is not None:
@@ -101,6 +119,8 @@ def set_defaults(
         matplotlib.rcParams["figure.figsize"] = (width, height)
     if dpi is not None:
         matplotlib.rcParams["figure.dpi"] = dpi
+    if layout_style is not _UNSET:
+        _Defaults.layout_style = typing.cast("ModernLayoutConfig | None", layout_style)
 
     info = {key: value for key, value in vars(_Defaults).items() if not key.startswith("_")}
     info["figsize"] = matplotlib.rcParams["figure.figsize"]
@@ -400,6 +420,117 @@ def plot_floor_plan_shape(
             plot_patch(patch, ax, line_width_scale=line_width_scale)
 
 
+# Bokeh marker name → matplotlib scatter marker code. Bokeh's decorated
+# variants (circle_cross, diamond_dot, …) collapse to their base shape since
+# matplotlib has no exact equivalent.
+_STYLED_LAYOUT_MPL_MARKERS: dict[str, str] = {
+    "asterisk": "*",
+    "circle": "o",
+    "circle_cross": "o",
+    "circle_dot": "o",
+    "circle_x": "o",
+    "circle_y": "o",
+    "cross": "+",
+    "dash": "_",
+    "diamond": "D",
+    "diamond_cross": "D",
+    "diamond_dot": "D",
+    "dot": ".",
+    "hex": "h",
+    "hex_dot": "h",
+    "inverted_triangle": "v",
+    "plus": "P",
+    "square": "s",
+    "square_cross": "s",
+    "square_dot": "s",
+    "square_pin": "s",
+    "square_x": "s",
+    "star": "*",
+    "star_dot": "*",
+    "triangle": "^",
+    "triangle_dot": "^",
+    "triangle_pin": "^",
+    "x": "x",
+    "y": "1",
+}
+
+
+def plot_modern_layout(
+    graph: ModernLatticeLayoutGraph,
+    ax: matplotlib.axes.Axes,
+) -> None:
+    """Render a ``ModernLatticeLayoutGraph`` onto a matplotlib axis."""
+    s_min, s_max = graph.xlim
+    y_min, y_max = graph.ylim
+
+    ax.axhline(y=0, color="#333", linewidth=1.5)
+
+    _draw_modern_layout_sections(ax, graph.sections, y_max)
+    _draw_modern_layout_stems(ax, graph.stems)
+    _draw_modern_layout_boxes(ax, graph.boxes)
+    _draw_modern_layout_markers(ax, graph.markers)
+
+    ax.set_xlim(s_min, s_max)
+    ax.set_ylim(y_min, y_max)
+    ax.set_xlabel("s (m)")
+    ax.yaxis.set_visible(False)
+    ax.grid(visible=False)
+
+
+def _draw_modern_layout_sections(ax, sections, y_top: float) -> None:
+    for sec in sections:
+        ax.axvline(x=sec.s_min, color="#bbb", linestyle="--", linewidth=0.8)
+        ax.text(
+            sec.s_min,
+            y_top * 0.92,
+            sec.name,
+            color="#888",
+            fontsize=8,
+            fontweight="bold",
+        )
+
+
+def _draw_modern_layout_stems(ax, stems: StemData) -> None:
+    for x0, y0, x1, y1, color in zip(
+        stems["x0"], stems["y0"], stems["x1"], stems["y1"], stems["color"]
+    ):
+        ax.plot([x0, x1], [y0, y1], color=color, alpha=0.5, linewidth=1)
+
+
+def _draw_modern_layout_boxes(ax, boxes: BoxData) -> None:
+    for left, right, top, bottom, color in zip(
+        boxes["left"], boxes["right"], boxes["top"], boxes["bottom"], boxes["color"]
+    ):
+        ax.add_patch(
+            matplotlib.patches.Rectangle(
+                (left, bottom),
+                width=max(right - left, 0.0),
+                height=top - bottom,
+                facecolor=color,
+                edgecolor="none",
+                alpha=0.55,
+            )
+        )
+
+
+def _draw_modern_layout_markers(ax, markers: dict[str, MarkerData]) -> None:
+    for shape, data in markers.items():
+        marker = _STYLED_LAYOUT_MPL_MARKERS.get(shape)
+        if marker is None or not data["x"]:
+            continue
+        # Matplotlib scatter `s` is area in pt^2; bokeh size is diameter in
+        # screen px. Square the per-point diameter to roughly match weight.
+        sizes = [s * s for s in data["size"]]
+        ax.scatter(
+            data["x"],
+            data["y"],
+            c=data["color"],
+            s=sizes,
+            marker=marker,
+            linewidths=0,
+        )
+
+
 def plot(graph: AnyGraph, ax: matplotlib.axes.Axes | None = None) -> matplotlib.axes.Axes:
     if ax is None:
         _, ax = plt.subplots()
@@ -442,6 +573,8 @@ def plot(graph: AnyGraph, ax: matplotlib.axes.Axes | None = None) -> matplotlib.
         # ax.set_xticks([elem.info["ele_s_start"] for elem in self.elements])
         # ax.set_xticklabels([elem.info["label_name"] for elem in self.elements], rotation=90)
         ax.grid(visible=False)
+    elif isinstance(graph, ModernLatticeLayoutGraph):
+        plot_modern_layout(graph, ax)
     elif isinstance(graph, FloorPlanGraph):
         ax.set_aspect("equal")
         for elem in graph.elements:
@@ -475,6 +608,9 @@ class MatplotlibGraphManager(GraphManager):
     @functools.wraps(set_defaults)
     def configure(self, **kwargs):
         return set_defaults(**kwargs)
+
+    def _default_layout_style(self) -> ModernLayoutConfig | None:
+        return _Defaults.layout_style
 
     def plot_grid(
         self,
@@ -707,9 +843,10 @@ class MatplotlibGraphManager(GraphManager):
 
         figsize = get_figsize(figsize, width, height)
 
+        layout_types: tuple[type, ...] = (LatticeLayoutGraph, ModernLatticeLayoutGraph)
         if (
             include_layout
-            and not any(isinstance(graph, LatticeLayoutGraph) for graph in graphs)
+            and not any(isinstance(graph, layout_types) for graph in graphs)
             and any(graph.is_s_plot for graph in graphs)
         ):
             layout_graph = self.lattice_layout_graph
@@ -754,7 +891,7 @@ class MatplotlibGraphManager(GraphManager):
             except UnsupportedGraphError:
                 continue
 
-            if isinstance(graph, LatticeLayoutGraph) and len(graphs) > 1:
+            if isinstance(graph, layout_types) and len(graphs) > 1:
                 # Do not set ylimits if the user specifically requested a layout graph
                 yl = None
             else:
