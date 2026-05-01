@@ -2476,15 +2476,15 @@ config</div>
         dt_track_step=1e-12,
         lsc_kick_transverse_dependence=False,
         lsc_sigma_cutoff=0.100000001490116,
+        mesh_growth_factor=0.100000001490116,
+        mesh_shrink_factor=0.100000001490116,
         n_bin=0,
         n_shield_images=0,
         particle_bin_span=2,
         particle_sigma_cutoff=-1.0,
         rel_tol_tracking=1e-08,
         sc_min_in_bin=10,
-        space_charge_mesh_size=[32, 32, 64],
-        mesh_growth_factor=0.100000001490116,
-        mesh_shrink_factor=0.100000001490116
+        space_charge_mesh_size=[32, 32, 64]
     ),
     beam_init=BeamInit(
         a_emit=0.0,
@@ -3160,20 +3160,6 @@ config.set(tao)</div>
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Unhandled extra fields - code regeneration required. Class 'SpaceChargeCom': mesh_growth_factor, mesh_shrink_factor.
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Unhandled extra fields - code regeneration required. Class 'SpaceChargeCom': mesh_growth_factor, mesh_shrink_factor.
-</pre>
-</div>
-</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[10]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
@@ -3217,20 +3203,6 @@ config.set(tao)</div>
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Unhandled extra fields - code regeneration required. Class 'SpaceChargeCom': mesh_growth_factor, mesh_shrink_factor.
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Unhandled extra fields - code regeneration required. Class 'SpaceChargeCom': mesh_growth_factor, mesh_shrink_factor.
-</pre>
-</div>
-</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[11]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
@@ -3503,13 +3475,6 @@ print(f"Command file: {cmd_file}")</div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Unhandled extra fields - code regeneration required. Class 'SpaceChargeCom': mesh_growth_factor, mesh_shrink_factor.
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Shell script: /home/runner/work/pytao/pytao/docs/examples/my_archive/run_tao.sh
 Command file: /home/runner/work/pytao/pytao/docs/examples/my_archive/run_tao.cmd
@@ -3605,7 +3570,7 @@ for line in cmd_lines[:10]:
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Total lines: 201
+<pre>Total lines: 203
 First 10 commands:
   set global lattice_calc_on = F
   set bmad_com abs_tol_adaptive_tracking = 1e-10

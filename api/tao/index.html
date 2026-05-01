@@ -3506,19 +3506,19 @@ and plotting updates.</p>
 
 <p><span class="doc-section-title">Examples:</span></p>
     <p>Get a single Element with the defaults (loads attrs, twiss, orbit, etc.):</p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">ele</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">eles</span><span class="p">(</span><span class="s2">&quot;Q1&quot;</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">ele</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">ele</span><span class="p">(</span><span class="s2">&quot;Q1&quot;</span><span class="p">)</span>
 </code></pre></div>
     <p>Do not warn if Q1 matches more than one element:</p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">ele</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">eles</span><span class="p">(</span><span class="s2">&quot;Q1&quot;</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">ele</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">ele</span><span class="p">(</span><span class="s2">&quot;Q1&quot;</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </code></pre></div>
     <p>Get an Element but skip orbit calculations:</p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">ele</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">eles</span><span class="p">(</span><span class="s2">&quot;Q1&quot;</span><span class="p">,</span> <span class="n">orbit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">ele</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">ele</span><span class="p">(</span><span class="s2">&quot;Q1&quot;</span><span class="p">,</span> <span class="n">orbit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </code></pre></div>
     <p>Get an Element AND add comb data (usually off):</p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">ele</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">eles</span><span class="p">(</span><span class="s2">&quot;Q1&quot;</span><span class="p">,</span> <span class="n">comb</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">ele</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">ele</span><span class="p">(</span><span class="s2">&quot;Q1&quot;</span><span class="p">,</span> <span class="n">comb</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
     <p>Get a minimal Element (disable everything explicit):</p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">ele</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">eles</span><span class="p">(</span><span class="s2">&quot;Q1&quot;</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">ele</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">ele</span><span class="p">(</span><span class="s2">&quot;Q1&quot;</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </code></pre></div>
 
 
@@ -4067,19 +4067,19 @@ the full comb data.</p>
 <span class="sd">    --------</span>
 
 <span class="sd">    Get a single Element with the defaults (loads attrs, twiss, orbit, etc.):</span>
-<span class="sd">    &gt;&gt;&gt; ele = tao.eles(&quot;Q1&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; ele = tao.ele(&quot;Q1&quot;)</span>
 
 <span class="sd">    Do not warn if Q1 matches more than one element:</span>
-<span class="sd">    &gt;&gt;&gt; ele = tao.eles(&quot;Q1&quot;, warn=False)</span>
+<span class="sd">    &gt;&gt;&gt; ele = tao.ele(&quot;Q1&quot;, warn=False)</span>
 
 <span class="sd">    Get an Element but skip orbit calculations:</span>
-<span class="sd">    &gt;&gt;&gt; ele = tao.eles(&quot;Q1&quot;, orbit=False)</span>
+<span class="sd">    &gt;&gt;&gt; ele = tao.ele(&quot;Q1&quot;, orbit=False)</span>
 
 <span class="sd">    Get an Element AND add comb data (usually off):</span>
-<span class="sd">    &gt;&gt;&gt; ele = tao.eles(&quot;Q1&quot;, comb=True)</span>
+<span class="sd">    &gt;&gt;&gt; ele = tao.ele(&quot;Q1&quot;, comb=True)</span>
 
 <span class="sd">    Get a minimal Element (disable everything explicit):</span>
-<span class="sd">    &gt;&gt;&gt; ele = tao.eles(&quot;Q1&quot;, defaults=False)</span>
+<span class="sd">    &gt;&gt;&gt; ele = tao.ele(&quot;Q1&quot;, defaults=False)</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
