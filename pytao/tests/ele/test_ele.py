@@ -15,7 +15,7 @@ from pytao.model.ele.ele import restore_raw_element_ndarrays
 from pytao.model.ele.time_stats import _PytaoStatistics, get_pytao_statistics
 from pytao.model.types import NDArray, empty_ndarray
 
-from ..conftest import no_pytao_debug_logging, timed_section
+from ..conftest import get_regression_test, no_pytao_debug_logging, timed_section
 
 
 class TestElement(NamedTuple):
@@ -257,6 +257,37 @@ def test_cbeta_tracking(cbeta_ffag_tao: SubprocessTao, pytao_stats: _PytaoStatis
     assert len(lat.by_element_index) == len(lat.elements)
     assert sum(len(eles) for eles in lat.by_element_key.values()) == len(lat.elements)
     lat.by_element_name
+
+
+def test_ele_comb(pytao_stats: _PytaoStatistics):
+    startup = get_regression_test("tao.init_optics_matching")
+    with startup.run_context(use_subprocess=True) as tao:
+        conf = tao.get_config()
+        conf.beam.comb_ds_save = 0.5
+        conf.beam_init.n_particle = 100
+        conf.beam_init.bunch_charge = 1e-15
+        conf.beam_init.a_norm_emit = 1e-6
+        conf.beam_init.b_norm_emit = 1e-6
+        conf.beam.track_start = "beginning"
+        conf.beam.track_end = "end"
+
+        print(conf.get_set_commands(tao))
+        conf.set(tao)
+
+        tao.cmd("set global track_type = beam;set global track_type = single")
+
+        # make sure we actually have bunch comb data
+        assert len(tao.bunch_comb("x"))
+
+        # compare the two constructors, ensuring tao.ele() and
+        # from_tao_tracking give the same result
+        full_lat = Lattice.from_tao_tracking(tao, comb=True)
+
+        assert full_lat.elements[0].name == "BEGINNING"
+        assert len(full_lat.elements[0].comb.s)
+
+        tao_ele = tao.ele("BEGINNING", comb=True)
+        assert tao_ele.comb == full_lat.elements[0].comb
 
 
 def test_lattice_track_start(cbeta_ffag_tao: SubprocessTao, pytao_stats: _PytaoStatistics):

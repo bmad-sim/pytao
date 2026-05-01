@@ -309,7 +309,7 @@ class Comb(TaoModel, extra="allow"):
             if tao.beam(ix_branch)["ds_save"] <= 0:
                 return cls()
 
-        return cls(**comb_data_from_tao(tao, ix_branch=ix_branch, **kwargs))
+        return cls(**comb_data_from_tao(tao, ix_branch=ix_branch))
 
     def slice_by_s(self, s_start: float, s_end: float, *, inclusive: bool = True) -> Comb:
         """
