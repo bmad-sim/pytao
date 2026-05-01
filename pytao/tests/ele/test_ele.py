@@ -13,7 +13,7 @@ from pytao.model.base import TaoBaseModel, format_from_filename
 from pytao.model.ele import Element, Lattice
 from pytao.model.ele.ele import restore_raw_element_ndarrays
 from pytao.model.ele.time_stats import _PytaoStatistics, get_pytao_statistics
-from pytao.model.types import NDArray
+from pytao.model.types import NDArray, empty_ndarray
 
 from ..conftest import no_pytao_debug_logging, timed_section
 
@@ -620,19 +620,27 @@ class ArrHolder(TaoBaseModel):
     arr: NDArray
 
 
-def test_ndarray_validate():
+class ArrHolderWithDefault(TaoBaseModel):
+    arr: NDArray = empty_ndarray()
+
+
+@pytest.mark.parametrize("cls", [ArrHolder, ArrHolderWithDefault])
+@pytest.mark.parametrize("exclude_defaults", [False, True])
+def test_ndarray_validate(
+    cls: type[ArrHolder] | type[ArrHolderWithDefault], exclude_defaults: bool
+):
     arr = np.asarray([1, 2, 3])
-    holder = ArrHolder(arr=arr)
-    holder.model_dump()
+    holder = cls(arr=arr)
+    holder.model_dump(exclude_defaults=exclude_defaults)
 
     d = {"arr": _make_ndarray_dict(arr)}
-    restored = ArrHolder.model_validate(d)
+    restored = cls.model_validate(d)
     assert holder == restored
 
     d = {"arr": arr}
-    restored = ArrHolder.model_validate(d)
+    restored = cls.model_validate(d)
     assert holder == restored
 
     d = {"arr": arr.tolist()}
-    restored = ArrHolder.model_validate(d)
+    restored = cls.model_validate(d)
     assert holder == restored
