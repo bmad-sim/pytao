@@ -8,7 +8,7 @@ from beamphysics.species import mass_of
 from typing_extensions import Self
 
 from ..base import ArchiveFormat, TaoModel, load_model_data
-from ..types import NDArray, empty_ndarray
+from ..types import NDArray, deserialize_ndarray, empty_ndarray
 
 if typing.TYPE_CHECKING:
     from pytao import Tao
@@ -285,6 +285,17 @@ class Comb(TaoModel, extra="allow"):
     def query(self, tao: Tao) -> Self:
         return self.from_tao(tao)
 
+    def sort_by_s(self) -> Comb:
+        """Sort array data by `s` position."""
+        res = Comb()
+        order = np.argsort(self.s)
+        for attr in _comb_array_attrs:
+            value = getattr(self, attr)
+
+            if value.size:
+                setattr(res, attr, np.asarray(value)[order])
+        return res
+
     @classmethod
     def from_tao(
         cls: type[Self], tao: Tao, *, check_ds_save: bool = True, ix_branch: int = 0, **kwargs
@@ -345,41 +356,84 @@ class Comb(TaoModel, extra="allow"):
         return type(self)(**data)
 
 
-def combine_combs(combs: typing.Sequence[Comb]) -> Comb:
+_comb_array_attrs = set(Comb.model_fields) - {"command_args"}
+
+
+def combine_combs(combs: typing.Sequence[Comb], sort: bool = True) -> Comb:
     """Combine the given combs into a single one."""
-    attrs = set(Comb.model_fields) - {"command_args"}
     res = Comb()
 
-    for attr in attrs:
+    for attr in _comb_array_attrs:
         parts = [getattr(comb, attr) for comb in combs]
-        setattr(res, attr, np.concat(parts))
+        if parts:
+            setattr(res, attr, np.concat(parts))
 
-    order = np.argsort(res.s)
-    for attr in attrs:
-        value = getattr(res, attr)
-
-        if value.size:
-            setattr(res, attr, np.asarray(value)[order])
-    return res
+    return res.sort_by_s() if sort else res
 
 
-def load_combs_from_lattice_data(lat_data) -> Comb:
+def load_combs_from_lattice_data(lat_data, sort: bool = False) -> Comb:
+    """
+    Load comb data from raw lattice data.
+
+    This can be used to speed up loading only comb data from an archive.
+
+    Parameters
+    ----------
+    lat_data : dict
+        Raw Lattice model data.
+    sort : bool, optional
+        Sort comb data by s position. Defaults to True.
+
+    Returns
+    -------
+    Comb
+
+    Example
+    -------
+    >>> lattice_data = load_model_data(lattice_dump_fn, raw=True)
+    >>> comb = load_combs_from_lattice_data(lattice_data)
+    """
     comb_data = {}
     for ele in lat_data["elements"]:
         if "comb" in ele:
             for key, value in ele["comb"].items():
-                if isinstance(value, list):
+                if key in _comb_array_attrs:
+                    arr = deserialize_ndarray(value)
                     comb_data.setdefault(key, [])
-                    comb_data[key].extend(value)
-    return Comb(**comb_data)
+                    comb_data[key].extend(arr.tolist())
+    comb = Comb(**comb_data)
+    return comb.sort_by_s() if sort else comb
 
 
-def load_combs_from_lattice_file(fn: pathlib.Path, format: ArchiveFormat | None = None):
+def load_combs_from_lattice_file(
+    fn: pathlib.Path,
+    format: ArchiveFormat | None = None,
+    sort: bool = True,
+) -> Comb:
+    """
+    Load only comb data from a lattice file.
+
+    Parameters
+    ----------
+    fn : pathlib.Path
+        The Lattice filename dump to load from.
+    format : ArchiveFormat or None, optional
+        The format of the archive.
+    sort : bool, optional
+        Sort comb data by s position. Defaults to True.
+
+    Returns
+    -------
+    Comb
+    """
     data = load_model_data(fn, format=format)
 
     from .. import Lattice
 
     if isinstance(data, Lattice):
-        return combine_combs([ele.comb for ele in data.elements if ele.comb is not None])
+        return combine_combs(
+            [ele.comb for ele in data.elements if ele.comb is not None],
+            sort=sort,
+        )
     # Otherwise, just raw lattice data
-    return load_combs_from_lattice_data(data)
+    return load_combs_from_lattice_data(data, sort=sort)

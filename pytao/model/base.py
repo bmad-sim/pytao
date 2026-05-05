@@ -28,7 +28,7 @@ from beamphysics.units import pmd_unit
 from pydantic.fields import FieldInfo
 from typing_extensions import Self, override
 
-from .types import ArgumentType
+from .types import ArgumentType, _PydanticNDArray
 
 from rich.pretty import pretty_repr
 
@@ -734,7 +734,7 @@ def dump_model(
     return data
 
 
-_MSGPACK_NDARRAY_MARKER = "__ndarray__"
+_MSGPACK_NDARRAY_MARKER = _PydanticNDArray._MSGPACK_MARKER
 
 
 def _msgpack_default(obj: Any) -> Any:
@@ -766,7 +766,8 @@ def _msgpack_default(obj: Any) -> Any:
 
 
 def _msgpack_restore_ndarrays(obj: Any) -> Any:
-    """Restore numpy arrays from ``__ndarray__`` marker dicts, in-place.
+    """
+    Restore numpy arrays from ``__ndarray__`` marker dicts, in-place.
 
     Walks the deserialized msgpack structure and replaces marker dicts
     with actual numpy arrays.  Modifies containers in-place to avoid
