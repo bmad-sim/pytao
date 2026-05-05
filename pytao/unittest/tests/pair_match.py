@@ -3,7 +3,7 @@ from typing import Literal, Annotated, Union
 from abc import ABC, abstractmethod
 import numpy as np
 
-from pytao.unittest.tests.twiss import twiss_comparison_types, BmagTwissComparison, DispersionComparison
+from pytao.unittest.tests.twiss import twiss_comparison_types, BmagTwissComparison
 
 
 class TolComparison(BaseModel):
