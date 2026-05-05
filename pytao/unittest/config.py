@@ -7,4 +7,4 @@ class LatticeConfig(BaseModel):
 
 
 class UnittestConfig(BaseModel):
-    lattices: list[LatticeConfig] = Field(default_factory=list)
+    lattices: dict[str, LatticeConfig] = Field(default_factory=list, description="Mapping from unique lattice identifier to lattice loading information")
