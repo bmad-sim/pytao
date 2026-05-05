@@ -36,7 +36,7 @@ class PairMatch(BaseModel):
     # Other tests
     p0c_test: TolComparison | None = Field(default_factory=TolComparison)
     orbit_test: TolComparison | None = Field(default_factory=TolComparison)
-    floor_x_test: TolComparison | None = Field(default_factory=TolComparison)
-    floor_y_test: TolComparison | None = Field(default_factory=TolComparison)
-    floor_z_test: TolComparison | None = Field(default_factory=TolComparison)
+    floor_x_test: TolComparison | None = None
+    floor_y_test: TolComparison | None = None
+    floor_z_test: TolComparison | None = None
     
