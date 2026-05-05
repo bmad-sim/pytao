@@ -187,6 +187,10 @@ class _PydanticNDArray:
         raise ValueError(f"No conversion from {value!r} to numpy ndarray")
 
 
+def deserialize_ndarray(value: Any | np.ndarray | Sequence | dict):
+    return _PydanticNDArray._pydantic_validate(value, None)
+
+
 _zeros = np.zeros(0)
 
 

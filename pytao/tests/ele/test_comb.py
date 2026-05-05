@@ -8,8 +8,13 @@ import numpy as np
 import pytest
 
 from pytao import SubprocessTao
-from pytao.model.ele import Comb
-from pytao.model.ele.comb import combine_combs
+from pytao.model.base import _msgpack_default
+from pytao.model import Comb, Element, ElementHead, Lattice
+from pytao.model.ele.comb import (
+    combine_combs,
+    load_combs_from_lattice_data,
+    load_combs_from_lattice_file,
+)
 
 
 @pytest.fixture(scope="module")
@@ -72,6 +77,73 @@ def test_combine():
         charge_live=np.asarray([1, 2, 3, 4, 5, 6]),
         s=np.asarray([1, 2, 3, 4, 5, 6]),
     )
+    assert combined == expected
+
+
+def test_combine_empty():
+    a = Comb()
+    b = Comb()
+
+    combined = combine_combs([a, b])
+    expected = Comb()
+    assert combined == expected
+
+
+def test_load_from_lattice_data():
+    d1 = {
+        "elements": [
+            {
+                "comb": {"s": [4, 5, 6]},
+            },
+            {
+                "comb": {"s": _msgpack_default(np.asarray([1, 2, 3]))},
+            },
+            {
+                "comb": {"s": []},
+            },
+        ],
+    }
+
+    expected = Comb(s=np.asarray([4, 5, 6, 1, 2, 3]))
+    combined = load_combs_from_lattice_data(d1)
+    assert combined == expected
+
+    expected = Comb(s=np.asarray([1, 2, 3, 4, 5, 6]))
+    combined = load_combs_from_lattice_data(d1, sort=True)
+    assert combined == expected
+
+
+@pytest.mark.parametrize("format", ["msgpack", "json"])
+@pytest.mark.parametrize("exclude_defaults", [False, True])
+def test_load_from_lattice_file(
+    tmp_path: pathlib.Path, format: Literal["msgpack", "json"], exclude_defaults: bool
+):
+    lat = Lattice(
+        which="model",
+        elements=(
+            Element(
+                ele_id="0",
+                which="model",
+                head=ElementHead(key="BEGINNING"),
+                comb=Comb(s=np.asarray([4, 5, 6])),
+            ),
+            Element(
+                ele_id="1",
+                which="model",
+                head=ElementHead(key="PIPE"),
+                comb=Comb(s=np.asarray([1, 2, 3])),
+            ),
+        ),
+    )
+
+    lat.write(tmp_path, format=format, exclude_defaults=exclude_defaults)
+
+    expected = Comb(s=np.asarray([4, 5, 6, 1, 2, 3]))
+    combined = load_combs_from_lattice_file(tmp_path, format=format, sort=False)
+    assert combined == expected
+
+    expected = Comb(s=np.asarray([1, 2, 3, 4, 5, 6]))
+    combined = load_combs_from_lattice_file(tmp_path, format=format, sort=True)
     assert combined == expected
 
 
