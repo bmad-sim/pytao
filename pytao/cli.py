@@ -143,6 +143,7 @@ def print_header(ipython: bool, startup_message: str, plot: str | None = "") -> 
 def init(argv, ipython: bool, exit_on_error=True):
     args = PytaoArgs.from_cli_args(argv[1:], exit_on_error=exit_on_error)
     args.pyplot = os.environ.get("PYTAO_PLOT", args.pyplot or "tao").lower()
+    args.plot = args.pyplot
 
     args = _get_implied_init_args(args)
     if not args.pyquiet:

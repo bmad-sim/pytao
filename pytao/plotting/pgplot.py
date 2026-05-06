@@ -88,11 +88,19 @@ def mpl_string(value: str) -> str:
         d_pos = result.find(r"\\d")
         u_pos = result.find(r"\\u")
         if d_pos < u_pos:
+            # Subscript
+            modifier = "_"
             sx = result[d_pos : u_pos + 3]
-            result = result.replace(sx, "_" + sx[3:-3])
         else:
+            # Superscript
+            modifier = "^"
             sx = result[u_pos : d_pos + 3]
-            result = result.replace(sx, "^" + sx[3:-3])
+
+        subscript = sx[3:-3]  # or superscript
+        if len(subscript) > 1:
+            result = result.replace(sx, modifier + "{" + subscript + "}")
+        else:
+            result = result.replace(sx, f"{modifier}{subscript}")
 
     # TODO this is far from performant, but this is unlikely to be called
     # frequently so I'm leaving it for now
