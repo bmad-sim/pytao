@@ -16,7 +16,7 @@ from ...util.parsers import Attr, parse_tao_python_data_with_units
 from .. import _generated as tao_classes
 from ..base import ArchiveFormat, TaoBaseModel, TaoModel
 from ..types import NDArray, _PydanticNDArray
-from .comb import Comb
+from .comb import Comb, _comb_array_attrs
 from .time_stats import _pytao_stats
 
 if TYPE_CHECKING:
@@ -2521,3 +2521,9 @@ def restore_raw_element_ndarrays(ele: dict) -> None:
                     ref_data["wmat"] = _PydanticNDArray._pydantic_validate(
                         ref_data["wmat"], None
                     )
+    comb = ele.get("comb")
+    if comb:
+        for key in _comb_array_attrs:
+            value = comb.get(key)
+            if value is not None:
+                comb[key] = _PydanticNDArray._pydantic_validate(value, None)

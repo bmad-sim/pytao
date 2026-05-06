@@ -398,7 +398,12 @@ def load_combs_from_lattice_data(lat_data, sort: bool = False) -> Comb:
         if "comb" in ele:
             for key, value in ele["comb"].items():
                 if key in _comb_array_attrs:
-                    arr = deserialize_ndarray(value)
+                    if isinstance(value, np.ndarray):
+                        arr = value
+                    else:
+                        arr = deserialize_ndarray(value)
+                        ele["comb"][key] = arr
+
                     comb_data.setdefault(key, [])
                     comb_data[key].extend(arr.tolist())
     comb = Comb(**comb_data)
