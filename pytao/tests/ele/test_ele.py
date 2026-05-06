@@ -647,6 +647,20 @@ def test_raw_already_ndarray():
     assert ele["mat6"]["vec0"] is vec
 
 
+def test_ndarray_in_comb():
+    vec = np.array([1.0, 2.0])
+    ele = {"comb": {"s": vec}}
+    restore_raw_element_ndarrays(ele)
+    assert ele["comb"]["s"] is vec
+
+
+def test_raw_ndarray_in_comb():
+    vec = np.array([1.0, 2.0])
+    ele = {"comb": {"s": _make_ndarray_dict(vec)}}
+    restore_raw_element_ndarrays(ele)
+    np.testing.assert_array_equal(ele["comb"]["s"], vec)
+
+
 class ArrHolder(TaoBaseModel):
     arr: NDArray
 
