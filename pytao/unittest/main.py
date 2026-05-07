@@ -89,9 +89,18 @@ def _print_results(results: UnittestResults) -> None:
         status = "PASS" if result.passed else "FAIL"
         suffix = f"  {result.description}" if result.description else ""
         print(f"  [{status}] {result.test_type}{suffix}")
-        if result.error:
-            for line in result.error.splitlines():
-                print(f"         {line}")
+
+    failures = [r for r in results.tests if not r.passed]
+    if failures:
+        print()
+        print("=" * 60)
+        print("FAILURES")
+        print("=" * 60)
+        for result in failures:
+            desc = f"  {result.description}" if result.description else ""
+            print(f"\n  {result.test_type}{desc}")
+            print("  " + "-" * 56)
+            result.print_failure_detail()
 
     n_passed = sum(1 for t in results.tests if t.passed)
     n_total = len(results.tests)
