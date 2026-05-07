@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 
 from pytao.unittest.tests.twiss import twiss_comparison_types, BmagTwissComparison
-
+from pytao.unittest.tests.base import UnitTest
 
 class TolComparison(BaseModel):
     atol: float = 1e-8
@@ -14,7 +14,7 @@ class TolComparison(BaseModel):
         return np.allclose(x0, x1, rtol=self.rtol, atol=self.atol)
 
 
-class PairMatch(BaseModel):
+class PairMatch(UnitTest):
     type: Literal["PairMatch"] = "PairMatch"
     
     # Define the element and lattice which we are comparing
@@ -34,6 +34,7 @@ class PairMatch(BaseModel):
     etap_y_test: TolComparison | None = Field(default_factory=TolComparison)
 
     # Other tests
+    ref_energy_test: TolComparison | None = Field(default_factory=TolComparison)
     p0c_test: TolComparison | None = Field(default_factory=TolComparison)
     orbit_test: TolComparison | None = Field(default_factory=TolComparison)
     floor_x_test: TolComparison | None = None
