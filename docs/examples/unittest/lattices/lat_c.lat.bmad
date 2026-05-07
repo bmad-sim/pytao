@@ -4,7 +4,7 @@ BEGINNING[ALPHA_A] =  -0.91666667
 BEGINNING[BETA_B]  =   3.62500000
 BEGINNING[ALPHA_B] =   1.37500000
    
-beginning[e_tot] = 5000e6
+beginning[e_tot] = 4000e6
 
 parameter[geometry] = open
 parameter[particle] = electron

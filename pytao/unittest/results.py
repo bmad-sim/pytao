@@ -3,6 +3,14 @@ from typing import Annotated, Literal, Union
 from pydantic import BaseModel, Field
 
 
+class CheckResult(BaseModel):
+    passed: bool
+    detail: str = ""
+
+    def __bool__(self) -> bool:
+        return self.passed
+
+
 class TestResult(BaseModel):
     result_type: Literal["TestResult"] = "TestResult"
     test_type: str
@@ -18,18 +26,18 @@ class TestResult(BaseModel):
 
 class PairMatchResult(TestResult):
     result_type: Literal["PairMatchResult"] = "PairMatchResult"
-    twiss_a: bool | None = None
-    twiss_b: bool | None = None
-    eta_x: bool | None = None
-    etap_x: bool | None = None
-    eta_y: bool | None = None
-    etap_y: bool | None = None
-    ref_energy: bool | None = None
-    p0c: bool | None = None
-    orbit: bool | None = None
-    floor_x: bool | None = None
-    floor_y: bool | None = None
-    floor_z: bool | None = None
+    twiss_a: CheckResult | None = None
+    twiss_b: CheckResult | None = None
+    eta_x: CheckResult | None = None
+    etap_x: CheckResult | None = None
+    eta_y: CheckResult | None = None
+    etap_y: CheckResult | None = None
+    ref_energy: CheckResult | None = None
+    p0c: CheckResult | None = None
+    orbit: CheckResult | None = None
+    floor_x: CheckResult | None = None
+    floor_y: CheckResult | None = None
+    floor_z: CheckResult | None = None
 
     def print_failure_detail(self) -> None:
         checks = {
@@ -50,8 +58,9 @@ class PairMatchResult(TestResult):
         if ran:
             width = max(len(name) for name in ran)
             for name, result in ran.items():
-                status = "PASS" if result else "FAIL"
-                print(f"    {name:<{width}}  {status}")
+                status = "PASS" if result.passed else "FAIL"
+                detail = f"  {result.detail}" if not result.passed and result.detail else ""
+                print(f"    {name:<{width}}  {status}{detail}")
         if self.error:
             for line in self.error.splitlines():
                 print(f"    {line}")

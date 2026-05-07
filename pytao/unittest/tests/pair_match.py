@@ -3,7 +3,7 @@ import numpy as np
 from pydantic import BaseModel, Field
 
 from pytao.unittest.observables import EleObservable, EleObservation, Observable, Observation
-from pytao.unittest.results import PairMatchResult
+from pytao.unittest.results import CheckResult, PairMatchResult
 from pytao.unittest.tests.twiss import twiss_comparison_types, BmagTwissComparison
 from pytao.unittest.tests.base import UnitTest
 
@@ -12,8 +12,16 @@ class TolComparison(BaseModel):
     atol: float = 1e-8
     rtol: float = 1e-5
 
-    def __call__(self, x0, x1) -> bool:
-        return bool(np.allclose(x0, x1, rtol=self.rtol, atol=self.atol))
+    def __call__(self, x0, x1) -> CheckResult:
+        passed = bool(np.allclose(x0, x1, rtol=self.rtol, atol=self.atol))
+        if passed:
+            return CheckResult(passed=True)
+        x0a, x1a = np.asarray(x0), np.asarray(x1)
+        if x0a.ndim == 0:
+            detail = f"a={float(x0a):.6g}, b={float(x1a):.6g}, diff={abs(float(x0a) - float(x1a)):.3e}"
+        else:
+            detail = f"max|diff|={np.max(np.abs(x0a - x1a)):.3e}"
+        return CheckResult(passed=False, detail=detail)
 
 
 class PairMatch(UnitTest):
@@ -55,18 +63,18 @@ class PairMatch(UnitTest):
         obs_b = cast(EleObservation, observations[self.lattice_b_id])
         ea, eb = obs_a.element, obs_b.element
 
-        twiss_a: bool | None = None
-        twiss_b: bool | None = None
-        eta_x: bool | None = None
-        etap_x: bool | None = None
-        eta_y: bool | None = None
-        etap_y: bool | None = None
-        ref_energy: bool | None = None
-        p0c: bool | None = None
-        orbit: bool | None = None
-        floor_x: bool | None = None
-        floor_y: bool | None = None
-        floor_z: bool | None = None
+        twiss_a: CheckResult | None = None
+        twiss_b: CheckResult | None = None
+        eta_x: CheckResult | None = None
+        etap_x: CheckResult | None = None
+        eta_y: CheckResult | None = None
+        etap_y: CheckResult | None = None
+        ref_energy: CheckResult | None = None
+        p0c: CheckResult | None = None
+        orbit: CheckResult | None = None
+        floor_x: CheckResult | None = None
+        floor_y: CheckResult | None = None
+        floor_z: CheckResult | None = None
 
         if ea.twiss is not None and eb.twiss is not None:
             ta, tb = ea.twiss, eb.twiss
