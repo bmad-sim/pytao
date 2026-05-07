@@ -54,24 +54,22 @@ def run(config: UnittestConfig, config_dir: Path) -> UnittestResults:
         )
 
     # Run each test, resolving its observations from the shared map
-    test_results: list[TestResult] = []
+    test_results: list[test_result_types] = []
     for test in config.tests:
-        passed = False
-        error = None
         try:
             observations: dict[str, Observation] = {
                 lat_id: obs_map[lat_id][obs]
                 for lat_id, obs in test.observables.items()
             }
-            passed = test.run(observations)
+            result = test.run(observations)
         except Exception:
-            error = traceback.format_exc().strip()
-        test_results.append(TestResult(
-            test_type=type(test).__name__,
-            description=test.description,
-            passed=passed,
-            error=error,
-        ))
+            result = TestResult(
+                test_type=type(test).__name__,
+                description=test.description,
+                passed=False,
+                error=traceback.format_exc().strip(),
+            )
+        test_results.append(result)
 
     return UnittestResults(lattices=lattice_results, tests=test_results)
 
