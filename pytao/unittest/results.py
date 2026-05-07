@@ -11,6 +11,7 @@ class LatticeResult(BaseModel):
 
 class TestResult(BaseModel):
     test_type: str
+    description: str
     passed: bool
     error: str | None = None
 

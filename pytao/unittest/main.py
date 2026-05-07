@@ -68,6 +68,7 @@ def run(config: UnittestConfig, config_dir: Path) -> UnittestResults:
             error = traceback.format_exc().strip()
         test_results.append(TestResult(
             test_type=type(test).__name__,
+            description=test.description,
             passed=passed,
             error=error,
         ))
@@ -88,7 +89,8 @@ def _print_results(results: UnittestResults) -> None:
     print("Tests:")
     for result in results.tests:
         status = "PASS" if result.passed else "FAIL"
-        print(f"  [{status}] {result.test_type}")
+        suffix = f"  {result.description}" if result.description else ""
+        print(f"  [{status}] {result.test_type}{suffix}")
         if result.error:
             for line in result.error.splitlines():
                 print(f"         {line}")

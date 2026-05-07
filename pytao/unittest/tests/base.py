@@ -5,6 +5,9 @@ from pytao.unittest.observables import Observable, Observation
 
 
 class UnitTest(BaseModel, ABC):
+    description: str = ""
+    comment: str = ""
+
     @property
     @abstractmethod
     def observables(self) -> dict[str, Observable]:

@@ -6,6 +6,7 @@ lattices:
 
 tests:
   - type: PairMatch
+    description: lat_a[END] matches lat_b[BEGINNING]
     lattice_a_id: lat_a
     element_a: END
     lattice_b_id: lat_b
