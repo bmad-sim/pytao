@@ -1,29 +1,33 @@
-from pydantic import BaseModel
-from pytao import Tao
 from abc import ABC, abstractmethod
+from pydantic import BaseModel
 
-from pytao.unittest.tests.observables import Observable
+from pytao.unittest.observables import Observable, Observation
+
 
 class UnitTest(BaseModel, ABC):
-    @abstractmethod
     @property
-    def associated_lattices(self) -> list[str] | None:
+    @abstractmethod
+    def observables(self) -> dict[str, Observable]:
         """
-        On which lattices are we required to make observations for this test. None means all lattices.
+        Mapping of lattice_id to the Observable to run on that lattice.
 
         Returns
         -------
-        list[str] | None
-            A list of lattice IDs for which lattices we need, or None meaning all.
+        dict[str, Observable]
         """
         ...
-        
+
     @abstractmethod
-    @property
-    def observable(self) -> Observable:
+    def run(self, observations: dict[str, Observation]) -> bool:
         """
-        The observable that will be run on each associated lattice.
+        Run the test given observations keyed by lattice_id.
+
+        Parameters
+        ----------
+        observations : dict[str, Observation]
+
+        Returns
+        -------
+        bool
         """
         ...
-    
-    
