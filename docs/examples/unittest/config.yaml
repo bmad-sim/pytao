@@ -1,0 +1,12 @@
+lattices:
+  lat_a:
+    lattice_file: lattices/lat_a.lat.bmad
+  lat_b:
+    lattice_file: lattices/lat_b.lat.bmad
+
+tests:
+  - type: PairMatch
+    lattice_a_id: lat_a
+    element_a: END
+    lattice_b_id: lat_b
+    element_b: BEGINNING
