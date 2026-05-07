@@ -9,5 +9,12 @@ class LatticeResult(BaseModel):
     load_time: float
 
 
+class TestResult(BaseModel):
+    test_type: str
+    passed: bool
+    error: str | None = None
+
+
 class UnittestResults(BaseModel):
-    lattices: list[LatticeResult]
+    lattices: dict[str, LatticeResult]
+    tests: list[TestResult]

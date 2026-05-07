@@ -8,7 +8,7 @@ class Observation(BaseModel):
     ...
 
 
-class Observable(BaseModel):
+class Observable(BaseModel, frozen=True):
     """Configuration and action to make an observation from a lattice."""
     def __call__(self, tao: Tao) -> Observation:
         ...
