@@ -3,11 +3,22 @@ lattices:
     lattice_file: lattices/lat_a.lat.bmad
   lat_b:
     lattice_file: lattices/lat_b.lat.bmad
+  lat_c:
+    lattice_file: lattices/lat_c.lat.bmad
 
 tests:
   - type: PairMatch
     description: lat_a[END] matches lat_b[BEGINNING]
+    comment: We can leave comments in the config file for users to understand what test does
     lattice_a_id: lat_a
     element_a: END
     lattice_b_id: lat_b
+    element_b: BEGINNING
+  
+  - type: PairMatch
+    description: lat_a[END] matches lat_c[BEGINNING] (should fail)
+    comment: This test checks a failing lattice
+    lattice_a_id: lat_a
+    element_a: END
+    lattice_b_id: lat_c
     element_b: BEGINNING

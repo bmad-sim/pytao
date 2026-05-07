@@ -19,8 +19,8 @@ class DummyTwissComparison(TwissComparisonMethod):
 
 class BmagTwissComparison(TwissComparisonMethod):
     type: Literal["bmag"] = "bmag"
-    max_bmag: float = 1.1
-    min_bmag: float = 0.9
+    max_bmag: float = 1.01
+    min_bmag: float = 0.99
     
     def __call__(self, beta0, alpha0, beta1, alpha1):
         bmag = 0.5 * ( (beta0/beta1 + beta1/beta0) + beta1*beta0*(alpha1/beta1 - alpha0/beta0)**2 )

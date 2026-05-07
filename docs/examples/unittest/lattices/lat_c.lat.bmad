@@ -1,0 +1,16 @@
+no_digested
+BEGINNING[BETA_A]  =   4.41666667
+BEGINNING[ALPHA_A] =  -0.91666667
+BEGINNING[BETA_B]  =   3.62500000
+BEGINNING[ALPHA_B] =   1.37500000
+   
+beginning[e_tot] = 5000e6
+
+parameter[geometry] = open
+parameter[particle] = electron
+
+PIP01: pipe, L=1
+
+lat_a: line=(PIP01)
+
+use, lat_a
