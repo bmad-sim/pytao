@@ -8,6 +8,7 @@ nav:
   - Installation: installation.md
 
   - Usage: usage.md
+  - Optimization: optimize.md
   - Releases: release_notes.md
 
   - Examples:
@@ -35,6 +36,7 @@ nav:
       - Plotting: api/plot.md
       - Matplotlib: api/plot-mpl.md
       - Bokeh: api/plot-bokeh.md
+      - Optimization: api/optimize.md
 
 theme:
   icon:
