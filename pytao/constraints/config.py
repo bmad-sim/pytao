@@ -4,6 +4,7 @@ from typing import Annotated, Literal, Union
 from pydantic import BaseModel, Field
 
 from pytao.constraints.observables import IsCloseResult, Observable, Observation
+from pytao.constraints.observables.datum import DatumIsClose, DatumIsCloseResult, DatumObservable
 from pytao.constraints.observables.ele import EleIsClose, EleIsCloseResult, EleObservable
 
 
@@ -40,7 +41,25 @@ class ElementPair(EqualityConstraint):
         return self.comparison(obs_a, obs_b)
 
 
-equality_constraint_types = Annotated[Union[ElementPair], Field(discriminator="constraint_type")]
+class DatumPair(EqualityConstraint):
+    constraint_type: Literal["datum"] = "datum"
+    datum_a: DatumObservable
+    datum_b: DatumObservable
+    comparison: DatumIsClose = Field(default_factory=DatumIsClose)
+
+    @property
+    def obs_a(self) -> DatumObservable:
+        return self.datum_a
+
+    @property
+    def obs_b(self) -> DatumObservable:
+        return self.datum_b
+
+    def compare(self, obs_a: Observation, obs_b: Observation) -> DatumIsCloseResult:
+        return self.comparison(obs_a, obs_b)
+
+
+equality_constraint_types = Annotated[Union[ElementPair, DatumPair], Field(discriminator="constraint_type")]
 
 
 class LatticeConfig(BaseModel):

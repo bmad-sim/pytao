@@ -32,3 +32,13 @@ equality_constraints:
         atol: 1e-6
       floor_z_test:
         atol: 1e-6
+
+  - constraint_type: datum
+    datum_a:
+      lattice_id: lat_a
+      data_type: r56_compaction
+      ele_name: END
+    datum_b:
+      lattice_id: lat_b
+      data_type: r56_compaction
+      ele_name: END
