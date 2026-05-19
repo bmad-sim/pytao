@@ -6,19 +6,23 @@ lattices:
   lat_c:
     lattice_file: lattices/lat_c.lat.bmad
 
-tests:
-  - type: PairMatch
-    description: lat_a[END] matches lat_b[BEGINNING]
-    comment: We can leave comments in the config file for users to understand what test does
-    lattice_a_id: lat_a
+pair_equality:
+  - lattice_a_id: lat_a
     element_a: END
     lattice_b_id: lat_b
     element_b: BEGINNING
-  
-  - type: PairMatch
-    description: lat_a[END] matches lat_c[BEGINNING] (should fail)
-    comment: This test checks a failing lattice
-    lattice_a_id: lat_a
+
+  - lattice_a_id: lat_a
     element_a: END
     lattice_b_id: lat_c
     element_b: BEGINNING
+    comparison:
+      twiss_a_test:
+        type: bmag
+        max_bmag: 1.05
+      floor_x_test:
+        atol: 1e-6
+      floor_y_test:
+        atol: 1e-6
+      floor_z_test:
+        atol: 1e-6

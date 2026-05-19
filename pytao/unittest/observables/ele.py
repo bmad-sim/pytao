@@ -4,9 +4,8 @@ from pydantic import BaseModel, Field
 
 from pytao import Tao
 from pytao.model import Element
-from pytao.unittest.observables.base import IsClose, IsCloseResult, Observable, Observation
-from pytao.unittest.results import CheckResult
-from pytao.unittest.tests.twiss import BmagTwissComparison, twiss_comparison_types
+from pytao.unittest.observables.base import CheckResult, IsClose, IsCloseResult, Observable, Observation
+from pytao.unittest.observables.twiss import BmagTwissComparison, twiss_comparison_types
 
 
 class EleObservation(Observation):

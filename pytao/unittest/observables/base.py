@@ -1,6 +1,14 @@
 from pydantic import BaseModel
 from pytao import Tao
-from typing import Literal, TypeVar
+from typing import Literal
+
+
+class CheckResult(BaseModel):
+    passed: bool
+    detail: str = ""
+
+    def __bool__(self) -> bool:
+        return self.passed
 
 
 class Observation(BaseModel):

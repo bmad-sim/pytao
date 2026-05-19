@@ -8,20 +8,21 @@ import yaml
 from pytao import SubprocessTao
 
 from .config import UnittestConfig
-from .observables import Observable, Observation
-from .results import LatticeResult, TestResult, UnittestResults
+from .observables.ele import EleIsCloseResult, EleObservable, EleObservation
+from .results import LatticeResult, PairEqualityResult, UnittestResults
 
 
 def run(config: UnittestConfig, config_dir: Path) -> UnittestResults:
     # Build lattice_id -> set of unique observables needed
-    needed: dict[str, set[Observable]] = {lat_id: set() for lat_id in config.lattices}
-    for test in config.tests:
-        for lat_id, obs in test.observables.items():
-            if lat_id in needed:
-                needed[lat_id].add(obs)
+    needed: dict[str, set[EleObservable]] = {lat_id: set() for lat_id in config.lattices}
+    for pair in config.pair_equality:
+        if pair.lattice_a_id in needed:
+            needed[pair.lattice_a_id].add(EleObservable(ele=pair.element_a))
+        if pair.lattice_b_id in needed:
+            needed[pair.lattice_b_id].add(EleObservable(ele=pair.element_b))
 
     # Run observables: lattice_id -> {observable -> observation}
-    obs_map: dict[str, dict[Observable, Observation]] = {}
+    obs_map: dict[str, dict[EleObservable, EleObservation]] = {}
     lattice_results: dict[str, LatticeResult] = {}
 
     for lat_id, lat_config in config.lattices.items():
@@ -53,25 +54,29 @@ def run(config: UnittestConfig, config_dir: Path) -> UnittestResults:
             load_time=load_time,
         )
 
-    # Run each test, resolving its observations from the shared map
-    test_results: list[test_result_types] = []
-    for test in config.tests:
+    # Run each pair comparison
+    pair_results: list[PairEqualityResult] = []
+    for pair in config.pair_equality:
+        obs_a_key = EleObservable(ele=pair.element_a)
+        obs_b_key = EleObservable(ele=pair.element_b)
         try:
-            observations: dict[str, Observation] = {
-                lat_id: obs_map[lat_id][obs]
-                for lat_id, obs in test.observables.items()
-            }
-            result = test.run(observations)
+            obs_a = obs_map[pair.lattice_a_id][obs_a_key]
+            obs_b = obs_map[pair.lattice_b_id][obs_b_key]
+            result = pair.comparison(obs_a, obs_b)
         except Exception:
-            result = TestResult(
-                test_type=type(test).__name__,
-                description=test.description,
-                passed=False,
+            result = EleIsCloseResult(
+                is_close=False,
                 error=traceback.format_exc().strip(),
             )
-        test_results.append(result)
+        pair_results.append(PairEqualityResult(
+            lattice_a_id=pair.lattice_a_id,
+            element_a=pair.element_a,
+            lattice_b_id=pair.lattice_b_id,
+            element_b=pair.element_b,
+            result=result,
+        ))
 
-    return UnittestResults(lattices=lattice_results, tests=test_results)
+    return UnittestResults(lattices=lattice_results, pair_equality=pair_results)
 
 
 def _print_results(results: UnittestResults) -> None:
@@ -84,28 +89,52 @@ def _print_results(results: UnittestResults) -> None:
                 print(f"         {line}")
 
     print()
-    print("Tests:")
-    for result in results.tests:
-        status = "PASS" if result.passed else "FAIL"
-        suffix = f"  {result.description}" if result.description else ""
-        print(f"  [{status}] {result.test_type}{suffix}")
+    print("Pair equality:")
+    for pr in results.pair_equality:
+        status = "PASS" if pr.result.is_close else "FAIL"
+        label = f"{pr.lattice_a_id}[{pr.element_a}] == {pr.lattice_b_id}[{pr.element_b}]"
+        print(f"  [{status}] {label}")
 
-    failures = [r for r in results.tests if not r.passed]
+    failures = [pr for pr in results.pair_equality if not pr.result.is_close]
     if failures:
         print()
         print("=" * 60)
         print("FAILURES")
         print("=" * 60)
-        for result in failures:
-            desc = f"  {result.description}" if result.description else ""
-            print(f"\n  {result.test_type}{desc}")
+        for pr in failures:
+            label = f"{pr.lattice_a_id}[{pr.element_a}] == {pr.lattice_b_id}[{pr.element_b}]"
+            print(f"\n  {label}")
             print("  " + "-" * 56)
-            result.print_failure_detail()
+            res = pr.result
+            checks = {
+                "twiss_a": res.twiss_a,
+                "twiss_b": res.twiss_b,
+                "eta_x": res.eta_x,
+                "etap_x": res.etap_x,
+                "eta_y": res.eta_y,
+                "etap_y": res.etap_y,
+                "ref_energy": res.ref_energy,
+                "p0c": res.p0c,
+                "orbit": res.orbit,
+                "floor_x": res.floor_x,
+                "floor_y": res.floor_y,
+                "floor_z": res.floor_z,
+            }
+            ran = {name: check for name, check in checks.items() if check is not None}
+            if ran:
+                width = max(len(name) for name in ran)
+                for name, check in ran.items():
+                    check_status = "PASS" if check.passed else "FAIL"
+                    detail = f"  {check.detail}" if not check.passed and check.detail else ""
+                    print(f"    {name:<{width}}  {check_status}{detail}")
+            if res.error:
+                for line in res.error.splitlines():
+                    print(f"    {line}")
 
-    n_passed = sum(1 for t in results.tests if t.passed)
-    n_total = len(results.tests)
+    n_passed = sum(1 for pr in results.pair_equality if pr.result.is_close)
+    n_total = len(results.pair_equality)
     print()
-    print(f"{n_passed}/{n_total} tests passed")
+    print(f"{n_passed}/{n_total} pairs passed")
 
 
 def main() -> None:

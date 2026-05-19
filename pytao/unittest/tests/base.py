@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from pydantic import BaseModel
 
-from pytao.unittest.observables import Observable, Observation
+from pytao.unittest.observables.base import Observable, Observation
 from pytao.unittest.results import TestResult
 
 

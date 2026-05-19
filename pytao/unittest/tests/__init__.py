@@ -5,7 +5,7 @@ from pydantic import Field
 from pytao.unittest.tests.base import UnitTest
 from pytao.unittest.tests.dummy import DummyUnitTest
 from pytao.unittest.tests.pair_match import PairMatch, TolComparison
-from pytao.unittest.tests.twiss import (
+from pytao.unittest.observables.twiss import (
     BmagTwissComparison,
     DummyTwissComparison,
     TwissComparisonMethod,

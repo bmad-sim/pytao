@@ -1,14 +1,9 @@
-from typing import Annotated, Literal, Union
+from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
-
-class CheckResult(BaseModel):
-    passed: bool
-    detail: str = ""
-
-    def __bool__(self) -> bool:
-        return self.passed
+from pytao.unittest.observables.base import CheckResult
+from pytao.unittest.observables.ele import EleIsCloseResult
 
 
 class TestResult(BaseModel):
@@ -66,7 +61,12 @@ class PairMatchResult(TestResult):
                 print(f"    {line}")
 
 
-test_result_types = Annotated[Union[PairMatchResult, TestResult], Field(discriminator="result_type")]
+class PairEqualityResult(BaseModel):
+    lattice_a_id: str
+    element_a: str
+    lattice_b_id: str
+    element_b: str
+    result: EleIsCloseResult
 
 
 class LatticeResult(BaseModel):
@@ -79,4 +79,4 @@ class LatticeResult(BaseModel):
 
 class UnittestResults(BaseModel):
     lattices: dict[str, LatticeResult]
-    tests: list[test_result_types]
+    pair_equality: list[PairEqualityResult]

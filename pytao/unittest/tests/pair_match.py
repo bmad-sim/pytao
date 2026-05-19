@@ -3,8 +3,9 @@ import numpy as np
 from pydantic import BaseModel, Field
 
 from pytao.unittest.observables import EleObservable, EleObservation, Observable, Observation
-from pytao.unittest.results import CheckResult, PairMatchResult
-from pytao.unittest.tests.twiss import twiss_comparison_types, BmagTwissComparison
+from pytao.unittest.observables.base import CheckResult
+from pytao.unittest.results import PairMatchResult
+from pytao.unittest.observables.twiss import BmagTwissComparison, twiss_comparison_types
 from pytao.unittest.tests.base import UnitTest
 
 

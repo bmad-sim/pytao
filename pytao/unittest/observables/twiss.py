@@ -1,8 +1,9 @@
-from typing import Literal, Annotated, Union
 from abc import ABC, abstractmethod
+from typing import Annotated, Literal, Union
+
 from pydantic import BaseModel, Field
 
-from pytao.unittest.results import CheckResult
+from pytao.unittest.observables.base import CheckResult
 
 
 class TwissComparisonMethod(BaseModel, ABC):
