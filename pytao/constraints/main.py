@@ -8,10 +8,10 @@ import yaml
 from pytao import SubprocessTao
 
 from .config import UnittestConfig
-from .observables import EleIsCloseResult, Observable, Observation
+from .observables import EleIsCloseResult, IsCloseResult, Observable, Observation
 from .results import (
+    EqualityConstraintResult,
     LatticeResult,
-    PairEqualityResult,
     RegressionResult,
     SavedEntry,
     SavedObservations,
@@ -27,11 +27,10 @@ def run(
 ) -> UnittestResults:
     # Build lattice_id -> set of observables needed for that lattice
     needed: dict[str, set[Observable]] = {lat_id: set() for lat_id in config.lattices}
-    for pair in config.ele_equality:
-        if pair.ele_a.lattice_id in needed:
-            needed[pair.ele_a.lattice_id].add(pair.ele_a)
-        if pair.ele_b.lattice_id in needed:
-            needed[pair.ele_b.lattice_id].add(pair.ele_b)
+    for constraint in config.equality_constraints:
+        for obs in [constraint.obs_a, constraint.obs_b]:
+            if obs.lattice_id in needed:
+                needed[obs.lattice_id].add(obs)
 
     # Run observables: observable -> observation
     obs_map: dict[Observable, Observation] = {}
@@ -73,19 +72,19 @@ def run(
         ])
         save_path.write_text(saved.model_dump_json(indent=2))
 
-    # Run each pair comparison
-    pair_results: list[PairEqualityResult] = []
-    for pair in config.ele_equality:
+    # Run each equality constraint comparison
+    constraint_results: list[EqualityConstraintResult] = []
+    for constraint in config.equality_constraints:
         try:
-            result = pair.comparison(obs_map[pair.ele_a], obs_map[pair.ele_b])
+            result = constraint.compare(obs_map[constraint.obs_a], obs_map[constraint.obs_b])
         except Exception:
-            result = EleIsCloseResult(
+            result = IsCloseResult(
                 is_close=False,
                 error=traceback.format_exc().strip(),
             )
-        pair_results.append(PairEqualityResult(
-            ele_a=pair.ele_a,
-            ele_b=pair.ele_b,
+        constraint_results.append(EqualityConstraintResult(
+            obs_a=constraint.obs_a,
+            obs_b=constraint.obs_b,
             result=result,
         ))
 
@@ -93,12 +92,12 @@ def run(
     regression_results: list[RegressionResult] = []
     if compare is not None:
         compare_map = {e.observable: e.observation for e in compare.entries}
-        for pair in config.ele_equality:
-            for obs in [pair.ele_a, pair.ele_b]:
+        for constraint in config.equality_constraints:
+            for obs in [constraint.obs_a, constraint.obs_b]:
                 try:
-                    result = pair.comparison(obs_map[obs], compare_map[obs])
+                    result = constraint.compare(obs_map[obs], compare_map[obs])
                 except Exception:
-                    result = EleIsCloseResult(
+                    result = IsCloseResult(
                         is_close=False,
                         error=traceback.format_exc().strip(),
                     )
@@ -106,40 +105,37 @@ def run(
 
     return UnittestResults(
         lattices=lattice_results,
-        ele_equality=pair_results,
+        equality_constraints=constraint_results,
         regression=regression_results,
     )
 
 
-def _print_check_detail(res: EleIsCloseResult) -> None:
-    checks = {
-        "twiss_a": res.twiss_a,
-        "twiss_b": res.twiss_b,
-        "eta_x": res.eta_x,
-        "etap_x": res.etap_x,
-        "eta_y": res.eta_y,
-        "etap_y": res.etap_y,
-        "ref_energy": res.ref_energy,
-        "p0c": res.p0c,
-        "orbit": res.orbit,
-        "floor_x": res.floor_x,
-        "floor_y": res.floor_y,
-        "floor_z": res.floor_z,
-    }
-    ran = {name: check for name, check in checks.items() if check is not None}
-    if ran:
-        width = max(len(name) for name in ran)
-        for name, check in ran.items():
-            check_status = "PASS" if check.passed else "FAIL"
-            detail = f"  {check.detail}" if not check.passed and check.detail else ""
-            print(f"    {name:<{width}}  {check_status}{detail}")
+def _print_check_detail(res: IsCloseResult) -> None:
+    if isinstance(res, EleIsCloseResult):
+        checks = {
+            "twiss_a": res.twiss_a,
+            "twiss_b": res.twiss_b,
+            "eta_x": res.eta_x,
+            "etap_x": res.etap_x,
+            "eta_y": res.eta_y,
+            "etap_y": res.etap_y,
+            "ref_energy": res.ref_energy,
+            "p0c": res.p0c,
+            "orbit": res.orbit,
+            "floor_x": res.floor_x,
+            "floor_y": res.floor_y,
+            "floor_z": res.floor_z,
+        }
+        ran = {name: check for name, check in checks.items() if check is not None}
+        if ran:
+            width = max(len(name) for name in ran)
+            for name, check in ran.items():
+                check_status = "PASS" if check.passed else "FAIL"
+                detail = f"  {check.detail}" if not check.passed and check.detail else ""
+                print(f"    {name:<{width}}  {check_status}{detail}")
     if res.error:
         for line in res.error.splitlines():
             print(f"    {line}")
-
-
-def _obs_label(obs: Observable) -> str:
-    return obs.label
 
 
 def _print_results(results: UnittestResults) -> None:
@@ -152,10 +148,10 @@ def _print_results(results: UnittestResults) -> None:
                 print(f"         {line}")
 
     print()
-    print("Pair equality:")
-    for pr in results.ele_equality:
-        status = "PASS" if pr.result.is_close else "FAIL"
-        label = f"{_obs_label(pr.ele_a)} == {_obs_label(pr.ele_b)}"
+    print("Equality constraints:")
+    for cr in results.equality_constraints:
+        status = "PASS" if cr.result.is_close else "FAIL"
+        label = f"{cr.obs_a.label} == {cr.obs_b.label}"
         print(f"  [{status}] {label}")
 
     if results.regression:
@@ -163,9 +159,9 @@ def _print_results(results: UnittestResults) -> None:
         print("Regression:")
         for rr in results.regression:
             status = "PASS" if rr.result.is_close else "FAIL"
-            print(f"  [{status}] {_obs_label(rr.observable)}")
+            print(f"  [{status}] {rr.observable.label}")
 
-    failures_eq = [pr for pr in results.ele_equality if not pr.result.is_close]
+    failures_eq = [cr for cr in results.equality_constraints if not cr.result.is_close]
     failures_reg = [rr for rr in results.regression if not rr.result.is_close]
 
     if failures_eq or failures_reg:
@@ -173,20 +169,20 @@ def _print_results(results: UnittestResults) -> None:
         print("=" * 60)
         print("FAILURES")
         print("=" * 60)
-        for pr in failures_eq:
-            label = f"{_obs_label(pr.ele_a)} == {_obs_label(pr.ele_b)}"
+        for cr in failures_eq:
+            label = f"{cr.obs_a.label} == {cr.obs_b.label}"
             print(f"\n  {label}")
             print("  " + "-" * 56)
-            _print_check_detail(pr.result)
+            _print_check_detail(cr.result)
         for rr in failures_reg:
-            print(f"\n  regression: {_obs_label(rr.observable)}")
+            print(f"\n  regression: {rr.observable.label}")
             print("  " + "-" * 56)
             _print_check_detail(rr.result)
 
-    n_eq_passed = sum(1 for pr in results.ele_equality if pr.result.is_close)
-    n_eq_total = len(results.ele_equality)
+    n_passed = sum(1 for cr in results.equality_constraints if cr.result.is_close)
+    n_total = len(results.equality_constraints)
     print()
-    print(f"{n_eq_passed}/{n_eq_total} pairs passed")
+    print(f"{n_passed}/{n_total} constraints passed")
 
     if results.regression:
         n_reg_passed = sum(1 for rr in results.regression if rr.result.is_close)

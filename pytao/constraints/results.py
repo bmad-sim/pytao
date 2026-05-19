@@ -6,6 +6,7 @@ from pytao.constraints.observables import (
     CheckResult,
     EleIsCloseResult,
     EleObservable,
+    is_close_result_types,
     observable_types,
     observation_types,
 )
@@ -66,9 +67,15 @@ class PairMatchResult(TestResult):
                 print(f"    {line}")
 
 
-class PairEqualityResult(BaseModel):
-    ele_a: EleObservable
-    ele_b: EleObservable
+class EqualityConstraintResult(BaseModel):
+    obs_a: observable_types
+    obs_b: observable_types
+    result: is_close_result_types
+
+
+class PairEqualityResult(EqualityConstraintResult):
+    obs_a: EleObservable
+    obs_b: EleObservable
     result: EleIsCloseResult
 
 
@@ -96,5 +103,5 @@ class LatticeResult(BaseModel):
 
 class UnittestResults(BaseModel):
     lattices: dict[str, LatticeResult]
-    ele_equality: list[PairEqualityResult]
+    equality_constraints: list[EqualityConstraintResult]
     regression: list[RegressionResult] = Field(default_factory=list)

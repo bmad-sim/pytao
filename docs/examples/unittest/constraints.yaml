@@ -6,15 +6,17 @@ lattices:
   lat_c:
     lattice_file: lattices/lat_c.lat.bmad
 
-ele_equality:
-  - ele_a:
+equality_constraints:
+  - constraint_type: ele
+    ele_a:
       lattice_id: lat_a
       ele_id: END
     ele_b:
       lattice_id: lat_b
       ele_id: BEGINNING
 
-  - ele_a:
+  - constraint_type: ele
+    ele_a:
       lattice_id: lat_a
       ele_id: END
     ele_b:

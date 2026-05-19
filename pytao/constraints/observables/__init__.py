@@ -19,6 +19,7 @@ from pytao.constraints.observables.twiss import (
 
 observable_types = Annotated[Union[EleObservable], Field(discriminator="obs_type")]
 observation_types = Annotated[Union[EleObservation], Field(discriminator="obs_type")]
+is_close_result_types = Annotated[Union[EleIsCloseResult, IsCloseResult], Field(discriminator="result_type")]
 
 __all__ = [
     "BmagTwissComparison",
@@ -34,6 +35,7 @@ __all__ = [
     "Observation",
     "TolComparison",
     "TwissComparisonMethod",
+    "is_close_result_types",
     "observable_types",
     "observation_types",
     "twiss_comparison_types",
