@@ -74,13 +74,11 @@ class PairEqualityResult(BaseModel):
 
 
 class RegressionResult(BaseModel):
-    lattice_id: str
     observable: observable_types
     result: EleIsCloseResult
 
 
 class SavedEntry(BaseModel):
-    lattice_id: str
     observable: observable_types
     observation: observation_types
 

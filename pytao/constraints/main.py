@@ -8,7 +8,7 @@ import yaml
 from pytao import SubprocessTao
 
 from .config import UnittestConfig
-from .observables import EleIsCloseResult, EleObservable, EleObservation
+from .observables import EleIsCloseResult, EleObservable, EleObservation, Observable, Observation
 from .results import (
     LatticeResult,
     PairEqualityResult,
@@ -25,16 +25,18 @@ def run(
     save_path: Path | None = None,
     compare: SavedObservations | None = None,
 ) -> UnittestResults:
-    # Build lattice_id -> set of unique observables needed
+    # Build lattice_id -> set of observables needed for that lattice
     needed: dict[str, set[EleObservable]] = {lat_id: set() for lat_id in config.lattices}
     for pair in config.ele_equality:
+        obs_a = EleObservable(lattice_id=pair.lattice_a_id, ele=pair.element_a)
+        obs_b = EleObservable(lattice_id=pair.lattice_b_id, ele=pair.element_b)
         if pair.lattice_a_id in needed:
-            needed[pair.lattice_a_id].add(EleObservable(ele=pair.element_a))
+            needed[pair.lattice_a_id].add(obs_a)
         if pair.lattice_b_id in needed:
-            needed[pair.lattice_b_id].add(EleObservable(ele=pair.element_b))
+            needed[pair.lattice_b_id].add(obs_b)
 
-    # Run observables: (lattice_id, observable) -> observation
-    obs_map: dict[tuple[str, EleObservable], EleObservation] = {}
+    # Run observables: observable -> observation
+    obs_map: dict[Observable, Observation] = {}
     lattice_results: dict[str, LatticeResult] = {}
 
     for lat_id, lat_config in config.lattices.items():
@@ -52,7 +54,7 @@ def run(
             with SubprocessTao(**kwargs) as tao:
                 loaded = True
                 for obs in needed[lat_id]:
-                    obs_map[(lat_id, obs)] = obs(tao)
+                    obs_map[obs] = obs(tao)
         except Exception:
             error = traceback.format_exc().strip()
         finally:
@@ -68,20 +70,18 @@ def run(
 
     if save_path is not None:
         saved = SavedObservations(entries=[
-            SavedEntry(lattice_id=lat_id, observable=obs, observation=obs_val)
-            for (lat_id, obs), obs_val in obs_map.items()
+            SavedEntry(observable=obs, observation=obs_val)
+            for obs, obs_val in obs_map.items()
         ])
         save_path.write_text(saved.model_dump_json(indent=2))
 
     # Run each pair comparison
     pair_results: list[PairEqualityResult] = []
     for pair in config.ele_equality:
-        obs_a_key = EleObservable(ele=pair.element_a)
-        obs_b_key = EleObservable(ele=pair.element_b)
+        obs_a = EleObservable(lattice_id=pair.lattice_a_id, ele=pair.element_a)
+        obs_b = EleObservable(lattice_id=pair.lattice_b_id, ele=pair.element_b)
         try:
-            obs_a = obs_map[(pair.lattice_a_id, obs_a_key)]
-            obs_b = obs_map[(pair.lattice_b_id, obs_b_key)]
-            result = pair.comparison(obs_a, obs_b)
+            result = pair.comparison(obs_map[obs_a], obs_map[obs_b])
         except Exception:
             result = EleIsCloseResult(
                 is_close=False,
@@ -98,28 +98,20 @@ def run(
     # Regression comparisons against saved observations
     regression_results: list[RegressionResult] = []
     if compare is not None:
+        compare_map = {e.observable: e.observation for e in compare.entries}
         for pair in config.ele_equality:
-            for lat_id, ele in [(pair.lattice_a_id, pair.element_a), (pair.lattice_b_id, pair.element_b)]:
-                obs_key = EleObservable(ele=ele)
-                past_entry = next(
-                    (e for e in compare.entries if e.lattice_id == lat_id and e.observable == obs_key),
-                    None,
-                )
+            for obs in [
+                EleObservable(lattice_id=pair.lattice_a_id, ele=pair.element_a),
+                EleObservable(lattice_id=pair.lattice_b_id, ele=pair.element_b),
+            ]:
                 try:
-                    if past_entry is None:
-                        raise KeyError(f"No saved observation for {lat_id}[{ele}]")
-                    current_obs = obs_map[(lat_id, obs_key)]
-                    result = pair.comparison(current_obs, past_entry.observation)
+                    result = pair.comparison(obs_map[obs], compare_map[obs])
                 except Exception:
                     result = EleIsCloseResult(
                         is_close=False,
                         error=traceback.format_exc().strip(),
                     )
-                regression_results.append(RegressionResult(
-                    lattice_id=lat_id,
-                    observable=obs_key,
-                    result=result,
-                ))
+                regression_results.append(RegressionResult(observable=obs, result=result))
 
     return UnittestResults(
         lattices=lattice_results,
@@ -176,7 +168,8 @@ def _print_results(results: UnittestResults) -> None:
         print("Regression:")
         for rr in results.regression:
             status = "PASS" if rr.result.is_close else "FAIL"
-            print(f"  [{status}] {rr.lattice_id}[{rr.observable.ele}]")
+            obs = rr.observable
+            print(f"  [{status}] {obs.lattice_id}[{obs.ele}]")
 
     failures_eq = [pr for pr in results.ele_equality if not pr.result.is_close]
     failures_reg = [rr for rr in results.regression if not rr.result.is_close]
@@ -192,7 +185,8 @@ def _print_results(results: UnittestResults) -> None:
             print("  " + "-" * 56)
             _print_check_detail(pr.result)
         for rr in failures_reg:
-            print(f"\n  regression: {rr.lattice_id}[{rr.observable.ele}]")
+            obs = rr.observable
+            print(f"\n  regression: {obs.lattice_id}[{obs.ele}]")
             print("  " + "-" * 56)
             _print_check_detail(rr.result)
 
