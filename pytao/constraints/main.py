@@ -29,8 +29,7 @@ def run(
     needed: dict[str, set[Observable]] = {lat_id: set() for lat_id in config.lattices}
     for constraint in config.equality_constraints:
         for obs in [constraint.obs_a, constraint.obs_b]:
-            if obs.lattice_id in needed:
-                needed[obs.lattice_id].add(obs)
+            needed[obs.lattice_id].add(obs)
 
     # Run observables: observable -> observation
     obs_map: dict[Observable, Observation] = {}
@@ -45,7 +44,7 @@ def run(
 
         loaded = False
         error: str | None = None
-        t0 = time.monotonic()
+        t0 = time.perf_counter()
 
         try:
             with SubprocessTao(**kwargs) as tao:
@@ -55,7 +54,7 @@ def run(
         except Exception:
             error = traceback.format_exc().strip()
         finally:
-            load_time = time.monotonic() - t0
+            load_time = time.perf_counter() - t0
 
         lattice_results[lat_id] = LatticeResult(
             lattice_file=lat_config.lattice_file,
