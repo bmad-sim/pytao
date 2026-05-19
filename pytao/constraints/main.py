@@ -196,19 +196,18 @@ def main() -> None:
     )
     parser.add_argument("config", help="Path to YAML configuration file")
     parser.add_argument(
-        "-o",
-        "--output",
-        metavar="OUTPUT",
-        help="Path to write JSON results file (optional)",
-    )
-    parser.add_argument(
-        "--save",
-        metavar="OBSERVATIONS",
+        "--save-observations",
+        metavar="FILE",
         help="Path to write a JSON snapshot of current observations",
     )
     parser.add_argument(
+        "--save-results",
+        metavar="FILE",
+        help="Path to write a JSON snapshot of the results",
+    )
+    parser.add_argument(
         "--compare-path",
-        metavar="OBSERVATIONS",
+        metavar="FILE",
         help="Path to a previously saved observations JSON for regression comparison",
     )
     args = parser.parse_args()
@@ -223,16 +222,16 @@ def main() -> None:
     if args.compare_path:
         compare = SavedObservations.model_validate_json(Path(args.compare_path).read_text())
 
-    save_path = Path(args.save) if args.save else None
+    save_obs_path = Path(args.save_observations) if args.save_observations else None
 
-    results = run(config, config_dir=config_path.parent, save_path=save_path, compare=compare)
+    results = run(config, config_dir=config_path.parent, save_path=save_obs_path, compare=compare)
 
     _print_results(results)
 
-    if save_path is not None:
-        print(f"\nObservations saved to {save_path}")
+    if save_obs_path is not None:
+        print(f"\nObservations saved to {save_obs_path}")
 
-    if args.output:
-        output_path = Path(args.output)
-        output_path.write_text(results.model_dump_json(indent=2))
-        print(f"\nResults written to {output_path}")
+    if args.save_results:
+        results_path = Path(args.save_results)
+        results_path.write_text(results.model_dump_json(indent=2))
+        print(f"\nResults saved to {results_path}")
