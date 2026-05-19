@@ -1,4 +1,4 @@
-from typing import Annotated, Literal, Union
+from typing import Literal
 import numpy as np
 from pydantic import BaseModel, Field
 
@@ -16,14 +16,14 @@ class EleObservation(Observation):
 class EleObservable(Observable):
     """Observable that fetches element data from the lattice."""
     obs_type: Literal["ele"] = "ele"
-    ele: str | int
+    ele_id: str | int
 
     @property
     def label(self) -> str:
-        return f"{self.lattice_id}[{self.ele}]"
+        return f"{self.lattice_id}[{self.ele_id}]"
 
     def __call__(self, tao: Tao) -> EleObservation:
-        return EleObservation(element=tao.ele(self.ele))
+        return EleObservation(element=tao.ele(self.ele_id))
 
 
 class TolComparison(BaseModel):

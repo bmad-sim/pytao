@@ -9,17 +9,17 @@ lattices:
 ele_equality:
   - ele_a:
       lattice_id: lat_a
-      ele: END
+      ele_id: END
     ele_b:
       lattice_id: lat_b
-      ele: BEGINNING
+      ele_id: BEGINNING
 
   - ele_a:
       lattice_id: lat_a
-      ele: END
+      ele_id: END
     ele_b:
       lattice_id: lat_c
-      ele: BEGINNING
+      ele_id: BEGINNING
     comparison:
       twiss_a_test:
         type: bmag
