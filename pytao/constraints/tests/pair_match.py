@@ -2,11 +2,11 @@ from typing import Literal, cast
 import numpy as np
 from pydantic import BaseModel, Field
 
-from pytao.unittest.observables import EleObservable, EleObservation, Observable, Observation
-from pytao.unittest.observables.base import CheckResult
-from pytao.unittest.results import PairMatchResult
-from pytao.unittest.observables.twiss import BmagTwissComparison, twiss_comparison_types
-from pytao.unittest.tests.base import UnitTest
+from pytao.constraints.observables import EleObservable, EleObservation, Observable, Observation
+from pytao.constraints.observables.base import CheckResult
+from pytao.constraints.results import PairMatchResult
+from pytao.constraints.observables.twiss import BmagTwissComparison, twiss_comparison_types
+from pytao.constraints.tests.base import UnitTest
 
 
 class TolComparison(BaseModel):

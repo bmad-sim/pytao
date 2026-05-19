@@ -3,7 +3,7 @@ from typing import Annotated, Literal, Union
 
 from pydantic import BaseModel, Field
 
-from pytao.unittest.observables.base import CheckResult
+from pytao.constraints.observables.base import CheckResult
 
 
 class TwissComparisonMethod(BaseModel, ABC):

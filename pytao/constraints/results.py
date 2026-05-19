@@ -2,8 +2,8 @@ from typing import Literal
 
 from pydantic import BaseModel
 
-from pytao.unittest.observables.base import CheckResult
-from pytao.unittest.observables.ele import EleIsCloseResult
+from pytao.constraints.observables.base import CheckResult
+from pytao.constraints.observables.ele import EleIsCloseResult
 
 
 class TestResult(BaseModel):

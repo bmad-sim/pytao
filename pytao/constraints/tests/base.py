@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from pydantic import BaseModel
 
-from pytao.unittest.observables.base import Observable, Observation
-from pytao.unittest.results import TestResult
+from pytao.constraints.observables.base import Observable, Observation
+from pytao.constraints.results import TestResult
 
 
 class UnitTest(BaseModel, ABC):

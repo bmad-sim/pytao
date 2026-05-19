@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from pytao.unittest.observables.ele import EleIsClose
+from pytao.constraints.observables.ele import EleIsClose
 
 
 class LatticeConfig(BaseModel):

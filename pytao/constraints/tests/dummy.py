@@ -1,8 +1,8 @@
 from typing import Literal
 
-from pytao.unittest.observables import Observable, Observation
-from pytao.unittest.results import TestResult
-from pytao.unittest.tests.base import UnitTest
+from pytao.constraints.observables import Observable, Observation
+from pytao.constraints.results import TestResult
+from pytao.constraints.tests.base import UnitTest
 
 
 class DummyUnitTest(UnitTest):

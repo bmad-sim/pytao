@@ -2,10 +2,10 @@ from typing import Annotated, Union
 
 from pydantic import Field
 
-from pytao.unittest.tests.base import UnitTest
-from pytao.unittest.tests.dummy import DummyUnitTest
-from pytao.unittest.tests.pair_match import PairMatch, TolComparison
-from pytao.unittest.observables.twiss import (
+from pytao.constraints.tests.base import UnitTest
+from pytao.constraints.tests.dummy import DummyUnitTest
+from pytao.constraints.tests.pair_match import PairMatch, TolComparison
+from pytao.constraints.observables.twiss import (
     BmagTwissComparison,
     DummyTwissComparison,
     TwissComparisonMethod,
