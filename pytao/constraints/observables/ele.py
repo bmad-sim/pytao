@@ -18,6 +18,10 @@ class EleObservable(Observable):
     obs_type: Literal["ele"] = "ele"
     ele: str | int
 
+    @property
+    def label(self) -> str:
+        return f"{self.lattice_id}[{self.ele}]"
+
     def __call__(self, tao: Tao) -> EleObservation:
         return EleObservation(element=tao.ele(self.ele))
 

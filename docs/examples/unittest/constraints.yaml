@@ -7,15 +7,19 @@ lattices:
     lattice_file: lattices/lat_c.lat.bmad
 
 ele_equality:
-  - lattice_a_id: lat_a
-    element_a: END
-    lattice_b_id: lat_b
-    element_b: BEGINNING
+  - ele_a:
+      lattice_id: lat_a
+      ele: END
+    ele_b:
+      lattice_id: lat_b
+      ele: BEGINNING
 
-  - lattice_a_id: lat_a
-    element_a: END
-    lattice_b_id: lat_c
-    element_b: BEGINNING
+  - ele_a:
+      lattice_id: lat_a
+      ele: END
+    ele_b:
+      lattice_id: lat_c
+      ele: BEGINNING
     comparison:
       twiss_a_test:
         type: bmag

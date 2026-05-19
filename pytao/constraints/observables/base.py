@@ -20,6 +20,10 @@ class Observable(BaseModel, frozen=True):
     """Configuration and action to make an observation from a lattice."""
     lattice_id: str
 
+    @property
+    def label(self) -> str:
+        return self.lattice_id
+
     def __call__(self, tao: Tao) -> Observation:
         ...
 

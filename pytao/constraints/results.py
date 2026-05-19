@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 from pytao.constraints.observables import (
     CheckResult,
     EleIsCloseResult,
+    EleObservable,
     observable_types,
     observation_types,
 )
@@ -66,10 +67,8 @@ class PairMatchResult(TestResult):
 
 
 class PairEqualityResult(BaseModel):
-    lattice_a_id: str
-    element_a: str
-    lattice_b_id: str
-    element_b: str
+    ele_a: EleObservable
+    ele_b: EleObservable
     result: EleIsCloseResult
 
 

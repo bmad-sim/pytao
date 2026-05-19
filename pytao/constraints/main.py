@@ -8,7 +8,7 @@ import yaml
 from pytao import SubprocessTao
 
 from .config import UnittestConfig
-from .observables import EleIsCloseResult, EleObservable, EleObservation, Observable, Observation
+from .observables import EleIsCloseResult, Observable, Observation
 from .results import (
     LatticeResult,
     PairEqualityResult,
@@ -26,14 +26,12 @@ def run(
     compare: SavedObservations | None = None,
 ) -> UnittestResults:
     # Build lattice_id -> set of observables needed for that lattice
-    needed: dict[str, set[EleObservable]] = {lat_id: set() for lat_id in config.lattices}
+    needed: dict[str, set[Observable]] = {lat_id: set() for lat_id in config.lattices}
     for pair in config.ele_equality:
-        obs_a = EleObservable(lattice_id=pair.lattice_a_id, ele=pair.element_a)
-        obs_b = EleObservable(lattice_id=pair.lattice_b_id, ele=pair.element_b)
-        if pair.lattice_a_id in needed:
-            needed[pair.lattice_a_id].add(obs_a)
-        if pair.lattice_b_id in needed:
-            needed[pair.lattice_b_id].add(obs_b)
+        if pair.ele_a.lattice_id in needed:
+            needed[pair.ele_a.lattice_id].add(pair.ele_a)
+        if pair.ele_b.lattice_id in needed:
+            needed[pair.ele_b.lattice_id].add(pair.ele_b)
 
     # Run observables: observable -> observation
     obs_map: dict[Observable, Observation] = {}
@@ -78,20 +76,16 @@ def run(
     # Run each pair comparison
     pair_results: list[PairEqualityResult] = []
     for pair in config.ele_equality:
-        obs_a = EleObservable(lattice_id=pair.lattice_a_id, ele=pair.element_a)
-        obs_b = EleObservable(lattice_id=pair.lattice_b_id, ele=pair.element_b)
         try:
-            result = pair.comparison(obs_map[obs_a], obs_map[obs_b])
+            result = pair.comparison(obs_map[pair.ele_a], obs_map[pair.ele_b])
         except Exception:
             result = EleIsCloseResult(
                 is_close=False,
                 error=traceback.format_exc().strip(),
             )
         pair_results.append(PairEqualityResult(
-            lattice_a_id=pair.lattice_a_id,
-            element_a=pair.element_a,
-            lattice_b_id=pair.lattice_b_id,
-            element_b=pair.element_b,
+            ele_a=pair.ele_a,
+            ele_b=pair.ele_b,
             result=result,
         ))
 
@@ -100,10 +94,7 @@ def run(
     if compare is not None:
         compare_map = {e.observable: e.observation for e in compare.entries}
         for pair in config.ele_equality:
-            for obs in [
-                EleObservable(lattice_id=pair.lattice_a_id, ele=pair.element_a),
-                EleObservable(lattice_id=pair.lattice_b_id, ele=pair.element_b),
-            ]:
+            for obs in [pair.ele_a, pair.ele_b]:
                 try:
                     result = pair.comparison(obs_map[obs], compare_map[obs])
                 except Exception:
@@ -147,6 +138,10 @@ def _print_check_detail(res: EleIsCloseResult) -> None:
             print(f"    {line}")
 
 
+def _obs_label(obs: Observable) -> str:
+    return obs.label
+
+
 def _print_results(results: UnittestResults) -> None:
     print("Lattices:")
     for lat_id, lat in results.lattices.items():
@@ -160,7 +155,7 @@ def _print_results(results: UnittestResults) -> None:
     print("Pair equality:")
     for pr in results.ele_equality:
         status = "PASS" if pr.result.is_close else "FAIL"
-        label = f"{pr.lattice_a_id}[{pr.element_a}] == {pr.lattice_b_id}[{pr.element_b}]"
+        label = f"{_obs_label(pr.ele_a)} == {_obs_label(pr.ele_b)}"
         print(f"  [{status}] {label}")
 
     if results.regression:
@@ -168,8 +163,7 @@ def _print_results(results: UnittestResults) -> None:
         print("Regression:")
         for rr in results.regression:
             status = "PASS" if rr.result.is_close else "FAIL"
-            obs = rr.observable
-            print(f"  [{status}] {obs.lattice_id}[{obs.ele}]")
+            print(f"  [{status}] {_obs_label(rr.observable)}")
 
     failures_eq = [pr for pr in results.ele_equality if not pr.result.is_close]
     failures_reg = [rr for rr in results.regression if not rr.result.is_close]
@@ -180,13 +174,12 @@ def _print_results(results: UnittestResults) -> None:
         print("FAILURES")
         print("=" * 60)
         for pr in failures_eq:
-            label = f"{pr.lattice_a_id}[{pr.element_a}] == {pr.lattice_b_id}[{pr.element_b}]"
+            label = f"{_obs_label(pr.ele_a)} == {_obs_label(pr.ele_b)}"
             print(f"\n  {label}")
             print("  " + "-" * 56)
             _print_check_detail(pr.result)
         for rr in failures_reg:
-            obs = rr.observable
-            print(f"\n  regression: {obs.lattice_id}[{obs.ele}]")
+            print(f"\n  regression: {_obs_label(rr.observable)}")
             print("  " + "-" * 56)
             _print_check_detail(rr.result)
 
