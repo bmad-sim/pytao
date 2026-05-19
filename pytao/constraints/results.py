@@ -1,9 +1,13 @@
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-from pytao.constraints.observables.base import CheckResult
-from pytao.constraints.observables.ele import EleIsCloseResult
+from pytao.constraints.observables import (
+    CheckResult,
+    EleIsCloseResult,
+    observable_types,
+    observation_types,
+)
 
 
 class TestResult(BaseModel):
@@ -69,6 +73,22 @@ class PairEqualityResult(BaseModel):
     result: EleIsCloseResult
 
 
+class RegressionResult(BaseModel):
+    lattice_id: str
+    observable: observable_types
+    result: EleIsCloseResult
+
+
+class SavedEntry(BaseModel):
+    lattice_id: str
+    observable: observable_types
+    observation: observation_types
+
+
+class SavedObservations(BaseModel):
+    entries: list[SavedEntry]
+
+
 class LatticeResult(BaseModel):
     lattice_file: str | None
     init_file: str | None
@@ -80,3 +100,4 @@ class LatticeResult(BaseModel):
 class UnittestResults(BaseModel):
     lattices: dict[str, LatticeResult]
     ele_equality: list[PairEqualityResult]
+    regression: list[RegressionResult] = Field(default_factory=list)

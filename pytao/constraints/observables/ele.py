@@ -9,11 +9,13 @@ from pytao.constraints.observables.twiss import BmagTwissComparison, twiss_compa
 
 
 class EleObservation(Observation):
+    obs_type: Literal["ele"] = "ele"
     element: Element
 
 
 class EleObservable(Observable):
     """Observable that fetches element data from the lattice."""
+    obs_type: Literal["ele"] = "ele"
     ele: str | int
 
     def __call__(self, tao: Tao) -> EleObservation:
