@@ -15,7 +15,7 @@ from .results import LatticeResult, PairEqualityResult, UnittestResults
 def run(config: UnittestConfig, config_dir: Path) -> UnittestResults:
     # Build lattice_id -> set of unique observables needed
     needed: dict[str, set[EleObservable]] = {lat_id: set() for lat_id in config.lattices}
-    for pair in config.pair_equality:
+    for pair in config.ele_equality:
         if pair.lattice_a_id in needed:
             needed[pair.lattice_a_id].add(EleObservable(ele=pair.element_a))
         if pair.lattice_b_id in needed:
@@ -56,7 +56,7 @@ def run(config: UnittestConfig, config_dir: Path) -> UnittestResults:
 
     # Run each pair comparison
     pair_results: list[PairEqualityResult] = []
-    for pair in config.pair_equality:
+    for pair in config.ele_equality:
         obs_a_key = EleObservable(ele=pair.element_a)
         obs_b_key = EleObservable(ele=pair.element_b)
         try:
@@ -76,7 +76,7 @@ def run(config: UnittestConfig, config_dir: Path) -> UnittestResults:
             result=result,
         ))
 
-    return UnittestResults(lattices=lattice_results, pair_equality=pair_results)
+    return UnittestResults(lattices=lattice_results, ele_equality=pair_results)
 
 
 def _print_results(results: UnittestResults) -> None:
@@ -90,12 +90,12 @@ def _print_results(results: UnittestResults) -> None:
 
     print()
     print("Pair equality:")
-    for pr in results.pair_equality:
+    for pr in results.ele_equality:
         status = "PASS" if pr.result.is_close else "FAIL"
         label = f"{pr.lattice_a_id}[{pr.element_a}] == {pr.lattice_b_id}[{pr.element_b}]"
         print(f"  [{status}] {label}")
 
-    failures = [pr for pr in results.pair_equality if not pr.result.is_close]
+    failures = [pr for pr in results.ele_equality if not pr.result.is_close]
     if failures:
         print()
         print("=" * 60)
@@ -131,8 +131,8 @@ def _print_results(results: UnittestResults) -> None:
                 for line in res.error.splitlines():
                     print(f"    {line}")
 
-    n_passed = sum(1 for pr in results.pair_equality if pr.result.is_close)
-    n_total = len(results.pair_equality)
+    n_passed = sum(1 for pr in results.ele_equality if pr.result.is_close)
+    n_total = len(results.ele_equality)
     print()
     print(f"{n_passed}/{n_total} pairs passed")
 

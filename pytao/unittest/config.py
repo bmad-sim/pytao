@@ -18,4 +18,4 @@ class ElementPair(BaseModel):
 
 class UnittestConfig(BaseModel):
     lattices: dict[str, LatticeConfig] = Field(default_factory=dict, description="Mapping from unique lattice identifier to lattice loading information")
-    pair_equality: list[ElementPair] = Field(default_factory=list, description="Element pairs to compare across lattices")
+    ele_equality: list[ElementPair] = Field(default_factory=list, description="Element pairs to compare across lattices")

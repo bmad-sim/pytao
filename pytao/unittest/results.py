@@ -79,4 +79,4 @@ class LatticeResult(BaseModel):
 
 class UnittestResults(BaseModel):
     lattices: dict[str, LatticeResult]
-    pair_equality: list[PairEqualityResult]
+    ele_equality: list[PairEqualityResult]

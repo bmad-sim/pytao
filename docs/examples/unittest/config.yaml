@@ -6,7 +6,7 @@ lattices:
   lat_c:
     lattice_file: lattices/lat_c.lat.bmad
 
-pair_equality:
+ele_equality:
   - lattice_a_id: lat_a
     element_a: END
     lattice_b_id: lat_b
