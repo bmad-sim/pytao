@@ -48,6 +48,6 @@ class LatticeConfig(BaseModel):
     init_file: str | None = None
 
 
-class UnittestConfig(BaseModel):
+class ConstraintsConfig(BaseModel):
     lattices: dict[str, LatticeConfig] = Field(default_factory=dict, description="Mapping from unique lattice identifier to lattice loading information")
     equality_constraints: list[equality_constraint_types] = Field(default_factory=list, description="Equality constraints to check across lattices")

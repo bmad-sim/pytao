@@ -7,7 +7,7 @@ import yaml
 
 from pytao import SubprocessTao
 
-from .config import UnittestConfig
+from .config import ConstraintsConfig
 from .observables import EleIsCloseResult, IsCloseResult, Observable, Observation
 from .results import (
     EqualityConstraintResult,
@@ -15,16 +15,16 @@ from .results import (
     RegressionResult,
     SavedEntry,
     SavedObservations,
-    UnittestResults,
+    ConstraintResults,
 )
 
 
 def run(
-    config: UnittestConfig,
+    config: ConstraintsConfig,
     config_dir: Path,
     save_path: Path | None = None,
     compare: SavedObservations | None = None,
-) -> UnittestResults:
+) -> ConstraintResults:
     # Build lattice_id -> set of observables needed for that lattice
     needed: dict[str, set[Observable]] = {lat_id: set() for lat_id in config.lattices}
     for constraint in config.equality_constraints:
@@ -102,7 +102,7 @@ def run(
                     )
                 regression_results.append(RegressionResult(observable=obs, result=result))
 
-    return UnittestResults(
+    return ConstraintResults(
         lattices=lattice_results,
         equality_constraints=constraint_results,
         regression=regression_results,
@@ -137,7 +137,7 @@ def _print_check_detail(res: IsCloseResult) -> None:
             print(f"    {line}")
 
 
-def _print_results(results: UnittestResults) -> None:
+def _print_results(results: ConstraintResults) -> None:
     print("Lattices:")
     for lat_id, lat in results.lattices.items():
         status = "OK  " if lat.loaded else "FAIL"
@@ -217,7 +217,7 @@ def main() -> None:
     with config_path.open() as fh:
         raw = yaml.safe_load(fh)
 
-    config = UnittestConfig.model_validate(raw)
+    config = ConstraintsConfig.model_validate(raw)
 
     compare: SavedObservations | None = None
     if args.compare_path:

@@ -101,7 +101,7 @@ class LatticeResult(BaseModel):
     load_time: float
 
 
-class UnittestResults(BaseModel):
+class ConstraintResults(BaseModel):
     lattices: dict[str, LatticeResult]
     equality_constraints: list[EqualityConstraintResult]
     regression: list[RegressionResult] = Field(default_factory=list)

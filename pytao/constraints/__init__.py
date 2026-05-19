@@ -1,12 +1,12 @@
-from .config import LatticeConfig, UnittestConfig
+from .config import LatticeConfig, ConstraintsConfig
 from .main import main, run
-from .results import LatticeResult, UnittestResults
+from .results import LatticeResult, ConstraintResults
 
 __all__ = [
     "LatticeConfig",
-    "UnittestConfig",
+    "ConstraintsConfig",
     "LatticeResult",
-    "UnittestResults",
+    "ConstraintResults",
     "run",
     "main",
 ]
