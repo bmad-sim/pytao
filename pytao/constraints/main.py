@@ -184,6 +184,8 @@ def _print_results(results: ConstraintResults) -> None:
         for cr in failures_eq:
             label = " == ".join(obs.label for obs in cr.observables)
             print(f"\n  {label}")
+            if cr.comment:
+                print(f"  {cr.comment}")
             print("  " + "-" * 56)
             _print_check_detail(cr.result)
         for rr in failures_reg:
