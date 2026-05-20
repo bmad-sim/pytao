@@ -29,7 +29,8 @@ def run(
     needed: dict[str, set[Observable]] = {lat_id: set() for lat_id in config.lattices}
     for constraint in config.equality_constraints:
         for obs in [constraint.obs_a, constraint.obs_b]:
-            needed[obs.lattice_id].add(obs)
+            if obs is not None:
+                needed[obs.lattice_id].add(obs)
 
     # Run observables: observable -> observation
     obs_map: dict[Observable, Observation] = {}
@@ -75,7 +76,9 @@ def run(
     constraint_results: list[EqualityConstraintResult] = []
     for constraint in config.equality_constraints:
         try:
-            result = constraint.compare(obs_map[constraint.obs_a], obs_map[constraint.obs_b])
+            obs_a = obs_map[constraint.obs_a] if constraint.obs_a is not None else None
+            obs_b = obs_map[constraint.obs_b] if constraint.obs_b is not None else None
+            result = constraint.compare(obs_a, obs_b)
         except Exception:
             result = IsCloseResult(
                 is_close=False,
@@ -93,6 +96,8 @@ def run(
         compare_map = {e.observable: e.observation for e in compare.entries}
         for constraint in config.equality_constraints:
             for obs in [constraint.obs_a, constraint.obs_b]:
+                if obs is None:
+                    continue
                 try:
                     result = constraint.compare(obs_map[obs], compare_map[obs])
                 except Exception:
