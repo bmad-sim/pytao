@@ -38,14 +38,10 @@ class EqualityConstraint(BaseModel):
 
     @property
     @abstractmethod
-    def obs_a(self) -> Observable | None: ...
-
-    @property
-    @abstractmethod
-    def obs_b(self) -> Observable | None: ...
+    def required_observables(self) -> frozenset[Observable]: ...
 
     @abstractmethod
-    def compare(self, obs_a: Observation | None, obs_b: Observation | None) -> IsCloseResult: ...
+    def compare(self, observations: dict[Observable, Observation]) -> IsCloseResult: ...
 
 
 class ElementPairEquality(EqualityConstraint):
@@ -55,18 +51,12 @@ class ElementPairEquality(EqualityConstraint):
     comparison: EleIsClose = Field(default_factory=EleIsClose)
 
     @property
-    def obs_a(self) -> EleObservable | None:
-        return self.ele_a if isinstance(self.ele_a, EleObservable) else None
+    def required_observables(self) -> frozenset[Observable]:
+        return frozenset(x for x in (self.ele_a, self.ele_b) if isinstance(x, EleObservable))
 
-    @property
-    def obs_b(self) -> EleObservable | None:
-        return self.ele_b if isinstance(self.ele_b, EleObservable) else None
-
-    def compare(self, obs_a: Observation | None, obs_b: Observation | None) -> EleIsCloseResult:
-        if isinstance(self.ele_a, EleLiteral):
-            obs_a = self.ele_a.to_observation()
-        if isinstance(self.ele_b, EleLiteral):
-            obs_b = self.ele_b.to_observation()
+    def compare(self, observations: dict[Observable, Observation]) -> EleIsCloseResult:
+        obs_a = observations[self.ele_a] if isinstance(self.ele_a, EleObservable) else self.ele_a.to_observation()
+        obs_b = observations[self.ele_b] if isinstance(self.ele_b, EleObservable) else self.ele_b.to_observation()
         if not isinstance(obs_a, EleObservation):
             raise TypeError(f"expected EleObservation for obs_a, got {type(obs_a)}")
         if not isinstance(obs_b, EleObservation):
@@ -81,22 +71,12 @@ class DatumPairEquality(EqualityConstraint):
     comparison: DatumIsClose = Field(default_factory=DatumIsClose)
 
     @property
-    def obs_a(self) -> DatumObservable | None:
-        return self.datum_a if isinstance(self.datum_a, DatumObservable) else None
+    def required_observables(self) -> frozenset[Observable]:
+        return frozenset(x for x in (self.datum_a, self.datum_b) if isinstance(x, DatumObservable))
 
-    @property
-    def obs_b(self) -> DatumObservable | None:
-        return self.datum_b if isinstance(self.datum_b, DatumObservable) else None
-
-    def compare(self, obs_a: Observation | None, obs_b: Observation | None) -> DatumIsCloseResult:
-        if isinstance(self.datum_a, DatumLiteral):
-            if not isinstance(obs_b, DatumObservation):
-                raise TypeError(f"expected DatumObservation for obs_b, got {type(obs_b)}")
-            obs_a = self.datum_a.to_observation(obs_b)
-        if isinstance(self.datum_b, DatumLiteral):
-            if not isinstance(obs_a, DatumObservation):
-                raise TypeError(f"expected DatumObservation for obs_a, got {type(obs_a)}")
-            obs_b = self.datum_b.to_observation(obs_a)
+    def compare(self, observations: dict[Observable, Observation]) -> DatumIsCloseResult:
+        obs_a = observations[self.datum_a] if isinstance(self.datum_a, DatumObservable) else self.datum_a.to_observation()
+        obs_b = observations[self.datum_b] if isinstance(self.datum_b, DatumObservable) else self.datum_b.to_observation()
         if not isinstance(obs_a, DatumObservation):
             raise TypeError(f"expected DatumObservation for obs_a, got {type(obs_a)}")
         if not isinstance(obs_b, DatumObservation):

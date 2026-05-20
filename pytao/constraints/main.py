@@ -28,9 +28,8 @@ def run(
     # Build lattice_id -> set of observables needed for that lattice
     needed: dict[str, set[Observable]] = {lat_id: set() for lat_id in config.lattices}
     for constraint in config.equality_constraints:
-        for obs in [constraint.obs_a, constraint.obs_b]:
-            if obs is not None:
-                needed[obs.lattice_id].add(obs)
+        for obs in constraint.required_observables:
+            needed[obs.lattice_id].add(obs)
 
     # Run observables: observable -> observation
     obs_map: dict[Observable, Observation] = {}
@@ -76,17 +75,14 @@ def run(
     constraint_results: list[EqualityConstraintResult] = []
     for constraint in config.equality_constraints:
         try:
-            obs_a = obs_map[constraint.obs_a] if constraint.obs_a is not None else None
-            obs_b = obs_map[constraint.obs_b] if constraint.obs_b is not None else None
-            result = constraint.compare(obs_a, obs_b)
+            result = constraint.compare({obs: obs_map[obs] for obs in constraint.required_observables})
         except Exception:
             result = IsCloseResult(
                 is_close=False,
                 error=traceback.format_exc().strip(),
             )
         constraint_results.append(EqualityConstraintResult(
-            obs_a=constraint.obs_a,
-            obs_b=constraint.obs_b,
+            observables=list(constraint.required_observables),
             result=result,
         ))
 
@@ -95,11 +91,11 @@ def run(
     if compare is not None:
         compare_map = {e.observable: e.observation for e in compare.entries}
         for constraint in config.equality_constraints:
-            for obs in [constraint.obs_a, constraint.obs_b]:
-                if obs is None:
+            for obs in constraint.required_observables:
+                if obs not in obs_map or obs not in compare_map:
                     continue
                 try:
-                    result = constraint.compare(obs_map[obs], compare_map[obs])
+                    result = constraint.comparison(obs_map[obs], compare_map[obs])
                 except Exception:
                     result = IsCloseResult(
                         is_close=False,
@@ -155,7 +151,7 @@ def _print_results(results: ConstraintResults) -> None:
     print("Equality constraints:")
     for cr in results.equality_constraints:
         status = "PASS" if cr.result.is_close else "FAIL"
-        label = f"{cr.obs_a.label} == {cr.obs_b.label}"
+        label = " == ".join(obs.label for obs in cr.observables)
         print(f"  [{status}] {label}")
 
     if results.regression:
@@ -174,7 +170,7 @@ def _print_results(results: ConstraintResults) -> None:
         print("FAILURES")
         print("=" * 60)
         for cr in failures_eq:
-            label = f"{cr.obs_a.label} == {cr.obs_b.label}"
+            label = " == ".join(obs.label for obs in cr.observables)
             print(f"\n  {label}")
             print("  " + "-" * 56)
             _print_check_detail(cr.result)

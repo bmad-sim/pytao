@@ -51,14 +51,11 @@ class DatumObservable(Observable):
 
 
 class DatumLiteral(BaseModel):
-    model_value: float | None = None
-    design_value: float | None = None
+    model_value: float
+    design_value: float
 
-    def to_observation(self, base: DatumObservation) -> DatumObservation:
-        return DatumObservation(
-            model_value=self.model_value if self.model_value is not None else base.model_value,
-            design_value=self.design_value if self.design_value is not None else base.design_value,
-        )
+    def to_observation(self) -> DatumObservation:
+        return DatumObservation(model_value=self.model_value, design_value=self.design_value)
 
 
 class DatumIsCloseResult(IsCloseResult):

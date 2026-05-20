@@ -4,8 +4,6 @@ from pydantic import BaseModel, Field
 
 from pytao.constraints.observables import (
     CheckResult,
-    EleIsCloseResult,
-    EleObservable,
     is_close_result_types,
     observable_types,
     observation_types,
@@ -68,20 +66,13 @@ class PairMatchResult(TestResult):
 
 
 class EqualityConstraintResult(BaseModel):
-    obs_a: observable_types
-    obs_b: observable_types
+    observables: list[observable_types]
     result: is_close_result_types
-
-
-class PairEqualityResult(EqualityConstraintResult):
-    obs_a: EleObservable
-    obs_b: EleObservable
-    result: EleIsCloseResult
 
 
 class RegressionResult(BaseModel):
     observable: observable_types
-    result: EleIsCloseResult
+    result: is_close_result_types
 
 
 class SavedEntry(BaseModel):
