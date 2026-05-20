@@ -7,7 +7,56 @@ from pytao.constraints.observables import IsCloseResult, Observable, Observation
 from pytao.constraints.observables.datum import DatumIsClose, DatumIsCloseResult, DatumObservable, DatumObservation
 from pytao.model import ElementFloor, ElementFloorAll, ElementFloorPosition, ElementOrbit, ElementTwiss
 
+from pytao.model.ele.ele import Element
+
 from pytao.constraints.observables.ele import EleIsClose, EleIsCloseResult, EleObservable, EleObservation
+
+
+class EleLiteralValues(BaseModel):
+    beta_a: float | None = None
+    alpha_a: float | None = None
+    beta_b: float | None = None
+    alpha_b: float | None = None
+    eta_x: float | None = None
+    etap_x: float | None = None
+    eta_y: float | None = None
+    etap_y: float | None = None
+    p0c: float | None = None
+    floor_x: float | None = None
+    floor_y: float | None = None
+    floor_z: float | None = None
+
+    def to_observation(self, base: Element) -> Element:
+        new_twiss = ElementTwiss(
+            **{k: v for k, v in [
+                ("beta_a", self.beta_a), ("alpha_a", self.alpha_a),
+                ("beta_b", self.beta_b), ("alpha_b", self.alpha_b),
+                ("eta_x", self.eta_x), ("etap_x", self.etap_x),
+                ("eta_y", self.eta_y), ("etap_y", self.etap_y),
+            ] if v is not None}
+        )
+        new_orbit = ElementOrbit(
+            **{k: v for k, v in [("p0c", self.p0c)] if v is not None}
+        )
+        dummy_floor = ElementFloor(which="model", where="end", actual=None, reference=None, slaves={})
+        new_floor = ElementFloorAll(
+            which="model",
+            beginning=dummy_floor,
+            center=dummy_floor,
+            end=ElementFloor(
+                which="model",
+                where="end",
+                actual=ElementFloorPosition(
+                    **{k: v for k, v in [
+                        ("x", self.floor_x), ("y", self.floor_y), ("z", self.floor_z)
+                    ] if v is not None}
+                ),
+                reference=None,
+                slaves={},
+            ),
+        )
+        element = base.model_copy(update={"twiss": new_twiss, "orbit": new_orbit, "floor": new_floor})
+        return EleObservation(element=element)
 
 
 class EqualityConstraint(BaseModel):
@@ -64,18 +113,7 @@ class DatumPair(EqualityConstraint):
 class EleLiteral(EqualityConstraint):
     constraint_type: Literal["ele_literal"] = "ele_literal"
     ele: EleObservable
-    beta_a: float | None = None
-    alpha_a: float | None = None
-    beta_b: float | None = None
-    alpha_b: float | None = None
-    eta_x: float | None = None
-    etap_x: float | None = None
-    eta_y: float | None = None
-    etap_y: float | None = None
-    p0c: float | None = None
-    floor_x: float | None = None
-    floor_y: float | None = None
-    floor_z: float | None = None
+    expected: EleLiteralValues
     comparison: EleIsClose = Field(default_factory=EleIsClose)
 
     @property
@@ -89,49 +127,24 @@ class EleLiteral(EqualityConstraint):
     def compare(self, obs_a: Observation, obs_b: Observation) -> EleIsCloseResult:
         if not isinstance(obs_a, EleObservation):
             raise TypeError(f"expected EleObservation, got {type(obs_a)}")
-        ea = obs_a.element
+        return self.comparison(obs_a, lement=self.expected.to_observation(obs_a.element))
 
-        new_twiss = ElementTwiss(
-            **{k: v for k, v in [
-                ("beta_a", self.beta_a), ("alpha_a", self.alpha_a),
-                ("beta_b", self.beta_b), ("alpha_b", self.alpha_b),
-                ("eta_x", self.eta_x), ("etap_x", self.etap_x),
-                ("eta_y", self.eta_y), ("etap_y", self.etap_y),
-            ] if v is not None}
+
+class DatumLiteralValues(BaseModel):
+    model_value: float | None = None
+    design_value: float | None = None
+
+    def to_observation(self, base: DatumObservation) -> DatumObservation:
+        return DatumObservation(
+            model_value=self.model_value if self.model_value is not None else base.model_value,
+            design_value=self.design_value if self.design_value is not None else base.design_value,
         )
-
-        new_orbit = ElementOrbit(
-            **{k: v for k, v in [("p0c", self.p0c)] if v is not None}
-        )
-
-        dummy_floor = ElementFloor(which="model", where="end", actual=None, reference=None, slaves={})
-        new_floor = ElementFloorAll(
-            which="model",
-            beginning=dummy_floor,
-            center=dummy_floor,
-            end=ElementFloor(
-                which="model",
-                where="end",
-                actual=ElementFloorPosition(
-                    **{k: v for k, v in [
-                        ("x", self.floor_x), ("y", self.floor_y), ("z", self.floor_z)
-                    ] if v is not None}
-                ),
-                reference=None,
-                slaves={},
-            ),
-        )
-
-        literal_element = ea.model_copy(update={"twiss": new_twiss, "orbit": new_orbit, "floor": new_floor})
-        literal_obs = EleObservation(element=literal_element)
-        return self.comparison(obs_a, literal_obs)
 
 
 class DatumLiteral(EqualityConstraint):
     constraint_type: Literal["datum_literal"] = "datum_literal"
     datum: DatumObservable
-    expected_model_value: float | None = None
-    expected_design_value: float | None = None
+    expected: DatumLiteralValues
     comparison: DatumIsClose = Field(default_factory=DatumIsClose)
 
     @property
@@ -143,10 +156,9 @@ class DatumLiteral(EqualityConstraint):
         return self.datum
 
     def compare(self, obs_a: Observation, obs_b: Observation) -> DatumIsCloseResult:
-        literal = DatumObservation(
-            model_value=self.expected_model_value if self.expected_model_value is not None else obs_a.model_value,
-            design_value=self.expected_design_value if self.expected_design_value is not None else obs_a.design_value,
-        )
+        if not isinstance(obs_a, DatumObservation):
+            raise TypeError(f"expected DatumObservation, got {type(obs_a)}")
+        literal = self.expected.to_observation(obs_a)
         return self.comparison(obs_a, literal)
 
 
