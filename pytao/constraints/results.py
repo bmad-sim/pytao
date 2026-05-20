@@ -4,7 +4,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from pytao.constraints.observables import (
-    is_close_result_types,
+    constraint_result_types,
     observable_types,
     observation_types,
 )
@@ -23,15 +23,15 @@ class TestResult(BaseModel):
                 print(f"    {line}")
 
 
-class EqualityConstraintResult(BaseModel):
+class ConstraintResult(BaseModel):
     observables: list[observable_types]
     comment: str = ""
-    result: is_close_result_types
+    result: constraint_result_types
 
 
 class RegressionResult(BaseModel):
     observable: observable_types
-    result: is_close_result_types
+    result: constraint_result_types
 
 
 class SavedEntry(BaseModel):
@@ -55,5 +55,5 @@ class ConstraintResults(BaseModel):
     started_at: datetime
     finished_at: datetime
     lattices: dict[str, LatticeResult]
-    equality_constraints: list[EqualityConstraintResult]
+    constraints: list[ConstraintResult]
     regression: list[RegressionResult] = Field(default_factory=list)

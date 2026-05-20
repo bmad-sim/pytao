@@ -8,15 +8,15 @@ import yaml
 
 from pytao import SubprocessTao
 
-from .config import ConstraintsConfig
+from .config import ConstraintsConfig, EqualityConstraint
 from .observables import DatumIsCloseResult, DatumLessThanResult, EleIsCloseResult, EleLessThanResult, IsCloseResult, Observable, Observation
 from .results import (
-    EqualityConstraintResult,
+    ConstraintResult,
+    ConstraintResults,
     LatticeResult,
     RegressionResult,
     SavedEntry,
     SavedObservations,
-    ConstraintResults,
 )
 
 
@@ -30,7 +30,7 @@ def run(
 
     # Build lattice_id -> set of observables needed for that lattice
     needed: dict[str, set[Observable]] = {lat_id: set() for lat_id in config.lattices}
-    for constraint in config.equality_constraints:
+    for constraint in config.constraints:
         for obs in constraint.required_observables:
             needed[obs.lattice_id].add(obs)
 
@@ -72,16 +72,16 @@ def run(
         save_path.write_text(saved.model_dump_json(indent=2))
 
     # Run each equality constraint comparison
-    constraint_results: list[EqualityConstraintResult] = []
-    for constraint in config.equality_constraints:
+    constraint_results: list[ConstraintResult] = []
+    for constraint in config.constraints:
         try:
-            result = constraint.compare({obs: obs_map[obs] for obs in constraint.required_observables})
+            result = constraint.is_satisfied({obs: obs_map[obs] for obs in constraint.required_observables})
         except Exception:
             result = IsCloseResult(
                 is_close=False,
                 error=traceback.format_exc().strip(),
             )
-        constraint_results.append(EqualityConstraintResult(
+        constraint_results.append(ConstraintResult(
             observables=list(constraint.required_observables),
             comment=constraint.comment,
             result=result,
@@ -91,7 +91,9 @@ def run(
     regression_results: list[RegressionResult] = []
     if compare is not None:
         compare_map = {e.observable: e.observation for e in compare.entries}
-        for constraint in config.equality_constraints:
+        for constraint in config.constraints:
+            if not isinstance(constraint, EqualityConstraint):
+                continue
             for obs in constraint.required_observables:
                 if obs not in obs_map or obs not in compare_map:
                     continue
@@ -108,7 +110,7 @@ def run(
         started_at=started_at,
         finished_at=datetime.now(timezone.utc),
         lattices=lattice_results,
-        equality_constraints=constraint_results,
+        constraints=constraint_results,
         regression=regression_results,
     )
 
@@ -177,7 +179,7 @@ def _print_results(results: ConstraintResults) -> None:
 
     print()
     print("Equality constraints:")
-    for cr in results.equality_constraints:
+    for cr in results.constraints:
         status = "PASS" if cr.result.is_close else "FAIL"
         label = " == ".join(obs.label for obs in cr.observables)
         print(f"  [{status}] {label}")
@@ -189,7 +191,7 @@ def _print_results(results: ConstraintResults) -> None:
             status = "PASS" if rr.result.is_close else "FAIL"
             print(f"  [{status}] {rr.observable.label}")
 
-    failures_eq = [cr for cr in results.equality_constraints if not cr.result.is_close]
+    failures_eq = [cr for cr in results.constraints if not cr.result.is_close]
     failures_reg = [rr for rr in results.regression if not rr.result.is_close]
 
     if failures_eq or failures_reg:
@@ -209,8 +211,8 @@ def _print_results(results: ConstraintResults) -> None:
             print("  " + "-" * 56)
             _print_check_detail(rr.result)
 
-    n_passed = sum(1 for cr in results.equality_constraints if cr.result.is_close)
-    n_total = len(results.equality_constraints)
+    n_passed = sum(1 for cr in results.constraints if cr.result.is_close)
+    n_total = len(results.constraints)
     print()
     print(f"{n_passed}/{n_total} constraints passed")
 

@@ -6,8 +6,8 @@ lattices:
   lat_c:
     lattice_file: lattices/lat_c.lat.bmad
 
-equality_constraints:
-  - constraint_type: ele
+constraints:
+  - constraint_type: ele_eq
     comment: Basic constraint requiring lat_a[END] == lab_b[BEGINNING]
     ele_a:
       lattice_id: lat_a
@@ -16,7 +16,7 @@ equality_constraints:
       lattice_id: lat_b
       ele_id: BEGINNING
 
-  - constraint_type: ele
+  - constraint_type: ele_eq
     comment: Example of a failing constraint
     ele_a:
       lattice_id: lat_a
@@ -35,7 +35,7 @@ equality_constraints:
       floor_z_test:
         atol: 1e-6
 
-  - constraint_type: datum
+  - constraint_type: datum_eq
     comment: Check a datum against a literal value
     datum_a:
       lattice_id: lat_a

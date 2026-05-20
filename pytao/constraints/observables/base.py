@@ -32,10 +32,14 @@ class Comparison(BaseModel):
     """Abstract base for comparison operators between two observations."""
 
 
-class IsCloseResult(BaseModel):
+class ConstraintResult(BaseModel):
+    """Base for all constraint check results."""
+    error: str | None = None
+
+
+class IsCloseResult(ConstraintResult):
     result_type: Literal["IsCloseResult"] = "IsCloseResult"
     is_close: bool
-    error: str | None = None
 
 
 class IsClose(Comparison):
@@ -44,10 +48,9 @@ class IsClose(Comparison):
         ...
 
 
-class IsLessResult(BaseModel):
+class IsLessResult(ConstraintResult):
     result_type: Literal["IsLessResult"] = "IsLessResult"
     is_less: bool
-    error: str | None = None
 
     @property
     def is_close(self) -> bool:
