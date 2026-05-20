@@ -9,7 +9,7 @@ import yaml
 from pytao import SubprocessTao
 
 from .config import ConstraintsConfig
-from .observables import EleIsCloseResult, IsCloseResult, Observable, Observation
+from .observables import DatumIsCloseResult, EleIsCloseResult, IsCloseResult, Observable, Observation
 from .results import (
     EqualityConstraintResult,
     LatticeResult,
@@ -129,6 +129,15 @@ def _print_check_detail(res: IsCloseResult) -> None:
             "floor_y": res.floor_y,
             "floor_z": res.floor_z,
         }
+        ran = {name: check for name, check in checks.items() if check is not None}
+        if ran:
+            width = max(len(name) for name in ran)
+            for name, check in ran.items():
+                check_status = "PASS" if check.passed else "FAIL"
+                detail = f"  {check.detail}" if not check.passed and check.detail else ""
+                print(f"    {name:<{width}}  {check_status}{detail}")
+    elif isinstance(res, DatumIsCloseResult):
+        checks = {"model_value": res.model_value, "design_value": res.design_value}
         ran = {name: check for name, check in checks.items() if check is not None}
         if ran:
             width = max(len(name) for name in ran)

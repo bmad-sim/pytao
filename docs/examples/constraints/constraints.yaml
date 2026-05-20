@@ -8,6 +8,7 @@ lattices:
 
 equality_constraints:
   - constraint_type: ele
+    comment: Basic constraint requiring lat_a[END] == lab_b[BEGINNING]
     ele_a:
       lattice_id: lat_a
       ele_id: END
@@ -16,6 +17,7 @@ equality_constraints:
       ele_id: BEGINNING
 
   - constraint_type: ele
+    comment: Example of a failing constraint
     ele_a:
       lattice_id: lat_a
       ele_id: END
@@ -34,11 +36,11 @@ equality_constraints:
         atol: 1e-6
 
   - constraint_type: datum
+    comment: Check a datum against a literal value
     datum_a:
       lattice_id: lat_a
       data_type: r56_compaction
       ele_name: END
     datum_b:
-      lattice_id: lat_b
-      data_type: r56_compaction
-      ele_name: END
+      model_value: 1.04448e-08
+      design_value: 0.0
