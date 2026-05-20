@@ -3,7 +3,7 @@ from typing import Annotated, Literal, Union
 
 from pydantic import BaseModel, Discriminator, Field, Tag
 
-from pytao.constraints.observables import IsCloseResult, Observable, Observation
+from pytao.constraints.observables import IsClose, IsCloseResult, Observable, Observation
 from pytao.constraints.observables.datum import DatumIsClose, DatumIsCloseResult, DatumLessThan, DatumLessThanResult, DatumLiteral, DatumObservable, DatumObservation
 from pytao.constraints.observables.ele import EleIsClose, EleIsCloseResult, EleLessThan, EleLessThanResult, EleLiteral, EleObservable, EleObservation
 from pytao.startup import TaoStartup
@@ -38,6 +38,7 @@ class EqualityConstraint(BaseModel):
     """Abstract base for equality constraints between two observables."""
 
     comment: str = ""
+    comparison: IsClose
 
     @property
     @abstractmethod

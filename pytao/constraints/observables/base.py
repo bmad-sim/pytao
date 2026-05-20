@@ -28,13 +28,17 @@ class Observable(BaseModel, frozen=True):
         ...
 
 
+class Comparison(BaseModel):
+    """Abstract base for comparison operators between two observations."""
+
+
 class IsCloseResult(BaseModel):
     result_type: Literal["IsCloseResult"] = "IsCloseResult"
     is_close: bool
     error: str | None = None
 
 
-class IsClose(BaseModel):
+class IsClose(Comparison):
     """Approximate equality operator between two observations."""
     def __call__(self, obja: Observation, objb: Observation) -> IsCloseResult:
         ...
@@ -50,7 +54,7 @@ class IsLessResult(BaseModel):
         return self.is_less
 
 
-class IsLess(BaseModel):
+class IsLess(Comparison):
     """Component-wise less-than operator between two observations."""
     def __call__(self, obja: Observation, objb: Observation) -> IsLessResult:
         ...

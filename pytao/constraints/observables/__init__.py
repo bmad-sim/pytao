@@ -2,7 +2,7 @@ from typing import Annotated, Union
 
 from pydantic import Field
 
-from pytao.constraints.observables.base import CheckResult, IsClose, IsCloseResult, IsLess, IsLessResult, Observable, Observation
+from pytao.constraints.observables.base import CheckResult, Comparison, IsClose, IsCloseResult, IsLess, IsLessResult, Observable, Observation
 from pytao.constraints.observables.datum import (
     DatumIsClose,
     DatumIsCloseResult,
@@ -34,6 +34,7 @@ is_close_result_types = Annotated[Union[EleIsCloseResult, DatumIsCloseResult, El
 __all__ = [
     "BmagTwissComparison",
     "CheckResult",
+    "Comparison",
     "DatumIsClose",
     "DatumIsCloseResult",
     "DatumLessThan",
