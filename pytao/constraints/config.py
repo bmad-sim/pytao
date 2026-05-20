@@ -5,7 +5,9 @@ from pydantic import BaseModel, Field
 
 from pytao.constraints.observables import IsCloseResult, Observable, Observation
 from pytao.constraints.observables.datum import DatumIsClose, DatumIsCloseResult, DatumObservable, DatumObservation
-from pytao.constraints.observables.ele import EleIsClose, EleIsCloseResult, EleObservable, EleObservation, TolComparison
+from pytao.model import ElementFloor, ElementFloorAll, ElementFloorPosition, ElementOrbit, ElementTwiss
+
+from pytao.constraints.observables.ele import EleIsClose, EleIsCloseResult, EleObservable, EleObservation
 
 
 class EqualityConstraint(BaseModel):
@@ -70,12 +72,11 @@ class EleLiteral(EqualityConstraint):
     etap_x: float | None = None
     eta_y: float | None = None
     etap_y: float | None = None
-    ref_energy: float | None = None
     p0c: float | None = None
     floor_x: float | None = None
     floor_y: float | None = None
     floor_z: float | None = None
-    comparison: TolComparison = Field(default_factory=TolComparison)
+    comparison: EleIsClose = Field(default_factory=EleIsClose)
 
     @property
     def obs_a(self) -> EleObservable:
@@ -86,85 +87,44 @@ class EleLiteral(EqualityConstraint):
         return self.ele
 
     def compare(self, obs_a: Observation, obs_b: Observation) -> EleIsCloseResult:
-        assert isinstance(obs_a, EleObservation)
+        if not isinstance(obs_a, EleObservation):
+            raise TypeError(f"expected EleObservation, got {type(obs_a)}")
         ea = obs_a.element
 
-        twiss_a = None
-        twiss_b = None
-        eta_x = None
-        etap_x = None
-        eta_y = None
-        etap_y = None
-        ref_energy = None
-        p0c = None
-        floor_x = None
-        floor_y = None
-        floor_z = None
-
-        if ea.twiss is not None:
-            ta = ea.twiss
-            twiss_a_checks = [
-                self.comparison(ta.beta_a, self.beta_a) if self.beta_a is not None else None,
-                self.comparison(ta.alpha_a, self.alpha_a) if self.alpha_a is not None else None,
-            ]
-            twiss_a_checks = [c for c in twiss_a_checks if c is not None]
-            twiss_a = next((c for c in twiss_a_checks if not c.passed), twiss_a_checks[0] if twiss_a_checks else None)
-            twiss_b_checks = [
-                self.comparison(ta.beta_b, self.beta_b) if self.beta_b is not None else None,
-                self.comparison(ta.alpha_b, self.alpha_b) if self.alpha_b is not None else None,
-            ]
-            twiss_b_checks = [c for c in twiss_b_checks if c is not None]
-            twiss_b = next((c for c in twiss_b_checks if not c.passed), twiss_b_checks[0] if twiss_b_checks else None)
-            if self.eta_x is not None:
-                eta_x = self.comparison(ta.eta_x, self.eta_x)
-            if self.etap_x is not None:
-                etap_x = self.comparison(ta.etap_x, self.etap_x)
-            if self.eta_y is not None:
-                eta_y = self.comparison(ta.eta_y, self.eta_y)
-            if self.etap_y is not None:
-                etap_y = self.comparison(ta.etap_y, self.etap_y)
-
-        if ea.orbit is not None:
-            oa = ea.orbit
-            if self.p0c is not None:
-                p0c = self.comparison(oa.p0c, self.p0c)
-
-        if ea.attrs is not None and self.ref_energy is not None:
-            try:
-                e_tot = float(ea.attrs["e_tot"].data)
-            except (KeyError, TypeError, ValueError):
-                pass
-            else:
-                ref_energy = self.comparison(e_tot, self.ref_energy)
-
-        if ea.floor is not None:
-            fa = ea.floor.end.actual
-            if fa is not None:
-                if self.floor_x is not None:
-                    floor_x = self.comparison(fa.x, self.floor_x)
-                if self.floor_y is not None:
-                    floor_y = self.comparison(fa.y, self.floor_y)
-                if self.floor_z is not None:
-                    floor_z = self.comparison(fa.z, self.floor_z)
-
-        ran = [r for r in [twiss_a, twiss_b, eta_x, etap_x, eta_y, etap_y,
-                            ref_energy, p0c, floor_x, floor_y, floor_z]
-               if r is not None]
-
-        return EleIsCloseResult(
-            is_close=all(ran) if ran else True,
-            twiss_a=twiss_a,
-            twiss_b=twiss_b,
-            eta_x=eta_x,
-            etap_x=etap_x,
-            eta_y=eta_y,
-            etap_y=etap_y,
-            ref_energy=ref_energy,
-            p0c=p0c,
-            floor_x=floor_x,
-            floor_y=floor_y,
-            floor_z=floor_z,
+        new_twiss = ElementTwiss(
+            **{k: v for k, v in [
+                ("beta_a", self.beta_a), ("alpha_a", self.alpha_a),
+                ("beta_b", self.beta_b), ("alpha_b", self.alpha_b),
+                ("eta_x", self.eta_x), ("etap_x", self.etap_x),
+                ("eta_y", self.eta_y), ("etap_y", self.etap_y),
+            ] if v is not None}
         )
+
+        new_orbit = ElementOrbit(
+            **{k: v for k, v in [("p0c", self.p0c)] if v is not None}
+        )
+
+        dummy_floor = ElementFloor(which="model", where="end", actual=None, reference=None, slaves={})
+        new_floor = ElementFloorAll(
+            which="model",
+            beginning=dummy_floor,
+            center=dummy_floor,
+            end=ElementFloor(
+                which="model",
+                where="end",
+                actual=ElementFloorPosition(
+                    **{k: v for k, v in [
+                        ("x", self.floor_x), ("y", self.floor_y), ("z", self.floor_z)
+                    ] if v is not None}
+                ),
+                reference=None,
+                slaves={},
+            ),
+        )
+
+        literal_element = ea.model_copy(update={"twiss": new_twiss, "orbit": new_orbit, "floor": new_floor})
+        literal_obs = EleObservation(element=literal_element)
+        return self.comparison(obs_a, literal_obs)
 
 
 class DatumLiteral(EqualityConstraint):
