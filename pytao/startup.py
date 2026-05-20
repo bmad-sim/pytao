@@ -4,7 +4,7 @@ import contextlib
 import logging
 import pathlib
 import shlex
-from dataclasses import InitVar, asdict, fields
+from dataclasses import InitVar, asdict, fields, replace
 from typing import TYPE_CHECKING, Any, Literal, Union
 
 import pydantic
@@ -414,6 +414,21 @@ class TaoStartup:
                 f"See `tao` or `pytao --help` for appropriate options and flags.\n"
                 f"{ex}"
             ) from ex
+
+    _path_fields: tuple[str, ...] = (
+        "beam_file", "beam_init_position_file", "building_wall_file",
+        "data_file", "hook_init_file", "init_file", "lattice_file",
+        "plot_file", "startup_file", "var_file",
+    )
+
+    def with_resolved_paths(self, parent: pathlib.Path) -> TaoStartup:
+        """Return a copy with all relative path fields resolved against parent."""
+        updates = {
+            name: parent / getattr(self, name)
+            for name in self._path_fields
+            if getattr(self, name) is not None
+        }
+        return replace(self, **updates)
 
     @property
     def tao_class_params(self) -> dict[str, Any]:
