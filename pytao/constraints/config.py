@@ -6,7 +6,6 @@ from pydantic import BaseModel, Field
 from pytao.constraints.observables import IsCloseResult, Observable, Observation
 from pytao.constraints.observables.datum import DatumIsClose, DatumIsCloseResult, DatumObservable, DatumObservation
 from pytao.model import ElementFloor, ElementFloorAll, ElementFloorPosition, ElementOrbit, ElementTwiss
-
 from pytao.model.ele.ele import Element
 
 from pytao.constraints.observables.ele import EleIsClose, EleIsCloseResult, EleObservable, EleObservation
@@ -26,7 +25,7 @@ class EleLiteralValues(BaseModel):
     floor_y: float | None = None
     floor_z: float | None = None
 
-    def to_observation(self, base: Element) -> Element:
+    def to_observation(self) -> EleObservation:
         new_twiss = ElementTwiss(
             **{k: v for k, v in [
                 ("beta_a", self.beta_a), ("alpha_a", self.alpha_a),
@@ -46,7 +45,7 @@ class EleLiteralValues(BaseModel):
             end=ElementFloor(
                 which="model",
                 where="end",
-                actual=ElementFloorPosition(
+                actual=ElementFloorPosition.model_construct(
                     **{k: v for k, v in [
                         ("x", self.floor_x), ("y", self.floor_y), ("z", self.floor_z)
                     ] if v is not None}
@@ -55,7 +54,16 @@ class EleLiteralValues(BaseModel):
                 slaves={},
             ),
         )
-        element = base.model_copy(update={"twiss": new_twiss, "orbit": new_orbit, "floor": new_floor})
+        
+        # Note: use model_construct to pack values into model without validation so we may partially populate for
+        # use in the constraint checking code.
+        element = Element.model_construct(
+            ele_id="_literal",
+            which="model",
+            twiss=new_twiss,
+            orbit=new_orbit,
+            floor=new_floor,
+        )
         return EleObservation(element=element)
 
 
@@ -127,7 +135,7 @@ class EleLiteral(EqualityConstraint):
     def compare(self, obs_a: Observation, obs_b: Observation) -> EleIsCloseResult:
         if not isinstance(obs_a, EleObservation):
             raise TypeError(f"expected EleObservation, got {type(obs_a)}")
-        return self.comparison(obs_a, lement=self.expected.to_observation(obs_a.element))
+        return self.comparison(obs_a, self.expected.to_observation())
 
 
 class DatumLiteralValues(BaseModel):
