@@ -36,6 +36,8 @@ DatumObservableOrLiteral = Annotated[
 class EqualityConstraint(BaseModel):
     """Abstract base for equality constraints between two observables."""
 
+    comment: str = ""
+
     @property
     @abstractmethod
     def required_observables(self) -> frozenset[Observable]: ...

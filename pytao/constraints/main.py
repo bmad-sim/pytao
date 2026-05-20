@@ -1,6 +1,7 @@
 import argparse
 import time
 import traceback
+from datetime import datetime, timezone
 from pathlib import Path
 
 import yaml
@@ -25,6 +26,8 @@ def run(
     save_path: Path | None = None,
     compare: SavedObservations | None = None,
 ) -> ConstraintResults:
+    started_at = datetime.now(timezone.utc)
+
     # Build lattice_id -> set of observables needed for that lattice
     needed: dict[str, set[Observable]] = {lat_id: set() for lat_id in config.lattices}
     for constraint in config.equality_constraints:
@@ -83,6 +86,7 @@ def run(
             )
         constraint_results.append(EqualityConstraintResult(
             observables=list(constraint.required_observables),
+            comment=constraint.comment,
             result=result,
         ))
 
@@ -104,6 +108,8 @@ def run(
                 regression_results.append(RegressionResult(observable=obs, result=result))
 
     return ConstraintResults(
+        started_at=started_at,
+        finished_at=datetime.now(timezone.utc),
         lattices=lattice_results,
         equality_constraints=constraint_results,
         regression=regression_results,
