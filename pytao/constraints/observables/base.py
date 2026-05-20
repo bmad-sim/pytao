@@ -38,3 +38,19 @@ class IsClose(BaseModel):
     """Approximate equality operator between two observations."""
     def __call__(self, obja: Observation, objb: Observation) -> IsCloseResult:
         ...
+
+
+class IsLessResult(BaseModel):
+    result_type: Literal["IsLessResult"] = "IsLessResult"
+    is_less: bool
+    error: str | None = None
+
+    @property
+    def is_close(self) -> bool:
+        return self.is_less
+
+
+class IsLess(BaseModel):
+    """Component-wise less-than operator between two observations."""
+    def __call__(self, obja: Observation, objb: Observation) -> IsLessResult:
+        ...

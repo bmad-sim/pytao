@@ -3,7 +3,7 @@ from typing import Literal
 from pydantic import Field, BaseModel
 
 from pytao import Tao
-from pytao.constraints.observables.base import CheckResult, IsClose, IsCloseResult, Observable, Observation
+from pytao.constraints.observables.base import CheckResult, IsClose, IsCloseResult, IsLess, IsLessResult, Observable, Observation
 from pytao.constraints.observables.ele import TolComparison
 
 _D2_NAME = "_pytao_tmp"
@@ -81,6 +81,32 @@ class DatumIsClose(IsClose):
 
         return DatumIsCloseResult(
             is_close=all(ran) if ran else True,
+            model_value=model_value,
+            design_value=design_value,
+        )
+
+
+class DatumLessThanResult(IsLessResult):
+    result_type: Literal["DatumLessThanResult"] = "DatumLessThanResult"
+    model_value: CheckResult | None = None
+    design_value: CheckResult | None = None
+
+
+class DatumLessThan(IsLess):
+    """Component-wise less-than comparison between two DatumObservations."""
+    model_value: bool = True
+    design_value: bool = False
+
+    def _check(self, va: float, vb: float) -> CheckResult:
+        passed = va < vb
+        return CheckResult(passed=passed, detail="" if passed else f"a={va:.6g} not < b={vb:.6g}")
+
+    def __call__(self, obja: DatumObservation, objb: DatumObservation) -> DatumLessThanResult:
+        model_value = self._check(obja.model_value, objb.model_value) if self.model_value else None
+        design_value = self._check(obja.design_value, objb.design_value) if self.design_value else None
+        ran = [r for r in [model_value, design_value] if r is not None]
+        return DatumLessThanResult(
+            is_less=all(ran) if ran else True,
             model_value=model_value,
             design_value=design_value,
         )

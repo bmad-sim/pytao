@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 
 from pytao import Tao
 from pytao.model import Element
-from pytao.constraints.observables.base import CheckResult, IsClose, IsCloseResult, Observable, Observation
+from pytao.constraints.observables.base import CheckResult, IsClose, IsCloseResult, IsLess, IsLessResult, Observable, Observation
 from pytao.constraints.observables.twiss import BmagTwissComparison, twiss_comparison_types
 from pytao.model import ElementFloor, ElementFloorAll, ElementFloorPosition, ElementOrbit, ElementTwiss
 from pytao.model.ele.ele import Element
@@ -211,4 +211,97 @@ class EleIsClose(IsClose):
             floor_x=floor_x,
             floor_y=floor_y,
             floor_z=floor_z,
+        )
+
+
+class EleLessThanResult(IsLessResult):
+    result_type: Literal["EleLessThanResult"] = "EleLessThanResult"
+    beta_a: CheckResult | None = None
+    alpha_a: CheckResult | None = None
+    beta_b: CheckResult | None = None
+    alpha_b: CheckResult | None = None
+    eta_x: CheckResult | None = None
+    etap_x: CheckResult | None = None
+    eta_y: CheckResult | None = None
+    etap_y: CheckResult | None = None
+    ref_energy: CheckResult | None = None
+    p0c: CheckResult | None = None
+    floor_x: CheckResult | None = None
+    floor_y: CheckResult | None = None
+    floor_z: CheckResult | None = None
+
+
+class EleLessThan(IsLess):
+    """Component-wise less-than comparison between two EleObservations."""
+    beta_a: bool = False
+    alpha_a: bool = False
+    beta_b: bool = False
+    alpha_b: bool = False
+    eta_x: bool = False
+    etap_x: bool = False
+    eta_y: bool = False
+    etap_y: bool = False
+    ref_energy: bool = False
+    p0c: bool = False
+    floor_x: bool = False
+    floor_y: bool = False
+    floor_z: bool = False
+
+    def _check(self, va: float, vb: float) -> CheckResult:
+        passed = va < vb
+        return CheckResult(passed=passed, detail="" if passed else f"a={va:.6g} not < b={vb:.6g}")
+
+    def __call__(self, obja: EleObservation, objb: EleObservation) -> EleLessThanResult:
+        ea, eb = obja.element, objb.element
+        beta_a = alpha_a = beta_b = alpha_b = None
+        eta_x = etap_x = eta_y = etap_y = None
+        ref_energy = p0c = floor_x = floor_y = floor_z = None
+
+        if ea.twiss is not None and eb.twiss is not None:
+            ta, tb = ea.twiss, eb.twiss
+            if self.beta_a:
+                beta_a = self._check(ta.beta_a, tb.beta_a)
+            if self.alpha_a:
+                alpha_a = self._check(ta.alpha_a, tb.alpha_a)
+            if self.beta_b:
+                beta_b = self._check(ta.beta_b, tb.beta_b)
+            if self.alpha_b:
+                alpha_b = self._check(ta.alpha_b, tb.alpha_b)
+            if self.eta_x:
+                eta_x = self._check(ta.eta_x, tb.eta_x)
+            if self.etap_x:
+                etap_x = self._check(ta.etap_x, tb.etap_x)
+            if self.eta_y:
+                eta_y = self._check(ta.eta_y, tb.eta_y)
+            if self.etap_y:
+                etap_y = self._check(ta.etap_y, tb.etap_y)
+
+        if ea.orbit is not None and eb.orbit is not None and self.p0c:
+            p0c = self._check(ea.orbit.p0c, eb.orbit.p0c)
+
+        if ea.attrs is not None and eb.attrs is not None and self.ref_energy:
+            try:
+                ref_energy = self._check(float(ea.attrs["e_tot"].data), float(eb.attrs["e_tot"].data))
+            except (KeyError, TypeError, ValueError):
+                pass
+
+        if ea.floor is not None and eb.floor is not None:
+            fa, fb = ea.floor.end.actual, eb.floor.end.actual
+            if fa is not None and fb is not None:
+                if self.floor_x:
+                    floor_x = self._check(fa.x, fb.x)
+                if self.floor_y:
+                    floor_y = self._check(fa.y, fb.y)
+                if self.floor_z:
+                    floor_z = self._check(fa.z, fb.z)
+
+        ran = [r for r in [beta_a, alpha_a, beta_b, alpha_b, eta_x, etap_x, eta_y, etap_y,
+                            ref_energy, p0c, floor_x, floor_y, floor_z] if r is not None]
+
+        return EleLessThanResult(
+            is_less=all(ran) if ran else True,
+            beta_a=beta_a, alpha_a=alpha_a, beta_b=beta_b, alpha_b=alpha_b,
+            eta_x=eta_x, etap_x=etap_x, eta_y=eta_y, etap_y=etap_y,
+            ref_energy=ref_energy, p0c=p0c,
+            floor_x=floor_x, floor_y=floor_y, floor_z=floor_z,
         )
