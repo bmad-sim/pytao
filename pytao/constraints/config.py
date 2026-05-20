@@ -6,6 +6,7 @@ from pydantic import BaseModel, Discriminator, Field, Tag
 from pytao.constraints.observables import IsCloseResult, Observable, Observation
 from pytao.constraints.observables.datum import DatumIsClose, DatumIsCloseResult, DatumLiteral, DatumObservable, DatumObservation
 from pytao.constraints.observables.ele import EleIsClose, EleIsCloseResult, EleLiteral, EleObservable, EleObservation
+from pytao.startup import TaoStartup
 
 
 def _has_lattice_id(v) -> bool:
@@ -92,11 +93,6 @@ equality_constraint_types = Annotated[
 ]
 
 
-class LatticeConfig(BaseModel):
-    lattice_file: str | None = None
-    init_file: str | None = None
-
-
 class ConstraintsConfig(BaseModel):
-    lattices: dict[str, LatticeConfig] = Field(default_factory=dict, description="Mapping from unique lattice identifier to lattice loading information")
+    lattices: dict[str, TaoStartup] = Field(default_factory=dict, description="Mapping from unique lattice identifier to lattice loading information")
     equality_constraints: list[equality_constraint_types] = Field(default_factory=list, description="Equality constraints to check across lattices")

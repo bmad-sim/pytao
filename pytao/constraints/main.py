@@ -38,19 +38,16 @@ def run(
     obs_map: dict[Observable, Observation] = {}
     lattice_results: dict[str, LatticeResult] = {}
 
-    for lat_id, lat_config in config.lattices.items():
-        kwargs: dict = {"noplot": True}
-        if lat_config.init_file:
-            kwargs["init_file"] = str(config_dir / lat_config.init_file)
-        if lat_config.lattice_file:
-            kwargs["lattice_file"] = str(config_dir / lat_config.lattice_file)
+    for lat_id, lat_startup in config.lattices.items():
+        params = dict(lat_startup.with_resolved_paths(config_dir).tao_class_params)
+        params["noplot"] = True
 
         loaded = False
         error: str | None = None
         t0 = time.perf_counter()
 
         try:
-            with SubprocessTao(**kwargs) as tao:
+            with SubprocessTao(**params) as tao:
                 loaded = True
                 for obs in needed[lat_id]:
                     obs_map[obs] = obs(tao)
@@ -60,8 +57,8 @@ def run(
             load_time = time.perf_counter() - t0
 
         lattice_results[lat_id] = LatticeResult(
-            lattice_file=lat_config.lattice_file,
-            init_file=lat_config.init_file,
+            lattice_file=str(lat_startup.lattice_file) if lat_startup.lattice_file else None,
+            init_file=str(lat_startup.init_file) if lat_startup.init_file else None,
             loaded=loaded,
             error=error,
             load_time=load_time,
