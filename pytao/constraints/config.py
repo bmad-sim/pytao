@@ -11,7 +11,7 @@ from pytao.model.ele.ele import Element
 from pytao.constraints.observables.ele import EleIsClose, EleIsCloseResult, EleObservable, EleObservation
 
 
-class EleLiteralValues(BaseModel):
+class EleLiteral(BaseModel):
     beta_a: float | None = None
     alpha_a: float | None = None
     beta_b: float | None = None
@@ -82,7 +82,7 @@ class EqualityConstraint(BaseModel):
     def compare(self, obs_a: Observation, obs_b: Observation) -> IsCloseResult: ...
 
 
-class ElementPair(EqualityConstraint):
+class ElementPairEquality(EqualityConstraint):
     constraint_type: Literal["ele"] = "ele"
     ele_a: EleObservable
     ele_b: EleObservable
@@ -100,7 +100,7 @@ class ElementPair(EqualityConstraint):
         return self.comparison(obs_a, obs_b)
 
 
-class DatumPair(EqualityConstraint):
+class DatumPairEquality(EqualityConstraint):
     constraint_type: Literal["datum"] = "datum"
     datum_a: DatumObservable
     datum_b: DatumObservable
@@ -118,10 +118,10 @@ class DatumPair(EqualityConstraint):
         return self.comparison(obs_a, obs_b)
 
 
-class EleLiteral(EqualityConstraint):
+class EleLiteralEquality(EqualityConstraint):
     constraint_type: Literal["ele_literal"] = "ele_literal"
     ele: EleObservable
-    expected: EleLiteralValues
+    expected: EleLiteral
     comparison: EleIsClose = Field(default_factory=EleIsClose)
 
     @property
@@ -138,7 +138,7 @@ class EleLiteral(EqualityConstraint):
         return self.comparison(obs_a, self.expected.to_observation())
 
 
-class DatumLiteralValues(BaseModel):
+class DatumLiteral(BaseModel):
     model_value: float | None = None
     design_value: float | None = None
 
@@ -149,10 +149,10 @@ class DatumLiteralValues(BaseModel):
         )
 
 
-class DatumLiteral(EqualityConstraint):
+class DatumLiteralEquality(EqualityConstraint):
     constraint_type: Literal["datum_literal"] = "datum_literal"
     datum: DatumObservable
-    expected: DatumLiteralValues
+    expected: DatumLiteral
     comparison: DatumIsClose = Field(default_factory=DatumIsClose)
 
     @property
@@ -170,7 +170,7 @@ class DatumLiteral(EqualityConstraint):
         return self.comparison(obs_a, literal)
 
 
-equality_constraint_types = Annotated[Union[ElementPair, EleLiteral, DatumPair, DatumLiteral], Field(discriminator="constraint_type")]
+equality_constraint_types = Annotated[Union[ElementPairEquality, EleLiteralEquality, DatumPairEquality, DatumLiteralEquality], Field(discriminator="constraint_type")]
 
 
 class LatticeConfig(BaseModel):
