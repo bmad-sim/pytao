@@ -47,7 +47,8 @@ DatumObservableOrLiteral = Annotated[
 class Constraint(BaseModel):
     """Abstract base for all constraint types."""
 
-    comment: str = ""
+    description: str = Field(default="", description="Short one-line name used on labels")
+    comment: str = Field(default="", description="Detailed description or notes about the constraint")
 
     @property
     @abstractmethod

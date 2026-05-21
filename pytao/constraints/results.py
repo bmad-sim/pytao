@@ -25,6 +25,7 @@ class TestResult(BaseModel):
 
 class ConstraintResult(BaseModel):
     observables: list[observable_types]
+    description: str = ""
     comment: str = ""
     result: constraint_result_types
 
@@ -49,6 +50,7 @@ class LatticeResult(BaseModel):
     loaded: bool
     error: str | None = None
     load_time: float
+    obs_time: float = 0.0
 
 
 class ConstraintResults(BaseModel):

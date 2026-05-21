@@ -50,17 +50,21 @@ def run(
 
         loaded = False
         error: str | None = None
+        load_time = 0.0
+        obs_time = 0.0
         t0 = time.perf_counter()
 
         try:
             with SubprocessTao(**params) as tao:
+                load_time = time.perf_counter() - t0
                 loaded = True
                 for obs in needed[lat_id]:
                     obs_map[obs] = obs(tao)
+                obs_time = sum(obs_map[obs].elapsed_time for obs in needed[lat_id] if obs in obs_map)
         except Exception:
+            if not load_time:
+                load_time = time.perf_counter() - t0
             error = traceback.format_exc().strip()
-        finally:
-            load_time = time.perf_counter() - t0
 
         lattice_results[lat_id] = LatticeResult(
             lattice_file=str(lat_startup.lattice_file) if lat_startup.lattice_file else None,
@@ -68,6 +72,7 @@ def run(
             loaded=loaded,
             error=error,
             load_time=load_time,
+            obs_time=obs_time,
         )
 
     for obs in literal_obs:
@@ -93,6 +98,7 @@ def run(
             )
         constraint_results.append(ConstraintResult(
             observables=list(constraint.required_observables),
+            description=constraint.description,
             comment=constraint.comment,
             result=result,
         ))
@@ -182,7 +188,7 @@ def _print_results(results: ConstraintResults) -> None:
     print("Lattices:")
     for lat_id, lat in results.lattices.items():
         status = "OK  " if lat.loaded else "FAIL"
-        print(f"  [{status}] {lat_id}  ({lat.load_time:.2f}s)")
+        print(f"  [{status}] {lat_id}  loaded in {lat.load_time:.2f}s, observables in {lat.obs_time:.2f}s")
         if lat.error:
             for line in lat.error.splitlines():
                 print(f"         {line}")
@@ -192,7 +198,8 @@ def _print_results(results: ConstraintResults) -> None:
     for cr in results.constraints:
         status = "PASS" if cr.result.is_close else "FAIL"
         label = " == ".join(obs.label for obs in cr.observables)
-        print(f"  [{status}] {label}")
+        suffix = f"  {cr.description}" if cr.description else ""
+        print(f"  [{status}] {label}{suffix}")
 
     if results.regression:
         print()
@@ -211,7 +218,8 @@ def _print_results(results: ConstraintResults) -> None:
         print("=" * 60)
         for cr in failures_eq:
             label = " == ".join(obs.label for obs in cr.observables)
-            print(f"\n  {label}")
+            header = f"{label}  {cr.description}" if cr.description else label
+            print(f"\n  {header}")
             if cr.comment:
                 print(f"  {cr.comment}")
             print("  " + "-" * 56)

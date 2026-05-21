@@ -8,7 +8,8 @@ lattices:
 
 constraints:
   - constraint_type: ele_eq
-    comment: Basic constraint requiring lat_a[END] == lab_b[BEGINNING]
+    description: Short description, lat_a, lat_b treaty point
+    comment: Longer comment included on error and in reports. eg Please rerun `tune_matcher.tao` in event of failure.
     ele_a:
       lattice_id: lat_a
       ele_id: END
@@ -17,7 +18,7 @@ constraints:
       ele_id: BEGINNING
 
   - constraint_type: ele_eq
-    comment: Example of a failing constraint
+    description: Example of a failing constraint
     ele_a:
       lattice_id: lat_a
       ele_id: END
@@ -36,7 +37,7 @@ constraints:
         atol: 1e-6
 
   - constraint_type: ele_max_lt
-    comment: Example of a failing constraint
+    description: lat_a beta sanity check
     ele_a:
       lattice_id: lat_a
     ele_b:
@@ -44,7 +45,7 @@ constraints:
       beta_b: 200
 
   - constraint_type: datum_eq
-    comment: Check a datum against a literal value
+    description: Datum and literal example
     datum_a:
       lattice_id: lat_a
       data_type: r56_compaction
