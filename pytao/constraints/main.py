@@ -35,8 +35,10 @@ def run(
         for obs in constraint.required_observables:
             if isinstance(obs, LatticeObservable):
                 needed[obs.lattice_id].add(obs)
-            else:
+            elif isinstance(obs, LiteralObservable):
                 literal_obs.add(obs)
+            else:
+                raise ValueError(f"Unrecognized observable type: {type(obs)}")
 
     # Run observables: observable -> observation
     obs_map: dict[Observable, Observation] = {}

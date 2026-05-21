@@ -105,8 +105,8 @@ def _ele_reduce(tao: Tao, reduce_fn) -> EleObservation:
     p0c = None
     floor_x = floor_y = floor_z = None
 
-    for ele_id in tao.unique_ele_ids_from_branch("1", "0"):
-        ele = tao.ele(ele_id)
+    for ix_ele in tao.lat_list("*", "ele.ix_ele", ix_uni="1", ix_branch="0"):
+        ele = tao.ele(ix_ele, ix_uni="1", ix_branch="0")
         if ele.twiss is not None:
             t = ele.twiss
             beta_a  = reduce_fn(beta_a,  t.beta_a)  if beta_a  is not None else t.beta_a
