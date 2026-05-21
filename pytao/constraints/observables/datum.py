@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import ClassVar, Literal
 
 from pydantic import Field
 
@@ -17,7 +17,83 @@ class DatumObservation(Observation):
     design_value: float
 
 
+class DatumIsCloseResult(IsCloseResult):
+    result_type: Literal["DatumIsCloseResult"] = "DatumIsCloseResult"
+    model_value: CheckResult | None = None
+    design_value: CheckResult | None = None
+
+
+class DatumIsClose(IsClose[DatumObservation]):
+    model_value_test: TolComparison | None = Field(default_factory=TolComparison)
+    design_value_test: TolComparison | None = None
+
+    def __call__(self, obja: DatumObservation, objb: DatumObservation) -> DatumIsCloseResult:
+        model_value = None
+        design_value = None
+
+        if self.model_value_test is not None:
+            model_value = self.model_value_test(obja.model_value, objb.model_value)
+        if self.design_value_test is not None:
+            design_value = self.design_value_test(obja.design_value, objb.design_value)
+
+        ran = [r for r in [model_value, design_value] if r is not None]
+
+        return DatumIsCloseResult(
+            is_close=all(ran) if ran else True,
+            model_value=model_value,
+            design_value=design_value,
+        )
+
+
+class DatumLessThanResult(IsLessResult):
+    result_type: Literal["DatumLessThanResult"] = "DatumLessThanResult"
+    model_value: CheckResult | None = None
+    design_value: CheckResult | None = None
+
+
+class DatumLessThan(IsLess[DatumObservation]):
+    """Component-wise less-than comparison between two DatumObservations."""
+    model_value: bool = True
+    design_value: bool = False
+
+    def _check(self, va: float, vb: float) -> CheckResult:
+        passed = va < vb
+        return CheckResult(passed=passed, detail="" if passed else f"a={va:.6g} not < b={vb:.6g}")
+
+    def __call__(self, obja: DatumObservation, objb: DatumObservation) -> DatumLessThanResult:
+        model_value = self._check(obja.model_value, objb.model_value) if self.model_value else None
+        design_value = self._check(obja.design_value, objb.design_value) if self.design_value else None
+        ran = [r for r in [model_value, design_value] if r is not None]
+        return DatumLessThanResult(
+            is_less=all(ran) if ran else True,
+            model_value=model_value,
+            design_value=design_value,
+        )
+
+
+class DatumLiteral(LiteralObservable):
+    observation_cls: ClassVar[type[DatumObservation]] = DatumObservation
+    is_close_cls: ClassVar[type[DatumIsClose]] = DatumIsClose
+    is_less_cls: ClassVar[type[DatumLessThan]] = DatumLessThan
+
+    obs_type: Literal["datum_literal"] = "datum_literal"
+    model_value: float
+    design_value: float
+
+    @property
+    def label(self) -> str:
+        return "literal"
+
+    def _make_observation(self) -> DatumObservation:
+        return DatumObservation(model_value=self.model_value, design_value=self.design_value)
+
+
 class DatumObservable(LatticeObservable):
+    observation_cls: ClassVar[type[DatumObservation]] = DatumObservation
+    is_close_cls: ClassVar[type[DatumIsClose]] = DatumIsClose
+    is_less_cls: ClassVar[type[DatumLessThan]] = DatumLessThan
+    literal_cls: ClassVar[type[DatumLiteral]] = DatumLiteral
+
     obs_type: Literal["datum"] = "datum"
     data_type: str
     ele_name: str
@@ -47,71 +123,4 @@ class DatumObservable(LatticeObservable):
         return DatumObservation(
             model_value=result["model_value"],
             design_value=result["design_value"],
-        )
-
-
-class DatumLiteral(LiteralObservable):
-    obs_type: Literal["datum_literal"] = "datum_literal"
-    model_value: float
-    design_value: float
-
-    @property
-    def label(self) -> str:
-        return "literal"
-
-    def _make_observation(self) -> DatumObservation:
-        return DatumObservation(model_value=self.model_value, design_value=self.design_value)
-
-
-class DatumIsCloseResult(IsCloseResult):
-    result_type: Literal["DatumIsCloseResult"] = "DatumIsCloseResult"
-    model_value: CheckResult | None = None
-    design_value: CheckResult | None = None
-
-
-class DatumIsClose(IsClose):
-    model_value_test: TolComparison | None = Field(default_factory=TolComparison)
-    design_value_test: TolComparison | None = None
-
-    def __call__(self, obja: DatumObservation, objb: DatumObservation) -> DatumIsCloseResult:
-        model_value = None
-        design_value = None
-
-        if self.model_value_test is not None:
-            model_value = self.model_value_test(obja.model_value, objb.model_value)
-        if self.design_value_test is not None:
-            design_value = self.design_value_test(obja.design_value, objb.design_value)
-
-        ran = [r for r in [model_value, design_value] if r is not None]
-
-        return DatumIsCloseResult(
-            is_close=all(ran) if ran else True,
-            model_value=model_value,
-            design_value=design_value,
-        )
-
-
-class DatumLessThanResult(IsLessResult):
-    result_type: Literal["DatumLessThanResult"] = "DatumLessThanResult"
-    model_value: CheckResult | None = None
-    design_value: CheckResult | None = None
-
-
-class DatumLessThan(IsLess):
-    """Component-wise less-than comparison between two DatumObservations."""
-    model_value: bool = True
-    design_value: bool = False
-
-    def _check(self, va: float, vb: float) -> CheckResult:
-        passed = va < vb
-        return CheckResult(passed=passed, detail="" if passed else f"a={va:.6g} not < b={vb:.6g}")
-
-    def __call__(self, obja: DatumObservation, objb: DatumObservation) -> DatumLessThanResult:
-        model_value = self._check(obja.model_value, objb.model_value) if self.model_value else None
-        design_value = self._check(obja.design_value, objb.design_value) if self.design_value else None
-        ran = [r for r in [model_value, design_value] if r is not None]
-        return DatumLessThanResult(
-            is_less=all(ran) if ran else True,
-            model_value=model_value,
-            design_value=design_value,
         )

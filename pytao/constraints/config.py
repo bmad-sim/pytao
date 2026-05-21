@@ -68,7 +68,7 @@ class ElementPairEquality(EqualityConstraint):
     constraint_type: Literal["ele_eq"] = "ele_eq"
     ele_a: EleObservableOrLiteral
     ele_b: EleObservableOrLiteral
-    comparison: EleIsClose = Field(default_factory=EleIsClose)
+    comparison: EleIsClose = Field(default_factory=EleObservable.is_close_cls)
 
     @property
     def required_observables(self) -> frozenset[Observable]:
@@ -82,7 +82,7 @@ class DatumPairEquality(EqualityConstraint):
     constraint_type: Literal["datum_eq"] = "datum_eq"
     datum_a: DatumObservableOrLiteral
     datum_b: DatumObservableOrLiteral
-    comparison: DatumIsClose = Field(default_factory=DatumIsClose)
+    comparison: DatumIsClose = Field(default_factory=DatumObservable.is_close_cls)
 
     @property
     def required_observables(self) -> frozenset[Observable]:
@@ -96,7 +96,7 @@ class ElementPairLessThan(Constraint):
     constraint_type: Literal["ele_lt"] = "ele_lt"
     ele_a: EleObservableOrLiteral
     ele_b: EleObservableOrLiteral
-    comparison: EleLessThan = Field(default_factory=EleLessThan)
+    comparison: EleLessThan = Field(default_factory=EleObservable.is_less_cls)
 
     @property
     def required_observables(self) -> frozenset[Observable]:
@@ -110,7 +110,7 @@ class DatumPairLessThan(Constraint):
     constraint_type: Literal["datum_lt"] = "datum_lt"
     datum_a: DatumObservableOrLiteral
     datum_b: DatumObservableOrLiteral
-    comparison: DatumLessThan = Field(default_factory=DatumLessThan)
+    comparison: DatumLessThan = Field(default_factory=DatumObservable.is_less_cls)
 
     @property
     def required_observables(self) -> frozenset[Observable]:
@@ -124,7 +124,7 @@ class ElementMaxEquality(EqualityConstraint):
     constraint_type: Literal["ele_max_eq"] = "ele_max_eq"
     ele_a: EleMaxObservableOrLiteral
     ele_b: EleMaxObservableOrLiteral
-    comparison: EleIsClose = Field(default_factory=EleIsClose)
+    comparison: EleIsClose = Field(default_factory=EleMaxObservable.is_close_cls)
 
     @property
     def required_observables(self) -> frozenset[Observable]:
@@ -138,7 +138,7 @@ class ElementMinEquality(EqualityConstraint):
     constraint_type: Literal["ele_min_eq"] = "ele_min_eq"
     ele_a: EleMinObservableOrLiteral
     ele_b: EleMinObservableOrLiteral
-    comparison: EleIsClose = Field(default_factory=EleIsClose)
+    comparison: EleIsClose = Field(default_factory=EleMinObservable.is_close_cls)
 
     @property
     def required_observables(self) -> frozenset[Observable]:
@@ -152,7 +152,7 @@ class ElementMaxLessThan(Constraint):
     constraint_type: Literal["ele_max_lt"] = "ele_max_lt"
     ele_a: EleMaxObservableOrLiteral
     ele_b: EleMaxObservableOrLiteral
-    comparison: EleLessThan = Field(default_factory=EleLessThan)
+    comparison: EleLessThan = Field(default_factory=EleMaxObservable.is_less_cls)
 
     @property
     def required_observables(self) -> frozenset[Observable]:
@@ -166,7 +166,7 @@ class ElementMinLessThan(Constraint):
     constraint_type: Literal["ele_min_lt"] = "ele_min_lt"
     ele_a: EleMinObservableOrLiteral
     ele_b: EleMinObservableOrLiteral
-    comparison: EleLessThan = Field(default_factory=EleLessThan)
+    comparison: EleLessThan = Field(default_factory=EleMinObservable.is_less_cls)
 
     @property
     def required_observables(self) -> frozenset[Observable]:

@@ -2,7 +2,7 @@ import time
 from datetime import datetime, timezone
 from pydantic import BaseModel, Field
 from pytao import Tao
-from typing import Literal
+from typing import ClassVar, Generic, Literal, TypeVar
 
 
 class CheckResult(BaseModel):
@@ -17,6 +17,9 @@ class Observation(BaseModel):
     """Concrete output from a lattice observation."""
     elapsed_time: float = 0.0
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+ObsT = TypeVar("ObsT", bound=Observation)
 
 
 class Observable(BaseModel, frozen=True):
@@ -76,9 +79,9 @@ class IsCloseResult(ConstraintResult):
     is_close: bool
 
 
-class IsClose(Comparison):
+class IsClose(Comparison, Generic[ObsT]):
     """Approximate equality operator between two observations."""
-    def __call__(self, obja: Observation, objb: Observation) -> IsCloseResult:
+    def __call__(self, obja: ObsT, objb: ObsT) -> IsCloseResult:
         ...
 
 
@@ -91,7 +94,7 @@ class IsLessResult(ConstraintResult):
         return self.is_less
 
 
-class IsLess(Comparison):
+class IsLess(Comparison, Generic[ObsT]):
     """Component-wise less-than operator between two observations."""
-    def __call__(self, obja: Observation, objb: Observation) -> IsLessResult:
+    def __call__(self, obja: ObsT, objb: ObsT) -> IsLessResult:
         ...
