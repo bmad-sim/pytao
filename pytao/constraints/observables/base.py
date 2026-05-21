@@ -17,7 +17,15 @@ class Observation(BaseModel):
 
 
 class Observable(BaseModel, frozen=True):
-    """Configuration and action to make an observation from a lattice."""
+    """Abstract base for all observables."""
+
+    @property
+    def label(self) -> str:
+        return ""
+
+
+class LatticeObservable(Observable):
+    """Observable that fetches data from a lattice via Tao."""
     lattice_id: str
 
     @property
@@ -25,6 +33,13 @@ class Observable(BaseModel, frozen=True):
         return self.lattice_id
 
     def __call__(self, tao: Tao) -> Observation:
+        ...
+
+
+class LiteralObservable(Observable):
+    """Observable whose observation is a constant value."""
+
+    def get_observation(self) -> Observation:
         ...
 
 

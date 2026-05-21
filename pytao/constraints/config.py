@@ -3,16 +3,16 @@ from typing import Annotated, Literal, Union
 
 from pydantic import BaseModel, Discriminator, Field, Tag
 
-from pytao.constraints.observables import ConstraintResult, IsClose, Observable, Observation
-from pytao.constraints.observables.datum import DatumIsClose, DatumIsCloseResult, DatumLessThan, DatumLessThanResult, DatumLiteral, DatumObservable, DatumObservation
-from pytao.constraints.observables.ele import EleIsClose, EleIsCloseResult, EleLessThan, EleLessThanResult, EleLiteral, EleObservable, EleObservation
+from pytao.constraints.observables import ConstraintResult, IsClose, LatticeObservable, Observable, Observation
+from pytao.constraints.observables.datum import DatumIsClose, DatumIsCloseResult, DatumLessThan, DatumLessThanResult, DatumLiteral, DatumObservable
+from pytao.constraints.observables.ele import EleIsClose, EleIsCloseResult, EleLessThan, EleLessThanResult, EleLiteral, EleObservable
 from pytao.startup import TaoStartup
 
 
 def _has_lattice_id(v) -> bool:
     if isinstance(v, dict):
         return "lattice_id" in v
-    return isinstance(v, Observable)
+    return isinstance(v, LatticeObservable)
 
 
 def _ele_discriminator(v) -> str:
@@ -61,16 +61,10 @@ class ElementPairEquality(EqualityConstraint):
 
     @property
     def required_observables(self) -> frozenset[Observable]:
-        return frozenset(x for x in (self.ele_a, self.ele_b) if isinstance(x, EleObservable))
+        return frozenset((self.ele_a, self.ele_b))
 
     def is_satisfied(self, observations: dict[Observable, Observation]) -> EleIsCloseResult:
-        obs_a = observations[self.ele_a] if isinstance(self.ele_a, EleObservable) else self.ele_a.to_observation()
-        obs_b = observations[self.ele_b] if isinstance(self.ele_b, EleObservable) else self.ele_b.to_observation()
-        if not isinstance(obs_a, EleObservation):
-            raise TypeError(f"expected EleObservation for obs_a, got {type(obs_a)}")
-        if not isinstance(obs_b, EleObservation):
-            raise TypeError(f"expected EleObservation for obs_b, got {type(obs_b)}")
-        return self.comparison(obs_a, obs_b)
+        return self.comparison(observations[self.ele_a], observations[self.ele_b])
 
 
 class DatumPairEquality(EqualityConstraint):
@@ -81,16 +75,10 @@ class DatumPairEquality(EqualityConstraint):
 
     @property
     def required_observables(self) -> frozenset[Observable]:
-        return frozenset(x for x in (self.datum_a, self.datum_b) if isinstance(x, DatumObservable))
+        return frozenset((self.datum_a, self.datum_b))
 
     def is_satisfied(self, observations: dict[Observable, Observation]) -> DatumIsCloseResult:
-        obs_a = observations[self.datum_a] if isinstance(self.datum_a, DatumObservable) else self.datum_a.to_observation()
-        obs_b = observations[self.datum_b] if isinstance(self.datum_b, DatumObservable) else self.datum_b.to_observation()
-        if not isinstance(obs_a, DatumObservation):
-            raise TypeError(f"expected DatumObservation for obs_a, got {type(obs_a)}")
-        if not isinstance(obs_b, DatumObservation):
-            raise TypeError(f"expected DatumObservation for obs_b, got {type(obs_b)}")
-        return self.comparison(obs_a, obs_b)
+        return self.comparison(observations[self.datum_a], observations[self.datum_b])
 
 
 class ElementPairLessThan(Constraint):
@@ -101,16 +89,10 @@ class ElementPairLessThan(Constraint):
 
     @property
     def required_observables(self) -> frozenset[Observable]:
-        return frozenset(x for x in (self.ele_a, self.ele_b) if isinstance(x, EleObservable))
+        return frozenset((self.ele_a, self.ele_b))
 
     def is_satisfied(self, observations: dict[Observable, Observation]) -> EleLessThanResult:
-        obs_a = observations[self.ele_a] if isinstance(self.ele_a, EleObservable) else self.ele_a.to_observation()
-        obs_b = observations[self.ele_b] if isinstance(self.ele_b, EleObservable) else self.ele_b.to_observation()
-        if not isinstance(obs_a, EleObservation):
-            raise TypeError(f"expected EleObservation for obs_a, got {type(obs_a)}")
-        if not isinstance(obs_b, EleObservation):
-            raise TypeError(f"expected EleObservation for obs_b, got {type(obs_b)}")
-        return self.comparison(obs_a, obs_b)
+        return self.comparison(observations[self.ele_a], observations[self.ele_b])
 
 
 class DatumPairLessThan(Constraint):
@@ -121,16 +103,10 @@ class DatumPairLessThan(Constraint):
 
     @property
     def required_observables(self) -> frozenset[Observable]:
-        return frozenset(x for x in (self.datum_a, self.datum_b) if isinstance(x, DatumObservable))
+        return frozenset((self.datum_a, self.datum_b))
 
     def is_satisfied(self, observations: dict[Observable, Observation]) -> DatumLessThanResult:
-        obs_b = observations[self.datum_b] if isinstance(self.datum_b, DatumObservable) else self.datum_b.to_observation()
-        obs_a = observations[self.datum_a] if isinstance(self.datum_a, DatumObservable) else self.datum_a.to_observation()
-        if not isinstance(obs_a, DatumObservation):
-            raise TypeError(f"expected DatumObservation for obs_a, got {type(obs_a)}")
-        if not isinstance(obs_b, DatumObservation):
-            raise TypeError(f"expected DatumObservation for obs_b, got {type(obs_b)}")
-        return self.comparison(obs_a, obs_b)
+        return self.comparison(observations[self.datum_a], observations[self.datum_b])
 
 
 constraint_types = Annotated[

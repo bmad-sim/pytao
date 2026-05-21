@@ -9,7 +9,7 @@ import yaml
 from pytao import SubprocessTao
 
 from .config import ConstraintsConfig, EqualityConstraint
-from .observables import DatumIsCloseResult, DatumLessThanResult, EleIsCloseResult, EleLessThanResult, IsCloseResult, Observable, Observation
+from .observables import DatumIsCloseResult, DatumLessThanResult, EleIsCloseResult, EleLessThanResult, IsCloseResult, LatticeObservable, LiteralObservable, Observable, Observation
 from .results import (
     ConstraintResult,
     ConstraintResults,
@@ -28,11 +28,15 @@ def run(
 ) -> ConstraintResults:
     started_at = datetime.now(timezone.utc)
 
-    # Build lattice_id -> set of observables needed for that lattice
-    needed: dict[str, set[Observable]] = {lat_id: set() for lat_id in config.lattices}
+    # Build lattice_id -> set of lattice observables, and collect literal observables separately
+    needed: dict[str, set[LatticeObservable]] = {lat_id: set() for lat_id in config.lattices}
+    literal_obs: set[LiteralObservable] = set()
     for constraint in config.constraints:
         for obs in constraint.required_observables:
-            needed[obs.lattice_id].add(obs)
+            if isinstance(obs, LatticeObservable):
+                needed[obs.lattice_id].add(obs)
+            else:
+                literal_obs.add(obs)
 
     # Run observables: observable -> observation
     obs_map: dict[Observable, Observation] = {}
@@ -64,10 +68,14 @@ def run(
             load_time=load_time,
         )
 
+    for obs in literal_obs:
+        obs_map[obs] = obs.get_observation()
+
     if save_path is not None:
         saved = SavedObservations(entries=[
             SavedEntry(observable=obs, observation=obs_val)
             for obs, obs_val in obs_map.items()
+            if isinstance(obs, LatticeObservable)
         ])
         save_path.write_text(saved.model_dump_json(indent=2))
 

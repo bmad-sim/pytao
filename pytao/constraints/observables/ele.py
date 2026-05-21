@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 
 from pytao import Tao
 from pytao.model import Element
-from pytao.constraints.observables.base import CheckResult, IsClose, IsCloseResult, IsLess, IsLessResult, Observable, Observation
+from pytao.constraints.observables.base import CheckResult, IsClose, IsCloseResult, IsLess, IsLessResult, LatticeObservable, LiteralObservable, Observation
 from pytao.constraints.observables.twiss import BmagTwissComparison, twiss_comparison_types
 from pytao.model import ElementFloor, ElementFloorAll, ElementFloorPosition, ElementOrbit, ElementTwiss
 from pytao.model.ele.ele import Element
@@ -15,7 +15,7 @@ class EleObservation(Observation):
     element: Element
 
 
-class EleObservable(Observable):
+class EleObservable(LatticeObservable):
     """Observable that fetches element data from the lattice."""
     obs_type: Literal["ele"] = "ele"
     ele_id: str | int
@@ -28,7 +28,8 @@ class EleObservable(Observable):
         return EleObservation(element=tao.ele(self.ele_id))
 
 
-class EleLiteral(BaseModel):
+class EleLiteral(LiteralObservable):
+    obs_type: Literal["ele_literal"] = "ele_literal"
     beta_a: float | None = None
     alpha_a: float | None = None
     beta_b: float | None = None
@@ -42,7 +43,11 @@ class EleLiteral(BaseModel):
     floor_y: float | None = None
     floor_z: float | None = None
 
-    def to_observation(self) -> EleObservation:
+    @property
+    def label(self) -> str:
+        return "literal"
+
+    def get_observation(self) -> EleObservation:
         new_twiss = ElementTwiss(
             **{k: v for k, v in [
                 ("beta_a", self.beta_a), ("alpha_a", self.alpha_a),

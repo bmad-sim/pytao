@@ -1,9 +1,9 @@
 from typing import Literal
 
-from pydantic import Field, BaseModel
+from pydantic import Field
 
 from pytao import Tao
-from pytao.constraints.observables.base import CheckResult, IsClose, IsCloseResult, IsLess, IsLessResult, Observable, Observation
+from pytao.constraints.observables.base import CheckResult, IsClose, IsCloseResult, IsLess, IsLessResult, LatticeObservable, LiteralObservable, Observation
 from pytao.constraints.observables.ele import TolComparison
 
 _D2_NAME = "_pytao_tmp"
@@ -17,7 +17,7 @@ class DatumObservation(Observation):
     design_value: float
 
 
-class DatumObservable(Observable):
+class DatumObservable(LatticeObservable):
     obs_type: Literal["datum"] = "datum"
     data_type: str
     ele_name: str
@@ -50,11 +50,16 @@ class DatumObservable(Observable):
         )
 
 
-class DatumLiteral(BaseModel):
+class DatumLiteral(LiteralObservable):
+    obs_type: Literal["datum_literal"] = "datum_literal"
     model_value: float
     design_value: float
 
-    def to_observation(self) -> DatumObservation:
+    @property
+    def label(self) -> str:
+        return "literal"
+
+    def get_observation(self) -> DatumObservation:
         return DatumObservation(model_value=self.model_value, design_value=self.design_value)
 
 
