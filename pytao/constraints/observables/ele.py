@@ -48,45 +48,112 @@ class EleLiteral(LiteralObservable):
         return "literal"
 
     def get_observation(self) -> EleObservation:
-        new_twiss = ElementTwiss(
-            **{k: v for k, v in [
-                ("beta_a", self.beta_a), ("alpha_a", self.alpha_a),
-                ("beta_b", self.beta_b), ("alpha_b", self.alpha_b),
-                ("eta_x", self.eta_x), ("etap_x", self.etap_x),
-                ("eta_y", self.eta_y), ("etap_y", self.etap_y),
-            ] if v is not None}
+        return _build_ele_observation(
+            self.beta_a, self.alpha_a, self.beta_b, self.alpha_b,
+            self.eta_x, self.etap_x, self.eta_y, self.etap_y,
+            self.p0c, self.floor_x, self.floor_y, self.floor_z,
         )
-        new_orbit = ElementOrbit(
-            **{k: v for k, v in [("p0c", self.p0c)] if v is not None}
-        )
-        dummy_floor = ElementFloor(which="model", where="end", actual=None, reference=None, slaves={})
-        new_floor = ElementFloorAll(
+
+
+def _build_ele_observation(
+    beta_a, alpha_a, beta_b, alpha_b,
+    eta_x, etap_x, eta_y, etap_y,
+    p0c, floor_x, floor_y, floor_z,
+) -> EleObservation:
+    new_twiss = ElementTwiss(
+        **{k: v for k, v in [
+            ("beta_a", beta_a), ("alpha_a", alpha_a),
+            ("beta_b", beta_b), ("alpha_b", alpha_b),
+            ("eta_x", eta_x), ("etap_x", etap_x),
+            ("eta_y", eta_y), ("etap_y", etap_y),
+        ] if v is not None}
+    )
+    new_orbit = ElementOrbit(
+        **{k: v for k, v in [("p0c", p0c)] if v is not None}
+    )
+    dummy_floor = ElementFloor(which="model", where="end", actual=None, reference=None, slaves={})
+    new_floor = ElementFloorAll(
+        which="model",
+        beginning=dummy_floor,
+        center=dummy_floor,
+        end=ElementFloor(
             which="model",
-            beginning=dummy_floor,
-            center=dummy_floor,
-            end=ElementFloor(
-                which="model",
-                where="end",
-                actual=ElementFloorPosition.model_construct(
-                    **{k: v for k, v in [
-                        ("x", self.floor_x), ("y", self.floor_y), ("z", self.floor_z)
-                    ] if v is not None}
-                ),
-                reference=None,
-                slaves={},
+            where="end",
+            actual=ElementFloorPosition.model_construct(
+                **{k: v for k, v in [
+                    ("x", floor_x), ("y", floor_y), ("z", floor_z)
+                ] if v is not None}
             ),
-        )
-        
-        # Note: use model_construct to pack values into model without validation so we may partially populate for
-        # use in the constraint checking code.
-        element = Element.model_construct(
-            ele_id="_literal",
-            which="model",
-            twiss=new_twiss,
-            orbit=new_orbit,
-            floor=new_floor,
-        )
-        return EleObservation(element=element)
+            reference=None,
+            slaves={},
+        ),
+    )
+    # use model_construct to partially populate without validation
+    element = Element.model_construct(
+        ele_id="_literal",
+        which="model",
+        twiss=new_twiss,
+        orbit=new_orbit,
+        floor=new_floor,
+    )
+    return EleObservation(element=element)
+
+
+def _ele_reduce(tao: Tao, reduce_fn) -> EleObservation:
+    beta_a = alpha_a = beta_b = alpha_b = None
+    eta_x = etap_x = eta_y = etap_y = None
+    p0c = None
+    floor_x = floor_y = floor_z = None
+
+    for ele_id in tao.unique_ele_ids_from_branch("1", "0"):
+        ele = tao.ele(ele_id)
+        if ele.twiss is not None:
+            t = ele.twiss
+            beta_a  = reduce_fn(beta_a,  t.beta_a)  if beta_a  is not None else t.beta_a
+            alpha_a = reduce_fn(alpha_a, t.alpha_a) if alpha_a is not None else t.alpha_a
+            beta_b  = reduce_fn(beta_b,  t.beta_b)  if beta_b  is not None else t.beta_b
+            alpha_b = reduce_fn(alpha_b, t.alpha_b) if alpha_b is not None else t.alpha_b
+            eta_x   = reduce_fn(eta_x,   t.eta_x)   if eta_x   is not None else t.eta_x
+            etap_x  = reduce_fn(etap_x,  t.etap_x)  if etap_x  is not None else t.etap_x
+            eta_y   = reduce_fn(eta_y,   t.eta_y)   if eta_y   is not None else t.eta_y
+            etap_y  = reduce_fn(etap_y,  t.etap_y)  if etap_y  is not None else t.etap_y
+        if ele.orbit is not None:
+            p0c = reduce_fn(p0c, ele.orbit.p0c) if p0c is not None else ele.orbit.p0c
+        if ele.floor is not None and ele.floor.end.actual is not None:
+            fa = ele.floor.end.actual
+            floor_x = reduce_fn(floor_x, fa.x) if floor_x is not None else fa.x
+            floor_y = reduce_fn(floor_y, fa.y) if floor_y is not None else fa.y
+            floor_z = reduce_fn(floor_z, fa.z) if floor_z is not None else fa.z
+
+    return _build_ele_observation(
+        beta_a, alpha_a, beta_b, alpha_b,
+        eta_x, etap_x, eta_y, etap_y,
+        p0c, floor_x, floor_y, floor_z,
+    )
+
+
+class EleMaxObservable(LatticeObservable):
+    """Observable yielding the per-field maximum across all tracking elements."""
+    obs_type: Literal["ele_max"] = "ele_max"
+
+    @property
+    def label(self) -> str:
+        return f"{self.lattice_id}[max]"
+
+    def __call__(self, tao: Tao) -> EleObservation:
+        return _ele_reduce(tao, max)
+
+
+class EleMinObservable(LatticeObservable):
+    """Observable yielding the per-field minimum across all tracking elements."""
+    obs_type: Literal["ele_min"] = "ele_min"
+
+    @property
+    def label(self) -> str:
+        return f"{self.lattice_id}[min]"
+
+    def __call__(self, tao: Tao) -> EleObservation:
+        return _ele_reduce(tao, min)
 
 
 class TolComparison(BaseModel):

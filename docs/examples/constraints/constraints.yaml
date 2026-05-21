@@ -35,6 +35,14 @@ constraints:
       floor_z_test:
         atol: 1e-6
 
+  - constraint_type: ele_max_lt
+    comment: Example of a failing constraint
+    ele_a:
+      lattice_id: lat_a
+    ele_b:
+      beta_a: 200
+      beta_b: 200
+
   - constraint_type: datum_eq
     comment: Check a datum against a literal value
     datum_a:

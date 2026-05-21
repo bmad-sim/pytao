@@ -18,6 +18,8 @@ from pytao.constraints.observables.ele import (
     EleLessThan,
     EleLessThanResult,
     EleLiteral,
+    EleMaxObservable,
+    EleMinObservable,
     EleObservable,
     EleObservation,
     TolComparison,
@@ -30,7 +32,7 @@ from pytao.constraints.observables.twiss import (
 )
 
 observable_types = Annotated[
-    Union[EleObservable, DatumObservable, EleLiteral, DatumLiteral],
+    Union[EleObservable, EleMaxObservable, EleMinObservable, DatumObservable, EleLiteral, DatumLiteral],
     Field(discriminator="obs_type"),
 ]
 observation_types = Annotated[Union[EleObservation, DatumObservation], Field(discriminator="obs_type")]
@@ -54,6 +56,8 @@ __all__ = [
     "EleLessThan",
     "EleLessThanResult",
     "EleLiteral",
+    "EleMaxObservable",
+    "EleMinObservable",
     "EleObservable",
     "EleObservation",
     "IsClose",
