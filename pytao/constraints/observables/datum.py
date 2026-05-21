@@ -30,7 +30,7 @@ class DatumObservable(LatticeObservable):
     def label(self) -> str:
         return f"{self.lattice_id}[{self.data_type}@{self.ele_name}]"
 
-    def __call__(self, tao: Tao) -> DatumObservation:
+    def _make_observation(self, tao: Tao) -> DatumObservation:
         tao.data_d2_create(_D2_NAME, "1", f"{_D1_NAME}^^1^^1")
         tao.datum_create(
             _DATUM_NAME,
@@ -59,7 +59,7 @@ class DatumLiteral(LiteralObservable):
     def label(self) -> str:
         return "literal"
 
-    def get_observation(self) -> DatumObservation:
+    def _make_observation(self) -> DatumObservation:
         return DatumObservation(model_value=self.model_value, design_value=self.design_value)
 
 

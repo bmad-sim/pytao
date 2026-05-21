@@ -1,4 +1,6 @@
-from pydantic import BaseModel
+import time
+from datetime import datetime, timezone
+from pydantic import BaseModel, Field
 from pytao import Tao
 from typing import Literal
 
@@ -13,7 +15,8 @@ class CheckResult(BaseModel):
 
 class Observation(BaseModel):
     """Concrete output from a lattice observation."""
-    ...
+    elapsed_time: float = 0.0
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 class Observable(BaseModel, frozen=True):
@@ -32,15 +35,31 @@ class LatticeObservable(Observable):
     def label(self) -> str:
         return self.lattice_id
 
-    def __call__(self, tao: Tao) -> Observation:
+    def _make_observation(self, tao: Tao) -> Observation:
         ...
+
+    def __call__(self, tao: Tao) -> Observation:
+        created_at = datetime.now(timezone.utc)
+        t0 = time.perf_counter()
+        result = self._make_observation(tao)
+        result.elapsed_time = time.perf_counter() - t0
+        result.created_at = created_at
+        return result
 
 
 class LiteralObservable(Observable):
     """Observable whose observation is a constant value."""
 
-    def get_observation(self) -> Observation:
+    def _make_observation(self) -> Observation:
         ...
+
+    def __call__(self) -> Observation:
+        created_at = datetime.now(timezone.utc)
+        t0 = time.perf_counter()
+        result = self._make_observation()
+        result.elapsed_time = time.perf_counter() - t0
+        result.created_at = created_at
+        return result
 
 
 class Comparison(BaseModel):

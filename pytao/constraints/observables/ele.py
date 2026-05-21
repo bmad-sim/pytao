@@ -24,7 +24,7 @@ class EleObservable(LatticeObservable):
     def label(self) -> str:
         return f"{self.lattice_id}[{self.ele_id}]"
 
-    def __call__(self, tao: Tao) -> EleObservation:
+    def _make_observation(self, tao: Tao) -> EleObservation:
         return EleObservation(element=tao.ele(self.ele_id))
 
 
@@ -47,7 +47,7 @@ class EleLiteral(LiteralObservable):
     def label(self) -> str:
         return "literal"
 
-    def get_observation(self) -> EleObservation:
+    def _make_observation(self) -> EleObservation:
         return _build_ele_observation(
             self.beta_a, self.alpha_a, self.beta_b, self.alpha_b,
             self.eta_x, self.etap_x, self.eta_y, self.etap_y,
@@ -140,7 +140,7 @@ class EleMaxObservable(LatticeObservable):
     def label(self) -> str:
         return f"{self.lattice_id}[max]"
 
-    def __call__(self, tao: Tao) -> EleObservation:
+    def _make_observation(self, tao: Tao) -> EleObservation:
         return _ele_reduce(tao, max)
 
 
@@ -152,7 +152,7 @@ class EleMinObservable(LatticeObservable):
     def label(self) -> str:
         return f"{self.lattice_id}[min]"
 
-    def __call__(self, tao: Tao) -> EleObservation:
+    def _make_observation(self, tao: Tao) -> EleObservation:
         return _ele_reduce(tao, min)
 
 

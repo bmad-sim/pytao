@@ -71,7 +71,7 @@ def run(
         )
 
     for obs in literal_obs:
-        obs_map[obs] = obs.get_observation()
+        obs_map[obs] = obs()
 
     if save_path is not None:
         saved = SavedObservations(entries=[
