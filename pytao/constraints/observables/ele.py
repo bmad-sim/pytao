@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import ClassVar, Literal
 
 import numpy as np
@@ -13,6 +15,8 @@ from pytao.model.ele.ele import Element
 class EleObservation(Observation):
     obs_type: Literal["ele"] = "ele"
     element: Element
+    is_close_cls: ClassVar[type[EleIsClose]]
+    is_less_cls: ClassVar[type[EleLessThan]]
 
 
 class TolComparison(BaseModel):
@@ -281,11 +285,7 @@ def _build_ele_observation(
     return EleObservation(element=element)
 
 
-class EleLiteral(LiteralObservable):
-    observation_cls: ClassVar[type[EleObservation]] = EleObservation
-    is_close_cls: ClassVar[type[EleIsClose]] = EleIsClose
-    is_less_cls: ClassVar[type[EleLessThan]] = EleLessThan
-
+class EleLiteral(LiteralObservable[EleObservation]):
     obs_type: Literal["ele_literal"] = "ele_literal"
     beta_a: float | None = None
     alpha_a: float | None = None
@@ -345,13 +345,8 @@ def _ele_reduce(tao: Tao, reduce_fn) -> EleObservation:
     )
 
 
-class EleObservable(LatticeObservable):
+class EleObservable(LatticeObservable[EleObservation]):
     """Observable that fetches element data from the lattice."""
-    observation_cls: ClassVar[type[EleObservation]] = EleObservation
-    is_close_cls: ClassVar[type[EleIsClose]] = EleIsClose
-    is_less_cls: ClassVar[type[EleLessThan]] = EleLessThan
-    literal_cls: ClassVar[type[EleLiteral]] = EleLiteral
-
     obs_type: Literal["ele"] = "ele"
     ele_id: str | int
 
@@ -363,13 +358,8 @@ class EleObservable(LatticeObservable):
         return EleObservation(element=tao.ele(self.ele_id))
 
 
-class EleMaxObservable(LatticeObservable):
+class EleMaxObservable(LatticeObservable[EleObservation]):
     """Observable yielding the per-field maximum across all tracking elements."""
-    observation_cls: ClassVar[type[EleObservation]] = EleObservation
-    is_close_cls: ClassVar[type[EleIsClose]] = EleIsClose
-    is_less_cls: ClassVar[type[EleLessThan]] = EleLessThan
-    literal_cls: ClassVar[type[EleLiteral]] = EleLiteral
-
     obs_type: Literal["ele_max"] = "ele_max"
 
     @property
@@ -380,13 +370,8 @@ class EleMaxObservable(LatticeObservable):
         return _ele_reduce(tao, max)
 
 
-class EleMinObservable(LatticeObservable):
+class EleMinObservable(LatticeObservable[EleObservation]):
     """Observable yielding the per-field minimum across all tracking elements."""
-    observation_cls: ClassVar[type[EleObservation]] = EleObservation
-    is_close_cls: ClassVar[type[EleIsClose]] = EleIsClose
-    is_less_cls: ClassVar[type[EleLessThan]] = EleLessThan
-    literal_cls: ClassVar[type[EleLiteral]] = EleLiteral
-
     obs_type: Literal["ele_min"] = "ele_min"
 
     @property
@@ -395,3 +380,9 @@ class EleMinObservable(LatticeObservable):
 
     def _make_observation(self, tao: Tao) -> EleObservation:
         return _ele_reduce(tao, min)
+
+
+# EleIsClose and EleLessThan reference EleObservation, so they must be defined after it;
+# EleObservation.is_close_cls references them, so it must be assigned after them.
+EleObservation.is_close_cls = EleIsClose
+EleObservation.is_less_cls = EleLessThan

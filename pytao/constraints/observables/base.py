@@ -1,8 +1,8 @@
 import time
 from datetime import datetime, timezone
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from pytao import Tao
-from typing import ClassVar, Generic, Literal, TypeVar
+from typing import Generic, Literal, TypeVar
 
 
 class CheckResult(BaseModel):
@@ -22,15 +22,16 @@ class Observation(BaseModel):
 ObsT = TypeVar("ObsT", bound=Observation)
 
 
-class Observable(BaseModel, frozen=True):
+class Observable(BaseModel, Generic[ObsT]):
     """Abstract base for all observables."""
+    model_config = ConfigDict(frozen=True)
 
     @property
     def label(self) -> str:
         return ""
 
 
-class LatticeObservable(Observable):
+class LatticeObservable(Observable[ObsT]):
     """Observable that fetches data from a lattice via Tao."""
     lattice_id: str
 
@@ -38,10 +39,10 @@ class LatticeObservable(Observable):
     def label(self) -> str:
         return self.lattice_id
 
-    def _make_observation(self, tao: Tao) -> Observation:
+    def _make_observation(self, tao: Tao) -> ObsT:
         ...
 
-    def __call__(self, tao: Tao) -> Observation:
+    def __call__(self, tao: Tao) -> ObsT:
         created_at = datetime.now(timezone.utc)
         t0 = time.perf_counter()
         result = self._make_observation(tao)
@@ -50,13 +51,13 @@ class LatticeObservable(Observable):
         return result
 
 
-class LiteralObservable(Observable):
+class LiteralObservable(Observable[ObsT]):
     """Observable whose observation is a constant value."""
 
-    def _make_observation(self) -> Observation:
+    def _make_observation(self) -> ObsT:
         ...
 
-    def __call__(self) -> Observation:
+    def __call__(self) -> ObsT:
         created_at = datetime.now(timezone.utc)
         t0 = time.perf_counter()
         result = self._make_observation()

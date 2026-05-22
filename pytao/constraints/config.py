@@ -1,46 +1,42 @@
 from abc import abstractmethod
 from typing import Annotated, Literal, Union
 
-from pydantic import BaseModel, Discriminator, Field, Tag
+from pydantic import BaseModel, Field
 
-from pytao.constraints.observables import ConstraintResult, IsClose, LatticeObservable, Observable, Observation
-from pytao.constraints.observables.datum import DatumIsClose, DatumIsCloseResult, DatumLessThan, DatumLessThanResult, DatumLiteral, DatumObservable
-from pytao.constraints.observables.ele import EleIsClose, EleIsCloseResult, EleLessThan, EleLessThanResult, EleLiteral, EleMaxObservable, EleMinObservable, EleObservable
+from pytao.constraints.observables import (
+    ConstraintResult,
+    DatumIsClose,
+    DatumIsCloseResult,
+    DatumLessThan,
+    DatumLessThanResult,
+    DatumLiteral,
+    DatumObservable,
+    DatumObservation,
+    EleIsClose,
+    EleIsCloseResult,
+    EleLessThan,
+    EleLessThanResult,
+    EleLiteral,
+    EleMaxObservable,
+    EleMinObservable,
+    EleObservable,
+    EleObservation,
+    IsClose,
+    LatticeObservable,
+    Observable,
+    Observation,
+)
 from pytao.startup import TaoStartup
 
 
-def _has_lattice_id(v) -> bool:
-    if isinstance(v, dict):
-        return "lattice_id" in v
-    return isinstance(v, LatticeObservable)
-
-
-def _ele_discriminator(v) -> str:
-    return "observable" if _has_lattice_id(v) else "literal"
-
-
-def _datum_discriminator(v) -> str:
-    return "observable" if _has_lattice_id(v) else "literal"
-
-
-EleObservableOrLiteral = Annotated[
-    Union[Annotated[EleObservable, Tag("observable")], Annotated[EleLiteral, Tag("literal")]],
-    Discriminator(_ele_discriminator),
+EleObservables = Annotated[
+    Union[EleObservable, EleMaxObservable, EleMinObservable, EleLiteral],
+    Field(discriminator="obs_type"),
 ]
 
-EleMaxObservableOrLiteral = Annotated[
-    Union[Annotated[EleMaxObservable, Tag("observable")], Annotated[EleLiteral, Tag("literal")]],
-    Discriminator(_ele_discriminator),
-]
-
-EleMinObservableOrLiteral = Annotated[
-    Union[Annotated[EleMinObservable, Tag("observable")], Annotated[EleLiteral, Tag("literal")]],
-    Discriminator(_ele_discriminator),
-]
-
-DatumObservableOrLiteral = Annotated[
-    Union[Annotated[DatumObservable, Tag("observable")], Annotated[DatumLiteral, Tag("literal")]],
-    Discriminator(_datum_discriminator),
+DatumObservables = Annotated[
+    Union[DatumObservable, DatumLiteral],
+    Field(discriminator="obs_type"),
 ]
 
 
@@ -64,125 +60,64 @@ class EqualityConstraint(Constraint):
     comparison: IsClose
 
 
-class ElementPairEquality(EqualityConstraint):
+class EleIsCloseConstraint(EqualityConstraint):
     constraint_type: Literal["ele_eq"] = "ele_eq"
-    ele_a: EleObservableOrLiteral
-    ele_b: EleObservableOrLiteral
-    comparison: EleIsClose = Field(default_factory=EleObservable.is_close_cls)
+    obs_a: EleObservables
+    obs_b: EleObservables
+    comparison: EleIsClose = Field(default_factory=EleObservation.is_close_cls)
 
     @property
     def required_observables(self) -> frozenset[Observable]:
-        return frozenset((self.ele_a, self.ele_b))
+        return frozenset((self.obs_a, self.obs_b))
 
     def is_satisfied(self, observations: dict[Observable, Observation]) -> EleIsCloseResult:
-        return self.comparison(observations[self.ele_a], observations[self.ele_b])
+        return self.comparison(observations[self.obs_a], observations[self.obs_b])
 
 
-class DatumPairEquality(EqualityConstraint):
-    constraint_type: Literal["datum_eq"] = "datum_eq"
-    datum_a: DatumObservableOrLiteral
-    datum_b: DatumObservableOrLiteral
-    comparison: DatumIsClose = Field(default_factory=DatumObservable.is_close_cls)
+class EleLessThanConstraint(Constraint):
+    constraint_type: Literal["ele_lt"] = "ele_lt"
+    obs_a: EleObservables
+    obs_b: EleObservables
+    comparison: EleLessThan = Field(default_factory=EleObservation.is_less_cls)
 
     @property
     def required_observables(self) -> frozenset[Observable]:
-        return frozenset((self.datum_a, self.datum_b))
+        return frozenset((self.obs_a, self.obs_b))
+
+    def is_satisfied(self, observations: dict[Observable, Observation]) -> EleLessThanResult:
+        return self.comparison(observations[self.obs_a], observations[self.obs_b])
+
+
+class DatumIsCloseConstraint(EqualityConstraint):
+    constraint_type: Literal["datum_eq"] = "datum_eq"
+    obs_a: DatumObservables
+    obs_b: DatumObservables
+    comparison: DatumIsClose = Field(default_factory=DatumObservation.is_close_cls)
+
+    @property
+    def required_observables(self) -> frozenset[Observable]:
+        return frozenset((self.obs_a, self.obs_b))
 
     def is_satisfied(self, observations: dict[Observable, Observation]) -> DatumIsCloseResult:
-        return self.comparison(observations[self.datum_a], observations[self.datum_b])
+        return self.comparison(observations[self.obs_a], observations[self.obs_b])
 
 
-class ElementPairLessThan(Constraint):
-    constraint_type: Literal["ele_lt"] = "ele_lt"
-    ele_a: EleObservableOrLiteral
-    ele_b: EleObservableOrLiteral
-    comparison: EleLessThan = Field(default_factory=EleObservable.is_less_cls)
-
-    @property
-    def required_observables(self) -> frozenset[Observable]:
-        return frozenset((self.ele_a, self.ele_b))
-
-    def is_satisfied(self, observations: dict[Observable, Observation]) -> EleLessThanResult:
-        return self.comparison(observations[self.ele_a], observations[self.ele_b])
-
-
-class DatumPairLessThan(Constraint):
+class DatumLessThanConstraint(Constraint):
     constraint_type: Literal["datum_lt"] = "datum_lt"
-    datum_a: DatumObservableOrLiteral
-    datum_b: DatumObservableOrLiteral
-    comparison: DatumLessThan = Field(default_factory=DatumObservable.is_less_cls)
+    obs_a: DatumObservables
+    obs_b: DatumObservables
+    comparison: DatumLessThan = Field(default_factory=DatumObservation.is_less_cls)
 
     @property
     def required_observables(self) -> frozenset[Observable]:
-        return frozenset((self.datum_a, self.datum_b))
+        return frozenset((self.obs_a, self.obs_b))
 
     def is_satisfied(self, observations: dict[Observable, Observation]) -> DatumLessThanResult:
-        return self.comparison(observations[self.datum_a], observations[self.datum_b])
-
-
-class ElementMaxEquality(EqualityConstraint):
-    constraint_type: Literal["ele_max_eq"] = "ele_max_eq"
-    ele_a: EleMaxObservableOrLiteral
-    ele_b: EleMaxObservableOrLiteral
-    comparison: EleIsClose = Field(default_factory=EleMaxObservable.is_close_cls)
-
-    @property
-    def required_observables(self) -> frozenset[Observable]:
-        return frozenset((self.ele_a, self.ele_b))
-
-    def is_satisfied(self, observations: dict[Observable, Observation]) -> EleIsCloseResult:
-        return self.comparison(observations[self.ele_a], observations[self.ele_b])
-
-
-class ElementMinEquality(EqualityConstraint):
-    constraint_type: Literal["ele_min_eq"] = "ele_min_eq"
-    ele_a: EleMinObservableOrLiteral
-    ele_b: EleMinObservableOrLiteral
-    comparison: EleIsClose = Field(default_factory=EleMinObservable.is_close_cls)
-
-    @property
-    def required_observables(self) -> frozenset[Observable]:
-        return frozenset((self.ele_a, self.ele_b))
-
-    def is_satisfied(self, observations: dict[Observable, Observation]) -> EleIsCloseResult:
-        return self.comparison(observations[self.ele_a], observations[self.ele_b])
-
-
-class ElementMaxLessThan(Constraint):
-    constraint_type: Literal["ele_max_lt"] = "ele_max_lt"
-    ele_a: EleMaxObservableOrLiteral
-    ele_b: EleMaxObservableOrLiteral
-    comparison: EleLessThan = Field(default_factory=EleMaxObservable.is_less_cls)
-
-    @property
-    def required_observables(self) -> frozenset[Observable]:
-        return frozenset((self.ele_a, self.ele_b))
-
-    def is_satisfied(self, observations: dict[Observable, Observation]) -> EleLessThanResult:
-        return self.comparison(observations[self.ele_a], observations[self.ele_b])
-
-
-class ElementMinLessThan(Constraint):
-    constraint_type: Literal["ele_min_lt"] = "ele_min_lt"
-    ele_a: EleMinObservableOrLiteral
-    ele_b: EleMinObservableOrLiteral
-    comparison: EleLessThan = Field(default_factory=EleMinObservable.is_less_cls)
-
-    @property
-    def required_observables(self) -> frozenset[Observable]:
-        return frozenset((self.ele_a, self.ele_b))
-
-    def is_satisfied(self, observations: dict[Observable, Observation]) -> EleLessThanResult:
-        return self.comparison(observations[self.ele_a], observations[self.ele_b])
+        return self.comparison(observations[self.obs_a], observations[self.obs_b])
 
 
 constraint_types = Annotated[
-    Union[
-        ElementPairEquality, DatumPairEquality,
-        ElementPairLessThan, DatumPairLessThan,
-        ElementMaxEquality, ElementMinEquality,
-        ElementMaxLessThan, ElementMinLessThan,
-    ],
+    Union[EleIsCloseConstraint, EleLessThanConstraint, DatumIsCloseConstraint, DatumLessThanConstraint],
     Field(discriminator="constraint_type"),
 ]
 

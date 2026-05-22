@@ -10,19 +10,23 @@ constraints:
   - constraint_type: ele_eq
     description: Short description, lat_a, lat_b treaty point
     comment: Longer comment included on error and in reports. eg Please rerun `tune_matcher.tao` in event of failure.
-    ele_a:
+    obs_a:
+      obs_type: ele
       lattice_id: lat_a
       ele_id: END
-    ele_b:
+    obs_b:
+      obs_type: ele
       lattice_id: lat_b
       ele_id: BEGINNING
 
   - constraint_type: ele_eq
     description: Example of a failing constraint
-    ele_a:
+    obs_a:
+      obs_type: ele
       lattice_id: lat_a
       ele_id: END
-    ele_b:
+    obs_b:
+      obs_type: ele
       lattice_id: lat_c
       ele_id: BEGINNING
     comparison:
@@ -36,20 +40,24 @@ constraints:
       floor_z_test:
         atol: 1e-6
 
-  - constraint_type: ele_max_lt
+  - constraint_type: ele_lt
     description: lat_a beta sanity check
-    ele_a:
+    obs_a:
+      obs_type: ele_max
       lattice_id: lat_a
-    ele_b:
+    obs_b:
+      obs_type: ele_literal
       beta_a: 200
       beta_b: 200
 
   - constraint_type: datum_eq
     description: Datum and literal example
-    datum_a:
+    obs_a:
+      obs_type: datum
       lattice_id: lat_a
       data_type: r56_compaction
       ele_name: END
-    datum_b:
+    obs_b:
+      obs_type: datum_literal
       model_value: 1.04448e-08
       design_value: 0.0

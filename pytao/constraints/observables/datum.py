@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import ClassVar, Literal
 
 from pydantic import Field
@@ -15,6 +17,8 @@ class DatumObservation(Observation):
     obs_type: Literal["datum"] = "datum"
     model_value: float
     design_value: float
+    is_close_cls: ClassVar[type[DatumIsClose]]
+    is_less_cls: ClassVar[type[DatumLessThan]]
 
 
 class DatumIsCloseResult(IsCloseResult):
@@ -71,11 +75,7 @@ class DatumLessThan(IsLess[DatumObservation]):
         )
 
 
-class DatumLiteral(LiteralObservable):
-    observation_cls: ClassVar[type[DatumObservation]] = DatumObservation
-    is_close_cls: ClassVar[type[DatumIsClose]] = DatumIsClose
-    is_less_cls: ClassVar[type[DatumLessThan]] = DatumLessThan
-
+class DatumLiteral(LiteralObservable[DatumObservation]):
     obs_type: Literal["datum_literal"] = "datum_literal"
     model_value: float
     design_value: float
@@ -88,12 +88,7 @@ class DatumLiteral(LiteralObservable):
         return DatumObservation(model_value=self.model_value, design_value=self.design_value)
 
 
-class DatumObservable(LatticeObservable):
-    observation_cls: ClassVar[type[DatumObservation]] = DatumObservation
-    is_close_cls: ClassVar[type[DatumIsClose]] = DatumIsClose
-    is_less_cls: ClassVar[type[DatumLessThan]] = DatumLessThan
-    literal_cls: ClassVar[type[DatumLiteral]] = DatumLiteral
-
+class DatumObservable(LatticeObservable[DatumObservation]):
     obs_type: Literal["datum"] = "datum"
     data_type: str
     ele_name: str
@@ -124,3 +119,9 @@ class DatumObservable(LatticeObservable):
             model_value=result["model_value"],
             design_value=result["design_value"],
         )
+
+
+# DatumIsClose and DatumLessThan reference DatumObservation, so they must be defined after it;
+# DatumObservation.is_close_cls references them, so it must be assigned after them.
+DatumObservation.is_close_cls = DatumIsClose
+DatumObservation.is_less_cls = DatumLessThan
