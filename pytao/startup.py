@@ -416,9 +416,16 @@ class TaoStartup:
             ) from ex
 
     _path_fields: tuple[str, ...] = (
-        "beam_file", "beam_init_position_file", "building_wall_file",
-        "data_file", "hook_init_file", "init_file", "lattice_file",
-        "plot_file", "startup_file", "var_file",
+        "beam_file",
+        "beam_init_position_file",
+        "building_wall_file",
+        "data_file",
+        "hook_init_file",
+        "init_file",
+        "lattice_file",
+        "plot_file",
+        "startup_file",
+        "var_file",
     )
 
     def with_resolved_paths(self, parent: pathlib.Path) -> TaoStartup:

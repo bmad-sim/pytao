@@ -8,8 +8,7 @@ from pytao.constraints.observables.base import CheckResult
 
 class TwissComparisonMethod(BaseModel, ABC):
     @abstractmethod
-    def __call__(self, beta0, alpha0, beta1, alpha1) -> CheckResult:
-        ...
+    def __call__(self, beta0, alpha0, beta1, alpha1) -> CheckResult: ...
 
 
 class DummyTwissComparison(TwissComparisonMethod):
@@ -25,7 +24,10 @@ class BmagTwissComparison(TwissComparisonMethod):
     min_bmag: float = 0.99
 
     def __call__(self, beta0, alpha0, beta1, alpha1) -> CheckResult:
-        bmag = 0.5 * ((beta0 / beta1 + beta1 / beta0) + beta1 * beta0 * (alpha1 / beta1 - alpha0 / beta0) ** 2)
+        bmag = 0.5 * (
+            (beta0 / beta1 + beta1 / beta0)
+            + beta1 * beta0 * (alpha1 / beta1 - alpha0 / beta0) ** 2
+        )
         passed = self.min_bmag <= bmag <= self.max_bmag
         detail = (
             ""
@@ -39,4 +41,6 @@ class BmagTwissComparison(TwissComparisonMethod):
         return CheckResult(passed=passed, detail=detail)
 
 
-twiss_comparison_types = Annotated[Union[DummyTwissComparison, BmagTwissComparison], Field(discriminator="type")]
+twiss_comparison_types = Annotated[
+    Union[DummyTwissComparison, BmagTwissComparison], Field(discriminator="type")
+]

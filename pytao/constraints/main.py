@@ -9,7 +9,17 @@ import yaml
 from pytao import SubprocessTao
 
 from .config import ConstraintsConfig, EqualityConstraint
-from .observables import DatumIsCloseResult, DatumLessThanResult, EleIsCloseResult, EleLessThanResult, IsCloseResult, LatticeObservable, LiteralObservable, Observable, Observation
+from .observables import (
+    DatumIsCloseResult,
+    DatumLessThanResult,
+    EleIsCloseResult,
+    EleLessThanResult,
+    IsCloseResult,
+    LatticeObservable,
+    LiteralObservable,
+    Observable,
+    Observation,
+)
 from .results import (
     ConstraintResult,
     ConstraintResults,
@@ -60,7 +70,9 @@ def run(
                 loaded = True
                 for obs in needed[lat_id]:
                     obs_map[obs] = obs(tao)
-                obs_time = sum(obs_map[obs].elapsed_time for obs in needed[lat_id] if obs in obs_map)
+                obs_time = sum(
+                    obs_map[obs].elapsed_time for obs in needed[lat_id] if obs in obs_map
+                )
         except Exception:
             if not load_time:
                 load_time = time.perf_counter() - t0
@@ -79,29 +91,35 @@ def run(
         obs_map[obs] = obs()
 
     if save_path is not None:
-        saved = SavedObservations(entries=[
-            SavedEntry(observable=obs, observation=obs_val)
-            for obs, obs_val in obs_map.items()
-            if isinstance(obs, LatticeObservable)
-        ])
+        saved = SavedObservations(
+            entries=[
+                SavedEntry(observable=obs, observation=obs_val)
+                for obs, obs_val in obs_map.items()
+                if isinstance(obs, LatticeObservable)
+            ]
+        )
         save_path.write_text(saved.model_dump_json(indent=2))
 
     # Run each equality constraint comparison
     constraint_results: list[ConstraintResult] = []
     for constraint in config.constraints:
         try:
-            result = constraint.is_satisfied({obs: obs_map[obs] for obs in constraint.required_observables})
+            result = constraint.is_satisfied(
+                {obs: obs_map[obs] for obs in constraint.required_observables}
+            )
         except Exception:
             result = IsCloseResult(
                 is_close=False,
                 error=traceback.format_exc().strip(),
             )
-        constraint_results.append(ConstraintResult(
-            observables=list(constraint.required_observables),
-            description=constraint.description,
-            comment=constraint.comment,
-            result=result,
-        ))
+        constraint_results.append(
+            ConstraintResult(
+                observables=list(constraint.required_observables),
+                description=constraint.description,
+                comment=constraint.comment,
+                result=result,
+            )
+        )
 
     # Regression comparisons against saved observations
     regression_results: list[RegressionResult] = []
@@ -165,12 +183,19 @@ def _print_check_detail(res: IsCloseResult) -> None:
                 print(f"    {name:<{width}}  {check_status}{detail}")
     elif isinstance(res, EleLessThanResult):
         checks = {
-            "beta_a": res.beta_a, "alpha_a": res.alpha_a,
-            "beta_b": res.beta_b, "alpha_b": res.alpha_b,
-            "eta_x": res.eta_x, "etap_x": res.etap_x,
-            "eta_y": res.eta_y, "etap_y": res.etap_y,
-            "ref_energy": res.ref_energy, "p0c": res.p0c,
-            "floor_x": res.floor_x, "floor_y": res.floor_y, "floor_z": res.floor_z,
+            "beta_a": res.beta_a,
+            "alpha_a": res.alpha_a,
+            "beta_b": res.beta_b,
+            "alpha_b": res.alpha_b,
+            "eta_x": res.eta_x,
+            "etap_x": res.etap_x,
+            "eta_y": res.eta_y,
+            "etap_y": res.etap_y,
+            "ref_energy": res.ref_energy,
+            "p0c": res.p0c,
+            "floor_x": res.floor_x,
+            "floor_y": res.floor_y,
+            "floor_z": res.floor_z,
         }
         ran = {name: check for name, check in checks.items() if check is not None}
         if ran:
@@ -188,7 +213,9 @@ def _print_results(results: ConstraintResults) -> None:
     print("Lattices:")
     for lat_id, lat in results.lattices.items():
         status = "OK  " if lat.loaded else "FAIL"
-        print(f"  [{status}] {lat_id}  loaded in {lat.load_time:.2f}s, observables in {lat.obs_time:.2f}s")
+        print(
+            f"  [{status}] {lat_id}  loaded in {lat.load_time:.2f}s, observables in {lat.obs_time:.2f}s"
+        )
         if lat.error:
             for line in lat.error.splitlines():
                 print(f"         {line}")
@@ -275,7 +302,9 @@ def main() -> None:
 
     save_obs_path = Path(args.save_observations) if args.save_observations else None
 
-    results = run(config, config_dir=config_path.parent, save_path=save_obs_path, compare=compare)
+    results = run(
+        config, config_dir=config_path.parent, save_path=save_obs_path, compare=compare
+    )
 
     _print_results(results)
 

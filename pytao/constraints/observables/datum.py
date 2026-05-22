@@ -5,7 +5,16 @@ from typing import ClassVar, Literal
 from pydantic import Field
 
 from pytao import Tao
-from pytao.constraints.observables.base import CheckResult, IsClose, IsCloseResult, IsLess, IsLessResult, LatticeObservable, LiteralObservable, Observation
+from pytao.constraints.observables.base import (
+    CheckResult,
+    IsClose,
+    IsCloseResult,
+    IsLess,
+    IsLessResult,
+    LatticeObservable,
+    LiteralObservable,
+    Observation,
+)
 from pytao.constraints.observables.ele import TolComparison
 
 _D2_NAME = "_pytao_tmp"
@@ -57,16 +66,23 @@ class DatumLessThanResult(IsLessResult):
 
 class DatumLessThan(IsLess[DatumObservation]):
     """Component-wise less-than comparison between two DatumObservations."""
+
     model_value: bool = True
     design_value: bool = False
 
     def _check(self, va: float, vb: float) -> CheckResult:
         passed = va < vb
-        return CheckResult(passed=passed, detail="" if passed else f"a={va:.6g} not < b={vb:.6g}")
+        return CheckResult(
+            passed=passed, detail="" if passed else f"a={va:.6g} not < b={vb:.6g}"
+        )
 
     def __call__(self, obja: DatumObservation, objb: DatumObservation) -> DatumLessThanResult:
-        model_value = self._check(obja.model_value, objb.model_value) if self.model_value else None
-        design_value = self._check(obja.design_value, objb.design_value) if self.design_value else None
+        model_value = (
+            self._check(obja.model_value, objb.model_value) if self.model_value else None
+        )
+        design_value = (
+            self._check(obja.design_value, objb.design_value) if self.design_value else None
+        )
         ran = [r for r in [model_value, design_value] if r is not None]
         return DatumLessThanResult(
             is_less=all(ran) if ran else True,

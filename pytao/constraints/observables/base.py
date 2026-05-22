@@ -15,6 +15,7 @@ class CheckResult(BaseModel):
 
 class Observation(BaseModel):
     """Concrete output from a lattice observation."""
+
     elapsed_time: float = 0.0
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
@@ -24,6 +25,7 @@ ObsT = TypeVar("ObsT", bound=Observation)
 
 class Observable(BaseModel, Generic[ObsT]):
     """Abstract base for all observables."""
+
     model_config = ConfigDict(frozen=True)
 
     @property
@@ -33,14 +35,14 @@ class Observable(BaseModel, Generic[ObsT]):
 
 class LatticeObservable(Observable[ObsT]):
     """Observable that fetches data from a lattice via Tao."""
+
     lattice_id: str
 
     @property
     def label(self) -> str:
         return self.lattice_id
 
-    def _make_observation(self, tao: Tao) -> ObsT:
-        ...
+    def _make_observation(self, tao: Tao) -> ObsT: ...
 
     def __call__(self, tao: Tao) -> ObsT:
         created_at = datetime.now(timezone.utc)
@@ -54,8 +56,7 @@ class LatticeObservable(Observable[ObsT]):
 class LiteralObservable(Observable[ObsT]):
     """Observable whose observation is a constant value."""
 
-    def _make_observation(self) -> ObsT:
-        ...
+    def _make_observation(self) -> ObsT: ...
 
     def __call__(self) -> ObsT:
         created_at = datetime.now(timezone.utc)
@@ -72,6 +73,7 @@ class Comparison(BaseModel):
 
 class ConstraintResult(BaseModel):
     """Base for all constraint check results."""
+
     error: str | None = None
 
 
@@ -82,8 +84,8 @@ class IsCloseResult(ConstraintResult):
 
 class IsClose(Comparison, Generic[ObsT]):
     """Approximate equality operator between two observations."""
-    def __call__(self, obja: ObsT, objb: ObsT) -> IsCloseResult:
-        ...
+
+    def __call__(self, obja: ObsT, objb: ObsT) -> IsCloseResult: ...
 
 
 class IsLessResult(ConstraintResult):
@@ -97,5 +99,5 @@ class IsLessResult(ConstraintResult):
 
 class IsLess(Comparison, Generic[ObsT]):
     """Component-wise less-than operator between two observations."""
-    def __call__(self, obja: ObsT, objb: ObsT) -> IsLessResult:
-        ...
+
+    def __call__(self, obja: ObsT, objb: ObsT) -> IsLessResult: ...

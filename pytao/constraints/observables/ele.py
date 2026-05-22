@@ -6,9 +6,24 @@ import numpy as np
 from pydantic import BaseModel, Field
 
 from pytao import Tao
-from pytao.constraints.observables.base import CheckResult, IsClose, IsCloseResult, IsLess, IsLessResult, LatticeObservable, LiteralObservable, Observation
+from pytao.constraints.observables.base import (
+    CheckResult,
+    IsClose,
+    IsCloseResult,
+    IsLess,
+    IsLessResult,
+    LatticeObservable,
+    LiteralObservable,
+    Observation,
+)
 from pytao.constraints.observables.twiss import BmagTwissComparison, twiss_comparison_types
-from pytao.model import ElementFloor, ElementFloorAll, ElementFloorPosition, ElementOrbit, ElementTwiss
+from pytao.model import (
+    ElementFloor,
+    ElementFloorAll,
+    ElementFloorPosition,
+    ElementOrbit,
+    ElementTwiss,
+)
 from pytao.model.ele.ele import Element
 
 
@@ -53,6 +68,7 @@ class EleIsCloseResult(IsCloseResult):
 
 class EleIsClose(IsClose[EleObservation]):
     """IsClose operator comparing two EleObservation instances across all available data."""
+
     twiss_a_test: twiss_comparison_types | None = Field(default_factory=BmagTwissComparison)
     twiss_b_test: twiss_comparison_types | None = Field(default_factory=BmagTwissComparison)
 
@@ -128,9 +144,24 @@ class EleIsClose(IsClose[EleObservation]):
                 if self.floor_z_test is not None:
                     floor_z = self.floor_z_test(fa.z, fb.z)
 
-        ran = [r for r in [twiss_a, twiss_b, eta_x, etap_x, eta_y, etap_y,
-                            ref_energy, p0c, orbit, floor_x, floor_y, floor_z]
-               if r is not None]
+        ran = [
+            r
+            for r in [
+                twiss_a,
+                twiss_b,
+                eta_x,
+                etap_x,
+                eta_y,
+                etap_y,
+                ref_energy,
+                p0c,
+                orbit,
+                floor_x,
+                floor_y,
+                floor_z,
+            ]
+            if r is not None
+        ]
 
         return EleIsCloseResult(
             is_close=all(ran) if ran else True,
@@ -168,6 +199,7 @@ class EleLessThanResult(IsLessResult):
 
 class EleLessThan(IsLess[EleObservation]):
     """Component-wise less-than comparison between two EleObservations."""
+
     beta_a: bool = False
     alpha_a: bool = False
     beta_b: bool = False
@@ -184,7 +216,9 @@ class EleLessThan(IsLess[EleObservation]):
 
     def _check(self, va: float, vb: float) -> CheckResult:
         passed = va < vb
-        return CheckResult(passed=passed, detail="" if passed else f"a={va:.6g} not < b={vb:.6g}")
+        return CheckResult(
+            passed=passed, detail="" if passed else f"a={va:.6g} not < b={vb:.6g}"
+        )
 
     def __call__(self, obja: EleObservation, objb: EleObservation) -> EleLessThanResult:
         ea, eb = obja.element, objb.element
@@ -216,7 +250,9 @@ class EleLessThan(IsLess[EleObservation]):
 
         if ea.attrs is not None and eb.attrs is not None and self.ref_energy:
             try:
-                ref_energy = self._check(float(ea.attrs["e_tot"].data), float(eb.attrs["e_tot"].data))
+                ref_energy = self._check(
+                    float(ea.attrs["e_tot"].data), float(eb.attrs["e_tot"].data)
+                )
             except (KeyError, TypeError, ValueError):
                 pass
 
@@ -230,35 +266,78 @@ class EleLessThan(IsLess[EleObservation]):
                 if self.floor_z:
                     floor_z = self._check(fa.z, fb.z)
 
-        ran = [r for r in [beta_a, alpha_a, beta_b, alpha_b, eta_x, etap_x, eta_y, etap_y,
-                            ref_energy, p0c, floor_x, floor_y, floor_z] if r is not None]
+        ran = [
+            r
+            for r in [
+                beta_a,
+                alpha_a,
+                beta_b,
+                alpha_b,
+                eta_x,
+                etap_x,
+                eta_y,
+                etap_y,
+                ref_energy,
+                p0c,
+                floor_x,
+                floor_y,
+                floor_z,
+            ]
+            if r is not None
+        ]
 
         return EleLessThanResult(
             is_less=all(ran) if ran else True,
-            beta_a=beta_a, alpha_a=alpha_a, beta_b=beta_b, alpha_b=alpha_b,
-            eta_x=eta_x, etap_x=etap_x, eta_y=eta_y, etap_y=etap_y,
-            ref_energy=ref_energy, p0c=p0c,
-            floor_x=floor_x, floor_y=floor_y, floor_z=floor_z,
+            beta_a=beta_a,
+            alpha_a=alpha_a,
+            beta_b=beta_b,
+            alpha_b=alpha_b,
+            eta_x=eta_x,
+            etap_x=etap_x,
+            eta_y=eta_y,
+            etap_y=etap_y,
+            ref_energy=ref_energy,
+            p0c=p0c,
+            floor_x=floor_x,
+            floor_y=floor_y,
+            floor_z=floor_z,
         )
 
 
 def _build_ele_observation(
-    beta_a, alpha_a, beta_b, alpha_b,
-    eta_x, etap_x, eta_y, etap_y,
-    p0c, floor_x, floor_y, floor_z,
+    beta_a,
+    alpha_a,
+    beta_b,
+    alpha_b,
+    eta_x,
+    etap_x,
+    eta_y,
+    etap_y,
+    p0c,
+    floor_x,
+    floor_y,
+    floor_z,
 ) -> EleObservation:
     new_twiss = ElementTwiss(
-        **{k: v for k, v in [
-            ("beta_a", beta_a), ("alpha_a", alpha_a),
-            ("beta_b", beta_b), ("alpha_b", alpha_b),
-            ("eta_x", eta_x), ("etap_x", etap_x),
-            ("eta_y", eta_y), ("etap_y", etap_y),
-        ] if v is not None}
+        **{
+            k: v
+            for k, v in [
+                ("beta_a", beta_a),
+                ("alpha_a", alpha_a),
+                ("beta_b", beta_b),
+                ("alpha_b", alpha_b),
+                ("eta_x", eta_x),
+                ("etap_x", etap_x),
+                ("eta_y", eta_y),
+                ("etap_y", etap_y),
+            ]
+            if v is not None
+        }
     )
-    new_orbit = ElementOrbit(
-        **{k: v for k, v in [("p0c", p0c)] if v is not None}
+    new_orbit = ElementOrbit(**{k: v for k, v in [("p0c", p0c)] if v is not None})
+    dummy_floor = ElementFloor(
+        which="model", where="end", actual=None, reference=None, slaves={}
     )
-    dummy_floor = ElementFloor(which="model", where="end", actual=None, reference=None, slaves={})
     new_floor = ElementFloorAll(
         which="model",
         beginning=dummy_floor,
@@ -267,9 +346,11 @@ def _build_ele_observation(
             which="model",
             where="end",
             actual=ElementFloorPosition.model_construct(
-                **{k: v for k, v in [
-                    ("x", floor_x), ("y", floor_y), ("z", floor_z)
-                ] if v is not None}
+                **{
+                    k: v
+                    for k, v in [("x", floor_x), ("y", floor_y), ("z", floor_z)]
+                    if v is not None
+                }
             ),
             reference=None,
             slaves={},
@@ -306,9 +387,18 @@ class EleLiteral(LiteralObservable[EleObservation]):
 
     def _make_observation(self) -> EleObservation:
         return _build_ele_observation(
-            self.beta_a, self.alpha_a, self.beta_b, self.alpha_b,
-            self.eta_x, self.etap_x, self.eta_y, self.etap_y,
-            self.p0c, self.floor_x, self.floor_y, self.floor_z,
+            self.beta_a,
+            self.alpha_a,
+            self.beta_b,
+            self.alpha_b,
+            self.eta_x,
+            self.etap_x,
+            self.eta_y,
+            self.etap_y,
+            self.p0c,
+            self.floor_x,
+            self.floor_y,
+            self.floor_z,
         )
 
 
@@ -322,14 +412,14 @@ def _ele_reduce(tao: Tao, reduce_fn) -> EleObservation:
         ele = tao.ele(ix_ele, ix_uni="1", ix_branch="0")
         if ele.twiss is not None:
             t = ele.twiss
-            beta_a  = reduce_fn(beta_a,  t.beta_a)  if beta_a  is not None else t.beta_a
+            beta_a = reduce_fn(beta_a, t.beta_a) if beta_a is not None else t.beta_a
             alpha_a = reduce_fn(alpha_a, t.alpha_a) if alpha_a is not None else t.alpha_a
-            beta_b  = reduce_fn(beta_b,  t.beta_b)  if beta_b  is not None else t.beta_b
+            beta_b = reduce_fn(beta_b, t.beta_b) if beta_b is not None else t.beta_b
             alpha_b = reduce_fn(alpha_b, t.alpha_b) if alpha_b is not None else t.alpha_b
-            eta_x   = reduce_fn(eta_x,   t.eta_x)   if eta_x   is not None else t.eta_x
-            etap_x  = reduce_fn(etap_x,  t.etap_x)  if etap_x  is not None else t.etap_x
-            eta_y   = reduce_fn(eta_y,   t.eta_y)   if eta_y   is not None else t.eta_y
-            etap_y  = reduce_fn(etap_y,  t.etap_y)  if etap_y  is not None else t.etap_y
+            eta_x = reduce_fn(eta_x, t.eta_x) if eta_x is not None else t.eta_x
+            etap_x = reduce_fn(etap_x, t.etap_x) if etap_x is not None else t.etap_x
+            eta_y = reduce_fn(eta_y, t.eta_y) if eta_y is not None else t.eta_y
+            etap_y = reduce_fn(etap_y, t.etap_y) if etap_y is not None else t.etap_y
         if ele.orbit is not None:
             p0c = reduce_fn(p0c, ele.orbit.p0c) if p0c is not None else ele.orbit.p0c
         if ele.floor is not None and ele.floor.end.actual is not None:
@@ -339,14 +429,24 @@ def _ele_reduce(tao: Tao, reduce_fn) -> EleObservation:
             floor_z = reduce_fn(floor_z, fa.z) if floor_z is not None else fa.z
 
     return _build_ele_observation(
-        beta_a, alpha_a, beta_b, alpha_b,
-        eta_x, etap_x, eta_y, etap_y,
-        p0c, floor_x, floor_y, floor_z,
+        beta_a,
+        alpha_a,
+        beta_b,
+        alpha_b,
+        eta_x,
+        etap_x,
+        eta_y,
+        etap_y,
+        p0c,
+        floor_x,
+        floor_y,
+        floor_z,
     )
 
 
 class EleObservable(LatticeObservable[EleObservation]):
     """Observable that fetches element data from the lattice."""
+
     obs_type: Literal["ele"] = "ele"
     ele_id: str | int
 
@@ -360,6 +460,7 @@ class EleObservable(LatticeObservable[EleObservation]):
 
 class EleMaxObservable(LatticeObservable[EleObservation]):
     """Observable yielding the per-field maximum across all tracking elements."""
+
     obs_type: Literal["ele_max"] = "ele_max"
 
     @property
@@ -372,6 +473,7 @@ class EleMaxObservable(LatticeObservable[EleObservation]):
 
 class EleMinObservable(LatticeObservable[EleObservation]):
     """Observable yielding the per-field minimum across all tracking elements."""
+
     obs_type: Literal["ele_min"] = "ele_min"
 
     @property

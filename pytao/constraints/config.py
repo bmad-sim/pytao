@@ -22,7 +22,6 @@ from pytao.constraints.observables import (
     EleObservable,
     EleObservation,
     IsClose,
-    LatticeObservable,
     Observable,
     Observation,
 )
@@ -44,14 +43,18 @@ class Constraint(BaseModel):
     """Abstract base for all constraint types."""
 
     description: str = Field(default="", description="Short one-line name used on labels")
-    comment: str = Field(default="", description="Detailed description or notes about the constraint")
+    comment: str = Field(
+        default="", description="Detailed description or notes about the constraint"
+    )
 
     @property
     @abstractmethod
     def required_observables(self) -> frozenset[Observable]: ...
 
     @abstractmethod
-    def is_satisfied(self, observations: dict[Observable, Observation]) -> ConstraintResult: ...
+    def is_satisfied(
+        self, observations: dict[Observable, Observation]
+    ) -> ConstraintResult: ...
 
 
 class EqualityConstraint(Constraint):
@@ -117,11 +120,21 @@ class DatumLessThanConstraint(Constraint):
 
 
 constraint_types = Annotated[
-    Union[EleIsCloseConstraint, EleLessThanConstraint, DatumIsCloseConstraint, DatumLessThanConstraint],
+    Union[
+        EleIsCloseConstraint,
+        EleLessThanConstraint,
+        DatumIsCloseConstraint,
+        DatumLessThanConstraint,
+    ],
     Field(discriminator="constraint_type"),
 ]
 
 
 class ConstraintsConfig(BaseModel):
-    lattices: dict[str, TaoStartup] = Field(default_factory=dict, description="Mapping from unique lattice identifier to lattice loading information")
-    constraints: list[constraint_types] = Field(default_factory=list, description="Constraints to check across lattices")
+    lattices: dict[str, TaoStartup] = Field(
+        default_factory=dict,
+        description="Mapping from unique lattice identifier to lattice loading information",
+    )
+    constraints: list[constraint_types] = Field(
+        default_factory=list, description="Constraints to check across lattices"
+    )
