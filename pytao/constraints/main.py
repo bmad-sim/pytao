@@ -1,4 +1,5 @@
 import argparse
+import logging
 import time
 import traceback
 from datetime import datetime, timezone
@@ -27,6 +28,8 @@ from .results import (
     RegressionResult,
     SavedObservations,
 )
+
+logger = logging.getLogger(__name__)
 
 
 def run(
@@ -84,7 +87,15 @@ def run(
                 load_time = time.perf_counter() - t0
                 loaded = True
                 for obs in needed[lat_id]:
-                    obs_map[obs] = obs(tao)
+                    try:
+                        obs_map[obs] = obs(tao)
+                    except Exception:
+                        logger.debug(
+                            "Observable %r failed for lattice %r:\n%s",
+                            obs,
+                            lat_id,
+                            traceback.format_exc().strip(),
+                        )
                 obs_time = sum(
                     obs_map[obs].elapsed_time for obs in needed[lat_id] if obs in obs_map
                 )
@@ -296,6 +307,8 @@ def main() -> None:
         help="Path to a previously saved observations JSON for regression comparison",
     )
     args = parser.parse_args()
+
+    logging.basicConfig(level=logging.DEBUG, format="%(levelname)s %(name)s: %(message)s")
 
     config_path = Path(args.config).resolve()
     with config_path.open() as fh:
