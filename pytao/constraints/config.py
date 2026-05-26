@@ -56,6 +56,9 @@ class Constraint(BaseModel):
         self, observations: dict[Observable, Observation]
     ) -> ConstraintResult: ...
 
+    @abstractmethod
+    def error_result(self, error: str) -> ConstraintResult: ...
+
 
 class EqualityConstraint(Constraint):
     """Base for constraints that use an IsClose comparison operator."""
@@ -76,6 +79,9 @@ class EleIsCloseConstraint(EqualityConstraint):
     def is_satisfied(self, observations: dict[Observable, Observation]) -> EleIsCloseResult:
         return self.comparison(observations[self.obs_a], observations[self.obs_b])
 
+    def error_result(self, error: str) -> EleIsCloseResult:
+        return EleIsCloseResult(is_close=False, error=error)
+
 
 class EleLessThanConstraint(Constraint):
     constraint_type: Literal["ele_lt"] = "ele_lt"
@@ -89,6 +95,9 @@ class EleLessThanConstraint(Constraint):
 
     def is_satisfied(self, observations: dict[Observable, Observation]) -> EleLessThanResult:
         return self.comparison(observations[self.obs_a], observations[self.obs_b])
+
+    def error_result(self, error: str) -> EleLessThanResult:
+        return EleLessThanResult(is_less=False, error=error)
 
 
 class DatumIsCloseConstraint(EqualityConstraint):
@@ -104,6 +113,9 @@ class DatumIsCloseConstraint(EqualityConstraint):
     def is_satisfied(self, observations: dict[Observable, Observation]) -> DatumIsCloseResult:
         return self.comparison(observations[self.obs_a], observations[self.obs_b])
 
+    def error_result(self, error: str) -> DatumIsCloseResult:
+        return DatumIsCloseResult(is_close=False, error=error)
+
 
 class DatumLessThanConstraint(Constraint):
     constraint_type: Literal["datum_lt"] = "datum_lt"
@@ -117,6 +129,9 @@ class DatumLessThanConstraint(Constraint):
 
     def is_satisfied(self, observations: dict[Observable, Observation]) -> DatumLessThanResult:
         return self.comparison(observations[self.obs_a], observations[self.obs_b])
+
+    def error_result(self, error: str) -> DatumLessThanResult:
+        return DatumLessThanResult(is_less=False, error=error)
 
 
 constraint_types = Annotated[

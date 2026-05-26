@@ -118,17 +118,16 @@ def run(
 
     saved = SavedObservations.from_obs_map(obs_map)
 
-    # Run each equality constraint comparison
+    # Run each constraint comparison
     constraint_results: list[ConstraintResult] = []
     for constraint in config.constraints:
-        try:
+        missing = [obs for obs in constraint.required_observables if obs not in obs_map]
+        if missing:
+            missing_labels = ", ".join(obs.label for obs in missing)
+            result = constraint.error_result(f"Missing observations: {missing_labels}")
+        else:
             result = constraint.is_satisfied(
                 {obs: obs_map[obs] for obs in constraint.required_observables}
-            )
-        except Exception:
-            result = IsCloseResult(
-                is_close=False,
-                error=traceback.format_exc().strip(),
             )
         constraint_results.append(
             ConstraintResult(
