@@ -8,7 +8,7 @@ from pytao.constraints.config import (
 )
 from pytao.constraints.main import run
 from pytao.constraints.observables.datum import DatumLiteral
-from pytao.constraints.observables.ele import EleLessThan, EleLiteral, EleObservable
+from pytao.constraints.observables.ele import EleLiteral, EleObservable
 from pytao.startup import TaoStartup
 
 DATA_DIR = pathlib.Path(__file__).parent / "data"
@@ -84,35 +84,34 @@ def test_run_lattice_load_failure():
 
 
 def test_run_continues_on_invalid_element():
-    obs = EleObservable(lattice_id="lat_a", ele_id="BEGINNING")
-    wrong_lit = EleLiteral(beta_a=999.0, alpha_a=0.0, beta_b=999.0, alpha_b=0.0)
-    small_lit = EleLiteral(beta_a=1.0, alpha_a=-0.5, beta_b=1.0, alpha_b=2.0)
-    valid_lit = EleLiteral(beta_a=3.0, alpha_a=-0.5, beta_b=8.0, alpha_b=2.0)
+    obs_valid = EleObservable(lattice_id="lat_a", ele_id="BEGINNING")
     config = ConstraintsConfig(
         lattices={"lat_a": TaoStartup(lattice_file=LAT_A)},
         constraints=[
-            EleIsCloseConstraint(obs_a=obs, obs_b=wrong_lit),
-            EleIsCloseConstraint(obs_a=obs, obs_b=wrong_lit),
-            EleLessThanConstraint(
-                obs_a=obs, obs_b=small_lit, comparison=EleLessThan(beta_a=True)
+            EleIsCloseConstraint(
+                obs_a=EleObservable(lattice_id="lat_a", ele_id="FAKE1"), obs_b=obs_valid
+            ),
+            EleIsCloseConstraint(
+                obs_a=EleObservable(lattice_id="lat_a", ele_id="FAKE2"), obs_b=obs_valid
             ),
             EleLessThanConstraint(
-                obs_a=obs, obs_b=small_lit, comparison=EleLessThan(beta_b=True)
+                obs_a=EleObservable(lattice_id="lat_a", ele_id="FAKE3"), obs_b=obs_valid
             ),
-            EleIsCloseConstraint(obs_a=valid_lit, obs_b=valid_lit, description="valid"),
+            EleLessThanConstraint(
+                obs_a=EleObservable(lattice_id="lat_a", ele_id="FAKE4"), obs_b=obs_valid
+            ),
+            EleIsCloseConstraint(obs_a=obs_valid, obs_b=obs_valid, description="valid"),
         ],
     )
     saved, results = run(config, DATA_DIR)
     assert results.lattices["lat_a"].loaded
     assert results.lattices["lat_a"].error is None
     assert len(results.constraints) == 5
-    assert not results.constraints[0].result.is_close
-    assert not results.constraints[1].result.is_close
-    assert not results.constraints[2].result.is_less
-    assert not results.constraints[3].result.is_less
-    valid_cr = results.constraints[4]
-    assert valid_cr.description == "valid"
-    assert valid_cr.result.is_close
+    for cr in results.constraints[:4]:
+        assert not cr.result.is_close
+        assert cr.result.error is not None
+    assert results.constraints[4].description == "valid"
+    assert results.constraints[4].result.is_close
 
 
 def test_run_saved_observations():
