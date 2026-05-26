@@ -4,6 +4,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from pytao.constraints.observables import (
+    LatticeObservable,
     constraint_result_types,
     observable_types,
     observation_types,
@@ -42,6 +43,22 @@ class SavedEntry(BaseModel):
 
 class SavedObservations(BaseModel):
     entries: list[SavedEntry]
+
+    @classmethod
+    def from_obs_map(
+        cls, obs_map: dict[observable_types, observation_types]
+    ) -> "SavedObservations":
+        return cls(
+            entries=[
+                SavedEntry(observable=obs, observation=obs_val)
+                for obs, obs_val in obs_map.items()
+                if isinstance(obs, LatticeObservable)
+            ]
+        )
+
+    @property
+    def obs_map(self) -> dict[observable_types, observation_types]:
+        return {e.observable: e.observation for e in self.entries}
 
 
 class LatticeResult(BaseModel):

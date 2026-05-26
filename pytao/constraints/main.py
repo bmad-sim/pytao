@@ -25,7 +25,6 @@ from .results import (
     ConstraintResults,
     LatticeResult,
     RegressionResult,
-    SavedEntry,
     SavedObservations,
 )
 
@@ -33,9 +32,25 @@ from .results import (
 def run(
     config: ConstraintsConfig,
     config_dir: Path,
-    save_path: Path | None = None,
     compare: SavedObservations | None = None,
-) -> ConstraintResults:
+) -> tuple[SavedObservations, ConstraintResults]:
+    """
+    Run all constraints in the given config and return observations and results.
+
+    Parameters
+    ----------
+    config : ConstraintsConfig
+        Parsed constraints configuration.
+    config_dir : Path
+        Directory used to resolve relative paths in the config.
+    compare : SavedObservations, optional
+        Previously saved observations for regression comparison.
+
+    Returns
+    -------
+    tuple[SavedObservations, ConstraintResults]
+        Saved lattice observations and the full constraint results.
+    """
     started_at = datetime.now(timezone.utc)
 
     # Build lattice_id -> set of lattice observables, and collect literal observables separately
@@ -90,15 +105,7 @@ def run(
     for obs in literal_obs:
         obs_map[obs] = obs()
 
-    if save_path is not None:
-        saved = SavedObservations(
-            entries=[
-                SavedEntry(observable=obs, observation=obs_val)
-                for obs, obs_val in obs_map.items()
-                if isinstance(obs, LatticeObservable)
-            ]
-        )
-        save_path.write_text(saved.model_dump_json(indent=2))
+    saved = SavedObservations.from_obs_map(obs_map)
 
     # Run each equality constraint comparison
     constraint_results: list[ConstraintResult] = []
@@ -124,7 +131,7 @@ def run(
     # Regression comparisons against saved observations
     regression_results: list[RegressionResult] = []
     if compare is not None:
-        compare_map = {e.observable: e.observation for e in compare.entries}
+        compare_map = compare.obs_map
         for constraint in config.constraints:
             if not isinstance(constraint, EqualityConstraint):
                 continue
@@ -140,7 +147,7 @@ def run(
                     )
                 regression_results.append(RegressionResult(observable=obs, result=result))
 
-    return ConstraintResults(
+    return saved, ConstraintResults(
         started_at=started_at,
         finished_at=datetime.now(timezone.utc),
         lattices=lattice_results,
@@ -302,13 +309,12 @@ def main() -> None:
 
     save_obs_path = Path(args.save_observations) if args.save_observations else None
 
-    results = run(
-        config, config_dir=config_path.parent, save_path=save_obs_path, compare=compare
-    )
+    saved, results = run(config, config_dir=config_path.parent, compare=compare)
 
     _print_results(results)
 
     if save_obs_path is not None:
+        save_obs_path.write_text(saved.model_dump_json(indent=2))
         print(f"\nObservations saved to {save_obs_path}")
 
     if args.save_results:
