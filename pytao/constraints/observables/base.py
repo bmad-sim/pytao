@@ -67,14 +67,17 @@ class LiteralObservable(Observable[ObsT]):
         return result
 
 
-class Comparison(BaseModel):
-    """Abstract base for comparison operators between two observations."""
-
-
 class ComparisonResult(BaseModel):
     """Base for all constraint check results."""
 
     error: str | None = None
+
+
+ResultT = TypeVar("ResultT", bound=ComparisonResult)
+
+
+class Comparison(BaseModel, Generic[ResultT]):
+    """Abstract base for comparison operators between two observations."""
 
 
 class IsCloseResult(ComparisonResult):
@@ -82,7 +85,7 @@ class IsCloseResult(ComparisonResult):
     is_close: bool
 
 
-class IsClose(Comparison, Generic[ObsT]):
+class IsClose(Comparison[IsCloseResult], Generic[ObsT]):
     """Approximate equality operator between two observations."""
 
     def __call__(self, obja: ObsT, objb: ObsT) -> IsCloseResult: ...
@@ -97,7 +100,7 @@ class IsLessResult(ComparisonResult):
         return self.is_less
 
 
-class IsLess(Comparison, Generic[ObsT]):
+class IsLess(Comparison[IsLessResult], Generic[ObsT]):
     """Component-wise less-than operator between two observations."""
 
     def __call__(self, obja: ObsT, objb: ObsT) -> IsLessResult: ...

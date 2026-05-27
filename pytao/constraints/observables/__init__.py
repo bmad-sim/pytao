@@ -14,6 +14,7 @@ from pytao.constraints.observables.base import (
     LiteralObservable,
     Observable,
     Observation,
+    ResultT,
 )
 from pytao.constraints.observables.datum import (
     DataSource,
@@ -103,6 +104,7 @@ __all__ = [
     "LiteralObservable",
     "Observable",
     "Observation",
+    "ResultT",
     "TolComparison",
     "TwissComparisonMethod",
     "constraint_result_types",
