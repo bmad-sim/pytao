@@ -65,7 +65,7 @@ class EleIsCloseResult(IsCloseResult):
 
     @computed_field
     @property
-    def is_close(self) -> bool:
+    def is_satisfied(self) -> bool:
         if self.error:
             return False
         ran = [
@@ -211,7 +211,7 @@ class EleLessThanResult(IsLessResult):
 
     @computed_field
     @property
-    def is_less(self) -> bool:
+    def is_satisfied(self) -> bool:
         if self.error:
             return False
         ran = [

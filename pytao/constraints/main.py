@@ -1,5 +1,6 @@
 import argparse
 import logging
+import sys
 import time
 import traceback
 from datetime import datetime, timezone
@@ -158,7 +159,7 @@ def run(
                     result = constraint.comparison(obs_map[obs], compare_map[obs])
                 except Exception:
                     result = IsCloseResult(
-                        is_close=False,
+                        is_satisfied=False,
                         error=traceback.format_exc().strip(),
                     )
                 regression_results.append(RegressionResult(observable=obs, result=result))
@@ -217,44 +218,40 @@ def _print_results_markdown(results: ConstraintResults) -> None:
         print("</details>")
 
     print()
-    print("---")
-    print()
     print("## Constraints")
     print()
     print("| Status | Constraint | Description |")
     print("|--------|------------|-------------|")
     for cr in results.constraints:
-        status = _md_status(cr.result.is_close)
+        status = _md_status(cr.result.is_satisfied)
         label = _escape_md(" == ".join(obs.label for obs in cr.observables))
         desc = _escape_md(cr.description)
         print(f"| {status} | {label} | {desc} |")
 
     if results.regression:
         print()
-        print("---")
-        print()
         print("## Regression")
         print()
         print("| Status | Observable |")
         print("|--------|------------|")
         for rr in results.regression:
-            status = _md_status(rr.result.is_close)
+            status = _md_status(rr.result.is_satisfied)
             print(f"| {status} | {_escape_md(rr.observable.label)} |")
 
-    failures_eq = [cr for cr in results.constraints if not cr.result.is_close]
-    failures_reg = [rr for rr in results.regression if not rr.result.is_close]
+    failures_eq = [cr for cr in results.constraints if not cr.result.is_satisfied]
+    failures_reg = [rr for rr in results.regression if not rr.result.is_satisfied]
 
     if failures_eq or failures_reg:
-        print()
-        print("---")
         print()
         print("## Failures")
         print()
         for cr in failures_eq:
-            label = _escape_md(" == ".join(obs.label for obs in cr.observables))
+            # Raw label in <summary>: content is HTML, not markdown, so _escape_md
+            # would produce literal backslashes instead of consumed escape sequences.
+            label = " == ".join(obs.label for obs in cr.observables)
             summary = f"{_md_status(False)} {label}"
             if cr.description:
-                summary += f"  {_escape_md(cr.description)}"
+                summary += f"  {cr.description}"
             print("<details>")
             print(f"<summary>{summary}</summary>")
             print()
@@ -266,7 +263,7 @@ def _print_results_markdown(results: ConstraintResults) -> None:
             print("</details>")
             print()
         for rr in failures_reg:
-            label = _escape_md(rr.observable.label)
+            label = rr.observable.label
             print("<details>")
             print(f"<summary>{_md_status(False)} regression: {label}</summary>")
             print()
@@ -275,15 +272,13 @@ def _print_results_markdown(results: ConstraintResults) -> None:
             print("</details>")
             print()
 
-    n_passed = sum(1 for cr in results.constraints if cr.result.is_close)
+    n_passed = sum(1 for cr in results.constraints if cr.result.is_satisfied)
     n_total = len(results.constraints)
-    print()
-    print("---")
     print()
     print(f"**{n_passed}/{n_total} constraints passed**")
 
     if results.regression:
-        n_reg_passed = sum(1 for rr in results.regression if rr.result.is_close)
+        n_reg_passed = sum(1 for rr in results.regression if rr.result.is_satisfied)
         n_reg_total = len(results.regression)
         print(f"**{n_reg_passed}/{n_reg_total} regression checks passed**")
 
@@ -313,7 +308,7 @@ def _print_results(results: ConstraintResults) -> None:
     print()
     print("Constraints:")
     for cr in results.constraints:
-        status = "PASS" if cr.result.is_close else "FAIL"
+        status = "PASS" if cr.result.is_satisfied else "FAIL"
         label = " == ".join(obs.label for obs in cr.observables)
         suffix = f"  {cr.description}" if cr.description else ""
         print(f"  [{status}] {label}{suffix}")
@@ -322,11 +317,11 @@ def _print_results(results: ConstraintResults) -> None:
         print()
         print("Regression:")
         for rr in results.regression:
-            status = "PASS" if rr.result.is_close else "FAIL"
+            status = "PASS" if rr.result.is_satisfied else "FAIL"
             print(f"  [{status}] {rr.observable.label}")
 
-    failures_eq = [cr for cr in results.constraints if not cr.result.is_close]
-    failures_reg = [rr for rr in results.regression if not rr.result.is_close]
+    failures_eq = [cr for cr in results.constraints if not cr.result.is_satisfied]
+    failures_reg = [rr for rr in results.regression if not rr.result.is_satisfied]
 
     if failures_eq or failures_reg:
         print()
@@ -346,13 +341,13 @@ def _print_results(results: ConstraintResults) -> None:
             print("  " + "-" * 56)
             _print_check_detail(rr.result)
 
-    n_passed = sum(1 for cr in results.constraints if cr.result.is_close)
+    n_passed = sum(1 for cr in results.constraints if cr.result.is_satisfied)
     n_total = len(results.constraints)
     print()
     print(f"{n_passed}/{n_total} constraints passed")
 
     if results.regression:
-        n_reg_passed = sum(1 for rr in results.regression if rr.result.is_close)
+        n_reg_passed = sum(1 for rr in results.regression if rr.result.is_satisfied)
         n_reg_total = len(results.regression)
         print(f"{n_reg_passed}/{n_reg_total} regression checks passed")
 
@@ -414,3 +409,9 @@ def main() -> None:
         results_path = Path(args.save_results)
         results_path.write_text(results.model_dump_json(indent=2))
         print(f"\nResults saved to {results_path}")
+
+    failed = any(not lat.loaded for lat in results.lattices.values()) or any(
+        not cr.result.is_satisfied for cr in results.constraints
+    )
+    if failed:
+        sys.exit(1)

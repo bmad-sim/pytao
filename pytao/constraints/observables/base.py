@@ -78,6 +78,10 @@ class ComparisonResult(BaseModel):
 
     error: str | None = None
 
+    @property
+    def is_satisfied(self) -> bool:
+        return not bool(self.error)
+
     def check_results(self) -> dict[str, CheckResult]:
         return {
             name: getattr(self, name)
@@ -99,7 +103,7 @@ class IsCloseResult(ComparisonResult):
     # computed_field includes this property in pydantic serialization
     @computed_field
     @property
-    def is_close(self) -> bool:
+    def is_satisfied(self) -> bool:
         return not bool(self.error)
 
 
@@ -115,12 +119,8 @@ class IsLessResult(ComparisonResult):
     # computed_field includes this property in pydantic serialization
     @computed_field
     @property
-    def is_less(self) -> bool:
+    def is_satisfied(self) -> bool:
         return not bool(self.error)
-
-    @property
-    def is_close(self) -> bool:
-        return self.is_less
 
 
 class IsLess(Comparison[IsLessResult], Generic[ObsT]):

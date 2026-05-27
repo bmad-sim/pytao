@@ -23,11 +23,11 @@ def datum_lit():
         ({"design_value": 2.0}, True, _IC),
     ],
 )
-def test_datum_is_close(datum_lit, overrides, outcome, fields):
+def test_datum_is_satisfied(datum_lit, overrides, outcome, fields):
     obs_a = datum_lit.model_copy(update=overrides)()
     obs_b = datum_lit()
     result = DatumIsClose()(obs_a, obs_b)
-    assert result.is_close == outcome
+    assert result.is_satisfied == outcome
     assert_result_fields(result, fields)
 
 
@@ -43,7 +43,7 @@ def test_datum_less_than(datum_lit, overrides, outcome, fields):
     obs_a = datum_lit.model_copy(update=overrides)()
     obs_b = datum_lit()
     result = DatumLessThan()(obs_a, obs_b)
-    assert result.is_close == outcome
+    assert result.is_satisfied == outcome
     assert_result_fields(result, fields)
 
 
@@ -88,11 +88,11 @@ def test_datum_less_than(datum_lit, overrides, outcome, fields):
         ),
     ],
 )
-def test_datum_is_close_turned_off(datum_lit, comparison, overrides, outcome, fields):
+def test_datum_is_satisfied_turned_off(datum_lit, comparison, overrides, outcome, fields):
     obs_a = datum_lit.model_copy(update=overrides)()
     obs_b = datum_lit()
     result = comparison(obs_a, obs_b)
-    assert result.is_close == outcome
+    assert result.is_satisfied == outcome
     assert_result_fields(result, fields)
 
 
@@ -141,5 +141,5 @@ def test_datum_less_than_turned_off(datum_lit, comparison, overrides, outcome, f
     obs_a = datum_lit.model_copy(update=overrides)()
     obs_b = datum_lit()
     result = comparison(obs_a, obs_b)
-    assert result.is_close == outcome
+    assert result.is_satisfied == outcome
     assert_result_fields(result, fields)

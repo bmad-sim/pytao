@@ -88,10 +88,10 @@ def test_run_lattice_load_failure():
     assert results.lattices["lat_a"].error is None
     assert len(results.constraints) == 2
     bad_cr = next(cr for cr in results.constraints if cr.description == "bad")
-    assert not bad_cr.result.is_close
+    assert not bad_cr.result.is_satisfied
     assert bad_cr.result.error is not None
     good_cr = next(cr for cr in results.constraints if cr.description == "good")
-    assert good_cr.result.is_close
+    assert good_cr.result.is_satisfied
 
 
 def test_run_continues_on_invalid_element():
@@ -119,10 +119,10 @@ def test_run_continues_on_invalid_element():
     assert results.lattices["lat_a"].error is None
     assert len(results.constraints) == 5
     for cr in results.constraints[:4]:
-        assert not cr.result.is_close
+        assert not cr.result.is_satisfied
         assert cr.result.error is not None
     assert results.constraints[4].description == "valid"
-    assert results.constraints[4].result.is_close
+    assert results.constraints[4].result.is_satisfied
 
 
 def test_run_error_result_types():
@@ -144,16 +144,16 @@ def test_run_error_result_types():
     saved, results = run(config, DATA_DIR)
     assert len(results.constraints) == 4
     assert isinstance(results.constraints[0].result, EleIsCloseResult)
-    assert not results.constraints[0].result.is_close
+    assert not results.constraints[0].result.is_satisfied
     assert results.constraints[0].result.error is not None
     assert isinstance(results.constraints[1].result, EleLessThanResult)
-    assert not results.constraints[1].result.is_less
+    assert not results.constraints[1].result.is_satisfied
     assert results.constraints[1].result.error is not None
     assert isinstance(results.constraints[2].result, DatumIsCloseResult)
-    assert not results.constraints[2].result.is_close
+    assert not results.constraints[2].result.is_satisfied
     assert results.constraints[2].result.error is not None
     assert isinstance(results.constraints[3].result, DatumLessThanResult)
-    assert not results.constraints[3].result.is_less
+    assert not results.constraints[3].result.is_satisfied
     assert results.constraints[3].result.error is not None
 
 
