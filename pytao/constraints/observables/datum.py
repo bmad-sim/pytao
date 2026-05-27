@@ -138,8 +138,8 @@ class DatumObservable(LatticeObservable[DatumObservation]):
             ele_name=self.ele_name,
             ele_start_name=self.ele_start_name,
             ele_ref_name=self.ele_ref_name,
-            eval_point=self.eval_point,
-            data_source=self.data_source,
+            eval_point=self.eval_point.value,
+            data_source=self.data_source.value,
         )
         tao.data_set_design_value()
         result = tao.data_d_array(_D2_NAME, _D1_NAME)[0]
