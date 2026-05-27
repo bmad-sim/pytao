@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import ClassVar, Literal
+from typing import Literal
 
 from pydantic import Field
 
@@ -42,8 +42,6 @@ class DatumObservation(Observation):
     obs_type: Literal["datum"] = "datum"
     model_value: float
     design_value: float
-    is_close_cls: ClassVar[type[DatumIsClose]]
-    is_less_cls: ClassVar[type[DatumLessThan]]
 
 
 class DatumIsCloseResult(IsCloseResult):
@@ -156,9 +154,3 @@ class DatumObservable(LatticeObservable[DatumObservation]):
             model_value=result["model_value"],
             design_value=result["design_value"],
         )
-
-
-# DatumIsClose and DatumLessThan reference DatumObservation, so they must be defined after it;
-# DatumObservation.is_close_cls references them, so it must be assigned after them.
-DatumObservation.is_close_cls = DatumIsClose
-DatumObservation.is_less_cls = DatumLessThan

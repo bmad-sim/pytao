@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import ClassVar, Literal
+from typing import Literal
 
 import numpy as np
 from pydantic import BaseModel, Field
@@ -30,8 +30,6 @@ from pytao.model.ele.ele import Element
 class EleObservation(Observation):
     obs_type: Literal["ele"] = "ele"
     element: Element
-    is_close_cls: ClassVar[type[EleIsClose]]
-    is_less_cls: ClassVar[type[EleLessThan]]
 
 
 class TolComparison(BaseModel):
@@ -482,9 +480,3 @@ class EleMinObservable(LatticeObservable[EleObservation]):
 
     def _make_observation(self, tao: Tao) -> EleObservation:
         return _ele_reduce(tao, min)
-
-
-# EleIsClose and EleLessThan reference EleObservation, so they must be defined after it;
-# EleObservation.is_close_cls references them, so it must be assigned after them.
-EleObservation.is_close_cls = EleIsClose
-EleObservation.is_less_cls = EleLessThan
