@@ -1,6 +1,6 @@
 import time
 from datetime import datetime, timezone
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, computed_field
 from pytao import Tao
 from typing import Generic, Literal, TypeVar
 
@@ -82,7 +82,12 @@ class Comparison(BaseModel, Generic[ResultT]):
 
 class IsCloseResult(ComparisonResult):
     result_type: Literal["IsCloseResult"] = "IsCloseResult"
-    is_close: bool
+
+    # computed_field includes this property in pydantic serialization
+    @computed_field
+    @property
+    def is_close(self) -> bool:
+        return not bool(self.error)
 
 
 class IsClose(Comparison[IsCloseResult], Generic[ObsT]):
@@ -93,7 +98,12 @@ class IsClose(Comparison[IsCloseResult], Generic[ObsT]):
 
 class IsLessResult(ComparisonResult):
     result_type: Literal["IsLessResult"] = "IsLessResult"
-    is_less: bool
+
+    # computed_field includes this property in pydantic serialization
+    @computed_field
+    @property
+    def is_less(self) -> bool:
+        return not bool(self.error)
 
     @property
     def is_close(self) -> bool:

@@ -85,7 +85,7 @@ class EleIsCloseConstraint(EqualityConstraint):
         return self.comparison(observations[self.obs_a], observations[self.obs_b])
 
     def error_result(self, error: str) -> EleIsCloseResult:
-        return EleIsCloseResult(is_close=False, error=error)
+        return EleIsCloseResult(error=error)
 
 
 class EleLessThanConstraint(IsLessConstraint):
@@ -102,7 +102,7 @@ class EleLessThanConstraint(IsLessConstraint):
         return self.comparison(observations[self.obs_a], observations[self.obs_b])
 
     def error_result(self, error: str) -> EleLessThanResult:
-        return EleLessThanResult(is_less=False, error=error)
+        return EleLessThanResult(error=error)
 
 
 class DatumIsCloseConstraint(EqualityConstraint):
@@ -119,7 +119,7 @@ class DatumIsCloseConstraint(EqualityConstraint):
         return self.comparison(observations[self.obs_a], observations[self.obs_b])
 
     def error_result(self, error: str) -> DatumIsCloseResult:
-        return DatumIsCloseResult(is_close=False, error=error)
+        return DatumIsCloseResult(error=error)
 
 
 class DatumLessThanConstraint(IsLessConstraint):
@@ -136,7 +136,7 @@ class DatumLessThanConstraint(IsLessConstraint):
         return self.comparison(observations[self.obs_a], observations[self.obs_b])
 
     def error_result(self, error: str) -> DatumLessThanResult:
-        return DatumLessThanResult(is_less=False, error=error)
+        return DatumLessThanResult(error=error)
 
 
 AnyConstraint = Annotated[

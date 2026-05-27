@@ -4,6 +4,8 @@ from enum import Enum
 from typing import Literal
 
 
+from pydantic import computed_field
+
 from pytao import Tao
 from pytao.errors import TaoCommandError
 from pytao.constraints.observables.base import (
@@ -48,6 +50,14 @@ class DatumIsCloseResult(IsCloseResult):
     model_value: CheckResult | None = None
     design_value: CheckResult | None = None
 
+    @computed_field
+    @property
+    def is_close(self) -> bool:
+        if self.error:
+            return False
+        ran = [r for r in [self.model_value, self.design_value] if r is not None]
+        return all(ran) if ran else True
+
 
 class DatumIsClose(IsClose[DatumObservation]):
     model_value_test: TolComparison | None = TolComparison()
@@ -62,19 +72,21 @@ class DatumIsClose(IsClose[DatumObservation]):
         if self.design_value_test is not None:
             design_value = self.design_value_test(obja.design_value, objb.design_value)
 
-        ran = [r for r in [model_value, design_value] if r is not None]
-
-        return DatumIsCloseResult(
-            is_close=all(ran) if ran else True,
-            model_value=model_value,
-            design_value=design_value,
-        )
+        return DatumIsCloseResult(model_value=model_value, design_value=design_value)
 
 
 class DatumLessThanResult(IsLessResult):
     result_type: Literal["DatumLessThanResult"] = "DatumLessThanResult"
     model_value: CheckResult | None = None
     design_value: CheckResult | None = None
+
+    @computed_field
+    @property
+    def is_less(self) -> bool:
+        if self.error:
+            return False
+        ran = [r for r in [self.model_value, self.design_value] if r is not None]
+        return all(ran) if ran else True
 
 
 class DatumLessThan(IsLess[DatumObservation]):
@@ -96,12 +108,7 @@ class DatumLessThan(IsLess[DatumObservation]):
         design_value = (
             self._check(obja.design_value, objb.design_value) if self.design_value else None
         )
-        ran = [r for r in [model_value, design_value] if r is not None]
-        return DatumLessThanResult(
-            is_less=all(ran) if ran else True,
-            model_value=model_value,
-            design_value=design_value,
-        )
+        return DatumLessThanResult(model_value=model_value, design_value=design_value)
 
 
 class DatumLiteral(LiteralObservable[DatumObservation]):

@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Literal
 
 import numpy as np
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, computed_field
 
 from pytao import Tao
 from pytao.constraints.observables.base import (
@@ -62,6 +62,31 @@ class EleIsCloseResult(IsCloseResult):
     floor_x: CheckResult | None = None
     floor_y: CheckResult | None = None
     floor_z: CheckResult | None = None
+
+    @computed_field
+    @property
+    def is_close(self) -> bool:
+        if self.error:
+            return False
+        ran = [
+            r
+            for r in [
+                self.twiss_a,
+                self.twiss_b,
+                self.eta_x,
+                self.etap_x,
+                self.eta_y,
+                self.etap_y,
+                self.ref_energy,
+                self.p0c,
+                self.orbit,
+                self.floor_x,
+                self.floor_y,
+                self.floor_z,
+            ]
+            if r is not None
+        ]
+        return all(ran) if ran else True
 
 
 class EleIsClose(IsClose[EleObservation]):
@@ -152,27 +177,7 @@ class EleIsClose(IsClose[EleObservation]):
         if self.floor_z_test is not None:
             floor_z = self.floor_z_test(fa.z, fb.z) if floor_ok else no_floor
 
-        ran = [
-            r
-            for r in [
-                twiss_a,
-                twiss_b,
-                eta_x,
-                etap_x,
-                eta_y,
-                etap_y,
-                ref_energy,
-                p0c,
-                orbit,
-                floor_x,
-                floor_y,
-                floor_z,
-            ]
-            if r is not None
-        ]
-
         return EleIsCloseResult(
-            is_close=all(ran) if ran else True,
             twiss_a=twiss_a,
             twiss_b=twiss_b,
             eta_x=eta_x,
@@ -203,6 +208,32 @@ class EleLessThanResult(IsLessResult):
     floor_x: CheckResult | None = None
     floor_y: CheckResult | None = None
     floor_z: CheckResult | None = None
+
+    @computed_field
+    @property
+    def is_less(self) -> bool:
+        if self.error:
+            return False
+        ran = [
+            r
+            for r in [
+                self.beta_a,
+                self.alpha_a,
+                self.beta_b,
+                self.alpha_b,
+                self.eta_x,
+                self.etap_x,
+                self.eta_y,
+                self.etap_y,
+                self.ref_energy,
+                self.p0c,
+                self.floor_x,
+                self.floor_y,
+                self.floor_z,
+            ]
+            if r is not None
+        ]
+        return all(ran) if ran else True
 
 
 class EleLessThan(IsLess[EleObservation]):
@@ -290,28 +321,7 @@ class EleLessThan(IsLess[EleObservation]):
         if self.floor_z:
             floor_z = self._check(fa.z, fb.z) if floor_ok else no_floor
 
-        ran = [
-            r
-            for r in [
-                beta_a,
-                alpha_a,
-                beta_b,
-                alpha_b,
-                eta_x,
-                etap_x,
-                eta_y,
-                etap_y,
-                ref_energy,
-                p0c,
-                floor_x,
-                floor_y,
-                floor_z,
-            ]
-            if r is not None
-        ]
-
         return EleLessThanResult(
-            is_less=all(ran) if ran else True,
             beta_a=beta_a,
             alpha_a=alpha_a,
             beta_b=beta_b,
