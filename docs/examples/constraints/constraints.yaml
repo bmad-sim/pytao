@@ -30,14 +30,14 @@ constraints:
       lattice_id: lat_c
       ele_id: BEGINNING
     comparison:
-      twiss_a_test:
+      twiss_a:
         type: bmag
         max_bmag: 1.05
-      floor_x_test:
+      floor_x:
         atol: 1e-6
-      floor_y_test:
+      floor_y:
         atol: 1e-6
-      floor_z_test:
+      floor_z:
         atol: 1e-6
 
   - constraint_type: ele_lt

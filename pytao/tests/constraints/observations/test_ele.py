@@ -41,7 +41,7 @@ def ele_lit():
     return EleLiteral(beta_a=5.0, alpha_a=0.5, beta_b=3.0, alpha_b=0.3)
 
 
-_ELE_IC_OP = EleIsClose(ref_energy_test=None)
+_ELE_IC_OP = EleIsClose(ref_energy=None)
 
 
 @pytest.mark.parametrize(
@@ -105,37 +105,37 @@ def test_ele_less_than(ele_lit, comparison, overrides, outcome, fields):
     "comparison, overrides, outcome, fields",
     [
         (
-            EleIsClose(twiss_a_test=None, ref_energy_test=None),
+            EleIsClose(twiss_a=None, ref_energy=None),
             {"beta_a": 10.0},
             True,
             {**_ELE_IC, "twiss_a": None},
         ),
         (
-            EleIsClose(twiss_b_test=None, ref_energy_test=None),
+            EleIsClose(twiss_b=None, ref_energy=None),
             {"beta_b": 10.0},
             True,
             {**_ELE_IC, "twiss_b": None},
         ),
         (
-            EleIsClose(eta_x_test=None, ref_energy_test=None),
+            EleIsClose(eta_x=None, ref_energy=None),
             {"eta_x": 1.0},
             True,
             {**_ELE_IC, "eta_x": None},
         ),
         (
-            EleIsClose(etap_x_test=None, ref_energy_test=None),
+            EleIsClose(etap_x=None, ref_energy=None),
             {"etap_x": 1.0},
             True,
             {**_ELE_IC, "etap_x": None},
         ),
         (
-            EleIsClose(eta_y_test=None, ref_energy_test=None),
+            EleIsClose(eta_y=None, ref_energy=None),
             {"eta_y": 1.0},
             True,
             {**_ELE_IC, "eta_y": None},
         ),
         (
-            EleIsClose(p0c_test=None, ref_energy_test=None),
+            EleIsClose(p0c=None, ref_energy=None),
             {"p0c": 1.0},
             True,
             {**_ELE_IC, "p0c": None},

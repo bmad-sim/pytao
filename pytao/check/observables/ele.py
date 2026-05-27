@@ -92,20 +92,20 @@ class EleIsCloseResult(IsCloseResult):
 class EleIsClose(IsClose[EleObservation]):
     """IsClose operator comparing two EleObservation instances across all available data."""
 
-    twiss_a_test: AnyTwissComparison | None = BmagTwissComparison()
-    twiss_b_test: AnyTwissComparison | None = BmagTwissComparison()
+    twiss_a: AnyTwissComparison | None = BmagTwissComparison()
+    twiss_b: AnyTwissComparison | None = BmagTwissComparison()
 
-    eta_x_test: TolComparison | None = TolComparison()
-    etap_x_test: TolComparison | None = TolComparison()
-    eta_y_test: TolComparison | None = TolComparison()
-    etap_y_test: TolComparison | None = TolComparison()
+    eta_x: TolComparison | None = TolComparison()
+    etap_x: TolComparison | None = TolComparison()
+    eta_y: TolComparison | None = TolComparison()
+    etap_y: TolComparison | None = TolComparison()
 
-    ref_energy_test: TolComparison | None = TolComparison()
-    p0c_test: TolComparison | None = TolComparison()
-    orbit_test: TolComparison | None = TolComparison()
-    floor_x_test: TolComparison | None = None
-    floor_y_test: TolComparison | None = None
-    floor_z_test: TolComparison | None = None
+    ref_energy: TolComparison | None = TolComparison()
+    p0c: TolComparison | None = TolComparison()
+    orbit: TolComparison | None = TolComparison()
+    floor_x: TolComparison | None = None
+    floor_y: TolComparison | None = None
+    floor_z: TolComparison | None = None
 
     def __call__(self, obja: EleObservation, objb: EleObservation) -> EleIsCloseResult:
         ea, eb = obja.element, objb.element
@@ -116,41 +116,41 @@ class EleIsClose(IsClose[EleObservation]):
         ta, tb = ea.twiss, eb.twiss
         twiss_ok = ta is not None and tb is not None
         no_twiss = CheckResult(passed=False, detail="twiss data not available")
-        if self.twiss_a_test is not None:
+        if self.twiss_a is not None:
             twiss_a = (
-                self.twiss_a_test(ta.beta_a, ta.alpha_a, tb.beta_a, tb.alpha_a)
+                self.twiss_a(ta.beta_a, ta.alpha_a, tb.beta_a, tb.alpha_a)
                 if twiss_ok
                 else no_twiss
             )
-        if self.twiss_b_test is not None:
+        if self.twiss_b is not None:
             twiss_b = (
-                self.twiss_b_test(ta.beta_b, ta.alpha_b, tb.beta_b, tb.alpha_b)
+                self.twiss_b(ta.beta_b, ta.alpha_b, tb.beta_b, tb.alpha_b)
                 if twiss_ok
                 else no_twiss
             )
-        if self.eta_x_test is not None:
-            eta_x = self.eta_x_test(ta.eta_x, tb.eta_x) if twiss_ok else no_twiss
-        if self.etap_x_test is not None:
-            etap_x = self.etap_x_test(ta.etap_x, tb.etap_x) if twiss_ok else no_twiss
-        if self.eta_y_test is not None:
-            eta_y = self.eta_y_test(ta.eta_y, tb.eta_y) if twiss_ok else no_twiss
-        if self.etap_y_test is not None:
-            etap_y = self.etap_y_test(ta.etap_y, tb.etap_y) if twiss_ok else no_twiss
+        if self.eta_x is not None:
+            eta_x = self.eta_x(ta.eta_x, tb.eta_x) if twiss_ok else no_twiss
+        if self.etap_x is not None:
+            etap_x = self.etap_x(ta.etap_x, tb.etap_x) if twiss_ok else no_twiss
+        if self.eta_y is not None:
+            eta_y = self.eta_y(ta.eta_y, tb.eta_y) if twiss_ok else no_twiss
+        if self.etap_y is not None:
+            etap_y = self.etap_y(ta.etap_y, tb.etap_y) if twiss_ok else no_twiss
 
         oa, ob = ea.orbit, eb.orbit
         orbit_ok = oa is not None and ob is not None
         no_orbit = CheckResult(passed=False, detail="orbit data not available")
-        if self.p0c_test is not None:
-            p0c = self.p0c_test(oa.p0c, ob.p0c) if orbit_ok else no_orbit
-        if self.orbit_test is not None:
+        if self.p0c is not None:
+            p0c = self.p0c(oa.p0c, ob.p0c) if orbit_ok else no_orbit
+        if self.orbit is not None:
             if orbit_ok:
                 vec_a = np.array([oa.x, oa.px, oa.y, oa.py, oa.z, oa.pz])
                 vec_b = np.array([ob.x, ob.px, ob.y, ob.py, ob.z, ob.pz])
-                orbit = self.orbit_test(vec_a, vec_b)
+                orbit = self.orbit(vec_a, vec_b)
             else:
                 orbit = no_orbit
 
-        if self.ref_energy_test is not None:
+        if self.ref_energy is not None:
             ref_energy_ok = False
             e_tot_a = e_tot_b = 0.0
             if ea.attrs is not None and eb.attrs is not None:
@@ -161,7 +161,7 @@ class EleIsClose(IsClose[EleObservation]):
                 except (KeyError, TypeError, ValueError):
                     pass
             ref_energy = (
-                self.ref_energy_test(e_tot_a, e_tot_b)
+                self.ref_energy(e_tot_a, e_tot_b)
                 if ref_energy_ok
                 else CheckResult(passed=False, detail="ref_energy data not available")
             )
@@ -170,12 +170,12 @@ class EleIsClose(IsClose[EleObservation]):
         fb = eb.floor.end.actual if eb.floor is not None else None
         floor_ok = fa is not None and fb is not None
         no_floor = CheckResult(passed=False, detail="floor data not available")
-        if self.floor_x_test is not None:
-            floor_x = self.floor_x_test(fa.x, fb.x) if floor_ok else no_floor
-        if self.floor_y_test is not None:
-            floor_y = self.floor_y_test(fa.y, fb.y) if floor_ok else no_floor
-        if self.floor_z_test is not None:
-            floor_z = self.floor_z_test(fa.z, fb.z) if floor_ok else no_floor
+        if self.floor_x is not None:
+            floor_x = self.floor_x(fa.x, fb.x) if floor_ok else no_floor
+        if self.floor_y is not None:
+            floor_y = self.floor_y(fa.y, fb.y) if floor_ok else no_floor
+        if self.floor_z is not None:
+            floor_z = self.floor_z(fa.z, fb.z) if floor_ok else no_floor
 
         return EleIsCloseResult(
             twiss_a=twiss_a,
