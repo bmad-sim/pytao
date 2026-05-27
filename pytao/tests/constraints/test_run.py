@@ -3,12 +3,23 @@ import pathlib
 from pytao.constraints.config import (
     ConstraintsConfig,
     DatumIsCloseConstraint,
+    DatumLessThanConstraint,
     EleIsCloseConstraint,
     EleLessThanConstraint,
 )
 from pytao.constraints.main import run
-from pytao.constraints.observables.datum import DatumLiteral
-from pytao.constraints.observables.ele import EleLiteral, EleObservable
+from pytao.constraints.observables.datum import (
+    DatumIsCloseResult,
+    DatumLessThanResult,
+    DatumLiteral,
+    DatumObservable,
+)
+from pytao.constraints.observables.ele import (
+    EleIsCloseResult,
+    EleLessThanResult,
+    EleLiteral,
+    EleObservable,
+)
 from pytao.startup import TaoStartup
 
 DATA_DIR = pathlib.Path(__file__).parent / "data"
@@ -112,6 +123,38 @@ def test_run_continues_on_invalid_element():
         assert cr.result.error is not None
     assert results.constraints[4].description == "valid"
     assert results.constraints[4].result.is_close
+
+
+def test_run_error_result_types():
+    obs_ele = EleObservable(lattice_id="lat_a", ele_id="FAKE")
+    obs_dat = DatumObservable(
+        lattice_id="lat_a", data_type="nonexistent_datum", ele_name="END"
+    )
+    lit_ele = EleLiteral(beta_a=3.0, alpha_a=-0.5, beta_b=8.0, alpha_b=2.0)
+    lit_dat = DatumLiteral(model_value=1.0, design_value=0.0)
+    config = ConstraintsConfig(
+        lattices={"lat_a": TaoStartup(lattice_file=LAT_A)},
+        constraints=[
+            EleIsCloseConstraint(obs_a=obs_ele, obs_b=lit_ele),
+            EleLessThanConstraint(obs_a=obs_ele, obs_b=lit_ele),
+            DatumIsCloseConstraint(obs_a=obs_dat, obs_b=lit_dat),
+            DatumLessThanConstraint(obs_a=obs_dat, obs_b=lit_dat),
+        ],
+    )
+    saved, results = run(config, DATA_DIR)
+    assert len(results.constraints) == 4
+    assert isinstance(results.constraints[0].result, EleIsCloseResult)
+    assert not results.constraints[0].result.is_close
+    assert results.constraints[0].result.error is not None
+    assert isinstance(results.constraints[1].result, EleLessThanResult)
+    assert not results.constraints[1].result.is_less
+    assert results.constraints[1].result.error is not None
+    assert isinstance(results.constraints[2].result, DatumIsCloseResult)
+    assert not results.constraints[2].result.is_close
+    assert results.constraints[2].result.error is not None
+    assert isinstance(results.constraints[3].result, DatumLessThanResult)
+    assert not results.constraints[3].result.is_less
+    assert results.constraints[3].result.error is not None
 
 
 def test_run_saved_observations():

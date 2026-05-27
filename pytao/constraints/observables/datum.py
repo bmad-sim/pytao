@@ -5,6 +5,7 @@ from typing import ClassVar, Literal
 from pydantic import Field
 
 from pytao import Tao
+from pytao.errors import TaoCommandError
 from pytao.constraints.observables.base import (
     CheckResult,
     IsClose,
@@ -130,6 +131,11 @@ class DatumObservable(LatticeObservable[DatumObservation]):
         )
         tao.data_set_design_value()
         result = tao.data_d_array(_D2_NAME, _D1_NAME)[0]
+
+        # Sanity check if tao is failing silently
+        if not result["exists"]:
+            raise TaoCommandError(f"DatumObservable Failed: Could not create datum. {self!r}")
+
         tao.data_d2_destroy(_D2_NAME)
         return DatumObservation(
             model_value=result["model_value"],
