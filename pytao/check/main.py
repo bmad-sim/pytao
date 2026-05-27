@@ -11,10 +11,7 @@ from pytao import SubprocessTao
 
 from .config import ConstraintsConfig, EqualityConstraint
 from .observables import (
-    DatumIsCloseResult,
-    DatumLessThanResult,
-    EleIsCloseResult,
-    EleLessThanResult,
+    ComparisonResult,
     IsCloseResult,
     LatticeObservable,
     LiteralObservable,
@@ -166,61 +163,12 @@ def run(
     )
 
 
-def _print_check_detail(res: IsCloseResult) -> None:
-    if isinstance(res, EleIsCloseResult):
-        checks = {
-            "twiss_a": res.twiss_a,
-            "twiss_b": res.twiss_b,
-            "eta_x": res.eta_x,
-            "etap_x": res.etap_x,
-            "eta_y": res.eta_y,
-            "etap_y": res.etap_y,
-            "ref_energy": res.ref_energy,
-            "p0c": res.p0c,
-            "orbit": res.orbit,
-            "floor_x": res.floor_x,
-            "floor_y": res.floor_y,
-            "floor_z": res.floor_z,
-        }
-        ran = {name: check for name, check in checks.items() if check is not None}
-        if ran:
-            width = max(len(name) for name in ran)
-            for name, check in ran.items():
-                check_status = "PASS" if check.passed else "FAIL"
-                detail = f"  {check.detail}" if not check.passed and check.detail else ""
-                print(f"    {name:<{width}}  {check_status}{detail}")
-    elif isinstance(res, (DatumIsCloseResult, DatumLessThanResult)):
-        checks = {"model_value": res.model_value, "design_value": res.design_value}
-        ran = {name: check for name, check in checks.items() if check is not None}
-        if ran:
-            width = max(len(name) for name in ran)
-            for name, check in ran.items():
-                check_status = "PASS" if check.passed else "FAIL"
-                detail = f"  {check.detail}" if not check.passed and check.detail else ""
-                print(f"    {name:<{width}}  {check_status}{detail}")
-    elif isinstance(res, EleLessThanResult):
-        checks = {
-            "beta_a": res.beta_a,
-            "alpha_a": res.alpha_a,
-            "beta_b": res.beta_b,
-            "alpha_b": res.alpha_b,
-            "eta_x": res.eta_x,
-            "etap_x": res.etap_x,
-            "eta_y": res.eta_y,
-            "etap_y": res.etap_y,
-            "ref_energy": res.ref_energy,
-            "p0c": res.p0c,
-            "floor_x": res.floor_x,
-            "floor_y": res.floor_y,
-            "floor_z": res.floor_z,
-        }
-        ran = {name: check for name, check in checks.items() if check is not None}
-        if ran:
-            width = max(len(name) for name in ran)
-            for name, check in ran.items():
-                check_status = "PASS" if check.passed else "FAIL"
-                detail = f"  {check.detail}" if not check.passed and check.detail else ""
-                print(f"    {name:<{width}}  {check_status}{detail}")
+def _print_check_detail(res: ComparisonResult) -> None:
+    checks = res.check_results()
+    if checks:
+        width = max(len(name) for name in checks)
+        for name, check in checks.items():
+            print(f"    {name:<{width}}  {check.format_detail()}")
     if res.error:
         for line in res.error.splitlines():
             print(f"    {line}")
@@ -238,7 +186,7 @@ def _print_results(results: ConstraintResults) -> None:
                 print(f"         {line}")
 
     print()
-    print("Equality constraints:")
+    print("Constraints:")
     for cr in results.constraints:
         status = "PASS" if cr.result.is_close else "FAIL"
         label = " == ".join(obs.label for obs in cr.observables)
@@ -307,7 +255,7 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    logging.basicConfig(level=logging.DEBUG, format="%(levelname)s %(name)s: %(message)s")
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
 
     config_path = Path(args.config).resolve()
     with config_path.open() as fh:

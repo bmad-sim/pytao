@@ -12,6 +12,12 @@ class CheckResult(BaseModel):
     def __bool__(self) -> bool:
         return self.passed
 
+    def format_detail(self) -> str:
+        status = "PASS" if self.passed else "FAIL"
+        if not self.passed and self.detail:
+            return f"{status}  {self.detail}"
+        return status
+
 
 class Observation(BaseModel):
     """Concrete output from a lattice observation."""
@@ -71,6 +77,13 @@ class ComparisonResult(BaseModel):
     """Base for all constraint check results."""
 
     error: str | None = None
+
+    def check_results(self) -> dict[str, CheckResult]:
+        return {
+            name: getattr(self, name)
+            for name in self.model_fields
+            if isinstance(getattr(self, name), CheckResult)
+        }
 
 
 ResultT = TypeVar("ResultT", bound=ComparisonResult)
