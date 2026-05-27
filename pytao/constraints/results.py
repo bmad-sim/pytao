@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from datetime import datetime
 from typing import Literal
 
@@ -45,7 +47,7 @@ class SavedObservations(BaseModel):
     entries: list[SavedEntry]
 
     @classmethod
-    def from_obs_map(cls, obs_map: dict[AnyObservable, AnyObservation]) -> "SavedObservations":
+    def from_obs_map(cls, obs_map: dict[AnyObservable, AnyObservation]) -> SavedObservations:
         return cls(
             entries=[
                 SavedEntry(observable=obs, observation=obs_val)
