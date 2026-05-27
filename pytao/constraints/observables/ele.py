@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Literal
 
 import numpy as np
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from pytao import Tao
 from pytao.constraints.observables.base import (
@@ -400,14 +400,16 @@ class EleLiteral(LiteralObservable[EleObservation]):
         )
 
 
-def _ele_reduce(tao: Tao, reduce_fn) -> EleObservation:
+def _ele_reduce(
+    tao: Tao, reduce_fn, ix_uni: str = "1", ix_branch: str = "0"
+) -> EleObservation:
     beta_a = alpha_a = beta_b = alpha_b = None
     eta_x = etap_x = eta_y = etap_y = None
     p0c = None
     floor_x = floor_y = floor_z = None
 
-    for ix_ele in tao.lat_list("*", "ele.ix_ele", ix_uni="1", ix_branch="0"):
-        ele = tao.ele(ix_ele, ix_uni="1", ix_branch="0")
+    for ix_ele in tao.lat_list("*", "ele.ix_ele", ix_uni=ix_uni, ix_branch=ix_branch):
+        ele = tao.ele(ix_ele, ix_uni=ix_uni, ix_branch=ix_branch)
         if ele.twiss is not None:
             t = ele.twiss
             beta_a = reduce_fn(beta_a, t.beta_a) if beta_a is not None else t.beta_a
@@ -447,36 +449,61 @@ class EleObservable(LatticeObservable[EleObservation]):
 
     obs_type: Literal["ele"] = "ele"
     ele_id: str | int
+    ix_uni: int = Field(default=1, ge=0)
+    ix_branch: int = Field(default=0, ge=0)
 
     @property
     def label(self) -> str:
-        return f"{self.lattice_id}[{self.ele_id}]"
+        suffix = (
+            f"@{self.ix_uni}:{self.ix_branch}"
+            if self.ix_uni != 1 or self.ix_branch != 0
+            else ""
+        )
+        return f"{self.lattice_id}[{self.ele_id}{suffix}]"
 
     def _make_observation(self, tao: Tao) -> EleObservation:
-        return EleObservation(element=tao.ele(self.ele_id))
+        return EleObservation(
+            element=tao.ele(
+                self.ele_id, ix_uni=str(self.ix_uni), ix_branch=str(self.ix_branch)
+            )
+        )
 
 
 class EleMaxObservable(LatticeObservable[EleObservation]):
     """Observable yielding the per-field maximum across all tracking elements."""
 
     obs_type: Literal["ele_max"] = "ele_max"
+    ix_uni: int = Field(default=1, ge=0)
+    ix_branch: int = Field(default=0, ge=0)
 
     @property
     def label(self) -> str:
-        return f"{self.lattice_id}[max]"
+        suffix = (
+            f"@{self.ix_uni}:{self.ix_branch}"
+            if self.ix_uni != 1 or self.ix_branch != 0
+            else ""
+        )
+        return f"{self.lattice_id}[max{suffix}]"
 
     def _make_observation(self, tao: Tao) -> EleObservation:
-        return _ele_reduce(tao, max)
+        return _ele_reduce(tao, max, ix_uni=str(self.ix_uni), ix_branch=str(self.ix_branch))
 
 
 class EleMinObservable(LatticeObservable[EleObservation]):
     """Observable yielding the per-field minimum across all tracking elements."""
 
     obs_type: Literal["ele_min"] = "ele_min"
+    ix_uni: int = Field(default=1, ge=0)
+    ix_branch: int = Field(default=0, ge=0)
 
     @property
     def label(self) -> str:
-        return f"{self.lattice_id}[min]"
+        suffix = (
+            f"@{self.ix_uni}:{self.ix_branch}"
+            if self.ix_uni != 1 or self.ix_branch != 0
+            else ""
+        )
+        return f"{self.lattice_id}[min{suffix}]"
 
     def _make_observation(self, tao: Tao) -> EleObservation:
-        return _ele_reduce(tao, min)
+        return _ele_reduce(tao, min, ix_uni=str(self.ix_uni), ix_branch=str(self.ix_branch))
