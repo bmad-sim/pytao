@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Literal
 
 import numpy as np
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from pytao import Tao
 from pytao.constraints.observables.base import (
@@ -67,17 +67,17 @@ class EleIsCloseResult(IsCloseResult):
 class EleIsClose(IsClose[EleObservation]):
     """IsClose operator comparing two EleObservation instances across all available data."""
 
-    twiss_a_test: twiss_comparison_types | None = Field(default_factory=BmagTwissComparison)
-    twiss_b_test: twiss_comparison_types | None = Field(default_factory=BmagTwissComparison)
+    twiss_a_test: twiss_comparison_types | None = BmagTwissComparison()
+    twiss_b_test: twiss_comparison_types | None = BmagTwissComparison()
 
-    eta_x_test: TolComparison | None = Field(default_factory=TolComparison)
-    etap_x_test: TolComparison | None = Field(default_factory=TolComparison)
-    eta_y_test: TolComparison | None = Field(default_factory=TolComparison)
-    etap_y_test: TolComparison | None = Field(default_factory=TolComparison)
+    eta_x_test: TolComparison | None = TolComparison()
+    etap_x_test: TolComparison | None = TolComparison()
+    eta_y_test: TolComparison | None = TolComparison()
+    etap_y_test: TolComparison | None = TolComparison()
 
-    ref_energy_test: TolComparison | None = Field(default_factory=TolComparison)
-    p0c_test: TolComparison | None = Field(default_factory=TolComparison)
-    orbit_test: TolComparison | None = Field(default_factory=TolComparison)
+    ref_energy_test: TolComparison | None = TolComparison()
+    p0c_test: TolComparison | None = TolComparison()
+    orbit_test: TolComparison | None = TolComparison()
     floor_x_test: TolComparison | None = None
     floor_y_test: TolComparison | None = None
     floor_z_test: TolComparison | None = None

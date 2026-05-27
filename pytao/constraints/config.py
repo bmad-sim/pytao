@@ -75,7 +75,7 @@ class EleIsCloseConstraint(EqualityConstraint):
     constraint_type: Literal["ele_eq"] = "ele_eq"
     obs_a: EleObservables
     obs_b: EleObservables
-    comparison: EleIsClose = Field(default_factory=EleIsClose)
+    comparison: EleIsClose = EleIsClose()
 
     @property
     def required_observables(self) -> frozenset[Observable]:
@@ -92,7 +92,7 @@ class EleLessThanConstraint(IsLessConstraint):
     constraint_type: Literal["ele_lt"] = "ele_lt"
     obs_a: EleObservables
     obs_b: EleObservables
-    comparison: EleLessThan = Field(default_factory=EleLessThan)
+    comparison: EleLessThan = EleLessThan()
 
     @property
     def required_observables(self) -> frozenset[Observable]:
@@ -109,7 +109,7 @@ class DatumIsCloseConstraint(EqualityConstraint):
     constraint_type: Literal["datum_eq"] = "datum_eq"
     obs_a: DatumObservables
     obs_b: DatumObservables
-    comparison: DatumIsClose = Field(default_factory=DatumIsClose)
+    comparison: DatumIsClose = DatumIsClose()
 
     @property
     def required_observables(self) -> frozenset[Observable]:
@@ -126,7 +126,7 @@ class DatumLessThanConstraint(IsLessConstraint):
     constraint_type: Literal["datum_lt"] = "datum_lt"
     obs_a: DatumObservables
     obs_b: DatumObservables
-    comparison: DatumLessThan = Field(default_factory=DatumLessThan)
+    comparison: DatumLessThan = DatumLessThan()
 
     @property
     def required_observables(self) -> frozenset[Observable]:

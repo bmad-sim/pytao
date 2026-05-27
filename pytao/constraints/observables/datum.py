@@ -3,7 +3,6 @@ from __future__ import annotations
 from enum import Enum
 from typing import Literal
 
-from pydantic import Field
 
 from pytao import Tao
 from pytao.errors import TaoCommandError
@@ -51,7 +50,7 @@ class DatumIsCloseResult(IsCloseResult):
 
 
 class DatumIsClose(IsClose[DatumObservation]):
-    model_value_test: TolComparison | None = Field(default_factory=TolComparison)
+    model_value_test: TolComparison | None = TolComparison()
     design_value_test: TolComparison | None = None
 
     def __call__(self, obja: DatumObservation, objb: DatumObservation) -> DatumIsCloseResult:
