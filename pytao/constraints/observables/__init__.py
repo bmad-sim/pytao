@@ -60,7 +60,7 @@ AnyObservable = Annotated[
 AnyObservation = Annotated[
     Union[EleObservation, DatumObservation], Field(discriminator="obs_type")
 ]
-AnyConstraintResult = Annotated[
+AnyComparisonResult = Annotated[
     Union[
         EleIsCloseResult,
         DatumIsCloseResult,
@@ -73,7 +73,7 @@ AnyConstraintResult = Annotated[
 ]
 
 __all__ = [
-    "AnyConstraintResult",
+    "AnyComparisonResult",
     "AnyObservable",
     "AnyObservation",
     "AnyTwissComparison",

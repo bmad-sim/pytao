@@ -6,7 +6,7 @@ from typing import Literal
 from pydantic import BaseModel
 
 from pytao.constraints.observables import (
-    AnyConstraintResult,
+    AnyComparisonResult,
     AnyObservable,
     AnyObservation,
     LatticeObservable,
@@ -31,12 +31,12 @@ class ConstraintResult(BaseModel):
     observables: list[AnyObservable]
     description: str = ""
     comment: str = ""
-    result: AnyConstraintResult
+    result: AnyComparisonResult
 
 
 class RegressionResult(BaseModel):
     observable: AnyObservable
-    result: AnyConstraintResult
+    result: AnyComparisonResult
 
 
 class SavedEntry(BaseModel):
