@@ -71,13 +71,13 @@ class Comparison(BaseModel):
     """Abstract base for comparison operators between two observations."""
 
 
-class ConstraintResult(BaseModel):
+class ComparisonResult(BaseModel):
     """Base for all constraint check results."""
 
     error: str | None = None
 
 
-class IsCloseResult(ConstraintResult):
+class IsCloseResult(ComparisonResult):
     result_type: Literal["IsCloseResult"] = "IsCloseResult"
     is_close: bool
 
@@ -88,7 +88,7 @@ class IsClose(Comparison, Generic[ObsT]):
     def __call__(self, obja: ObsT, objb: ObsT) -> IsCloseResult: ...
 
 
-class IsLessResult(ConstraintResult):
+class IsLessResult(ComparisonResult):
     result_type: Literal["IsLessResult"] = "IsLessResult"
     is_less: bool
 

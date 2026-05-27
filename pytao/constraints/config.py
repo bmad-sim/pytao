@@ -4,7 +4,7 @@ from typing import Annotated, Literal, Union
 from pydantic import BaseModel, Field
 
 from pytao.constraints.observables import (
-    ConstraintResult,
+    ComparisonResult,
     DatumIsClose,
     DatumIsCloseResult,
     DatumLessThan,
@@ -54,10 +54,10 @@ class Constraint(BaseModel):
     @abstractmethod
     def is_satisfied(
         self, observations: dict[Observable, Observation]
-    ) -> ConstraintResult: ...
+    ) -> ComparisonResult: ...
 
     @abstractmethod
-    def error_result(self, error: str) -> ConstraintResult: ...
+    def error_result(self, error: str) -> ComparisonResult: ...
 
 
 class EqualityConstraint(Constraint):

@@ -5,7 +5,7 @@ from pydantic import Field
 from pytao.constraints.observables.base import (
     CheckResult,
     Comparison,
-    ConstraintResult,
+    ComparisonResult,
     IsClose,
     IsCloseResult,
     IsLess,
@@ -73,7 +73,7 @@ __all__ = [
     "BmagTwissComparison",
     "CheckResult",
     "Comparison",
-    "ConstraintResult",
+    "ComparisonResult",
     "DatumIsClose",
     "DatumIsCloseResult",
     "DatumLessThan",
