@@ -21,7 +21,7 @@ if TYPE_CHECKING:
 import argparse
 import sys
 from collections.abc import Sequence
-
+from typing import ClassVar
 from typing_extensions import override
 
 logger = logging.getLogger(__name__)
@@ -428,7 +428,7 @@ class TaoStartup:
         "var_file",
     )
 
-    def with_resolved_paths(self, parent: pathlib.Path) -> TaoStartup:
+    def with_path_prefix(self, parent: pathlib.Path) -> TaoStartup:
         """Return a copy with all relative path fields resolved against parent."""
         updates = {
             name: parent / getattr(self, name)
