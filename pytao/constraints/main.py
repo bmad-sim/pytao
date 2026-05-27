@@ -28,6 +28,16 @@ from .results import (
 
 logger = logging.getLogger(__name__)
 
+_MD_ESCAPE = str.maketrans({c: f"\\{c}" for c in r"\[]*_`|"})
+
+
+def _escape_md(text: str) -> str:
+    return text.translate(_MD_ESCAPE)
+
+
+def _md_status(passed: bool) -> str:
+    return ":white_check_mark:" if passed else ":x:"
+
 
 def run(
     config: ConstraintsConfig,
@@ -162,6 +172,122 @@ def run(
     )
 
 
+def _md_check_detail_rows(res: ComparisonResult) -> str:
+    lines = []
+    checks = res.check_results()
+    if checks:
+        lines.append("| Check | Result |")
+        lines.append("|-------|--------|")
+        for name, check in checks.items():
+            status = _md_status(check.passed)
+            detail = _escape_md(check.detail) if check.detail else ""
+            result_cell = f"{status} {detail}".strip()
+            lines.append(f"| {_escape_md(name)} | {result_cell} |")
+    if res.error:
+        lines.append("")
+        lines.append("```")
+        lines.append(res.error)
+        lines.append("```")
+    return "\n".join(lines)
+
+
+def _print_results_markdown(results: ConstraintResults) -> None:
+    print("## Lattices")
+    print()
+    print("| Lattice | Status | Load | Obs |")
+    print("|---------|--------|------|-----|")
+    for lat_id, lat in results.lattices.items():
+        status = f"{_md_status(lat.loaded)} {'loaded' if lat.loaded else 'failed'}"
+        print(
+            f"| {_escape_md(lat_id)} | {status} | {lat.load_time:.2f}s | {lat.obs_time:.2f}s |"
+        )
+
+    lat_errors = [(lat_id, lat) for lat_id, lat in results.lattices.items() if lat.error]
+    if lat_errors:
+        print()
+        print("<details><summary>Lattice errors</summary>")
+        print()
+        for lat_id, lat in lat_errors:
+            print(f"**{_escape_md(lat_id)}**")
+            print()
+            print("```")
+            print(lat.error)
+            print("```")
+            print()
+        print("</details>")
+
+    print()
+    print("---")
+    print()
+    print("## Constraints")
+    print()
+    print("| Status | Constraint | Description |")
+    print("|--------|------------|-------------|")
+    for cr in results.constraints:
+        status = _md_status(cr.result.is_close)
+        label = _escape_md(" == ".join(obs.label for obs in cr.observables))
+        desc = _escape_md(cr.description)
+        print(f"| {status} | {label} | {desc} |")
+
+    if results.regression:
+        print()
+        print("---")
+        print()
+        print("## Regression")
+        print()
+        print("| Status | Observable |")
+        print("|--------|------------|")
+        for rr in results.regression:
+            status = _md_status(rr.result.is_close)
+            print(f"| {status} | {_escape_md(rr.observable.label)} |")
+
+    failures_eq = [cr for cr in results.constraints if not cr.result.is_close]
+    failures_reg = [rr for rr in results.regression if not rr.result.is_close]
+
+    if failures_eq or failures_reg:
+        print()
+        print("---")
+        print()
+        print("## Failures")
+        print()
+        for cr in failures_eq:
+            label = _escape_md(" == ".join(obs.label for obs in cr.observables))
+            summary = f"{_md_status(False)} {label}"
+            if cr.description:
+                summary += f"  {_escape_md(cr.description)}"
+            print("<details>")
+            print(f"<summary>{summary}</summary>")
+            print()
+            if cr.comment:
+                print(_escape_md(cr.comment))
+                print()
+            print(_md_check_detail_rows(cr.result))
+            print()
+            print("</details>")
+            print()
+        for rr in failures_reg:
+            label = _escape_md(rr.observable.label)
+            print("<details>")
+            print(f"<summary>{_md_status(False)} regression: {label}</summary>")
+            print()
+            print(_md_check_detail_rows(rr.result))
+            print()
+            print("</details>")
+            print()
+
+    n_passed = sum(1 for cr in results.constraints if cr.result.is_close)
+    n_total = len(results.constraints)
+    print()
+    print("---")
+    print()
+    print(f"**{n_passed}/{n_total} constraints passed**")
+
+    if results.regression:
+        n_reg_passed = sum(1 for rr in results.regression if rr.result.is_close)
+        n_reg_total = len(results.regression)
+        print(f"**{n_reg_passed}/{n_reg_total} regression checks passed**")
+
+
 def _print_check_detail(res: ComparisonResult) -> None:
     checks = res.check_results()
     if checks:
@@ -252,6 +378,11 @@ def main() -> None:
         metavar="FILE",
         help="Path to a previously saved observations JSON for regression comparison",
     )
+    parser.add_argument(
+        "--markdown",
+        action="store_true",
+        help="Emit GitHub-flavored markdown suitable for GITHUB_STEP_SUMMARY",
+    )
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
@@ -270,7 +401,10 @@ def main() -> None:
 
     saved, results = run(config, config_dir=config_path.parent, compare=compare)
 
-    _print_results(results)
+    if args.markdown:
+        _print_results_markdown(results)
+    else:
+        _print_results(results)
 
     if save_obs_path is not None:
         save_obs_path.write_text(saved.model_dump_json(indent=2))
