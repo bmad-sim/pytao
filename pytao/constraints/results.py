@@ -11,6 +11,7 @@ from pytao.constraints.observables import (
     AnyObservation,
     LatticeObservable,
 )
+from pytao.startup import TaoStartup
 
 
 class TestResult(BaseModel):
@@ -68,6 +69,25 @@ class LatticeResult(BaseModel):
     error: str | None = None
     load_time: float
     obs_time: float = 0.0
+
+    @classmethod
+    def from_startup(
+        cls,
+        lat_startup: TaoStartup,
+        *,
+        loaded: bool,
+        error: str | None,
+        load_time: float,
+        obs_time: float,
+    ) -> LatticeResult:
+        return cls(
+            lattice_file=str(lat_startup.lattice_file) if lat_startup.lattice_file else None,
+            init_file=str(lat_startup.init_file) if lat_startup.init_file else None,
+            loaded=loaded,
+            error=error,
+            load_time=load_time,
+            obs_time=obs_time,
+        )
 
 
 class ConstraintResults(BaseModel):

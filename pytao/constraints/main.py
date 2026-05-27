@@ -101,9 +101,8 @@ def run(
                 load_time = time.perf_counter() - t0
             error = traceback.format_exc().strip()
 
-        lattice_results[lat_id] = LatticeResult(
-            lattice_file=str(lat_startup.lattice_file) if lat_startup.lattice_file else None,
-            init_file=str(lat_startup.init_file) if lat_startup.init_file else None,
+        lattice_results[lat_id] = LatticeResult.from_startup(
+            lat_startup,
             loaded=loaded,
             error=error,
             load_time=load_time,
