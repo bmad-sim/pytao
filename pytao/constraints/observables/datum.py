@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from enum import Enum
 from typing import ClassVar, Literal
 
 from pydantic import Field
@@ -17,6 +18,20 @@ from pytao.constraints.observables.base import (
     Observation,
 )
 from pytao.constraints.observables.ele import TolComparison
+
+
+class DataSource(str, Enum):
+    lat = "lat"
+    data = "data"
+    var = "var"
+    beam = "beam"
+
+
+class EvalPoint(str, Enum):
+    beginning = "beginning"
+    center = "center"
+    end = "end"
+
 
 _D2_NAME = "_pytao_tmp"
 _D1_NAME = "v"
@@ -111,8 +126,8 @@ class DatumObservable(LatticeObservable[DatumObservation]):
     ele_name: str
     ele_start_name: str = ""
     ele_ref_name: str = ""
-    eval_point: str = "END"
-    data_source: str = "lat"
+    eval_point: EvalPoint = EvalPoint.end
+    data_source: DataSource = DataSource.lat
 
     @property
     def label(self) -> str:

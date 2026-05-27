@@ -16,6 +16,7 @@ from pytao.constraints.observables.base import (
     Observation,
 )
 from pytao.constraints.observables.datum import (
+    DataSource,
     DatumIsClose,
     DatumIsCloseResult,
     DatumLessThan,
@@ -23,6 +24,7 @@ from pytao.constraints.observables.datum import (
     DatumLiteral,
     DatumObservable,
     DatumObservation,
+    EvalPoint,
 )
 from pytao.constraints.observables.ele import (
     EleIsClose,
@@ -74,6 +76,7 @@ __all__ = [
     "CheckResult",
     "Comparison",
     "ComparisonResult",
+    "DataSource",
     "DatumIsClose",
     "DatumIsCloseResult",
     "DatumLessThan",
@@ -91,6 +94,7 @@ __all__ = [
     "EleMinObservable",
     "EleObservable",
     "EleObservation",
+    "EvalPoint",
     "IsClose",
     "IsCloseResult",
     "IsLess",
