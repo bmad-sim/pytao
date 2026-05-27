@@ -415,7 +415,7 @@ class TaoStartup:
                 f"{ex}"
             ) from ex
 
-    _path_fields: tuple[str, ...] = (
+    _path_fields_: ClassVar[tuple[str, ...]] = (
         "beam_file",
         "beam_init_position_file",
         "building_wall_file",
