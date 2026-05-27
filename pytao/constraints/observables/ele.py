@@ -339,18 +339,18 @@ class EleLessThan(IsLess[EleObservation]):
 
 
 def _build_ele_observation(
-    beta_a,
-    alpha_a,
-    beta_b,
-    alpha_b,
-    eta_x,
-    etap_x,
-    eta_y,
-    etap_y,
-    p0c,
-    floor_x,
-    floor_y,
-    floor_z,
+    beta_a: float | None,
+    alpha_a: float | None,
+    beta_b: float | None,
+    alpha_b: float | None,
+    eta_x: float | None,
+    etap_x: float | None,
+    eta_y: float | None,
+    etap_y: float | None,
+    p0c: float | None,
+    floor_x: float | None,
+    floor_y: float | None,
+    floor_z: float | None,
 ) -> EleObservation:
     new_twiss = ElementTwiss(
         **{
