@@ -5,129 +5,41 @@ The values computed from the lattices may be saved and then loaded as a referenc
 
 ## Class Structure
 
-### Observables, Observations, and Operators
+### Base Classes
 
-#### Observations
-
-```mermaid
-classDiagram
-    class Observation {
-        +float elapsed_time
-        +datetime created_at
-    }
-    class DatumObservation {
-        +float model_value
-        +float design_value
-    }
-    class EleObservation {
-        +Element element
-    }
-    Observation <|-- DatumObservation
-    Observation <|-- EleObservation
-```
-
-#### Observables
+#### Observations, Observables, and Operators
 
 ```mermaid
 classDiagram
-    class Observable {
-        <<generic ObsT>>
-        +label() str
-    }
-    class LatticeObservable {
-        <<generic ObsT>>
+    class Observation
+    class Observable~ObsT~
+    class LatticeObservable~ObsT~ {
         +str lattice_id
         +__call__(tao) ObsT
     }
-    class LiteralObservable {
-        <<generic ObsT>>
+    class LiteralObservable~ObsT~ {
         +__call__() ObsT
-    }
-    class DatumObservable {
-        +str data_type
-        +str ele_name
-        +str data_source
-    }
-    class EleObservable {
-        +str ele_id
-    }
-    class EleMaxObservable
-    class EleMinObservable
-    class DatumLiteral {
-        +float model_value
-        +float design_value
-    }
-    class EleLiteral {
-        +float beta_a
-        +float alpha_a
-        +...
     }
     Observable <|-- LatticeObservable
     Observable <|-- LiteralObservable
-    LatticeObservable <|-- DatumObservable
-    LatticeObservable <|-- EleObservable
-    LatticeObservable <|-- EleMaxObservable
-    LatticeObservable <|-- EleMinObservable
-    LiteralObservable <|-- DatumLiteral
-    LiteralObservable <|-- EleLiteral
 
-    DatumObservable ..> DatumObservation : creates
-    DatumLiteral ..> DatumObservation : creates
-    EleObservable ..> EleObservation : creates
-    EleMaxObservable ..> EleObservation : creates
-    EleMinObservable ..> EleObservation : creates
-    EleLiteral ..> EleObservation : creates
-```
-
-#### Operators
-
-```mermaid
-classDiagram
-    class Comparison {
-        <<abstract>>
-    }
-    class IsClose {
-        <<generic ObsT>>
+    class Comparison
+    class IsClose~ObsT~ {
         +__call__(a, b) IsCloseResult
     }
-    class IsLess {
-        <<generic ObsT>>
+    class IsLess~ObsT~ {
         +__call__(a, b) IsLessResult
-    }
-    class DatumIsClose {
-        +TolComparison model_value_test
-        +TolComparison design_value_test
-    }
-    class EleIsClose {
-        +TwissComparisonMethod twiss_a_test
-        +TwissComparisonMethod twiss_b_test
-        +TolComparison eta_x_test
-        +...
-    }
-    class DatumLessThan {
-        +bool model_value
-        +bool design_value
-    }
-    class EleLessThan {
-        +bool beta_a
-        +bool alpha_a
-        +...
     }
     Comparison <|-- IsClose
     Comparison <|-- IsLess
-    IsClose <|-- DatumIsClose
-    IsClose <|-- EleIsClose
-    IsLess <|-- DatumLessThan
-    IsLess <|-- EleLessThan
-    DatumIsClose ..> DatumObservation : operates on
-    EleIsClose ..> EleObservation : operates on
-    DatumLessThan ..> DatumObservation : operates on
-    EleLessThan ..> EleObservation : operates on
+
+    LatticeObservable ..> Observation : creates
+    LiteralObservable ..> Observation : creates
+    IsClose ..> Observation : operates on
+    IsLess ..> Observation : operates on
 ```
 
-### Constraints and Results
-
-#### Constraints
+#### Constraints and Results
 
 ```mermaid
 classDiagram
@@ -145,38 +57,9 @@ classDiagram
     class IsLessConstraint {
         +IsLess comparison
     }
-    class EleIsCloseConstraint {
-        +EleObservable obs_a
-        +EleObservable obs_b
-        +EleIsClose comparison
-    }
-    class EleLessThanConstraint {
-        +EleObservable obs_a
-        +EleObservable obs_b
-        +EleLessThan comparison
-    }
-    class DatumIsCloseConstraint {
-        +DatumObservable obs_a
-        +DatumObservable obs_b
-        +DatumIsClose comparison
-    }
-    class DatumLessThanConstraint {
-        +DatumObservable obs_a
-        +DatumObservable obs_b
-        +DatumLessThan comparison
-    }
     Constraint <|-- EqualityConstraint
     Constraint <|-- IsLessConstraint
-    EqualityConstraint <|-- EleIsCloseConstraint
-    EqualityConstraint <|-- DatumIsCloseConstraint
-    IsLessConstraint <|-- EleLessThanConstraint
-    IsLessConstraint <|-- DatumLessThanConstraint
-```
 
-#### Results
-
-```mermaid
-classDiagram
     class CheckResult {
         +bool passed
         +str detail
@@ -191,9 +74,144 @@ classDiagram
     class IsLessResult {
         +bool is_less
     }
+    ComparisonResult <|-- IsCloseResult
+    ComparisonResult <|-- IsLessResult
+
+    EqualityConstraint ..> IsCloseResult : produces
+    IsLessConstraint ..> IsLessResult : produces
+    IsCloseResult *-- CheckResult
+    IsLessResult *-- CheckResult
+```
+
+### Concrete Classes
+
+#### Datum
+
+```mermaid
+classDiagram
+    class Observation
+    class LatticeObservable~ObsT~
+    class LiteralObservable~ObsT~
+    class IsClose~ObsT~
+    class IsLess~ObsT~
+
+    class DatumObservation {
+        +float model_value
+        +float design_value
+    }
+    class DatumObservable {
+        +str data_type
+        +str ele_name
+        +str data_source
+    }
+    class DatumLiteral {
+        +float model_value
+        +float design_value
+    }
+    class DatumIsClose {
+        +TolComparison model_value_test
+        +TolComparison design_value_test
+    }
+    class DatumLessThan {
+        +bool model_value
+        +bool design_value
+    }
+
+    Observation <|-- DatumObservation
+    LatticeObservable <|-- DatumObservable
+    LiteralObservable <|-- DatumLiteral
+    IsClose <|-- DatumIsClose
+    IsLess <|-- DatumLessThan
+```
+
+```mermaid
+classDiagram
+    class EqualityConstraint
+    class IsLessConstraint
+
+    class DatumIsCloseConstraint {
+        +DatumObservable obs_a
+        +DatumObservable obs_b
+        +DatumIsClose comparison
+    }
+    class DatumLessThanConstraint {
+        +DatumObservable obs_a
+        +DatumObservable obs_b
+        +DatumLessThan comparison
+    }
     class DatumIsCloseResult {
         +CheckResult model_value
         +CheckResult design_value
+    }
+    class DatumLessThanResult {
+        +CheckResult model_value
+        +CheckResult design_value
+    }
+
+    EqualityConstraint <|-- DatumIsCloseConstraint
+    IsLessConstraint <|-- DatumLessThanConstraint
+    DatumIsCloseConstraint ..> DatumIsCloseResult : creates
+    DatumLessThanConstraint ..> DatumLessThanResult : creates
+```
+
+#### Ele
+
+```mermaid
+classDiagram
+    class Observation
+    class LatticeObservable~ObsT~
+    class LiteralObservable~ObsT~
+    class IsClose~ObsT~
+    class IsLess~ObsT~
+
+    class EleObservation {
+        +Element element
+    }
+    class EleObservable {
+        +str ele_id
+    }
+    class EleMaxObservable
+    class EleMinObservable
+    class EleLiteral {
+        +float beta_a
+        +float alpha_a
+        +...
+    }
+    class EleIsClose {
+        +TwissComparisonMethod twiss_a_test
+        +TwissComparisonMethod twiss_b_test
+        +TolComparison eta_x_test
+        +...
+    }
+    class EleLessThan {
+        +bool beta_a
+        +bool alpha_a
+        +...
+    }
+
+    Observation <|-- EleObservation
+    LatticeObservable <|-- EleObservable
+    LatticeObservable <|-- EleMaxObservable
+    LatticeObservable <|-- EleMinObservable
+    LiteralObservable <|-- EleLiteral
+    IsClose <|-- EleIsClose
+    IsLess <|-- EleLessThan
+```
+
+```mermaid
+classDiagram
+    class EqualityConstraint
+    class IsLessConstraint
+
+    class EleIsCloseConstraint {
+        +EleObservable obs_a
+        +EleObservable obs_b
+        +EleIsClose comparison
+    }
+    class EleLessThanConstraint {
+        +EleObservable obs_a
+        +EleObservable obs_b
+        +EleLessThan comparison
     }
     class EleIsCloseResult {
         +CheckResult twiss_a
@@ -201,53 +219,14 @@ classDiagram
         +CheckResult eta_x
         +...
     }
-    class DatumLessThanResult {
-        +CheckResult model_value
-        +CheckResult design_value
-    }
     class EleLessThanResult {
         +CheckResult beta_a
         +CheckResult alpha_a
         +...
     }
-    class ConstraintResults {
-        +datetime started_at
-        +datetime finished_at
-        +dict lattices
-        +list constraints
-        +list regression
-    }
-    class LatticeResult {
-        +str lattice_file
-        +bool loaded
-        +float load_time
-        +float obs_time
-        +str error
-    }
-    class ConstraintResult {
-        +list observables
-        +str description
-        +ComparisonResult result
-    }
-    class RegressionResult {
-        +Observable observable
-        +ComparisonResult result
-    }
-    ComparisonResult <|-- IsCloseResult
-    ComparisonResult <|-- IsLessResult
-    IsCloseResult <|-- DatumIsCloseResult
-    IsCloseResult <|-- EleIsCloseResult
-    IsLessResult <|-- DatumLessThanResult
-    IsLessResult <|-- EleLessThanResult
 
-    DatumIsCloseResult *-- CheckResult
-    EleIsCloseResult *-- CheckResult
-    DatumLessThanResult *-- CheckResult
-    EleLessThanResult *-- CheckResult
-
-    ConstraintResults *-- LatticeResult
-    ConstraintResults *-- ConstraintResult
-    ConstraintResults *-- RegressionResult
-    ConstraintResult *-- ComparisonResult
-    RegressionResult *-- ComparisonResult
+    EqualityConstraint <|-- EleIsCloseConstraint
+    IsLessConstraint <|-- EleLessThanConstraint
+    EleIsCloseConstraint ..> EleIsCloseResult : creates
+    EleLessThanConstraint ..> EleLessThanResult : creates
 ```
