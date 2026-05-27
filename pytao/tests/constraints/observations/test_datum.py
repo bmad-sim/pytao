@@ -1,7 +1,7 @@
 import pytest
 
-from pytao.constraints.observables.datum import DatumIsClose, DatumLessThan, DatumLiteral
-from pytao.constraints.observables.ele import TolComparison
+from pytao.check.observables.datum import DatumIsClose, DatumLessThan, DatumLiteral
+from pytao.check.observables.ele import TolComparison
 
 from .utils import assert_result_fields
 

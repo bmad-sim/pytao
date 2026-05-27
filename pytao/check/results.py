@@ -3,9 +3,9 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
-from pytao.constraints.observables import (
+from pytao.check.observables import (
     AnyConstraintResult,
     AnyObservable,
     AnyObservation,

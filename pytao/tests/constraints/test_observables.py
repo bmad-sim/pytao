@@ -3,8 +3,8 @@ import pathlib
 import pytest
 
 from pytao import SubprocessTao
-from pytao.constraints.observables.datum import DatumLiteral, DatumObservable, DatumObservation
-from pytao.constraints.observables.ele import (
+from pytao.check.observables.datum import DatumLiteral, DatumObservable, DatumObservation
+from pytao.check.observables.ele import (
     EleMaxObservable,
     EleMinObservable,
     EleObservable,

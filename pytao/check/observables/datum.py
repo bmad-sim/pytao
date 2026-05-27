@@ -8,7 +8,7 @@ from pydantic import computed_field
 
 from pytao import Tao
 from pytao.errors import TaoCommandError
-from pytao.constraints.observables.base import (
+from pytao.check.observables.base import (
     CheckResult,
     IsClose,
     IsCloseResult,
@@ -18,7 +18,7 @@ from pytao.constraints.observables.base import (
     LiteralObservable,
     Observation,
 )
-from pytao.constraints.observables.ele import TolComparison
+from pytao.check.observables.ele import TolComparison
 
 
 class DataSource(str, Enum):
