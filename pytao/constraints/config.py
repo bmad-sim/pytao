@@ -22,6 +22,7 @@ from pytao.constraints.observables import (
     EleObservable,
     EleObservation,
     IsClose,
+    IsLess,
     Observable,
     Observation,
 )
@@ -66,6 +67,12 @@ class EqualityConstraint(Constraint):
     comparison: IsClose
 
 
+class IsLessConstraint(Constraint):
+    """Base for constraints that use an IsLess comparison operator."""
+
+    comparison: IsLess
+
+
 class EleIsCloseConstraint(EqualityConstraint):
     constraint_type: Literal["ele_eq"] = "ele_eq"
     obs_a: EleObservables
@@ -83,7 +90,7 @@ class EleIsCloseConstraint(EqualityConstraint):
         return EleIsCloseResult(is_close=False, error=error)
 
 
-class EleLessThanConstraint(Constraint):
+class EleLessThanConstraint(IsLessConstraint):
     constraint_type: Literal["ele_lt"] = "ele_lt"
     obs_a: EleObservables
     obs_b: EleObservables
@@ -117,7 +124,7 @@ class DatumIsCloseConstraint(EqualityConstraint):
         return DatumIsCloseResult(is_close=False, error=error)
 
 
-class DatumLessThanConstraint(Constraint):
+class DatumLessThanConstraint(IsLessConstraint):
     constraint_type: Literal["datum_lt"] = "datum_lt"
     obs_a: DatumObservables
     obs_b: DatumObservables
