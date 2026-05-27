@@ -37,7 +37,30 @@ def test_comb_from_tao(tao: SubprocessTao):
     comb = Comb.from_tao(tao)
     print(repr(comb))
     assert "command_args" not in repr(comb)
-    comb.query(tao)
+    comb.query(tao)  # smoke
+
+
+@pytest.mark.parametrize(
+    "attr",
+    (
+        "max_delta",
+        "min_delta",
+        "px_max",
+        "px_min",
+        "py_max",
+        "py_min",
+        "x_max",
+        "x_min",
+        "y_max",
+        "y_min",
+        "z_max",
+        "z_min",
+    ),
+)
+def test_comb_smoke_properties(comb: Comb, attr: str) -> None:
+    value = getattr(comb, attr)
+    assert isinstance(value, np.ndarray)
+    assert len(value) == len(comb.s)
 
 
 def test_comb_slice(comb: Comb):
