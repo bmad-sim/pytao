@@ -420,20 +420,7 @@ class EleLiteral(LiteralObservable[EleObservation]):
         return "literal"
 
     def _make_observation(self) -> EleObservation:
-        return _build_ele_observation(
-            self.beta_a,
-            self.alpha_a,
-            self.beta_b,
-            self.alpha_b,
-            self.eta_x,
-            self.etap_x,
-            self.eta_y,
-            self.etap_y,
-            self.p0c,
-            self.floor_x,
-            self.floor_y,
-            self.floor_z,
-        )
+        return _build_ele_observation(**self.model_dump(exclude={"obs_type"}))
 
 
 def _ele_reduce(
