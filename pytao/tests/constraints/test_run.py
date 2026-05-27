@@ -1,20 +1,20 @@
 import pathlib
 
-from pytao.check.config import (
+from pytao.constraints.config import (
     ConstraintsConfig,
     DatumIsCloseConstraint,
     DatumLessThanConstraint,
     EleIsCloseConstraint,
     EleLessThanConstraint,
 )
-from pytao.check.main import run
-from pytao.check.observables.datum import (
+from pytao.constraints.main import run
+from pytao.constraints.observables.datum import (
     DatumIsCloseResult,
     DatumLessThanResult,
     DatumLiteral,
     DatumObservable,
 )
-from pytao.check.observables.ele import (
+from pytao.constraints.observables.ele import (
     EleIsCloseResult,
     EleLessThanResult,
     EleLiteral,

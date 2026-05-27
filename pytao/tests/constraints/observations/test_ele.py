@@ -1,6 +1,6 @@
 import pytest
 
-from pytao.check.observables.ele import EleIsClose, EleLessThan, EleLiteral
+from pytao.constraints.observables.ele import EleIsClose, EleLessThan, EleLiteral
 
 from .utils import assert_result_fields
 

@@ -1,6 +1,6 @@
 import pytest
 
-from pytao.check.observables.twiss import BmagTwissComparison
+from pytao.constraints.observables.twiss import BmagTwissComparison
 
 
 @pytest.mark.parametrize(
