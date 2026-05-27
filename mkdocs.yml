@@ -23,6 +23,9 @@ nav:
       - examples/fodo.ipynb
       - examples/beam_track_progress_bar.ipynb
 
+  - Constraints:
+      - constraints/index.md
+
   - Dev:
       - development.md
 
@@ -62,7 +65,11 @@ theme:
 
 markdown_extensions:
   - pymdownx.highlight
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 
 extra:
   generator: false
@@ -77,8 +84,8 @@ extra_css:
 plugins:
   - search
 
-  - mkdocs-jupyter:
-      include_source: True
+  # - mkdocs-jupyter:
+  #     include_source: True
 
   - mkdocstrings:
       default_handler: python
