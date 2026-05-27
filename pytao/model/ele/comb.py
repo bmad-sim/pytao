@@ -211,6 +211,166 @@ def comb_data_from_tao(tao: Tao, ix_branch: int = 0):
 
 
 class Comb(TaoModel, extra="allow"):
+    """
+    Beam comb (saved bunch statistics) along the lattice.
+
+    Note
+    ----
+    Arrays are indexed by element. Phase-space momenta follow Bmad's
+    normalized convention and are dimensionless: ``px`` = p_x / p0,
+    ``py`` = p_y / p0, and the longitudinal ``p`` = ``delta`` = (p - p0) / p0.
+    This differs from openPMD-beamphysics, where px/py/p carry units of eV/c.
+
+    Attributes
+    ----------
+    s : np.ndarray
+        Longitudinal position (m).
+    p0c : np.ndarray
+        Reference momentum energy equivalent, p0*c (eV).
+    charge_live : np.ndarray
+        Total live charge (C).
+    ix_ele : np.ndarray
+        Element index (dimensionless).
+    n_particle_live : np.ndarray
+        Number of live particles (dimensionless).
+    n_particle_lost_in_ele : np.ndarray
+        Number of particles lost in this element (dimensionless).
+    mean_x : np.ndarray
+        Mean horizontal position (m).
+    mean_y : np.ndarray
+        Mean vertical position (m).
+    mean_z : np.ndarray
+        Mean longitudinal position, z = -beta*c*(t - t_ref) (m).
+    mean_px : np.ndarray
+        Mean normalized horizontal momentum p_x/p0 (dimensionless).
+    mean_py : np.ndarray
+        Mean normalized vertical momentum p_y/p0 (dimensionless).
+    mean_p : np.ndarray
+        Mean total momentum, (delta + 1) * p0c (eV/c).
+    mean_delta : np.ndarray
+        Mean relative momentum deviation (p - p0) / p0 (dimensionless).
+    mean_energy : np.ndarray
+        Mean total relativistic energy (eV).
+    mean_t : np.ndarray
+        Mean time coordinate (s).
+    sigma_x : np.ndarray
+        RMS horizontal beam size (m).
+    sigma_y : np.ndarray
+        RMS vertical beam size (m).
+    sigma_z : np.ndarray
+        RMS longitudinal beam size (m).
+    sigma_px : np.ndarray
+        RMS normalized horizontal momentum spread (dimensionless).
+    sigma_py : np.ndarray
+        RMS normalized vertical momentum spread (dimensionless).
+    sigma_p : np.ndarray
+        RMS relative momentum spread (dimensionless).
+    sigma_delta : np.ndarray
+        RMS relative momentum spread (dimensionless).
+    norm_emit_x : np.ndarray
+        Normalized RMS horizontal emittance (m).
+    norm_emit_y : np.ndarray
+        Normalized RMS vertical emittance (m).
+    rel_min_x : np.ndarray
+        Minimum horizontal position relative to mean (m).
+    rel_max_x : np.ndarray
+        Maximum horizontal position relative to mean (m).
+    rel_min_y : np.ndarray
+        Minimum vertical position relative to mean (m).
+    rel_max_y : np.ndarray
+        Maximum vertical position relative to mean (m).
+    rel_min_z : np.ndarray
+        Minimum longitudinal position relative to mean (m).
+    rel_max_z : np.ndarray
+        Maximum longitudinal position relative to mean (m).
+    rel_min_px : np.ndarray
+        Minimum normalized horizontal momentum relative to mean (dimensionless).
+    rel_max_px : np.ndarray
+        Maximum normalized horizontal momentum relative to mean (dimensionless).
+    rel_min_py : np.ndarray
+        Minimum normalized vertical momentum relative to mean (dimensionless).
+    rel_max_py : np.ndarray
+        Maximum normalized vertical momentum relative to mean (dimensionless).
+    rel_min_delta : np.ndarray
+        Minimum relative momentum deviation relative to mean (dimensionless).
+    rel_max_delta : np.ndarray
+        Maximum relative momentum deviation relative to mean (dimensionless).
+    cov_x__x : np.ndarray
+        Covariance <x*x> - <x><x> (m^2).
+    cov_x__px : np.ndarray
+        Covariance <x*px> - <x><px> (m).
+    cov_x__y : np.ndarray
+        Covariance <x*y> - <x><y> (m^2).
+    cov_x__py : np.ndarray
+        Covariance <x*py> - <x><py> (m).
+    cov_x__z : np.ndarray
+        Covariance <x*z> - <x><z> (m^2).
+    cov_x__p : np.ndarray
+        Covariance <x*delta> - <x><delta> (m).
+    cov_px__px : np.ndarray
+        Covariance <px*px> - <px><px> (dimensionless).
+    cov_px__y : np.ndarray
+        Covariance <px*y> - <px><y> (m).
+    cov_px__py : np.ndarray
+        Covariance <px*py> - <px><py> (dimensionless).
+    cov_px__z : np.ndarray
+        Covariance <px*z> - <px><z> (m).
+    cov_px__p : np.ndarray
+        Covariance <px*delta> - <px><delta> (dimensionless).
+    cov_y__y : np.ndarray
+        Covariance <y*y> - <y><y> (m^2).
+    cov_y__py : np.ndarray
+        Covariance <y*py> - <y><py> (m).
+    cov_y__z : np.ndarray
+        Covariance <y*z> - <y><z> (m^2).
+    cov_y__p : np.ndarray
+        Covariance <y*delta> - <y><delta> (m).
+    cov_py__py : np.ndarray
+        Covariance <py*py> - <py><py> (dimensionless).
+    cov_py__z : np.ndarray
+        Covariance <py*z> - <py><z> (m).
+    cov_py__p : np.ndarray
+        Covariance <py*delta> - <py><delta> (dimensionless).
+    cov_z__z : np.ndarray
+        Covariance <z*z> - <z><z> (m^2).
+    cov_z__p : np.ndarray
+        Covariance <z*delta> - <z><delta> (m).
+    cov_p__p : np.ndarray
+        Covariance <delta*delta> - <delta><delta> (dimensionless).
+    twiss_beta_x : np.ndarray
+        Horizontal beta function (m).
+    twiss_beta_y : np.ndarray
+        Vertical beta function (m).
+    twiss_beta_a : np.ndarray
+        Mode-a beta function (m).
+    twiss_beta_b : np.ndarray
+        Mode-b beta function (m).
+    twiss_alpha_x : np.ndarray
+        Horizontal alpha function (dimensionless).
+    twiss_alpha_y : np.ndarray
+        Vertical alpha function (dimensionless).
+    twiss_alpha_a : np.ndarray
+        Mode-a alpha function (dimensionless).
+    twiss_alpha_b : np.ndarray
+        Mode-b alpha function (dimensionless).
+    twiss_phi_x : np.ndarray
+        Horizontal phase advance (rad).
+    twiss_phi_y : np.ndarray
+        Vertical phase advance (rad).
+    twiss_phi_a : np.ndarray
+        Mode-a phase advance (rad).
+    twiss_phi_b : np.ndarray
+        Mode-b phase advance (rad).
+    twiss_eta_x : np.ndarray
+        Horizontal dispersion function (m).
+    twiss_eta_y : np.ndarray
+        Vertical dispersion function (m).
+    twiss_eta_a : np.ndarray
+        Mode-a dispersion function (m).
+    twiss_eta_b : np.ndarray
+        Mode-b dispersion function (m).
+    """
+
     charge_live: NDArray = empty_ndarray()
     cov_p__p: NDArray = empty_ndarray()
     cov_px__p: NDArray = empty_ndarray()
@@ -285,7 +445,68 @@ class Comb(TaoModel, extra="allow"):
     twiss_phi_x: NDArray = empty_ndarray()
     twiss_phi_y: NDArray = empty_ndarray()
 
+    @property
+    def x_min(self) -> np.ndarray:
+        """Minimum horizontal position, mean_x + rel_min_x (m)."""
+        return self.mean_x + self.rel_min_x
+
+    @property
+    def y_min(self) -> np.ndarray:
+        """Minimum vertical position, mean_y + rel_min_y (m)."""
+        return self.mean_y + self.rel_min_y
+
+    @property
+    def z_min(self) -> np.ndarray:
+        """Minimum longitudinal position, mean_z + rel_min_z (m)."""
+        return self.mean_z + self.rel_min_z
+
+    @property
+    def x_max(self) -> np.ndarray:
+        """Maximum horizontal position, mean_x + rel_max_x (m)."""
+        return self.mean_x + self.rel_max_x
+
+    @property
+    def y_max(self) -> np.ndarray:
+        """Maximum vertical position, mean_y + rel_max_y (m)."""
+        return self.mean_y + self.rel_max_y
+
+    @property
+    def z_max(self) -> np.ndarray:
+        """Maximum longitudinal position, mean_z + rel_max_z (m)."""
+        return self.mean_z + self.rel_max_z
+
+    @property
+    def px_min(self) -> np.ndarray:
+        """Minimum normalized horizontal momentum, mean_px + rel_min_px (dimensionless)."""
+        return self.mean_px + self.rel_min_px
+
+    @property
+    def py_min(self) -> np.ndarray:
+        """Minimum normalized vertical momentum, mean_py + rel_min_py (dimensionless)."""
+        return self.mean_py + self.rel_min_py
+
+    @property
+    def px_max(self) -> np.ndarray:
+        """Maximum normalized horizontal momentum, mean_px + rel_max_px (dimensionless)."""
+        return self.mean_px + self.rel_max_px
+
+    @property
+    def py_max(self) -> np.ndarray:
+        """Maximum normalized vertical momentum, mean_py + rel_max_py (dimensionless)."""
+        return self.mean_py + self.rel_max_py
+
+    @property
+    def min_delta(self) -> np.ndarray:
+        """Minimum relative momentum deviation, mean_delta + rel_min_delta (dimensionless)."""
+        return self.mean_delta + self.rel_min_delta
+
+    @property
+    def max_delta(self) -> np.ndarray:
+        """Maximum relative momentum deviation, mean_delta + rel_max_delta (dimensionless)."""
+        return self.mean_delta + self.rel_max_delta
+
     def query(self, tao: Tao) -> Self:
+        """Re-query Tao for updated Comb data."""
         return self.from_tao(tao)
 
     def sort_by_s(self) -> Comb:
