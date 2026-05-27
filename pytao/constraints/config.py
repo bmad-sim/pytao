@@ -3,7 +3,7 @@ from typing import Annotated, Literal, Union
 
 from pydantic import BaseModel, Field
 
-from pytao.check.observables import (
+from pytao.constraints.observables import (
     ComparisonResult,
     DatumIsClose,
     DatumIsCloseResult,

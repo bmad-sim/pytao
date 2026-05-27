@@ -5,7 +5,7 @@ from typing import Literal
 
 from pydantic import BaseModel
 
-from pytao.check.observables import (
+from pytao.constraints.observables import (
     AnyConstraintResult,
     AnyObservable,
     AnyObservation,

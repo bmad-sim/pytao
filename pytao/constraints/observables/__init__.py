@@ -2,7 +2,7 @@ from typing import Annotated, Union
 
 from pydantic import Field
 
-from pytao.check.observables.base import (
+from pytao.constraints.observables.base import (
     CheckResult,
     Comparison,
     ComparisonResult,
@@ -16,7 +16,7 @@ from pytao.check.observables.base import (
     Observation,
     ResultT,
 )
-from pytao.check.observables.datum import (
+from pytao.constraints.observables.datum import (
     DataSource,
     DatumIsClose,
     DatumIsCloseResult,
@@ -27,7 +27,7 @@ from pytao.check.observables.datum import (
     DatumObservation,
     EvalPoint,
 )
-from pytao.check.observables.ele import (
+from pytao.constraints.observables.ele import (
     EleIsClose,
     EleIsCloseResult,
     EleLessThan,
@@ -39,7 +39,7 @@ from pytao.check.observables.ele import (
     EleObservation,
     TolComparison,
 )
-from pytao.check.observables.twiss import (
+from pytao.constraints.observables.twiss import (
     AnyTwissComparison,
     BmagTwissComparison,
     DummyTwissComparison,

@@ -6,7 +6,7 @@ import numpy as np
 from pydantic import BaseModel, Field, computed_field
 
 from pytao import Tao
-from pytao.check.observables.base import (
+from pytao.constraints.observables.base import (
     CheckResult,
     IsClose,
     IsCloseResult,
@@ -16,7 +16,7 @@ from pytao.check.observables.base import (
     LiteralObservable,
     Observation,
 )
-from pytao.check.observables.twiss import AnyTwissComparison, BmagTwissComparison
+from pytao.constraints.observables.twiss import AnyTwissComparison, BmagTwissComparison
 from pytao.model import (
     ElementFloor,
     ElementFloorAll,
