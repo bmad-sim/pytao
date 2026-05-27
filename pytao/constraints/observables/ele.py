@@ -85,62 +85,72 @@ class EleIsClose(IsClose[EleObservation]):
     def __call__(self, obja: EleObservation, objb: EleObservation) -> EleIsCloseResult:
         ea, eb = obja.element, objb.element
 
-        twiss_a = None
-        twiss_b = None
-        eta_x = None
-        etap_x = None
-        eta_y = None
-        etap_y = None
-        ref_energy = None
-        p0c = None
-        orbit = None
-        floor_x = None
-        floor_y = None
-        floor_z = None
+        twiss_a = twiss_b = eta_x = etap_x = eta_y = etap_y = None
+        ref_energy = p0c = orbit = floor_x = floor_y = floor_z = None
 
-        if ea.twiss is not None and eb.twiss is not None:
-            ta, tb = ea.twiss, eb.twiss
-            if self.twiss_a_test is not None:
-                twiss_a = self.twiss_a_test(ta.beta_a, ta.alpha_a, tb.beta_a, tb.alpha_a)
-            if self.twiss_b_test is not None:
-                twiss_b = self.twiss_b_test(ta.beta_b, ta.alpha_b, tb.beta_b, tb.alpha_b)
-            if self.eta_x_test is not None:
-                eta_x = self.eta_x_test(ta.eta_x, tb.eta_x)
-            if self.etap_x_test is not None:
-                etap_x = self.etap_x_test(ta.etap_x, tb.etap_x)
-            if self.eta_y_test is not None:
-                eta_y = self.eta_y_test(ta.eta_y, tb.eta_y)
-            if self.etap_y_test is not None:
-                etap_y = self.etap_y_test(ta.etap_y, tb.etap_y)
+        ta, tb = ea.twiss, eb.twiss
+        twiss_ok = ta is not None and tb is not None
+        no_twiss = CheckResult(passed=False, detail="twiss data not available")
+        if self.twiss_a_test is not None:
+            twiss_a = (
+                self.twiss_a_test(ta.beta_a, ta.alpha_a, tb.beta_a, tb.alpha_a)
+                if twiss_ok
+                else no_twiss
+            )
+        if self.twiss_b_test is not None:
+            twiss_b = (
+                self.twiss_b_test(ta.beta_b, ta.alpha_b, tb.beta_b, tb.alpha_b)
+                if twiss_ok
+                else no_twiss
+            )
+        if self.eta_x_test is not None:
+            eta_x = self.eta_x_test(ta.eta_x, tb.eta_x) if twiss_ok else no_twiss
+        if self.etap_x_test is not None:
+            etap_x = self.etap_x_test(ta.etap_x, tb.etap_x) if twiss_ok else no_twiss
+        if self.eta_y_test is not None:
+            eta_y = self.eta_y_test(ta.eta_y, tb.eta_y) if twiss_ok else no_twiss
+        if self.etap_y_test is not None:
+            etap_y = self.etap_y_test(ta.etap_y, tb.etap_y) if twiss_ok else no_twiss
 
-        if ea.orbit is not None and eb.orbit is not None:
-            oa, ob = ea.orbit, eb.orbit
-            if self.p0c_test is not None:
-                p0c = self.p0c_test(oa.p0c, ob.p0c)
-            if self.orbit_test is not None:
+        oa, ob = ea.orbit, eb.orbit
+        orbit_ok = oa is not None and ob is not None
+        no_orbit = CheckResult(passed=False, detail="orbit data not available")
+        if self.p0c_test is not None:
+            p0c = self.p0c_test(oa.p0c, ob.p0c) if orbit_ok else no_orbit
+        if self.orbit_test is not None:
+            if orbit_ok:
                 vec_a = np.array([oa.x, oa.px, oa.y, oa.py, oa.z, oa.pz])
                 vec_b = np.array([ob.x, ob.px, ob.y, ob.py, ob.z, ob.pz])
                 orbit = self.orbit_test(vec_a, vec_b)
-
-        if ea.attrs is not None and eb.attrs is not None and self.ref_energy_test is not None:
-            try:
-                e_tot_a = float(ea.attrs["e_tot"].data)
-                e_tot_b = float(eb.attrs["e_tot"].data)
-            except (KeyError, TypeError, ValueError):
-                pass
             else:
-                ref_energy = self.ref_energy_test(e_tot_a, e_tot_b)
+                orbit = no_orbit
 
-        if ea.floor is not None and eb.floor is not None:
-            fa = ea.floor.end.actual
-            fb = eb.floor.end.actual
-            if fa is not None and fb is not None:
-                if self.floor_x_test is not None:
-                    floor_x = self.floor_x_test(fa.x, fb.x)
-                if self.floor_y_test is not None:
-                    floor_y = self.floor_y_test(fa.y, fb.y)
-                if self.floor_z_test is not None:
-                    floor_z = self.floor_z_test(fa.z, fb.z)
+        if self.ref_energy_test is not None:
+            ref_energy_ok = False
+            e_tot_a = e_tot_b = 0.0
+            if ea.attrs is not None and eb.attrs is not None:
+                try:
+                    e_tot_a = float(ea.attrs["e_tot"].data)
+                    e_tot_b = float(eb.attrs["e_tot"].data)
+                    ref_energy_ok = True
+                except (KeyError, TypeError, ValueError):
+                    pass
+            ref_energy = (
+                self.ref_energy_test(e_tot_a, e_tot_b)
+                if ref_energy_ok
+                else CheckResult(passed=False, detail="ref_energy data not available")
+            )
+
+        fa = ea.floor.end.actual if ea.floor is not None else None
+        fb = eb.floor.end.actual if eb.floor is not None else None
+        floor_ok = fa is not None and fb is not None
+        no_floor = CheckResult(passed=False, detail="floor data not available")
+        if self.floor_x_test is not None:
+            floor_x = self.floor_x_test(fa.x, fb.x) if floor_ok else no_floor
+        if self.floor_y_test is not None:
+            floor_y = self.floor_y_test(fa.y, fb.y) if floor_ok else no_floor
+        if self.floor_z_test is not None:
+            floor_z = self.floor_z_test(fa.z, fb.z) if floor_ok else no_floor
 
         ran = [
             r
@@ -224,45 +234,61 @@ class EleLessThan(IsLess[EleObservation]):
         eta_x = etap_x = eta_y = etap_y = None
         ref_energy = p0c = floor_x = floor_y = floor_z = None
 
-        if ea.twiss is not None and eb.twiss is not None:
-            ta, tb = ea.twiss, eb.twiss
-            if self.beta_a:
-                beta_a = self._check(ta.beta_a, tb.beta_a)
-            if self.alpha_a:
-                alpha_a = self._check(ta.alpha_a, tb.alpha_a)
-            if self.beta_b:
-                beta_b = self._check(ta.beta_b, tb.beta_b)
-            if self.alpha_b:
-                alpha_b = self._check(ta.alpha_b, tb.alpha_b)
-            if self.eta_x:
-                eta_x = self._check(ta.eta_x, tb.eta_x)
-            if self.etap_x:
-                etap_x = self._check(ta.etap_x, tb.etap_x)
-            if self.eta_y:
-                eta_y = self._check(ta.eta_y, tb.eta_y)
-            if self.etap_y:
-                etap_y = self._check(ta.etap_y, tb.etap_y)
+        ta, tb = ea.twiss, eb.twiss
+        twiss_ok = ta is not None and tb is not None
+        no_twiss = CheckResult(passed=False, detail="twiss data not available")
+        if self.beta_a:
+            beta_a = self._check(ta.beta_a, tb.beta_a) if twiss_ok else no_twiss
+        if self.alpha_a:
+            alpha_a = self._check(ta.alpha_a, tb.alpha_a) if twiss_ok else no_twiss
+        if self.beta_b:
+            beta_b = self._check(ta.beta_b, tb.beta_b) if twiss_ok else no_twiss
+        if self.alpha_b:
+            alpha_b = self._check(ta.alpha_b, tb.alpha_b) if twiss_ok else no_twiss
+        if self.eta_x:
+            eta_x = self._check(ta.eta_x, tb.eta_x) if twiss_ok else no_twiss
+        if self.etap_x:
+            etap_x = self._check(ta.etap_x, tb.etap_x) if twiss_ok else no_twiss
+        if self.eta_y:
+            eta_y = self._check(ta.eta_y, tb.eta_y) if twiss_ok else no_twiss
+        if self.etap_y:
+            etap_y = self._check(ta.etap_y, tb.etap_y) if twiss_ok else no_twiss
 
-        if ea.orbit is not None and eb.orbit is not None and self.p0c:
-            p0c = self._check(ea.orbit.p0c, eb.orbit.p0c)
+        oa, ob = ea.orbit, eb.orbit
+        orbit_ok = oa is not None and ob is not None
+        if self.p0c:
+            p0c = (
+                self._check(oa.p0c, ob.p0c)
+                if orbit_ok
+                else CheckResult(passed=False, detail="orbit data not available")
+            )
 
-        if ea.attrs is not None and eb.attrs is not None and self.ref_energy:
-            try:
-                ref_energy = self._check(
-                    float(ea.attrs["e_tot"].data), float(eb.attrs["e_tot"].data)
-                )
-            except (KeyError, TypeError, ValueError):
-                pass
+        if self.ref_energy:
+            ref_energy_ok = False
+            e_tot_a = e_tot_b = 0.0
+            if ea.attrs is not None and eb.attrs is not None:
+                try:
+                    e_tot_a = float(ea.attrs["e_tot"].data)
+                    e_tot_b = float(eb.attrs["e_tot"].data)
+                    ref_energy_ok = True
+                except (KeyError, TypeError, ValueError):
+                    pass
+            ref_energy = (
+                self._check(e_tot_a, e_tot_b)
+                if ref_energy_ok
+                else CheckResult(passed=False, detail="ref_energy data not available")
+            )
 
-        if ea.floor is not None and eb.floor is not None:
-            fa, fb = ea.floor.end.actual, eb.floor.end.actual
-            if fa is not None and fb is not None:
-                if self.floor_x:
-                    floor_x = self._check(fa.x, fb.x)
-                if self.floor_y:
-                    floor_y = self._check(fa.y, fb.y)
-                if self.floor_z:
-                    floor_z = self._check(fa.z, fb.z)
+        fa = ea.floor.end.actual if ea.floor is not None else None
+        fb = eb.floor.end.actual if eb.floor is not None else None
+        floor_ok = fa is not None and fb is not None
+        no_floor = CheckResult(passed=False, detail="floor data not available")
+        if self.floor_x:
+            floor_x = self._check(fa.x, fb.x) if floor_ok else no_floor
+        if self.floor_y:
+            floor_y = self._check(fa.y, fb.y) if floor_ok else no_floor
+        if self.floor_z:
+            floor_z = self._check(fa.z, fb.z) if floor_ok else no_floor
 
         ran = [
             r
