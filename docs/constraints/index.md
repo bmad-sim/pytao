@@ -7,7 +7,7 @@ The values computed from the lattices may be saved and then loaded as a referenc
 
 ### Base Classes
 
-#### Observations, Observables, and Operators
+#### Observations and Observables
 
 ```mermaid
 classDiagram
@@ -23,6 +23,14 @@ classDiagram
     Observable <|-- LatticeObservable
     Observable <|-- LiteralObservable
 
+    LatticeObservable ..> Observation : creates
+    LiteralObservable ..> Observation : creates
+```
+
+#### Operators, Constraints, and Results
+
+```mermaid
+classDiagram
     class Comparison
     class IsClose~ObsT~ {
         +__call__(a, b) IsCloseResult
@@ -33,23 +41,13 @@ classDiagram
     Comparison <|-- IsClose
     Comparison <|-- IsLess
 
-    LatticeObservable ..> Observation : creates
-    LiteralObservable ..> Observation : creates
-    IsClose ..> Observation : operates on
-    IsLess ..> Observation : operates on
-```
-
-#### Constraints and Results
-
-```mermaid
-classDiagram
     class Constraint {
         <<abstract>>
         +str description
         +str comment
         +required_observables() frozenset
-        +is_satisfied(observations) ComparisonResult
-        +error_result(error) ComparisonResult
+        +is_satisfied(observations)
+        +error_result(error)
     }
     class EqualityConstraint {
         +IsClose comparison
@@ -64,18 +62,12 @@ classDiagram
         +bool passed
         +str detail
     }
-    class ComparisonResult {
-        <<abstract>>
-        +str error
-    }
     class IsCloseResult {
         +bool is_close
     }
     class IsLessResult {
         +bool is_less
     }
-    ComparisonResult <|-- IsCloseResult
-    ComparisonResult <|-- IsLessResult
 
     EqualityConstraint ..> IsCloseResult : produces
     IsLessConstraint ..> IsLessResult : produces
@@ -87,146 +79,68 @@ classDiagram
 
 #### Datum
 
+##### Observations, Observables, and Operators
+
 ```mermaid
-classDiagram
-    class Observation
-    class LatticeObservable~ObsT~
-    class LiteralObservable~ObsT~
-    class IsClose~ObsT~
-    class IsLess~ObsT~
-
-    class DatumObservation {
-        +float model_value
-        +float design_value
-    }
-    class DatumObservable {
-        +str data_type
-        +str ele_name
-        +str data_source
-    }
-    class DatumLiteral {
-        +float model_value
-        +float design_value
-    }
-    class DatumIsClose {
-        +TolComparison model_value_test
-        +TolComparison design_value_test
-    }
-    class DatumLessThan {
-        +bool model_value
-        +bool design_value
-    }
-
-    Observation <|-- DatumObservation
-    LatticeObservable <|-- DatumObservable
-    LiteralObservable <|-- DatumLiteral
-    IsClose <|-- DatumIsClose
-    IsLess <|-- DatumLessThan
+flowchart TD
+    Observable([Observable]) --> LatticeObservable([LatticeObservable])
+    Observable --> LiteralObservable([LiteralObservable])
+    LatticeObservable --> DatumObservable[DatumObservable]
+    LiteralObservable --> DatumLiteral[DatumLiteral]
+    Comparison([Comparison]) --> IsClose([IsClose])
+    Comparison --> IsLess([IsLess])
+    IsClose --> DatumIsClose[DatumIsClose]
+    IsLess --> DatumLessThan[DatumLessThan]
+    DatumObservable -. creates .-> DatumObservation[DatumObservation]
+    DatumLiteral -. creates .-> DatumObservation
+    DatumIsClose -. creates .-> DatumIsCloseResult[DatumIsCloseResult]
+    DatumLessThan -. creates .-> DatumLessThanResult[DatumLessThanResult]
 ```
 
+##### Constraints, and Results
+
 ```mermaid
-classDiagram
-    class EqualityConstraint
-    class IsLessConstraint
-
-    class DatumIsCloseConstraint {
-        +DatumObservable obs_a
-        +DatumObservable obs_b
-        +DatumIsClose comparison
-    }
-    class DatumLessThanConstraint {
-        +DatumObservable obs_a
-        +DatumObservable obs_b
-        +DatumLessThan comparison
-    }
-    class DatumIsCloseResult {
-        +CheckResult model_value
-        +CheckResult design_value
-    }
-    class DatumLessThanResult {
-        +CheckResult model_value
-        +CheckResult design_value
-    }
-
-    EqualityConstraint <|-- DatumIsCloseConstraint
-    IsLessConstraint <|-- DatumLessThanConstraint
-    DatumIsCloseConstraint ..> DatumIsCloseResult : creates
-    DatumLessThanConstraint ..> DatumLessThanResult : creates
+flowchart TD
+    Constraint([Constraint]) --> EqualityConstraint([EqualityConstraint])
+    Constraint --> IsLessConstraint([IsLessConstraint])
+    EqualityConstraint --> DatumIsCloseConstraint[DatumIsCloseConstraint]
+    IsLessConstraint --> DatumLessThanConstraint[DatumLessThanConstraint]
+    DatumIsCloseConstraint -. creates .-> DatumIsCloseResult[DatumIsCloseResult]
+    DatumLessThanConstraint -. creates .-> DatumLessThanResult[DatumLessThanResult]
 ```
 
 #### Ele
 
+##### Observations, Observables, and Operators
+
 ```mermaid
-classDiagram
-    class Observation
-    class LatticeObservable~ObsT~
-    class LiteralObservable~ObsT~
-    class IsClose~ObsT~
-    class IsLess~ObsT~
-
-    class EleObservation {
-        +Element element
-    }
-    class EleObservable {
-        +str ele_id
-    }
-    class EleMaxObservable
-    class EleMinObservable
-    class EleLiteral {
-        +float beta_a
-        +float alpha_a
-        +...
-    }
-    class EleIsClose {
-        +TwissComparisonMethod twiss_a_test
-        +TwissComparisonMethod twiss_b_test
-        +TolComparison eta_x_test
-        +...
-    }
-    class EleLessThan {
-        +bool beta_a
-        +bool alpha_a
-        +...
-    }
-
-    Observation <|-- EleObservation
-    LatticeObservable <|-- EleObservable
-    LatticeObservable <|-- EleMaxObservable
-    LatticeObservable <|-- EleMinObservable
-    LiteralObservable <|-- EleLiteral
-    IsClose <|-- EleIsClose
-    IsLess <|-- EleLessThan
+flowchart TD
+    Observable([Observable]) --> LatticeObservable([LatticeObservable])
+    Observable --> LiteralObservable([LiteralObservable])
+    LatticeObservable --> EleObservable[EleObservable]
+    LatticeObservable --> EleMaxObservable[EleMaxObservable]
+    LatticeObservable --> EleMinObservable[EleMinObservable]
+    LiteralObservable --> EleLiteral[EleLiteral]
+    Comparison([Comparison]) --> IsClose([IsClose])
+    Comparison --> IsLess([IsLess])
+    IsClose --> EleIsClose[EleIsClose]
+    IsLess --> EleLessThan[EleLessThan]
+    EleObservable -. creates .-> EleObservation[EleObservation]
+    EleMaxObservable -. creates .-> EleObservation
+    EleMinObservable -. creates .-> EleObservation
+    EleLiteral -. creates .-> EleObservation
+    EleIsClose -. creates .-> EleIsCloseResult[EleIsCloseResult]
+    EleLessThan -. creates .-> EleLessThanResult[EleLessThanResult]
 ```
 
+##### Constraints, and Results
+
 ```mermaid
-classDiagram
-    class EqualityConstraint
-    class IsLessConstraint
-
-    class EleIsCloseConstraint {
-        +EleObservable obs_a
-        +EleObservable obs_b
-        +EleIsClose comparison
-    }
-    class EleLessThanConstraint {
-        +EleObservable obs_a
-        +EleObservable obs_b
-        +EleLessThan comparison
-    }
-    class EleIsCloseResult {
-        +CheckResult twiss_a
-        +CheckResult twiss_b
-        +CheckResult eta_x
-        +...
-    }
-    class EleLessThanResult {
-        +CheckResult beta_a
-        +CheckResult alpha_a
-        +...
-    }
-
-    EqualityConstraint <|-- EleIsCloseConstraint
-    IsLessConstraint <|-- EleLessThanConstraint
-    EleIsCloseConstraint ..> EleIsCloseResult : creates
-    EleLessThanConstraint ..> EleLessThanResult : creates
+flowchart TD
+    Constraint([Constraint]) --> EqualityConstraint([EqualityConstraint])
+    Constraint --> IsLessConstraint([IsLessConstraint])
+    EqualityConstraint --> EleIsCloseConstraint[EleIsCloseConstraint]
+    IsLessConstraint --> EleLessThanConstraint[EleLessThanConstraint]
+    EleIsCloseConstraint -. creates .-> EleIsCloseResult[EleIsCloseResult]
+    EleLessThanConstraint -. creates .-> EleLessThanResult[EleLessThanResult]
 ```
