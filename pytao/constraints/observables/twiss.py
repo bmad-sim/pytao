@@ -41,6 +41,6 @@ class BmagTwissComparison(TwissComparisonMethod):
         return CheckResult(passed=passed, detail=detail)
 
 
-twiss_comparison_types = Annotated[
+AnyTwissComparison = Annotated[
     Union[DummyTwissComparison, BmagTwissComparison], Field(discriminator="type")
 ]

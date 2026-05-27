@@ -4,10 +4,10 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from pytao.constraints.observables import (
+    AnyConstraintResult,
+    AnyObservable,
+    AnyObservation,
     LatticeObservable,
-    constraint_result_types,
-    observable_types,
-    observation_types,
 )
 
 
@@ -25,29 +25,27 @@ class TestResult(BaseModel):
 
 
 class ConstraintResult(BaseModel):
-    observables: list[observable_types]
+    observables: list[AnyObservable]
     description: str = ""
     comment: str = ""
-    result: constraint_result_types
+    result: AnyConstraintResult
 
 
 class RegressionResult(BaseModel):
-    observable: observable_types
-    result: constraint_result_types
+    observable: AnyObservable
+    result: AnyConstraintResult
 
 
 class SavedEntry(BaseModel):
-    observable: observable_types
-    observation: observation_types
+    observable: AnyObservable
+    observation: AnyObservation
 
 
 class SavedObservations(BaseModel):
     entries: list[SavedEntry]
 
     @classmethod
-    def from_obs_map(
-        cls, obs_map: dict[observable_types, observation_types]
-    ) -> "SavedObservations":
+    def from_obs_map(cls, obs_map: dict[AnyObservable, AnyObservation]) -> "SavedObservations":
         return cls(
             entries=[
                 SavedEntry(observable=obs, observation=obs_val)
@@ -57,7 +55,7 @@ class SavedObservations(BaseModel):
         )
 
     @property
-    def obs_map(self) -> dict[observable_types, observation_types]:
+    def obs_map(self) -> dict[AnyObservable, AnyObservation]:
         return {e.observable: e.observation for e in self.entries}
 
 

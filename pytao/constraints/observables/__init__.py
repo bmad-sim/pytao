@@ -40,13 +40,13 @@ from pytao.constraints.observables.ele import (
     TolComparison,
 )
 from pytao.constraints.observables.twiss import (
+    AnyTwissComparison,
     BmagTwissComparison,
     DummyTwissComparison,
     TwissComparisonMethod,
-    twiss_comparison_types,
 )
 
-observable_types = Annotated[
+AnyObservable = Annotated[
     Union[
         EleObservable,
         EleMaxObservable,
@@ -57,10 +57,10 @@ observable_types = Annotated[
     ],
     Field(discriminator="obs_type"),
 ]
-observation_types = Annotated[
+AnyObservation = Annotated[
     Union[EleObservation, DatumObservation], Field(discriminator="obs_type")
 ]
-constraint_result_types = Annotated[
+AnyConstraintResult = Annotated[
     Union[
         EleIsCloseResult,
         DatumIsCloseResult,
@@ -73,6 +73,10 @@ constraint_result_types = Annotated[
 ]
 
 __all__ = [
+    "AnyConstraintResult",
+    "AnyObservable",
+    "AnyObservation",
+    "AnyTwissComparison",
     "BmagTwissComparison",
     "CheckResult",
     "Comparison",
@@ -107,8 +111,4 @@ __all__ = [
     "ResultT",
     "TolComparison",
     "TwissComparisonMethod",
-    "constraint_result_types",
-    "observable_types",
-    "observation_types",
-    "twiss_comparison_types",
 ]

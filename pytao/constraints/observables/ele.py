@@ -16,7 +16,7 @@ from pytao.constraints.observables.base import (
     LiteralObservable,
     Observation,
 )
-from pytao.constraints.observables.twiss import BmagTwissComparison, twiss_comparison_types
+from pytao.constraints.observables.twiss import AnyTwissComparison, BmagTwissComparison
 from pytao.model import (
     ElementFloor,
     ElementFloorAll,
@@ -67,8 +67,8 @@ class EleIsCloseResult(IsCloseResult):
 class EleIsClose(IsClose[EleObservation]):
     """IsClose operator comparing two EleObservation instances across all available data."""
 
-    twiss_a_test: twiss_comparison_types | None = BmagTwissComparison()
-    twiss_b_test: twiss_comparison_types | None = BmagTwissComparison()
+    twiss_a_test: AnyTwissComparison | None = BmagTwissComparison()
+    twiss_b_test: AnyTwissComparison | None = BmagTwissComparison()
 
     eta_x_test: TolComparison | None = TolComparison()
     etap_x_test: TolComparison | None = TolComparison()

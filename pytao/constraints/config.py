@@ -139,7 +139,7 @@ class DatumLessThanConstraint(IsLessConstraint):
         return DatumLessThanResult(is_less=False, error=error)
 
 
-constraint_types = Annotated[
+AnyConstraint = Annotated[
     Union[
         EleIsCloseConstraint,
         EleLessThanConstraint,
@@ -155,6 +155,6 @@ class ConstraintsConfig(BaseModel):
         default_factory=dict,
         description="Mapping from unique lattice identifier to lattice loading information",
     )
-    constraints: list[constraint_types] = Field(
+    constraints: list[AnyConstraint] = Field(
         default_factory=list, description="Constraints to check across lattices"
     )
