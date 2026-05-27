@@ -75,4 +75,4 @@ class ConstraintResults(BaseModel):
     finished_at: datetime
     lattices: dict[str, LatticeResult]
     constraints: list[ConstraintResult]
-    regression: list[RegressionResult] = Field(default_factory=list)
+    regression: list[RegressionResult] = []
