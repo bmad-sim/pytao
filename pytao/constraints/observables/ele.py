@@ -26,6 +26,7 @@ from pytao.model import (
     ElementOrbit,
     ElementTwiss,
 )
+from pytao.model import _generated as tao_classes
 from pytao.model.ele.ele import Element
 
 
@@ -396,6 +397,7 @@ def _build_ele_observation(
     element = Element.model_construct(
         ele_id="_literal",
         which="model",
+        head=tao_classes.ElementHead(name="_literal", key="literal"),
         twiss=new_twiss,
         orbit=new_orbit,
         floor=new_floor,
