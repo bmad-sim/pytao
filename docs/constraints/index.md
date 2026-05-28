@@ -38,11 +38,10 @@ classDiagram
     LiteralObservable ..> Observation : creates
 ```
 
-#### Operators, Constraints, and Results
+#### Operators and Results
 
 Comparisons are defined between two `Observation` objects of the same type in the form of operators.
-These operators may belong to `Constraint` objects which define the checks performed on the lattices.
-These checks produce `ConstraintResult` objects which can be printed from the CLI tool and saved as an artifact from the tests run.
+Each operator produces a typed result containing per-field `CheckResult` entries.
 
 ```mermaid
 classDiagram
@@ -56,13 +55,41 @@ classDiagram
     Comparison <|-- IsClose
     Comparison <|-- IsLess
 
+    class CheckResult {
+        +bool passed
+        +str detail
+    }
+    class IsCloseResult {
+        +bool is_satisfied
+    }
+    class IsLessResult {
+        +bool is_satisfied
+    }
+
+    IsClose ..> IsCloseResult : produces
+    IsLess ..> IsLessResult : produces
+    IsCloseResult *-- CheckResult
+    IsLessResult *-- CheckResult
+```
+
+#### Constraint Hierarchy
+
+`Constraint` is the abstract base for all checks.
+`ComparisonConstraint` subclasses compare two live observations against each other.
+`RegressionConstraint` subclasses compare a current observation against a previously saved reference.
+
+```mermaid
+classDiagram
     class Constraint {
         <<abstract>>
         +str description
         +str comment
         +required_observables() frozenset
-        +is_satisfied(observations)
         +error_result(error)
+    }
+    class ComparisonConstraint {
+        <<abstract>>
+        +is_satisfied(observations)
     }
     class IsCloseConstraint {
         +IsClose comparison
@@ -70,24 +97,25 @@ classDiagram
     class IsLessConstraint {
         +IsLess comparison
     }
-    Constraint <|-- IsCloseConstraint
-    Constraint <|-- IsLessConstraint
-
-    class CheckResult {
-        +bool passed
-        +str detail
+    class RegressionConstraint {
+        <<abstract>>
+        +IsClose comparison
+        +evaluate(current, reference)
     }
     class IsCloseResult {
-        +bool is_close
+        +bool is_satisfied
     }
     class IsLessResult {
-        +bool is_less
+        +bool is_satisfied
     }
 
+    Constraint <|-- ComparisonConstraint
+    Constraint <|-- RegressionConstraint
+    ComparisonConstraint <|-- IsCloseConstraint
+    ComparisonConstraint <|-- IsLessConstraint
     IsCloseConstraint ..> IsCloseResult : produces
     IsLessConstraint ..> IsLessResult : produces
-    IsCloseResult *-- CheckResult
-    IsLessResult *-- CheckResult
+    RegressionConstraint ..> IsCloseResult : produces
 ```
 
 ### Concrete Classes
@@ -121,12 +149,16 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    Constraint([Constraint]) --> IsCloseConstraint([IsCloseConstraint])
-    Constraint --> IsLessConstraint([IsLessConstraint])
+    Constraint([Constraint]) --> ComparisonConstraint([ComparisonConstraint])
+    Constraint --> RegressionConstraint([RegressionConstraint])
+    ComparisonConstraint --> IsCloseConstraint([IsCloseConstraint])
+    ComparisonConstraint --> IsLessConstraint([IsLessConstraint])
     IsCloseConstraint --> DatumIsCloseConstraint[DatumIsCloseConstraint]
     IsLessConstraint --> DatumLessThanConstraint[DatumLessThanConstraint]
+    RegressionConstraint --> DatumRegressionConstraint[DatumRegressionConstraint]
     DatumIsCloseConstraint -. creates .-> DatumIsCloseResult[DatumIsCloseResult]
     DatumLessThanConstraint -. creates .-> DatumLessThanResult[DatumLessThanResult]
+    DatumRegressionConstraint -. creates .-> DatumIsCloseResult
 ```
 
 #### Element
@@ -161,10 +193,14 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    Constraint([Constraint]) --> IsCloseConstraint([IsCloseConstraint])
-    Constraint --> IsLessConstraint([IsLessConstraint])
+    Constraint([Constraint]) --> ComparisonConstraint([ComparisonConstraint])
+    Constraint --> RegressionConstraint([RegressionConstraint])
+    ComparisonConstraint --> IsCloseConstraint([IsCloseConstraint])
+    ComparisonConstraint --> IsLessConstraint([IsLessConstraint])
     IsCloseConstraint --> EleIsCloseConstraint[EleIsCloseConstraint]
     IsLessConstraint --> EleLessThanConstraint[EleLessThanConstraint]
+    RegressionConstraint --> EleRegressionConstraint[EleRegressionConstraint]
     EleIsCloseConstraint -. creates .-> EleIsCloseResult[EleIsCloseResult]
     EleLessThanConstraint -. creates .-> EleLessThanResult[EleLessThanResult]
+    EleRegressionConstraint -. creates .-> EleIsCloseResult
 ```
