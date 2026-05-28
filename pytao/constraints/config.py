@@ -1,7 +1,9 @@
 from abc import abstractmethod
 from typing import Annotated, Literal, Union
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from pytao.constraints.pydantic import ConstraintsBase
 
 from pytao.constraints.observables import (
     ComparisonResult,
@@ -38,7 +40,7 @@ DatumObservables = Annotated[
 ]
 
 
-class Constraint(BaseModel):
+class Constraint(ConstraintsBase):
     """Abstract base for all constraint types."""
 
     description: str = Field(default="", description="Short one-line name used on labels")
@@ -174,7 +176,7 @@ AnyConstraint = Annotated[
 ]
 
 
-class ConstraintsConfig(BaseModel):
+class ConstraintsConfig(ConstraintsBase):
     lattices: dict[str, TaoStartup] = Field(
         default_factory=dict,
         description="Mapping from unique lattice identifier to lattice loading information",

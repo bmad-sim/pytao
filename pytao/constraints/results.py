@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel
+from pytao.constraints.pydantic import ConstraintsBase
 
 from pytao.constraints.observables import (
     AnyComparisonResult,
@@ -14,7 +14,7 @@ from pytao.constraints.observables import (
 from pytao.startup import TaoStartup
 
 
-class TestResult(BaseModel):
+class TestResult(ConstraintsBase):
     result_type: Literal["TestResult"] = "TestResult"
     test_type: str
     description: str
@@ -27,7 +27,7 @@ class TestResult(BaseModel):
                 print(f"    {line}")
 
 
-class ConstraintResult(BaseModel):
+class ConstraintResult(ConstraintsBase):
     group: str | None = None
     label: str = ""
     observables: list[AnyObservable]
@@ -36,17 +36,17 @@ class ConstraintResult(BaseModel):
     result: AnyComparisonResult
 
 
-class RegressionResult(BaseModel):
+class RegressionResult(ConstraintsBase):
     observable: AnyObservable
     result: AnyComparisonResult
 
 
-class SavedEntry(BaseModel):
+class SavedEntry(ConstraintsBase):
     observable: AnyObservable
     observation: AnyObservation
 
 
-class SavedObservations(BaseModel):
+class SavedObservations(ConstraintsBase):
     entries: list[SavedEntry]
 
     @classmethod
@@ -64,7 +64,7 @@ class SavedObservations(BaseModel):
         return {e.observable: e.observation for e in self.entries}
 
 
-class LatticeResult(BaseModel):
+class LatticeResult(ConstraintsBase):
     lattice_file: str | None
     init_file: str | None
     loaded: bool
@@ -92,7 +92,7 @@ class LatticeResult(BaseModel):
         )
 
 
-class ConstraintResults(BaseModel):
+class ConstraintResults(ConstraintsBase):
     started_at: datetime
     finished_at: datetime
     lattices: dict[str, LatticeResult]

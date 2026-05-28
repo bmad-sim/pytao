@@ -1,12 +1,14 @@
 from abc import ABC, abstractmethod
 from typing import Annotated, Literal, Union
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from pytao.constraints.pydantic import ConstraintsBase
 
 from pytao.constraints.observables.base import CheckResult
 
 
-class TwissComparisonMethod(BaseModel, ABC):
+class TwissComparisonMethod(ConstraintsBase, ABC):
     @abstractmethod
     def __call__(self, beta0, alpha0, beta1, alpha1) -> CheckResult: ...
 

@@ -3,7 +3,9 @@ from __future__ import annotations
 from typing import Literal
 
 import numpy as np
-from pydantic import BaseModel, Field, computed_field
+from pydantic import Field, computed_field
+
+from pytao.constraints.pydantic import ConstraintsBase
 
 from pytao import Tao
 from pytao.constraints.observables.base import (
@@ -32,7 +34,7 @@ class EleObservation(Observation):
     element: Element
 
 
-class TolComparison(BaseModel):
+class TolComparison(ConstraintsBase):
     atol: float = 1e-8
     rtol: float = 1e-5
 

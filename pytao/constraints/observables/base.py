@@ -1,11 +1,13 @@
 import time
 from datetime import datetime, timezone
-from pydantic import BaseModel, ConfigDict, Field, computed_field
+from pydantic import ConfigDict, Field, computed_field
+
+from pytao.constraints.pydantic import ConstraintsBase
 from pytao import Tao
 from typing import Generic, Literal, TypeVar
 
 
-class CheckResult(BaseModel):
+class CheckResult(ConstraintsBase):
     passed: bool
     detail: str = ""
 
@@ -19,7 +21,7 @@ class CheckResult(BaseModel):
         return status
 
 
-class Observation(BaseModel):
+class Observation(ConstraintsBase):
     """Concrete output from a lattice observation."""
 
     elapsed_time: float = 0.0
@@ -29,7 +31,7 @@ class Observation(BaseModel):
 ObsT = TypeVar("ObsT", bound=Observation)
 
 
-class Observable(BaseModel, Generic[ObsT]):
+class Observable(ConstraintsBase, Generic[ObsT]):
     """Abstract base for all observables."""
 
     model_config = ConfigDict(frozen=True)
@@ -73,7 +75,7 @@ class LiteralObservable(Observable[ObsT]):
         return result
 
 
-class ComparisonResult(BaseModel):
+class ComparisonResult(ConstraintsBase):
     """Base for all constraint check results."""
 
     error: str | None = None
@@ -93,7 +95,7 @@ class ComparisonResult(BaseModel):
 ResultT = TypeVar("ResultT", bound=ComparisonResult)
 
 
-class Comparison(BaseModel, Generic[ResultT]):
+class Comparison(ConstraintsBase, Generic[ResultT]):
     """Abstract base for comparison operators between two observations."""
 
 
