@@ -13,6 +13,7 @@ from pytao.constraints.observables import (
     DatumLessThanResult,
     DatumLiteral,
     DatumObservable,
+    DatumObservation,
     EleIsClose,
     EleIsCloseResult,
     EleLessThan,
@@ -21,8 +22,11 @@ from pytao.constraints.observables import (
     EleMaxObservable,
     EleMinObservable,
     EleObservable,
+    EleObservation,
     IsClose,
     IsLess,
+    LatticeObservable,
+    LiteralObservable,
     Observable,
     Observation,
 )
@@ -57,24 +61,37 @@ class Constraint(ConstraintsBase):
     def required_observables(self) -> frozenset[Observable]: ...
 
     @abstractmethod
+    def error_result(self, error: str) -> ComparisonResult: ...
+
+
+class ComparisonConstraint(Constraint):
+    """Base for constraints that compare two observations against each other."""
+
+    @abstractmethod
     def is_satisfied(
         self, observations: dict[Observable, Observation]
     ) -> ComparisonResult: ...
 
-    @abstractmethod
-    def error_result(self, error: str) -> ComparisonResult: ...
 
-
-class EqualityConstraint(Constraint):
+class EqualityConstraint(ComparisonConstraint):
     """Base for constraints that use an IsClose comparison operator."""
 
     comparison: IsClose
 
 
-class IsLessConstraint(Constraint):
+class IsLessConstraint(ComparisonConstraint):
     """Base for constraints that use an IsLess comparison operator."""
 
     comparison: IsLess
+
+
+class RegressionConstraint(Constraint):
+    """Base for constraints that compare current observations against a saved reference."""
+
+    comparison: IsClose
+
+    @abstractmethod
+    def evaluate(self, current: Observation, reference: Observation) -> ComparisonResult: ...
 
 
 class EleIsCloseConstraint(EqualityConstraint):
@@ -165,12 +182,56 @@ class DatumLessThanConstraint(IsLessConstraint):
         return DatumLessThanResult(error=error)
 
 
+class EleRegressionConstraint(RegressionConstraint):
+    constraint_type: Literal["ele_reg"] = "ele_reg"
+    obs: EleObservables
+    comparison: EleIsClose = EleIsClose()
+
+    @property
+    def label(self) -> str:
+        return self.obs.label
+
+    @property
+    def required_observables(self) -> frozenset[Observable]:
+        return frozenset({self.obs})
+
+    def evaluate(self, current: EleObservation, reference: EleObservation) -> EleIsCloseResult:
+        return self.comparison(current, reference)
+
+    def error_result(self, error: str) -> EleIsCloseResult:
+        return EleIsCloseResult(error=error)
+
+
+class DatumRegressionConstraint(RegressionConstraint):
+    constraint_type: Literal["datum_reg"] = "datum_reg"
+    obs: DatumObservables
+    comparison: DatumIsClose = DatumIsClose()
+
+    @property
+    def label(self) -> str:
+        return self.obs.label
+
+    @property
+    def required_observables(self) -> frozenset[Observable]:
+        return frozenset({self.obs})
+
+    def evaluate(
+        self, current: DatumObservation, reference: DatumObservation
+    ) -> DatumIsCloseResult:
+        return self.comparison(current, reference)
+
+    def error_result(self, error: str) -> DatumIsCloseResult:
+        return DatumIsCloseResult(error=error)
+
+
 AnyConstraint = Annotated[
     Union[
         EleIsCloseConstraint,
         EleLessThanConstraint,
         DatumIsCloseConstraint,
         DatumLessThanConstraint,
+        EleRegressionConstraint,
+        DatumRegressionConstraint,
     ],
     Field(discriminator="constraint_type"),
 ]
@@ -197,3 +258,21 @@ class ConstraintsConfig(ConstraintsBase):
         if isinstance(self.constraints, list):
             return self.constraints
         return [c for cs in self.constraints.values() for c in cs]
+
+    @property
+    def required_lattice_observables(self) -> dict[str, set[LatticeObservable]]:
+        needed: dict[str, set[LatticeObservable]] = {lat_id: set() for lat_id in self.lattices}
+        for constraint in self.all_constraints:
+            for obs in constraint.required_observables:
+                if isinstance(obs, LatticeObservable):
+                    needed[obs.lattice_id].add(obs)
+        return needed
+
+    @property
+    def required_literal_observables(self) -> set[LiteralObservable]:
+        return {
+            obs
+            for constraint in self.all_constraints
+            for obs in constraint.required_observables
+            if isinstance(obs, LiteralObservable)
+        }

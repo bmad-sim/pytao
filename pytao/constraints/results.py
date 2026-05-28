@@ -37,6 +37,10 @@ class ConstraintResult(ConstraintsBase):
 
 
 class RegressionResult(ConstraintsBase):
+    group: str | None = None
+    label: str = ""
+    description: str = ""
+    comment: str = ""
     observable: AnyObservable
     result: AnyComparisonResult
 

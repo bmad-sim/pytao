@@ -10,12 +10,9 @@ import yaml
 
 from pytao import SubprocessTao
 
-from .config import ConstraintsConfig, EqualityConstraint
+from .config import ComparisonConstraint, ConstraintsConfig, RegressionConstraint
 from .observables import (
     ComparisonResult,
-    IsCloseResult,
-    LatticeObservable,
-    LiteralObservable,
     Observable,
     Observation,
 )
@@ -64,17 +61,8 @@ def run(
     """
     started_at = datetime.now(timezone.utc)
 
-    # Build lattice_id -> set of lattice observables, and collect literal observables separately
-    needed: dict[str, set[LatticeObservable]] = {lat_id: set() for lat_id in config.lattices}
-    literal_obs: set[LiteralObservable] = set()
-    for constraint in config.all_constraints:
-        for obs in constraint.required_observables:
-            if isinstance(obs, LatticeObservable):
-                needed[obs.lattice_id].add(obs)
-            elif isinstance(obs, LiteralObservable):
-                literal_obs.add(obs)
-            else:
-                raise ValueError(f"Unrecognized observable type: {type(obs)}")
+    needed = config.required_lattice_observables
+    literal_obs = config.required_literal_observables
 
     # Run observables: observable -> observation
     obs_map: dict[Observable, Observation] = {}
@@ -125,47 +113,56 @@ def run(
 
     saved = SavedObservations.from_obs_map(obs_map)
 
-    # Run each constraint comparison
     constraint_results: list[ConstraintResult] = []
+    regression_results: list[RegressionResult] = []
+    compare_map = compare.obs_map if compare is not None else None
+
     for group, constraints in config.constraints_by_group.items():
         for constraint in constraints:
-            missing = [obs for obs in constraint.required_observables if obs not in obs_map]
-            if missing:
-                missing_labels = ", ".join(obs.label for obs in missing)
-                result = constraint.error_result(f"Missing observations: {missing_labels}")
-            else:
-                result = constraint.is_satisfied(
-                    {obs: obs_map[obs] for obs in constraint.required_observables}
-                )
-            constraint_results.append(
-                ConstraintResult(
-                    group=group,
-                    label=constraint.label,
-                    observables=list(constraint.required_observables),
-                    description=constraint.description,
-                    comment=constraint.comment,
-                    result=result,
-                )
-            )
-
-    # Regression comparisons against saved observations
-    regression_results: list[RegressionResult] = []
-    if compare is not None:
-        compare_map = compare.obs_map
-        for constraint in config.all_constraints:
-            if not isinstance(constraint, EqualityConstraint):
-                continue
-            for obs in constraint.required_observables:
-                if obs not in obs_map or obs not in compare_map:
-                    continue
-                try:
-                    result = constraint.comparison(obs_map[obs], compare_map[obs])
-                except Exception:
-                    result = IsCloseResult(
-                        is_satisfied=False,
-                        error=traceback.format_exc().strip(),
+            if isinstance(constraint, ComparisonConstraint):
+                missing = [
+                    obs for obs in constraint.required_observables if obs not in obs_map
+                ]
+                if missing:
+                    missing_labels = ", ".join(obs.label for obs in missing)
+                    result = constraint.error_result(f"Missing observations: {missing_labels}")
+                else:
+                    result = constraint.is_satisfied(
+                        {obs: obs_map[obs] for obs in constraint.required_observables}
                     )
-                regression_results.append(RegressionResult(observable=obs, result=result))
+                constraint_results.append(
+                    ConstraintResult(
+                        group=group,
+                        label=constraint.label,
+                        observables=list(constraint.required_observables),
+                        description=constraint.description,
+                        comment=constraint.comment,
+                        result=result,
+                    )
+                )
+            elif isinstance(constraint, RegressionConstraint):
+                if compare_map is None:
+                    continue
+                obs = next(iter(constraint.required_observables))
+                if obs not in obs_map or obs not in compare_map:
+                    result = constraint.error_result("Missing observation")
+                else:
+                    try:
+                        result = constraint.evaluate(obs_map[obs], compare_map[obs])
+                    except Exception:
+                        result = constraint.error_result(traceback.format_exc().strip())
+                regression_results.append(
+                    RegressionResult(
+                        group=group,
+                        label=constraint.label,
+                        description=constraint.description,
+                        comment=constraint.comment,
+                        observable=obs,
+                        result=result,
+                    )
+                )
+            else:
+                raise ValueError(f"Unrecognized constraint type: {type(constraint)}")
 
     return saved, ConstraintResults(
         started_at=started_at,
@@ -241,11 +238,12 @@ def _print_results_markdown(results: ConstraintResults) -> None:
         print()
         print("## Regression")
         print()
-        print("| Status | Observable |")
-        print("|--------|------------|")
+        print("| Status | Observable | Description |")
+        print("|--------|------------|-------------|")
         for rr in results.regression:
             status = _md_status(rr.result.is_satisfied)
-            print(f"| {status} | {_escape_md(rr.observable.label)} |")
+            desc = _escape_md(rr.description)
+            print(f"| {status} | {_escape_md(rr.label)} | {desc} |")
 
     failures_eq = [cr for cr in results.constraints if not cr.result.is_satisfied]
     failures_reg = [rr for rr in results.regression if not rr.result.is_satisfied]
@@ -273,10 +271,15 @@ def _print_results_markdown(results: ConstraintResults) -> None:
             print("</details>")
             print()
         for rr in failures_reg:
-            label = rr.observable.label
+            summary = f"{_md_status(False)} regression: {rr.label}"
+            if rr.description:
+                summary += f"  {rr.description}"
             print("<details>")
-            print(f"<summary>{_md_status(False)} regression: {label}</summary>")
+            print(f"<summary>{summary}</summary>")
             print()
+            if rr.comment:
+                print(_escape_md(rr.comment))
+                print()
             print(_md_check_detail_rows(rr.result))
             print()
             print("</details>")
@@ -334,7 +337,8 @@ def _print_results(results: ConstraintResults) -> None:
         print("Regression:")
         for rr in results.regression:
             status = "PASS" if rr.result.is_satisfied else "FAIL"
-            print(f"  [{status}] {rr.observable.label}")
+            suffix = f"  {rr.description}" if rr.description else ""
+            print(f"  [{status}] {rr.label}{suffix}")
 
     failures_eq = [cr for cr in results.constraints if not cr.result.is_satisfied]
     failures_reg = [rr for rr in results.regression if not rr.result.is_satisfied]
@@ -356,7 +360,12 @@ def _print_results(results: ConstraintResults) -> None:
             print("  " + "-" * 56)
             _print_check_detail(cr.result)
         for rr in failures_reg:
-            print(f"\n  regression: {rr.observable.label}")
+            header = f"regression: {rr.label}"
+            if rr.description:
+                header += f"  {rr.description}"
+            print(f"\n  {header}")
+            if rr.comment:
+                print(f"  {rr.comment}")
             print("  " + "-" * 56)
             _print_check_detail(rr.result)
 
