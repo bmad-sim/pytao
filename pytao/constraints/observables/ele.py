@@ -382,11 +382,12 @@ def _build_ele_observation(
             which="model",
             where="end",
             actual=ElementFloorPosition.model_construct(
+                wmat=np.identity(3),
                 **{
                     k: v
                     for k, v in [("x", floor_x), ("y", floor_y), ("z", floor_z)]
                     if v is not None
-                }
+                },
             ),
             reference=None,
             slaves={},
