@@ -1,3 +1,4 @@
+# Lattice definitions in the form of a dict: lattice_id -> TaoStartup (ie the arguments to Tao(...))
 lattices:
   lat_a:
     lattice_file: lattices/lat_a.lat.bmad
@@ -6,6 +7,9 @@ lattices:
   lat_c:
     lattice_file: lattices/lat_c.lat.bmad
 
+# List of constraints. Each constraint defined by its `constraint_type`. The constraints each have two observables, the type of
+# which is set by `obs_type` and can be derived from the lattice or a literal. The constraints may include short descriptions
+# and longer comments for documentation.
 constraints:
   - constraint_type: ele_eq
     description: Short description, lat_a, lat_b treaty point
