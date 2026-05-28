@@ -155,6 +155,19 @@ class ConstraintsConfig(BaseModel):
         default_factory=dict,
         description="Mapping from unique lattice identifier to lattice loading information",
     )
-    constraints: list[AnyConstraint] = Field(
-        default_factory=list, description="Constraints to check across lattices"
+    constraints: list[AnyConstraint] | dict[str, list[AnyConstraint]] = Field(
+        default_factory=list,
+        description="Flat list (ungrouped) or mapping of group name to list of constraints",
     )
+
+    @property
+    def constraints_by_group(self) -> dict[str | None, list[AnyConstraint]]:
+        if isinstance(self.constraints, list):
+            return {None: self.constraints}
+        return dict(self.constraints)
+
+    @property
+    def all_constraints(self) -> list[AnyConstraint]:
+        if isinstance(self.constraints, list):
+            return self.constraints
+        return [c for cs in self.constraints.values() for c in cs]

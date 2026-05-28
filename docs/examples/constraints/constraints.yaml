@@ -49,6 +49,9 @@ constraints:
       obs_type: ele_literal
       beta_a: 200
       beta_b: 200
+      comparison:
+        beta_a: true
+        beta_b: true
 
   - constraint_type: datum_eq
     description: Datum and literal example

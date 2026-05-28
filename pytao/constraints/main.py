@@ -67,7 +67,7 @@ def run(
     # Build lattice_id -> set of lattice observables, and collect literal observables separately
     needed: dict[str, set[LatticeObservable]] = {lat_id: set() for lat_id in config.lattices}
     literal_obs: set[LiteralObservable] = set()
-    for constraint in config.constraints:
+    for constraint in config.all_constraints:
         for obs in constraint.required_observables:
             if isinstance(obs, LatticeObservable):
                 needed[obs.lattice_id].add(obs)
@@ -127,29 +127,31 @@ def run(
 
     # Run each constraint comparison
     constraint_results: list[ConstraintResult] = []
-    for constraint in config.constraints:
-        missing = [obs for obs in constraint.required_observables if obs not in obs_map]
-        if missing:
-            missing_labels = ", ".join(obs.label for obs in missing)
-            result = constraint.error_result(f"Missing observations: {missing_labels}")
-        else:
-            result = constraint.is_satisfied(
-                {obs: obs_map[obs] for obs in constraint.required_observables}
+    for group, constraints in config.constraints_by_group.items():
+        for constraint in constraints:
+            missing = [obs for obs in constraint.required_observables if obs not in obs_map]
+            if missing:
+                missing_labels = ", ".join(obs.label for obs in missing)
+                result = constraint.error_result(f"Missing observations: {missing_labels}")
+            else:
+                result = constraint.is_satisfied(
+                    {obs: obs_map[obs] for obs in constraint.required_observables}
+                )
+            constraint_results.append(
+                ConstraintResult(
+                    group=group,
+                    observables=list(constraint.required_observables),
+                    description=constraint.description,
+                    comment=constraint.comment,
+                    result=result,
+                )
             )
-        constraint_results.append(
-            ConstraintResult(
-                observables=list(constraint.required_observables),
-                description=constraint.description,
-                comment=constraint.comment,
-                result=result,
-            )
-        )
 
     # Regression comparisons against saved observations
     regression_results: list[RegressionResult] = []
     if compare is not None:
         compare_map = compare.obs_map
-        for constraint in config.constraints:
+        for constraint in config.all_constraints:
             if not isinstance(constraint, EqualityConstraint):
                 continue
             for obs in constraint.required_observables:
@@ -193,6 +195,8 @@ def _md_check_detail_rows(res: ComparisonResult) -> str:
 
 
 def _print_results_markdown(results: ConstraintResults) -> None:
+    grouped = any(cr.group is not None for cr in results.constraints)
+
     print("## Lattices")
     print()
     print("| Lattice | Status | Load | Obs |")
@@ -219,14 +223,18 @@ def _print_results_markdown(results: ConstraintResults) -> None:
 
     print()
     print("## Constraints")
-    print()
-    print("| Status | Constraint | Description |")
-    print("|--------|------------|-------------|")
-    for cr in results.constraints:
-        status = _md_status(cr.result.is_satisfied)
-        label = _escape_md(" == ".join(obs.label for obs in cr.observables))
-        desc = _escape_md(cr.description)
-        print(f"| {status} | {label} | {desc} |")
+    for group, crs in results.constraints_by_group.items():
+        if grouped:
+            print()
+            print(f"### {group}")
+        print()
+        print("| Status | Constraint | Description |")
+        print("|--------|------------|-------------|")
+        for cr in crs:
+            status = _md_status(cr.result.is_satisfied)
+            label = _escape_md(" == ".join(obs.label for obs in cr.observables))
+            desc = _escape_md(cr.description)
+            print(f"| {status} | {label} | {desc} |")
 
     if results.regression:
         print()
@@ -249,7 +257,8 @@ def _print_results_markdown(results: ConstraintResults) -> None:
             # Raw label in <summary>: content is HTML, not markdown, so _escape_md
             # would produce literal backslashes instead of consumed escape sequences.
             label = " == ".join(obs.label for obs in cr.observables)
-            summary = f"{_md_status(False)} {label}"
+            prefix = f"[{cr.group}] " if grouped and cr.group else ""
+            summary = f"{_md_status(False)} {prefix}{label}"
             if cr.description:
                 summary += f"  {cr.description}"
             print("<details>")
@@ -295,6 +304,8 @@ def _print_check_detail(res: ComparisonResult) -> None:
 
 
 def _print_results(results: ConstraintResults) -> None:
+    grouped = any(cr.group is not None for cr in results.constraints)
+
     print("Lattices:")
     for lat_id, lat in results.lattices.items():
         status = "OK  " if lat.loaded else "FAIL"
@@ -307,11 +318,15 @@ def _print_results(results: ConstraintResults) -> None:
 
     print()
     print("Constraints:")
-    for cr in results.constraints:
-        status = "PASS" if cr.result.is_satisfied else "FAIL"
-        label = " == ".join(obs.label for obs in cr.observables)
-        suffix = f"  {cr.description}" if cr.description else ""
-        print(f"  [{status}] {label}{suffix}")
+    for group, crs in results.constraints_by_group.items():
+        if grouped:
+            print(f"  [{group}]")
+        indent = "    " if grouped else "  "
+        for cr in crs:
+            status = "PASS" if cr.result.is_satisfied else "FAIL"
+            label = " == ".join(obs.label for obs in cr.observables)
+            suffix = f"  {cr.description}" if cr.description else ""
+            print(f"{indent}[{status}] {label}{suffix}")
 
     if results.regression:
         print()
@@ -330,7 +345,10 @@ def _print_results(results: ConstraintResults) -> None:
         print("=" * 60)
         for cr in failures_eq:
             label = " == ".join(obs.label for obs in cr.observables)
-            header = f"{label}  {cr.description}" if cr.description else label
+            prefix = f"[{cr.group}] " if grouped and cr.group else ""
+            header = (
+                f"{prefix}{label}  {cr.description}" if cr.description else f"{prefix}{label}"
+            )
             print(f"\n  {header}")
             if cr.comment:
                 print(f"  {cr.comment}")

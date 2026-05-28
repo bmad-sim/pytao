@@ -28,6 +28,7 @@ class TestResult(BaseModel):
 
 
 class ConstraintResult(BaseModel):
+    group: str | None = None
     observables: list[AnyObservable]
     description: str = ""
     comment: str = ""
@@ -96,3 +97,10 @@ class ConstraintResults(BaseModel):
     lattices: dict[str, LatticeResult]
     constraints: list[ConstraintResult]
     regression: list[RegressionResult] = []
+
+    @property
+    def constraints_by_group(self) -> dict[str | None, list[ConstraintResult]]:
+        groups: dict[str | None, list[ConstraintResult]] = {}
+        for cr in self.constraints:
+            groups.setdefault(cr.group, []).append(cr)
+        return groups
