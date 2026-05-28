@@ -75,3 +75,14 @@ constraints:
       comparison:
         beta_a: true
         beta_b: true
+  
+  # Define some regression tests. Note: we split them out in their own group here, but they are constraints in their own
+  # right and may be placed anywhere in the file. IsCloseConstraint's also implicitly define regression checks. 
+  Regression:
+    - constraint_type: ele_reg
+      description: Middle of lat_a
+      comment: lat_a should not be changing, check middle Twiss
+      obs:
+        obs_type: ele
+        lattice_id: lat_a
+        ele_id: MAR_MID

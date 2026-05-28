@@ -67,6 +67,9 @@ class SavedObservations(ConstraintsBase):
     def obs_map(self) -> dict[AnyObservable, AnyObservation]:
         return {e.observable: e.observation for e in self.entries}
 
+    def __len__(self):
+        return len(self.entries)
+
 
 class LatticeResult(ConstraintsBase):
     lattice_file: str | None

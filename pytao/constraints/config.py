@@ -73,7 +73,7 @@ class ComparisonConstraint(Constraint):
     ) -> ComparisonResult: ...
 
 
-class EqualityConstraint(ComparisonConstraint):
+class IsCloseConstraint(ComparisonConstraint):
     """Base for constraints that use an IsClose comparison operator."""
 
     comparison: IsClose
@@ -94,7 +94,7 @@ class RegressionConstraint(Constraint):
     def evaluate(self, current: Observation, reference: Observation) -> ComparisonResult: ...
 
 
-class EleIsCloseConstraint(EqualityConstraint):
+class EleIsCloseConstraint(IsCloseConstraint):
     constraint_type: Literal["ele_eq"] = "ele_eq"
     obs_a: EleObservables
     obs_b: EleObservables
@@ -138,7 +138,7 @@ class EleLessThanConstraint(IsLessConstraint):
         return EleLessThanResult(error=error)
 
 
-class DatumIsCloseConstraint(EqualityConstraint):
+class DatumIsCloseConstraint(IsCloseConstraint):
     constraint_type: Literal["datum_eq"] = "datum_eq"
     obs_a: DatumObservables
     obs_b: DatumObservables

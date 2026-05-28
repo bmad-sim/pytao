@@ -64,13 +64,13 @@ classDiagram
         +is_satisfied(observations)
         +error_result(error)
     }
-    class EqualityConstraint {
+    class IsCloseConstraint {
         +IsClose comparison
     }
     class IsLessConstraint {
         +IsLess comparison
     }
-    Constraint <|-- EqualityConstraint
+    Constraint <|-- IsCloseConstraint
     Constraint <|-- IsLessConstraint
 
     class CheckResult {
@@ -84,7 +84,7 @@ classDiagram
         +bool is_less
     }
 
-    EqualityConstraint ..> IsCloseResult : produces
+    IsCloseConstraint ..> IsCloseResult : produces
     IsLessConstraint ..> IsLessResult : produces
     IsCloseResult *-- CheckResult
     IsLessResult *-- CheckResult
@@ -121,9 +121,9 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    Constraint([Constraint]) --> EqualityConstraint([EqualityConstraint])
+    Constraint([Constraint]) --> IsCloseConstraint([IsCloseConstraint])
     Constraint --> IsLessConstraint([IsLessConstraint])
-    EqualityConstraint --> DatumIsCloseConstraint[DatumIsCloseConstraint]
+    IsCloseConstraint --> DatumIsCloseConstraint[DatumIsCloseConstraint]
     IsLessConstraint --> DatumLessThanConstraint[DatumLessThanConstraint]
     DatumIsCloseConstraint -. creates .-> DatumIsCloseResult[DatumIsCloseResult]
     DatumLessThanConstraint -. creates .-> DatumLessThanResult[DatumLessThanResult]
@@ -161,9 +161,9 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    Constraint([Constraint]) --> EqualityConstraint([EqualityConstraint])
+    Constraint([Constraint]) --> IsCloseConstraint([IsCloseConstraint])
     Constraint --> IsLessConstraint([IsLessConstraint])
-    EqualityConstraint --> EleIsCloseConstraint[EleIsCloseConstraint]
+    IsCloseConstraint --> EleIsCloseConstraint[EleIsCloseConstraint]
     IsLessConstraint --> EleLessThanConstraint[EleLessThanConstraint]
     EleIsCloseConstraint -. creates .-> EleIsCloseResult[EleIsCloseResult]
     EleLessThanConstraint -. creates .-> EleLessThanResult[EleLessThanResult]

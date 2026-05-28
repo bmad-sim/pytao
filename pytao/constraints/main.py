@@ -431,7 +431,7 @@ def main() -> None:
 
     if save_obs_path is not None:
         save_obs_path.write_text(saved.model_dump_json(indent=2))
-        print(f"\nObservations saved to {save_obs_path}")
+        print(f"\n{len(saved)} observations saved to {save_obs_path}")
 
     if args.save_results:
         results_path = Path(args.save_results)
