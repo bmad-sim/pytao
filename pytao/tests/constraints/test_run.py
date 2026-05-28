@@ -4,6 +4,7 @@ from pytao.constraints.config import (
     ConstraintsConfig,
     DatumIsCloseConstraint,
     DatumLessThanConstraint,
+    DatumRegressionConstraint,
     EleIsCloseConstraint,
     EleLessThanConstraint,
 )
@@ -13,6 +14,7 @@ from pytao.constraints.observables.datum import (
     DatumLessThanResult,
     DatumLiteral,
     DatumObservable,
+    DatumObservation,
 )
 from pytao.constraints.observables.ele import (
     EleIsCloseResult,
@@ -20,6 +22,7 @@ from pytao.constraints.observables.ele import (
     EleLiteral,
     EleObservable,
 )
+from pytao.constraints.results import SavedEntry, SavedObservations
 from pytao.startup import TaoStartup
 
 DATA_DIR = pathlib.Path(__file__).parent / "data"
@@ -168,3 +171,62 @@ def test_run_saved_observations():
     assert len(saved.entries) == 1
     assert saved.entries[0].observable == obs_a
     assert saved.entries[0].observation.element is not None
+
+
+def test_run_regression_no_compare():
+    obs = DatumLiteral(model_value=1.0, design_value=0.0)
+    config = ConstraintsConfig(
+        lattices={},
+        constraints=[DatumRegressionConstraint(obs=obs)],
+    )
+    _, results = run(config, DATA_DIR)
+    assert results.regression == []
+
+
+def test_run_regression_missing_observation():
+    obs = DatumLiteral(model_value=1.0, design_value=0.0)
+    config = ConstraintsConfig(
+        lattices={},
+        constraints=[DatumRegressionConstraint(obs=obs)],
+    )
+    compare = SavedObservations(entries=[])
+    _, results = run(config, DATA_DIR, compare=compare)
+    assert len(results.regression) == 1
+    rr = results.regression[0]
+    assert not rr.result.is_satisfied
+    assert rr.result.error is not None
+
+
+def test_run_regression_multiple_groups():
+    obs_pass = DatumLiteral(model_value=1.0, design_value=0.0)
+    obs_fail = DatumLiteral(model_value=2.0, design_value=0.0)
+    config = ConstraintsConfig(
+        lattices={},
+        constraints={
+            "A": [
+                DatumRegressionConstraint(obs=obs_pass, description="passes", comment="note")
+            ],
+            "B": [DatumRegressionConstraint(obs=obs_fail)],
+        },
+    )
+    compare = SavedObservations(
+        entries=[
+            SavedEntry(observable=obs_pass, observation=obs_pass()),
+            SavedEntry(
+                observable=obs_fail,
+                observation=DatumObservation(model_value=999.0, design_value=0.0),
+            ),
+        ]
+    )
+    _, results = run(config, DATA_DIR, compare=compare)
+    assert len(results.regression) == 2
+    by_group = {rr.group: rr for rr in results.regression}
+    a = by_group["A"]
+    assert a.result.is_satisfied
+    assert a.label == obs_pass.label
+    assert a.description == "passes"
+    assert a.comment == "note"
+    assert a.group == "A"
+    b = by_group["B"]
+    assert not b.result.is_satisfied
+    assert b.group == "B"
