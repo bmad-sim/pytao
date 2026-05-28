@@ -29,6 +29,7 @@ class TestResult(BaseModel):
 
 class ConstraintResult(BaseModel):
     group: str | None = None
+    label: str = ""
     observables: list[AnyObservable]
     description: str = ""
     comment: str = ""

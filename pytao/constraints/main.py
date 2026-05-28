@@ -140,6 +140,7 @@ def run(
             constraint_results.append(
                 ConstraintResult(
                     group=group,
+                    label=constraint.label,
                     observables=list(constraint.required_observables),
                     description=constraint.description,
                     comment=constraint.comment,
@@ -232,7 +233,7 @@ def _print_results_markdown(results: ConstraintResults) -> None:
         print("|--------|------------|-------------|")
         for cr in crs:
             status = _md_status(cr.result.is_satisfied)
-            label = _escape_md(" == ".join(obs.label for obs in cr.observables))
+            label = _escape_md(cr.label)
             desc = _escape_md(cr.description)
             print(f"| {status} | {label} | {desc} |")
 
@@ -256,7 +257,7 @@ def _print_results_markdown(results: ConstraintResults) -> None:
         for cr in failures_eq:
             # Raw label in <summary>: content is HTML, not markdown, so _escape_md
             # would produce literal backslashes instead of consumed escape sequences.
-            label = " == ".join(obs.label for obs in cr.observables)
+            label = cr.label
             prefix = f"[{cr.group}] " if grouped and cr.group else ""
             summary = f"{_md_status(False)} {prefix}{label}"
             if cr.description:
@@ -324,7 +325,7 @@ def _print_results(results: ConstraintResults) -> None:
         indent = "    " if grouped else "  "
         for cr in crs:
             status = "PASS" if cr.result.is_satisfied else "FAIL"
-            label = " == ".join(obs.label for obs in cr.observables)
+            label = cr.label
             suffix = f"  {cr.description}" if cr.description else ""
             print(f"{indent}[{status}] {label}{suffix}")
 
@@ -344,7 +345,7 @@ def _print_results(results: ConstraintResults) -> None:
         print("FAILURES")
         print("=" * 60)
         for cr in failures_eq:
-            label = " == ".join(obs.label for obs in cr.observables)
+            label = cr.label
             prefix = f"[{cr.group}] " if grouped and cr.group else ""
             header = (
                 f"{prefix}{label}  {cr.description}" if cr.description else f"{prefix}{label}"

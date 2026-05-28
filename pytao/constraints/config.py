@@ -48,6 +48,10 @@ class Constraint(BaseModel):
 
     @property
     @abstractmethod
+    def label(self) -> str: ...
+
+    @property
+    @abstractmethod
     def required_observables(self) -> frozenset[Observable]: ...
 
     @abstractmethod
@@ -78,6 +82,12 @@ class EleIsCloseConstraint(EqualityConstraint):
     comparison: EleIsClose = EleIsClose()
 
     @property
+    def label(self) -> str:
+        if self.obs_a == self.obs_b:
+            return self.obs_a.label
+        return f"{self.obs_a.label} == {self.obs_b.label}"
+
+    @property
     def required_observables(self) -> frozenset[Observable]:
         return frozenset((self.obs_a, self.obs_b))
 
@@ -93,6 +103,10 @@ class EleLessThanConstraint(IsLessConstraint):
     obs_a: EleObservables
     obs_b: EleObservables
     comparison: EleLessThan = EleLessThan()
+
+    @property
+    def label(self) -> str:
+        return f"{self.obs_a.label} < {self.obs_b.label}"
 
     @property
     def required_observables(self) -> frozenset[Observable]:
@@ -112,6 +126,12 @@ class DatumIsCloseConstraint(EqualityConstraint):
     comparison: DatumIsClose = DatumIsClose()
 
     @property
+    def label(self) -> str:
+        if self.obs_a == self.obs_b:
+            return self.obs_a.label
+        return f"{self.obs_a.label} == {self.obs_b.label}"
+
+    @property
     def required_observables(self) -> frozenset[Observable]:
         return frozenset((self.obs_a, self.obs_b))
 
@@ -127,6 +147,10 @@ class DatumLessThanConstraint(IsLessConstraint):
     obs_a: DatumObservables
     obs_b: DatumObservables
     comparison: DatumLessThan = DatumLessThan()
+
+    @property
+    def label(self) -> str:
+        return f"{self.obs_a.label} < {self.obs_b.label}"
 
     @property
     def required_observables(self) -> frozenset[Observable]:
