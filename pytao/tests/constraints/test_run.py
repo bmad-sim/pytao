@@ -1,4 +1,7 @@
 import pathlib
+import tempfile
+
+import pytest
 
 from pytao.constraints.config import (
     ConstraintsConfig,
@@ -230,3 +233,40 @@ def test_run_regression_multiple_groups():
     b = by_group["B"]
     assert not b.result.is_satisfied
     assert b.group == "B"
+
+
+def test_saved_observations_round_trip_datum():
+    obs = DatumLiteral(model_value=1.5, design_value=0.5)
+    observation = obs()
+    saved = SavedObservations(entries=[SavedEntry(observable=obs, observation=observation)])
+    with tempfile.TemporaryDirectory() as tmp:
+        path = pathlib.Path(tmp) / "obs.json"
+        path.write_text(saved.model_dump_json(indent=2))
+        loaded = SavedObservations.model_validate_json(path.read_text())
+    assert len(loaded.entries) == 1
+    entry = loaded.entries[0]
+    assert entry.observable == obs
+    assert entry.observation.model_value == observation.model_value
+    assert entry.observation.design_value == observation.design_value
+
+
+def test_saved_observations_round_trip_ele():
+    obs = EleObservable(lattice_id="lat_a", ele_id="BEGINNING")
+    config = ConstraintsConfig(
+        lattices={"lat_a": TaoStartup(lattice_file=LAT_A)},
+        constraints=[EleIsCloseConstraint(obs_a=obs, obs_b=obs)],
+    )
+    saved, _ = run(config, DATA_DIR)
+    with tempfile.TemporaryDirectory() as tmp:
+        path = pathlib.Path(tmp) / "obs.json"
+        path.write_text(saved.model_dump_json(indent=2))
+        loaded = SavedObservations.model_validate_json(path.read_text())
+    assert len(loaded.entries) == 1
+    entry = loaded.entries[0]
+    assert entry.observable == obs
+    orig = saved.obs_map[obs]
+    restored = loaded.obs_map[entry.observable]
+    assert restored.obs_type == orig.obs_type
+    assert restored.element.twiss is not None
+    assert restored.element.twiss.beta_a == pytest.approx(orig.element.twiss.beta_a)
+    assert restored.element.twiss.alpha_a == pytest.approx(orig.element.twiss.alpha_a)
