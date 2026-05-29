@@ -32,7 +32,7 @@ constraints:
 ```
 
 The constraints tool is run from the terminal with the following command.
-```console title="Running the constraints tool"
+```console
 pytao-user$ pytao-constraints config.yml
 Lattices:
   [OK  ] lat_a  loaded in 1.53s, observables in 0.02s
