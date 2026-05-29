@@ -42,7 +42,6 @@ from pytao.constraints.observables.ele import (
 from pytao.constraints.observables.twiss import (
     AnyTwissComparison,
     BmagTwissComparison,
-    DummyTwissComparison,
     TwissComparisonMethod,
 )
 
@@ -89,7 +88,6 @@ __all__ = [
     "DatumLiteral",
     "DatumObservable",
     "DatumObservation",
-    "DummyTwissComparison",
     "EleIsClose",
     "EleIsCloseResult",
     "EleLessThan",

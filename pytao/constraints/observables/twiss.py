@@ -9,15 +9,14 @@ from pytao.constraints.observables.base import CheckResult
 
 
 class TwissComparisonMethod(ConstraintsBase, ABC):
+    """Abstract base for Twiss parameter comparison methods.
+
+    Subclasses implement ``__call__`` to compare a (beta, alpha) pair
+    from two elements and return a ``CheckResult``.
+    """
+
     @abstractmethod
     def __call__(self, beta0, alpha0, beta1, alpha1) -> CheckResult: ...
-
-
-class DummyTwissComparison(TwissComparisonMethod):
-    type: Literal["dummy"] = "dummy"
-
-    def __call__(self, _beta0, _alpha0, _beta1, _alpha1) -> CheckResult:
-        return CheckResult(passed=True)
 
 
 class BmagTwissComparison(TwissComparisonMethod):
@@ -53,6 +52,4 @@ class BmagTwissComparison(TwissComparisonMethod):
         return CheckResult(passed=passed, detail=detail)
 
 
-AnyTwissComparison = Annotated[
-    Union[DummyTwissComparison, BmagTwissComparison], Field(discriminator="type")
-]
+AnyTwissComparison = Annotated[Union[BmagTwissComparison], Field(discriminator="type")]

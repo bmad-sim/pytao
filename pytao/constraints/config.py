@@ -45,7 +45,15 @@ DatumObservables = Annotated[
 
 
 class Constraint(ConstraintsBase):
-    """Abstract base for all constraint types."""
+    """Abstract base for all constraint types.
+
+    Attributes
+    ----------
+    description : str
+        Short one-line name used on labels.
+    comment : str
+        Detailed notes about the constraint.
+    """
 
     description: str = Field(default="", description="Short one-line name used on labels")
     comment: str = Field(
@@ -74,19 +82,37 @@ class ComparisonConstraint(Constraint):
 
 
 class IsCloseConstraint(ComparisonConstraint):
-    """Base for constraints that use an IsClose comparison operator."""
+    """Base for constraints that use an IsClose comparison operator.
+
+    Attributes
+    ----------
+    comparison : IsClose
+        Operator used to evaluate approximate equality between two observations.
+    """
 
     comparison: IsClose
 
 
 class IsLessConstraint(ComparisonConstraint):
-    """Base for constraints that use an IsLess comparison operator."""
+    """Base for constraints that use an IsLess comparison operator.
+
+    Attributes
+    ----------
+    comparison : IsLess
+        Operator used to evaluate component-wise less-than between two observations.
+    """
 
     comparison: IsLess
 
 
 class RegressionConstraint(Constraint):
-    """Base for constraints that compare current observations against a saved reference."""
+    """Base for constraints that compare current observations against a saved reference.
+
+    Attributes
+    ----------
+    comparison : IsClose
+        Operator used to compare the current observation against the reference.
+    """
 
     comparison: IsClose
 

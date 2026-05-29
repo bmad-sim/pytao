@@ -8,6 +8,16 @@ from typing import Generic, Literal, TypeVar
 
 
 class CheckResult(ConstraintsBase):
+    """Result of a single scalar or array comparison check.
+
+    Attributes
+    ----------
+    passed : bool
+        Whether the check passed.
+    detail : str
+        Human-readable detail shown on failure.
+    """
+
     passed: bool
     detail: str = ""
 
@@ -22,7 +32,15 @@ class CheckResult(ConstraintsBase):
 
 
 class Observation(ConstraintsBase):
-    """Concrete output from a lattice observation."""
+    """Base class for all observation outputs.
+
+    Attributes
+    ----------
+    elapsed_time : float
+        Wall-clock time taken to produce the observation, in seconds.
+    created_at : datetime
+        UTC timestamp at which the observation was created.
+    """
 
     elapsed_time: float = 0.0
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -32,7 +50,11 @@ ObsT = TypeVar("ObsT", bound=Observation)
 
 
 class Observable(ConstraintsBase, Generic[ObsT]):
-    """Abstract base for all observables."""
+    """Abstract base for all observables.
+
+    Generic over ``ObsT``, the ``Observation`` subclass this observable produces.
+    All observable instances are frozen (immutable) Pydantic models.
+    """
 
     model_config = ConfigDict(frozen=True)
 
@@ -42,7 +64,15 @@ class Observable(ConstraintsBase, Generic[ObsT]):
 
 
 class LatticeObservable(Observable[ObsT]):
-    """Observable that fetches data from a lattice via Tao."""
+    """Observable that fetches data from a lattice via Tao.
+
+    Subclasses implement ``_make_observation`` to retrieve and package data.
+
+    Attributes
+    ----------
+    lattice_id : str
+        Identifier for the lattice this observable is associated with.
+    """
 
     lattice_id: str
 
@@ -62,7 +92,10 @@ class LatticeObservable(Observable[ObsT]):
 
 
 class LiteralObservable(Observable[ObsT]):
-    """Observable whose observation is a constant value."""
+    """Observable whose observation is a constant value independent of the lattice.
+
+    Subclasses implement ``_make_observation`` to build the fixed observation.
+    """
 
     def _make_observation(self) -> ObsT: ...
 
@@ -76,7 +109,14 @@ class LiteralObservable(Observable[ObsT]):
 
 
 class ComparisonResult(ConstraintsBase):
-    """Base for all constraint check results."""
+    """Base class for all constraint check results.
+
+    Attributes
+    ----------
+    error : str or None
+        Set to a non-empty string when evaluation failed (e.g. a Tao error).
+        When set, ``is_satisfied`` returns ``False`` regardless of per-field results.
+    """
 
     error: str | None = None
 
@@ -100,6 +140,11 @@ class Comparison(ConstraintsBase, Generic[ResultT]):
 
 
 class IsCloseResult(ComparisonResult):
+    """Base result type for approximate-equality comparisons.
+
+    ``is_satisfied`` is a ``computed_field`` so it is included in Pydantic serialization.
+    """
+
     result_type: Literal["IsCloseResult"] = "IsCloseResult"
 
     # computed_field includes this property in pydantic serialization
@@ -116,6 +161,11 @@ class IsClose(Comparison[IsCloseResult], Generic[ObsT]):
 
 
 class IsLessResult(ComparisonResult):
+    """Base result type for less-than comparisons.
+
+    ``is_satisfied`` is a ``computed_field`` so it is included in Pydantic serialization.
+    """
+
     result_type: Literal["IsLessResult"] = "IsLessResult"
 
     # computed_field includes this property in pydantic serialization
