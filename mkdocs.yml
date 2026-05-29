@@ -25,6 +25,8 @@ nav:
 
   - Constraints:
       - constraints/index.md
+      - constraints/config.md
+      - constraints/api.md
 
   - Dev:
       - development.md
