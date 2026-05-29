@@ -95,6 +95,18 @@ class RegressionConstraint(Constraint):
 
 
 class EleIsCloseConstraint(IsCloseConstraint):
+    """Constraint checking that two element observables are approximately equal.
+
+    Attributes
+    ----------
+    obs_a : EleObservables
+        First element observable.
+    obs_b : EleObservables
+        Second element observable.
+    comparison : EleIsClose
+        Comparison operator applied to the two observations.
+    """
+
     constraint_type: Literal["ele_eq"] = "ele_eq"
     obs_a: EleObservables
     obs_b: EleObservables
@@ -118,6 +130,18 @@ class EleIsCloseConstraint(IsCloseConstraint):
 
 
 class EleLessThanConstraint(IsLessConstraint):
+    """Constraint checking that ``obs_a`` is component-wise less than ``obs_b``.
+
+    Attributes
+    ----------
+    obs_a : EleObservables
+        Left-hand side observable.
+    obs_b : EleObservables
+        Right-hand side observable.
+    comparison : EleLessThan
+        Component selector and less-than operator.
+    """
+
     constraint_type: Literal["ele_lt"] = "ele_lt"
     obs_a: EleObservables
     obs_b: EleObservables
@@ -183,6 +207,16 @@ class DatumLessThanConstraint(IsLessConstraint):
 
 
 class EleRegressionConstraint(RegressionConstraint):
+    """Constraint comparing current element observations against a saved reference.
+
+    Attributes
+    ----------
+    obs : EleObservables
+        Element observable to evaluate and compare.
+    comparison : EleIsClose
+        Comparison operator used to check current against reference.
+    """
+
     constraint_type: Literal["ele_reg"] = "ele_reg"
     obs: EleObservables
     comparison: EleIsClose = EleIsClose()

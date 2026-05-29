@@ -31,11 +31,30 @@ from pytao.model.ele.ele import Element
 
 
 class EleObservation(Observation):
+    """Observation with all of the data available in a Bmad element. Ie, all of the information you get from a pytao
+    ``tao.ele(...)`` call.
+
+    Attributes
+    ----------
+    element : Element
+        Element data including Twiss parameters, orbit, floor position, and attributes.
+    """
+
     obs_type: Literal["ele"] = "ele"
     element: Element
 
 
 class TolComparison(ConstraintsBase):
+    """Scalar or array approximate-equality check using ``np.allclose``.
+
+    Attributes
+    ----------
+    atol : float
+        Absolute tolerance.
+    rtol : float
+        Relative tolerance.
+    """
+
     atol: float = 1e-8
     rtol: float = 1e-5
 
@@ -52,6 +71,38 @@ class TolComparison(ConstraintsBase):
 
 
 class EleIsCloseResult(IsCloseResult):
+    """Result of an EleIsClose comparison with per-field check results.
+
+    Each field is ``None`` if the corresponding comparison was not run.
+
+    Attributes
+    ----------
+    twiss_a : CheckResult or None
+        Mode A Twiss comparison (beta_a, alpha_a).
+    twiss_b : CheckResult or None
+        Mode B Twiss comparison (beta_b, alpha_b).
+    eta_x : CheckResult or None
+        Horizontal dispersion.
+    etap_x : CheckResult or None
+        Horizontal dispersion slope.
+    eta_y : CheckResult or None
+        Vertical dispersion.
+    etap_y : CheckResult or None
+        Vertical dispersion slope.
+    ref_energy : CheckResult or None
+        Total reference energy (e_tot).
+    p0c : CheckResult or None
+        Reference momentum.
+    orbit : CheckResult or None
+        Orbit, as 6D vector.
+    floor_x : CheckResult or None
+        Global floor x coordinate.
+    floor_y : CheckResult or None
+        Global floor y coordinate.
+    floor_z : CheckResult or None
+        Global floor z coordinate.
+    """
+
     result_type: Literal["EleIsCloseResult"] = "EleIsCloseResult"
     twiss_a: CheckResult | None = None
     twiss_b: CheckResult | None = None
@@ -93,7 +144,37 @@ class EleIsCloseResult(IsCloseResult):
 
 
 class EleIsClose(IsClose[EleObservation]):
-    """IsClose operator comparing two EleObservation instances across all available data."""
+    """IsClose operator comparing two EleObservation instances across all available data.
+
+    Set a field to ``None`` to skip that comparison.
+
+    Attributes
+    ----------
+    twiss_a : AnyTwissComparison or None
+        Comparison method for mode A Twiss parameters.
+    twiss_b : AnyTwissComparison or None
+        Comparison method for mode B Twiss parameters.
+    eta_x : TolComparison or None
+        Comparison for horizontal dispersion.
+    etap_x : TolComparison or None
+        Comparison for horizontal dispersion slope.
+    eta_y : TolComparison or None
+        Comparison for vertical dispersion.
+    etap_y : TolComparison or None
+        Comparison for vertical dispersion slope.
+    ref_energy : TolComparison or None
+        Comparison for total reference energy.
+    p0c : TolComparison or None
+        Comparison for reference momentum.
+    orbit : TolComparison or None
+        Comparison for orbit, as 6D vector.
+    floor_x : TolComparison or None
+        Comparison for global floor x coordinate.
+    floor_y : TolComparison or None
+        Comparison for global floor y coordinate.
+    floor_z : TolComparison or None
+        Comparison for global floor z coordinate.
+    """
 
     twiss_a: AnyTwissComparison | None = BmagTwissComparison()
     twiss_b: AnyTwissComparison | None = BmagTwissComparison()
@@ -197,6 +278,40 @@ class EleIsClose(IsClose[EleObservation]):
 
 
 class EleLessThanResult(IsLessResult):
+    """Result of an EleLessThan comparison with per-field less-than check results.
+
+    Each field is ``None`` if the corresponding component was not checked.
+
+    Attributes
+    ----------
+    beta_a : CheckResult or None
+        Mode A beta function.
+    alpha_a : CheckResult or None
+        Mode A alpha function.
+    beta_b : CheckResult or None
+        Mode B beta function.
+    alpha_b : CheckResult or None
+        Mode B alpha function.
+    eta_x : CheckResult or None
+        Horizontal dispersion.
+    etap_x : CheckResult or None
+        Horizontal dispersion slope.
+    eta_y : CheckResult or None
+        Vertical dispersion.
+    etap_y : CheckResult or None
+        Vertical dispersion slope.
+    ref_energy : CheckResult or None
+        Total reference energy.
+    p0c : CheckResult or None
+        Reference momentum.
+    floor_x : CheckResult or None
+        Global floor x coordinate.
+    floor_y : CheckResult or None
+        Global floor y coordinate.
+    floor_z : CheckResult or None
+        Global floor z coordinate.
+    """
+
     result_type: Literal["EleLessThanResult"] = "EleLessThanResult"
     beta_a: CheckResult | None = None
     alpha_a: CheckResult | None = None
@@ -240,7 +355,39 @@ class EleLessThanResult(IsLessResult):
 
 
 class EleLessThan(IsLess[EleObservation]):
-    """Component-wise less-than comparison between two EleObservations."""
+    """Component-wise less-than comparison between two EleObservations.
+
+    Set a field to ``True`` to enable the less-than check for that component.
+
+    Attributes
+    ----------
+    beta_a : bool
+        Check mode A beta function.
+    alpha_a : bool
+        Check mode A alpha function.
+    beta_b : bool
+        Check mode B beta function.
+    alpha_b : bool
+        Check mode B alpha function.
+    eta_x : bool
+        Check horizontal dispersion.
+    etap_x : bool
+        Check horizontal dispersion slope.
+    eta_y : bool
+        Check vertical dispersion.
+    etap_y : bool
+        Check vertical dispersion slope.
+    ref_energy : bool
+        Check total reference energy.
+    p0c : bool
+        Check reference momentum.
+    floor_x : bool
+        Check global floor x coordinate.
+    floor_y : bool
+        Check global floor y coordinate.
+    floor_z : bool
+        Check global floor z coordinate.
+    """
 
     beta_a: bool = False
     alpha_a: bool = False
@@ -406,6 +553,38 @@ def _build_ele_observation(
 
 
 class EleLiteral(LiteralObservable[EleObservation]):
+    """Literal element observable with user-specified field values.
+
+    Only non-``None`` fields are included in the produced observation.
+
+    Attributes
+    ----------
+    beta_a : float or None
+        Mode A beta function.
+    alpha_a : float or None
+        Mode A alpha function.
+    beta_b : float or None
+        Mode B beta function.
+    alpha_b : float or None
+        Mode B alpha function.
+    eta_x : float or None
+        Horizontal dispersion.
+    etap_x : float or None
+        Horizontal dispersion slope.
+    eta_y : float or None
+        Vertical dispersion.
+    etap_y : float or None
+        Vertical dispersion slope.
+    p0c : float or None
+        Reference momentum.
+    floor_x : float or None
+        Global floor x coordinate.
+    floor_y : float or None
+        Global floor y coordinate.
+    floor_z : float or None
+        Global floor z coordinate.
+    """
+
     obs_type: Literal["ele_literal"] = "ele_literal"
     beta_a: float | None = None
     alpha_a: float | None = None
@@ -473,7 +652,17 @@ def _ele_reduce(
 
 
 class EleObservable(LatticeObservable[EleObservation]):
-    """Observable that fetches element data from the lattice."""
+    """Observable that fetches element data from the lattice.
+
+    Attributes
+    ----------
+    ele_id : str or int
+        Element index or name passed to ``tao.ele()``.
+    ix_uni : int
+        Universe index.
+    ix_branch : int
+        Branch index.
+    """
 
     obs_type: Literal["ele"] = "ele"
     ele_id: str | int
@@ -498,7 +687,15 @@ class EleObservable(LatticeObservable[EleObservation]):
 
 
 class EleMaxObservable(LatticeObservable[EleObservation]):
-    """Observable yielding the per-field maximum across all tracking elements."""
+    """Observable yielding the per-field maximum across all tracking elements.
+
+    Attributes
+    ----------
+    ix_uni : int
+        Universe index.
+    ix_branch : int
+        Branch index.
+    """
 
     obs_type: Literal["ele_max"] = "ele_max"
     ix_uni: int = Field(default=1, ge=0)
@@ -518,7 +715,15 @@ class EleMaxObservable(LatticeObservable[EleObservation]):
 
 
 class EleMinObservable(LatticeObservable[EleObservation]):
-    """Observable yielding the per-field minimum across all tracking elements."""
+    """Observable yielding the per-field minimum across all tracking elements.
+
+    Attributes
+    ----------
+    ix_uni : int
+        Universe index.
+    ix_branch : int
+        Branch index.
+    """
 
     obs_type: Literal["ele_min"] = "ele_min"
     ix_uni: int = Field(default=1, ge=0)

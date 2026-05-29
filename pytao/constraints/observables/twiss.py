@@ -21,6 +21,16 @@ class DummyTwissComparison(TwissComparisonMethod):
 
 
 class BmagTwissComparison(TwissComparisonMethod):
+    """Twiss comparison using the Bmag beam transfer matrix invariant.
+
+    Attributes
+    ----------
+    max_bmag : float
+        Upper bound for an acceptable Bmag value.
+    min_bmag : float
+        Lower bound for an acceptable Bmag value.
+    """
+
     type: Literal["bmag"] = "bmag"
     max_bmag: float = 1.01
     min_bmag: float = 0.99
