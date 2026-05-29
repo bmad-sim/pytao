@@ -10,7 +10,12 @@ import yaml
 
 from pytao import SubprocessTao
 
-from .config import ComparisonConstraint, ConstraintsConfig, RegressionConstraint
+from .config import (
+    ComparisonConstraint,
+    ConstraintsConfig,
+    IsCloseConstraint,
+    RegressionConstraint,
+)
 from .observables import (
     ComparisonResult,
     Observable,
@@ -140,6 +145,26 @@ def run(
                         result=result,
                     )
                 )
+                if (
+                    isinstance(constraint, IsCloseConstraint)
+                    and constraint.regression_check
+                    and compare_map is not None
+                ):
+                    for obs in constraint.required_observables:
+                        if obs not in obs_map or obs not in compare_map:
+                            reg_result = constraint.error_result("Missing observation")
+                        else:
+                            reg_result = constraint.comparison(obs_map[obs], compare_map[obs])
+                        regression_results.append(
+                            RegressionResult(
+                                group=group,
+                                label=constraint.label,
+                                description=constraint.description,
+                                comment=constraint.comment,
+                                observable=obs,
+                                result=reg_result,
+                            )
+                        )
             elif isinstance(constraint, RegressionConstraint):
                 if compare_map is None:
                     continue
@@ -147,10 +172,7 @@ def run(
                 if obs not in obs_map or obs not in compare_map:
                     result = constraint.error_result("Missing observation")
                 else:
-                    try:
-                        result = constraint.evaluate(obs_map[obs], compare_map[obs])
-                    except Exception:
-                        result = constraint.error_result(traceback.format_exc().strip())
+                    result = constraint.evaluate(obs_map[obs], compare_map[obs])
                 regression_results.append(
                     RegressionResult(
                         group=group,

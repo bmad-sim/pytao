@@ -84,13 +84,20 @@ class ComparisonConstraint(Constraint):
 class IsCloseConstraint(ComparisonConstraint):
     """Base for constraints that use an IsClose comparison operator.
 
+    When ``regression_check`` is ``True`` and a comparison baseline is available,
+    each required observable is also compared against its saved value using the
+    same ``comparison`` operator.
+
     Attributes
     ----------
     comparison : IsClose
         Operator used to evaluate approximate equality between two observations.
+    regression_check : bool
+        Whether to implicitly define regression checks on the observations from this constraint.
     """
 
     comparison: IsClose
+    regression_check: bool = True
 
 
 class IsLessConstraint(ComparisonConstraint):
