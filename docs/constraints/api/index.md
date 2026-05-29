@@ -1,7 +1,15 @@
 
-# Class Structure
+# Constraints API
 
-The folowing inheritance diagrams are provided to aid developers in understanding the constraints codebase.
+The structure of the constraints checking tool is laid out in this section of the documentation.
+On this page, we give descriptions of and listings for the abstract base classes.
+In particular, for the constraints, results, observaations, and operators on the observations.
+Concrete classes are organized by the type of observation (ie `EleObservation` and `DatumObservation`).
+These are the following.
+
+- [Element Observation Constraints](ele.md)
+- [Datum Observation Constraints](datum.md)
+
 
 ## Base Classes
 
@@ -71,8 +79,10 @@ classDiagram
 ### Constraint Hierarchy
 
 `Constraint` is the abstract base for all checks.
-`ComparisonConstraint` subclasses compare two live observations against each other.
-`RegressionConstraint` subclasses compare a current observation against a previously saved reference.
+`ComparisonConstraint` objects compare two live observations against each other.
+`RegressionConstraint` objects allow the definition of pure regression tests.
+These don't show up in test results unless there is a comparison set of observations saved from a previous run of the tool. 
+Note: regression tests are also automatically defined for constraints involving an equality operator.
 
 ```mermaid
 classDiagram

@@ -26,9 +26,10 @@ nav:
   - Constraints:
       - constraints/index.md
       - constraints/config.md
-      - constraints/api.md
-      - constraints/ele.md
-      - constraints/datum.md
+      - API:
+        - constraints/api/index.md
+        - constraints/api/ele.md
+        - constraints/api/datum.md
 
   - Dev:
       - development.md
