@@ -495,6 +495,7 @@ class EleLessThan(IsLess[EleObservation]):
 
 
 def _build_ele_observation(
+    *,
     beta_a: float | None,
     alpha_a: float | None,
     beta_b: float | None,
@@ -644,18 +645,18 @@ def _ele_reduce(
             floor_z = reduce_fn(floor_z, fa.z) if floor_z is not None else fa.z
 
     return _build_ele_observation(
-        beta_a,
-        alpha_a,
-        beta_b,
-        alpha_b,
-        eta_x,
-        etap_x,
-        eta_y,
-        etap_y,
-        p0c,
-        floor_x,
-        floor_y,
-        floor_z,
+        beta_a=beta_a,
+        alpha_a=alpha_a,
+        beta_b=beta_b,
+        alpha_b=alpha_b,
+        eta_x=eta_x,
+        etap_x=etap_x,
+        eta_y=eta_y,
+        etap_y=etap_y,
+        p0c=p0c,
+        floor_x=floor_x,
+        floor_y=floor_y,
+        floor_z=floor_z,
     )
 
 
