@@ -22,6 +22,8 @@ from pytao.constraints.observables.ele import TolComparison
 
 
 class DataSource(str, Enum):
+    """Data source for a Tao datum evaluation."""
+
     lat = "lat"
     data = "data"
     var = "var"
@@ -29,6 +31,8 @@ class DataSource(str, Enum):
 
 
 class EvalPoint(str, Enum):
+    """Element evaluation point for a Tao datum."""
+
     beginning = "beginning"
     center = "center"
     end = "end"
@@ -40,12 +44,34 @@ _DATUM_NAME = f"{_D2_NAME}.{_D1_NAME}[1]"
 
 
 class DatumObservation(Observation):
+    """Observation containing the result of a Tao datum evaluation.
+
+    Attributes
+    ----------
+    model_value : float
+        Model value of the datum.
+    design_value : float
+        Design value of the datum.
+    """
+
     obs_type: Literal["datum"] = "datum"
     model_value: float
     design_value: float
 
 
 class DatumIsCloseResult(IsCloseResult):
+    """Result of a DatumIsClose comparison with per-field check results.
+
+    Each field is ``None`` if the corresponding comparison was not run.
+
+    Attributes
+    ----------
+    model_value : CheckResult or None
+        Model value comparison result.
+    design_value : CheckResult or None
+        Design value comparison result.
+    """
+
     result_type: Literal["DatumIsCloseResult"] = "DatumIsCloseResult"
     model_value: CheckResult | None = None
     design_value: CheckResult | None = None
@@ -60,6 +86,18 @@ class DatumIsCloseResult(IsCloseResult):
 
 
 class DatumIsClose(IsClose[DatumObservation]):
+    """IsClose operator comparing two DatumObservation instances.
+
+    Set a field to ``None`` to skip that comparison.
+
+    Attributes
+    ----------
+    model_value_test : TolComparison or None
+        Comparison for the model value.
+    design_value_test : TolComparison or None
+        Comparison for the design value.
+    """
+
     model_value_test: TolComparison | None = TolComparison()
     design_value_test: TolComparison | None = None
 
@@ -76,6 +114,18 @@ class DatumIsClose(IsClose[DatumObservation]):
 
 
 class DatumLessThanResult(IsLessResult):
+    """Result of a DatumLessThan comparison with per-field less-than check results.
+
+    Each field is ``None`` if the corresponding component was not checked.
+
+    Attributes
+    ----------
+    model_value : CheckResult or None
+        Model value comparison result.
+    design_value : CheckResult or None
+        Design value comparison result.
+    """
+
     result_type: Literal["DatumLessThanResult"] = "DatumLessThanResult"
     model_value: CheckResult | None = None
     design_value: CheckResult | None = None
@@ -90,7 +140,17 @@ class DatumLessThanResult(IsLessResult):
 
 
 class DatumLessThan(IsLess[DatumObservation]):
-    """Component-wise less-than comparison between two DatumObservations."""
+    """Component-wise less-than comparison between two DatumObservations.
+
+    Set a field to ``True`` to enable the less-than check for that component.
+
+    Attributes
+    ----------
+    model_value : bool
+        Check model value.
+    design_value : bool
+        Check design value.
+    """
 
     model_value: bool = True
     design_value: bool = False
@@ -112,6 +172,16 @@ class DatumLessThan(IsLess[DatumObservation]):
 
 
 class DatumLiteral(LiteralObservable[DatumObservation]):
+    """Literal datum observable with user-specified model and design values.
+
+    Attributes
+    ----------
+    model_value : float
+        Model value for the produced observation.
+    design_value : float
+        Design value for the produced observation.
+    """
+
     obs_type: Literal["datum_literal"] = "datum_literal"
     model_value: float
     design_value: float
@@ -125,6 +195,24 @@ class DatumLiteral(LiteralObservable[DatumObservation]):
 
 
 class DatumObservable(LatticeObservable[DatumObservation]):
+    """Observable that creates a temporary Tao datum and evaluates it.
+
+    Attributes
+    ----------
+    data_type : str
+        Tao datum data type (e.g. ``"orbit.x"``).
+    ele_name : str
+        Name of the element at which the datum is evaluated.
+    ele_start_name : str
+        Start element name for range datums.
+    ele_ref_name : str
+        Reference element name.
+    eval_point : EvalPoint
+        Where along the element to evaluate (beginning, center, or end).
+    data_source : DataSource
+        Source of the data (lat, data, var, or beam).
+    """
+
     obs_type: Literal["datum"] = "datum"
     data_type: str
     ele_name: str

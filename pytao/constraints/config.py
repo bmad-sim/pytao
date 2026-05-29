@@ -165,7 +165,7 @@ class EleLessThanConstraint(IsLessConstraint):
     obs_b : EleObservables
         Right-hand side observable.
     comparison : EleLessThan
-        Component selector and less-than operator.
+        Less-than operator configuration.
     """
 
     constraint_type: Literal["ele_lt"] = "ele_lt"
@@ -189,6 +189,18 @@ class EleLessThanConstraint(IsLessConstraint):
 
 
 class DatumIsCloseConstraint(IsCloseConstraint):
+    """Constraint checking that two datum observables are approximately equal.
+
+    Attributes
+    ----------
+    obs_a : DatumObservables
+        First datum observable.
+    obs_b : DatumObservables
+        Second datum observable.
+    comparison : DatumIsClose
+        Comparison operator applied to the two observations.
+    """
+
     constraint_type: Literal["datum_eq"] = "datum_eq"
     obs_a: DatumObservables
     obs_b: DatumObservables
@@ -212,6 +224,18 @@ class DatumIsCloseConstraint(IsCloseConstraint):
 
 
 class DatumLessThanConstraint(IsLessConstraint):
+    """Constraint checking that ``obs_a`` is component-wise less than ``obs_b``.
+
+    Attributes
+    ----------
+    obs_a : DatumObservables
+        Left-hand side observable.
+    obs_b : DatumObservables
+        Right-hand side observable.
+    comparison : DatumLessThan
+        Less-than operator configuration.
+    """
+
     constraint_type: Literal["datum_lt"] = "datum_lt"
     obs_a: DatumObservables
     obs_b: DatumObservables
@@ -263,6 +287,16 @@ class EleRegressionConstraint(RegressionConstraint):
 
 
 class DatumRegressionConstraint(RegressionConstraint):
+    """Constraint comparing current datum observations against a saved reference.
+
+    Attributes
+    ----------
+    obs : DatumObservables
+        Datum observable to evaluate and compare.
+    comparison : DatumIsClose
+        Comparison operator used to check current against reference.
+    """
+
     constraint_type: Literal["datum_reg"] = "datum_reg"
     obs: DatumObservables
     comparison: DatumIsClose = DatumIsClose()
