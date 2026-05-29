@@ -113,3 +113,54 @@ obs:
 ```
 
 ## Full Example
+
+Finally, all of this comes together in a full config file.
+We give an example below.
+```yaml title="config.yml"
+lattices:
+  lat_a:
+    lattice_file: lattices/lat_a.lat.bmad
+  lat_b:
+    lattice_file: lattices/lat_b.lat.bmad
+  lat_c:
+    lattice_file: lattices/lat_c.lat.bmad
+
+constraints:
+  - constraint_type: ele_eq
+    description: Short description, lat_a, lat_b treaty point
+    comment: Longer comment included on error and in reports. eg Please rerun `tune_matcher.tao` in event of failure.
+    obs_a:
+      obs_type: ele
+      lattice_id: lat_a
+      ele_id: END
+    obs_b:
+      obs_type: ele
+      lattice_id: lat_b
+      ele_id: BEGINNING
+
+  - constraint_type: ele_lt
+    description: lat_a beta sanity check
+    obs_a:
+      obs_type: ele_max
+      lattice_id: lat_a
+    obs_b:
+      obs_type: ele_literal
+      beta_a: 200
+      beta_b: 200
+    comparison:
+      beta_a: true
+      beta_b: true
+
+  - constraint_type: datum_eq
+    description: Datum and literal example
+    obs_a:
+      obs_type: datum
+      lattice_id: lat_a
+      data_type: r56_compaction
+      ele_name: END
+    obs_b:
+      obs_type: datum_literal
+      model_value: 1.04448e-08
+      design_value: 0.0
+
+```
