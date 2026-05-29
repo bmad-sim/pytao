@@ -143,9 +143,14 @@ class IsCloseResult(ComparisonResult):
     """Base result type for approximate-equality comparisons.
 
     ``is_satisfied`` is a ``computed_field`` so it is included in Pydantic serialization.
+
+    Attributes
+    ----------
+    result_type : str
+        Discriminator literal. Always ``"is_close"``.
     """
 
-    result_type: Literal["IsCloseResult"] = "IsCloseResult"
+    result_type: Literal["is_close"] = "is_close"
 
     # computed_field includes this property in pydantic serialization
     @computed_field
@@ -164,9 +169,14 @@ class IsLessResult(ComparisonResult):
     """Base result type for less-than comparisons.
 
     ``is_satisfied`` is a ``computed_field`` so it is included in Pydantic serialization.
+
+    Attributes
+    ----------
+    result_type : str
+        Discriminator literal. Always ``"is_less"``.
     """
 
-    result_type: Literal["IsLessResult"] = "IsLessResult"
+    result_type: Literal["is_less"] = "is_less"
 
     # computed_field includes this property in pydantic serialization
     @computed_field

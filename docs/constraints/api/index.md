@@ -42,6 +42,9 @@ classDiagram
     LiteralObservable ..> Observation : creates
 ```
 
+#### ::: pytao.constraints.observables.LatticeObservable
+#### ::: pytao.constraints.observables.LiteralObservable
+
 ### Operators and Results
 
 Comparisons are defined between two `Observation` objects of the same type in the form of operators.

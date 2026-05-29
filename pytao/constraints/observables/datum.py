@@ -48,6 +48,8 @@ class DatumObservation(Observation):
 
     Attributes
     ----------
+    obs_type : str
+        Discriminator literal. Always ``"datum"``.
     model_value : float
         Model value of the datum.
     design_value : float
@@ -66,13 +68,15 @@ class DatumIsCloseResult(IsCloseResult):
 
     Attributes
     ----------
+    result_type : str
+        Discriminator literal. Always ``"datum_is_close"``.
     model_value : CheckResult or None
         Model value comparison result.
     design_value : CheckResult or None
         Design value comparison result.
     """
 
-    result_type: Literal["DatumIsCloseResult"] = "DatumIsCloseResult"
+    result_type: Literal["datum_is_close"] = "datum_is_close"
     model_value: CheckResult | None = None
     design_value: CheckResult | None = None
 
@@ -120,13 +124,15 @@ class DatumLessThanResult(IsLessResult):
 
     Attributes
     ----------
+    result_type : str
+        Discriminator literal. Always ``"datum_is_less"``.
     model_value : CheckResult or None
         Model value comparison result.
     design_value : CheckResult or None
         Design value comparison result.
     """
 
-    result_type: Literal["DatumLessThanResult"] = "DatumLessThanResult"
+    result_type: Literal["datum_is_less"] = "datum_is_less"
     model_value: CheckResult | None = None
     design_value: CheckResult | None = None
 
@@ -176,6 +182,8 @@ class DatumLiteral(LiteralObservable[DatumObservation]):
 
     Attributes
     ----------
+    obs_type : str
+        Discriminator literal. Always ``"datum_literal"``.
     model_value : float
         Model value for the produced observation.
     design_value : float
@@ -199,6 +207,8 @@ class DatumObservable(LatticeObservable[DatumObservation]):
 
     Attributes
     ----------
+    obs_type : str
+        Discriminator literal. Always ``"datum"``.
     data_type : str
         Tao datum data type (e.g. ``"orbit.x"``).
     ele_name : str

@@ -125,6 +125,8 @@ class EleIsCloseConstraint(IsCloseConstraint):
 
     Attributes
     ----------
+    constraint_type : str
+        Discriminator literal. Always ``"ele_eq"``.
     obs_a : EleObservables
         First element observable.
     obs_b : EleObservables
@@ -160,6 +162,8 @@ class EleLessThanConstraint(IsLessConstraint):
 
     Attributes
     ----------
+    constraint_type : str
+        Discriminator literal. Always ``"ele_lt"``.
     obs_a : EleObservables
         Left-hand side observable.
     obs_b : EleObservables
@@ -193,6 +197,8 @@ class DatumIsCloseConstraint(IsCloseConstraint):
 
     Attributes
     ----------
+    constraint_type : str
+        Discriminator literal. Always ``"datum_eq"``.
     obs_a : DatumObservables
         First datum observable.
     obs_b : DatumObservables
@@ -228,6 +234,8 @@ class DatumLessThanConstraint(IsLessConstraint):
 
     Attributes
     ----------
+    constraint_type : str
+        Discriminator literal. Always ``"datum_lt"``.
     obs_a : DatumObservables
         Left-hand side observable.
     obs_b : DatumObservables
@@ -261,6 +269,8 @@ class EleRegressionConstraint(RegressionConstraint):
 
     Attributes
     ----------
+    constraint_type : str
+        Discriminator literal. Always ``"ele_reg"``.
     obs : EleObservables
         Element observable to evaluate and compare.
     comparison : EleIsClose
@@ -291,6 +301,8 @@ class DatumRegressionConstraint(RegressionConstraint):
 
     Attributes
     ----------
+    constraint_type : str
+        Discriminator literal. Always ``"datum_reg"``.
     obs : DatumObservables
         Datum observable to evaluate and compare.
     comparison : DatumIsClose

@@ -27,17 +27,13 @@ flowchart TD
 ### Observables
 
 #### ::: pytao.constraints.observables.DatumObservable
-
 #### ::: pytao.constraints.observables.DatumLiteral
 
 ### Operators and Results
 
 #### ::: pytao.constraints.observables.DatumIsClose
-
 #### ::: pytao.constraints.observables.DatumIsCloseResult
-
 #### ::: pytao.constraints.observables.DatumLessThan
-
 #### ::: pytao.constraints.observables.DatumLessThanResult
 
 ## Constraints Classes
@@ -57,7 +53,5 @@ flowchart TD
 ```
 
 #### ::: pytao.constraints.config.DatumIsCloseConstraint
-
 #### ::: pytao.constraints.config.DatumLessThanConstraint
-
 #### ::: pytao.constraints.config.DatumRegressionConstraint

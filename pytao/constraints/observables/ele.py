@@ -36,6 +36,8 @@ class EleObservation(Observation):
 
     Attributes
     ----------
+    obs_type : str
+        Discriminator literal. Always ``"ele"``.
     element : Element
         Element data including Twiss parameters, orbit, floor position, and attributes.
     """
@@ -77,6 +79,8 @@ class EleIsCloseResult(IsCloseResult):
 
     Attributes
     ----------
+    result_type : str
+        Discriminator literal. Always ``"ele_is_close"``.
     twiss_a : CheckResult or None
         Mode A Twiss comparison (beta_a, alpha_a).
     twiss_b : CheckResult or None
@@ -103,7 +107,7 @@ class EleIsCloseResult(IsCloseResult):
         Global floor z coordinate.
     """
 
-    result_type: Literal["EleIsCloseResult"] = "EleIsCloseResult"
+    result_type: Literal["ele_is_close"] = "ele_is_close"
     twiss_a: CheckResult | None = None
     twiss_b: CheckResult | None = None
     eta_x: CheckResult | None = None
@@ -284,6 +288,8 @@ class EleLessThanResult(IsLessResult):
 
     Attributes
     ----------
+    result_type : str
+        Discriminator literal. Always ``"ele_is_less"``.
     beta_a : CheckResult or None
         Mode A beta function.
     alpha_a : CheckResult or None
@@ -312,7 +318,7 @@ class EleLessThanResult(IsLessResult):
         Global floor z coordinate.
     """
 
-    result_type: Literal["EleLessThanResult"] = "EleLessThanResult"
+    result_type: Literal["ele_is_less"] = "ele_is_less"
     beta_a: CheckResult | None = None
     alpha_a: CheckResult | None = None
     beta_b: CheckResult | None = None
@@ -559,6 +565,8 @@ class EleLiteral(LiteralObservable[EleObservation]):
 
     Attributes
     ----------
+    obs_type : str
+        Discriminator literal. Always ``"ele_literal"``.
     beta_a : float or None
         Mode A beta function.
     alpha_a : float or None
@@ -656,6 +664,8 @@ class EleObservable(LatticeObservable[EleObservation]):
 
     Attributes
     ----------
+    obs_type : str
+        Discriminator literal. Always ``"ele"``.
     ele_id : str or int
         Element index or name passed to ``tao.ele()``.
     ix_uni : int
@@ -691,6 +701,8 @@ class EleMaxObservable(LatticeObservable[EleObservation]):
 
     Attributes
     ----------
+    obs_type : str
+        Discriminator literal. Always ``"ele_max"``.
     ix_uni : int
         Universe index.
     ix_branch : int
@@ -719,6 +731,8 @@ class EleMinObservable(LatticeObservable[EleObservation]):
 
     Attributes
     ----------
+    obs_type : str
+        Discriminator literal. Always ``"ele_min"``.
     ix_uni : int
         Universe index.
     ix_branch : int

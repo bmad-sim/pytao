@@ -31,30 +31,21 @@ flowchart TD
 ### Observables
 
 #### ::: pytao.constraints.observables.EleObservable
-
 #### ::: pytao.constraints.observables.EleMinObservable
-
 #### ::: pytao.constraints.observables.EleMaxObservable
-
 #### ::: pytao.constraints.observables.EleLiteral
 
 ### Operators and Results
 
 #### ::: pytao.constraints.observables.EleIsClose
-
 #### ::: pytao.constraints.observables.EleLessThanResult
-
 #### ::: pytao.constraints.observables.EleLessThan
-
 #### ::: pytao.constraints.observables.EleIsCloseResult
 
 ### Operator Helper Classes
 
 #### ::: pytao.constraints.observables.TolComparison
-
 #### ::: pytao.constraints.observables.BmagTwissComparison
-
-
 
 ## Constraints, and Results
 

@@ -24,6 +24,8 @@ class BmagTwissComparison(TwissComparisonMethod):
 
     Attributes
     ----------
+    type : str
+        Discriminator literal. Always ``"bmag"``.
     max_bmag : float
         Upper bound for an acceptable Bmag value.
     min_bmag : float

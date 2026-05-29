@@ -15,7 +15,7 @@ from pytao.startup import TaoStartup
 
 
 class TestResult(ConstraintsBase):
-    result_type: Literal["TestResult"] = "TestResult"
+    result_type: Literal["test_result"] = "test_result"
     test_type: str
     description: str
     passed: bool
