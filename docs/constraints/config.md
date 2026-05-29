@@ -98,6 +98,7 @@ comparison:
 The constraints tool enables regression tests through the saving of all observations made during the checks and then loading them in subsequent runs.
 These will show up in a separate section of the output and results artifact.
 The approximate equality constraints (such as `EleIsClose` and `DatumIsClose`) inherently define regression tests for their observables as they include a equality operator letting us compare to past results.
+Implicit regression tests can be turned off with `regression_check: false` in the constraint.
 Users may optionally define their own regression checks at additional points using the `RegressionConstraint` objects.
 These are constraints in their own right and are defined in the constraints section, but only have one observable and don't get run unless a comparison file is provided.
 
