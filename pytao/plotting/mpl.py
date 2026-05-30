@@ -487,6 +487,8 @@ def _draw_modern_layout_sections(ax, sections, y_top: float) -> None:
             color="#888",
             fontsize=8,
             fontweight="bold",
+            clip_on=True,
+            in_layout=False,
         )
 
 
@@ -547,6 +549,8 @@ def _draw_modern_layout_markers(
                     fontsize=6,
                     ha="center",
                     va="bottom",
+                    clip_on=True,
+                    in_layout=False,
                 )
 
 
