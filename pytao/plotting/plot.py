@@ -1257,17 +1257,36 @@ class GraphManager(ABC):
 
     @layout_style.setter
     def layout_style(self, value: ModernLayoutConfig | None) -> None:
+        prev = self.layout_style
         self._layout_style_override = value
         self._layout_style_set = True
+        if value is not prev:
+            self._evict_layout_graphs()
 
     @layout_style.deleter
     def layout_style(self) -> None:
+        prev = self.layout_style
         self._layout_style_override = None
         self._layout_style_set = False
+        if self.layout_style is not prev:
+            self._evict_layout_graphs()
 
     def _default_layout_style(self) -> ModernLayoutConfig | None:
         """Backend-supplied default. Base manager has none."""
         return None
+
+    def _evict_layout_graphs(self) -> None:
+        """Drop any cached lattice-layout graphs so they get replaced."""
+        from .modern_layout import ModernLatticeLayoutGraph
+
+        layout_types: tuple[type, ...] = (LatticeLayoutGraph, ModernLatticeLayoutGraph)
+        for region_name in list(self.regions):
+            graphs = self.regions[region_name]
+            kept = [g for g in graphs if not isinstance(g, layout_types)]
+            if not kept:
+                del self.regions[region_name]
+            elif len(kept) != len(graphs):
+                self.regions[region_name] = kept
 
     def tao_init_hook(self) -> None:
         """Tao has reinitialized; clear our state."""
