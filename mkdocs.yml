@@ -15,6 +15,7 @@ nav:
       - examples/elements.ipynb
       - examples/config.ipynb
       - examples/plot-matplotlib.ipynb
+      - examples/plot-modern-layout.ipynb
       - examples/plot-bokeh.ipynb
       - examples/plot-bokeh-vars.ipynb
       - examples/plot-bokeh-particles.ipynb

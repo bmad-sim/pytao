@@ -203,16 +203,21 @@ class ModernLayoutConfig(TaoBaseModel, extra="forbid"):
         return type(self).model_validate(data)
 
     def classify(self, key: str, name: str) -> ElementStyle | None:
-        """Return the matched ``ElementStyle``, or None to skip the element."""
+        """Return the matched ``ElementStyle``, or None to skip the element.
+
+        Rules are checked before ``skip_keys`` so a rule can promote an
+        element whose Bmad key would otherwise be hidden (e.g. a ``MARKER``
+        whose name identifies it as a BPM).
+        """
         key = key.upper()
-        if key in self.skip_keys:
-            return None
         if key in self.styles:
             return self.styles[key]
         for rule in self.rules:
             style_key = rule.match(key, name)
             if style_key is not None and style_key in self.styles:
                 return self.styles[style_key]
+        if key in self.skip_keys:
+            return None
         return None
 
 
@@ -335,6 +340,10 @@ _DEFAULT_RULES: list[dict] = [
     {"key_pattern": r"^(MONITOR|INSTRUMENT)$", "name_pattern": r"SLM", "style": "SLM"},
     {"key_pattern": r"^(MONITOR|INSTRUMENT)$", "name_pattern": r"BSI", "style": "BSI"},
     {"key_pattern": r"^(MONITOR|INSTRUMENT)$", "name_pattern": r"FCUP", "style": "FCUP"},
+    # Some lattices use the ``MARKER`` key for BPMs. If "BPM" appears
+    # anywhere in the name, treat it as a BPM; other markers fall through
+    # to the default skip behavior.
+    {"key_pattern": r"^MARKER$", "name_pattern": r"BPM", "style": "BPM"},
 ]
 
 
