@@ -89,8 +89,8 @@ extra_css:
 plugins:
   - search
 
-  # - mkdocs-jupyter:
-  #     include_source: True
+  - mkdocs-jupyter:
+      include_source: True
 
   - mkdocstrings:
       default_handler: python
