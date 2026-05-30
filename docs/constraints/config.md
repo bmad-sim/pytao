@@ -28,7 +28,7 @@ constraints:
 ```
 
 To enable organization of constraints when the number is large, they may also be grouped together. 
-When the constraints tool is run, these groups will be propogated to the results and output will also be grouped.
+When the constraints tool is run, these groups will be propagated to the results and output will also be grouped.
 ```yaml
 constraints:
   Treaty-Points:
@@ -43,24 +43,24 @@ constraints:
 
 ## Constraints
 
-Contraints are distinguished by the `constraint_type` field and a complete listing of all constraint types can be found in the [API documentation](api/index.md).
+Constraints are distinguished by the `constraint_type` field and a complete listing of all constraint types can be found in the [API documentation](api/index.md).
 All constraints allow the fields `description` and `comment` which allow for human-readable documentation of the constraints.
 A `description` is a short string of text which is included in the constraint tool's output whenever the constraint is referenced.
 The `comment` is meant to be a longer description or explanation of what the constraint does and is output on violation of the constraint (as well as being included in saved artifacts).
 
-We will quickly explore the use the element approximate equality constraint (`EleLessThanConstraint`) as a prototypical example of defining the constraints.
-After writing the `constraint_type` (in this case `ele_eq` from [API docs](api/ele.md#pytao.constraints.config.EleLessThanConstraint)), we also define the two observables it acts on and (optionally) any configuration for the comparison operator.
+We will quickly explore the element approximate equality constraint (`EleIsCloseConstraint`) as a prototypical example of defining constraints.
+After writing the `constraint_type` (in this case `ele_eq` from [API docs](api/ele.md#pytao.constraints.config.EleIsCloseConstraint)), we also define the two observables it acts on and (optionally) any configuration for the comparison operator.
 Constraints are organized by `Observation` type and they accept any observable that outputs the right object.
 
-For an `EleLessThanConstraint` we have a choice of several observables from `ele` which evaluates the properties from a single element, or `ele_literal` which is a user defined value, or `ele_min` and `ele_max` which evaluate element-wise min/max of values over a single lattice.
-These are distinguished by `obs_type` and the right values for these can be found in the [API docs](api/ele.md#observables) again.
-We also define the other fields in the observable of choice here. 
+For an `EleIsCloseConstraint` we have a choice of several observables: `ele`, which evaluates the properties of a single element; `ele_literal`, which is a user-defined value; and `ele_min` and `ele_max`, which evaluate element-wise min/max values over a single lattice.
+These are distinguished by `obs_type` and the correct values can be found in the [API docs](api/ele.md#observables).
+We also define the other fields in the chosen observable. 
 For example, for the `EleObservable` we must reference the lattice and element to perform the measurement on.
 In the `ele_literal` observable, we list the values of the properties we are defining.
 
 Finally, the comparison operator may be configured. 
 Tolerances can be set for the approximate comparison operator.
-Checks can also be disabled or enabled as needed (for example, enabling floor comparisons or disable checks against literal fields that are not defined).
+Checks can also be disabled or enabled as needed (for example, enabling floor comparisons or disabling checks against literal fields that are not defined).
 
 ```yaml
 # Fields common to all constraints

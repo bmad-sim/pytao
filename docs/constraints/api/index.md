@@ -3,9 +3,9 @@
 
 The structure of the constraints checking tool is laid out in this section of the documentation.
 On this page, we give descriptions of and listings for the abstract base classes.
-In particular, for the constraints, results, observaations, and operators on the observations.
-Concrete classes are organized by the type of observation (ie `EleObservation` and `DatumObservation`).
-These are the following.
+In particular, for the constraints, results, observations, and operators on the observations.
+Concrete classes are organized by the type of observation (i.e., `EleObservation` and `DatumObservation`).
+These include:
 
 - [Element Observation Constraints](ele.md)
 - [Datum Observation Constraints](datum.md)
