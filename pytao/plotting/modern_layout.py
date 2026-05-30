@@ -326,24 +326,16 @@ _DEFAULT_STYLES: dict[str, ElementStyle] = {
 
 # Default classification rules. Direct key matches in `styles` win first;
 # these only run if the key isn't itself a style key.
+#
+marker_like = "^(MONITOR|INSTRUMENT|MARKER)$"
 _DEFAULT_RULES: list[dict] = [
-    # MONITOR/INSTRUMENT named like "<prefix>_<TYPE>[digits]" → style=<TYPE>.
-    {
-        "key_pattern": r"^(MONITOR|INSTRUMENT)$",
-        "name_pattern": r"^[^_]+_(?P<style>[A-Za-z]+)\d*",
-    },
-    # Fallback substring matches for the diagnostic types.
-    {"key_pattern": r"^(MONITOR|INSTRUMENT)$", "name_pattern": r"BPM", "style": "BPM"},
-    {"key_pattern": r"^(MONITOR|INSTRUMENT)$", "name_pattern": r"BSCR", "style": "BSCR"},
-    {"key_pattern": r"^(MONITOR|INSTRUMENT)$", "name_pattern": r"WRSC", "style": "WRSC"},
-    {"key_pattern": r"^(MONITOR|INSTRUMENT)$", "name_pattern": r"BLEN", "style": "BLEN"},
-    {"key_pattern": r"^(MONITOR|INSTRUMENT)$", "name_pattern": r"SLM", "style": "SLM"},
-    {"key_pattern": r"^(MONITOR|INSTRUMENT)$", "name_pattern": r"BSI", "style": "BSI"},
-    {"key_pattern": r"^(MONITOR|INSTRUMENT)$", "name_pattern": r"FCUP", "style": "FCUP"},
-    # Some lattices use the ``MARKER`` key for BPMs. If "BPM" appears
-    # anywhere in the name, treat it as a BPM; other markers fall through
-    # to the default skip behavior.
-    {"key_pattern": r"^MARKER$", "name_pattern": r"BPM", "style": "BPM"},
+    {"key_pattern": marker_like, "name_pattern": "BPM", "style": "BPM"},
+    {"key_pattern": marker_like, "name_pattern": "BSCR", "style": "BSCR"},
+    {"key_pattern": marker_like, "name_pattern": "WRSC", "style": "WRSC"},
+    {"key_pattern": marker_like, "name_pattern": "BLEN", "style": "BLEN"},
+    {"key_pattern": marker_like, "name_pattern": "SLM", "style": "SLM"},
+    {"key_pattern": marker_like, "name_pattern": "BSI", "style": "BSI"},
+    {"key_pattern": marker_like, "name_pattern": "FCUP", "style": "FCUP"},
 ]
 
 
