@@ -423,7 +423,7 @@ def plot_floor_plan_shape(
 # Bokeh marker name → matplotlib scatter marker code. Bokeh's decorated
 # variants (circle_cross, diamond_dot, …) collapse to their base shape since
 # matplotlib has no exact equivalent.
-_STYLED_LAYOUT_MPL_MARKERS: dict[str, str] = {
+_MODERN_LAYOUT_MPL_MARKERS: dict[str, str] = {
     "asterisk": "*",
     "circle": "o",
     "circle_cross": "o",
@@ -513,14 +513,19 @@ def _draw_modern_layout_boxes(ax, boxes: BoxData) -> None:
         )
 
 
-def _draw_modern_layout_markers(ax, markers: dict[str, MarkerData]) -> None:
+def _draw_modern_layout_markers(
+    ax,
+    markers: dict[str, MarkerData],
+    *,
+    show_labels: bool = True,
+) -> None:
     for shape, data in markers.items():
-        marker = _STYLED_LAYOUT_MPL_MARKERS.get(shape)
+        marker = _MODERN_LAYOUT_MPL_MARKERS.get(shape)
         if marker is None or not data["x"]:
             continue
-        # Matplotlib scatter `s` is area in pt^2; bokeh size is diameter in
-        # screen px. Square the per-point diameter to roughly match weight.
-        sizes = [s * s for s in data["size"]]
+        # screen-px diameter source data (bokeh). Matplotlib area in square pts
+        # try to match area here
+        sizes = [(s / 2) ** 2 for s in data["size"]]
         ax.scatter(
             data["x"],
             data["y"],
@@ -529,6 +534,20 @@ def _draw_modern_layout_markers(ax, markers: dict[str, MarkerData]) -> None:
             marker=marker,
             linewidths=0,
         )
+
+        if show_labels:
+            for x, y, name, color in zip(data["x"], data["y"], data["name"], data["color"]):
+                if not name:
+                    continue
+                ax.text(
+                    x,
+                    y + 4,
+                    name,
+                    color=color,
+                    fontsize=6,
+                    ha="center",
+                    va="bottom",
+                )
 
 
 def plot(graph: AnyGraph, ax: matplotlib.axes.Axes | None = None) -> matplotlib.axes.Axes:

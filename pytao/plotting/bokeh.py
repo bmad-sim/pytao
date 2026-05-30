@@ -1177,7 +1177,7 @@ def _draw_modern_layout_markers(
                 {
                     "x": list(data["x"]),
                     "y": [y + 8 for y in data["y"]],
-                    "text": ["_".join(n.split("_")[1:]) for n in data["name"]],
+                    "text": data["name"],
                     "color": list(data["color"]),
                 }
             )
