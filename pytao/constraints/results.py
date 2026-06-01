@@ -58,8 +58,7 @@ class SavedObservations(ConstraintsBase):
 
 
 class LatticeResult(ConstraintsBase):
-    lattice_file: str | None
-    init_file: str | None
+    tao_startup: TaoStartup
     loaded: bool
     error: str | None = None
     load_time: float
@@ -76,8 +75,7 @@ class LatticeResult(ConstraintsBase):
         obs_time: float,
     ) -> LatticeResult:
         return cls(
-            lattice_file=str(lat_startup.lattice_file) if lat_startup.lattice_file else None,
-            init_file=str(lat_startup.init_file) if lat_startup.init_file else None,
+            tao_startup=lat_startup,
             loaded=loaded,
             error=error,
             load_time=load_time,
