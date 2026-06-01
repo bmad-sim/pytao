@@ -20,7 +20,7 @@ class TwissComparisonMethod(ConstraintsBase, ABC):
 
 
 class BmagTwissComparison(TwissComparisonMethod):
-    """Twiss comparison using the Bmag beam transfer matrix invariant.
+    """Twiss comparison using the Bmag metric.
 
     Attributes
     ----------
