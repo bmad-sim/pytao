@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Literal
 
 from pytao.constraints.pydantic import ConstraintsBase
 
@@ -12,19 +11,6 @@ from pytao.constraints.observables import (
     LatticeObservable,
 )
 from pytao.startup import TaoStartup
-
-
-class TestResult(ConstraintsBase):
-    result_type: Literal["test_result"] = "test_result"
-    test_type: str
-    description: str
-    passed: bool
-    error: str | None = None
-
-    def print_failure_detail(self) -> None:
-        if self.error:
-            for line in self.error.splitlines():
-                print(f"    {line}")
 
 
 class ConstraintResult(ConstraintsBase):
