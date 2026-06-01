@@ -17,6 +17,8 @@ lattices:
     init_file: ...
 ```
 
+Note: paths in the lattice section are resolved relative to the config file.
+
 The second important section in the config file is the `constraints` section.
 There are two ways that constraints may be defined.
 For smaller projects, a simple list of the constraints will suffice.
