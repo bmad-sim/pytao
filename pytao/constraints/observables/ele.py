@@ -183,10 +183,10 @@ class EleIsClose(IsClose[EleObservation]):
     twiss_a: AnyTwissComparison | None = BmagTwissComparison()
     twiss_b: AnyTwissComparison | None = BmagTwissComparison()
 
-    eta_x: TolComparison | None = TolComparison()
-    etap_x: TolComparison | None = TolComparison()
-    eta_y: TolComparison | None = TolComparison()
-    etap_y: TolComparison | None = TolComparison()
+    eta_x: TolComparison | None = TolComparison(atol=1e-6)
+    etap_x: TolComparison | None = TolComparison(atol=1e-6)
+    eta_y: TolComparison | None = TolComparison(atol=1e-6)
+    etap_y: TolComparison | None = TolComparison(atol=1e-6)
 
     ref_energy: TolComparison | None = TolComparison()
     p0c: TolComparison | None = TolComparison()
