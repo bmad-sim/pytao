@@ -27,7 +27,7 @@ from pytao.model import (
     ElementTwiss,
 )
 from pytao.model import _generated as tao_classes
-from pytao.model.ele.ele import Element
+from pytao.model.ele.ele import Element, get_head
 
 
 class EleObservation(Observation):
@@ -617,14 +617,38 @@ class EleLiteral(LiteralObservable[EleObservation]):
 
 
 def _ele_reduce(
-    tao: Tao, reduce_fn, ix_uni: str = "1", ix_branch: str = "0"
+    tao: Tao,
+    reduce_fn,
+    ix_uni: str = "1",
+    ix_branch: str = "0",
+    begin_ele: str | int | None = None,
+    end_ele: str | int | None = None,
 ) -> EleObservation:
+    ix_begin: int | None = None
+    ix_end: int | None = None
+
+    if begin_ele is not None or end_ele is not None:
+        ix_end_marker = get_head(tao, "END", which="model").ix_ele
+        if begin_ele is not None:
+            ix_begin = get_head(tao, begin_ele, which="model").ix_ele
+            if ix_begin >= ix_end_marker:
+                raise ValueError(f"begin_ele {begin_ele!r} is not a tracking element")
+        if end_ele is not None:
+            ix_end = get_head(tao, end_ele, which="model").ix_ele
+            if ix_end >= ix_end_marker:
+                raise ValueError(f"end_ele {end_ele!r} is not a tracking element")
+
     beta_a = alpha_a = beta_b = alpha_b = None
     eta_x = etap_x = eta_y = etap_y = None
     p0c = None
     floor_x = floor_y = floor_z = None
 
     for ix_ele in tao.lat_list("*", "ele.ix_ele", ix_uni=ix_uni, ix_branch=ix_branch):
+        ix_ele_int = int(ix_ele)
+        if ix_begin is not None and ix_ele_int < ix_begin:
+            continue
+        if ix_end is not None and ix_ele_int > ix_end:
+            continue
         ele = tao.ele(ix_ele, ix_uni=ix_uni, ix_branch=ix_branch)
         if ele.twiss is not None:
             t = ele.twiss
@@ -713,6 +737,8 @@ class EleMaxObservable(LatticeObservable[EleObservation]):
     obs_type: Literal["ele_max"] = "ele_max"
     ix_uni: int = Field(default=1, ge=0)
     ix_branch: int = Field(default=0, ge=0)
+    begin_ele: str | int | None = None
+    end_ele: str | int | None = None
 
     @property
     def label(self) -> str:
@@ -724,7 +750,14 @@ class EleMaxObservable(LatticeObservable[EleObservation]):
         return f"{self.lattice_id}[max{suffix}]"
 
     def _make_observation(self, tao: Tao) -> EleObservation:
-        return _ele_reduce(tao, max, ix_uni=str(self.ix_uni), ix_branch=str(self.ix_branch))
+        return _ele_reduce(
+            tao,
+            max,
+            ix_uni=str(self.ix_uni),
+            ix_branch=str(self.ix_branch),
+            begin_ele=self.begin_ele,
+            end_ele=self.end_ele,
+        )
 
 
 class EleMinObservable(LatticeObservable[EleObservation]):
@@ -743,6 +776,8 @@ class EleMinObservable(LatticeObservable[EleObservation]):
     obs_type: Literal["ele_min"] = "ele_min"
     ix_uni: int = Field(default=1, ge=0)
     ix_branch: int = Field(default=0, ge=0)
+    begin_ele: str | int | None = None
+    end_ele: str | int | None = None
 
     @property
     def label(self) -> str:
@@ -754,4 +789,11 @@ class EleMinObservable(LatticeObservable[EleObservation]):
         return f"{self.lattice_id}[min{suffix}]"
 
     def _make_observation(self, tao: Tao) -> EleObservation:
-        return _ele_reduce(tao, min, ix_uni=str(self.ix_uni), ix_branch=str(self.ix_branch))
+        return _ele_reduce(
+            tao,
+            min,
+            ix_uni=str(self.ix_uni),
+            ix_branch=str(self.ix_branch),
+            begin_ele=self.begin_ele,
+            end_ele=self.end_ele,
+        )
