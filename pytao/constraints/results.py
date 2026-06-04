@@ -60,6 +60,7 @@ class SavedObservations(ConstraintsBase):
 class LatticeResult(ConstraintsBase):
     tao_startup: TaoStartup
     loaded: bool
+    particle_survived: bool | None = None
     error: str | None = None
     load_time: float
     obs_time: float = 0.0
@@ -70,6 +71,7 @@ class LatticeResult(ConstraintsBase):
         lat_startup: TaoStartup,
         *,
         loaded: bool,
+        particle_survived: bool | None,
         error: str | None,
         load_time: float,
         obs_time: float,
@@ -77,6 +79,7 @@ class LatticeResult(ConstraintsBase):
         return cls(
             tao_startup=lat_startup,
             loaded=loaded,
+            particle_survived=particle_survived,
             error=error,
             load_time=load_time,
             obs_time=obs_time,

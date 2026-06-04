@@ -89,6 +89,7 @@ def run(
         params["noplot"] = True
 
         loaded = False
+        particle_survived: bool | None = None
         error: str | None = None
         load_time = 0.0
         obs_time = 0.0
@@ -98,6 +99,15 @@ def run(
             with SubprocessTao(**params) as tao:
                 load_time = time.perf_counter() - t0
                 loaded = True
+                try:
+                    states = tao.lat_list("end", "orbit.state", flags="-array_out")
+                    particle_survived = bool(states[0] == 1)
+                except Exception:
+                    logger.debug(
+                        "Particle survival check failed for lattice %r:\n%s",
+                        lat_id,
+                        traceback.format_exc().strip(),
+                    )
                 for obs in needed[lat_id]:
                     try:
                         obs_map[obs] = obs(tao)
@@ -119,8 +129,13 @@ def run(
         if verbose:
             if loaded:
                 n_obs = len([obs for obs in needed[lat_id] if obs in obs_map])
+                particle_suffix = (
+                    ""
+                    if particle_survived is None or particle_survived
+                    else "  [particle lost]"
+                )
                 print(
-                    f"  [OK  ] {lat_id}  loaded in {load_time:.2f}s, {n_obs} observables in {obs_time:.2f}s"
+                    f"  [OK  ] {lat_id}  loaded in {load_time:.2f}s, {n_obs} observables in {obs_time:.2f}s{particle_suffix}"
                 )
             else:
                 first_line = error.splitlines()[-1] if error else "unknown error"
@@ -129,6 +144,7 @@ def run(
         lattice_results[lat_id] = LatticeResult.from_startup(
             lat_startup,
             loaded=loaded,
+            particle_survived=particle_survived,
             error=error,
             load_time=load_time,
             obs_time=obs_time,
@@ -240,12 +256,16 @@ def _print_results_markdown(results: ConstraintResults) -> None:
 
     print("## Lattices")
     print()
-    print("| Lattice | Status | Load | Obs |")
-    print("|---------|--------|------|-----|")
+    print("| Lattice | Status | Particle | Load | Obs |")
+    print("|---------|--------|----------|------|-----|")
     for lat_id, lat in results.lattices.items():
         status = f"{_md_status(lat.loaded)} {'loaded' if lat.loaded else 'failed'}"
+        if lat.particle_survived is None:
+            particle_cell = "-"
+        else:
+            particle_cell = _md_status(lat.particle_survived)
         print(
-            f"| {_escape_md(lat_id)} | {status} | {lat.load_time:.2f}s | {lat.obs_time:.2f}s |"
+            f"| {_escape_md(lat_id)} | {status} | {particle_cell} | {lat.load_time:.2f}s | {lat.obs_time:.2f}s |"
         )
 
     lat_errors = [(lat_id, lat) for lat_id, lat in results.lattices.items() if lat.error]
@@ -470,8 +490,10 @@ def main() -> None:
         results_path.write_text(results.model_dump_json(indent=2))
         print(f"\nResults saved to {results_path}")
 
-    failed = any(not lat.loaded for lat in results.lattices.values()) or any(
-        not cr.result.is_satisfied for cr in results.constraints
+    failed = (
+        any(not lat.loaded for lat in results.lattices.values())
+        or any(lat.particle_survived is False for lat in results.lattices.values())
+        or any(not cr.result.is_satisfied for cr in results.constraints)
     )
     if failed:
         sys.exit(1)
