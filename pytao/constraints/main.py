@@ -127,19 +127,15 @@ def run(
             error = traceback.format_exc().strip()
 
         if verbose:
-            if loaded:
-                n_obs = len([obs for obs in needed[lat_id] if obs in obs_map])
-                particle_suffix = (
-                    ""
-                    if particle_survived is None or particle_survived
-                    else "  [particle lost]"
-                )
-                print(
-                    f"  [OK  ] {lat_id}  loaded in {load_time:.2f}s, {n_obs} observables in {obs_time:.2f}s{particle_suffix}"
-                )
-            else:
+            if not loaded:
                 first_line = error.splitlines()[-1] if error else "unknown error"
                 print(f"  [FAIL] {lat_id}  {first_line}")
+            else:
+                n_obs = len([obs for obs in needed[lat_id] if obs in obs_map])
+                tag = "[LOST]" if particle_survived is False else "[OK  ]"
+                print(
+                    f"  {tag} {lat_id}  loaded in {load_time:.2f}s, {n_obs} observables in {obs_time:.2f}s"
+                )
 
         lattice_results[lat_id] = LatticeResult(
             tao_startup=lat_startup,
@@ -256,16 +252,17 @@ def _print_results_markdown(results: ConstraintResults) -> None:
 
     print("## Lattices")
     print()
-    print("| Lattice | Status | Particle | Load | Obs |")
-    print("|---------|--------|----------|------|-----|")
+    print("| Lattice | Status | Load | Obs |")
+    print("|---------|--------|------|-----|")
     for lat_id, lat in results.lattices.items():
-        status = f"{_md_status(lat.loaded)} {'loaded' if lat.loaded else 'failed'}"
-        if lat.particle_survived is None:
-            particle_cell = "-"
+        if not lat.loaded:
+            status = f"{_md_status(False)} failed"
+        elif lat.particle_survived is False:
+            status = f"{_md_status(False)} particle lost"
         else:
-            particle_cell = _md_status(lat.particle_survived)
+            status = f"{_md_status(True)} loaded"
         print(
-            f"| {_escape_md(lat_id)} | {status} | {particle_cell} | {lat.load_time:.2f}s | {lat.obs_time:.2f}s |"
+            f"| {_escape_md(lat_id)} | {status} | {lat.load_time:.2f}s | {lat.obs_time:.2f}s |"
         )
 
     lat_errors = [(lat_id, lat) for lat_id, lat in results.lattices.items() if lat.error]
