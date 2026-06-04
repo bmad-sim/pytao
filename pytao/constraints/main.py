@@ -46,6 +46,7 @@ def run(
     config: ConstraintsConfig,
     config_dir: Path,
     compare: SavedObservations | None = None,
+    verbose: bool = False,
 ) -> tuple[SavedObservations, ConstraintResults]:
     """
     Run all constraints in the given config and return observations and results.
@@ -68,6 +69,16 @@ def run(
 
     needed = config.required_lattice_observables
     literal_obs = config.required_literal_observables
+
+    if verbose:
+        n_lat = len(config.lattices)
+        n_obs = sum(len(v) for v in needed.values())
+        n_constraints = len(config.all_constraints)
+        print(
+            f"Beginning constraints check with {n_lat} lattice(s), {n_constraints} constraint(s), "
+            f"and {n_obs} observable(s)"
+        )
+        print("Loading Lattices:")
 
     # Run observables: observable -> observation
     obs_map: dict[Observable, Observation] = {}
@@ -104,6 +115,16 @@ def run(
             if not load_time:
                 load_time = time.perf_counter() - t0
             error = traceback.format_exc().strip()
+
+        if verbose:
+            if loaded:
+                n_obs = len([obs for obs in needed[lat_id] if obs in obs_map])
+                print(
+                    f"  [OK  ] {lat_id}  loaded in {load_time:.2f}s, {n_obs} observables in {obs_time:.2f}s"
+                )
+            else:
+                first_line = error.splitlines()[-1] if error else "unknown error"
+                print(f"  [FAIL] {lat_id}  {first_line}")
 
         lattice_results[lat_id] = LatticeResult.from_startup(
             lat_startup,
@@ -332,17 +353,6 @@ def _print_check_detail(res: ComparisonResult) -> None:
 def _print_results(results: ConstraintResults) -> None:
     grouped = any(cr.group is not None for cr in results.constraints)
 
-    print("Lattices:")
-    for lat_id, lat in results.lattices.items():
-        status = "OK  " if lat.loaded else "FAIL"
-        print(
-            f"  [{status}] {lat_id}  loaded in {lat.load_time:.2f}s, observables in {lat.obs_time:.2f}s"
-        )
-        if lat.error:
-            for line in lat.error.splitlines():
-                print(f"         {line}")
-
-    print()
     print("Constraints:")
     for group, crs in results.constraints_by_group.items():
         if grouped:
@@ -444,7 +454,7 @@ def main() -> None:
 
     save_obs_path = Path(args.save_observations) if args.save_observations else None
 
-    saved, results = run(config, config_dir=config_path.parent, compare=compare)
+    saved, results = run(config, config_dir=config_path.parent, compare=compare, verbose=True)
 
     if args.markdown:
         _print_results_markdown(results)
