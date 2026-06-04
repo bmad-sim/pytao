@@ -305,13 +305,36 @@ def _print_results_markdown(results: ConstraintResults) -> None:
             desc = _escape_md(rr.description)
             print(f"| {status} | {_escape_md(rr.label)} | {desc} |")
 
+    lat_failures = [
+        (lat_id, lat)
+        for lat_id, lat in results.lattices.items()
+        if not lat.loaded or lat.particle_survived is False
+    ]
     failures_eq = [cr for cr in results.constraints if not cr.result.is_satisfied]
     failures_reg = [rr for rr in results.regression if not rr.result.is_satisfied]
 
-    if failures_eq or failures_reg:
+    if lat_failures or failures_eq or failures_reg:
         print()
         print("## Failures")
         print()
+        for lat_id, lat in lat_failures:
+            if not lat.loaded:
+                summary = f"{_md_status(False)} lattice {_escape_md(lat_id)}: failed to load"
+                print("<details>")
+                print(f"<summary>{summary}</summary>")
+                print()
+                if lat.error:
+                    print("```")
+                    print(lat.error)
+                    print("```")
+                    print()
+                print("</details>")
+                print()
+            else:
+                print(
+                    f"{_md_status(False)} lattice {_escape_md(lat_id)}: particle lost before end"
+                )
+                print()
         for cr in failures_eq:
             # Raw label in <summary>: content is HTML, not markdown, so _escape_md
             # would produce literal backslashes instead of consumed escape sequences.
@@ -389,14 +412,26 @@ def _print_results(results: ConstraintResults) -> None:
             suffix = f"  {rr.description}" if rr.description else ""
             print(f"  [{status}] {rr.label}{suffix}")
 
+    lat_failures = [
+        (lat_id, lat)
+        for lat_id, lat in results.lattices.items()
+        if not lat.loaded or lat.particle_survived is False
+    ]
     failures_eq = [cr for cr in results.constraints if not cr.result.is_satisfied]
     failures_reg = [rr for rr in results.regression if not rr.result.is_satisfied]
 
-    if failures_eq or failures_reg:
+    if lat_failures or failures_eq or failures_reg:
         print()
         print("=" * 60)
         print("FAILURES")
         print("=" * 60)
+        for lat_id, lat in lat_failures:
+            if not lat.loaded:
+                reason = lat.error.splitlines()[-1] if lat.error else "unknown error"
+                print(f"\n  lattice {lat_id}: failed to load")
+                print(f"    {reason}")
+            else:
+                print(f"\n  lattice {lat_id}: particle lost before end")
         for cr in failures_eq:
             label = cr.label
             prefix = f"[{cr.group}] " if grouped and cr.group else ""
