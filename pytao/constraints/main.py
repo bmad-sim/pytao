@@ -141,8 +141,8 @@ def run(
                 first_line = error.splitlines()[-1] if error else "unknown error"
                 print(f"  [FAIL] {lat_id}  {first_line}")
 
-        lattice_results[lat_id] = LatticeResult.from_startup(
-            lat_startup,
+        lattice_results[lat_id] = LatticeResult(
+            tao_startup=lat_startup,
             loaded=loaded,
             particle_survived=particle_survived,
             error=error,

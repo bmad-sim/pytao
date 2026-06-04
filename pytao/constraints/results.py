@@ -65,26 +65,6 @@ class LatticeResult(ConstraintsBase):
     load_time: float
     obs_time: float = 0.0
 
-    @classmethod
-    def from_startup(
-        cls,
-        lat_startup: TaoStartup,
-        *,
-        loaded: bool,
-        particle_survived: bool | None,
-        error: str | None,
-        load_time: float,
-        obs_time: float,
-    ) -> LatticeResult:
-        return cls(
-            tao_startup=lat_startup,
-            loaded=loaded,
-            particle_survived=particle_survived,
-            error=error,
-            load_time=load_time,
-            obs_time=obs_time,
-        )
-
 
 class ConstraintResults(ConstraintsBase):
     started_at: datetime
