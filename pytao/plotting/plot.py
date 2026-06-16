@@ -1286,7 +1286,7 @@ class GraphManager(ABC):
             if not kept:
                 del self.regions[region_name]
             elif len(kept) != len(graphs):
-                self.regions[region_name] = kept
+                self.regions[region_name] = list(kept)
 
     def tao_init_hook(self) -> None:
         """Tao has reinitialized; clear our state."""
