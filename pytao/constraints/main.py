@@ -151,11 +151,12 @@ def run(
 
     saved = SavedObservations.from_obs_map(obs_map)
 
-    constraint_results: list[ConstraintResult] = []
+    constraint_results: dict[str | None, list[ConstraintResult]] = {}
     regression_results: list[RegressionResult] = []
     compare_map = compare.obs_map if compare is not None else None
 
     for group, constraints in config.constraints_by_group.items():
+        constraint_results[group] = []
         for constraint in constraints:
             if isinstance(constraint, ComparisonConstraint):
                 missing = [
@@ -168,9 +169,8 @@ def run(
                     result = constraint.is_satisfied(
                         {obs: obs_map[obs] for obs in constraint.required_observables}
                     )
-                constraint_results.append(
+                constraint_results[group].append(
                     ConstraintResult(
-                        group=group,
                         label=constraint.label,
                         observables=list(constraint.required_observables),
                         description=constraint.description,
@@ -248,7 +248,7 @@ def _md_check_detail_rows(res: ComparisonResult) -> str:
 
 
 def _print_results_markdown(results: ConstraintResults) -> None:
-    grouped = any(cr.group is not None for cr in results.constraints)
+    grouped = any(group is not None for group in results.constraints)
 
     print("## Lattices")
     print()
@@ -281,7 +281,7 @@ def _print_results_markdown(results: ConstraintResults) -> None:
 
     print()
     print("## Constraints")
-    for group, crs in results.constraints_by_group.items():
+    for group, crs in results.constraints.items():
         if grouped:
             print()
             print(f"### {group}")
@@ -310,7 +310,9 @@ def _print_results_markdown(results: ConstraintResults) -> None:
         for lat_id, lat in results.lattices.items()
         if not lat.loaded or lat.particle_survived is False
     ]
-    failures_eq = [cr for cr in results.constraints if not cr.result.is_satisfied]
+    failures_eq = [
+        (group, cr) for group, cr in results.iter_constraints() if not cr.result.is_satisfied
+    ]
     failures_reg = [rr for rr in results.regression if not rr.result.is_satisfied]
 
     if lat_failures or failures_eq or failures_reg:
@@ -335,11 +337,11 @@ def _print_results_markdown(results: ConstraintResults) -> None:
                     f"{_md_status(False)} lattice {_escape_md(lat_id)}: particle lost before end"
                 )
                 print()
-        for cr in failures_eq:
+        for group, cr in failures_eq:
             # Raw label in <summary>: content is HTML, not markdown, so _escape_md
             # would produce literal backslashes instead of consumed escape sequences.
             label = cr.label
-            prefix = f"[{cr.group}] " if grouped and cr.group else ""
+            prefix = f"[{group}] " if grouped and group else ""
             summary = f"{_md_status(False)} {prefix}{label}"
             if cr.description:
                 summary += f"  {cr.description}"
@@ -368,8 +370,8 @@ def _print_results_markdown(results: ConstraintResults) -> None:
             print("</details>")
             print()
 
-    n_passed = sum(1 for cr in results.constraints if cr.result.is_satisfied)
-    n_total = len(results.constraints)
+    n_passed = sum(1 for _, cr in results.iter_constraints() if cr.result.is_satisfied)
+    n_total = sum(len(v) for v in results.constraints.values())
     print()
     print(f"**{n_passed}/{n_total} constraints passed**")
 
@@ -391,10 +393,10 @@ def _print_check_detail(res: ComparisonResult) -> None:
 
 
 def _print_results(results: ConstraintResults) -> None:
-    grouped = any(cr.group is not None for cr in results.constraints)
+    grouped = any(group is not None for group in results.constraints)
 
     print("Constraints:")
-    for group, crs in results.constraints_by_group.items():
+    for group, crs in results.constraints.items():
         if grouped:
             print(f"  [{group}]")
         indent = "    " if grouped else "  "
@@ -417,7 +419,9 @@ def _print_results(results: ConstraintResults) -> None:
         for lat_id, lat in results.lattices.items()
         if not lat.loaded or lat.particle_survived is False
     ]
-    failures_eq = [cr for cr in results.constraints if not cr.result.is_satisfied]
+    failures_eq = [
+        (group, cr) for group, cr in results.iter_constraints() if not cr.result.is_satisfied
+    ]
     failures_reg = [rr for rr in results.regression if not rr.result.is_satisfied]
 
     if lat_failures or failures_eq or failures_reg:
@@ -432,9 +436,9 @@ def _print_results(results: ConstraintResults) -> None:
                 print(f"    {reason}")
             else:
                 print(f"\n  lattice {lat_id}: particle lost before end")
-        for cr in failures_eq:
+        for group, cr in failures_eq:
             label = cr.label
-            prefix = f"[{cr.group}] " if grouped and cr.group else ""
+            prefix = f"[{group}] " if grouped and group else ""
             header = (
                 f"{prefix}{label}  {cr.description}" if cr.description else f"{prefix}{label}"
             )
@@ -453,8 +457,8 @@ def _print_results(results: ConstraintResults) -> None:
             print("  " + "-" * 56)
             _print_check_detail(rr.result)
 
-    n_passed = sum(1 for cr in results.constraints if cr.result.is_satisfied)
-    n_total = len(results.constraints)
+    n_passed = sum(1 for _, cr in results.iter_constraints() if cr.result.is_satisfied)
+    n_total = sum(len(v) for v in results.constraints.values())
     print()
     print(f"{n_passed}/{n_total} constraints passed")
 
@@ -525,7 +529,7 @@ def main() -> None:
     failed = (
         any(not lat.loaded for lat in results.lattices.values())
         or any(lat.particle_survived is False for lat in results.lattices.values())
-        or any(not cr.result.is_satisfied for cr in results.constraints)
+        or any(not cr.result.is_satisfied for _, cr in results.iter_constraints())
     )
     if failed:
         sys.exit(1)

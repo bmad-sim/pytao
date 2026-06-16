@@ -39,7 +39,7 @@ def test_run_timing():
     saved, results = run(config, DATA_DIR)
     lat = results.lattices["lat_a"]
     assert lat.loaded
-    assert lat.error is None
+    assert not lat.error
     assert lat.load_time > 0
     assert lat.obs_time >= 0
     assert saved.entries[0].observation.elapsed_time >= 0
@@ -64,10 +64,11 @@ def test_run_description_comment():
         ],
     )
     saved, results = run(config, DATA_DIR)
-    assert results.constraints[0].description == "first"
-    assert results.constraints[0].comment == "first comment"
-    assert results.constraints[1].description == "second"
-    assert results.constraints[1].comment == "second comment"
+    crs = results.constraints[None]
+    assert crs[0].description == "first"
+    assert crs[0].comment == "first comment"
+    assert crs[1].description == "second"
+    assert crs[1].comment == "second comment"
 
 
 def test_run_lattice_load_failure():
@@ -87,14 +88,14 @@ def test_run_lattice_load_failure():
     )
     saved, results = run(config, DATA_DIR)
     assert not results.lattices["lat_bad"].loaded
-    assert results.lattices["lat_bad"].error is not None
+    assert results.lattices["lat_bad"].error
     assert results.lattices["lat_a"].loaded
-    assert results.lattices["lat_a"].error is None
-    assert len(results.constraints) == 2
-    bad_cr = next(cr for cr in results.constraints if cr.description == "bad")
+    assert not results.lattices["lat_a"].error
+    assert sum(len(v) for v in results.constraints.values()) == 2
+    bad_cr = next(cr for _, cr in results.iter_constraints() if cr.description == "bad")
     assert not bad_cr.result.is_satisfied
     assert bad_cr.result.error is not None
-    good_cr = next(cr for cr in results.constraints if cr.description == "good")
+    good_cr = next(cr for _, cr in results.iter_constraints() if cr.description == "good")
     assert good_cr.result.is_satisfied
 
 
@@ -120,13 +121,14 @@ def test_run_continues_on_invalid_element():
     )
     saved, results = run(config, DATA_DIR)
     assert results.lattices["lat_a"].loaded
-    assert results.lattices["lat_a"].error is None
-    assert len(results.constraints) == 5
-    for cr in results.constraints[:4]:
+    assert not results.lattices["lat_a"].error
+    crs = results.constraints[None]
+    assert len(crs) == 5
+    for cr in crs[:4]:
         assert not cr.result.is_satisfied
         assert cr.result.error is not None
-    assert results.constraints[4].description == "valid"
-    assert results.constraints[4].result.is_satisfied
+    assert crs[4].description == "valid"
+    assert crs[4].result.is_satisfied
 
 
 def test_run_error_result_types():
@@ -146,19 +148,20 @@ def test_run_error_result_types():
         ],
     )
     saved, results = run(config, DATA_DIR)
-    assert len(results.constraints) == 4
-    assert isinstance(results.constraints[0].result, EleIsCloseResult)
-    assert not results.constraints[0].result.is_satisfied
-    assert results.constraints[0].result.error is not None
-    assert isinstance(results.constraints[1].result, EleLessThanResult)
-    assert not results.constraints[1].result.is_satisfied
-    assert results.constraints[1].result.error is not None
-    assert isinstance(results.constraints[2].result, DatumIsCloseResult)
-    assert not results.constraints[2].result.is_satisfied
-    assert results.constraints[2].result.error is not None
-    assert isinstance(results.constraints[3].result, DatumLessThanResult)
-    assert not results.constraints[3].result.is_satisfied
-    assert results.constraints[3].result.error is not None
+    crs = results.constraints[None]
+    assert len(crs) == 4
+    assert isinstance(crs[0].result, EleIsCloseResult)
+    assert not crs[0].result.is_satisfied
+    assert crs[0].result.error is not None
+    assert isinstance(crs[1].result, EleLessThanResult)
+    assert not crs[1].result.is_satisfied
+    assert crs[1].result.error is not None
+    assert isinstance(crs[2].result, DatumIsCloseResult)
+    assert not crs[2].result.is_satisfied
+    assert crs[2].result.error is not None
+    assert isinstance(crs[3].result, DatumLessThanResult)
+    assert not crs[3].result.is_satisfied
+    assert crs[3].result.error is not None
 
 
 def test_run_saved_observations():

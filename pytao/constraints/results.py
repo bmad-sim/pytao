@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Iterator
 from datetime import datetime
 
 from pytao.constraints.pydantic import ConstraintsBase
@@ -14,7 +15,6 @@ from pytao.startup import TaoStartup
 
 
 class ConstraintResult(ConstraintsBase):
-    group: str | None = None
     label: str = ""
     observables: list[AnyObservable]
     description: str = ""
@@ -70,12 +70,10 @@ class ConstraintResults(ConstraintsBase):
     started_at: datetime
     finished_at: datetime
     lattices: dict[str, LatticeResult]
-    constraints: list[ConstraintResult]
+    constraints: dict[str | None, list[ConstraintResult]]
     regression: list[RegressionResult] = []
 
-    @property
-    def constraints_by_group(self) -> dict[str | None, list[ConstraintResult]]:
-        groups: dict[str | None, list[ConstraintResult]] = {}
-        for cr in self.constraints:
-            groups.setdefault(cr.group, []).append(cr)
-        return groups
+    def iter_constraints(self) -> Iterator[tuple[str | None, ConstraintResult]]:
+        for group, crs in self.constraints.items():
+            for cr in crs:
+                yield group, cr
