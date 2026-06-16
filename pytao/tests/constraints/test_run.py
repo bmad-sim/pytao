@@ -1,8 +1,6 @@
 import pathlib
 import tempfile
 
-import pytest
-
 from pytao.constraints.config import (
     ConstraintsConfig,
     DatumIsCloseConstraint,
@@ -243,11 +241,7 @@ def test_saved_observations_round_trip_datum():
         path = pathlib.Path(tmp) / "obs.json"
         path.write_text(saved.model_dump_json(indent=2))
         loaded = SavedObservations.model_validate_json(path.read_text())
-    assert len(loaded.entries) == 1
-    entry = loaded.entries[0]
-    assert entry.observable == obs
-    assert entry.observation.model_value == observation.model_value
-    assert entry.observation.design_value == observation.design_value
+    assert saved == loaded
 
 
 def test_saved_observations_round_trip_ele():
@@ -261,12 +255,4 @@ def test_saved_observations_round_trip_ele():
         path = pathlib.Path(tmp) / "obs.json"
         path.write_text(saved.model_dump_json(indent=2))
         loaded = SavedObservations.model_validate_json(path.read_text())
-    assert len(loaded.entries) == 1
-    entry = loaded.entries[0]
-    assert entry.observable == obs
-    orig = saved.obs_map[obs]
-    restored = loaded.obs_map[entry.observable]
-    assert restored.obs_type == orig.obs_type
-    assert restored.element.twiss is not None
-    assert restored.element.twiss.beta_a == pytest.approx(orig.element.twiss.beta_a)
-    assert restored.element.twiss.alpha_a == pytest.approx(orig.element.twiss.alpha_a)
+    assert saved == loaded
