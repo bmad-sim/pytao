@@ -1,6 +1,6 @@
 import time
 from datetime import datetime, timezone
-from pydantic import ConfigDict, Field, computed_field
+from pydantic import ConfigDict, Field
 
 from pytao.constraints.pydantic import ConstraintsBase
 from pytao import Tao
@@ -142,8 +142,6 @@ class Comparison(ConstraintsBase, Generic[ResultT]):
 class IsCloseResult(ComparisonResult):
     """Base result type for approximate-equality comparisons.
 
-    ``is_satisfied`` is a ``computed_field`` so it is included in Pydantic serialization.
-
     Attributes
     ----------
     result_type : str
@@ -151,12 +149,6 @@ class IsCloseResult(ComparisonResult):
     """
 
     result_type: Literal["is_close"] = "is_close"
-
-    # computed_field includes this property in pydantic serialization
-    @computed_field
-    @property
-    def is_satisfied(self) -> bool:
-        return not bool(self.error)
 
 
 class IsClose(Comparison[IsCloseResult], Generic[ObsT]):
@@ -168,8 +160,6 @@ class IsClose(Comparison[IsCloseResult], Generic[ObsT]):
 class IsLessResult(ComparisonResult):
     """Base result type for less-than comparisons.
 
-    ``is_satisfied`` is a ``computed_field`` so it is included in Pydantic serialization.
-
     Attributes
     ----------
     result_type : str
@@ -177,12 +167,6 @@ class IsLessResult(ComparisonResult):
     """
 
     result_type: Literal["is_less"] = "is_less"
-
-    # computed_field includes this property in pydantic serialization
-    @computed_field
-    @property
-    def is_satisfied(self) -> bool:
-        return not bool(self.error)
 
 
 class IsLess(Comparison[IsLessResult], Generic[ObsT]):
