@@ -83,7 +83,7 @@ class DatumIsCloseResult(IsCloseResult):
     @computed_field
     @property
     def is_satisfied(self) -> bool:
-        if not super().is_satisfied():
+        if not super().is_satisfied:
             return False
         ran = [r for r in [self.model_value, self.design_value] if r is not None]
         return all(ran) if ran else True
@@ -139,7 +139,7 @@ class DatumLessThanResult(IsLessResult):
     @computed_field
     @property
     def is_satisfied(self) -> bool:
-        if not super().is_satisfied():
+        if not super().is_satisfied:
             return False
         ran = [r for r in [self.model_value, self.design_value] if r is not None]
         return all(ran) if ran else True
