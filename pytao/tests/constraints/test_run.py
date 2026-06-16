@@ -63,7 +63,7 @@ def test_run_description_comment():
             ),
         ],
     )
-    saved, results = run(config, DATA_DIR)
+    _, results = run(config, DATA_DIR)
     crs = results.constraints[None]
     assert crs[0].description == "first"
     assert crs[0].comment == "first comment"
@@ -86,7 +86,7 @@ def test_run_lattice_load_failure():
             EleIsCloseConstraint(obs_a=obs_lat_a, obs_b=obs_lat_a, description="good"),
         ],
     )
-    saved, results = run(config, DATA_DIR)
+    _, results = run(config, DATA_DIR)
     assert not results.lattices["lat_bad"].loaded
     assert results.lattices["lat_bad"].error
     assert results.lattices["lat_a"].loaded
@@ -119,7 +119,7 @@ def test_run_continues_on_invalid_element():
             EleIsCloseConstraint(obs_a=obs_valid, obs_b=obs_valid, description="valid"),
         ],
     )
-    saved, results = run(config, DATA_DIR)
+    _, results = run(config, DATA_DIR)
     assert results.lattices["lat_a"].loaded
     assert not results.lattices["lat_a"].error
     crs = results.constraints[None]
@@ -147,7 +147,7 @@ def test_run_error_result_types():
             DatumLessThanConstraint(obs_a=obs_dat, obs_b=lit_dat),
         ],
     )
-    saved, results = run(config, DATA_DIR)
+    _, results = run(config, DATA_DIR)
     crs = results.constraints[None]
     assert len(crs) == 4
     assert isinstance(crs[0].result, EleIsCloseResult)
@@ -171,7 +171,7 @@ def test_run_saved_observations():
         lattices={"lat_a": TaoStartup(lattice_file=LAT_A)},
         constraints=[EleIsCloseConstraint(obs_a=obs_a, obs_b=obs_b)],
     )
-    saved, results = run(config, DATA_DIR)
+    saved, _ = run(config, DATA_DIR)
     assert len(saved.entries) == 1
     assert saved.entries[0].observable == obs_a
     assert saved.entries[0].observation.element is not None
