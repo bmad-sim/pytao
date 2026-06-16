@@ -38,19 +38,18 @@ from bokeh.plotting import figure
 from pydantic.dataclasses import dataclass
 from typing_extensions import NotRequired, TypedDict
 
-from pytao.plotting.modern_layout import (
+from ..core import AnyPath, TaoCommandError
+from . import floor_plan_shapes, pgplot, util
+from .curves import CurveIndexToCurve, PlotCurveLine, PlotCurveSymbols, TaoCurveSettings
+from .fields import ElementField
+from .layout_shapes import LayoutShape
+from .modern_layout import (
     BoxData,
     MarkerData,
     ModernLatticeLayoutGraph,
     ModernLayoutConfig,
     StemData,
 )
-
-from ..core import AnyPath, TaoCommandError
-from . import floor_plan_shapes, pgplot, util
-from .curves import CurveIndexToCurve, PlotCurveLine, PlotCurveSymbols, TaoCurveSettings
-from .fields import ElementField
-from .layout_shapes import LayoutShape
 from .patches import (
     PlotPatch,
     PlotPatchArc,
