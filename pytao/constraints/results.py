@@ -61,8 +61,8 @@ class LatticeResult(ConstraintsBase):
     tao_startup: TaoStartup
     loaded: bool
     particle_survived: bool | None = None
-    error: str | None = None
-    load_time: float
+    error: str = ""
+    load_time: float = 0.0
     obs_time: float = 0.0
 
 

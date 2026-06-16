@@ -141,7 +141,7 @@ def run(
             tao_startup=lat_startup,
             loaded=loaded,
             particle_survived=particle_survived,
-            error=error,
+            error=error or "",
             load_time=load_time,
             obs_time=obs_time,
         )
