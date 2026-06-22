@@ -5,7 +5,7 @@ from unittest.mock import patch
 import pytest
 
 from pytao.constraints.main import main
-from pytao.constraints.results import ConstraintResults, SavedObservations
+from pytao.constraints.results import ConstraintResultsGroup, SavedObservations
 
 DATA_DIR = pathlib.Path(__file__).parent / "data"
 CONFIGS = ["constraints.yaml", "constraints_grouped.yaml"]
@@ -93,7 +93,7 @@ def test_cli_reference_results(capsys, tmp_path):
         str(save_path),
         capsys=capsys,
     )
-    loaded = ConstraintResults.model_validate_json(save_path.read_text())
+    loaded = ConstraintResultsGroup.model_validate_json(save_path.read_text())
     actual = _normalize_results(loaded.model_dump(mode="json"))
     expected = _normalize_results(json.loads(REFERENCE_PATH.read_text()))
     assert (

@@ -66,7 +66,7 @@ class LatticeResult(ConstraintsBase):
     obs_time: float = 0.0
 
 
-class ConstraintResults(ConstraintsBase):
+class ConstraintResultsGroup(ConstraintsBase):
     started_at: datetime
     finished_at: datetime
     lattices: dict[str, LatticeResult]

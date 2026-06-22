@@ -4,7 +4,7 @@ import tempfile
 from unittest.mock import patch
 
 from pytao.constraints.main import main
-from pytao.constraints.results import ConstraintResults
+from pytao.constraints.results import ConstraintResultsGroup
 
 
 DATA_DIR = pathlib.Path(__file__).parent / "data"
@@ -39,7 +39,9 @@ def run() -> None:
                 main()
             except SystemExit:
                 pass
-        loaded = ConstraintResults.model_validate_json(pathlib.Path(save_path).read_text())
+        loaded = ConstraintResultsGroup.model_validate_json(
+            pathlib.Path(save_path).read_text()
+        )
         data = _normalize_results(loaded.model_dump(mode="json"))
         OUT_PATH.write_text(json.dumps(data, indent=2))
         print(f"Written: {OUT_PATH}")

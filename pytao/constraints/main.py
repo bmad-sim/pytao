@@ -18,7 +18,7 @@ from .observables import (
 )
 from .results import (
     ConstraintResult,
-    ConstraintResults,
+    ConstraintResultsGroup,
     LatticeResult,
     SavedObservations,
 )
@@ -41,7 +41,7 @@ def run(
     config_dir: Path,
     compare: SavedObservations | None = None,
     verbose: bool = False,
-) -> tuple[SavedObservations, ConstraintResults]:
+) -> tuple[SavedObservations, ConstraintResultsGroup]:
     """
     Run all constraints in the given config and return observations and results.
 
@@ -56,7 +56,7 @@ def run(
 
     Returns
     -------
-    tuple[SavedObservations, ConstraintResults]
+    tuple[SavedObservations, ConstraintResultsGroup]
         Saved lattice observations and the full constraint results.
     """
     started_at = datetime.now(timezone.utc)
@@ -157,7 +157,7 @@ def run(
             constraint_results[group].extend(crs)
             regression_results[group].extend(reg)
 
-    return saved, ConstraintResults(
+    return saved, ConstraintResultsGroup(
         started_at=started_at,
         finished_at=datetime.now(timezone.utc),
         lattices=lattice_results,
@@ -185,7 +185,7 @@ def _md_check_detail_rows(res: ComparisonResult) -> str:
     return "\n".join(lines)
 
 
-def _print_results_markdown(results: ConstraintResults) -> None:
+def _print_results_markdown(results: ConstraintResultsGroup) -> None:
     grouped = any(group is not None for group in results.constraints)
 
     print("## Lattices")
@@ -330,7 +330,7 @@ def _print_check_detail(res: ComparisonResult) -> None:
             print(f"    {line}")
 
 
-def _print_results(results: ConstraintResults) -> None:
+def _print_results(results: ConstraintResultsGroup) -> None:
     grouped = any(group is not None for group in results.constraints)
 
     print("Constraints:")
