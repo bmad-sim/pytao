@@ -247,14 +247,17 @@ class DatumObservable(LatticeObservable[DatumObservation]):
             data_source=self.data_source.value,
         )
         tao.data_set_design_value()
-        result = tao.data_d_array(_D2_NAME, _D1_NAME)[0]
+        try:
+            result = tao.data_d_array(_D2_NAME, _D1_NAME)[0]
 
-        # Sanity check if tao is failing silently
-        if not result["exists"]:
-            raise TaoCommandError(f"DatumObservable Failed: Could not create datum. {self!r}")
+            if not result["exists"]:
+                raise TaoCommandError(
+                    f"DatumObservable Failed: Could not create datum. {self!r}"
+                )
 
-        tao.data_d2_destroy(_D2_NAME)
-        return DatumObservation(
-            model_value=result["model_value"],
-            design_value=result["design_value"],
-        )
+            return DatumObservation(
+                model_value=result["model_value"],
+                design_value=result["design_value"],
+            )
+        finally:
+            tao.data_d2_destroy(_D2_NAME)
