@@ -5,20 +5,22 @@ from unittest.mock import patch
 import pytest
 
 from pytao.constraints.main import main
-from pytao.constraints.results import SavedObservations
+from pytao.constraints.results import ConstraintResults, SavedObservations
 
 DATA_DIR = pathlib.Path(__file__).parent / "data"
 CONFIGS = ["constraints.yaml", "constraints_grouped.yaml"]
-REFERENCE_PATH = DATA_DIR / "reference_observations.json"
+REFERENCE_PATH = DATA_DIR / "reference_results.json"
 
 
-def _normalize_observations(data: dict) -> dict:
-    entries = data.get("entries", [])
-    for entry in entries:
-        obs = entry.get("observation", {})
-        obs.pop("elapsed_time", None)
-        obs.pop("created_at", None)
-    entries.sort(key=lambda e: json.dumps(e.get("observable", {}), sort_keys=True))
+def _normalize_results(data: dict) -> dict:
+    data.pop("started_at", None)
+    data.pop("finished_at", None)
+    for lat in data.get("lattices", {}).values():
+        lat.pop("load_time", None)
+        lat.pop("obs_time", None)
+    for group in data.get("constraints", {}).values():
+        for constraint in group:
+            constraint["observables"].sort(key=lambda o: json.dumps(o, sort_keys=True))
     return data
 
 
@@ -83,17 +85,17 @@ def test_cli_compare(config_file, markdown, capsys, tmp_path):
             assert "Regression:" in out
 
 
-def test_cli_reference_observations(capsys, tmp_path):
-    save_path = tmp_path / "obs.json"
+def test_cli_reference_results(capsys, tmp_path):
+    save_path = tmp_path / "results.json"
     _run_cli(
         str(DATA_DIR / "constraints.yaml"),
-        "--save-observations",
+        "--save-results",
         str(save_path),
         capsys=capsys,
     )
-    loaded = SavedObservations.model_validate_json(save_path.read_text())
-    actual = _normalize_observations(loaded.model_dump(mode="json"))
-    expected = _normalize_observations(json.loads(REFERENCE_PATH.read_text()))
+    loaded = ConstraintResults.model_validate_json(save_path.read_text())
+    actual = _normalize_results(loaded.model_dump(mode="json"))
+    expected = _normalize_results(json.loads(REFERENCE_PATH.read_text()))
     assert (
         actual == expected
-    ), "Observations differ from reference. Re-run update_reference.py to accept."
+    ), "Results differ from reference. Re-run update_reference.py to accept."

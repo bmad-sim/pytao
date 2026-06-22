@@ -1,6 +1,6 @@
 import time
 from datetime import datetime, timezone
-from pydantic import ConfigDict, Field
+from pydantic import ConfigDict, Field, model_validator
 
 from pytao.constraints.pydantic import ConstraintsBase
 from pytao import Tao
@@ -119,6 +119,13 @@ class ComparisonResult(ConstraintsBase):
     """
 
     error: str | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def _strip_computed(cls, data: object) -> object:
+        if isinstance(data, dict):
+            data.pop("is_satisfied", None)
+        return data
 
     @property
     def is_satisfied(self) -> bool:
