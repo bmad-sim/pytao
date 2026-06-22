@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from typing import Literal
 
 import numpy as np
@@ -548,7 +549,7 @@ def _build_ele_observation(
             slaves={},
         ),
     )
-    element = Element.model_construct(
+    element = Element.model_validate(
         ele_id="_literal",
         which="model",
         head=tao_classes.ElementHead(name="_literal", key="literal"),
@@ -618,7 +619,7 @@ class EleLiteral(LiteralObservable[EleObservation]):
 
 def _ele_reduce(
     tao: Tao,
-    reduce_fn,
+    reduce_fn: Callable[[float, float], float],
     ix_uni: str = "1",
     ix_branch: str = "0",
     begin_ele: str | int | None = None,

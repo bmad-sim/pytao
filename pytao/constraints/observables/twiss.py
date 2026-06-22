@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Annotated, Literal, Union
+from typing import Annotated, Literal
 
 from pydantic import Field
 
@@ -54,4 +54,4 @@ class BmagTwissComparison(TwissComparisonMethod):
         return CheckResult(passed=passed, detail=detail)
 
 
-AnyTwissComparison = Annotated[Union[BmagTwissComparison], Field(discriminator="type")]
+AnyTwissComparison = Annotated[BmagTwissComparison, Field(discriminator="type")]
