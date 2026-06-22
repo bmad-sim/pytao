@@ -216,7 +216,7 @@ def test_run_regression_multiple_groups():
     )
     compare = SavedObservations(
         entries=[
-            SavedEntry(observable=obs_pass, observation=obs_pass()),
+            SavedEntry(observable=obs_pass, observation=obs_pass.observe()),
             SavedEntry(
                 observable=obs_fail,
                 observation=DatumObservation(model_value=999.0, design_value=0.0),
@@ -239,7 +239,7 @@ def test_run_regression_multiple_groups():
 
 def test_saved_observations_round_trip_datum():
     obs = DatumLiteral(model_value=1.5, design_value=0.5)
-    observation = obs()
+    observation = obs.observe()
     saved = SavedObservations(entries=[SavedEntry(observable=obs, observation=observation)])
     with tempfile.TemporaryDirectory() as tmp:
         path = pathlib.Path(tmp) / "obs.json"

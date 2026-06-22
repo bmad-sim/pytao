@@ -82,7 +82,7 @@ class LatticeObservable(Observable[ObsT]):
 
     def _make_observation(self, tao: Tao) -> ObsT: ...
 
-    def __call__(self, tao: Tao) -> ObsT:
+    def observe(self, tao: Tao) -> ObsT:
         created_at = datetime.now(timezone.utc)
         t0 = time.perf_counter()
         result = self._make_observation(tao)
@@ -99,7 +99,7 @@ class LiteralObservable(Observable[ObsT]):
 
     def _make_observation(self) -> ObsT: ...
 
-    def __call__(self) -> ObsT:
+    def observe(self) -> ObsT:
         created_at = datetime.now(timezone.utc)
         t0 = time.perf_counter()
         result = self._make_observation()
@@ -154,7 +154,7 @@ class IsCloseResult(ComparisonResult):
 class IsClose(Comparison[IsCloseResult], Generic[ObsT]):
     """Approximate equality operator between two observations."""
 
-    def __call__(self, obja: ObsT, objb: ObsT) -> IsCloseResult: ...
+    def compare(self, obja: ObsT, objb: ObsT) -> IsCloseResult: ...
 
 
 class IsLessResult(ComparisonResult):
@@ -172,4 +172,4 @@ class IsLessResult(ComparisonResult):
 class IsLess(Comparison[IsLessResult], Generic[ObsT]):
     """Component-wise less-than operator between two observations."""
 
-    def __call__(self, obja: ObsT, objb: ObsT) -> IsLessResult: ...
+    def compare(self, obja: ObsT, objb: ObsT) -> IsLessResult: ...

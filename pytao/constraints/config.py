@@ -144,7 +144,7 @@ class IsCloseConstraint(ComparisonConstraint):
                 if obs not in obs_map or obs not in compare_map:
                     reg_result = self.error_result("Missing observation")
                 else:
-                    reg_result = self.comparison(obs_map[obs], compare_map[obs])
+                    reg_result = self.comparison.compare(obs_map[obs], compare_map[obs])
                 reg.append(
                     RegressionResult(
                         group=group,
@@ -240,7 +240,7 @@ class EleIsCloseConstraint(IsCloseConstraint):
         return frozenset((self.obs_a, self.obs_b))
 
     def is_satisfied(self, observations: dict[Observable, Observation]) -> EleIsCloseResult:
-        return self.comparison(observations[self.obs_a], observations[self.obs_b])
+        return self.comparison.compare(observations[self.obs_a], observations[self.obs_b])
 
     def error_result(self, error: str) -> EleIsCloseResult:
         return EleIsCloseResult(error=error)
@@ -275,7 +275,7 @@ class EleLessThanConstraint(IsLessConstraint):
         return frozenset((self.obs_a, self.obs_b))
 
     def is_satisfied(self, observations: dict[Observable, Observation]) -> EleLessThanResult:
-        return self.comparison(observations[self.obs_a], observations[self.obs_b])
+        return self.comparison.compare(observations[self.obs_a], observations[self.obs_b])
 
     def error_result(self, error: str) -> EleLessThanResult:
         return EleLessThanResult(error=error)
@@ -312,7 +312,7 @@ class DatumIsCloseConstraint(IsCloseConstraint):
         return frozenset((self.obs_a, self.obs_b))
 
     def is_satisfied(self, observations: dict[Observable, Observation]) -> DatumIsCloseResult:
-        return self.comparison(observations[self.obs_a], observations[self.obs_b])
+        return self.comparison.compare(observations[self.obs_a], observations[self.obs_b])
 
     def error_result(self, error: str) -> DatumIsCloseResult:
         return DatumIsCloseResult(error=error)
@@ -347,7 +347,7 @@ class DatumLessThanConstraint(IsLessConstraint):
         return frozenset((self.obs_a, self.obs_b))
 
     def is_satisfied(self, observations: dict[Observable, Observation]) -> DatumLessThanResult:
-        return self.comparison(observations[self.obs_a], observations[self.obs_b])
+        return self.comparison.compare(observations[self.obs_a], observations[self.obs_b])
 
     def error_result(self, error: str) -> DatumLessThanResult:
         return DatumLessThanResult(error=error)
@@ -379,7 +379,7 @@ class EleRegressionConstraint(RegressionConstraint):
         return frozenset({self.obs})
 
     def evaluate(self, current: EleObservation, reference: EleObservation) -> EleIsCloseResult:
-        return self.comparison(current, reference)
+        return self.comparison.compare(current, reference)
 
     def error_result(self, error: str) -> EleIsCloseResult:
         return EleIsCloseResult(error=error)
@@ -413,7 +413,7 @@ class DatumRegressionConstraint(RegressionConstraint):
     def evaluate(
         self, current: DatumObservation, reference: DatumObservation
     ) -> DatumIsCloseResult:
-        return self.comparison(current, reference)
+        return self.comparison.compare(current, reference)
 
     def error_result(self, error: str) -> DatumIsCloseResult:
         return DatumIsCloseResult(error=error)

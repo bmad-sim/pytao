@@ -195,7 +195,7 @@ class EleIsClose(IsClose[EleObservation]):
     floor_y: TolComparison | None = None
     floor_z: TolComparison | None = None
 
-    def __call__(self, obja: EleObservation, objb: EleObservation) -> EleIsCloseResult:
+    def compare(self, obja: EleObservation, objb: EleObservation) -> EleIsCloseResult:
         ea, eb = obja.element, objb.element
 
         twiss_a = twiss_b = eta_x = etap_x = eta_y = etap_y = None
@@ -415,7 +415,7 @@ class EleLessThan(IsLess[EleObservation]):
             passed=passed, detail="" if passed else f"a={va:.6g} not < b={vb:.6g}"
         )
 
-    def __call__(self, obja: EleObservation, objb: EleObservation) -> EleLessThanResult:
+    def compare(self, obja: EleObservation, objb: EleObservation) -> EleLessThanResult:
         ea, eb = obja.element, objb.element
         beta_a = alpha_a = beta_b = alpha_b = None
         eta_x = etap_x = eta_y = etap_y = None

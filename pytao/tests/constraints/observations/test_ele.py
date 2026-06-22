@@ -58,17 +58,17 @@ _ELE_IC_OP = EleIsClose(ref_energy=None)
     ],
 )
 def test_ele_is_satisfied(ele_lit, overrides, outcome, fields):
-    obs_a = ele_lit.model_copy(update=overrides)()
-    obs_b = ele_lit()
-    result = _ELE_IC_OP(obs_a, obs_b)
+    obs_a = ele_lit.model_copy(update=overrides).observe()
+    obs_b = ele_lit.observe()
+    result = _ELE_IC_OP.compare(obs_a, obs_b)
     assert result.is_satisfied == outcome
     assert_result_fields(result, fields)
 
 
 def test_ele_is_satisfied_missing_data_fails(ele_lit):
-    obs_a = ele_lit()
-    obs_b = ele_lit()
-    result = EleIsClose()(obs_a, obs_b)
+    obs_a = ele_lit.observe()
+    obs_b = ele_lit.observe()
+    result = EleIsClose().compare(obs_a, obs_b)
     assert not result.is_satisfied
     assert result.ref_energy is not None
     assert not result.ref_energy.passed
@@ -94,9 +94,9 @@ def test_ele_is_satisfied_missing_data_fails(ele_lit):
     ],
 )
 def test_ele_less_than(ele_lit, comparison, overrides, outcome, fields):
-    obs_a = ele_lit.model_copy(update=overrides)()
-    obs_b = ele_lit()
-    result = comparison(obs_a, obs_b)
+    obs_a = ele_lit.model_copy(update=overrides).observe()
+    obs_b = ele_lit.observe()
+    result = comparison.compare(obs_a, obs_b)
     assert result.is_satisfied == outcome
     assert_result_fields(result, fields)
 
@@ -143,9 +143,9 @@ def test_ele_less_than(ele_lit, comparison, overrides, outcome, fields):
     ],
 )
 def test_ele_is_satisfied_turned_off(ele_lit, comparison, overrides, outcome, fields):
-    obs_a = ele_lit.model_copy(update=overrides)()
-    obs_b = ele_lit()
-    result = comparison(obs_a, obs_b)
+    obs_a = ele_lit.model_copy(update=overrides).observe()
+    obs_b = ele_lit.observe()
+    result = comparison.compare(obs_a, obs_b)
     assert result.is_satisfied == outcome
     assert_result_fields(result, fields)
 
@@ -187,8 +187,8 @@ def test_ele_is_satisfied_turned_off(ele_lit, comparison, overrides, outcome, fi
     ],
 )
 def test_ele_less_than_turned_off(ele_lit, comparison, overrides, outcome, fields):
-    obs_a = ele_lit.model_copy(update=overrides)()
-    obs_b = ele_lit()
-    result = comparison(obs_a, obs_b)
+    obs_a = ele_lit.model_copy(update=overrides).observe()
+    obs_b = ele_lit.observe()
+    result = comparison.compare(obs_a, obs_b)
     assert result.is_satisfied == outcome
     assert_result_fields(result, fields)

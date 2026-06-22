@@ -30,7 +30,7 @@ def tao():
     ],
 )
 def test_literal_observable(obs, expected_type):
-    result = obs()
+    result = obs.observe()
     assert isinstance(result, expected_type)
     assert result.elapsed_time >= 0.0
     if isinstance(result, DatumObservation):
@@ -51,7 +51,7 @@ def test_literal_observable(obs, expected_type):
     ],
 )
 def test_ele_lattice_observable(tao, obs):
-    result = obs(tao)
+    result = obs.observe(tao)
     assert isinstance(result, EleObservation)
     assert result.elapsed_time >= 0.0
     assert result.element is not None
@@ -64,7 +64,7 @@ def test_ele_lattice_observable(tao, obs):
     ],
 )
 def test_datum_lattice_observable(tao, obs):
-    result = obs(tao)
+    result = obs.observe(tao)
     assert isinstance(result, DatumObservation)
     assert result.elapsed_time >= 0.0
     assert isinstance(result.model_value, float)

@@ -104,7 +104,7 @@ def run(
                     )
                 for obs in needed[lat_id]:
                     try:
-                        obs_map[obs] = obs(tao)
+                        obs_map[obs] = obs.observe(tao)
                     except Exception:
                         logger.debug(
                             "Observable %r failed for lattice %r:\n%s",
@@ -141,7 +141,7 @@ def run(
         )
 
     for obs in literal_obs:
-        obs_map[obs] = obs()
+        obs_map[obs] = obs.observe()
 
     saved = SavedObservations.from_obs_map(obs_map)
 

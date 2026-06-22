@@ -105,7 +105,7 @@ class DatumIsClose(IsClose[DatumObservation]):
     model_value_test: TolComparison | None = TolComparison()
     design_value_test: TolComparison | None = None
 
-    def __call__(self, obja: DatumObservation, objb: DatumObservation) -> DatumIsCloseResult:
+    def compare(self, obja: DatumObservation, objb: DatumObservation) -> DatumIsCloseResult:
         model_value = None
         design_value = None
 
@@ -167,7 +167,7 @@ class DatumLessThan(IsLess[DatumObservation]):
             passed=passed, detail="" if passed else f"a={va:.6g} not < b={vb:.6g}"
         )
 
-    def __call__(self, obja: DatumObservation, objb: DatumObservation) -> DatumLessThanResult:
+    def compare(self, obja: DatumObservation, objb: DatumObservation) -> DatumLessThanResult:
         model_value = (
             self._check(obja.model_value, objb.model_value) if self.model_value else None
         )
