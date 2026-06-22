@@ -71,9 +71,14 @@ class ConstraintResults(ConstraintsBase):
     finished_at: datetime
     lattices: dict[str, LatticeResult]
     constraints: dict[str | None, list[ConstraintResult]]
-    regression: list[RegressionResult] = []
+    regression: dict[str | None, list[RegressionResult]] = {}
 
     def iter_constraints(self) -> Iterator[tuple[str | None, ConstraintResult]]:
         for group, crs in self.constraints.items():
             for cr in crs:
                 yield group, cr
+
+    def iter_regression(self) -> Iterator[tuple[str | None, RegressionResult]]:
+        for group, rrs in self.regression.items():
+            for rr in rrs:
+                yield group, rr

@@ -30,6 +30,7 @@ from pytao.constraints.observables import (
     Observable,
     Observation,
 )
+from pytao.constraints.results import ConstraintResult, RegressionResult
 from pytao.startup import TaoStartup
 
 
@@ -71,6 +72,14 @@ class Constraint(ConstraintsBase):
     @abstractmethod
     def error_result(self, error: str) -> ComparisonResult: ...
 
+    @abstractmethod
+    def run(
+        self,
+        obs_map: dict[Observable, Observation],
+        compare_map: dict[Observable, Observation] | None,
+        group: str | None,
+    ) -> tuple[list[ConstraintResult], list[RegressionResult]]: ...
+
 
 class ComparisonConstraint(Constraint):
     """Base for constraints that compare two observations against each other."""
@@ -79,6 +88,29 @@ class ComparisonConstraint(Constraint):
     def is_satisfied(
         self, observations: dict[Observable, Observation]
     ) -> ComparisonResult: ...
+
+    def run(
+        self,
+        obs_map: dict[Observable, Observation],
+        compare_map: dict[Observable, Observation] | None,
+        group: str | None,
+    ) -> tuple[list[ConstraintResult], list[RegressionResult]]:
+        missing = [obs for obs in self.required_observables if obs not in obs_map]
+        if missing:
+            missing_labels = ", ".join(obs.label for obs in missing)
+            result = self.error_result(f"Missing observations: {missing_labels}")
+        else:
+            result = self.is_satisfied(
+                {obs: obs_map[obs] for obs in self.required_observables}
+            )
+        cr = ConstraintResult(
+            label=self.label,
+            observables=list(self.required_observables),
+            description=self.description,
+            comment=self.comment,
+            result=result,
+        )
+        return [cr], []
 
 
 class IsCloseConstraint(ComparisonConstraint):
@@ -98,6 +130,32 @@ class IsCloseConstraint(ComparisonConstraint):
 
     comparison: IsClose
     regression_check: bool = True
+
+    def run(
+        self,
+        obs_map: dict[Observable, Observation],
+        compare_map: dict[Observable, Observation] | None,
+        group: str | None,
+    ) -> tuple[list[ConstraintResult], list[RegressionResult]]:
+        crs, _ = super().run(obs_map, compare_map, group)
+        reg: list[RegressionResult] = []
+        if self.regression_check and compare_map is not None:
+            for obs in self.required_observables:
+                if obs not in obs_map or obs not in compare_map:
+                    reg_result = self.error_result("Missing observation")
+                else:
+                    reg_result = self.comparison(obs_map[obs], compare_map[obs])
+                reg.append(
+                    RegressionResult(
+                        group=group,
+                        label=self.label,
+                        description=self.description,
+                        comment=self.comment,
+                        observable=obs,
+                        result=reg_result,
+                    )
+                )
+        return crs, reg
 
 
 class IsLessConstraint(ComparisonConstraint):
@@ -125,6 +183,30 @@ class RegressionConstraint(Constraint):
 
     @abstractmethod
     def evaluate(self, current: Observation, reference: Observation) -> ComparisonResult: ...
+
+    def run(
+        self,
+        obs_map: dict[Observable, Observation],
+        compare_map: dict[Observable, Observation] | None,
+        group: str | None,
+    ) -> tuple[list[ConstraintResult], list[RegressionResult]]:
+        if compare_map is None:
+            return [], []
+        obs = next(iter(self.required_observables))
+        if obs not in obs_map or obs not in compare_map:
+            result = self.error_result("Missing observation")
+        else:
+            result = self.evaluate(obs_map[obs], compare_map[obs])
+        return [], [
+            RegressionResult(
+                group=group,
+                label=self.label,
+                description=self.description,
+                comment=self.comment,
+                observable=obs,
+                result=result,
+            )
+        ]
 
 
 class EleIsCloseConstraint(IsCloseConstraint):

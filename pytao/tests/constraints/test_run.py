@@ -184,7 +184,7 @@ def test_run_regression_no_compare():
         constraints=[DatumRegressionConstraint(obs=obs)],
     )
     _, results = run(config, DATA_DIR)
-    assert results.regression == []
+    assert list(results.iter_regression()) == []
 
 
 def test_run_regression_missing_observation():
@@ -195,8 +195,9 @@ def test_run_regression_missing_observation():
     )
     compare = SavedObservations(entries=[])
     _, results = run(config, DATA_DIR, compare=compare)
-    assert len(results.regression) == 1
-    rr = results.regression[0]
+    reg = list(results.iter_regression())
+    assert len(reg) == 1
+    _, rr = reg[0]
     assert not rr.result.is_satisfied
     assert rr.result.error is not None
 
@@ -223,8 +224,8 @@ def test_run_regression_multiple_groups():
         ]
     )
     _, results = run(config, DATA_DIR, compare=compare)
-    assert len(results.regression) == 2
-    by_group = {rr.group: rr for rr in results.regression}
+    assert sum(len(v) for v in results.regression.values()) == 2
+    by_group = {rr.group: rr for _, rr in results.iter_regression()}
     a = by_group["A"]
     assert a.result.is_satisfied
     assert a.label == obs_pass.label

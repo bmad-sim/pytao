@@ -10,12 +10,7 @@ import yaml
 
 from pytao import SubprocessTao
 
-from .config import (
-    ComparisonConstraint,
-    ConstraintsConfig,
-    IsCloseConstraint,
-    RegressionConstraint,
-)
+from .config import ConstraintsConfig
 from .observables import (
     ComparisonResult,
     Observable,
@@ -25,7 +20,6 @@ from .results import (
     ConstraintResult,
     ConstraintResults,
     LatticeResult,
-    RegressionResult,
     SavedObservations,
 )
 
@@ -152,72 +146,16 @@ def run(
     saved = SavedObservations.from_obs_map(obs_map)
 
     constraint_results: dict[str | None, list[ConstraintResult]] = {}
-    regression_results: list[RegressionResult] = []
+    regression_results: dict[str | None, list] = {}
     compare_map = compare.obs_map if compare is not None else None
 
     for group, constraints in config.constraints_by_group.items():
         constraint_results[group] = []
+        regression_results[group] = []
         for constraint in constraints:
-            if isinstance(constraint, ComparisonConstraint):
-                missing = [
-                    obs for obs in constraint.required_observables if obs not in obs_map
-                ]
-                if missing:
-                    missing_labels = ", ".join(obs.label for obs in missing)
-                    result = constraint.error_result(f"Missing observations: {missing_labels}")
-                else:
-                    result = constraint.is_satisfied(
-                        {obs: obs_map[obs] for obs in constraint.required_observables}
-                    )
-                constraint_results[group].append(
-                    ConstraintResult(
-                        label=constraint.label,
-                        observables=list(constraint.required_observables),
-                        description=constraint.description,
-                        comment=constraint.comment,
-                        result=result,
-                    )
-                )
-                if (
-                    isinstance(constraint, IsCloseConstraint)
-                    and constraint.regression_check
-                    and compare_map is not None
-                ):
-                    for obs in constraint.required_observables:
-                        if obs not in obs_map or obs not in compare_map:
-                            reg_result = constraint.error_result("Missing observation")
-                        else:
-                            reg_result = constraint.comparison(obs_map[obs], compare_map[obs])
-                        regression_results.append(
-                            RegressionResult(
-                                group=group,
-                                label=constraint.label,
-                                description=constraint.description,
-                                comment=constraint.comment,
-                                observable=obs,
-                                result=reg_result,
-                            )
-                        )
-            elif isinstance(constraint, RegressionConstraint):
-                if compare_map is None:
-                    continue
-                obs = next(iter(constraint.required_observables))
-                if obs not in obs_map or obs not in compare_map:
-                    result = constraint.error_result("Missing observation")
-                else:
-                    result = constraint.evaluate(obs_map[obs], compare_map[obs])
-                regression_results.append(
-                    RegressionResult(
-                        group=group,
-                        label=constraint.label,
-                        description=constraint.description,
-                        comment=constraint.comment,
-                        observable=obs,
-                        result=result,
-                    )
-                )
-            else:
-                raise ValueError(f"Unrecognized constraint type: {type(constraint)}")
+            crs, reg = constraint.run(obs_map, compare_map, group)
+            constraint_results[group].extend(crs)
+            regression_results[group].extend(reg)
 
     return saved, ConstraintResults(
         started_at=started_at,
@@ -300,7 +238,7 @@ def _print_results_markdown(results: ConstraintResults) -> None:
         print()
         print("| Status | Observable | Description |")
         print("|--------|------------|-------------|")
-        for rr in results.regression:
+        for _, rr in results.iter_regression():
             status = _md_status(rr.result.is_satisfied)
             desc = _escape_md(rr.description)
             print(f"| {status} | {_escape_md(rr.label)} | {desc} |")
@@ -313,7 +251,7 @@ def _print_results_markdown(results: ConstraintResults) -> None:
     failures_eq = [
         (group, cr) for group, cr in results.iter_constraints() if not cr.result.is_satisfied
     ]
-    failures_reg = [rr for rr in results.regression if not rr.result.is_satisfied]
+    failures_reg = [rr for _, rr in results.iter_regression() if not rr.result.is_satisfied]
 
     if lat_failures or failures_eq or failures_reg:
         print()
@@ -376,8 +314,8 @@ def _print_results_markdown(results: ConstraintResults) -> None:
     print(f"**{n_passed}/{n_total} constraints passed**")
 
     if results.regression:
-        n_reg_passed = sum(1 for rr in results.regression if rr.result.is_satisfied)
-        n_reg_total = len(results.regression)
+        n_reg_passed = sum(1 for _, rr in results.iter_regression() if rr.result.is_satisfied)
+        n_reg_total = sum(len(v) for v in results.regression.values())
         print(f"**{n_reg_passed}/{n_reg_total} regression checks passed**")
 
 
@@ -409,7 +347,7 @@ def _print_results(results: ConstraintResults) -> None:
     if results.regression:
         print()
         print("Regression:")
-        for rr in results.regression:
+        for _, rr in results.iter_regression():
             status = "PASS" if rr.result.is_satisfied else "FAIL"
             suffix = f"  {rr.description}" if rr.description else ""
             print(f"  [{status}] {rr.label}{suffix}")
@@ -422,7 +360,7 @@ def _print_results(results: ConstraintResults) -> None:
     failures_eq = [
         (group, cr) for group, cr in results.iter_constraints() if not cr.result.is_satisfied
     ]
-    failures_reg = [rr for rr in results.regression if not rr.result.is_satisfied]
+    failures_reg = [rr for _, rr in results.iter_regression() if not rr.result.is_satisfied]
 
     if lat_failures or failures_eq or failures_reg:
         print()
@@ -463,8 +401,8 @@ def _print_results(results: ConstraintResults) -> None:
     print(f"{n_passed}/{n_total} constraints passed")
 
     if results.regression:
-        n_reg_passed = sum(1 for rr in results.regression if rr.result.is_satisfied)
-        n_reg_total = len(results.regression)
+        n_reg_passed = sum(1 for _, rr in results.iter_regression() if rr.result.is_satisfied)
+        n_reg_total = sum(len(v) for v in results.regression.values())
         print(f"{n_reg_passed}/{n_reg_total} regression checks passed")
 
 
