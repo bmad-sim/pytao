@@ -7,14 +7,14 @@ These can be defined and evaluated on the fly using a `DatumObservable`.
 
 ```mermaid
 flowchart TD
-    Observable([Observable]) --> LatticeObservable([LatticeObservable])
-    Observable --> LiteralObservable([LiteralObservable])
-    LatticeObservable --> DatumObservable[DatumObservable]
-    LiteralObservable --> DatumLiteral[DatumLiteral]
-    Comparison([Comparison]) --> IsClose([IsClose])
-    Comparison --> IsLess([IsLess])
-    IsClose --> DatumIsClose[DatumIsClose]
-    IsLess --> DatumLessThan[DatumLessThan]
+    LatticeObservable([LatticeObservable]) --> Observable([Observable])
+    LiteralObservable([LiteralObservable]) --> Observable
+    DatumObservable[DatumObservable] --> LatticeObservable
+    DatumLiteral[DatumLiteral] --> LiteralObservable
+    IsClose([IsClose]) --> Comparison([Comparison])
+    IsLess([IsLess]) --> Comparison
+    DatumIsClose[DatumIsClose] --> IsClose
+    DatumLessThan[DatumLessThan] --> IsLess
     DatumObservable -. creates .-> DatumObservation[DatumObservation]
     DatumLiteral -. creates .-> DatumObservation
     DatumIsClose -. creates .-> DatumIsCloseResult[DatumIsCloseResult]
@@ -40,13 +40,13 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    Constraint([Constraint]) --> ComparisonConstraint([ComparisonConstraint])
-    Constraint --> RegressionConstraint([RegressionConstraint])
-    ComparisonConstraint --> IsCloseConstraint([IsCloseConstraint])
-    ComparisonConstraint --> IsLessConstraint([IsLessConstraint])
-    IsCloseConstraint --> DatumIsCloseConstraint[DatumIsCloseConstraint]
-    IsLessConstraint --> DatumLessThanConstraint[DatumLessThanConstraint]
-    RegressionConstraint --> DatumRegressionConstraint[DatumRegressionConstraint]
+    ComparisonConstraint([ComparisonConstraint]) --> Constraint([Constraint])
+    RegressionConstraint([RegressionConstraint]) --> Constraint
+    IsCloseConstraint([IsCloseConstraint]) --> ComparisonConstraint
+    IsLessConstraint([IsLessConstraint]) --> ComparisonConstraint
+    DatumIsCloseConstraint[DatumIsCloseConstraint] --> IsCloseConstraint
+    DatumLessThanConstraint[DatumLessThanConstraint] --> IsLessConstraint
+    DatumRegressionConstraint[DatumRegressionConstraint] --> RegressionConstraint
     DatumIsCloseConstraint -. creates .-> DatumIsCloseResult[DatumIsCloseResult]
     DatumLessThanConstraint -. creates .-> DatumLessThanResult[DatumLessThanResult]
     DatumRegressionConstraint -. creates .-> DatumIsCloseResult

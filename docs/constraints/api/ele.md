@@ -8,16 +8,16 @@ The min and max of the values in the element can be evaluated using `EleMinObser
 
 ```mermaid
 flowchart TD
-    Observable([Observable]) --> LatticeObservable([LatticeObservable])
-    Observable --> LiteralObservable([LiteralObservable])
-    LatticeObservable --> EleObservable[EleObservable]
-    LatticeObservable --> EleMaxObservable[EleMaxObservable]
-    LatticeObservable --> EleMinObservable[EleMinObservable]
-    LiteralObservable --> EleLiteral[EleLiteral]
-    Comparison([Comparison]) --> IsClose([IsClose])
-    Comparison --> IsLess([IsLess])
-    IsClose --> EleIsClose[EleIsClose]
-    IsLess --> EleLessThan[EleLessThan]
+    LatticeObservable([LatticeObservable]) --> Observable([Observable])
+    LiteralObservable([LiteralObservable]) --> Observable
+    EleObservable[EleObservable] --> LatticeObservable
+    EleMaxObservable[EleMaxObservable] --> LatticeObservable
+    EleMinObservable[EleMinObservable] --> LatticeObservable
+    EleLiteral[EleLiteral] --> LiteralObservable
+    IsClose([IsClose]) --> Comparison([Comparison])
+    IsLess([IsLess]) --> Comparison
+    EleIsClose[EleIsClose] --> IsClose
+    EleLessThan[EleLessThan] --> IsLess
     EleObservable -. creates .-> EleObservation[EleObservation]
     EleMaxObservable -. creates .-> EleObservation
     EleMinObservable -. creates .-> EleObservation
@@ -51,13 +51,13 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    Constraint([Constraint]) --> ComparisonConstraint([ComparisonConstraint])
-    Constraint --> RegressionConstraint([RegressionConstraint])
-    ComparisonConstraint --> IsCloseConstraint([IsCloseConstraint])
-    ComparisonConstraint --> IsLessConstraint([IsLessConstraint])
-    IsCloseConstraint --> EleIsCloseConstraint[EleIsCloseConstraint]
-    IsLessConstraint --> EleLessThanConstraint[EleLessThanConstraint]
-    RegressionConstraint --> EleRegressionConstraint[EleRegressionConstraint]
+    ComparisonConstraint([ComparisonConstraint]) --> Constraint([Constraint])
+    RegressionConstraint([RegressionConstraint]) --> Constraint
+    IsCloseConstraint([IsCloseConstraint]) --> ComparisonConstraint
+    IsLessConstraint([IsLessConstraint]) --> ComparisonConstraint
+    EleIsCloseConstraint[EleIsCloseConstraint] --> IsCloseConstraint
+    EleLessThanConstraint[EleLessThanConstraint] --> IsLessConstraint
+    EleRegressionConstraint[EleRegressionConstraint] --> RegressionConstraint
     EleIsCloseConstraint -. creates .-> EleIsCloseResult[EleIsCloseResult]
     EleLessThanConstraint -. creates .-> EleLessThanResult[EleLessThanResult]
     EleRegressionConstraint -. creates .-> EleIsCloseResult
