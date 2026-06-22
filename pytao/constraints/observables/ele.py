@@ -550,12 +550,14 @@ def _build_ele_observation(
         ),
     )
     element = Element.model_validate(
-        ele_id="_literal",
-        which="model",
-        head=tao_classes.ElementHead(name="_literal", key="literal"),
-        twiss=new_twiss,
-        orbit=new_orbit,
-        floor=new_floor,
+        {
+            "ele_id": "_literal",
+            "which": "model",
+            "head": tao_classes.ElementHead(name="_literal", key="literal"),
+            "twiss": new_twiss,
+            "orbit": new_orbit,
+            "floor": new_floor,
+        }
     )
     return EleObservation(element=element)
 
