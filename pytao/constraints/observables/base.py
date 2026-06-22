@@ -127,7 +127,7 @@ class ComparisonResult(ConstraintsBase):
     def check_results(self) -> dict[str, CheckResult]:
         return {
             name: getattr(self, name)
-            for name in ComparisonResult.model_fields
+            for name in type(self).model_fields
             if isinstance(getattr(self, name), CheckResult)
         }
 
