@@ -1,1 +1,6 @@
 include LICENSE
+
+# git-archive export-subst are for `git archive`, not PyPI source
+# distributions:
+exclude .git_archival.txt
+exclude .gitattributes
