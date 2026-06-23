@@ -88,3 +88,4 @@ testpaths = ["pytao/tests"]
 [tool.setuptools_scm]
 version_file = "pytao/_version.py"
 fallback_version = "0.0.0.dev0"
+tag.strict = true
