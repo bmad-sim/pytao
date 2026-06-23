@@ -23,6 +23,14 @@ nav:
       - examples/fodo.ipynb
       - examples/beam_track_progress_bar.ipynb
 
+  - Constraints:
+      - constraints/index.md
+      - constraints/config.md
+      - API:
+        - constraints/api/index.md
+        - constraints/api/ele.md
+        - constraints/api/datum.md
+
   - Dev:
       - development.md
 
@@ -62,7 +70,11 @@ theme:
 
 markdown_extensions:
   - pymdownx.highlight
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 
 extra:
   generator: false

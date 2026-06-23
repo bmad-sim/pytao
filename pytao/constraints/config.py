@@ -1,0 +1,473 @@
+from abc import abstractmethod
+from typing import Annotated, Literal, Union
+
+from pydantic import Field
+
+from pytao.constraints.pydantic import ConstraintsBase
+
+from pytao.constraints.observables import (
+    ComparisonResult,
+    DatumIsClose,
+    DatumIsCloseResult,
+    DatumLessThan,
+    DatumLessThanResult,
+    DatumLiteral,
+    DatumObservable,
+    DatumObservation,
+    EleIsClose,
+    EleIsCloseResult,
+    EleLessThan,
+    EleLessThanResult,
+    EleLiteral,
+    EleMaxObservable,
+    EleMinObservable,
+    EleObservable,
+    EleObservation,
+    IsClose,
+    IsLess,
+    LatticeObservable,
+    LiteralObservable,
+    Observable,
+    Observation,
+)
+from pytao.constraints.results import ConstraintResult, RegressionResult
+from pytao.startup import TaoStartup
+
+
+EleObservables = Annotated[
+    Union[EleObservable, EleMaxObservable, EleMinObservable, EleLiteral],
+    Field(discriminator="obs_type"),
+]
+
+DatumObservables = Annotated[
+    Union[DatumObservable, DatumLiteral],
+    Field(discriminator="obs_type"),
+]
+
+
+class Constraint(ConstraintsBase):
+    """Abstract base for all constraint types.
+
+    Attributes
+    ----------
+    description : str
+        Short one-line name used on labels.
+    comment : str
+        Detailed notes about the constraint.
+    """
+
+    description: str = Field(default="", description="Short one-line name used on labels")
+    comment: str = Field(
+        default="", description="Detailed description or notes about the constraint"
+    )
+
+    @property
+    @abstractmethod
+    def label(self) -> str: ...
+
+    @property
+    @abstractmethod
+    def required_observables(self) -> frozenset[Observable]: ...
+
+    @abstractmethod
+    def error_result(self, error: str) -> ComparisonResult: ...
+
+    @abstractmethod
+    def run(
+        self,
+        obs_map: dict[Observable, Observation],
+        compare_map: dict[Observable, Observation] | None,
+        group: str | None,
+    ) -> tuple[list[ConstraintResult], list[RegressionResult]]: ...
+
+
+class ComparisonConstraint(Constraint):
+    """Base for constraints that compare two observations against each other."""
+
+    @abstractmethod
+    def is_satisfied(
+        self, observations: dict[Observable, Observation]
+    ) -> ComparisonResult: ...
+
+    def run(
+        self,
+        obs_map: dict[Observable, Observation],
+        compare_map: dict[Observable, Observation] | None,
+        group: str | None,
+    ) -> tuple[list[ConstraintResult], list[RegressionResult]]:
+        missing = [obs for obs in self.required_observables if obs not in obs_map]
+        if missing:
+            missing_labels = ", ".join(obs.label for obs in missing)
+            result = self.error_result(f"Missing observations: {missing_labels}")
+        else:
+            result = self.is_satisfied(
+                {obs: obs_map[obs] for obs in self.required_observables}
+            )
+        cr = ConstraintResult(
+            label=self.label,
+            observables=list(self.required_observables),
+            description=self.description,
+            comment=self.comment,
+            result=result,
+        )
+        return [cr], []
+
+
+class IsCloseConstraint(ComparisonConstraint):
+    """Base for constraints that use an IsClose comparison operator.
+
+    When ``regression_check`` is ``True`` and a comparison baseline is available,
+    each required observable is also compared against its saved value using the
+    same ``comparison`` operator.
+
+    Attributes
+    ----------
+    comparison : IsClose
+        Operator used to evaluate approximate equality between two observations.
+    regression_check : bool
+        Whether to implicitly define regression checks on the observations from this constraint.
+    """
+
+    comparison: IsClose
+    regression_check: bool = True
+
+    def run(
+        self,
+        obs_map: dict[Observable, Observation],
+        compare_map: dict[Observable, Observation] | None,
+        group: str | None,
+    ) -> tuple[list[ConstraintResult], list[RegressionResult]]:
+        crs, _ = super().run(obs_map, compare_map, group)
+        reg: list[RegressionResult] = []
+        if self.regression_check and compare_map is not None:
+            for obs in self.required_observables:
+                if obs not in obs_map or obs not in compare_map:
+                    reg_result = self.error_result("Missing observation")
+                else:
+                    reg_result = self.comparison.compare(obs_map[obs], compare_map[obs])
+                reg.append(
+                    RegressionResult(
+                        group=group,
+                        label=self.label,
+                        description=self.description,
+                        comment=self.comment,
+                        observable=obs,
+                        result=reg_result,
+                    )
+                )
+        return crs, reg
+
+
+class IsLessConstraint(ComparisonConstraint):
+    """Base for constraints that use an IsLess comparison operator.
+
+    Attributes
+    ----------
+    comparison : IsLess
+        Operator used to evaluate component-wise less-than between two observations.
+    """
+
+    comparison: IsLess
+
+
+class RegressionConstraint(Constraint):
+    """Base for constraints that compare current observations against a saved reference.
+
+    Attributes
+    ----------
+    comparison : IsClose
+        Operator used to compare the current observation against the reference.
+    """
+
+    comparison: IsClose
+
+    @abstractmethod
+    def evaluate(self, current: Observation, reference: Observation) -> ComparisonResult: ...
+
+    def run(
+        self,
+        obs_map: dict[Observable, Observation],
+        compare_map: dict[Observable, Observation] | None,
+        group: str | None,
+    ) -> tuple[list[ConstraintResult], list[RegressionResult]]:
+        if compare_map is None:
+            return [], []
+        obs = next(iter(self.required_observables))
+        if obs not in obs_map or obs not in compare_map:
+            result = self.error_result("Missing observation")
+        else:
+            result = self.evaluate(obs_map[obs], compare_map[obs])
+        return [], [
+            RegressionResult(
+                group=group,
+                label=self.label,
+                description=self.description,
+                comment=self.comment,
+                observable=obs,
+                result=result,
+            )
+        ]
+
+
+class EleIsCloseConstraint(IsCloseConstraint):
+    """Constraint checking that two element observables are approximately equal.
+
+    Attributes
+    ----------
+    constraint_type : str
+        Discriminator literal. Always ``"ele_eq"``.
+    obs_a : EleObservables
+        First element observable.
+    obs_b : EleObservables
+        Second element observable.
+    comparison : EleIsClose
+        Comparison operator applied to the two observations.
+    """
+
+    constraint_type: Literal["ele_eq"] = "ele_eq"
+    obs_a: EleObservables
+    obs_b: EleObservables
+    comparison: EleIsClose = EleIsClose()
+
+    @property
+    def label(self) -> str:
+        if self.obs_a == self.obs_b:
+            return self.obs_a.label
+        return f"{self.obs_a.label} == {self.obs_b.label}"
+
+    @property
+    def required_observables(self) -> frozenset[Observable]:
+        return frozenset((self.obs_a, self.obs_b))
+
+    def is_satisfied(self, observations: dict[Observable, Observation]) -> EleIsCloseResult:
+        return self.comparison.compare(observations[self.obs_a], observations[self.obs_b])
+
+    def error_result(self, error: str) -> EleIsCloseResult:
+        return EleIsCloseResult(error=error)
+
+
+class EleLessThanConstraint(IsLessConstraint):
+    """Constraint checking that ``obs_a`` is component-wise less than ``obs_b``.
+
+    Attributes
+    ----------
+    constraint_type : str
+        Discriminator literal. Always ``"ele_lt"``.
+    obs_a : EleObservables
+        Left-hand side observable.
+    obs_b : EleObservables
+        Right-hand side observable.
+    comparison : EleLessThan
+        Less-than operator configuration.
+    """
+
+    constraint_type: Literal["ele_lt"] = "ele_lt"
+    obs_a: EleObservables
+    obs_b: EleObservables
+    comparison: EleLessThan = EleLessThan()
+
+    @property
+    def label(self) -> str:
+        return f"{self.obs_a.label} < {self.obs_b.label}"
+
+    @property
+    def required_observables(self) -> frozenset[Observable]:
+        return frozenset((self.obs_a, self.obs_b))
+
+    def is_satisfied(self, observations: dict[Observable, Observation]) -> EleLessThanResult:
+        return self.comparison.compare(observations[self.obs_a], observations[self.obs_b])
+
+    def error_result(self, error: str) -> EleLessThanResult:
+        return EleLessThanResult(error=error)
+
+
+class DatumIsCloseConstraint(IsCloseConstraint):
+    """Constraint checking that two datum observables are approximately equal.
+
+    Attributes
+    ----------
+    constraint_type : str
+        Discriminator literal. Always ``"datum_eq"``.
+    obs_a : DatumObservables
+        First datum observable.
+    obs_b : DatumObservables
+        Second datum observable.
+    comparison : DatumIsClose
+        Comparison operator applied to the two observations.
+    """
+
+    constraint_type: Literal["datum_eq"] = "datum_eq"
+    obs_a: DatumObservables
+    obs_b: DatumObservables
+    comparison: DatumIsClose = DatumIsClose()
+
+    @property
+    def label(self) -> str:
+        if self.obs_a == self.obs_b:
+            return self.obs_a.label
+        return f"{self.obs_a.label} == {self.obs_b.label}"
+
+    @property
+    def required_observables(self) -> frozenset[Observable]:
+        return frozenset((self.obs_a, self.obs_b))
+
+    def is_satisfied(self, observations: dict[Observable, Observation]) -> DatumIsCloseResult:
+        return self.comparison.compare(observations[self.obs_a], observations[self.obs_b])
+
+    def error_result(self, error: str) -> DatumIsCloseResult:
+        return DatumIsCloseResult(error=error)
+
+
+class DatumLessThanConstraint(IsLessConstraint):
+    """Constraint checking that ``obs_a`` is component-wise less than ``obs_b``.
+
+    Attributes
+    ----------
+    constraint_type : str
+        Discriminator literal. Always ``"datum_lt"``.
+    obs_a : DatumObservables
+        Left-hand side observable.
+    obs_b : DatumObservables
+        Right-hand side observable.
+    comparison : DatumLessThan
+        Less-than operator configuration.
+    """
+
+    constraint_type: Literal["datum_lt"] = "datum_lt"
+    obs_a: DatumObservables
+    obs_b: DatumObservables
+    comparison: DatumLessThan = DatumLessThan()
+
+    @property
+    def label(self) -> str:
+        return f"{self.obs_a.label} < {self.obs_b.label}"
+
+    @property
+    def required_observables(self) -> frozenset[Observable]:
+        return frozenset((self.obs_a, self.obs_b))
+
+    def is_satisfied(self, observations: dict[Observable, Observation]) -> DatumLessThanResult:
+        return self.comparison.compare(observations[self.obs_a], observations[self.obs_b])
+
+    def error_result(self, error: str) -> DatumLessThanResult:
+        return DatumLessThanResult(error=error)
+
+
+class EleRegressionConstraint(RegressionConstraint):
+    """Constraint comparing current element observations against a saved reference.
+
+    Attributes
+    ----------
+    constraint_type : str
+        Discriminator literal. Always ``"ele_reg"``.
+    obs : EleObservables
+        Element observable to evaluate and compare.
+    comparison : EleIsClose
+        Comparison operator used to check current against reference.
+    """
+
+    constraint_type: Literal["ele_reg"] = "ele_reg"
+    obs: EleObservables
+    comparison: EleIsClose = EleIsClose()
+
+    @property
+    def label(self) -> str:
+        return self.obs.label
+
+    @property
+    def required_observables(self) -> frozenset[Observable]:
+        return frozenset({self.obs})
+
+    def evaluate(self, current: EleObservation, reference: EleObservation) -> EleIsCloseResult:
+        return self.comparison.compare(current, reference)
+
+    def error_result(self, error: str) -> EleIsCloseResult:
+        return EleIsCloseResult(error=error)
+
+
+class DatumRegressionConstraint(RegressionConstraint):
+    """Constraint comparing current datum observations against a saved reference.
+
+    Attributes
+    ----------
+    constraint_type : str
+        Discriminator literal. Always ``"datum_reg"``.
+    obs : DatumObservables
+        Datum observable to evaluate and compare.
+    comparison : DatumIsClose
+        Comparison operator used to check current against reference.
+    """
+
+    constraint_type: Literal["datum_reg"] = "datum_reg"
+    obs: DatumObservables
+    comparison: DatumIsClose = DatumIsClose()
+
+    @property
+    def label(self) -> str:
+        return self.obs.label
+
+    @property
+    def required_observables(self) -> frozenset[Observable]:
+        return frozenset({self.obs})
+
+    def evaluate(
+        self, current: DatumObservation, reference: DatumObservation
+    ) -> DatumIsCloseResult:
+        return self.comparison.compare(current, reference)
+
+    def error_result(self, error: str) -> DatumIsCloseResult:
+        return DatumIsCloseResult(error=error)
+
+
+AnyConstraint = Annotated[
+    Union[
+        EleIsCloseConstraint,
+        EleLessThanConstraint,
+        DatumIsCloseConstraint,
+        DatumLessThanConstraint,
+        EleRegressionConstraint,
+        DatumRegressionConstraint,
+    ],
+    Field(discriminator="constraint_type"),
+]
+
+
+class ConstraintsConfig(ConstraintsBase):
+    lattices: dict[str, TaoStartup] = Field(
+        default_factory=dict,
+        description="Mapping from unique lattice identifier to lattice loading information",
+    )
+    constraints: list[AnyConstraint] | dict[str, list[AnyConstraint]] = Field(
+        default_factory=list,
+        description="Flat list (ungrouped) or mapping of group name to list of constraints",
+    )
+
+    @property
+    def constraints_by_group(self) -> dict[str | None, list[AnyConstraint]]:
+        if isinstance(self.constraints, list):
+            return {None: self.constraints}
+        return dict(self.constraints)
+
+    @property
+    def all_constraints(self) -> list[AnyConstraint]:
+        if isinstance(self.constraints, list):
+            return self.constraints
+        return [c for cs in self.constraints.values() for c in cs]
+
+    @property
+    def required_lattice_observables(self) -> dict[str, set[LatticeObservable]]:
+        needed: dict[str, set[LatticeObservable]] = {lat_id: set() for lat_id in self.lattices}
+        for constraint in self.all_constraints:
+            for obs in constraint.required_observables:
+                if isinstance(obs, LatticeObservable):
+                    needed[obs.lattice_id].add(obs)
+        return needed
+
+    @property
+    def required_literal_observables(self) -> set[LiteralObservable]:
+        return {
+            obs
+            for constraint in self.all_constraints
+            for obs in constraint.required_observables
+            if isinstance(obs, LiteralObservable)
+        }

@@ -16,6 +16,7 @@ dependencies = [
   "orjson",
   "ormsgpack>=1.12.2",
   "pydantic>=2.12.5",
+  "pyyaml",
   "rich",
   "tqdm",
 ]
@@ -39,6 +40,7 @@ classifiers = [
 
 [project.scripts]
 pytao = "pytao.cli:main"
+pytao-constraints = "pytao.constraints.main:main"
 
 [project.optional-dependencies]
 all = []
