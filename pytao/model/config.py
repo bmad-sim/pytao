@@ -142,7 +142,9 @@ class TaoConfig(TaoSettableModel):
 
     @classmethod
     @override
-    def from_tao(cls, tao: Tao, ix_uni: str = "", ix_branch: str = "", **kwargs) -> TaoConfig:
+    def from_tao(
+        cls, tao: Tao, ix_uni: str | int = "", ix_branch: str = "", **kwargs
+    ) -> TaoConfig:
         """
         Get a configuration object representing the state of Tao.
 
