@@ -1630,13 +1630,21 @@ class GraphManager(ABC):
                 self.configure_curves(region_name, settings=settings, graph_name=plot_name)
             return
 
+        index_to_name = self._curve_index_to_name(region_name, graph_name)
+
         for curve_idx, curve in settings.items():
+            curve_name = index_to_name.get(curve_idx, f"c{curve_idx}")
             for command in curve.get_commands(
                 region_name,
                 graph_name,
-                curve_index=curve_idx,
+                curve_name=curve_name,
             ):
                 self.tao.cmd(command)
+
+    def _curve_index_to_name(self, region_name: str, graph_name: str) -> dict[int, str]:
+        """Map curve indices to their Tao curve names for a graph."""
+        info = get_plot_graph_info(self.tao, region_name, graph_name)
+        return {idx: info[f"curve[{idx}]"] for idx in range(1, info["num_curves"] + 1)}
 
     def configure_graph(
         self,

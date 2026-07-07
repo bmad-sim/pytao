@@ -1,6 +1,7 @@
 import pytest
 from pytest import FixtureRequest
 
+from .. import SubprocessTao, Tao
 from ..plotting import (
     TaoAxisSettings,
     TaoCurveSettings,
@@ -11,8 +12,29 @@ from ..plotting.types import Limit
 from .conftest import BackendName, get_example, test_artifacts
 
 
+@pytest.fixture(scope="function")
+def multi_uni_tao():
+    with SubprocessTao(
+        init_file="$ACC_ROOT_DIR/bmad-doc/tutorial_bmad_tao/lattice_files/multiple_universes/tao.init",
+        noplot=True,
+    ) as tao:
+        yield tao
+
+
 def test_curve_settings_empty():
-    assert TaoCurveSettings().get_commands("a", "b", 0) == []
+    assert TaoCurveSettings().get_commands("a", "b", "c1") == []
+
+
+@pytest.mark.parametrize(
+    "curve_name",
+    ["c1", "x", "y"],
+    ids=["indexed", "named-x", "named-y"],
+)
+def test_curve_settings_uses_curve_name(curve_name: str):
+    settings = TaoCurveSettings(ix_universe=2)
+    assert settings.get_commands("r11", "g", curve_name) == [
+        f"set curve r11.g.{curve_name} ix_universe = 2"
+    ]
 
 
 def test_graph_settings_empty():
@@ -104,6 +126,31 @@ def test_graph_settings_xlim_ylim(
     settings.xlim = xlim
     settings.ylim = ylim
     assert settings.get_commands("a", "b", graph_type="lat_layout") == expected_commands
+
+
+def test_configure_curves_resolves_named_curves(multi_uni_tao: Tao):
+    """
+    Curve settings must target the actual Tao curve names.
+
+    The ``orbit`` template names its curves ``x``/``y`` (not ``c1``/``c2``),
+    so a positional ``c{index}`` reference raises ``CURVE NOT FOUND``.  This
+    also exercises per-curve ``ix_universe`` selection for a second universe.
+    """
+    tao = multi_uni_tao
+    manager = tao.plot_manager
+
+    tao.cmd("place -no_buffer r11 orbit")
+
+    manager.configure_curves(
+        "r11",
+        {
+            1: TaoCurveSettings(ix_universe=2),
+            2: TaoCurveSettings(ix_universe=2),
+        },
+    )
+
+    assert tao.plot_curve("r11.g.x")["ix_universe"] == 2
+    assert tao.plot_curve("r11.g.y")["ix_universe"] == 2
 
 
 def test_plot_settings_grid(plot_backend: BackendName, request: FixtureRequest):
