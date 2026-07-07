@@ -74,22 +74,22 @@ def test_tao_config_shell_script(
 
 
 def test_beam_init(tao: SubprocessTao) -> None:
-    beam_init = BeamInit.from_tao(tao)
+    beam_init = BeamInit.from_tao(tao, ix_uni=1)
     print(repr(beam_init))
 
     assert beam_init == beam_init
 
     beam_init.a_emit = 1.0
-    assert "set beam_init a_emit = 1.0" in beam_init.set_commands
+    assert "set beam_init 1@a_emit = 1.0" in beam_init.set_commands
 
 
 def test_beam(tao: SubprocessTao, monkeypatch: pytest.MonkeyPatch) -> None:
-    beam = Beam.from_tao(tao)
+    beam = Beam.from_tao(tao, ix_uni=1)
     print(repr(beam))
 
     assert beam == beam
     beam.always_reinit = True
-    assert "set beam always_reinit = True" in beam.set_commands
+    assert "set beam 1@always_reinit = True" in beam.set_commands
 
     orig_cmd = tao.cmd
 
