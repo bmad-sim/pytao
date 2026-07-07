@@ -162,6 +162,7 @@ class TaoConfig(TaoSettableModel):
         TaoConfig
         """
         return cls(
+            command_args={"ix_branch": ix_branch, "ix_uni": ix_uni},
             startup=tao.init_settings,
             com=BmadCom.from_tao(tao, **kwargs),
             space_charge_com=SpaceChargeCom.from_tao(tao, **kwargs),
