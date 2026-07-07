@@ -915,7 +915,7 @@ class ElementGridField(TaoModel):
     harmonic: int = Field(default=0, description="Harmonic of fundamental for AC fields.")
     interpolation_order: int = Field(default=1, description="Possibilities are 1 or 3.")
     master_parameter: str = Field(
-        default=0,
+        default="",
         description="Master parameter in ele%value(:) array to use for scaling the field.",
     )
     phi0_fieldmap: float = Field(
@@ -1032,7 +1032,7 @@ class ElementHead(TaoModel):
         ),
         frozen=True,
     )
-    key: str = Field(default=0, description="Element class (quadrupole, etc.).", frozen=True)
+    key: str = Field(default="", description="Element class (quadrupole, etc.).", frozen=True)
     name: str = Field(default="<Initialized>", description="name of element.", frozen=True)
     num_cartesian_map: int = Field(default=0, alias="num#cartesian_map", frozen=True)
     num_cylindrical_map: int = Field(default=0, alias="num#cylindrical_map", frozen=True)

@@ -23,8 +23,8 @@ import pydantic
 import pytao
 import pytao.util
 import pytao.util.parsers as custom_parsers
-from pytao.util.parsers import parse_pytype, parse_tao_python_data
 from pytao import SubprocessTao, filter_tao_messages_context
+from pytao.util.parsers import parse_pytype, parse_tao_python_data
 
 logger = logging.getLogger(__name__)
 DefaultType = (
@@ -64,23 +64,45 @@ class PythonType(NamedTuple):
     type: str
     default: DefaultType | None
     default_factory: str | None
+    # scalar or container type
+    cls: Any
+    # if a container type, its scalar type
+    inner_cls: Any | None
 
 
 param_type_to_python_type = {
-    "ENUM": PythonType(type="str", default="", default_factory=None),
-    "ENUM_ARR": PythonType(type="Sequence[str]", default=None, default_factory="list"),
-    "FILE": PythonType(type="str", default="", default_factory=None),
-    "INT": PythonType(type="int", default=0, default_factory=None),
-    "INT_ARR": PythonType(type="IntSequence", default=None, default_factory="list"),
-    "INUM": PythonType(type="int", default=0, default_factory=None),
-    "LOGIC": PythonType(type="bool", default=False, default_factory=None),
-    "REAL": PythonType(type="float", default=0.0, default_factory=None),
-    "REAL_ARR": PythonType(type="FloatSequence", default=None, default_factory="list"),
-    "SPECIES": PythonType(type="str", default="", default_factory=None),
-    "STR": PythonType(type="str", default="", default_factory=None),
-    "STR_ARR": PythonType(type="Sequence[str]", default=None, default_factory="list"),
-    "ELE_PARAM": PythonType(type="str", default="", default_factory=None),
-    "COMPLEX": PythonType(type="complex", default=0j, default_factory=None),
+    "ENUM": PythonType(type="str", default="", default_factory=None, cls=str, inner_cls=None),
+    "ENUM_ARR": PythonType(
+        type="Sequence[str]", default=None, default_factory="list", cls=list, inner_cls=str
+    ),
+    "FILE": PythonType(type="str", default="", default_factory=None, cls=str, inner_cls=None),
+    "INT": PythonType(type="int", default=0, default_factory=None, cls=int, inner_cls=None),
+    "INT_ARR": PythonType(
+        type="IntSequence", default=None, default_factory="list", cls=list, inner_cls=int
+    ),
+    "INUM": PythonType(type="int", default=0, default_factory=None, cls=int, inner_cls=None),
+    "LOGIC": PythonType(
+        type="bool", default=False, default_factory=None, cls=bool, inner_cls=None
+    ),
+    "REAL": PythonType(
+        type="float", default=0.0, default_factory=None, cls=float, inner_cls=None
+    ),
+    "REAL_ARR": PythonType(
+        type="FloatSequence", default=None, default_factory="list", cls=list, inner_cls=float
+    ),
+    "SPECIES": PythonType(
+        type="str", default="", default_factory=None, cls=str, inner_cls=None
+    ),
+    "STR": PythonType(type="str", default="", default_factory=None, cls=str, inner_cls=None),
+    "STR_ARR": PythonType(
+        type="Sequence[str]", default=None, default_factory="list", cls=list, inner_cls=str
+    ),
+    "ELE_PARAM": PythonType(
+        type="str", default="", default_factory=None, cls=str, inner_cls=None
+    ),
+    "COMPLEX": PythonType(
+        type="complex", default=0j, default_factory=None, cls=complex, inner_cls=None
+    ),
 }
 TaoParameterValueBasic = (
     str | int | float | complex | list[float] | list[int] | list[str] | list[complex]
@@ -236,6 +258,23 @@ def match_default_from_struct(member: PipeOutputParameter, reference: StructureM
                 default = list(default)
             else:
                 default = [default] * int(reference.type_info.dimension)
+
+    ft = param_type_to_python_type[member.type]
+    if not isinstance(default, ft.cls) or (
+        isinstance(default, list) and not isinstance(default[0], ft.inner_cls)
+    ):
+        if ft.inner_cls is not None:
+            cls = f"{ft.cls}[{ft.inner_cls}]"
+        else:
+            cls = ft.cls
+        logger.warning("%s: Default mismatch: %s default=%r", member.name, cls, default)
+
+        default, default_factory = _get_default(
+            python_type=member.python_type,
+            size=reference.type_info.kind,
+            # Mismatch from the underlying Fortran data which we use to source defaults
+            fortran_default=None,
+        )
 
     return default, default_factory
 
