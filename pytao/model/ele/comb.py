@@ -216,10 +216,16 @@ class Comb(TaoModel, extra="allow"):
 
     Note
     ----
-    Arrays are indexed by element. Phase-space momenta follow Bmad's
-    normalized convention and are dimensionless: ``px`` = p_x / p0,
-    ``py`` = p_y / p0, and the longitudinal ``p`` = ``delta`` = (p - p0) / p0.
-    This differs from openPMD-beamphysics, where px/py/p carry units of eV/c.
+    Arrays are indexed by element.
+
+    Phase-space momenta follow Bmad's normalized convention and are
+    dimensionless:
+
+    * ``px`` = p_x / p0
+    * ``py`` = p_y / p0
+    * ``pz`` = p/p0 - 1 (also ``vec(6)`` or ``delta`` in Bmad)
+
+    Where p is the total momentum and p0 is the reference momentum.
 
     Attributes
     ----------
