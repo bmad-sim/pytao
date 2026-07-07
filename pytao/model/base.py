@@ -415,8 +415,8 @@ class TaoSettableModel(TaoModel):
         ix_uni = self.command_args.get("ix_uni", None)
         for item in to_set:
             tao_attr_name = _fix_tao_attr_name(item)
-            if ix_uni and "(" not in tao_attr_name:
-                # TODO: multi-universe array element setting broken in Tao?
+            if ix_uni and not tao_attr_name.startswith("distribution_type"):
+                # TODO: awaiting https://github.com/bmad-sim/bmad-ecosystem/pull/2091
                 tao_attr_name = f"{ix_uni}@{tao_attr_name}"
             set_value = self._make_set_value(item.value)
             cmds.append(f"set {set_name} {tao_attr_name} = {set_value}")
