@@ -11,7 +11,7 @@ Documentation for Bmad and Tao, as well as information for downloading the code 
 
 ## Installation
 
-See the [PyTao installation instructions](https://bmad-sim.github.io/pytao/user_docs/index.html) for details. The preferred installation method is using conda:
+See the [PyTao installation instructions](https://bmad-sim.github.io/pytao/installation/) for details. The preferred installation method is using conda:
 
 ```
 conda install -c conda-forge pytao
