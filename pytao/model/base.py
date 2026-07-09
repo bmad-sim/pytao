@@ -23,8 +23,6 @@ from typing import (
 
 import numpy as np
 import pydantic
-from beamphysics import ParticleGroup
-from beamphysics.units import pmd_unit
 from pydantic.fields import FieldInfo
 from typing_extensions import Self, override
 
@@ -741,6 +739,9 @@ def _msgpack_default(obj: Any) -> Any:
     """Fallback serializer for types ormsgpack doesn't handle natively."""
     # NOTE: this is borrowed from LUME-Genesis archiving, and ideally should be
     # kept in sync
+    from beamphysics import ParticleGroup
+    from beamphysics.units import pmd_unit
+
     if isinstance(obj, pmd_unit):
         return {
             "unitSI": obj.unitSI,

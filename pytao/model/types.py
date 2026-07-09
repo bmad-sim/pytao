@@ -2,14 +2,16 @@ from __future__ import annotations
 
 import pathlib
 from collections.abc import Sequence
-from typing import Annotated, Any, Union
+from typing import TYPE_CHECKING, Annotated, Any, Union
 
 import numpy as np
 import pydantic
 import pydantic_core
-from beamphysics import ParticleGroup
-from beamphysics.units import pmd_unit
 from typing_extensions import NotRequired, TypedDict
+
+if TYPE_CHECKING:
+    from beamphysics import ParticleGroup
+    from beamphysics.units import pmd_unit
 
 
 def _sequence_helper(value):
@@ -71,6 +73,8 @@ class _PydanticParticleGroup:
 
     @staticmethod
     def _from_dict(data: ParticleData) -> ParticleGroup:
+        from beamphysics import ParticleGroup
+
         return ParticleGroup(data=data)
 
     @staticmethod
@@ -95,6 +99,8 @@ class _PydanticParticleGroup:
 
     @classmethod
     def _pydantic_validate(cls, value: ParticleData | ParticleGroup) -> ParticleGroup:
+        from beamphysics import ParticleGroup
+
         if isinstance(value, ParticleGroup):
             return value
         if isinstance(value, dict):
@@ -109,6 +115,8 @@ class _PydanticPmdUnit:
 
     @staticmethod
     def _from_dict(dct: dict) -> pmd_unit:
+        from beamphysics.units import pmd_unit
+
         dct = dict(dct)
         dim = dct.pop("unitDimension", None)
         if dim is not None:
@@ -138,6 +146,8 @@ class _PydanticPmdUnit:
 
     @classmethod
     def _pydantic_validate(cls, value: dict[str, Any] | pmd_unit | Any) -> pmd_unit:
+        from beamphysics.units import pmd_unit
+
         if isinstance(value, pmd_unit):
             return value
         if isinstance(value, dict):
@@ -220,8 +230,17 @@ def empty_ndarray():
 FloatSequence = Annotated[Sequence[float], pydantic.BeforeValidator(_sequence_helper)]
 IntSequence = Annotated[Sequence[int], pydantic.BeforeValidator(_sequence_to_list)]
 ArgumentType = int | float | str | IntSequence | FloatSequence
-PydanticPmdUnit = Annotated[pmd_unit, _PydanticPmdUnit]
-PydanticParticleGroup = Annotated[ParticleGroup, _PydanticParticleGroup]
 AnyPath = Union[pathlib.Path, str]
 FileKey = Union[str, int]
 NDArray = Annotated[np.ndarray, _PydanticNDArray]
+
+
+if TYPE_CHECKING:
+    PydanticPmdUnit = Annotated[pmd_unit, _PydanticPmdUnit]
+    PydanticParticleGroup = Annotated[ParticleGroup, _PydanticParticleGroup]
+else:
+    # Non-type checking route: avoid the beamphysics imports here as they are
+    # rather heavy.  If that changes in the future, nuke this to reduce
+    # complexity.
+    PydanticPmdUnit = Annotated[Any, _PydanticPmdUnit]
+    PydanticParticleGroup = Annotated[Any, _PydanticParticleGroup]
