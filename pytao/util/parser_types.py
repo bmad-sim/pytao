@@ -277,7 +277,25 @@ class EleGridFieldPointInfo(TypedDict):
     data: list[Any]
 
 
-class EleGenGradMapDerivInfo(TypedDict):
+EleGenGradientBase = TypedDict(
+    "EleGenGradientBase",
+    {
+        "file": str,
+        "field_scale": float,
+        "r0": list[float],
+        "dz": float,
+        "master_parameter": str,
+        "ele_anchor_pt": str,
+        "nongrid^field_type": str,
+        "g_ref": float,
+        "iz0": int,
+        "iz1": int,
+        "size_of_curve": int,
+    },
+)
+
+
+class EleGenGradientDerivInfo(TypedDict):
     i: int
     j: int
     k: int
