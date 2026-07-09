@@ -494,6 +494,7 @@ class MatplotlibGraphManager(GraphManager):
         settings: list[TaoGraphSettings] | None = None,
         save: bool | str | pathlib.Path | None = None,
         axes: list[list[matplotlib.axes.Axes]] | None = None,
+        ix_uni: int | None = None,
     ):
         """
         Plot graphs on a grid with Matplotlib.
@@ -534,6 +535,8 @@ class MatplotlibGraphManager(GraphManager):
             Graph customization settings, per graph.
         save : pathlib.Path or str, optional
             Save the plot to the given filename.
+        ix_uni : int, optional
+            Plot data from this universe for every graph in the grid.
 
         Returns
         -------
@@ -552,6 +555,7 @@ class MatplotlibGraphManager(GraphManager):
             settings=settings,
             xlim=xlim,
             ylim=ylim,
+            ix_uni=ix_uni,
         )
         nrows, ncols = grid
         height_ratios = None
@@ -644,6 +648,7 @@ class MatplotlibGraphManager(GraphManager):
         settings: TaoGraphSettings | None = None,
         curves: dict[int, TaoCurveSettings] | None = None,
         axes: list[matplotlib.axes.Axes] | None = None,
+        ix_uni: int | None = None,
     ):
         """
         Plot a graph with Matplotlib.
@@ -684,6 +689,8 @@ class MatplotlibGraphManager(GraphManager):
             applied to the placed graph prior to plotting.
         settings : TaoGraphSettings, optional
             Graph customization settings.
+        ix_uni : int, optional
+            Plot data from this universe.
 
         Returns
         -------
@@ -701,6 +708,7 @@ class MatplotlibGraphManager(GraphManager):
             settings=settings,
             xlim=xlim,
             ylim=ylim,
+            ix_uni=ix_uni,
         )
         if not graphs:
             raise UnsupportedGraphError(f"No supported plots from this template: {template}")

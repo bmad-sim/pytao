@@ -86,6 +86,23 @@ def _clean_pytao_output(dct: dict, typ: type[T]) -> T:
     return {key: dct.get(key, None) for key in typ.__required_keys__}
 
 
+def _normalize_universe_prefixed_keys(dct: dict) -> dict:
+    """
+    Strip Tao's ``"{ix_universe}^"`` prefix from graph/curve info keys.
+
+    Tao's ``plot_graph``/``plot_curve`` output prefixes per-universe fields with
+    the universe index (e.g. ``"-1^ix_branch"``, ``"2^ix_bunch"``).  Collapsing
+    these to stable keys (``"ix_branch"``, ``"ix_bunch"``) keeps the info usable
+    regardless of universe.  Compound field names like ``"graph^type"`` (whose
+    prefix is not an integer) are left untouched.
+    """
+    for key in list(dct):
+        prefix, sep, rest = key.partition("^")
+        if sep and prefix.lstrip("-").isdigit():
+            dct[rest] = dct.pop(key)
+    return dct
+
+
 def _should_use_symbol_color(symbol_type: str, fill_pattern: str) -> bool:
     if (
         symbol_type in ("dot", "1")
@@ -220,7 +237,9 @@ class PlotCurve:
         graph_type: str | None = None,
     ) -> PlotCurve:
         full_name = f"{region_name}.{graph_name}.{curve_name}"
-        curve_info = cast(PlotCurveInfo, tao.plot_curve(full_name))
+        curve_info = cast(
+            PlotCurveInfo, _normalize_universe_prefixed_keys(tao.plot_curve(full_name))
+        )
 
         # Removed in https://github.com/bmad-sim/bmad-ecosystem/pull/1300
         curve_info.pop("ix_ele_ref", None)
@@ -745,8 +764,9 @@ class LatticeLayoutGraph(GraphBase):
         if graph_type != "lat_layout":
             raise ValueError(f"Incorrect graph type: {graph_type} for {cls.__name__}")
 
-        universe = 1 if info["ix_universe"] == -1 else info["ix_universe"]
-        branch = info["-1^ix_branch"]
+        raw_ix_universe = info["ix_universe"]
+        universe = 1 if raw_ix_universe == -1 else raw_ix_universe
+        branch = info["ix_branch"]
         try:
             all_elem_info = tao.plot_lat_layout(ix_uni=universe, ix_branch=branch)
         except Exception as ex:
@@ -1190,7 +1210,8 @@ def make_graph(
 
 
 def get_plot_graph_info(tao: Tao, region_name: str, graph_name: str) -> PlotGraphInfo:
-    return cast(PlotGraphInfo, tao.plot_graph(f"{region_name}.{graph_name}"))
+    info = tao.plot_graph(f"{region_name}.{graph_name}")
+    return cast(PlotGraphInfo, _normalize_universe_prefixed_keys(info))
 
 
 def find_unused_plot_region(tao: Tao, skip: set[str]) -> str:
@@ -1474,6 +1495,7 @@ class GraphManager(ABC):
         settings: list[TaoGraphSettings] | None = None,
         xlim: OptionalLimit | Sequence[OptionalLimit] = None,
         ylim: OptionalLimit | Sequence[OptionalLimit] = None,
+        ix_uni: int | None = None,
     ):
         """
         Prepare multiple graphs for a grid plot.
@@ -1494,6 +1516,8 @@ class GraphManager(ABC):
             X axis limits for each graph.
         ylim : list of (float, float), optional
             Y axis limits for each graph.
+        ix_uni : int, optional
+            Plot data from this universe for every graph in the grid.
 
         Returns
         -------
@@ -1523,6 +1547,7 @@ class GraphManager(ABC):
                     template_name=template_name,
                     curves=graph_curves,
                     settings=graph_settings,
+                    ix_uni=ix_uni,
                 )
                 for template_name, graph_curves, graph_settings in zip(
                     template_names,
@@ -1551,6 +1576,7 @@ class GraphManager(ABC):
         place: bool = True,
         xlim: Limit | None = None,
         ylim: Limit | None = None,
+        ix_uni: int | None = None,
     ) -> list[AnyGraph]:
         """
         Prepare a graph for plotting.
@@ -1565,6 +1591,10 @@ class GraphManager(ABC):
             Graph customization settings.
         curves : Dict[int, TaoCurveSettings], optional
             Curve settings, keyed by curve number.
+        ix_uni : int, optional
+            Plot data from this universe.  Sets the graph-level ``ix_universe``,
+            which every curve with ``ix_universe = -1`` (the default) inherits.
+            Ignored if ``settings.ix_universe`` is already set.
         ignore_unsupported : bool
             Ignore unsupported graph types (e.g., key tables).
         ignore_invalid : bool
@@ -1592,6 +1622,8 @@ class GraphManager(ABC):
             settings.xlim = xlim
         if ylim is not None:
             settings.ylim = ylim
+        if ix_uni is not None and settings.ix_universe is None:
+            settings.ix_universe = ix_uni
 
         self.configure_graph(region_name, settings)
 
@@ -1751,6 +1783,7 @@ class GraphManager(ABC):
         settings: TaoGraphSettings | None = None,
         xlim: Limit | None = None,
         ylim: Limit | None = None,
+        ix_uni: int | None = None,
     ) -> Any:
         pass
 
@@ -1765,6 +1798,7 @@ class GraphManager(ABC):
         settings: list[TaoGraphSettings] | None = None,
         xlim: OptionalLimit | Sequence[OptionalLimit] = None,
         ylim: OptionalLimit | Sequence[OptionalLimit] = None,
+        ix_uni: int | None = None,
     ) -> Any:
         pass
 
