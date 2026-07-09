@@ -986,7 +986,7 @@ class ElementHead(TaoModel):
         name of element.
     num_cartesian_map : int
     num_cylindrical_map : int
-    num_gen_grad_map : int
+    num_gen_gradients : int
     num_grid_field : int
     ref_time : float
         Time ref particle passes exit end.
@@ -1036,7 +1036,7 @@ class ElementHead(TaoModel):
     name: str = Field(default="<Initialized>", description="name of element.", frozen=True)
     num_cartesian_map: int = Field(default=0, alias="num#cartesian_map", frozen=True)
     num_cylindrical_map: int = Field(default=0, alias="num#cylindrical_map", frozen=True)
-    num_gen_grad_map: int = Field(default=0, alias="num#gen_grad_map", frozen=True)
+    num_gen_gradients: int = Field(default=0, alias="num#gen_gradients", frozen=True)
     num_grid_field: int = Field(default=0, alias="num#grid_field", frozen=True)
     ref_time: float = Field(
         default=0.0, description="Time ref particle passes exit end.", frozen=True
