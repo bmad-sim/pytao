@@ -4,7 +4,6 @@ import pathlib
 import typing
 
 import numpy as np
-from beamphysics.species import mass_of
 from typing_extensions import Self
 
 from ..base import ArchiveFormat, TaoModel, load_model_data
@@ -131,6 +130,8 @@ def comb_energy_data(tao: Tao, ix_branch: int = 0):
     if species == "":
         species = "positron"
 
+    from beamphysics.species import mass_of
+
     mc2 = mass_of(species)
     mean_p = (1 + tao.bunch_comb("pz")) * p0c
     data["mean_p"] = mean_p
@@ -200,6 +201,8 @@ def comb_data_from_tao(tao: Tao, ix_branch: int = 0):
     species = tao.beam_init(ix_branch=ix_branch)["species"]
     if species == "":
         species = "positron"
+    from beamphysics.species import mass_of
+
     mc2 = mass_of(species)
     mean_p = (data["mean_delta"] + 1) * p0c
     data["mean_p"] = mean_p
