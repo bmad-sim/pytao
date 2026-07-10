@@ -184,15 +184,28 @@ def test_ele_elec_multipoles_1(tao_cls: type[AnyTao]):
         assert "data" in tao.ele_elec_multipoles(ele_id="1@0>>1", which="model")
 
 
-def test_ele_gen_grad_map_1(tao_cls: type[AnyTao]):
+def test_ele_gen_gradients(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_em_field"
     ) as tao:
         assert set(
-            tao.ele_gen_grad_map(ele_id="1@0>>9", which="model", index="1", who="derivs")[
-                0
-            ].keys()
+            tao.ele_gen_gradients(ele_id="1@0>>9", which="model", index="1", who="derivs")[0]
         ) == {"i", "j", "k", "dz", "deriv"}
+        assert set(
+            tao.ele_gen_gradients(ele_id="1@0>>9", which="model", index="1", who="base")
+        ) == {
+            "file",
+            "field_scale",
+            "r0",
+            "dz",
+            "master_parameter",
+            "ele_anchor_pt",
+            "nongrid^field_type",
+            "g_ref",
+            "iz0",
+            "iz1",
+            "size_of_curve",
+        }
 
 
 def test_ele_lord_slave_1(tao_cls: type[AnyTao]):

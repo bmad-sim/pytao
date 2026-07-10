@@ -5,7 +5,7 @@ import dataclasses
 import datetime
 import logging
 from collections import defaultdict
-from typing import Any, TypeVar
+from typing import cast, Any, TypeVar
 
 from .parser_types import (
     BuildingWallGlobalInfo,
@@ -17,7 +17,8 @@ from .parser_types import (
     DataDArrayInfo,
     DataParameterLineInfo,
     EleChamberWallInfo,
-    EleGenGradMapDerivInfo,
+    EleGenGradientDerivInfo,
+    EleGenGradientBase,
     EleGridFieldPointInfo,
     EleLordSlaveInfo,
     EleSpinTaylorInfo,
@@ -1004,9 +1005,11 @@ def parse_ele_grid_field(lines, cmd="") -> list[EleGridFieldPointInfo] | dict[st
     return parse_tao_python_data(lines)
 
 
-def parse_ele_gen_grad_map(lines, cmd="") -> list[EleGenGradMapDerivInfo] | dict[str, Any]:
+def parse_ele_gen_gradients(
+    lines, cmd=""
+) -> list[EleGenGradientDerivInfo] | EleGenGradientBase:
     """
-    Parse ele_gen_grad_map results.
+    Parse ele_gen_gradients results.
 
     Returns
     -------
@@ -1027,7 +1030,7 @@ def parse_ele_gen_grad_map(lines, cmd="") -> list[EleGenGradMapDerivInfo] | dict
                 "deriv": float,
             },
         )
-    return parse_tao_python_data(lines)
+    return cast(EleGenGradientBase, parse_tao_python_data(lines))
 
 
 def parse_ele_lord_slave(lines, cmd="") -> list[EleLordSlaveInfo]:
