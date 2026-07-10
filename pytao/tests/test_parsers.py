@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 
 from .. import AnyTao
-from ..util.parsers import parse_derivative, parse_tao_python_data
+from ..util.parsers import parse_derivative, parse_show_version, parse_tao_python_data
 from .conftest import ensure_successful_parsing
 from .test_interface_commands import new_tao
 
@@ -555,6 +555,24 @@ def test_parse_version(tao_cls: type[AnyTao]):
     ) as tao:
         res = tao.version()
     assert isinstance(res, datetime)
+
+
+@pytest.mark.parametrize(
+    ["lines", "expected"],
+    [
+        pytest.param(["Version: 20260710-0"], datetime(2026, 7, 10), id="tag"),
+        pytest.param(
+            ["Version: 20260707-0-4-gec0e291a3"],
+            datetime(2026, 7, 7),
+            id="git-describe",
+        ),
+        pytest.param(["Date: 2026/07/07 00:00:00"], datetime(2026, 7, 7), id="date-fallback"),
+        pytest.param(["garbage"], None, id="unparseable"),
+        pytest.param(["Version: 20261301-0"], None, id="invalid-date"),
+    ],
+)
+def test_parse_show_version(lines: list[str], expected: datetime | None):
+    assert parse_show_version(lines) == expected
 
 
 def test_parse_wall3d_radius(caplog, tao_cls: type[AnyTao]):

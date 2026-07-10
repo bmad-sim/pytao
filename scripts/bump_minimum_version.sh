@@ -22,7 +22,9 @@ else
 fi
 
 datetime=$(python "$SCRIPT_DIR"/tao_datetime_version.py)
-bmad_conda_version=$(conda list --json | jq -r '.[] | select(.name=="bmad") | .version' | $SED -e 's/\..*$//')
+# Conda package versions are the bmad git tag with '-' replaced by '.' for
+# PEP 440 compatibility (tag 20260710-0 -> conda 20260710.0).
+bmad_conda_version=$(conda list --json | jq -r '.[] | select(.name=="bmad") | .version')
 
 if [ -z "$datetime" ]; then
   echo "Unable to determine version using pytao"
@@ -46,7 +48,7 @@ cd $SCRIPT_DIR || exit 1
 python generate_interface_commands.py
 
 if [ -n "$bmad_conda_version" ]; then
-  BMAD_TAG="$bmad_conda_version"
+  BMAD_TAG=$(echo "$bmad_conda_version" | $SED -e 's/\./-/')
 else
   BMAD_TAG=$(cd "$ACC_ROOT_DIR" && git describe --tags)
 fi

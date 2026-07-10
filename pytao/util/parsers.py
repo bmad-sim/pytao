@@ -4,6 +4,7 @@ import ast
 import dataclasses
 import datetime
 import logging
+import re
 from collections import defaultdict
 from typing import cast, Any, TypeVar
 
@@ -1765,12 +1766,26 @@ def parse_show_version(lines, cmd="") -> datetime.datetime | None:
     """
     Parse 'show version' output.
 
+    Supports the git tag-based format (e.g., ``Version: 20260710-0`` or with a
+    git-describe hash suffix)
+    Falls back to the old date-based format. (e.g., ``Date: 2026/07/07 00:00:00``).
+
     Returns
     -------
     datetime.datetime or None
     """
+    version = "".join(lines).strip()
+
+    match = re.match(r"^Version:\s*(\d{8})-\d+(-\d+-g[0-9a-f]+)?$", version)
+    if match:
+        try:
+            return datetime.datetime.strptime(match.group(1), "%Y%m%d")
+        except ValueError:
+            logger.warning("Failed to parse version output: %s", lines)
+            return None
+
     try:
-        return datetime.datetime.strptime("".join(lines).strip(), "Date: %Y/%m/%d %H:%M:%S")
+        return datetime.datetime.strptime(version, "Date: %Y/%m/%d %H:%M:%S")
     except ValueError:
         logger.warning("Failed to parse version output: %s", lines)
         return None
