@@ -1762,7 +1762,7 @@ def parse_show_plot_page(lines, cmd="") -> dict[str, Any]:
     return {key.replace("%", "_"): value for key, value in result.items()}
 
 
-def parse_show_version(lines, cmd="") -> datetime.datetime | None:
+def parse_show_version(lines, cmd="", as_date: bool = False) -> datetime.datetime | str | None:
     """
     Parse 'show version' output.
 
@@ -1775,6 +1775,12 @@ def parse_show_version(lines, cmd="") -> datetime.datetime | None:
     datetime.datetime or None
     """
     version = "".join(lines).strip()
+
+    if not as_date:
+        try:
+            return version.split(":", 1)[1].strip()
+        except IndexError:
+            return None
 
     match = re.match(r"^Version:\s*(\d{8})-\d+(-\d+-g[0-9a-f]+)?$", version)
     if match:

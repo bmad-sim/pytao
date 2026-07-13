@@ -553,26 +553,52 @@ def test_parse_version(tao_cls: type[AnyTao]):
         tao_cls,
         init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_optics_matching",
     ) as tao:
-        res = tao.version()
-    assert isinstance(res, datetime)
+        date_version = tao.version(as_date=True)
+        version = tao.version()
+    assert isinstance(date_version, datetime)
+    assert isinstance(version, str)
 
 
 @pytest.mark.parametrize(
-    ["lines", "expected"],
+    ["lines", "expected_date", "expected_str"],
     [
-        pytest.param(["Version: 20260710-0"], datetime(2026, 7, 10), id="tag"),
+        pytest.param(
+            ["Version: 20260710-0"],
+            datetime(2026, 7, 10),
+            "20260710-0",
+            id="tag",
+        ),
         pytest.param(
             ["Version: 20260707-0-4-gec0e291a3"],
             datetime(2026, 7, 7),
+            "20260707-0-4-gec0e291a3",
             id="git-describe",
         ),
-        pytest.param(["Date: 2026/07/07 00:00:00"], datetime(2026, 7, 7), id="date-fallback"),
-        pytest.param(["garbage"], None, id="unparseable"),
-        pytest.param(["Version: 20261301-0"], None, id="invalid-date"),
+        pytest.param(
+            ["Date: 2026/07/07 00:00:00"],
+            datetime(2026, 7, 7),
+            "2026/07/07 00:00:00",
+            id="date-fallback",
+        ),
+        pytest.param(
+            ["garbage"],
+            None,
+            None,
+            id="unparseable",
+        ),
+        pytest.param(
+            ["Version: 20261301-0"],
+            None,
+            "20261301-0",
+            id="invalid-date",
+        ),
     ],
 )
-def test_parse_show_version(lines: list[str], expected: datetime | None):
-    assert parse_show_version(lines) == expected
+def test_parse_show_version(
+    lines: list[str], expected_date: datetime | None, expected_str: str | None
+):
+    assert parse_show_version(lines, as_date=True) == expected_date
+    assert parse_show_version(lines) == expected_str
 
 
 def test_parse_wall3d_radius(caplog, tao_cls: type[AnyTao]):
