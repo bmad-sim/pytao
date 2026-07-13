@@ -1605,6 +1605,10 @@ class GraphManager(ABC):
             X axis limits.
         ylim : (float, float), optional
             Y axis limits.
+        ix_uni : int, optional
+            Plot data from this universe.  Sets the graph-level ``ix_universe``,
+            which every curve with ``ix_universe = -1`` (the default) inherits.
+            Ignored if ``settings.ix_universe`` is already set.
 
         Returns
         -------

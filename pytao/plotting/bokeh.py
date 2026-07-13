@@ -1705,7 +1705,7 @@ class Variable:
         return [
             cls.from_tao(
                 tao=tao,
-                name=f'{var_info["name"]}[{idx}]',
+                name=f"{var_info['name']}[{idx}]",
                 parameter=parameter,
             )
             for var_info in tao.var_general()
@@ -2229,8 +2229,8 @@ class NotebookGraphManager(BokehGraphManager):
             curves=curves,
             settings=settings,
             share_x=share_x,
-            save=save,
             ix_uni=ix_uni,
+            save=save,
         )
 
         if vars:
