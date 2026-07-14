@@ -361,9 +361,10 @@ def _print_results(results: ConstraintResultsGroup) -> None:
         print("=" * 60)
         for lat_id, lat in lat_failures:
             if not lat.loaded:
-                reason = lat.error.splitlines()[-1] if lat.error else "unknown error"
+                error_lines = lat.error.splitlines()[-10:] if lat.error else ["unknown error"]
                 print(f"\n  lattice {lat_id}: failed to load")
-                print(f"    {reason}")
+                for line in error_lines:
+                    print(f"    {line}")
             else:
                 print(f"\n  lattice {lat_id}: particle lost before end")
         for group, cr in failures_eq:
