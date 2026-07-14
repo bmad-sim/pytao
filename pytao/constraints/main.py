@@ -432,9 +432,16 @@ def main() -> None:
         action="store_true",
         help="Emit GitHub-flavored markdown suitable for GITHUB_STEP_SUMMARY",
     )
+    parser.add_argument(
+        "--verbose",
+        "-v",
+        action="store_true",
+        help="Enable debug-level logging",
+    )
     args = parser.parse_args()
 
-    logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
+    log_level = logging.DEBUG if args.verbose else logging.INFO
+    logging.basicConfig(level=log_level, format="%(levelname)s %(name)s: %(message)s")
 
     config_path = Path(args.config).resolve()
     with config_path.open() as fh:
