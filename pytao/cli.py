@@ -83,7 +83,10 @@ def create_pytao_argparser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--pylog",
         choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
-        help="Set logging level.",
+        help=(
+            "Set logging level. Defaults to the PYTAO_LOG environment "
+            "variable, or WARNING if unset."
+        ),
     )
     parser.add_argument(
         "--pyprefix",
