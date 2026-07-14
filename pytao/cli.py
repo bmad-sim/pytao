@@ -19,7 +19,7 @@ logger = logging.getLogger("pytao")
 @dataclasses.dataclass(config=ConfigDict(extra="forbid", validate_assignment=True))
 class PytaoArgs(TaoStartup):
     pycommand: str | None = None
-    pylog: str | None = None
+    pylog: str | None = os.environ.get("PYTAO_LOG", "WARNING") or None
     pyplot: str | None = None
     pyprefix: str = "`"
     pyscript: str | None = None
