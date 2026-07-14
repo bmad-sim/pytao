@@ -4,6 +4,7 @@ import ctypes
 import logging
 import os
 import pathlib
+import sys
 import textwrap
 from ctypes.util import find_library
 from typing import TYPE_CHECKING, Literal, Union
@@ -32,6 +33,14 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 AnyPath = Union[pathlib.Path, str]
 Quiet = Literal["all", "warnings"]
+
+
+def is_in_subprocess() -> bool:
+    """
+    Is this PyTao session from a SubprocessTao instance?
+    """
+
+    return bool(sys.argv and "subproc_main" in sys.argv[0])
 
 
 def ipython_shell(tao: AnyTao) -> None:
@@ -381,9 +390,11 @@ class TaoCore:
                 tao_output="\n".join(output),
             )
 
-        _raw_output, messages = self._check_output_lines(cmd, output, raises=False)
-        for msg in messages:
-            self._log(cmd, msg)
+        if not is_in_subprocess():
+            _raw_output, messages = self._check_output_lines(cmd, output, raises=False)
+            for msg in messages:
+                self._log(cmd, msg)
+
         return output
 
     def _check_output_lines(
