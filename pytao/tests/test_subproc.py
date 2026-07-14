@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 import time
 from collections.abc import Callable, Generator
 from typing import Any
@@ -8,6 +9,7 @@ import numpy as np
 import pytest
 
 from .. import SubprocessTao
+from ..core import is_in_subprocess
 from ..errors import TaoCommandError, filter_tao_messages_context
 from ..subproc import SubprocessErrorResult, SupportedKwarg, TaoDisconnectedError, _get_result
 from ..tao import Tao
@@ -219,6 +221,12 @@ def test_error_filter_context_cmd_real(subproc_tao: SubprocessTao) -> None:
         assert output.shape == (0,)
         assert "Divide by zero" in subproc_tao.last_messages[0].message
         assert "Invalid expression" in subproc_tao.last_messages[1].message
+
+
+def test_is_in_subprocess(monkeypatch: pytest.MonkeyPatch):
+    assert not is_in_subprocess()
+    monkeypatch.setattr(sys, "argv", ["/path/to/pytao/subproc_main.py", "fifo", "shm"])
+    assert is_in_subprocess()
 
 
 def test_get_result_error_no_propagate():
