@@ -199,6 +199,14 @@ PYTAO_LOG_MODE=matching pytao --pylog INFO -init_file "$ACC_ROOT_DIR/bmad-doc/ta
 To leave logging entirely unconfigured, set `PYTAO_LOG` to an empty string
 (and omit `--pylog`).
 
+For debugging, `--pylog-file` (or the `PYTAO_LOG_FILE` environment variable)
+additionally writes PyTao logs to a file. The file always captures `DEBUG`
+level and above, while console output stays at the `--pylog` level:
+
+```bash
+pytao --pylog-file pytao-debug.log -init_file "$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init"
+```
+
 ## PyTao plotting and startup scripts
 
 When PyTao is instructed to use its Matplotlib or Bokeh backends, it configures
@@ -249,6 +257,7 @@ Additionally, you may be required to:
 | ----------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `PYTAO_LOG_MODE`        | `quiet`   | How Tao message levels are translated to Python logging levels. `quiet` logs non-error Tao messages at `DEBUG`; `matching` translates each to its closest Python equivalent. See [Logging](#logging).                 |
 | `PYTAO_LOG`             | `WARNING` | Logging level for the `pytao` CLI when `--pylog` is not given. Set to an empty string to leave logging unconfigured.                                                                                                  |
+| `PYTAO_LOG_FILE`        | (unset)   | File to write PyTao logs to for the `pytao` CLI, when `--pylog-file` is not given. The file captures `DEBUG` and above; console output stays at the `--pylog` level.                                                  |
 | `PYTAO_PLOT`            | `tao`     | Plotting backend for the `pytao` CLI: `tao`, `mpl`, or `bokeh`. Takes precedence over `--pyplot`.                                                                                                                     |
 | `PYTAO_FILTER_TAB`      | `y`       | Filter tab completion on PyTao model classes, hiding private and pydantic-internal attributes. Set to `n` to show all attributes. Also toggleable at runtime with `pytao.model.base.toggle_tab_completion_filtering`. |
 | `PYTAO_BOKEH_NBCONVERT` | (unset)   | Set to `1` or `y` when exporting notebooks with `nbconvert`. Bokeh plots are then rendered as static grid plots instead of server-backed applications, which would show up blank in exported HTML.                    |
