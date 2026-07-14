@@ -1,5 +1,6 @@
 import code
 import contextlib
+import logging
 import os
 import pathlib
 import sys
@@ -150,6 +151,61 @@ def test_init_logging(mock_logging, mock_tao_startup):
     assert python_args.pylog == "DEBUG"
     mock_logging.assert_called_once()
     assert "self" in call_info, "TaoStartup.run was never called!"
+
+
+def test_split_args_pylog_file():
+    args = PytaoArgs.from_cli_args(["--pylog-file", "out.log", "-init", "init.foo"])
+    assert args.pylog_file == "out.log"
+
+
+@pytest.fixture
+def restore_logging_state() -> Generator[None, None, None]:
+    """Snapshot and restore pytao/root logger levels and handlers."""
+    # Why is Python logging such a pain? *sigh*
+    pytao_logger = logging.getLogger("pytao")
+    root_logger = logging.getLogger()
+    old_pytao_level = pytao_logger.level
+    old_pytao_handlers = list(pytao_logger.handlers)
+    old_root_level = root_logger.level
+    old_root_handler_levels = {handler: handler.level for handler in root_logger.handlers}
+    yield
+    pytao_logger.setLevel(old_pytao_level)
+    for handler in list(pytao_logger.handlers):
+        if handler not in old_pytao_handlers:
+            pytao_logger.removeHandler(handler)
+            handler.close()
+    root_logger.setLevel(old_root_level)
+    for handler in list(root_logger.handlers):
+        if handler in old_root_handler_levels:
+            handler.setLevel(old_root_handler_levels[handler])
+        else:
+            root_logger.removeHandler(handler)
+
+
+def test_init_log_file(mock_tao_startup, tmp_path: pathlib.Path, restore_logging_state):
+    log_file = tmp_path / "pytao-debug.log"
+
+    python_args, _ = init(
+        ["pytao", "--pylog", "WARNING", "--pylog-file", str(log_file)],
+        ipython=False,
+    )
+
+    assert python_args.pylog_file == str(log_file)
+
+    pytao_logger = logging.getLogger("pytao")
+    assert pytao_logger.level == logging.DEBUG
+
+    file_handlers = [
+        handler
+        for handler in pytao_logger.handlers
+        if isinstance(handler, logging.FileHandler)
+    ]
+    assert len(file_handlers) == 1
+    assert file_handlers[0].baseFilename == str(log_file)
+
+    pytao_logger.debug("debug message for the log file")
+    file_handlers[0].flush()
+    assert "debug message for the log file" in log_file.read_text()
 
 
 @patch("pytao.cli.init")
