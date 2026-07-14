@@ -380,6 +380,10 @@ class TaoCore:
                 ),
                 tao_output="\n".join(output),
             )
+
+        _raw_output, messages = self._check_output_lines(cmd, output, raises=False)
+        for msg in messages:
+            self._log(cmd, msg)
         return output
 
     def _check_output_lines(
