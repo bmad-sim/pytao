@@ -243,11 +243,7 @@ def _print_results_markdown(results: ConstraintResultsGroup) -> None:
             desc = _escape_md(rr.description)
             print(f"| {status} | {_escape_md(rr.label)} | {desc} |")
 
-    lat_failures = [
-        (lat_id, lat)
-        for lat_id, lat in results.lattices.items()
-        if not lat.loaded or lat.particle_survived is False
-    ]
+    lat_failures = [(lat_id, lat) for lat_id, lat in results.lattices.items() if lat.failed]
     failures_eq = [
         (group, cr) for group, cr in results.iter_constraints() if not cr.result.is_satisfied
     ]
@@ -352,11 +348,7 @@ def _print_results(results: ConstraintResultsGroup) -> None:
             suffix = f"  {rr.description}" if rr.description else ""
             print(f"  [{status}] {rr.label}{suffix}")
 
-    lat_failures = [
-        (lat_id, lat)
-        for lat_id, lat in results.lattices.items()
-        if not lat.loaded or lat.particle_survived is False
-    ]
+    lat_failures = [(lat_id, lat) for lat_id, lat in results.lattices.items() if lat.failed]
     failures_eq = [
         (group, cr) for group, cr in results.iter_constraints() if not cr.result.is_satisfied
     ]
@@ -471,10 +463,8 @@ def main() -> None:
         results_path.write_text(results.model_dump_json(indent=2))
         print(f"\nResults saved to {results_path}")
 
-    failed = (
-        any(not lat.loaded for lat in results.lattices.values())
-        or any(lat.particle_survived is False for lat in results.lattices.values())
-        or any(not cr.result.is_satisfied for _, cr in results.iter_constraints())
+    failed = any(lat.failed for lat in results.lattices.values()) or any(
+        not cr.result.is_satisfied for _, cr in results.iter_constraints()
     )
     if failed:
         sys.exit(1)
