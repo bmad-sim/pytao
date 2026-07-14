@@ -624,7 +624,7 @@ class TaoCore:
             )
 
     def _log(self, cmd: str, message: TaoMessage) -> None:
-        logger.log(message.log_level, str(message))
+        logger.log(message.log_level, message.to_string(include_level=False))
 
     def cmd_integer(self, cmd: str, raises: bool = True) -> np.ndarray | None:
         """

@@ -3,6 +3,7 @@ from __future__ import annotations
 import contextlib
 import contextvars
 import logging
+import os
 import textwrap
 from collections.abc import Iterable
 from dataclasses import dataclass, field
@@ -20,6 +21,27 @@ TaoMessageLevel = Literal[
 
 all_message_levels = ("INFO", "SUCCESS", "WARNING", "ERROR", "FATAL", "ABORT", "MESSAGE")
 error_message_levels = ("ERROR", "FATAL", "ABORT")
+
+quiet_log_levels: dict[TaoMessageLevel, int] = {
+    "INFO": logging.DEBUG,
+    "SUCCESS": logging.DEBUG,
+    "WARNING": logging.DEBUG,
+    "MESSAGE": logging.DEBUG,
+    "ERROR": logging.ERROR,
+    "FATAL": logging.ERROR,
+    "ABORT": logging.ERROR,
+}
+matching_log_levels: dict[TaoMessageLevel, int] = {
+    "INFO": logging.INFO,
+    "SUCCESS": logging.INFO,
+    "WARNING": logging.WARNING,
+    "MESSAGE": logging.INFO,
+    "ERROR": logging.ERROR,
+    "FATAL": logging.CRITICAL,
+    "ABORT": logging.CRITICAL,
+}
+
+log_behavior_mode = os.environ.get("PYTAO_LOG_MODE", "matching")
 
 
 class TaoException(Exception):
@@ -352,13 +374,28 @@ class TaoMessage:
         return all_message_levels.index(self.level)
 
     def __str__(self) -> str:
-        return f"[{self.level} {self.function}] {self.message}"
+        return self.to_string(include_level=True)
+
+    def to_string(self, include_level: bool = False, newline_prefix: str = "  ") -> str:
+        if include_level:
+            res = f"[{self.level} {self.function}] {self.message}"
+        else:
+            res = f"[{self.function}] {self.message}"
+        return res.replace("\n", f"\n{newline_prefix}")
 
     @property
     def log_level(self) -> int:
-        if self.level in error_message_levels:
-            return logging.ERROR
-        return logging.DEBUG
+        if log_behavior_mode == "quiet":
+            return self.quiet_log_level
+        return self.matching_log_level
+
+    @property
+    def quiet_log_level(self) -> int:
+        return quiet_log_levels[self.level]
+
+    @property
+    def matching_log_level(self) -> int:
+        return matching_log_levels[self.level]
 
 
 def filter_tao_messages(
