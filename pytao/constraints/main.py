@@ -425,15 +425,27 @@ def main() -> None:
         help="Emit GitHub-flavored markdown suitable for GITHUB_STEP_SUMMARY",
     )
     parser.add_argument(
-        "--verbose",
-        "-v",
-        action="store_true",
-        help="Enable debug-level logging",
+        "--log-file",
+        metavar="FILE",
+        help="Write pytao/Tao log output to FILE",
+    )
+    parser.add_argument(
+        "--log-level",
+        default="INFO",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+        help="Log level for --log-file (default: INFO)",
     )
     args = parser.parse_args()
 
-    log_level = logging.DEBUG if args.verbose else logging.INFO
-    logging.basicConfig(level=log_level, format="%(levelname)s %(name)s: %(message)s")
+    if args.log_file:
+        logging.basicConfig(
+            filename=args.log_file,
+            level=getattr(logging, args.log_level),
+            format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+        )
+    else:
+        # Avoid even error log messages (ie from pytao.core)
+        logging.getLogger().addHandler(logging.NullHandler())
 
     config_path = Path(args.config).resolve()
     with config_path.open() as fh:
@@ -447,21 +459,25 @@ def main() -> None:
 
     save_obs_path = Path(args.save_observations) if args.save_observations else None
 
-    saved, results = run(config, config_dir=config_path.parent, compare=compare, verbose=True)
+    saved, results = run(
+        config, config_dir=config_path.parent, compare=compare, verbose=not args.markdown
+    )
 
     if args.markdown:
         _print_results_markdown(results)
     else:
         _print_results(results)
 
+    info_stream = sys.stderr if args.markdown else sys.stdout
+
     if save_obs_path is not None:
         save_obs_path.write_text(saved.model_dump_json(indent=2))
-        print(f"\n{len(saved)} observations saved to {save_obs_path}")
+        print(f"\n{len(saved)} observations saved to {save_obs_path}", file=info_stream)
 
     if args.save_results:
         results_path = Path(args.save_results)
         results_path.write_text(results.model_dump_json(indent=2))
-        print(f"\nResults saved to {results_path}")
+        print(f"\nResults saved to {results_path}", file=info_stream)
 
     failed = any(lat.failed for lat in results.lattices.values()) or any(
         not cr.result.is_satisfied for _, cr in results.iter_constraints()

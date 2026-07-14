@@ -51,7 +51,8 @@ Constraints checking happens through the tool `pytao-constraints`.
 ```console
 $ pytao-constraints --help
 usage: pytao-constraints [-h] [--save-observations FILE] [--save-results FILE]
-                         [--compare-path FILE] [--markdown] [--verbose]
+                         [--compare-path FILE] [--markdown] [--log-file FILE]
+                         [--log-level LEVEL]
                          config
 
 Run pytao constraints checks against Bmad lattice files.
@@ -68,7 +69,8 @@ Run pytao constraints checks against Bmad lattice files.
 - `--save-results FILE` — Write a JSON snapshot of the results to `FILE`
 - `--compare-path FILE` — Path to a previously saved observations JSON for regression comparison
 - `--markdown` — Emit GitHub-flavored markdown suitable for `GITHUB_STEP_SUMMARY`
-- `-v`, `--verbose` — Enable debug-level logging
+- `--log-file FILE` — Write pytao/Tao log output to `FILE`
+- `--log-level LEVEL` — Log level for `--log-file` (one of `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`; default `INFO`)
 
 ## Example
 
