@@ -64,14 +64,17 @@ def run(
     needed = config.required_lattice_observables
     literal_obs = config.required_literal_observables
 
+    n_lat = len(config.lattices)
+    n_obs_total = sum(len(v) for v in needed.values())
+    n_constraints = len(config.all_constraints)
+    summary = (
+        f"Beginning constraints check with {n_lat} lattice(s), {n_constraints} constraint(s), "
+        f"and {n_obs_total} observable(s)"
+    )
+    logger.info(summary)
+    logger.info("Loading Lattices:")
     if verbose:
-        n_lat = len(config.lattices)
-        n_obs = sum(len(v) for v in needed.values())
-        n_constraints = len(config.all_constraints)
-        print(
-            f"Beginning constraints check with {n_lat} lattice(s), {n_constraints} constraint(s), "
-            f"and {n_obs} observable(s)"
-        )
+        print(summary)
         print("Loading Lattices:")
 
     # Run observables: observable -> observation
@@ -119,16 +122,16 @@ def run(
                 load_time = time.perf_counter() - t0
             error = traceback.format_exc().strip()
 
+        if not loaded:
+            first_line = error.splitlines()[-1] if error else "unknown error"
+            status_line = f"[FAIL] {lat_id}  {first_line}"
+        else:
+            n_obs = len([obs for obs in needed[lat_id] if obs in obs_map])
+            tag = "[LOST]" if particle_survived is False else "[OK  ]"
+            status_line = f"{tag} {lat_id}  loaded in {load_time:.2f}s, {n_obs} observables in {obs_time:.2f}s"
+        logger.info(status_line)
         if verbose:
-            if not loaded:
-                last_line = error.splitlines()[-1] if error else "unknown error"
-                print(f"  [FAIL] {lat_id}  {last_line}")
-            else:
-                n_obs = len([obs for obs in needed[lat_id] if obs in obs_map])
-                tag = "[LOST]" if particle_survived is False else "[OK  ]"
-                print(
-                    f"  {tag} {lat_id}  loaded in {load_time:.2f}s, {n_obs} observables in {obs_time:.2f}s"
-                )
+            print(f"  {status_line}")
 
         lattice_results[lat_id] = LatticeResult(
             tao_startup=lat_startup,
