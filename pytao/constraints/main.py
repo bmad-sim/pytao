@@ -122,8 +122,8 @@ def run(
 
         if verbose:
             if not loaded:
-                first_line = error.splitlines()[-1] if error else "unknown error"
-                print(f"  [FAIL] {lat_id}  {first_line}")
+                last_line = error.splitlines()[-1] if error else "unknown error"
+                print(f"  [FAIL] {lat_id}  {last_line}")
             else:
                 n_obs = len([obs for obs in needed[lat_id] if obs in obs_map])
                 tag = "[LOST]" if particle_survived is False else "[OK  ]"
