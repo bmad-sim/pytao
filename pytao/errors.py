@@ -41,7 +41,7 @@ matching_log_levels: dict[TaoMessageLevel, int] = {
     "ABORT": logging.CRITICAL,
 }
 
-log_behavior_mode = os.environ.get("PYTAO_LOG_MODE", "matching")
+pytao_log_mode = os.environ.get("PYTAO_LOG_MODE", "quiet")
 
 
 class TaoException(Exception):
@@ -385,7 +385,7 @@ class TaoMessage:
 
     @property
     def log_level(self) -> int:
-        if log_behavior_mode == "quiet":
+        if pytao_log_mode == "quiet":
             return self.quiet_log_level
         return self.matching_log_level
 
