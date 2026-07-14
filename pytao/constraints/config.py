@@ -1,7 +1,7 @@
 from abc import abstractmethod
-from typing import Annotated, Literal, Union
+from typing import Annotated, Any, Literal, Union
 
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from pytao.constraints.pydantic import ConstraintsBase
 
@@ -441,6 +441,18 @@ class ConstraintsConfig(ConstraintsBase):
         default_factory=list,
         description="Flat list (ungrouped) or mapping of group name to list of constraints",
     )
+
+    @model_validator(mode="before")
+    @classmethod
+    def _default_lattice_startup(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            lattices = data.get("lattices")
+            if isinstance(lattices, dict):
+                for startup in lattices.values():
+                    if isinstance(startup, dict):
+                        startup.setdefault("noinit", True)
+                        startup.setdefault("noplot", True)
+        return data
 
     @property
     def constraints_by_group(self) -> dict[str | None, list[AnyConstraint]]:

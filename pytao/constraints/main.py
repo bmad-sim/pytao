@@ -80,7 +80,6 @@ def run(
 
     for lat_id, lat_startup in config.lattices.items():
         params = dict(lat_startup.with_path_prefix(config_dir).tao_class_params)
-        params["noplot"] = True
 
         loaded = False
         particle_survived: bool | None = None
