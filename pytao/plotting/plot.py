@@ -95,10 +95,20 @@ def _normalize_universe_prefixed_keys(dct: dict) -> dict:
     these to stable keys (``"ix_branch"``, ``"ix_bunch"``) keeps the info usable
     regardless of universe.  Compound field names like ``"graph^type"`` (whose
     prefix is not an integer) are left untouched.
+
+    A graph/curve has a single ``ix_universe``, so each record carries only one
+    universe prefix and distinct suffixes never collide.  If Tao ever emits the
+    same suffix under two universes in one record, that invariant is broken; we
+    raise rather than silently discard a value.
     """
     for key in list(dct):
         prefix, sep, rest = key.partition("^")
         if sep and prefix.lstrip("-").isdigit():
+            if rest in dct:
+                raise ValueError(
+                    f"Universe-prefixed key {key!r} collides with {rest!r}; Tao "
+                    "returned multi-universe data that pytao cannot flatten."
+                )
             dct[rest] = dct.pop(key)
     return dct
 
