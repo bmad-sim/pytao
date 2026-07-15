@@ -412,12 +412,8 @@ class TaoSettableModel(TaoModel):
             to_set = self._all_attributes_to_set
 
         set_name = self._tao_set_name_ or self._tao_command_attr_
-        ix_uni = self.command_args.get("ix_uni", None)
         for item in to_set:
             tao_attr_name = _fix_tao_attr_name(item)
-            if ix_uni and not tao_attr_name.startswith("distribution_type"):
-                # TODO: awaiting https://github.com/bmad-sim/bmad-ecosystem/pull/2091
-                tao_attr_name = f"{ix_uni}@{tao_attr_name}"
             set_value = self._make_set_value(item.value)
             cmds.append(f"set {set_name} {tao_attr_name} = {set_value}")
 
