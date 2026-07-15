@@ -1,9 +1,10 @@
 import pytest
 
+from beamphysics import ParticleGroup
 from pytao import SubprocessTao, Tao
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="module")
 def tao():
     with SubprocessTao(
         init_file="$ACC_ROOT_DIR/bmad-doc/tutorial_bmad_tao/lattice_files/multiple_universes/tao.init",
@@ -12,32 +13,51 @@ def tao():
         yield tao
 
 
+@pytest.fixture(scope="function")
+def initial_particles():
+    with SubprocessTao(
+        init_file="$ACC_ROOT_DIR/bmad-doc/tutorial_bmad_tao/lattice_files/multiple_universes/tao.init",
+        noplot=True,
+    ) as tao:
+        beam_init = tao.get_config().beam_init
+        beam_init.a_norm_emit = 1e-6
+        beam_init.b_norm_emit = 1e-6
+        beam_init.n_particle = 10
+        beam_init.bunch_charge = 1e-10
+        beam_init.set(tao, only_changed=True)
+
+        tao.track_beam(use_progress_bar=False)
+        return tao.particles("BEGINNING")
+
+
 def test_initial_particles_empty(tao: Tao):
     for ix_uni in tao.inum("ix_universe"):
         assert tao.get_initial_particles(ix_uni=ix_uni) is None
 
 
-def test_initial_particles_set(tao: Tao):
-    # for ix_uni in tao.inum("ix_universe"):
-    ix_uni = 1
+def test_initial_particles_set(tao: Tao, initial_particles: ParticleGroup):
+    unis = tao.inum("ix_universe")
+    particles_by_universe: dict[int, ParticleGroup] = {
+        ix_uni: initial_particles.split(n_chunks=ix_uni)[0] for ix_uni in unis
+    }
 
-    assert tao.get_initial_particles(ix_uni=ix_uni) is None
+    # Set all of the particles first
+    for ix_uni in unis:
+        P0 = particles_by_universe[ix_uni]
+        assert tao.get_initial_particles(ix_uni=ix_uni) is None
+        tao.set_initial_particles(P0, ix_uni=ix_uni)
 
-    beam_init = tao.get_config(ix_uni=ix_uni).beam_init
-    beam_init.a_norm_emit = 1e-6
-    beam_init.b_norm_emit = 1e-7
-    beam_init.set(tao)
+    # Then make sure they are all readable
+    for ix_uni in unis:
+        P0 = particles_by_universe[ix_uni]
+        P1 = tao.get_initial_particles(ix_uni=ix_uni)
+        assert P1 is not None
+        assert len(P1) == len(P0)
+        assert P1.charge == pytest.approx(P0.charge)
 
-    bi = tao.get_config(ix_uni=ix_uni).beam_init
+        assert P0 == P1
 
-    assert bi.a_norm_emit == 1e-6
-    assert bi.b_norm_emit == 1e-7
-
-    charge = 1e-10
-    tao.init_particles(10, charge, ix_uni=1)
-    # tao.init_particles(100, 1e-15, ix_uni=2)
-
-    P1 = tao.get_initial_particles(ix_uni=ix_uni)
+    tao.set_initial_particles(initial_particles, n_particle=5)
+    P1 = tao.get_initial_particles()
     assert P1 is not None
-    assert len(P1) == 10
-    assert P1.charge == pytest.approx(charge)
+    assert len(P1) == 5
