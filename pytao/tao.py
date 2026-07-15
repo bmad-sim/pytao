@@ -15,7 +15,6 @@ from typing import (
 )
 
 import numpy as np
-from beamphysics import ParticleGroup
 
 from . import pbar
 from .core import AnyPath, TaoCore
