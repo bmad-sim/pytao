@@ -66,12 +66,6 @@ Type `tao.` and hit tab to see available commands.
 * Matplotlib mode configured. Pyplot available as `plt`. *
 ```
 
-Start pytao's GUI from the command-line with:
-
-```bash
-pytao-gui -init tao.init
-```
-
 ## Release process
 
 To release a new PyTao version with updated bindings for the Fortran functions:
