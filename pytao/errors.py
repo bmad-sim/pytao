@@ -41,7 +41,36 @@ matching_log_levels: dict[TaoMessageLevel, int] = {
     "ABORT": logging.CRITICAL,
 }
 
-pytao_log_mode = os.environ.get("PYTAO_LOG_MODE", "quiet")
+TaoLogMode = Literal["quiet", "matching"]
+
+_pytao_log_mode: TaoLogMode = "quiet"
+
+
+def get_log_mode() -> TaoLogMode:
+    """Get the log level map mode.  See `set_log_mode` for more details."""
+    return _pytao_log_mode
+
+
+def set_log_mode(mode: TaoLogMode) -> None:
+    """
+    Set how Tao message levels map onto Python logging levels.
+
+    Parameters
+    ----------
+    mode : {"quiet", "matching"}
+        In ``"quiet"`` mode only Tao errors surface at the Python logging
+        ERROR level and the rest stay at DEBUG. In ``"matching"`` mode every
+        Tao message level is brought to its closest Python logging level.
+        Python logging levels. INFO->INFO, WARNING->WARNING, ERROR->ERROR.
+        This mode may be significantly noisier.
+    """
+    global _pytao_log_mode
+    if mode not in ("quiet", "matching"):
+        raise ValueError(f"Invalid log mode: {mode!r}. Expected 'quiet' or 'matching'.")
+    _pytao_log_mode = mode
+
+
+set_log_mode(os.environ.get("PYTAO_LOG_MODE", "quiet"))  # type: ignore[assignment]
 
 
 class TaoException(Exception):
@@ -385,7 +414,7 @@ class TaoMessage:
 
     @property
     def log_level(self) -> int:
-        if pytao_log_mode == "quiet":
+        if _pytao_log_mode == "quiet":
             return self.quiet_log_level
         return self.matching_log_level
 

@@ -114,10 +114,10 @@ def test_message_log_level_translation(
     assert msg.quiet_log_level == quiet
     assert msg.matching_log_level == matching
 
-    monkeypatch.setattr(errors, "pytao_log_mode", "quiet")
+    monkeypatch.setattr(errors, "_pytao_log_mode", "quiet")
     assert msg.log_level == quiet
 
-    monkeypatch.setattr(errors, "pytao_log_mode", "matching")
+    monkeypatch.setattr(errors, "_pytao_log_mode", "matching")
     assert msg.log_level == matching
 
 

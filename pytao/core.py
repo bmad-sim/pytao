@@ -20,6 +20,7 @@ from .errors import (
     error_filter_context,
     error_message_levels,
     raise_for_error_messages,
+    set_log_mode,
 )
 from .util import parsers as _pytao_parsers
 # from .util.parameters import tao_parameter_dict
@@ -771,3 +772,80 @@ def init_libtao(user_path: str = "") -> tuple[ctypes.CDLL, str]:
 
     _configure_cdll(so_lib)
     return so_lib, so_lib_file
+
+
+def configure_logging(
+    level: str | None = None,
+    filename: str | None = None,
+    mode: str | None = None,
+    console: bool = True,
+    format: str = "%(asctime)s %(levelname)-8s %(name)s: %(message)s",
+) -> logging.Logger:
+    """
+    Configure PyTao's Python logging.
+
+    Parameters
+    ----------
+    level : str, optional
+        Console logging level for the pytao logger (e.g., `"WARNING"` or
+        `"DEBUG"`).
+        Defaults to the `PYTAO_LOG` environment variable, or `"WARNING"` if
+        unset.
+    filename : str, optional
+        If set, PyTao logs are also written at `DEBUG` level to this file
+        while console logging stays at `level`. Defaults to the
+        `PYTAO_LOG_FILE` environment variable.
+    mode : {"quiet", "matching"}, optional
+        How Tao message levels map onto Python logging levels.
+        Defaults to the `PYTAO_LOG_MODE` environment variable, or `"quiet"`.
+    console : bool, default=True
+        Log to the console (stderr) as well at `level`.
+    format : str, optional
+        Log message format, defaults to:
+        "%(asctime)s %(levelname)-8s %(name)s: %(message)s"
+
+    Returns
+    -------
+    logging.Logger
+        The configured ``"pytao"`` logger.
+    """
+    if level is None:
+        level = os.environ.get("PYTAO_LOG", "WARNING") or None
+    if filename is None:
+        filename = os.environ.get("PYTAO_LOG_FILE") or None
+    if mode is None:
+        mode = os.environ.get("PYTAO_LOG_MODE", "quiet")
+
+    set_log_mode(mode)  # type: ignore
+
+    logger = logging.getLogger("pytao")
+
+    # Remove any previous handlers:
+    for handler in list(logger.handlers):
+        if getattr(handler, "_pytao_handler_", False):
+            logger.removeHandler(handler)
+            handler.close()
+
+    if not level and not filename:
+        return logger
+
+    formatter = logging.Formatter(format)
+    # PyTao log messages will only go to the configured handlers here and not
+    # the root logger (which may be configured differently).
+    logger.propagate = False
+    logger.setLevel(level or "WARNING")
+
+    def add_handler(handler: logging.Handler, handler_level: int | str) -> None:
+        handler.setLevel(handler_level)
+        handler.setFormatter(formatter)
+        setattr(handler, "_pytao_handler_", True)
+        logger.addHandler(handler)
+
+    if console:
+        add_handler(logging.StreamHandler(), level or "WARNING")
+
+    if filename:
+        add_handler(logging.FileHandler(filename), logging.DEBUG)
+        logger.setLevel(logging.DEBUG)
+
+    return logger
