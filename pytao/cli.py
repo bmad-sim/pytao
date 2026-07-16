@@ -6,6 +6,7 @@ import logging
 import os
 import sys
 from typing import Any
+import pytao
 
 from pydantic import ConfigDict, dataclasses
 
@@ -189,7 +190,7 @@ def init(argv, ipython: bool, exit_on_error=True):
             sys.exit(1)
         raise
 
-    user_ns: dict[str, Any] = {"tao": tao}
+    user_ns: dict[str, Any] = {"tao": tao, "pytao": pytao}
     if args.pyplot == "mpl":
         import matplotlib.pyplot as plt
 
