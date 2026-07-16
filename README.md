@@ -66,6 +66,20 @@ Type `tao.` and hit tab to see available commands.
 * Matplotlib mode configured. Pyplot available as `plt`. *
 ```
 
+## Logging
+
+PyTao stays quiet by default. To see its log output, call `pytao.configure_logging`:
+
+```python
+import pytao
+
+pytao.configure_logging(level="DEBUG")
+```
+
+On the command line, use `--pylog` (e.g. `pytao --pylog DEBUG -init tao.init`). See the
+[logging documentation](https://bmad-sim.github.io/pytao/usage/#logging) for the full details,
+including writing to a file and controlling how Tao's own message levels map to Python logging.
+
 ## Release process
 
 To release a new PyTao version with updated bindings for the Fortran functions:
