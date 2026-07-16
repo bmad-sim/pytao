@@ -774,6 +774,9 @@ def init_libtao(user_path: str = "") -> tuple[ctypes.CDLL, str]:
     return so_lib, so_lib_file
 
 
+_logging_configured_once: bool = False
+
+
 def configure_logging(
     level: str | None = None,
     filename: str | None = None,
@@ -809,6 +812,10 @@ def configure_logging(
     logging.Logger
         The configured ``"pytao"`` logger.
     """
+    global _logging_configured_once
+
+    _logging_configured_once = True
+
     if level is None:
         level = os.environ.get("PYTAO_LOG", "WARNING") or None
     if filename is None:
@@ -849,3 +856,15 @@ def configure_logging(
         logger.setLevel(logging.DEBUG)
 
     return logger
+
+
+def configure_logging_from_env():
+    """
+    Automatically configure logging based on environment variable settings.
+
+    Only applies if PYTAO_LOG and/or PYTAO_LOG_FILE are set in the environment.
+    """
+    if not _logging_configured_once and any(
+        env in os.environ for env in {"PYTAO_LOG", "PYTAO_LOG_FILE"}
+    ):
+        configure_logging()
