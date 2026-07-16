@@ -836,11 +836,13 @@ def configure_logging(
     if not level and not filename:
         return logger
 
+    level = (level or "WARNING").upper()
     formatter = logging.Formatter(format)
+
     # PyTao log messages will only go to the configured handlers here and not
     # the root logger (which may be configured differently).
     logger.propagate = False
-    logger.setLevel(level or "WARNING")
+    logger.setLevel(level)
 
     def add_handler(handler: logging.Handler, handler_level: int | str) -> None:
         handler.setLevel(handler_level)
