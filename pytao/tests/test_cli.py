@@ -16,7 +16,8 @@ from ..cli import (
     main_ipython,
     main_python,
 )
-from ..core import configure_logging, register_input_transformer
+from .. import core
+from ..core import configure_logging, configure_logging_from_env, register_input_transformer
 
 
 def test_split_args_basic():
@@ -175,9 +176,11 @@ def restore_logging_state() -> Generator[None, None, None]:
     old_pytao_level = pytao_logger.level
     old_pytao_handlers = list(pytao_logger.handlers)
     old_pytao_propagate = pytao_logger.propagate
+    old_configured_once = core._logging_configured_once
     old_root_level = root_logger.level
     old_root_handler_levels = {handler: handler.level for handler in root_logger.handlers}
     yield
+    core._logging_configured_once = old_configured_once
     pytao_logger.setLevel(old_pytao_level)
     pytao_logger.propagate = old_pytao_propagate
     for handler in list(pytao_logger.handlers):
@@ -239,6 +242,27 @@ def test_configure_logging_preserves_user_handlers(restore_logging_state):
     configure_logging(level="INFO")
 
     assert user_handler in pytao_logger.handlers
+
+
+def test_configure_logging_from_env(monkeypatch, restore_logging_state):
+    pytao_logger = logging.getLogger("pytao")
+
+    monkeypatch.setattr(core, "_logging_configured_once", False)
+    monkeypatch.setenv("PYTAO_LOG", "DEBUG")
+
+    configure_logging_from_env()
+    assert core._logging_configured_once
+    assert pytao_logger.level == logging.DEBUG
+
+
+def test_configure_logging_from_env_respects_prior_config(monkeypatch, restore_logging_state):
+    monkeypatch.setattr(core, "_logging_configured_once", False)
+    monkeypatch.setenv("PYTAO_LOG", "DEBUG")
+
+    configure_logging(level="WARNING")
+    configure_logging_from_env()
+
+    assert logging.getLogger("pytao").level == logging.WARNING
 
 
 @patch("pytao.cli.init")
