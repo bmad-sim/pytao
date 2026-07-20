@@ -47,7 +47,14 @@ _pytao_log_mode: TaoLogMode = "quiet"
 
 
 def get_log_mode() -> TaoLogMode:
-    """Get the log level map mode.  See `set_log_mode` for more details."""
+    """
+    Get the log level map mode.
+
+    The default log mode is "quiet", unless overridden by the environment variable
+    `PYTAO_LOG_MODE`.
+
+    See `set_log_mode` for more details.
+    """
     return _pytao_log_mode
 
 
