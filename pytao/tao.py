@@ -1723,8 +1723,10 @@ def _ensure_global_block(tao: Tao, name: str, value: Any, raises: bool = True):
     orig = glob[name]
     if orig != value:
         tao.cmd(f"set global {name} = {value}", raises=raises)
-        yield
-        tao.cmd(f"set global {name} = {orig}", raises=raises)
+        try:
+            yield
+        finally:
+            tao.cmd(f"set global {name} = {orig}", raises=raises)
     else:
         yield
 
