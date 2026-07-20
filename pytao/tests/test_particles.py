@@ -77,6 +77,8 @@ def test_initial_particles_set_by_filename(
 
         fn = tmp_path / f"{ix_uni}.h5"
         P0.write(fn)
+
+        tao.cmd(f"set beam {ix_uni}@track_end = b")
         tao.set_initial_particles(fn, ix_uni=ix_uni)
 
     # Then make sure they are all readable
@@ -89,6 +91,9 @@ def test_initial_particles_set_by_filename(
         assert P1.charge == pytest.approx(P0.charge)
 
         assert P0 == P1
+
+        # Ensure track_end was reset from 'beginning' to 'b'
+        assert tao.get_config(ix_uni=ix_uni).beam.track_end == "b"
 
     tao.set_initial_particles(initial_particles, n_particle=5)
     P1 = tao.get_initial_particles()
