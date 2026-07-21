@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -27,7 +27,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -3282,7 +3282,10 @@ If <code>None</code>, all attributes to be set will be used.</p>
 <span class="normal">421</span>
 <span class="normal">422</span>
 <span class="normal">423</span>
-<span class="normal">424</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_set_commands</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_set_commands</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate a list of set commands to apply this configuration to `tao`.</span>
 
@@ -3306,8 +3309,11 @@ If <code>None</code>, all attributes to be set will be used.</p>
         <span class="n">to_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_all_attributes_to_set</span>
 
     <span class="n">set_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tao_set_name_</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tao_command_attr_</span>
+    <span class="n">ix_uni</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">command_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ix_uni&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">to_set</span><span class="p">:</span>
         <span class="n">tao_attr_name</span> <span class="o">=</span> <span class="n">_fix_tao_attr_name</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ix_uni</span><span class="p">:</span>
+            <span class="n">tao_attr_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ix_uni</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">tao_attr_name</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="n">set_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_set_value</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
         <span class="n">cmds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;set </span><span class="si">{</span><span class="n">set_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">tao_attr_name</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">set_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -3476,10 +3482,7 @@ If <code>None</code>, all attributes to be set will be used.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/base.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">437</span>
-<span class="normal">438</span>
-<span class="normal">439</span>
-<span class="normal">440</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">440</span>
 <span class="normal">441</span>
 <span class="normal">442</span>
 <span class="normal">443</span>
@@ -3551,7 +3554,10 @@ If <code>None</code>, all attributes to be set will be used.</p>
 <span class="normal">509</span>
 <span class="normal">510</span>
 <span class="normal">511</span>
-<span class="normal">512</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span>
+<span class="normal">512</span>
+<span class="normal">513</span>
+<span class="normal">514</span>
+<span class="normal">515</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -3667,10 +3673,7 @@ value:</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/base.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">514</span>
-<span class="normal">515</span>
-<span class="normal">516</span>
-<span class="normal">517</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">517</span>
 <span class="normal">518</span>
 <span class="normal">519</span>
 <span class="normal">520</span>
@@ -3695,7 +3698,10 @@ value:</p>
 <span class="normal">539</span>
 <span class="normal">540</span>
 <span class="normal">541</span>
-<span class="normal">542</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+<span class="normal">542</span>
+<span class="normal">543</span>
+<span class="normal">544</span>
+<span class="normal">545</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">set_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Apply this configuration to Tao **only** for the given ``with`` block.</span>
@@ -3824,10 +3830,7 @@ If True, all conversions will be applied recursively to the data.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/base.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">561</span>
-<span class="normal">562</span>
-<span class="normal">563</span>
-<span class="normal">564</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">564</span>
 <span class="normal">565</span>
 <span class="normal">566</span>
 <span class="normal">567</span>
@@ -3867,7 +3870,10 @@ If True, all conversions will be applied recursively to the data.</p>
 <span class="normal">601</span>
 <span class="normal">602</span>
 <span class="normal">603</span>
-<span class="normal">604</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">load_model_data</span><span class="p">(</span>
+<span class="normal">604</span>
+<span class="normal">605</span>
+<span class="normal">606</span>
+<span class="normal">607</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">load_model_data</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="nb">format</span><span class="p">:</span> <span class="n">ArchiveFormat</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -3999,10 +4005,7 @@ The file format is determined by the extension.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/base.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">607</span>
-<span class="normal">608</span>
-<span class="normal">609</span>
-<span class="normal">610</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">610</span>
 <span class="normal">611</span>
 <span class="normal">612</span>
 <span class="normal">613</span>
@@ -4019,7 +4022,10 @@ The file format is determined by the extension.</p>
 <span class="normal">624</span>
 <span class="normal">625</span>
 <span class="normal">626</span>
-<span class="normal">627</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">load_model</span><span class="p">(</span>
+<span class="normal">627</span>
+<span class="normal">628</span>
+<span class="normal">629</span>
+<span class="normal">630</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">load_model</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
     <span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">T</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
@@ -4209,10 +4215,7 @@ Defaults to True.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/base.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">648</span>
-<span class="normal">649</span>
-<span class="normal">650</span>
-<span class="normal">651</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">651</span>
 <span class="normal">652</span>
 <span class="normal">653</span>
 <span class="normal">654</span>
@@ -4293,7 +4296,10 @@ Defaults to True.</p>
 <span class="normal">729</span>
 <span class="normal">730</span>
 <span class="normal">731</span>
-<span class="normal">732</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dump_model</span><span class="p">(</span>
+<span class="normal">732</span>
+<span class="normal">733</span>
+<span class="normal">734</span>
+<span class="normal">735</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dump_model</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
     <span class="n">model</span><span class="p">:</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -4450,7 +4456,7 @@ Defaults to True.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.top", "navigation.tabs", "navigation.indexes"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
