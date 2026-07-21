@@ -6,11 +6,12 @@ import logging
 import os
 import sys
 from typing import Any
+import pytao
 
 from pydantic import ConfigDict, dataclasses
 
-from pytao.errors import TaoInitializationError
-
+from .core import configure_logging
+from .errors import TaoInitializationError
 from .startup import TaoArgumentParser, TaoStartup, create_tao_cli_parser
 
 logger = logging.getLogger("pytao")
@@ -19,7 +20,9 @@ logger = logging.getLogger("pytao")
 @dataclasses.dataclass(config=ConfigDict(extra="forbid", validate_assignment=True))
 class PytaoArgs(TaoStartup):
     pycommand: str | None = None
-    pylog: str | None = None
+    pylog: str | None = os.environ.get("PYTAO_LOG", "WARNING") or None
+    pylog_file: str | None = os.environ.get("PYTAO_LOG_FILE") or None
+    pylog_mode: str | None = None
     pyplot: str | None = None
     pyprefix: str = "`"
     pyscript: str | None = None
@@ -83,7 +86,30 @@ def create_pytao_argparser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--pylog",
         choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
-        help="Set logging level.",
+        help=(
+            "Set logging level. Defaults to the PYTAO_LOG environment "
+            "variable, or WARNING if unset."
+        ),
+    )
+    parser.add_argument(
+        "--pylog-file",
+        type=str,
+        help=(
+            "Write PyTao logs at DEBUG level to this file, in addition to "
+            "console logging at the --pylog level. Defaults to the "
+            "PYTAO_LOG_FILE environment variable."
+        ),
+    )
+    parser.add_argument(
+        "--pylog-mode",
+        choices=("quiet", "matching"),
+        help=(
+            "Logging mode, either 'quiet' or 'matching'. 'quiet' only surfaces "
+            "Tao errors to the Python logging ERROR level, the rest remain at DEBUG. "
+            "'matching' faithfully brings all Tao error levels to their matching "
+            "Python logging levels. INFO->INFO, WARNING->WARNING, ERROR->ERROR. "
+            "This mode may be significantly noisier."
+        ),
     )
     parser.add_argument(
         "--pyprefix",
@@ -150,9 +176,11 @@ def init(argv, ipython: bool, exit_on_error=True):
         startup_message = f"Initializing Tao object with: {args.tao_init}"
         print_header(ipython=ipython, startup_message=startup_message, plot=args.pyplot)
 
-    if args.pylog:
-        logger.setLevel(args.pylog)
-        logging.basicConfig()
+    configure_logging(
+        level=args.pylog,
+        filename=args.pylog_file,
+        mode=args.pylog_mode,
+    )
 
     try:
         tao = args.run(use_subprocess=args.pysubprocess)
@@ -162,7 +190,7 @@ def init(argv, ipython: bool, exit_on_error=True):
             sys.exit(1)
         raise
 
-    user_ns: dict[str, Any] = {"tao": tao}
+    user_ns: dict[str, Any] = {"tao": tao, "pytao": pytao}
     if args.pyplot == "mpl":
         import matplotlib.pyplot as plt
 

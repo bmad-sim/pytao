@@ -1,5 +1,6 @@
 import code
 import contextlib
+import logging
 import os
 import pathlib
 import sys
@@ -15,7 +16,8 @@ from ..cli import (
     main_ipython,
     main_python,
 )
-from ..core import register_input_transformer
+from .. import core
+from ..core import configure_logging, configure_logging_from_env, register_input_transformer
 
 
 def test_split_args_basic():
@@ -140,16 +142,127 @@ def test_init_env_plot_backend(mock_tao_startup):
     assert params["init_file"] == "tao.init"  # default
 
 
-@patch("logging.basicConfig")
-def test_init_logging(mock_logging, mock_tao_startup):
+def test_init_logging(mock_tao_startup, restore_logging_state):
     """Test logging configuration"""
     mock_instance, call_info = mock_tao_startup
 
     python_args, _ = init(["pytao", "--pylog", "DEBUG"], ipython=False)
 
     assert python_args.pylog == "DEBUG"
-    mock_logging.assert_called_once()
+
+    pytao_logger = logging.getLogger("pytao")
+    assert pytao_logger.level == logging.DEBUG
+    assert not pytao_logger.propagate
+
+    stream_handlers = [
+        handler for handler in pytao_logger.handlers if type(handler) is logging.StreamHandler
+    ]
+    assert len(stream_handlers) == 1
+    assert stream_handlers[0].level == logging.DEBUG
     assert "self" in call_info, "TaoStartup.run was never called!"
+
+
+def test_split_args_pylog_file():
+    args = PytaoArgs.from_cli_args(["--pylog-file", "out.log", "-init", "init.foo"])
+    assert args.pylog_file == "out.log"
+
+
+@pytest.fixture
+def restore_logging_state() -> Generator[None, None, None]:
+    """Snapshot and restore pytao/root logger levels and handlers."""
+    # Why is Python logging such a pain? *sigh*
+    pytao_logger = logging.getLogger("pytao")
+    root_logger = logging.getLogger()
+    old_pytao_level = pytao_logger.level
+    old_pytao_handlers = list(pytao_logger.handlers)
+    old_pytao_propagate = pytao_logger.propagate
+    old_configured_once = core._logging_configured_once
+    old_root_level = root_logger.level
+    old_root_handler_levels = {handler: handler.level for handler in root_logger.handlers}
+    yield
+    core._logging_configured_once = old_configured_once
+    pytao_logger.setLevel(old_pytao_level)
+    pytao_logger.propagate = old_pytao_propagate
+    for handler in list(pytao_logger.handlers):
+        if handler not in old_pytao_handlers:
+            pytao_logger.removeHandler(handler)
+            handler.close()
+    root_logger.setLevel(old_root_level)
+    for handler in list(root_logger.handlers):
+        if handler in old_root_handler_levels:
+            handler.setLevel(old_root_handler_levels[handler])
+        else:
+            root_logger.removeHandler(handler)
+
+
+def test_init_log_file(mock_tao_startup, tmp_path: pathlib.Path, restore_logging_state):
+    log_file = tmp_path / "pytao-debug.log"
+
+    python_args, _ = init(
+        ["pytao", "--pylog", "WARNING", "--pylog-file", str(log_file)],
+        ipython=False,
+    )
+
+    assert python_args.pylog_file == str(log_file)
+
+    pytao_logger = logging.getLogger("pytao")
+    assert pytao_logger.level == logging.DEBUG
+
+    file_handlers = [
+        handler
+        for handler in pytao_logger.handlers
+        if isinstance(handler, logging.FileHandler)
+    ]
+    assert len(file_handlers) == 1
+    assert file_handlers[0].baseFilename == str(log_file)
+
+    pytao_logger.debug("debug message for the log file")
+    file_handlers[0].flush()
+    assert "debug message for the log file" in log_file.read_text()
+
+
+def test_configure_logging_is_idempotent(tmp_path: pathlib.Path, restore_logging_state):
+    log_file = tmp_path / "pytao.log"
+
+    for _ in range(3):
+        result = configure_logging(level="DEBUG", filename=str(log_file), console=True)
+
+    assert result is logging.getLogger("pytao")
+    managed = [h for h in result.handlers if getattr(h, "_pytao_handler_", False)]
+    # One console handler and one file handler, not three of each.
+    assert len(managed) == 2
+
+
+def test_configure_logging_preserves_user_handlers(restore_logging_state):
+    pytao_logger = logging.getLogger("pytao")
+    user_handler = logging.StreamHandler()
+    pytao_logger.addHandler(user_handler)
+
+    configure_logging(level="DEBUG")
+    configure_logging(level="INFO")
+
+    assert user_handler in pytao_logger.handlers
+
+
+def test_configure_logging_from_env(monkeypatch, restore_logging_state):
+    pytao_logger = logging.getLogger("pytao")
+
+    monkeypatch.setattr(core, "_logging_configured_once", False)
+    monkeypatch.setenv("PYTAO_LOG", "DEBUG")
+
+    configure_logging_from_env()
+    assert core._logging_configured_once
+    assert pytao_logger.level == logging.DEBUG
+
+
+def test_configure_logging_from_env_respects_prior_config(monkeypatch, restore_logging_state):
+    monkeypatch.setattr(core, "_logging_configured_once", False)
+    monkeypatch.setenv("PYTAO_LOG", "DEBUG")
+
+    configure_logging(level="WARNING")
+    configure_logging_from_env()
+
+    assert logging.getLogger("pytao").level == logging.WARNING
 
 
 @patch("pytao.cli.init")

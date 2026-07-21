@@ -4,6 +4,7 @@ import ctypes
 import logging
 import os
 import pathlib
+import sys
 import textwrap
 from ctypes.util import find_library
 from typing import TYPE_CHECKING, Literal, Union
@@ -19,6 +20,7 @@ from .errors import (
     error_filter_context,
     error_message_levels,
     raise_for_error_messages,
+    set_log_mode,
 )
 from .util import parsers as _pytao_parsers
 # from .util.parameters import tao_parameter_dict
@@ -32,6 +34,14 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 AnyPath = Union[pathlib.Path, str]
 Quiet = Literal["all", "warnings"]
+
+
+def is_in_subprocess() -> bool:
+    """
+    Is this PyTao session from a SubprocessTao instance?
+    """
+
+    return bool(sys.argv and "subproc_main" in sys.argv[0])
 
 
 def ipython_shell(tao: AnyTao) -> None:
@@ -380,6 +390,12 @@ class TaoCore:
                 ),
                 tao_output="\n".join(output),
             )
+
+        if not is_in_subprocess():
+            _raw_output, messages = self._check_output_lines(cmd, output, raises=False)
+            for msg in messages:
+                self._log(cmd, msg)
+
         return output
 
     def _check_output_lines(
@@ -609,7 +625,7 @@ class TaoCore:
             )
 
     def _log(self, cmd: str, message: TaoMessage) -> None:
-        logger.log(message.log_level, str(message))
+        logger.log(message.log_level, message.to_string(include_level=False))
 
     def cmd_integer(self, cmd: str, raises: bool = True) -> np.ndarray | None:
         """
@@ -756,3 +772,101 @@ def init_libtao(user_path: str = "") -> tuple[ctypes.CDLL, str]:
 
     _configure_cdll(so_lib)
     return so_lib, so_lib_file
+
+
+_logging_configured_once: bool = False
+
+
+def configure_logging(
+    level: str | None = None,
+    filename: str | None = None,
+    mode: str | None = None,
+    console: bool = True,
+    format: str = "%(asctime)s %(levelname)-8s %(name)s: %(message)s",
+) -> logging.Logger:
+    """
+    Configure PyTao's Python logging.
+
+    Parameters
+    ----------
+    level : str, optional
+        Console logging level for the pytao logger (e.g., `"WARNING"` or
+        `"DEBUG"`).
+        Defaults to the `PYTAO_LOG` environment variable, or `"WARNING"` if
+        unset.
+    filename : str, optional
+        If set, PyTao logs are also written at `DEBUG` level to this file
+        while console logging stays at `level`. Defaults to the
+        `PYTAO_LOG_FILE` environment variable.
+    mode : {"quiet", "matching"}, optional
+        How Tao message levels map onto Python logging levels.
+        Defaults to the `PYTAO_LOG_MODE` environment variable, or `"quiet"`.
+    console : bool, default=True
+        Log to the console (stderr) as well at `level`.
+    format : str, optional
+        Log message format, defaults to:
+        "%(asctime)s %(levelname)-8s %(name)s: %(message)s"
+
+    Returns
+    -------
+    logging.Logger
+        The configured ``"pytao"`` logger.
+    """
+    global _logging_configured_once
+
+    _logging_configured_once = True
+
+    if level is None:
+        level = os.environ.get("PYTAO_LOG", "WARNING") or None
+    if filename is None:
+        filename = os.environ.get("PYTAO_LOG_FILE") or None
+    if mode is None:
+        mode = os.environ.get("PYTAO_LOG_MODE", "quiet")
+
+    set_log_mode(mode)  # type: ignore
+
+    logger = logging.getLogger("pytao")
+
+    # Remove any previous handlers:
+    for handler in list(logger.handlers):
+        if getattr(handler, "_pytao_handler_", False):
+            logger.removeHandler(handler)
+            handler.close()
+
+    if not level and not filename:
+        return logger
+
+    level = (level or "WARNING").upper()
+    formatter = logging.Formatter(format)
+
+    # PyTao log messages will only go to the configured handlers here and not
+    # the root logger (which may be configured differently).
+    logger.propagate = False
+    logger.setLevel(level)
+
+    def add_handler(handler: logging.Handler, handler_level: int | str) -> None:
+        handler.setLevel(handler_level)
+        handler.setFormatter(formatter)
+        setattr(handler, "_pytao_handler_", True)
+        logger.addHandler(handler)
+
+    if console:
+        add_handler(logging.StreamHandler(), level or "WARNING")
+
+    if filename:
+        add_handler(logging.FileHandler(filename), logging.DEBUG)
+        logger.setLevel(logging.DEBUG)
+
+    return logger
+
+
+def configure_logging_from_env():
+    """
+    Automatically configure logging based on environment variable settings.
+
+    Only applies if PYTAO_LOG and/or PYTAO_LOG_FILE are set in the environment.
+    """
+    if not _logging_configured_once and any(
+        env in os.environ for env in {"PYTAO_LOG", "PYTAO_LOG_FILE"}
+    ):
+        configure_logging()

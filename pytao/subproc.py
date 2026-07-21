@@ -605,6 +605,7 @@ class SubprocessTao(Tao):
     @override
     def cmd(self, cmd: str, raises: bool = True) -> list[str]:
         """Runs a command, and returns the output."""
+        logger.debug(f"Tao> {cmd}")
         return self._send_command_through_pipe("cmd", cmd, raises=raises)
 
     @override
