@@ -1738,11 +1738,3 @@ def _ensure_global_block(tao: Tao, name: str, value: Any, raises: bool = True):
             tao.cmd(f"set global {name} = {orig}", raises=raises)
     else:
         yield
-
-
-def _should_check_version() -> bool:
-    import sys
-
-    if sys.argv and "subproc_main" in sys.argv[0]:
-        return False
-    return True
