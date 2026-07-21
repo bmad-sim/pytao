@@ -588,6 +588,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Logging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tao-message-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tao message levels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logging-on-the-command-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging on the command-line
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#pytao-plotting-and-startup-scripts" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -603,6 +642,17 @@
     <span class="md-ellipsis">
       
         Notes about Bokeh on JupyterHub
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment variables
       
     </span>
   </a>
@@ -1724,6 +1774,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Logging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tao-message-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tao message levels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logging-on-the-command-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging on the command-line
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#pytao-plotting-and-startup-scripts" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1739,6 +1828,17 @@
     <span class="md-ellipsis">
       
         Notes about Bokeh on JupyterHub
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment variables
       
     </span>
   </a>
@@ -1853,6 +1953,153 @@ For manual lifetime control, use <code>tao.close_subprocess()</code>.</p>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">tao</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s2">&quot;beta&quot;</span><span class="p">)</span>
 </code></pre></div>
+<h2 id="logging">Logging</h2>
+<p>PyTao uses the standard Python <a href="https://docs.python.org/3/library/logging.html"><code>logging</code></a>
+module, with all of its loggers under the <code>"pytao"</code> namespace. Until logging is
+configured, PyTao stays silent: a <code>NullHandler</code> is attached at import, so it
+never emits unexpected output or interferes with other logging in your program.</p>
+<p>The simplest way to turn logging on is <code>pytao.configure_logging</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytao</span>
+
+<span class="n">pytao</span><span class="o">.</span><span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>This configures the <code>"pytao"</code> logger alone. It does <strong>not</strong> touch the root
+logger, and PyTao's records do not propagate to it, so <code>configure_logging</code> will
+not conflict with — or be affected by — logging your application configures
+elsewhere.</p>
+<p><code>configure_logging</code> accepts the following arguments (all optional):</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>level</code></td>
+<td><code>PYTAO_LOG</code> env, else <code>WARNING</code></td>
+<td>Console logging level for the <code>pytao</code> logger, e.g. <code>"DEBUG"</code> or <code>"WARNING"</code>.</td>
+</tr>
+<tr>
+<td><code>filename</code></td>
+<td><code>PYTAO_LOG_FILE</code> env</td>
+<td>If set, also write logs at <code>DEBUG</code> to this file while the console stays at <code>level</code>.</td>
+</tr>
+<tr>
+<td><code>mode</code></td>
+<td><code>PYTAO_LOG_MODE</code> env, else <code>quiet</code></td>
+<td>How Tao message levels map onto Python logging levels (see <a href="#tao-message-levels">below</a>).</td>
+</tr>
+<tr>
+<td><code>console</code></td>
+<td><code>True</code></td>
+<td>Emit records to the console (stderr) at <code>level</code>. Set <code>False</code> for file-only logging.</td>
+</tr>
+<tr>
+<td><code>format</code></td>
+<td>timestamped default</td>
+<td><a href="https://docs.python.org/3/library/logging.html#logrecord-attributes">Format string</a> for records.</td>
+</tr>
+</tbody>
+</table>
+<p>It returns the configured <code>"pytao"</code> logger.</p>
+<p>If you would rather configure logging yourself, everything lives under the
+<code>"pytao"</code> logger and can be driven with the standard library directly:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;pytao&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+</code></pre></div>
+<p>Messages that Tao itself reports (<code>[INFO ...]</code>, <code>[ERROR ...]</code>, and so on) are
+captured from its output and re-emitted as Python log records on the
+<code>pytao.core</code> logger.</p>
+<h3 id="tao-message-levels">Tao message levels</h3>
+<p>Tao messages have their own severity levels (<code>INFO</code>, <code>SUCCESS</code>, <code>MESSAGE</code>,
+<code>WARNING</code>, <code>ERROR</code>, <code>FATAL</code>, and <code>ABORT</code>). How these are translated to Python
+logging levels is controlled by the <code>PYTAO_LOG_MODE</code> environment variable:</p>
+<ul>
+<li><code>quiet</code> (default): non-error Tao messages are logged at <code>DEBUG</code> so that
+  chatty Bmad/Tao output stays out of the way; errors are logged at <code>ERROR</code>.</li>
+<li><code>matching</code>: each Tao level is translated to its closest Python equivalent,
+  so standard logging verbosity settings (<code>INFO</code>, <code>WARNING</code>, ...) apply to Tao
+  messages as you would expect.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Tao level</th>
+<th><code>quiet</code> (default)</th>
+<th><code>matching</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>INFO</code></td>
+<td><code>DEBUG</code></td>
+<td><code>INFO</code></td>
+</tr>
+<tr>
+<td><code>SUCCESS</code></td>
+<td><code>DEBUG</code></td>
+<td><code>INFO</code></td>
+</tr>
+<tr>
+<td><code>MESSAGE</code></td>
+<td><code>DEBUG</code></td>
+<td><code>INFO</code></td>
+</tr>
+<tr>
+<td><code>WARNING</code></td>
+<td><code>DEBUG</code></td>
+<td><code>WARNING</code></td>
+</tr>
+<tr>
+<td><code>ERROR</code></td>
+<td><code>ERROR</code></td>
+<td><code>ERROR</code></td>
+</tr>
+<tr>
+<td><code>FATAL</code></td>
+<td><code>ERROR</code></td>
+<td><code>CRITICAL</code></td>
+</tr>
+<tr>
+<td><code>ABORT</code></td>
+<td><code>ERROR</code></td>
+<td><code>CRITICAL</code></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="nv">PYTAO_LOG_MODE</span><span class="o">=</span>matching<span class="w"> </span>python<span class="w"> </span>my_script.py
+</code></pre></div>
+<p>The mode is read from <code>PYTAO_LOG_MODE</code> once when PyTao is imported. It may also
+be set through <code>configure_logging(mode=...)</code>, or changed at runtime with
+<code>pytao.set_log_mode</code> (and read back with <code>pytao.get_log_mode</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytao</span>
+
+<span class="n">pytao</span><span class="o">.</span><span class="n">set_log_mode</span><span class="p">(</span><span class="s2">&quot;matching&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="logging-on-the-command-line">Logging on the command-line</h3>
+<p>At startup the <code>pytao</code> CLI calls <code>configure_logging</code> for you, mapping
+<code>--pylog</code> to <code>level</code>, <code>--pylog-file</code> to <code>filename</code>, and <code>--pylog-mode</code> to
+<code>mode</code>. Each falls back to its environment variable (<code>PYTAO_LOG</code>,
+<code>PYTAO_LOG_FILE</code>, <code>PYTAO_LOG_MODE</code>), with <code>--pylog</code> defaulting to <code>WARNING</code>.</p>
+<div class="highlight"><pre><span></span><code>pytao<span class="w"> </span>--pylog<span class="w"> </span>DEBUG<span class="w"> </span>-init_file<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ACC_ROOT_DIR</span><span class="s2">/bmad-doc/tao_examples/cbeta_cell/tao.init&quot;</span>
+</code></pre></div>
+<p>Combining <code>PYTAO_LOG_MODE=matching</code> with <code>--pylog INFO</code> shows Tao's
+informational and warning messages as they arrive, without PyTao's internal
+debugging output:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">PYTAO_LOG_MODE</span><span class="o">=</span>matching<span class="w"> </span>pytao<span class="w"> </span>--pylog<span class="w"> </span>INFO<span class="w"> </span>-init_file<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ACC_ROOT_DIR</span><span class="s2">/bmad-doc/tao_examples/cbeta_cell/tao.init&quot;</span>
+</code></pre></div>
+<p>To leave logging entirely unconfigured, set <code>PYTAO_LOG</code> to an empty string
+(and omit <code>--pylog</code>).</p>
+<p>For debugging, <code>--pylog-file</code> (or the <code>PYTAO_LOG_FILE</code> environment variable)
+additionally writes PyTao logs to a file. The file always captures <code>DEBUG</code>
+level and above, while console output stays at the <code>--pylog</code> level:</p>
+<div class="highlight"><pre><span></span><code>pytao<span class="w"> </span>--pylog-file<span class="w"> </span>pytao-debug.log<span class="w"> </span>-init_file<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ACC_ROOT_DIR</span><span class="s2">/bmad-doc/tao_examples/cbeta_cell/tao.init&quot;</span>
+</code></pre></div>
 <h2 id="pytao-plotting-and-startup-scripts">PyTao plotting and startup scripts</h2>
 <p>When PyTao is instructed to use its Matplotlib or Bokeh backends, it configures
 the underlying Tao instance to work in <code>-noplot</code> mode. If you have plotting
@@ -1889,6 +2136,48 @@ non-<code>localhost</code> website, there are some additional setup steps requir
 <li>In the JupyterHub environment, <code>conda install jupyter-server-proxy</code></li>
 <li>Restart JupyterHub</li>
 </ul>
+<h2 id="environment-variables">Environment variables</h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PYTAO_LOG_MODE</code></td>
+<td><code>quiet</code></td>
+<td>How Tao message levels are translated to Python logging levels. <code>quiet</code> logs non-error Tao messages at <code>DEBUG</code>; <code>matching</code> translates each to its closest Python equivalent. See <a href="#logging">Logging</a>.</td>
+</tr>
+<tr>
+<td><code>PYTAO_LOG</code></td>
+<td><code>WARNING</code></td>
+<td>Default <code>level</code> for <code>configure_logging</code> (and the <code>pytao</code> CLI when <code>--pylog</code> is not given). Set to an empty string to leave logging unconfigured.</td>
+</tr>
+<tr>
+<td><code>PYTAO_LOG_FILE</code></td>
+<td>(unset)</td>
+<td>Default <code>filename</code> for <code>configure_logging</code> (and the <code>pytao</code> CLI when <code>--pylog-file</code> is not given). The file captures <code>DEBUG</code> and above; console output stays at the <code>level</code>.</td>
+</tr>
+<tr>
+<td><code>PYTAO_PLOT</code></td>
+<td><code>tao</code></td>
+<td>Plotting backend for the <code>pytao</code> CLI: <code>tao</code>, <code>mpl</code>, or <code>bokeh</code>. Takes precedence over <code>--pyplot</code>.</td>
+</tr>
+<tr>
+<td><code>PYTAO_FILTER_TAB</code></td>
+<td><code>y</code></td>
+<td>Filter tab completion on PyTao model classes, hiding private and pydantic-internal attributes. Set to <code>n</code> to show all attributes. Also toggleable at runtime with <code>pytao.model.base.toggle_tab_completion_filtering</code>.</td>
+</tr>
+<tr>
+<td><code>PYTAO_BOKEH_NBCONVERT</code></td>
+<td>(unset)</td>
+<td>Set to <code>1</code> or <code>y</code> when exporting notebooks with <code>nbconvert</code>. Bokeh plots are then rendered as static grid plots instead of server-backed applications, which would show up blank in exported HTML.</td>
+</tr>
+</tbody>
+</table>
 
 
 

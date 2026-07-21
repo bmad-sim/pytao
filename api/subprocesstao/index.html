@@ -2161,9 +2161,11 @@ That is, <code>tao.close_subprocess()</code> and <code>tao.init()</code>.</p>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">605</span>
 <span class="normal">606</span>
 <span class="normal">607</span>
-<span class="normal">608</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
+<span class="normal">608</span>
+<span class="normal">609</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">raises</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Runs a command, and returns the output.&quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tao&gt; </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_command_through_pipe</span><span class="p">(</span><span class="s2">&quot;cmd&quot;</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="n">raises</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2189,13 +2191,13 @@ That is, <code>tao.close_subprocess()</code> and <code>tao.init()</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/subproc.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">618</span>
-<span class="normal">619</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">619</span>
 <span class="normal">620</span>
 <span class="normal">621</span>
 <span class="normal">622</span>
 <span class="normal">623</span>
-<span class="normal">624</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
+<span class="normal">624</span>
+<span class="normal">625</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">cmd_integer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">raises</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Runs a command, and returns an integer array.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">cast</span><span class="p">(</span>
@@ -2226,13 +2228,13 @@ That is, <code>tao.close_subprocess()</code> and <code>tao.init()</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/subproc.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">610</span>
-<span class="normal">611</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">611</span>
 <span class="normal">612</span>
 <span class="normal">613</span>
 <span class="normal">614</span>
 <span class="normal">615</span>
-<span class="normal">616</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
+<span class="normal">616</span>
+<span class="normal">617</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">cmd_real</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">raises</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Runs a command, and returns a floating point array.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">cast</span><span class="p">(</span>
@@ -2263,10 +2265,10 @@ That is, <code>tao.close_subprocess()</code> and <code>tao.init()</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/subproc.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">626</span>
-<span class="normal">627</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">627</span>
 <span class="normal">628</span>
-<span class="normal">629</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_active_beam_track_element</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="normal">629</span>
+<span class="normal">630</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_active_beam_track_element</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the active element index being tracked via shared memory.&quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subproc_pipe_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subproc_pipe_</span><span class="o">.</span><span class="n">read_beam_track_element</span><span class="p">()</span>
