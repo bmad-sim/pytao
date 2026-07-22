@@ -65,6 +65,10 @@ class LatticeResult(ConstraintsBase):
     load_time: float = 0.0
     obs_time: float = 0.0
 
+    @property
+    def failed(self) -> bool:
+        return not self.loaded or self.particle_survived is False
+
 
 class ConstraintResultsGroup(ConstraintsBase):
     started_at: datetime

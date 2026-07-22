@@ -33,7 +33,7 @@ LAT_A = DATA_DIR / "lattices" / "lat_a.lat.bmad"
 def test_run_timing():
     obs = EleObservable(lattice_id="lat_a", ele_id="BEGINNING")
     config = ConstraintsConfig(
-        lattices={"lat_a": TaoStartup(lattice_file=LAT_A)},
+        lattices={"lat_a": TaoStartup(lattice_file=LAT_A, noinit=False, noplot=True)},
         constraints=[EleIsCloseConstraint(obs_a=obs, obs_b=obs)],
     )
     saved, results = run(config, DATA_DIR)
@@ -78,8 +78,8 @@ def test_run_lattice_load_failure():
     lit = EleLiteral(beta_a=3.0, alpha_a=-0.5, beta_b=8.0, alpha_b=2.0)
     config = ConstraintsConfig(
         lattices={
-            "lat_bad": TaoStartup(lattice_file=bad_path),
-            "lat_a": TaoStartup(lattice_file=LAT_A),
+            "lat_bad": TaoStartup(lattice_file=bad_path, noinit=False, noplot=True),
+            "lat_a": TaoStartup(lattice_file=LAT_A, noinit=False, noplot=True),
         },
         constraints=[
             EleIsCloseConstraint(obs_a=obs_bad, obs_b=lit, description="bad"),
@@ -102,7 +102,7 @@ def test_run_lattice_load_failure():
 def test_run_continues_on_invalid_element():
     obs_valid = EleObservable(lattice_id="lat_a", ele_id="BEGINNING")
     config = ConstraintsConfig(
-        lattices={"lat_a": TaoStartup(lattice_file=LAT_A)},
+        lattices={"lat_a": TaoStartup(lattice_file=LAT_A, noinit=False, noplot=True)},
         constraints=[
             EleIsCloseConstraint(
                 obs_a=EleObservable(lattice_id="lat_a", ele_id="FAKE1"), obs_b=obs_valid
@@ -139,7 +139,7 @@ def test_run_error_result_types():
     lit_ele = EleLiteral(beta_a=3.0, alpha_a=-0.5, beta_b=8.0, alpha_b=2.0)
     lit_dat = DatumLiteral(model_value=1.0, design_value=0.0)
     config = ConstraintsConfig(
-        lattices={"lat_a": TaoStartup(lattice_file=LAT_A)},
+        lattices={"lat_a": TaoStartup(lattice_file=LAT_A, noinit=False, noplot=True)},
         constraints=[
             EleIsCloseConstraint(obs_a=obs_ele, obs_b=lit_ele),
             EleLessThanConstraint(obs_a=obs_ele, obs_b=lit_ele),
@@ -168,7 +168,7 @@ def test_run_saved_observations():
     obs_a = EleObservable(lattice_id="lat_a", ele_id="BEGINNING")
     obs_b = EleLiteral(beta_a=3.0, alpha_a=-0.5, beta_b=8.0, alpha_b=2.0)
     config = ConstraintsConfig(
-        lattices={"lat_a": TaoStartup(lattice_file=LAT_A)},
+        lattices={"lat_a": TaoStartup(lattice_file=LAT_A, noinit=False, noplot=True)},
         constraints=[EleIsCloseConstraint(obs_a=obs_a, obs_b=obs_b)],
     )
     saved, _ = run(config, DATA_DIR)
@@ -251,7 +251,7 @@ def test_saved_observations_round_trip_datum():
 def test_saved_observations_round_trip_ele():
     obs = EleObservable(lattice_id="lat_a", ele_id="BEGINNING")
     config = ConstraintsConfig(
-        lattices={"lat_a": TaoStartup(lattice_file=LAT_A)},
+        lattices={"lat_a": TaoStartup(lattice_file=LAT_A, noinit=False, noplot=True)},
         constraints=[EleIsCloseConstraint(obs_a=obs, obs_b=obs)],
     )
     saved, _ = run(config, DATA_DIR)

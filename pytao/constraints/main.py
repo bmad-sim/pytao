@@ -64,14 +64,17 @@ def run(
     needed = config.required_lattice_observables
     literal_obs = config.required_literal_observables
 
+    n_lat = len(config.lattices)
+    n_obs_total = sum(len(v) for v in needed.values())
+    n_constraints = len(config.all_constraints)
+    summary = (
+        f"Beginning constraints check with {n_lat} lattice(s), {n_constraints} constraint(s), "
+        f"and {n_obs_total} observable(s)"
+    )
+    logger.info(summary)
+    logger.info("Loading Lattices:")
     if verbose:
-        n_lat = len(config.lattices)
-        n_obs = sum(len(v) for v in needed.values())
-        n_constraints = len(config.all_constraints)
-        print(
-            f"Beginning constraints check with {n_lat} lattice(s), {n_constraints} constraint(s), "
-            f"and {n_obs} observable(s)"
-        )
+        print(summary)
         print("Loading Lattices:")
 
     # Run observables: observable -> observation
@@ -80,7 +83,6 @@ def run(
 
     for lat_id, lat_startup in config.lattices.items():
         params = dict(lat_startup.with_path_prefix(config_dir).tao_class_params)
-        params["noplot"] = True
 
         loaded = False
         particle_survived: bool | None = None
@@ -120,16 +122,16 @@ def run(
                 load_time = time.perf_counter() - t0
             error = traceback.format_exc().strip()
 
+        if not loaded:
+            first_line = error.splitlines()[-1] if error else "unknown error"
+            status_line = f"[FAIL] {lat_id}  {first_line}"
+        else:
+            n_obs = len([obs for obs in needed[lat_id] if obs in obs_map])
+            tag = "[LOST]" if particle_survived is False else "[OK  ]"
+            status_line = f"{tag} {lat_id}  loaded in {load_time:.2f}s, {n_obs} observables in {obs_time:.2f}s"
+        logger.info(status_line)
         if verbose:
-            if not loaded:
-                first_line = error.splitlines()[-1] if error else "unknown error"
-                print(f"  [FAIL] {lat_id}  {first_line}")
-            else:
-                n_obs = len([obs for obs in needed[lat_id] if obs in obs_map])
-                tag = "[LOST]" if particle_survived is False else "[OK  ]"
-                print(
-                    f"  {tag} {lat_id}  loaded in {load_time:.2f}s, {n_obs} observables in {obs_time:.2f}s"
-                )
+            print(f"  {status_line}")
 
         lattice_results[lat_id] = LatticeResult(
             tao_startup=lat_startup,
@@ -243,11 +245,7 @@ def _print_results_markdown(results: ConstraintResultsGroup) -> None:
             desc = _escape_md(rr.description)
             print(f"| {status} | {_escape_md(rr.label)} | {desc} |")
 
-    lat_failures = [
-        (lat_id, lat)
-        for lat_id, lat in results.lattices.items()
-        if not lat.loaded or lat.particle_survived is False
-    ]
+    lat_failures = [(lat_id, lat) for lat_id, lat in results.lattices.items() if lat.failed]
     failures_eq = [
         (group, cr) for group, cr in results.iter_constraints() if not cr.result.is_satisfied
     ]
@@ -352,11 +350,7 @@ def _print_results(results: ConstraintResultsGroup) -> None:
             suffix = f"  {rr.description}" if rr.description else ""
             print(f"  [{status}] {rr.label}{suffix}")
 
-    lat_failures = [
-        (lat_id, lat)
-        for lat_id, lat in results.lattices.items()
-        if not lat.loaded or lat.particle_survived is False
-    ]
+    lat_failures = [(lat_id, lat) for lat_id, lat in results.lattices.items() if lat.failed]
     failures_eq = [
         (group, cr) for group, cr in results.iter_constraints() if not cr.result.is_satisfied
     ]
@@ -369,9 +363,10 @@ def _print_results(results: ConstraintResultsGroup) -> None:
         print("=" * 60)
         for lat_id, lat in lat_failures:
             if not lat.loaded:
-                reason = lat.error.splitlines()[-1] if lat.error else "unknown error"
+                error_lines = lat.error.splitlines()[-10:] if lat.error else ["unknown error"]
                 print(f"\n  lattice {lat_id}: failed to load")
-                print(f"    {reason}")
+                for line in error_lines:
+                    print(f"    {line}")
             else:
                 print(f"\n  lattice {lat_id}: particle lost before end")
         for group, cr in failures_eq:
@@ -432,9 +427,25 @@ def main() -> None:
         action="store_true",
         help="Emit GitHub-flavored markdown suitable for GITHUB_STEP_SUMMARY",
     )
+    parser.add_argument(
+        "--log-file",
+        metavar="FILE",
+        help="Write pytao/Tao log output to FILE",
+    )
+    parser.add_argument(
+        "--log-level",
+        default="INFO",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+        help="Log level for --log-file (default: INFO)",
+    )
     args = parser.parse_args()
 
-    logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
+    if args.log_file:
+        logging.basicConfig(
+            filename=args.log_file,
+            level=getattr(logging, args.log_level),
+            format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+        )
 
     config_path = Path(args.config).resolve()
     with config_path.open() as fh:
@@ -448,7 +459,9 @@ def main() -> None:
 
     save_obs_path = Path(args.save_observations) if args.save_observations else None
 
-    saved, results = run(config, config_dir=config_path.parent, compare=compare, verbose=True)
+    saved, results = run(
+        config, config_dir=config_path.parent, compare=compare, verbose=not args.markdown
+    )
 
     if args.markdown:
         _print_results_markdown(results)
@@ -464,10 +477,8 @@ def main() -> None:
         results_path.write_text(results.model_dump_json(indent=2))
         print(f"\nResults saved to {results_path}")
 
-    failed = (
-        any(not lat.loaded for lat in results.lattices.values())
-        or any(lat.particle_survived is False for lat in results.lattices.values())
-        or any(not cr.result.is_satisfied for _, cr in results.iter_constraints())
+    failed = any(lat.failed for lat in results.lattices.values()) or any(
+        not cr.result.is_satisfied for _, cr in results.iter_constraints()
     )
     if failed:
         sys.exit(1)
