@@ -468,16 +468,14 @@ def main() -> None:
     else:
         _print_results(results)
 
-    info_stream = sys.stderr if args.markdown else sys.stdout
-
     if save_obs_path is not None:
         save_obs_path.write_text(saved.model_dump_json(indent=2))
-        print(f"\n{len(saved)} observations saved to {save_obs_path}", file=info_stream)
+        print(f"\n{len(saved)} observations saved to {save_obs_path}")
 
     if args.save_results:
         results_path = Path(args.save_results)
         results_path.write_text(results.model_dump_json(indent=2))
-        print(f"\nResults saved to {results_path}", file=info_stream)
+        print(f"\nResults saved to {results_path}")
 
     failed = any(lat.failed for lat in results.lattices.values()) or any(
         not cr.result.is_satisfied for _, cr in results.iter_constraints()
