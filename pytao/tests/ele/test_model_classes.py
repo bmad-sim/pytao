@@ -74,22 +74,22 @@ def test_tao_config_shell_script(
 
 
 def test_beam_init(tao: SubprocessTao) -> None:
-    beam_init = BeamInit.from_tao(tao)
+    beam_init = BeamInit.from_tao(tao, ix_uni=1)
     print(repr(beam_init))
 
     assert beam_init == beam_init
 
     beam_init.a_emit = 1.0
-    assert "set beam_init a_emit = 1.0" in beam_init.set_commands
+    assert "set beam_init 1@a_emit = 1.0" in beam_init.set_commands
 
 
 def test_beam(tao: SubprocessTao, monkeypatch: pytest.MonkeyPatch) -> None:
-    beam = Beam.from_tao(tao)
+    beam = Beam.from_tao(tao, ix_uni=1)
     print(repr(beam))
 
     assert beam == beam
     beam.always_reinit = True
-    assert "set beam always_reinit = True" in beam.set_commands
+    assert "set beam 1@always_reinit = True" in beam.set_commands
 
     orig_cmd = tao.cmd
 
@@ -188,3 +188,37 @@ def test_json_serialization(type_annotation, obj, comparator):
     adapter = TypeAdapter(type_annotation)
     assert comparator(adapter.validate_python(adapter.dump_python(obj)), obj)
     assert comparator(adapter.validate_json(adapter.dump_json(obj)), obj)
+
+
+@pytest.fixture(scope="function")
+def tao_multi():
+    with SubprocessTao(
+        init_file="$ACC_ROOT_DIR/bmad-doc/tutorial_bmad_tao/lattice_files/multiple_universes/tao.init",
+        noplot=True,
+    ) as tao:
+        yield tao
+
+
+def test_multi_universe_config(tao_multi: SubprocessTao):
+    for ix_uni in tao_multi.inum("ix_universe"):
+        conf = tao_multi.get_config(ix_uni)
+
+        assert conf.command_args["ix_uni"] == int(ix_uni)
+
+        assert conf.beam_init.command_args["ix_uni"] == int(ix_uni)
+        assert conf.beam.command_args["ix_uni"] == int(ix_uni)
+
+        conf.beam_init.a_norm_emit = 1e-6
+        conf.beam_init.b_norm_emit = 1e-6
+        conf.beam_init.n_particle = 1
+        conf.beam_init.bunch_charge = 1e-12
+        assert set(conf.beam_init.get_set_commands(tao_multi)) == {
+            f"set beam_init {ix_uni}@a_norm_emit = 1e-06",
+            f"set beam_init {ix_uni}@b_norm_emit = 1e-06",
+            f"set beam_init {ix_uni}@bunch_charge = 1e-12",
+            f"set beam_init {ix_uni}@n_particle = 1",
+        }
+        conf.set(tao_multi, only_changed=True)
+
+        conf2 = tao_multi.get_config(ix_uni)
+        assert conf.beam_init == conf2.beam_init
