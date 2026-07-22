@@ -1707,7 +1707,8 @@ In this configuration file, we define an approximate equality constraint (<code>
 <p>Constraints checking happens through the tool <code>pytao-constraints</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$ </span>pytao-constraints<span class="w"> </span>--help
 <span class="go">usage: pytao-constraints [-h] [--save-observations FILE] [--save-results FILE]</span>
-<span class="go">                         [--compare-path FILE] [--markdown]</span>
+<span class="go">                         [--compare-path FILE] [--markdown] [--log-file FILE]</span>
+<span class="go">                         [--log-level LEVEL]</span>
 <span class="go">                         config</span>
 
 <span class="go">Run pytao constraints checks against Bmad lattice files.</span>
@@ -1723,6 +1724,8 @@ In this configuration file, we define an approximate equality constraint (<code>
 <li><code>--save-results FILE</code> — Write a JSON snapshot of the results to <code>FILE</code></li>
 <li><code>--compare-path FILE</code> — Path to a previously saved observations JSON for regression comparison</li>
 <li><code>--markdown</code> — Emit GitHub-flavored markdown suitable for <code>GITHUB_STEP_SUMMARY</code></li>
+<li><code>--log-file FILE</code> — Write pytao/Tao log output to <code>FILE</code></li>
+<li><code>--log-level LEVEL</code> — Log level for <code>--log-file</code> (one of <code>DEBUG</code>, <code>INFO</code>, <code>WARNING</code>, <code>ERROR</code>, <code>CRITICAL</code>; default <code>INFO</code>)</li>
 </ul>
 <h2 id="example">Example</h2>
 <p>A complete example with three lattices is available for download.
