@@ -446,10 +446,6 @@ def main() -> None:
             level=getattr(logging, args.log_level),
             format="%(asctime)s %(levelname)s %(name)s: %(message)s",
         )
-    else:
-        # Avoid even error log messages (ie from pytao.core)
-        logging.getLogger().addHandler(logging.NullHandler())
-
     config_path = Path(args.config).resolve()
     with config_path.open() as fh:
         raw = yaml.safe_load(fh)
