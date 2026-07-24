@@ -172,6 +172,10 @@ class Comb(TaoModel, extra="allow"):
         Maximum vertical momentum, mean_py + rel_max_py (eV/c).
     py_min : np.ndarray
         Minimum vertical momentum, mean_py + rel_min_py (eV/c).
+    p_max : np.ndarray
+        Maximum momentum, (1 + centroid(6) + rel_max(6)) * p0c (eV/c).
+    p_min : np.ndarray
+        Minimum momentum, (1 + centroid(6) + rel_min(6)) * p0c (eV/c).
     rel_max_delta : np.ndarray
         Maximum relative momentum deviation relative to mean (dimensionless).
     rel_max_p : np.ndarray
@@ -709,6 +713,8 @@ class Comb(TaoModel, extra="allow"):
         """Maximum longitudinal position, mean_z + rel_max_z (m)."""
         return self.mean_z + self.rel_max_z
 
+        return (1 + self.centroid_6 + self.rel_min_6) * self.p0c
+
     @property
     def px_min(self) -> np.ndarray:
         """Minimum horizontal momentum, mean_px + rel_min_px (eV/c)."""
@@ -728,6 +734,16 @@ class Comb(TaoModel, extra="allow"):
     def py_max(self) -> np.ndarray:
         """Maximum vertical momentum, mean_py + rel_max_py (eV/c)."""
         return self.mean_py + self.rel_max_py
+
+    @property
+    def p_min(self) -> np.ndarray:
+        """Minimum momentum, (1 + centroid(6) + rel_min(6)) * p0c (eV/c)."""
+        return (1 + self.centroid_6 + self.rel_min_6) * self.p0c
+
+    @property
+    def p_max(self) -> np.ndarray:
+        """Maximum momentum, (1 + centroid(6) + rel_max(6)) * p0c (eV/c)."""
+        return (1 + self.centroid_6 + self.rel_max_6) * self.p0c
 
     @property
     def min_delta(self) -> np.ndarray:
