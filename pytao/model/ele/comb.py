@@ -765,7 +765,7 @@ def load_combs_from_lattice_data(lat_data, sort: bool = False) -> Comb:
     lat_data : dict
         Raw Lattice model data.
     sort : bool, optional
-        Sort comb data by s position. Defaults to True.
+        Sort comb data by s position. Defaults to False.
 
     Returns
     -------
