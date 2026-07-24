@@ -16,6 +16,13 @@ if typing.TYPE_CHECKING:
 
 def _get_branch_species(tao: Tao, ix_uni: int = 1, ix_branch: int = 0) -> str:
     species = tao.beam_init(ix_uni=str(ix_uni), ix_branch=str(ix_branch))["species"]
+    if species not in {"H-", "H2+"}:
+        # NOTE/TODO: Bmad has many more species types, but beamphysics only
+        # supports 7 as of the time of writing.
+        # Tao accepts arbitrarily-cased named subatomic particles, so we
+        # normalize here ahead of time.
+        species = species.lower()
+
     return species or "positron"
 
 
