@@ -427,23 +427,33 @@ class Comb(TaoModel, extra="allow"):
         ix_uni: int = 1,
         ix_branch: int | str = 0,
         ix_bunch: int | str = 1,
-        **kwargs,
     ) -> Self:
         """
-        Create a Comb instance from Tao.
+        Get Comb data, if available.
 
         Parameters
         ----------
-        tao : Tao
+        ix_uni : int, optional
+            Defaults to the primary universe, universe 1.
+        ix_branch : str or int, optional
+            Defaults to the primary branch, branch 0.
+        ix_bunch : int, optional
+            The bunch index. Defaults to 1.
+        check_ds_save : bool, optional
+            Check if Comb data should be saved first (`beam
+            ds_save` is set). Defaults to True.
+            When True, returns an empty `Comb` instance if comb data is unavailable.
+            When False, raises `TaoCommandError` if no comb data available.
 
-        ix_branch : int, optional
-
-        **kwargs : dict
-            Additional keyword arguments to pass to `comb_data_from_tao`.
+        Raises
+        ------
+        TaoCommandError
+            If `check_ds_save` is False and comb data is unavailable.
 
         Returns
         -------
         Comb
+            Comb data.
         """
         if check_ds_save:
             if tao.beam(ix_branch)["ds_save"] <= 0:
