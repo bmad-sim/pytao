@@ -11,10 +11,11 @@ from collections.abc import Generator, Iterable
 from typing import Literal, TypeVar
 
 import matplotlib
+import numpy as np
 import pydantic
 import pytest
 
-from .. import SubprocessTao, Tao, TaoStartup
+from .. import AnyTao, SubprocessTao, Tao, TaoStartup
 from ..errors import filter_output_lines
 
 matplotlib.use("Agg")
@@ -98,6 +99,38 @@ else:
         @contextlib.contextmanager
         def run_context(self, use_subprocess: bool = False):
             yield self.run(use_subprocess=use_subprocess)
+
+
+def set_gaussian(
+    tao: AnyTao,
+    n_particle: int,
+    a_norm_emit: float = 1.0e-6,
+    b_norm_emit: float = 1.0e-6,
+    bunch_charge: float = 1e-9,
+    sig_pz0: float = 2e-6,
+    sig_z: float = 200e-6,
+    center_pz: float = 0.0,
+    chirp: float = 0.0,  # 1/m
+):
+    """
+    Configure a Gaussian ``beam_init`` distribution for beam tracking tests.
+    """
+    sig_pz = np.hypot(sig_pz0, chirp * sig_z)
+
+    cmds = [
+        f"set beam_init n_particle = {n_particle}",
+        "set beam_init random_engine = quasi",
+        "set beam_init saved_at = MARKER::*, BEGINNING, END",
+        f"set beam_init a_norm_emit = {a_norm_emit}",
+        f"set beam_init b_norm_emit = {b_norm_emit}",
+        f"set beam_init bunch_charge = {bunch_charge}",
+        f"set beam_init sig_pz = {sig_pz}",
+        f"set beam_init sig_z = {sig_z}",
+        f"set beam_init dpz_dz = {chirp}",
+        f"set beam_init center(6) = {center_pz}",
+    ]
+    tao.cmds(cmds)
+    tao.cmd("set global lattice_calc_on = T")
 
 
 def get_packaged_example(name: str) -> TaoStartup:
