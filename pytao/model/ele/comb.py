@@ -141,9 +141,9 @@ class Comb(TaoModel, extra="allow"):
     mean_z : np.ndarray
         Mean longitudinal position, z = -beta*c*(t - t_ref) (m).
     mean_px : np.ndarray
-        Mean normalized horizontal momentum p_x/p0 (dimensionless).
+        Mean horizontal momentum, (p_x/p0) * p0c (eV/c).
     mean_py : np.ndarray
-        Mean normalized vertical momentum p_y/p0 (dimensionless).
+        Mean vertical momentum, (p_y/p0) * p0c (eV/c).
     mean_p : np.ndarray
         Mean total momentum, (delta + 1) * p0c (eV/c).
     mean_delta : np.ndarray
@@ -159,17 +159,17 @@ class Comb(TaoModel, extra="allow"):
     sigma_z : np.ndarray
         RMS longitudinal beam size (m).
     sigma_px : np.ndarray
-        RMS normalized horizontal momentum spread (dimensionless).
+        RMS horizontal momentum spread, sqrt(sigma_22) * p0c (eV/c).
     sigma_py : np.ndarray
-        RMS normalized vertical momentum spread (dimensionless).
+        RMS vertical momentum spread, sqrt(sigma_44) * p0c (eV/c).
     sigma_p : np.ndarray
-        RMS relative momentum spread (dimensionless).
+        RMS momentum spread, sqrt(sigma_66) * p0c (eV/c).
     sigma_delta : np.ndarray
-        RMS relative momentum spread (dimensionless).
-    norm_emit_x : np.ndarray
-        Normalized RMS horizontal emittance (m).
-    norm_emit_y : np.ndarray
-        Normalized RMS vertical emittance (m).
+        RMS fractional momentum spread, sqrt(sigma_66) (dimensionless).
+    twiss_norm_emit_x : np.ndarray
+        Normalized RMS horizontal emittance (m·rad).
+    twiss_norm_emit_y : np.ndarray
+        Normalized RMS vertical emittance (m·rad).
     rel_min_x : np.ndarray
         Minimum horizontal position relative to mean (m).
     rel_max_x : np.ndarray
@@ -183,13 +183,13 @@ class Comb(TaoModel, extra="allow"):
     rel_max_z : np.ndarray
         Maximum longitudinal position relative to mean (m).
     rel_min_px : np.ndarray
-        Minimum normalized horizontal momentum relative to mean (dimensionless).
+        Minimum horizontal momentum relative to mean, rel_min(2) * p0c (eV/c).
     rel_max_px : np.ndarray
-        Maximum normalized horizontal momentum relative to mean (dimensionless).
+        Maximum horizontal momentum relative to mean, rel_max(2) * p0c (eV/c).
     rel_min_py : np.ndarray
-        Minimum normalized vertical momentum relative to mean (dimensionless).
+        Minimum vertical momentum relative to mean, rel_min(4) * p0c (eV/c).
     rel_max_py : np.ndarray
-        Maximum normalized vertical momentum relative to mean (dimensionless).
+        Maximum vertical momentum relative to mean, rel_max(4) * p0c (eV/c).
     rel_min_delta : np.ndarray
         Minimum relative momentum deviation relative to mean (dimensionless).
     rel_max_delta : np.ndarray
@@ -506,13 +506,23 @@ class Comb(TaoModel, extra="allow"):
 
     @property
     def mean_p(self) -> np.ndarray:
-        """Centroid mean p = pz (eV/c)."""
+        """Centroid mean total momentum, (1 + pz) * p0c (eV/c)."""
         return (1 + self.centroid_6) * self.p0c  # eV/c
+
+    @property
+    def mean_delta(self) -> np.ndarray:
+        """Centroid mean fractional momentum deviation, pz = (p - p0) / p0 (dimensionless)."""
+        return self.centroid_6
 
     @property
     def mean_energy(self) -> np.ndarray:
         """Mean energy (eV)."""
         return np.hypot(self.mean_p, self.mc2)
+
+    @property
+    def mean_t(self) -> np.ndarray:
+        """Centroid mean time coordinate (s)."""
+        return self.t
 
     @property
     def sigma_x(self) -> np.ndarray:
@@ -541,8 +551,13 @@ class Comb(TaoModel, extra="allow"):
 
     @property
     def sigma_p(self) -> np.ndarray:
-        """Sigma p = pz (eV/c)."""
+        """RMS momentum spread, sqrt(sigma_66) * p0c (eV/c)."""
         return np.sqrt(self.sigma_66) * self.p0c  # eV/c
+
+    @property
+    def sigma_delta(self) -> np.ndarray:
+        """RMS fractional momentum spread, sqrt(sigma_66) (dimensionless)."""
+        return np.sqrt(self.sigma_66)
 
     @property
     def rel_min_x(self) -> np.ndarray:
@@ -571,7 +586,7 @@ class Comb(TaoModel, extra="allow"):
 
     @property
     def rel_min_p(self) -> np.ndarray:
-        """Relative minimum p = pz (eV/c)."""
+        """Minimum momentum, (1 + rel_min(6)) * p0c (eV/c)."""
         return (1 + self.rel_min_6) * self.p0c
 
     @property
@@ -601,8 +616,18 @@ class Comb(TaoModel, extra="allow"):
 
     @property
     def rel_max_p(self) -> np.ndarray:
-        """Relative maximum p = pz (eV/c)."""
+        """Maximum momentum, (1 + rel_max(6)) * p0c (eV/c)."""
         return (1 + self.rel_max_6) * self.p0c
+
+    @property
+    def rel_min_delta(self) -> np.ndarray:
+        """Minimum fractional momentum deviation relative to mean (dimensionless)."""
+        return self.rel_min_6
+
+    @property
+    def rel_max_delta(self) -> np.ndarray:
+        """Maximum fractional momentum deviation relative to mean (dimensionless)."""
+        return self.rel_max_6
 
     @property
     def x_min(self) -> np.ndarray:
@@ -636,33 +661,33 @@ class Comb(TaoModel, extra="allow"):
 
     @property
     def px_min(self) -> np.ndarray:
-        """Minimum normalized horizontal momentum, mean_px + rel_min_px (dimensionless)."""
+        """Minimum horizontal momentum, mean_px + rel_min_px (eV/c)."""
         return self.mean_px + self.rel_min_px
 
     @property
     def py_min(self) -> np.ndarray:
-        """Minimum normalized vertical momentum, mean_py + rel_min_py (dimensionless)."""
+        """Minimum vertical momentum, mean_py + rel_min_py (eV/c)."""
         return self.mean_py + self.rel_min_py
 
     @property
     def px_max(self) -> np.ndarray:
-        """Maximum normalized horizontal momentum, mean_px + rel_max_px (dimensionless)."""
+        """Maximum horizontal momentum, mean_px + rel_max_px (eV/c)."""
         return self.mean_px + self.rel_max_px
 
     @property
     def py_max(self) -> np.ndarray:
-        """Maximum normalized vertical momentum, mean_py + rel_max_py (dimensionless)."""
+        """Maximum vertical momentum, mean_py + rel_max_py (eV/c)."""
         return self.mean_py + self.rel_max_py
 
     @property
     def min_delta(self) -> np.ndarray:
-        """Minimum relative momentum deviation, mean_p + rel_min_p (dimensionless)."""
-        return self.mean_p + self.rel_min_p
+        """Minimum fractional momentum deviation, mean_delta + rel_min_delta (dimensionless)."""
+        return self.mean_delta + self.rel_min_delta
 
     @property
     def max_delta(self) -> np.ndarray:
-        """Maximum relative momentum deviation, mean_p + rel_max_p (dimensionless)."""
-        return self.mean_p + self.rel_max_p
+        """Maximum fractional momentum deviation, mean_delta + rel_max_delta (dimensionless)."""
+        return self.mean_delta + self.rel_max_delta
 
 
 _comb_array_attrs = set(Comb.model_fields) - {"command_args"}
