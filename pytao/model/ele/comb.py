@@ -707,7 +707,7 @@ class Comb(TaoModel, extra="allow"):
         return self.mean_delta + self.rel_max_delta
 
 
-_comb_array_attrs = set(Comb.model_fields) - {"command_args"}
+_comb_array_attrs = set(Comb.model_fields) - {"command_args", "mc2"}
 
 
 def combine_combs(combs: typing.Sequence[Comb], sort: bool = True) -> Comb:
@@ -717,6 +717,8 @@ def combine_combs(combs: typing.Sequence[Comb], sort: bool = True) -> Comb:
     for attr in _comb_array_attrs:
         parts = [getattr(comb, attr) for comb in combs]
         if parts:
+            # NOTE: this may fail if you add a scalar attribute to Comb and
+            # _comb_array_attrs doesn't get updated!
             setattr(res, attr, np.concat(parts))
 
     return res.sort_by_s() if sort else res
