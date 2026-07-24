@@ -28,9 +28,11 @@ def tao() -> Generator[SubprocessTao]:
 @pytest.fixture(scope="function")
 def comb() -> Comb:
     data = {
-        key: np.arange(0, 1000) for key in Comb.model_fields if key not in {"command_args"}
+        key: np.arange(0, 1000)
+        for key in Comb.model_fields
+        if key not in {"command_args", "mc2"}
     }
-    return Comb(**data)
+    return Comb(mc2=5e6, **data)
 
 
 def test_comb_from_tao(tao: SubprocessTao):
