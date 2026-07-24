@@ -99,7 +99,7 @@ def comb_data_from_tao(
         data["sigma_t"] = get("t.sigma")
     except TaoCommandError:
         # bug in Bmad <=20260713-0
-        pass
+        data["sigma_t"] = np.zeros_like(data["s"])
 
     for i in range(1, 7):
         data[f"rel_min_{i}"] = get(f"rel_min.{i}")
@@ -488,6 +488,9 @@ class Comb(TaoModel, extra="allow"):
             (indices,) = np.where((s < s_end) & (s > s_start))
 
         def fix_value(value):
+            if not len(indices):
+                return value
+
             if isinstance(value, (list, np.ndarray)):
                 return np.asarray(value)[indices]
             return value
