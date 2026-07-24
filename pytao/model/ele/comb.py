@@ -201,6 +201,34 @@ class Comb(TaoModel, extra="allow"):
         Minimum relative momentum deviation relative to mean (dimensionless).
     rel_max_delta : np.ndarray
         Maximum relative momentum deviation relative to mean (dimensionless).
+    rel_min_p : np.ndarray
+        Minimum momentum, (1 + rel_min(6)) * p0c (eV/c).
+    rel_max_p : np.ndarray
+        Maximum momentum, (1 + rel_max(6)) * p0c (eV/c).
+    x_min : np.ndarray
+        Minimum horizontal position, mean_x + rel_min_x (m).
+    x_max : np.ndarray
+        Maximum horizontal position, mean_x + rel_max_x (m).
+    y_min : np.ndarray
+        Minimum vertical position, mean_y + rel_min_y (m).
+    y_max : np.ndarray
+        Maximum vertical position, mean_y + rel_max_y (m).
+    z_min : np.ndarray
+        Minimum longitudinal position, mean_z + rel_min_z (m).
+    z_max : np.ndarray
+        Maximum longitudinal position, mean_z + rel_max_z (m).
+    px_min : np.ndarray
+        Minimum horizontal momentum, mean_px + rel_min_px (eV/c).
+    px_max : np.ndarray
+        Maximum horizontal momentum, mean_px + rel_max_px (eV/c).
+    py_min : np.ndarray
+        Minimum vertical momentum, mean_py + rel_min_py (eV/c).
+    py_max : np.ndarray
+        Maximum vertical momentum, mean_py + rel_max_py (eV/c).
+    min_delta : np.ndarray
+        Minimum fractional momentum deviation, mean_delta + rel_min_delta (dimensionless).
+    max_delta : np.ndarray
+        Maximum fractional momentum deviation, mean_delta + rel_max_delta (dimensionless).
     twiss_beta_x : np.ndarray
         Horizontal beta function (m).
     twiss_beta_y : np.ndarray
