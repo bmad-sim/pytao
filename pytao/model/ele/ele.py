@@ -897,7 +897,12 @@ class Element(TaoBaseModel, extra="forbid"):
     @_pytao_stats.time_decorator
     def _fill_comb(self, tao: Tao, comb_data: Comb | None):
         if comb_data is None:
-            comb_data = Comb.from_tao(tao, which=self.which)
+            comb_data = Comb.from_tao(
+                tao,
+                which=self.which,
+                ix_uni=self.head.universe,
+                ix_branch=self.head.ix_branch,
+            )
         self.comb = comb_data.slice_by_s(self.head.s_start, self.head.s)
 
     @_pytao_stats.time_decorator

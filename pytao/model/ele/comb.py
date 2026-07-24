@@ -6,287 +6,275 @@ import typing
 import numpy as np
 from typing_extensions import Self
 
+from ...errors import TaoCommandError
 from ..base import ArchiveFormat, TaoModel, load_model_data
 from ..types import NDArray, deserialize_ndarray, empty_ndarray
 
 if typing.TYPE_CHECKING:
     from pytao import Tao
 
-comb_phase_space_int = {
-    "x": "1",
-    "px": "2",
-    "y": "3",
-    "py": "4",
-    "z": "5",
-    "pz": "6",
-}
-comb_phase_space_label = {
-    1: "x",
-    2: "px",
-    3: "y",
-    4: "py",
-    5: "z",
-    6: "p",
-}
+
+def _get_branch_species(tao: Tao, ix_uni: int = 1, ix_branch: int = 0) -> str:
+    species = tao.beam_init(ix_uni=str(ix_uni), ix_branch=str(ix_branch))["species"]
+    return species or "positron"
 
 
-def comb_covariance_data(tao: Tao):
-    """
-    Returns all covariance (sigma matrix) data from the bunch comb.
-
-    Returns
-    -------
-    dict with keys:
-        'cov_{a}__{b}'
-            where a and b are one of:
-                'x':
-                    x position in meters
-                'px':
-                    x momentum in eV/c
-                'y':
-                    y position in meters
-                'py':
-                    y momentum in eV/c
-                'z':
-                    z position in meters
-                    Note this is really Bmad's z = -beta*c*(t-t_ref)
-                'p':
-                    total momentum in eV/c
-        'sigma_{a}'
-            sqrt of the diagonals above
-        'p0c':
-            reference momentum in eV
-        'sigma_delta':
-            relative energy spread for convenience
-    """
-
-    # remove Bmad units
-    p0c = tao.bunch_comb("p0c")
-
-    data = {}
-    data["p0c"] = p0c
-
-    for i in comb_phase_space_label:
-        for j in comb_phase_space_label:
-            if i <= j:
-                k1 = comb_phase_space_label[i]
-                k2 = comb_phase_space_label[j]
-
-                key = f"cov_{k1}__{k2}"
-                value = tao.bunch_comb(f"sigma.{i}{j}")
-
-                # Convert from Bmad units px/p0, py/p0, p/p0 - 1
-                if i % 2 == 0:
-                    value = value * p0c
-                if j % 2 == 0:
-                    value = value * p0c
-
-                data[key] = value
-
-    # Add diagonals for convenience
-    for _, x in comb_phase_space_label.items():
-        data[f"sigma_{x}"] = np.sqrt(data[f"cov_{x}__{x}"])
-
-    # Add back delta for convenience
-    data["sigma_delta"] = data["sigma_p"] / p0c
-
-    return data
-
-
-def comb_misc_data(tao: Tao):
-    """
-    Returns a dict of miscellaneous comb data:
-        'charge_live'
-        'n_particle_live'
-        'ix_ele'
-        'n_particle_lost_in_ele'
-
-    """
-    keys = "charge_live", "n_particle_live", "ix_ele", "n_particle_lost_in_ele"
-    return {key: tao.bunch_comb(key) for key in keys}
-
-
-def comb_emittance_data(tao: Tao):
-    """
-    Returns a dict of comb arrays with keys:
-        'norm_emit_x'
-        'norm_emit_y'
-    """
-    data = {}
-    for plane in ("x", "y"):
-        data[f"norm_emit_{plane}"] = tao.bunch_comb(f"{plane}.norm_emit")
-    return data
-
-
-def comb_energy_data(tao: Tao, ix_branch: int = 0):
-    """
-    Returns a dict of bunch comb energy info, with keys
-        'mean_p'
-        'mean_energy'
-    """
-    data = {}
-    p0c = tao.bunch_comb("p0c")
-    species = tao.beam_init(ix_branch=ix_branch)["species"]
-    if species == "":
-        species = "positron"
-
+def _get_branch_mc2(tao: Tao, ix_uni: int = 1, ix_branch: int = 0) -> float:
     from beamphysics.species import mass_of
 
-    mc2 = mass_of(species)
-    mean_p = (1 + tao.bunch_comb("pz")) * p0c
-    data["mean_p"] = mean_p
-    data["mean_energy"] = np.hypot(mean_p, mc2)
-
-    return data
+    return mass_of(_get_branch_species(tao, ix_uni=ix_uni, ix_branch=ix_branch))
 
 
-def comb_twiss_data(
-    tao, planes=("x", "y", "a", "b"), properties=("beta", "alpha", "phi", "eta")
-):
-    """
-    Returns a dict all combinations of twiss data for various planes, in the form:
-        'twiss_{plane}_{property}'
-        e.g.: 'twiss_beta_y'
-    """
-    data = {}
-    for plane in planes:
-        for prop in properties:
-            data[f"twiss_{prop}_{plane}"] = tao.bunch_comb(f"{plane}.{prop}")
-    return data
-
-
-def comb_data_from_tao(tao: Tao, ix_branch: int = 0):
+def comb_data_from_tao(
+    tao: Tao, ix_uni: int = 1, ix_branch: int | str = 0, ix_bunch: int = 1
+) -> dict[str, float | np.ndarray]:
     """
     Extract all comb data from tao.
-
-    This converts tao.bunch_comb data from Bmad units into standard
-    openPMD-beamphysics units.
     """
-    data = {
-        **comb_covariance_data(tao),
-        **comb_twiss_data(tao),
-        **comb_emittance_data(tao),
-        **comb_misc_data(tao),
+
+    def get(who: str) -> np.ndarray:
+        return typing.cast(
+            np.ndarray,
+            tao.bunch_comb(
+                who,
+                ix_uni=str(ix_uni),
+                ix_branch=str(ix_branch),
+                ix_bunch=str(ix_bunch),
+                flags="-array_out",
+            ),
+        )
+
+    data: dict[str, float | np.ndarray] = {
+        "mc2": _get_branch_mc2(tao, ix_uni=ix_uni, ix_branch=ix_branch),
+        "p0c": get("p0c"),
+        # Centroid
+        "centroid_1": get("x"),
+        "centroid_2": get("px"),
+        "centroid_3": get("y"),
+        "centroid_4": get("py"),
+        "centroid_5": get("z"),
+        "centroid_6": get("pz"),
+        "t": get("t"),
+        "s": get("s"),
+        "centroid_spin_x": get("spin.x"),
+        "centroid_spin_y": get("spin.y"),
+        "centroid_spin_z": get("spin.z"),
+        "centroid_beta": get("beta"),
+        # Single sigma (more below)
+        # Verbatim
+        "charge_live": get("charge_live"),
+        "n_particle_live": get("n_particle_live"),
+        "n_particle_lost_in_ele": get("n_particle_lost_in_ele"),
+        "ix_ele": get("ix_ele"),
     }
 
-    # for scaling
-    p0c = data["p0c"]
+    for plane in "xyzabc":
+        for prop in (
+            "beta",
+            "alpha",
+            "gamma",
+            "phi",
+            "eta",
+            "etap",
+            "deta_ds",
+            "dbeta_dpz",
+            "dalpha_dpz",
+            "deta_dpz",
+            "detap_dpz",
+            "sigma",
+            "sigma_p",
+            "emit",
+            "norm_emit",
+        ):
+            data[f"twiss_{prop}_{plane}"] = get(f"{plane}.{prop}")
 
-    # rel_min, rel_max, mean
-    for i in comb_phase_space_label:
-        label = comb_phase_space_label[i]
+    try:
+        data["sigma_t"] = get("t.sigma")
+    except TaoCommandError:
+        # bug in Bmad <=20260713-0
+        pass
 
-        if i in (2, 4):
-            scale = p0c
-        elif i == 6:
-            label = "delta"
-            scale = 1
-        else:
-            scale = 1
-        data[f"rel_min_{label}"] = (tao.bunch_comb(f"rel_min.{i}")) * scale
-        data[f"rel_max_{label}"] = (tao.bunch_comb(f"rel_max.{i}")) * scale
+    for i in range(1, 7):
+        data[f"rel_min_{i}"] = get(f"rel_min.{i}")
+        data[f"rel_max_{i}"] = get(f"rel_max.{i}")
+        for j in range(1, 7):
+            data[f"sigma_{i}{j}"] = get(f"sigma.{i}{j}")
 
-        # Means
-        if label == "delta":
-            bkey = "pz"
-        else:
-            bkey = label
-        data[f"mean_{label}"] = tao.bunch_comb(f"{bkey}") * scale
-
-    # s, time
-    data["mean_t"] = tao.bunch_comb("t")
-    data["s"] = tao.bunch_comb("s")
-
-    # Also form mean_p, mean_energy for convenience
-    species = tao.beam_init(ix_branch=ix_branch)["species"]
-    if species == "":
-        species = "positron"
-    from beamphysics.species import mass_of
-
-    mc2 = mass_of(species)
-    mean_p = (data["mean_delta"] + 1) * p0c
-    data["mean_p"] = mean_p
-    data["mean_energy"] = np.hypot(mean_p, mc2)
     return data
 
 
 class Comb(TaoModel, extra="allow"):
+    mc2: float = 0.0
     charge_live: NDArray = empty_ndarray()
-    cov_p__p: NDArray = empty_ndarray()
-    cov_px__p: NDArray = empty_ndarray()
-    cov_px__px: NDArray = empty_ndarray()
-    cov_px__py: NDArray = empty_ndarray()
-    cov_px__y: NDArray = empty_ndarray()
-    cov_px__z: NDArray = empty_ndarray()
-    cov_py__p: NDArray = empty_ndarray()
-    cov_py__py: NDArray = empty_ndarray()
-    cov_py__z: NDArray = empty_ndarray()
-    cov_x__p: NDArray = empty_ndarray()
-    cov_x__px: NDArray = empty_ndarray()
-    cov_x__py: NDArray = empty_ndarray()
-    cov_x__x: NDArray = empty_ndarray()
-    cov_x__y: NDArray = empty_ndarray()
-    cov_x__z: NDArray = empty_ndarray()
-    cov_y__p: NDArray = empty_ndarray()
-    cov_y__py: NDArray = empty_ndarray()
-    cov_y__y: NDArray = empty_ndarray()
-    cov_y__z: NDArray = empty_ndarray()
-    cov_z__p: NDArray = empty_ndarray()
-    cov_z__z: NDArray = empty_ndarray()
+
+    centroid_1: NDArray = empty_ndarray()
+    centroid_2: NDArray = empty_ndarray()
+    centroid_3: NDArray = empty_ndarray()
+    centroid_4: NDArray = empty_ndarray()
+    centroid_5: NDArray = empty_ndarray()
+    centroid_6: NDArray = empty_ndarray()
+    centroid_beta: NDArray = empty_ndarray()
+    centroid_spin_x: NDArray = empty_ndarray()
+    centroid_spin_y: NDArray = empty_ndarray()
+    centroid_spin_z: NDArray = empty_ndarray()
+    charge_live: NDArray = empty_ndarray()
     ix_ele: NDArray = empty_ndarray()
-    mean_delta: NDArray = empty_ndarray()
-    mean_energy: NDArray = empty_ndarray()
-    mean_p: NDArray = empty_ndarray()
-    mean_px: NDArray = empty_ndarray()
-    mean_py: NDArray = empty_ndarray()
-    mean_t: NDArray = empty_ndarray()
-    mean_x: NDArray = empty_ndarray()
-    mean_y: NDArray = empty_ndarray()
-    mean_z: NDArray = empty_ndarray()
     n_particle_live: NDArray = empty_ndarray()
     n_particle_lost_in_ele: NDArray = empty_ndarray()
-    norm_emit_x: NDArray = empty_ndarray()
-    norm_emit_y: NDArray = empty_ndarray()
     p0c: NDArray = empty_ndarray()
-    rel_max_delta: NDArray = empty_ndarray()
-    rel_max_px: NDArray = empty_ndarray()
-    rel_max_py: NDArray = empty_ndarray()
-    rel_max_x: NDArray = empty_ndarray()
-    rel_max_y: NDArray = empty_ndarray()
-    rel_max_z: NDArray = empty_ndarray()
-    rel_min_delta: NDArray = empty_ndarray()
-    rel_min_px: NDArray = empty_ndarray()
-    rel_min_py: NDArray = empty_ndarray()
-    rel_min_x: NDArray = empty_ndarray()
-    rel_min_y: NDArray = empty_ndarray()
-    rel_min_z: NDArray = empty_ndarray()
+    rel_max_1: NDArray = empty_ndarray()
+    rel_max_2: NDArray = empty_ndarray()
+    rel_max_3: NDArray = empty_ndarray()
+    rel_max_4: NDArray = empty_ndarray()
+    rel_max_5: NDArray = empty_ndarray()
+    rel_max_6: NDArray = empty_ndarray()
+    rel_min_1: NDArray = empty_ndarray()
+    rel_min_2: NDArray = empty_ndarray()
+    rel_min_3: NDArray = empty_ndarray()
+    rel_min_4: NDArray = empty_ndarray()
+    rel_min_5: NDArray = empty_ndarray()
+    rel_min_6: NDArray = empty_ndarray()
     s: NDArray = empty_ndarray()
-    sigma_delta: NDArray = empty_ndarray()
-    sigma_p: NDArray = empty_ndarray()
-    sigma_px: NDArray = empty_ndarray()
-    sigma_py: NDArray = empty_ndarray()
-    sigma_x: NDArray = empty_ndarray()
-    sigma_y: NDArray = empty_ndarray()
-    sigma_z: NDArray = empty_ndarray()
+    sigma_11: NDArray = empty_ndarray()
+    sigma_12: NDArray = empty_ndarray()
+    sigma_13: NDArray = empty_ndarray()
+    sigma_14: NDArray = empty_ndarray()
+    sigma_15: NDArray = empty_ndarray()
+    sigma_16: NDArray = empty_ndarray()
+    sigma_21: NDArray = empty_ndarray()
+    sigma_22: NDArray = empty_ndarray()
+    sigma_23: NDArray = empty_ndarray()
+    sigma_24: NDArray = empty_ndarray()
+    sigma_25: NDArray = empty_ndarray()
+    sigma_26: NDArray = empty_ndarray()
+    sigma_31: NDArray = empty_ndarray()
+    sigma_32: NDArray = empty_ndarray()
+    sigma_33: NDArray = empty_ndarray()
+    sigma_34: NDArray = empty_ndarray()
+    sigma_35: NDArray = empty_ndarray()
+    sigma_36: NDArray = empty_ndarray()
+    sigma_41: NDArray = empty_ndarray()
+    sigma_42: NDArray = empty_ndarray()
+    sigma_43: NDArray = empty_ndarray()
+    sigma_44: NDArray = empty_ndarray()
+    sigma_45: NDArray = empty_ndarray()
+    sigma_46: NDArray = empty_ndarray()
+    sigma_51: NDArray = empty_ndarray()
+    sigma_52: NDArray = empty_ndarray()
+    sigma_53: NDArray = empty_ndarray()
+    sigma_54: NDArray = empty_ndarray()
+    sigma_55: NDArray = empty_ndarray()
+    sigma_56: NDArray = empty_ndarray()
+    sigma_61: NDArray = empty_ndarray()
+    sigma_62: NDArray = empty_ndarray()
+    sigma_63: NDArray = empty_ndarray()
+    sigma_64: NDArray = empty_ndarray()
+    sigma_65: NDArray = empty_ndarray()
+    sigma_66: NDArray = empty_ndarray()
+    sigma_t: NDArray = empty_ndarray()
+    t: NDArray = empty_ndarray()
     twiss_alpha_a: NDArray = empty_ndarray()
     twiss_alpha_b: NDArray = empty_ndarray()
+    twiss_alpha_c: NDArray = empty_ndarray()
     twiss_alpha_x: NDArray = empty_ndarray()
     twiss_alpha_y: NDArray = empty_ndarray()
+    twiss_alpha_z: NDArray = empty_ndarray()
     twiss_beta_a: NDArray = empty_ndarray()
     twiss_beta_b: NDArray = empty_ndarray()
+    twiss_beta_c: NDArray = empty_ndarray()
     twiss_beta_x: NDArray = empty_ndarray()
     twiss_beta_y: NDArray = empty_ndarray()
+    twiss_beta_z: NDArray = empty_ndarray()
+    twiss_dalpha_dpz_a: NDArray = empty_ndarray()
+    twiss_dalpha_dpz_b: NDArray = empty_ndarray()
+    twiss_dalpha_dpz_c: NDArray = empty_ndarray()
+    twiss_dalpha_dpz_x: NDArray = empty_ndarray()
+    twiss_dalpha_dpz_y: NDArray = empty_ndarray()
+    twiss_dalpha_dpz_z: NDArray = empty_ndarray()
+    twiss_dbeta_dpz_a: NDArray = empty_ndarray()
+    twiss_dbeta_dpz_b: NDArray = empty_ndarray()
+    twiss_dbeta_dpz_c: NDArray = empty_ndarray()
+    twiss_dbeta_dpz_x: NDArray = empty_ndarray()
+    twiss_dbeta_dpz_y: NDArray = empty_ndarray()
+    twiss_dbeta_dpz_z: NDArray = empty_ndarray()
+    twiss_deta_dpz_a: NDArray = empty_ndarray()
+    twiss_deta_dpz_b: NDArray = empty_ndarray()
+    twiss_deta_dpz_c: NDArray = empty_ndarray()
+    twiss_deta_dpz_x: NDArray = empty_ndarray()
+    twiss_deta_dpz_y: NDArray = empty_ndarray()
+    twiss_deta_dpz_z: NDArray = empty_ndarray()
+    twiss_deta_ds_a: NDArray = empty_ndarray()
+    twiss_deta_ds_b: NDArray = empty_ndarray()
+    twiss_deta_ds_c: NDArray = empty_ndarray()
+    twiss_deta_ds_x: NDArray = empty_ndarray()
+    twiss_deta_ds_y: NDArray = empty_ndarray()
+    twiss_deta_ds_z: NDArray = empty_ndarray()
+    twiss_detap_dpz_a: NDArray = empty_ndarray()
+    twiss_detap_dpz_b: NDArray = empty_ndarray()
+    twiss_detap_dpz_c: NDArray = empty_ndarray()
+    twiss_detap_dpz_x: NDArray = empty_ndarray()
+    twiss_detap_dpz_y: NDArray = empty_ndarray()
+    twiss_detap_dpz_z: NDArray = empty_ndarray()
+    twiss_emit_a: NDArray = empty_ndarray()
+    twiss_emit_b: NDArray = empty_ndarray()
+    twiss_emit_c: NDArray = empty_ndarray()
+    twiss_emit_x: NDArray = empty_ndarray()
+    twiss_emit_y: NDArray = empty_ndarray()
+    twiss_emit_z: NDArray = empty_ndarray()
     twiss_eta_a: NDArray = empty_ndarray()
     twiss_eta_b: NDArray = empty_ndarray()
+    twiss_eta_c: NDArray = empty_ndarray()
     twiss_eta_x: NDArray = empty_ndarray()
     twiss_eta_y: NDArray = empty_ndarray()
+    twiss_eta_z: NDArray = empty_ndarray()
+    twiss_etap_a: NDArray = empty_ndarray()
+    twiss_etap_b: NDArray = empty_ndarray()
+    twiss_etap_c: NDArray = empty_ndarray()
+    twiss_etap_x: NDArray = empty_ndarray()
+    twiss_etap_y: NDArray = empty_ndarray()
+    twiss_etap_z: NDArray = empty_ndarray()
+    twiss_gamma_a: NDArray = empty_ndarray()
+    twiss_gamma_b: NDArray = empty_ndarray()
+    twiss_gamma_c: NDArray = empty_ndarray()
+    twiss_gamma_x: NDArray = empty_ndarray()
+    twiss_gamma_y: NDArray = empty_ndarray()
+    twiss_gamma_z: NDArray = empty_ndarray()
+    twiss_norm_emit_a: NDArray = empty_ndarray()
+    twiss_norm_emit_b: NDArray = empty_ndarray()
+    twiss_norm_emit_c: NDArray = empty_ndarray()
+    twiss_norm_emit_x: NDArray = empty_ndarray()
+    twiss_norm_emit_y: NDArray = empty_ndarray()
+    twiss_norm_emit_z: NDArray = empty_ndarray()
     twiss_phi_a: NDArray = empty_ndarray()
     twiss_phi_b: NDArray = empty_ndarray()
+    twiss_phi_c: NDArray = empty_ndarray()
     twiss_phi_x: NDArray = empty_ndarray()
     twiss_phi_y: NDArray = empty_ndarray()
+    twiss_phi_z: NDArray = empty_ndarray()
+    twiss_sigma_a: NDArray = empty_ndarray()
+    twiss_sigma_b: NDArray = empty_ndarray()
+    twiss_sigma_c: NDArray = empty_ndarray()
+    twiss_sigma_p_a: NDArray = empty_ndarray()
+    twiss_sigma_p_b: NDArray = empty_ndarray()
+    twiss_sigma_p_c: NDArray = empty_ndarray()
+    twiss_sigma_p_x: NDArray = empty_ndarray()
+    twiss_sigma_p_y: NDArray = empty_ndarray()
+    twiss_sigma_p_z: NDArray = empty_ndarray()
+    twiss_sigma_x: NDArray = empty_ndarray()
+    twiss_sigma_y: NDArray = empty_ndarray()
+    twiss_sigma_z: NDArray = empty_ndarray()
 
-    def query(self, tao: Tao) -> Self:
-        return self.from_tao(tao)
+    def __repr__(self):
+        range_info = ""
+        if len(self.s):
+            min_s, max_s = np.min(self.s), np.max(self.s)
+            range_info = f" from s={min_s:.4g} to s={max_s:.4g}"
+
+            if len(self.s) > 1:
+                step = self.s[1] - self.s[0]
+                range_info = f"{range_info} with step {step:.4g}"
+
+        return f"<{type(self).__name__} with {len(self.s)} data points{range_info}>"
 
     def sort_by_s(self) -> Comb:
         """Sort array data by `s` position."""
@@ -301,7 +289,14 @@ class Comb(TaoModel, extra="allow"):
 
     @classmethod
     def from_tao(
-        cls: type[Self], tao: Tao, *, check_ds_save: bool = True, ix_branch: int = 0, **kwargs
+        cls: type[Self],
+        tao: Tao,
+        *,
+        check_ds_save: bool = True,
+        ix_uni: int = 1,
+        ix_branch: int | str = 0,
+        ix_bunch: int | str = 1,
+        **kwargs,
     ) -> Self:
         """
         Create a Comb instance from Tao.
@@ -323,7 +318,9 @@ class Comb(TaoModel, extra="allow"):
             if tao.beam(ix_branch)["ds_save"] <= 0:
                 return cls()
 
-        return cls(**comb_data_from_tao(tao, ix_branch=ix_branch))
+        args = {"ix_uni": ix_uni, "ix_branch": ix_branch, "ix_bunch": ix_bunch}
+        data = comb_data_from_tao(tao, **args)
+        return cls(**data, command_args=args)
 
     def slice_by_s(self, s_start: float, s_end: float, *, inclusive: bool = True) -> Comb:
         """
@@ -357,6 +354,131 @@ class Comb(TaoModel, extra="allow"):
 
         data = {key: fix_value(value) for key, value in self.model_dump().items()}
         return type(self)(**data)
+
+    @property
+    def mean_x(self) -> np.ndarray:
+        """Centroid mean x (m)."""
+        return self.centroid_1  # m
+
+    @property
+    def mean_px(self) -> np.ndarray:
+        """Centroid mean px (eV/c)."""
+        return self.centroid_2 * self.p0c  # eV/c
+
+    @property
+    def mean_y(self) -> np.ndarray:
+        """Centroid mean y (m)."""
+        return self.centroid_3  # m
+
+    @property
+    def mean_py(self) -> np.ndarray:
+        """Centroid mean py (eV/c)."""
+        return self.centroid_4 * self.p0c  # eV/c
+
+    @property
+    def mean_z(self) -> np.ndarray:
+        """Centroid mean z (m)."""
+        return self.centroid_5
+
+    @property
+    def mean_p(self) -> np.ndarray:
+        """Centroid mean p = pz (eV/c)."""
+        return (1 + self.centroid_6) * self.p0c  # eV/c
+
+    @property
+    def mean_energy(self) -> np.ndarray:
+        """Mean energy (eV)."""
+        return np.hypot(self.mean_p, self.mc2)
+
+    @property
+    def sigma_x(self) -> np.ndarray:
+        """Sigma x (m)."""
+        return np.sqrt(self.sigma_11)  # m
+
+    @property
+    def sigma_px(self) -> np.ndarray:
+        """Sigma px (eV/c)."""
+        return np.sqrt(self.sigma_22) * self.p0c  # eV/c
+
+    @property
+    def sigma_y(self) -> np.ndarray:
+        """Sigma y (m)."""
+        return np.sqrt(self.sigma_33)
+
+    @property
+    def sigma_py(self) -> np.ndarray:
+        """Sigma py (eV/c)."""
+        return np.sqrt(self.sigma_44) * self.p0c  # eV/c
+
+    @property
+    def sigma_z(self) -> np.ndarray:
+        """Sigma z (m)."""
+        return np.sqrt(self.sigma_55)  # m
+
+    @property
+    def sigma_p(self) -> np.ndarray:
+        """Sigma p = pz (eV/c)."""
+        return np.sqrt(self.sigma_66) * self.p0c  # eV/c
+
+    @property
+    def rel_min_x(self) -> np.ndarray:
+        """Relative minimum x (m)."""
+        return self.rel_min_1
+
+    @property
+    def rel_min_px(self) -> np.ndarray:
+        """Relative minimum px (eV/c)."""
+        return self.rel_min_2 * self.p0c
+
+    @property
+    def rel_min_y(self) -> np.ndarray:
+        """Relative minimum y (m)."""
+        return self.rel_min_3
+
+    @property
+    def rel_min_py(self) -> np.ndarray:
+        """Relative minimum py (eV/c)."""
+        return self.rel_min_4 * self.p0c
+
+    @property
+    def rel_min_z(self) -> np.ndarray:
+        """Relative minimum z (m)."""
+        return self.rel_min_5
+
+    @property
+    def rel_min_p(self) -> np.ndarray:
+        """Relative minimum p = pz (eV/c)."""
+        return (1 + self.rel_min_6) * self.p0c
+
+    @property
+    def rel_max_x(self) -> np.ndarray:
+        """Relative maximum x (m)."""
+        return self.rel_max_1
+
+    @property
+    def rel_max_px(self) -> np.ndarray:
+        """Relative maximum px (eV/c)."""
+        return self.rel_max_2 * self.p0c
+
+    @property
+    def rel_max_y(self) -> np.ndarray:
+        """Relative maximum y (m)."""
+        return self.rel_max_3
+
+    @property
+    def rel_max_py(self) -> np.ndarray:
+        """Relative maximum py (eV/c)."""
+        return self.rel_max_4 * self.p0c
+
+    @property
+    def rel_max_z(self) -> np.ndarray:
+        """Relative maximum z (m)."""
+        return self.rel_max_5
+
+    @property
+    def rel_max_p(self) -> np.ndarray:
+        """Relative maximum p = pz (eV/c)."""
+        return (1 + self.rel_max_6) * self.p0c
 
 
 _comb_array_attrs = set(Comb.model_fields) - {"command_args"}
