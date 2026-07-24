@@ -293,3 +293,5 @@ def test_get_comb_tracked(tracked_comb: Comb):
     np.testing.assert_allclose(comb.sigma_delta, np.sqrt(comb.sigma_66))
     np.testing.assert_allclose(comb.mean_energy, np.hypot(comb.mean_p, comb.mc2))
     np.testing.assert_allclose(comb.x_min, comb.mean_x + comb.rel_min_x)
+
+    assert not comb.model_extra

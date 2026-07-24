@@ -236,7 +236,6 @@ class Comb(TaoModel, extra="allow"):
     """
 
     mc2: float = 0.0
-    charge_live: NDArray = empty_ndarray()
 
     centroid_1: NDArray = empty_ndarray()
     centroid_2: NDArray = empty_ndarray()
