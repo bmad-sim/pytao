@@ -713,8 +713,6 @@ class Comb(TaoModel, extra="allow"):
         """Maximum longitudinal position, mean_z + rel_max_z (m)."""
         return self.mean_z + self.rel_max_z
 
-        return (1 + self.centroid_6 + self.rel_min_6) * self.p0c
-
     @property
     def px_min(self) -> np.ndarray:
         """Minimum horizontal momentum, mean_px + rel_min_px (eV/c)."""
