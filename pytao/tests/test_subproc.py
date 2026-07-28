@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import pathlib
 import sys
 import time
 from collections.abc import Callable, Generator
@@ -11,7 +12,15 @@ import pytest
 from .. import SubprocessTao
 from ..core import is_in_subprocess
 from ..errors import TaoCommandError, filter_tao_messages_context
-from ..subproc import SubprocessErrorResult, SupportedKwarg, TaoDisconnectedError, _get_result
+from ..startup import TaoStartup
+from ..subproc import (
+    SubprocessErrorResult,
+    SupportedKwarg,
+    TaoDisconnectedError,
+    TaoInitResult,
+    _get_result,
+    parallel_subprocess_taos,
+)
 from ..tao import Tao
 
 
@@ -289,3 +298,100 @@ def test_send_receive_custom_main_module():
         assert pipe is not None
         with pytest.raises(ValueError, match="not in an importable module"):
             pipe.send_receive_custom(local_func, {})
+
+
+LATTICE_DIR = pathlib.Path(__file__).parent / "constraints" / "data" / "lattices"
+LATTICE_IDS = ("lat_a", "lat_b", "lat_c")
+
+
+def _lattice_kwargs(name: str) -> dict[str, Any]:
+    return {
+        "lattice_file": str(LATTICE_DIR / f"{name}.lat.bmad"),
+        "noinit": False,
+        "noplot": True,
+    }
+
+
+@pytest.mark.parametrize("jobs", [1, 3], ids=["serial", "parallel"])
+def test_parallel_subprocess_taos(jobs):
+    startups = [_lattice_kwargs(name) for name in LATTICE_IDS]
+    seen: list[TaoInitResult] = []
+    with parallel_subprocess_taos(startups, jobs=jobs) as results:
+        for res in results:
+            assert res.ok
+            assert res.error is None
+            assert res.elapsed_time > 0
+            assert res.tao is not None and res.tao.subprocess_alive
+            seen.append(res)
+
+    assert len(seen) == len(LATTICE_IDS)
+    # Results follow input order regardless of completion order.
+    assert [str(res.startup.lattice_file) for res in seen] == [
+        str(LATTICE_DIR / f"{name}.lat.bmad") for name in LATTICE_IDS
+    ]
+    assert all(res.tao is not None and not res.tao.subprocess_alive for res in seen)
+
+
+def test_parallel_subprocess_taos_bounds_live_subprocesses():
+    """At most `jobs` subprocesses are alive at any point during iteration."""
+    startups = [_lattice_kwargs(name) for name in LATTICE_IDS]
+    seen: list[TaoInitResult] = []
+    with parallel_subprocess_taos(startups, jobs=1) as results:
+        for res in results:
+            # With a window of one, every previous instance is already closed.
+            assert all(prev.tao is not None and not prev.tao.subprocess_alive for prev in seen)
+            seen.append(res)
+    assert len(seen) == len(LATTICE_IDS)
+
+
+def test_parallel_subprocess_taos_accepts_startup_objects():
+    startups = [TaoStartup(**_lattice_kwargs(name)) for name in LATTICE_IDS]
+    with parallel_subprocess_taos(startups, jobs=3) as results:
+        seen = list(results)
+    assert all(res.ok for res in seen)
+    assert [res.startup for res in seen] == startups
+
+
+def test_parallel_subprocess_taos_failure_is_isolated():
+    startups = [
+        _lattice_kwargs("lat_a"),
+        {"lattice_file": str(LATTICE_DIR / "nonexistent.lat.bmad"), "noinit": False},
+        _lattice_kwargs("lat_b"),
+    ]
+    with parallel_subprocess_taos(startups, jobs=3) as results:
+        seen = list(results)
+    assert [res.ok for res in seen] == [True, False, True]
+    bad = seen[1]
+    assert bad.tao is None
+    assert isinstance(bad.error, Exception)
+
+
+def test_parallel_subprocess_taos_closes_on_exception():
+    startups = [_lattice_kwargs(name) for name in LATTICE_IDS]
+    seen: list[TaoInitResult] = []
+
+    with pytest.raises(RuntimeError, match="boom"):
+        with parallel_subprocess_taos(startups, jobs=3) as results:
+            for res in results:
+                seen.append(res)
+                raise RuntimeError("boom")
+
+    assert len(seen) == 1
+    assert seen[0].tao is not None and not seen[0].tao.subprocess_alive
+
+
+def test_parallel_subprocess_taos_closes_on_early_break():
+    startups = [_lattice_kwargs(name) for name in LATTICE_IDS]
+    seen: list[TaoInitResult] = []
+    with parallel_subprocess_taos(startups, jobs=3) as results:
+        for res in results:
+            seen.append(res)
+            break
+
+    assert len(seen) == 1
+    assert seen[0].tao is not None and not seen[0].tao.subprocess_alive
+
+
+def test_parallel_subprocess_taos_empty():
+    with parallel_subprocess_taos([]) as results:
+        assert list(results) == []

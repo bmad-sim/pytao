@@ -1,5 +1,8 @@
+import os
 import pathlib
 import tempfile
+
+import pytest
 
 from pytao.constraints.config import (
     ConstraintsConfig,
@@ -25,9 +28,83 @@ from pytao.constraints.observables.ele import (
 )
 from pytao.constraints.results import SavedEntry, SavedObservations
 from pytao.startup import TaoStartup
+from pytao.subproc import MAX_AUTO_JOBS, resolve_job_count
 
 DATA_DIR = pathlib.Path(__file__).parent / "data"
 LAT_A = DATA_DIR / "lattices" / "lat_a.lat.bmad"
+LAT_IDS = ("lat_a", "lat_b", "lat_c")
+
+
+def _multi_lattice_config() -> ConstraintsConfig:
+    lattices = {
+        lat_id: TaoStartup(
+            lattice_file=DATA_DIR / "lattices" / f"{lat_id}.lat.bmad",
+            noinit=False,
+            noplot=True,
+        )
+        for lat_id in LAT_IDS
+    }
+    constraints = [
+        EleIsCloseConstraint(
+            description=lat_id,
+            obs_a=EleObservable(lattice_id=lat_id, ele_id="BEGINNING"),
+            obs_b=EleObservable(lattice_id=lat_id, ele_id="END"),
+        )
+        for lat_id in LAT_IDS
+    ]
+    return ConstraintsConfig(lattices=lattices, constraints=constraints)
+
+
+@pytest.mark.parametrize(
+    ("jobs", "n_lattices", "expected"),
+    [
+        (None, 0, 1),
+        (None, 1, 1),
+        (1, 4, 1),
+        (0, 4, min(4, os.cpu_count() or 1, MAX_AUTO_JOBS)),
+        (None, 4, min(4, os.cpu_count() or 1, MAX_AUTO_JOBS)),
+        (100, 4, 4),
+        (2, 4, 2),
+    ],
+)
+def test_resolve_job_count(jobs, n_lattices, expected):
+    assert resolve_job_count(jobs, n_lattices) == expected
+
+
+def _obs_values(saved: SavedObservations) -> dict:
+    """Observations keyed by observable, with run-to-run metadata removed."""
+    return {
+        observable: observation.model_dump_json(exclude={"elapsed_time", "created_at"})
+        for observable, observation in saved.obs_map.items()
+    }
+
+
+def test_run_parallel_matches_serial():
+    config = _multi_lattice_config()
+    serial_saved, serial_results = run(config, DATA_DIR, jobs=1)
+    parallel_saved, parallel_results = run(config, DATA_DIR, jobs=len(LAT_IDS))
+
+    assert all(lat.loaded for lat in parallel_results.lattices.values())
+    # Lattice ordering follows the configuration, not completion order.
+    assert list(parallel_results.lattices) == list(LAT_IDS)
+    assert list(parallel_results.lattices) == list(serial_results.lattices)
+    assert _obs_values(parallel_saved) == _obs_values(serial_saved)
+    assert [cr.result.model_dump_json() for _, cr in parallel_results.iter_constraints()] == [
+        cr.result.model_dump_json() for _, cr in serial_results.iter_constraints()
+    ]
+
+
+def test_run_parallel_lattice_load_failure():
+    config = _multi_lattice_config()
+    config.lattices["lat_bad"] = TaoStartup(
+        lattice_file=DATA_DIR / "lattices" / "nonexistent.lat.bmad",
+        noinit=False,
+        noplot=True,
+    )
+    _, results = run(config, DATA_DIR, jobs=4)
+    assert not results.lattices["lat_bad"].loaded
+    assert results.lattices["lat_bad"].error
+    assert all(results.lattices[lat_id].loaded for lat_id in LAT_IDS)
 
 
 def test_run_timing():
