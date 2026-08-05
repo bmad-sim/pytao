@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import collections
 import contextlib
+import dataclasses
 import io
 import logging
 import os
@@ -11,8 +13,10 @@ import subprocess
 import sys
 import tempfile
 import threading
+import time
 import weakref
-from collections.abc import Callable
+from collections.abc import Callable, Iterable, Iterator
+from concurrent.futures import Future, ThreadPoolExecutor
 from typing import Any, Literal, Optional, Union, cast
 
 import numpy as np
@@ -24,6 +28,9 @@ from .startup import TaoStartup
 from .tao import Tao
 
 logger = logging.getLogger(__name__)
+
+#: Upper bound on concurrent Tao subprocesses when a job count is not specified.
+MAX_AUTO_JOBS = 8
 
 AnyTao = Union[Tao, "SubprocessTao"]
 
@@ -628,3 +635,186 @@ class SubprocessTao(Tao):
         """Get the active element index being tracked via shared memory."""
         assert self._subproc_pipe_ is not None
         return self._subproc_pipe_.read_beam_track_element()
+
+
+def resolve_job_count(jobs: int | None, n_items: int) -> int:
+    """
+    Determine how many Tao subprocesses to start concurrently.
+
+    Parameters
+    ----------
+    jobs : int or None
+        Requested job count. ``None`` or a non-positive value selects an
+        automatic count based on the available CPUs, capped at `MAX_AUTO_JOBS`.
+    n_items : int
+        Number of items to be processed.
+
+    Returns
+    -------
+    int
+        Number of worker threads to use, at least 1 and never more than
+        `n_items`.
+    """
+    if n_items <= 1:
+        return 1
+    if jobs is not None and jobs > 0:
+        return min(jobs, n_items)
+    return min(n_items, os.cpu_count() or 1, MAX_AUTO_JOBS)
+
+
+@dataclasses.dataclass
+class TaoInitResult:
+    """
+    The outcome of initializing a single `SubprocessTao` instance.
+
+    Exactly one of `tao` and `error` is set.
+
+    Attributes
+    ----------
+    startup : TaoStartup
+        The startup settings used for this instance.
+    tao : SubprocessTao or None
+        The initialized instance, or `None` if initialization failed.
+    error : Exception or None
+        The exception raised during initialization, or `None` on success.
+    elapsed_time : float
+        Seconds spent initializing, whether or not it succeeded.
+    """
+
+    startup: TaoStartup
+    tao: SubprocessTao | None = None
+    error: Exception | None = None
+    elapsed_time: float = 0.0
+
+    @property
+    def ok(self) -> bool:
+        """Initialization succeeded."""
+        return self.tao is not None
+
+
+@contextlib.contextmanager
+def parallel_subprocess_taos(
+    startups: Iterable[TaoStartup | dict[str, Any]],
+    *,
+    jobs: int | None = None,
+) -> Iterator[Iterator[TaoInitResult]]:
+    """
+    Initialize several `SubprocessTao` instances concurrently.
+
+    Each instance runs in its own subprocess, so initialization is I/O-bound
+    from the perspective of the calling process and scales with the number of
+    available CPUs.
+
+    Results are streamed in the order of `startups` while up to `jobs`
+    instances are initialized ahead of the consumer. Work done on one instance
+    therefore overlaps with the initialization of the next ones, and at most
+    `jobs` subprocesses are ever alive at once, so peak memory does not grow
+    with the total number of `startups`.
+
+    Each instance is closed as soon as the consumer advances past it, so its
+    `TaoInitResult.tao` must not be used after that point. Anything still open
+    is closed when the block exits, including when the body raises or breaks
+    out early.
+
+    Initialization failures are captured per item rather than raised, so a
+    single bad lattice does not prevent the others from loading. Inspect
+    `TaoInitResult.ok` or `TaoInitResult.error` to detect them.
+
+    Parameters
+    ----------
+    startups : iterable of TaoStartup or dict
+        Startup settings for each instance. Dictionaries are passed to
+        `TaoStartup` as keyword arguments.
+    jobs : int, optional
+        Maximum number of instances alive at once. Defaults to an automatic
+        count capped at `MAX_AUTO_JOBS`; use ``1`` to initialize one at a time.
+
+    Yields
+    ------
+    iterator of TaoInitResult
+        One result per entry in `startups`, in the same order.
+
+    Examples
+    --------
+    >>> lattices = [{"lattice_file": "a.bmad"}, {"lattice_file": "b.bmad"}]
+    >>> with parallel_subprocess_taos(lattices) as results:
+    ...     for res in results:
+    ...         if res.ok:
+    ...             print(res.tao.version())
+    ...         else:
+    ...             print(f"failed: {res.error}")
+    """
+    resolved = [
+        startup if isinstance(startup, TaoStartup) else TaoStartup(**startup)
+        for startup in startups
+    ]
+    n_jobs = resolve_job_count(jobs, len(resolved))
+    lock = threading.Lock()
+    open_taos: list[SubprocessTao] = []
+
+    def initialize(index: int) -> TaoInitResult:
+        startup = resolved[index]
+        t0 = time.perf_counter()
+        try:
+            tao = cast(SubprocessTao, startup.run(use_subprocess=True))
+        except Exception as ex:
+            return TaoInitResult(
+                startup=startup,
+                error=ex,
+                elapsed_time=time.perf_counter() - t0,
+            )
+        with lock:
+            open_taos.append(tao)
+        return TaoInitResult(
+            startup=startup,
+            tao=tao,
+            elapsed_time=time.perf_counter() - t0,
+        )
+
+    def close(tao: SubprocessTao | None) -> None:
+        if tao is None:
+            return
+        with lock:
+            # Only the thread that removes it from the registry closes it.
+            if tao not in open_taos:
+                return
+            open_taos.remove(tao)
+        try:
+            tao.close_subprocess()
+        except Exception:
+            logger.debug("Failed to close Tao subprocess", exc_info=True)
+
+    logger.debug("Initializing %d Tao subprocesses, %d at a time", len(resolved), n_jobs)
+    pool = ThreadPoolExecutor(max_workers=n_jobs, thread_name_prefix="pytao-init")
+
+    def stream() -> Iterator[TaoInitResult]:
+        pending: collections.deque[Future[TaoInitResult]] = collections.deque()
+        next_index = 0
+        # Prime the pipeline, then top it back up only once the consumer has
+        # released an instance. This is what bounds the number of live
+        # subprocesses to `n_jobs`.
+        while next_index < len(resolved) and len(pending) < n_jobs:
+            pending.append(pool.submit(initialize, next_index))
+            next_index += 1
+        while pending:
+            result = pending.popleft().result()
+            try:
+                yield result
+            finally:
+                close(result.tao)
+            if next_index < len(resolved):
+                pending.append(pool.submit(initialize, next_index))
+                next_index += 1
+
+    results = stream()
+    try:
+        yield results
+    finally:
+        # Unwind the generator first so the instance being consumed is closed,
+        # then drop anything already initialized but never reached.
+        results.close()
+        pool.shutdown(wait=True, cancel_futures=True)
+        with lock:
+            remaining = list(open_taos)
+        for tao in remaining:
+            close(tao)

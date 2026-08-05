@@ -15,7 +15,12 @@ from .errors import (
     get_log_mode,
     set_log_mode,
 )
-from .subproc import AnyTao, SubprocessTao
+from .subproc import (
+    AnyTao,
+    SubprocessTao,
+    TaoInitResult,
+    parallel_subprocess_taos,
+)
 from .tao import Tao
 
 logging.getLogger("pytao").addHandler(logging.NullHandler())
@@ -31,6 +36,7 @@ __all__ = [
     "Tao",
     "TaoCommandError",
     "TaoException",
+    "TaoInitResult",
     "TaoInitializationError",
     "TaoSharedLibraryNotFoundError",
     "TaoStartup",
@@ -38,5 +44,6 @@ __all__ = [
     "filter_tao_messages",
     "filter_tao_messages_context",
     "get_log_mode",
+    "parallel_subprocess_taos",
     "set_log_mode",
 ]

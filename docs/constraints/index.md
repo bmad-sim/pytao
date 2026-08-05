@@ -51,8 +51,8 @@ Constraints checking happens through the tool `pytao-constraints`.
 ```console
 $ pytao-constraints --help
 usage: pytao-constraints [-h] [--save-observations FILE] [--save-results FILE]
-                         [--compare-path FILE] [--markdown] [--log-file FILE]
-                         [--log-level LEVEL]
+                         [--compare-path FILE] [--markdown] [-j N]
+                         [--log-file FILE] [--log-level LEVEL]
                          config
 
 Run pytao constraints checks against Bmad lattice files.
@@ -69,8 +69,23 @@ Run pytao constraints checks against Bmad lattice files.
 - `--save-results FILE` — Write a JSON snapshot of the results to `FILE`
 - `--compare-path FILE` — Path to a previously saved observations JSON for regression comparison
 - `--markdown` — Emit GitHub-flavored markdown suitable for `GITHUB_STEP_SUMMARY`
+- `-j N`, `--jobs N` — Number of lattices to load in parallel (default: automatic, up to 8). Use `1` to load lattices sequentially.
 - `--log-file FILE` — Write pytao/Tao log output to `FILE`
 - `--log-level LEVEL` — Log level for `--log-file` (one of `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`; default `INFO`)
+
+### Parallel lattice loading
+
+Each lattice is loaded in its own Tao subprocess, so multiple lattices can be
+loaded and observed concurrently. By default the tool picks a job count based
+on the available CPUs (capped at 8) and the number of configured lattices.
+
+Results are independent of the job count: lattices are always reported in
+configuration order, and observations are identical to a sequential run.
+
+Lattices are streamed rather than all held at once — each one is closed as soon
+as its observations are gathered, while the next ones load in the background.
+At most `--jobs` lattices are resident at a time, so lower `--jobs` if you are
+working with very large lattices on a memory-constrained machine.
 
 ## Example
 

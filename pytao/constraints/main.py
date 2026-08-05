@@ -1,18 +1,25 @@
 import argparse
 import logging
 import sys
-import time
 import traceback
+from collections.abc import Iterable
 from datetime import datetime, timezone
 from pathlib import Path
 
 import yaml
 
-from pytao import SubprocessTao
+from pytao.startup import TaoStartup
+from pytao.subproc import (
+    MAX_AUTO_JOBS,
+    TaoInitResult,
+    parallel_subprocess_taos,
+    resolve_job_count,
+)
 
 from .config import ConstraintsConfig
 from .observables import (
     ComparisonResult,
+    LatticeObservable,
     Observable,
     Observation,
 )
@@ -36,11 +43,90 @@ def _md_status(passed: bool) -> str:
     return ":white_check_mark:" if passed else ":x:"
 
 
+def _observe_lattice(
+    lat_id: str,
+    lat_startup: TaoStartup,
+    init_result: TaoInitResult,
+    observables: Iterable[LatticeObservable],
+) -> tuple[LatticeResult, dict[Observable, Observation], str]:
+    """
+    Evaluate observables against an already-initialized lattice.
+
+    This never raises: initialization and observation failures are captured in
+    the returned `LatticeResult`.
+
+    Parameters
+    ----------
+    lat_id : str
+        Identifier of the lattice in the configuration.
+    lat_startup : TaoStartup
+        Startup settings as configured, before path prefixing. Recorded on the
+        result so that saved output stays relative to the config file.
+    init_result : TaoInitResult
+        Outcome of initializing Tao for this lattice.
+    observables : iterable of LatticeObservable
+        Observables to evaluate against this lattice.
+
+    Returns
+    -------
+    tuple[LatticeResult, dict[Observable, Observation], str]
+        The lattice result, its observations, and a one-line status message.
+    """
+    obs_map: dict[Observable, Observation] = {}
+    particle_survived: bool | None = None
+    error = ""
+    load_time = init_result.elapsed_time
+    obs_time = 0.0
+
+    tao = init_result.tao
+    if tao is None:
+        error = "".join(traceback.format_exception(init_result.error)).strip()
+        first_line = error.splitlines()[-1] if error else "unknown error"
+        status_line = f"[FAIL] {lat_id}  {first_line}"
+    else:
+        try:
+            states = tao.lat_list("end", "orbit.state", flags="-array_out")
+            particle_survived = bool(states[0] == 1)
+        except Exception:
+            logger.debug(
+                "Particle survival check failed for lattice %r:\n%s",
+                lat_id,
+                traceback.format_exc().strip(),
+            )
+        for obs in observables:
+            try:
+                obs_map[obs] = obs.observe(tao)
+            except Exception:
+                logger.debug(
+                    "Observable %r failed for lattice %r:\n%s",
+                    obs,
+                    lat_id,
+                    traceback.format_exc().strip(),
+                )
+        obs_time = sum(observation.elapsed_time for observation in obs_map.values())
+        tag = "[LOST]" if particle_survived is False else "[OK  ]"
+        status_line = (
+            f"{tag} {lat_id}  loaded in {load_time:.2f}s, "
+            f"{len(obs_map)} observables in {obs_time:.2f}s"
+        )
+
+    result = LatticeResult(
+        tao_startup=lat_startup,
+        loaded=tao is not None,
+        particle_survived=particle_survived,
+        error=error,
+        load_time=load_time,
+        obs_time=obs_time,
+    )
+    return result, obs_map, status_line
+
+
 def run(
     config: ConstraintsConfig,
     config_dir: Path,
     compare: SavedObservations | None = None,
     verbose: bool = False,
+    jobs: int | None = None,
 ) -> tuple[SavedObservations, ConstraintResultsGroup]:
     """
     Run all constraints in the given config and return observations and results.
@@ -53,6 +139,13 @@ def run(
         Directory used to resolve relative paths in the config.
     compare : SavedObservations, optional
         Previously saved observations for regression comparison.
+    verbose : bool, default=False
+        Print lattice loading progress to stdout.
+    jobs : int, optional
+        Number of lattices to load in parallel. Each lattice runs in its own
+        Tao subprocess, so this scales with available CPUs and memory. Defaults
+        to an automatic count capped at `MAX_AUTO_JOBS`; use ``1`` to load
+        lattices sequentially.
 
     Returns
     -------
@@ -67,80 +160,37 @@ def run(
     n_lat = len(config.lattices)
     n_obs_total = sum(len(v) for v in needed.values())
     n_constraints = len(config.all_constraints)
+    n_jobs = resolve_job_count(jobs, n_lat)
     summary = (
         f"Beginning constraints check with {n_lat} lattice(s), {n_constraints} constraint(s), "
         f"and {n_obs_total} observable(s)"
     )
+    loading_header = (
+        "Loading Lattices:" if n_jobs == 1 else f"Loading Lattices: ({n_jobs} in parallel)"
+    )
     logger.info(summary)
-    logger.info("Loading Lattices:")
+    logger.info(loading_header)
     if verbose:
         print(summary)
-        print("Loading Lattices:")
+        print(loading_header)
 
     # Run observables: observable -> observation
     obs_map: dict[Observable, Observation] = {}
     lattice_results: dict[str, LatticeResult] = {}
 
-    for lat_id, lat_startup in config.lattices.items():
-        params = dict(lat_startup.with_path_prefix(config_dir).tao_class_params)
+    lat_ids = list(config.lattices)
+    startups = [config.lattices[lat_id].with_path_prefix(config_dir) for lat_id in lat_ids]
 
-        loaded = False
-        particle_survived: bool | None = None
-        error: str | None = None
-        load_time = 0.0
-        obs_time = 0.0
-        t0 = time.perf_counter()
-
-        try:
-            with SubprocessTao(**params) as tao:
-                load_time = time.perf_counter() - t0
-                loaded = True
-                try:
-                    states = tao.lat_list("end", "orbit.state", flags="-array_out")
-                    particle_survived = bool(states[0] == 1)
-                except Exception:
-                    logger.debug(
-                        "Particle survival check failed for lattice %r:\n%s",
-                        lat_id,
-                        traceback.format_exc().strip(),
-                    )
-                for obs in needed[lat_id]:
-                    try:
-                        obs_map[obs] = obs.observe(tao)
-                    except Exception:
-                        logger.debug(
-                            "Observable %r failed for lattice %r:\n%s",
-                            obs,
-                            lat_id,
-                            traceback.format_exc().strip(),
-                        )
-                obs_time = sum(
-                    obs_map[obs].elapsed_time for obs in needed[lat_id] if obs in obs_map
-                )
-        except Exception:
-            if not load_time:
-                load_time = time.perf_counter() - t0
-            error = traceback.format_exc().strip()
-
-        if not loaded:
-            first_line = error.splitlines()[-1] if error else "unknown error"
-            status_line = f"[FAIL] {lat_id}  {first_line}"
-        else:
-            n_obs = len([obs for obs in needed[lat_id] if obs in obs_map])
-            tag = "[LOST]" if particle_survived is False else "[OK  ]"
-            status_line = f"{tag} {lat_id}  loaded in {load_time:.2f}s, {n_obs} observables in {obs_time:.2f}s"
-        logger.info(status_line)
-        if verbose:
-            print(f"  {status_line}")
-
-        lattice_results[lat_id] = LatticeResult(
-            tao_startup=lat_startup,
-            loaded=loaded,
-            particle_survived=particle_survived,
-            error=error or "",
-            load_time=load_time,
-            obs_time=obs_time,
-        )
+    with parallel_subprocess_taos(startups, jobs=n_jobs) as init_results:
+        for lat_id, init_result in zip(lat_ids, init_results):
+            result, lat_obs_map, status_line = _observe_lattice(
+                lat_id, config.lattices[lat_id], init_result, needed[lat_id]
+            )
+            logger.info(status_line)
+            if verbose:
+                print(f"  {status_line}")
+            obs_map.update(lat_obs_map)
+            lattice_results[lat_id] = result
 
     for obs in literal_obs:
         obs_map[obs] = obs.observe()
@@ -428,6 +478,17 @@ def main() -> None:
         help="Emit GitHub-flavored markdown suitable for GITHUB_STEP_SUMMARY",
     )
     parser.add_argument(
+        "-j",
+        "--jobs",
+        type=int,
+        default=None,
+        metavar="N",
+        help=(
+            "Number of lattices to load in parallel (default: automatic, "
+            f"up to {MAX_AUTO_JOBS}). Use 1 to load lattices sequentially."
+        ),
+    )
+    parser.add_argument(
         "--log-file",
         metavar="FILE",
         help="Write pytao/Tao log output to FILE",
@@ -460,7 +521,11 @@ def main() -> None:
     save_obs_path = Path(args.save_observations) if args.save_observations else None
 
     saved, results = run(
-        config, config_dir=config_path.parent, compare=compare, verbose=not args.markdown
+        config,
+        config_dir=config_path.parent,
+        compare=compare,
+        verbose=not args.markdown,
+        jobs=args.jobs,
     )
 
     if args.markdown:
