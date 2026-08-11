@@ -4195,7 +4195,7 @@ print("Current defaults:", Element.DEFAULTS)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Current defaults: {'wake', 'mat6', 'attrs', 'wall3d', 'grid_field', 'floor', 'photon', 'twiss', 'lord_slave', 'bunch_params', 'multipoles', 'control_vars', 'chamber_walls', 'orbit'}
+<pre>Current defaults: {'grid_field', 'photon', 'orbit', 'wall3d', 'control_vars', 'chamber_walls', 'multipoles', 'wake', 'attrs', 'twiss', 'lord_slave', 'bunch_params', 'floor', 'mat6'}
 </pre>
 </div>
 </div>
@@ -4654,8 +4654,8 @@ plt.tight_layout()</div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -4704,6 +4704,20 @@ lat_subset.write(Path("lattice_subset.msgpack"));
 
 # Note that the above returns all of the data that was just written to file.
 # The semicolon at the end suppresses this output in Jupyter notebooks.</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>/home/runner/miniconda3/envs/pytao-dev/lib/python3.12/site-packages/h5py/__init__.py:36: UserWarning: h5py is running against HDF5 2.2.0 when it was built against 2.1.0, this may cause problems
+  _warn(("h5py is running against HDF5 {0} when it was built against {1}, "
+</pre>
 </div>
 </div>
 </div>
