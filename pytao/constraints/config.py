@@ -104,14 +104,14 @@ class ComparisonConstraint(Constraint, Generic[CompT]):
         self,
         obs_map: dict[Observable, Observation],
         expected_obs_map: dict[Observable, Observation] | None,
-        common_comparisons_map: dict[str, AnyComparison],
+        common_comparison_map: dict[str, AnyComparison],
         group: str | None,
     ) -> tuple[list[ConstraintResult], list[RegressionResult]]:
         # replace string comparison reference with real comparison
         if isinstance(self.comparison, str):
-            if self.comparison not in common_comparisons_map:
+            if self.comparison not in common_comparison_map:
                 raise ValueError(f"Referenced comparison ({self.comparison}) not defined")
-            self._comparison_obj = cast(CompT, common_comparisons_map[self.comparison])
+            self._comparison_obj = cast(CompT, common_comparison_map[self.comparison])
         else:
             self._comparison_obj = self.comparison
 
