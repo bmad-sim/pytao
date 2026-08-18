@@ -3,9 +3,8 @@ from typing import Annotated, Literal
 
 from pydantic import Field
 
-from pytao.constraints.pydantic import ConstraintsBase
-
 from pytao.constraints.observables.base import CheckResult
+from pytao.constraints.pydantic import ConstraintsBase
 
 
 class TwissComparisonMethod(ConstraintsBase, ABC):

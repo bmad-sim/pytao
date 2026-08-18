@@ -3,14 +3,13 @@ from __future__ import annotations
 from collections.abc import Iterator
 from datetime import datetime
 
-from pytao.constraints.pydantic import ConstraintsBase
-
 from pytao.constraints.observables import (
     AnyComparisonResult,
     AnyObservable,
     AnyObservation,
     LatticeObservable,
 )
+from pytao.constraints.pydantic import ConstraintsBase
 from pytao.startup import TaoStartup
 
 

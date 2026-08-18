@@ -1,10 +1,11 @@
 import time
 from datetime import datetime, timezone
-from pydantic import ConfigDict, Field, model_validator
-
-from pytao.constraints.pydantic import ConstraintsBase
-from pytao import Tao
 from typing import Generic, TypeVar
+
+from pydantic import ConfigDict, Field, computed_field, model_validator
+
+from pytao import Tao
+from pytao.constraints.pydantic import ConstraintsBase
 
 
 class CheckResult(ConstraintsBase):
@@ -131,9 +132,19 @@ class ComparisonResult(ConstraintsBase):
             data.pop("is_satisfied", None)
         return data
 
+    @computed_field
     @property
     def is_satisfied(self) -> bool:
-        return not bool(self.error)
+        if bool(self.error):
+            return False
+
+        check_results = self.check_results()
+
+        # Preserve existing behavior: we are satisfied even if no CheckResults are found
+        if not check_results:
+            return True
+
+        return all(check_results.values())
 
     def check_results(self) -> dict[str, CheckResult]:
         return {

@@ -3,9 +3,6 @@ from typing import Annotated, Any, Generic, Literal, TypeVar, Union, cast
 
 from pydantic import Field, model_validator
 
-from pytao.constraints.observables.base import ObservableT, ResultT
-from pytao.constraints.pydantic import ConstraintsBase
-
 from pytao.constraints.observables import (
     AnyComparison,
     Comparison,
@@ -33,6 +30,8 @@ from pytao.constraints.observables import (
     Observable,
     Observation,
 )
+from pytao.constraints.observables.base import ObservableT, ResultT
+from pytao.constraints.pydantic import ConstraintsBase
 from pytao.constraints.results import ConstraintResult, RegressionResult
 from pytao.startup import TaoStartup
 
