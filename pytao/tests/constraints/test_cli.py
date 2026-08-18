@@ -35,10 +35,10 @@ def _run_cli(*args: str, capsys) -> tuple[str, int]:
     return capsys.readouterr().out, exc_info.value.code
 
 
-@pytest.mark.parametrize("config_file", CONFIGS)
+@pytest.mark.parametrize("constr_config_file", CONFIGS)
 @pytest.mark.parametrize("markdown", [False, True], ids=["plain", "markdown"])
-def test_cli_output_format(config_file, markdown, capsys):
-    args = [str(DATA_DIR / config_file)]
+def test_cli_output_format(constr_config_file, markdown, capsys):
+    args = [str(DATA_DIR / constr_config_file)]
     if markdown:
         args.append("--markdown")
     out, code = _run_cli(*args, capsys=capsys)
@@ -49,15 +49,15 @@ def test_cli_output_format(config_file, markdown, capsys):
     else:
         assert "Lattices:" in out
         assert "Constraints:" in out
-    if "grouped" in config_file:
+    if "grouped" in constr_config_file:
         assert "Lattice-Consistency" in out
 
 
-@pytest.mark.parametrize("config_file", CONFIGS)
-def test_cli_save_observations(config_file, capsys, tmp_path):
+@pytest.mark.parametrize("constr_config_file", CONFIGS)
+def test_cli_save_observations(constr_config_file, capsys, tmp_path):
     save_path = tmp_path / "obs.json"
     _, code = _run_cli(
-        str(DATA_DIR / config_file),
+        str(DATA_DIR / constr_config_file),
         "--save-observations",
         str(save_path),
         capsys=capsys,
@@ -68,10 +68,10 @@ def test_cli_save_observations(config_file, capsys, tmp_path):
     assert len(loaded.entries) > 0
 
 
-@pytest.mark.parametrize("config_file", CONFIGS)
+@pytest.mark.parametrize("constr_config_file", CONFIGS)
 @pytest.mark.parametrize("markdown", [False, True], ids=["plain", "markdown"])
-def test_cli_compare(config_file, markdown, capsys, tmp_path):
-    config_path = str(DATA_DIR / config_file)
+def test_cli_compare(constr_config_file, markdown, capsys, tmp_path):
+    config_path = str(DATA_DIR / constr_config_file)
     save_path = tmp_path / "obs.json"
 
     _run_cli(config_path, "--save-observations", str(save_path), capsys=capsys)
@@ -82,7 +82,7 @@ def test_cli_compare(config_file, markdown, capsys, tmp_path):
     out, code = _run_cli(*args, capsys=capsys)
     assert code == 1
 
-    if "grouped" in config_file:
+    if "grouped" in constr_config_file:
         if markdown:
             assert "## Regression" in out
         else:
