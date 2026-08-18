@@ -64,6 +64,9 @@ class Observable(ConstraintsBase, Generic[ObservationT]):
     def observe(self, *args, **kwargs) -> ObservationT: ...
 
 
+ObservableT = TypeVar("ObservableT", bound=Observable)
+
+
 class LatticeObservable(Observable[ObservationT]):
     """Observable that fetches data from a lattice via Tao.
 
