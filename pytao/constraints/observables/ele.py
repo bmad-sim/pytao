@@ -35,13 +35,13 @@ class EleObservation(Observation):
 
     Attributes
     ----------
-    obs_type : str
+    type : str
         Discriminator literal. Always ``"ele"``.
     element : Element
         Element data including Twiss parameters, orbit, floor position, and attributes.
     """
 
-    obs_type: Literal["ele"] = "ele"
+    type: Literal["ele"] = "ele"
     element: Element
 
 
@@ -78,7 +78,7 @@ class EleIsCloseResult(ComparisonResult):
 
     Attributes
     ----------
-    result_type : str
+    type : str
         Discriminator literal. Always ``"ele_is_close"``.
     twiss_a : CheckResult or None
         Mode A Twiss comparison (beta_a, alpha_a).
@@ -106,7 +106,7 @@ class EleIsCloseResult(ComparisonResult):
         Global floor z coordinate.
     """
 
-    result_type: Literal["ele_is_close"] = "ele_is_close"
+    type: Literal["ele_is_close"] = "ele_is_close"
     twiss_a: CheckResult | None = None
     twiss_b: CheckResult | None = None
     eta_x: CheckResult | None = None
@@ -154,7 +154,7 @@ class EleIsClose(IsClose[EleObservation, EleIsCloseResult]):
         Comparison for global floor z coordinate.
     """
 
-    comp_type: Literal["ele_is_close"] = "ele_is_close"
+    type: Literal["ele_is_close"] = "ele_is_close"
     twiss_a: AnyTwissComparison | None = BmagTwissComparison()
     twiss_b: AnyTwissComparison | None = BmagTwissComparison()
 
@@ -263,7 +263,7 @@ class EleLessThanResult(ComparisonResult):
 
     Attributes
     ----------
-    result_type : str
+    type : str
         Discriminator literal. Always ``"ele_is_less"``.
     beta_a : CheckResult or None
         Mode A beta function.
@@ -293,7 +293,7 @@ class EleLessThanResult(ComparisonResult):
         Global floor z coordinate.
     """
 
-    result_type: Literal["ele_is_less"] = "ele_is_less"
+    type: Literal["ele_is_less"] = "ele_is_less"
     beta_a: CheckResult | None = None
     alpha_a: CheckResult | None = None
     beta_b: CheckResult | None = None
@@ -344,7 +344,7 @@ class EleLessThan(IsLess[EleObservation, EleLessThanResult]):
         Check global floor z coordinate.
     """
 
-    comp_type: Literal["ele_is_less"] = "ele_is_less"
+    type: Literal["ele_is_less"] = "ele_is_less"
 
     beta_a: bool = False
     alpha_a: bool = False
@@ -519,7 +519,7 @@ class EleLiteral(LiteralObservable[EleObservation]):
 
     Attributes
     ----------
-    obs_type : str
+    type : str
         Discriminator literal. Always ``"ele_literal"``.
     beta_a : float or None
         Mode A beta function.
@@ -547,7 +547,7 @@ class EleLiteral(LiteralObservable[EleObservation]):
         Global floor z coordinate.
     """
 
-    obs_type: Literal["ele_literal"] = "ele_literal"
+    type: Literal["ele_literal"] = "ele_literal"
     beta_a: float | None = None
     alpha_a: float | None = None
     beta_b: float | None = None
@@ -566,7 +566,7 @@ class EleLiteral(LiteralObservable[EleObservation]):
         return "literal"
 
     def _make_observation(self) -> EleObservation:
-        return _build_ele_observation(**self.model_dump(exclude={"obs_type"}))
+        return _build_ele_observation(**self.model_dump(exclude={"type"}))
 
 
 def _ele_reduce(
@@ -642,7 +642,7 @@ class EleObservable(LatticeObservable[EleObservation]):
 
     Attributes
     ----------
-    obs_type : str
+    type : str
         Discriminator literal. Always ``"ele"``.
     ele_id : str or int
         Element index or name passed to ``tao.ele()``.
@@ -652,7 +652,7 @@ class EleObservable(LatticeObservable[EleObservation]):
         Branch index.
     """
 
-    obs_type: Literal["ele"] = "ele"
+    type: Literal["ele"] = "ele"
     ele_id: str | int
     ix_uni: int = Field(default=1, ge=0)
     ix_branch: int = Field(default=0, ge=0)
@@ -679,7 +679,7 @@ class EleMaxObservable(LatticeObservable[EleObservation]):
 
     Attributes
     ----------
-    obs_type : str
+    type : str
         Discriminator literal. Always ``"ele_max"``.
     ix_uni : int
         Universe index.
@@ -687,7 +687,7 @@ class EleMaxObservable(LatticeObservable[EleObservation]):
         Branch index.
     """
 
-    obs_type: Literal["ele_max"] = "ele_max"
+    type: Literal["ele_max"] = "ele_max"
     ix_uni: int = Field(default=1, ge=0)
     ix_branch: int = Field(default=0, ge=0)
     begin_ele: str | int | None = None
@@ -718,7 +718,7 @@ class EleMinObservable(LatticeObservable[EleObservation]):
 
     Attributes
     ----------
-    obs_type : str
+    type : str
         Discriminator literal. Always ``"ele_min"``.
     ix_uni : int
         Universe index.
@@ -726,7 +726,7 @@ class EleMinObservable(LatticeObservable[EleObservation]):
         Branch index.
     """
 
-    obs_type: Literal["ele_min"] = "ele_min"
+    type: Literal["ele_min"] = "ele_min"
     ix_uni: int = Field(default=1, ge=0)
     ix_branch: int = Field(default=0, ge=0)
     begin_ele: str | int | None = None
