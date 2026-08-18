@@ -35,7 +35,7 @@ from pytao.constraints.observables import (
 from pytao.constraints.results import ConstraintResult, RegressionResult
 from pytao.startup import TaoStartup
 
-CompT = TypeVar("CompT", bound=Comparison[Any])
+CompT = TypeVar("CompT", bound=Comparison[Any, Any])
 
 
 EleObservables = Annotated[
