@@ -3,7 +3,9 @@ import pathlib
 from unittest.mock import patch
 
 import pytest
+import yaml
 
+from pytao.constraints.config import ConstraintsConfig
 from pytao.constraints.main import main
 from pytao.constraints.results import ConstraintResultsGroup, SavedObservations
 
@@ -103,3 +105,15 @@ def test_cli_reference_results(capsys, tmp_path):
     assert (
         actual == expected
     ), "Results differ from reference. Re-run update_reference.py to accept."
+
+
+@pytest.mark.parametrize("constr_config_file", CONFIGS)
+def test_roundtrip(constr_config_file):
+    with open(DATA_DIR / constr_config_file) as fh:
+        raw = yaml.safe_load(fh)
+
+    config = ConstraintsConfig.model_validate(raw)
+
+    round_tripped = ConstraintsConfig.model_validate(config.model_dump(exclude_defaults=True))
+
+    assert config == round_tripped

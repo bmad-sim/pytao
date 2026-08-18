@@ -40,12 +40,12 @@ CompT = TypeVar("CompT", bound=Comparison[Any, Any])
 
 EleObservables = Annotated[
     Union[EleObservable, EleMaxObservable, EleMinObservable, EleLiteral],
-    Field(discriminator="obs_type"),
+    Field(discriminator="type"),
 ]
 
 DatumObservables = Annotated[
     Union[DatumObservable, DatumLiteral],
-    Field(discriminator="obs_type"),
+    Field(discriminator="type"),
 ]
 
 
@@ -309,7 +309,7 @@ class EleIsCloseConstraint(IsCloseConstraint[EleObservables, EleIsClose, EleIsCl
 
     Attributes
     ----------
-    constraint_type : str
+    type : str
         Discriminator literal. Always ``"ele_eq"``.
     obs_a : EleObservables
         First element observable.
@@ -319,7 +319,7 @@ class EleIsCloseConstraint(IsCloseConstraint[EleObservables, EleIsClose, EleIsCl
         Comparison operator applied to the two observations.
     """
 
-    constraint_type: Literal["ele_eq"] = "ele_eq"
+    type: Literal["ele_eq"] = "ele_eq"
     obs_a: EleObservables
     obs_b: EleObservables
     comparison: EleIsClose | str = EleIsClose()
@@ -339,7 +339,7 @@ class EleLessThanConstraint(IsLessConstraint[EleObservables, EleLessThan, EleLes
 
     Attributes
     ----------
-    constraint_type : str
+    type : str
         Discriminator literal. Always ``"ele_lt"``.
     obs_a : EleObservables
         Left-hand side observable.
@@ -349,7 +349,7 @@ class EleLessThanConstraint(IsLessConstraint[EleObservables, EleLessThan, EleLes
         Less-than operator configuration.
     """
 
-    constraint_type: Literal["ele_lt"] = "ele_lt"
+    type: Literal["ele_lt"] = "ele_lt"
     obs_a: EleObservables
     obs_b: EleObservables
     comparison: EleLessThan | str = EleLessThan()
@@ -369,7 +369,7 @@ class DatumIsCloseConstraint(
 
     Attributes
     ----------
-    constraint_type : str
+    type : str
         Discriminator literal. Always ``"datum_eq"``.
     obs_a : DatumObservables
         First datum observable.
@@ -379,7 +379,7 @@ class DatumIsCloseConstraint(
         Comparison operator applied to the two observations.
     """
 
-    constraint_type: Literal["datum_eq"] = "datum_eq"
+    type: Literal["datum_eq"] = "datum_eq"
     obs_a: DatumObservables
     obs_b: DatumObservables
     comparison: DatumIsClose | str = DatumIsClose()
@@ -401,7 +401,7 @@ class DatumLessThanConstraint(
 
     Attributes
     ----------
-    constraint_type : str
+    type : str
         Discriminator literal. Always ``"datum_lt"``.
     obs_a : DatumObservables
         Left-hand side observable.
@@ -411,7 +411,7 @@ class DatumLessThanConstraint(
         Less-than operator configuration.
     """
 
-    constraint_type: Literal["datum_lt"] = "datum_lt"
+    type: Literal["datum_lt"] = "datum_lt"
     obs_a: DatumObservables
     obs_b: DatumObservables
     comparison: DatumLessThan | str = DatumLessThan()
@@ -429,7 +429,7 @@ class EleRegressionConstraint(RegressionConstraint[EleIsClose]):
 
     Attributes
     ----------
-    constraint_type : str
+    type : str
         Discriminator literal. Always ``"ele_reg"``.
     obs : EleObservables
         Element observable to evaluate and compare.
@@ -437,7 +437,7 @@ class EleRegressionConstraint(RegressionConstraint[EleIsClose]):
         Comparison operator used to check current against reference.
     """
 
-    constraint_type: Literal["ele_reg"] = "ele_reg"
+    type: Literal["ele_reg"] = "ele_reg"
     obs: EleObservables
     comparison: EleIsClose | str = EleIsClose()
 
@@ -461,7 +461,7 @@ class DatumRegressionConstraint(RegressionConstraint[DatumIsClose]):
 
     Attributes
     ----------
-    constraint_type : str
+    type : str
         Discriminator literal. Always ``"datum_reg"``.
     obs : DatumObservables
         Datum observable to evaluate and compare.
@@ -469,7 +469,7 @@ class DatumRegressionConstraint(RegressionConstraint[DatumIsClose]):
         Comparison operator used to check current against reference.
     """
 
-    constraint_type: Literal["datum_reg"] = "datum_reg"
+    type: Literal["datum_reg"] = "datum_reg"
     obs: DatumObservables
     comparison: DatumIsClose | str = DatumIsClose()
 
@@ -499,7 +499,7 @@ AnyConstraint = Annotated[
         EleRegressionConstraint,
         DatumRegressionConstraint,
     ],
-    Field(discriminator="constraint_type"),
+    Field(discriminator="type"),
 ]
 
 

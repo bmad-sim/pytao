@@ -52,10 +52,10 @@ AnyObservable = Annotated[
         EleLiteral,
         DatumLiteral,
     ],
-    Field(discriminator="obs_type"),
+    Field(discriminator="type"),
 ]
 AnyObservation = Annotated[
-    Union[EleObservation, DatumObservation], Field(discriminator="obs_type")
+    Union[EleObservation, DatumObservation], Field(discriminator="type")
 ]
 AnyComparison = Annotated[
     Union[
@@ -64,7 +64,7 @@ AnyComparison = Annotated[
         EleLessThan,
         DatumLessThan,
     ],
-    Field(discriminator="comp_type"),
+    Field(discriminator="type"),
 ]
 AnyComparisonResult = Annotated[
     Union[
@@ -73,7 +73,7 @@ AnyComparisonResult = Annotated[
         EleLessThanResult,
         DatumLessThanResult,
     ],
-    Field(discriminator="result_type"),
+    Field(discriminator="type"),
 ]
 
 __all__ = [

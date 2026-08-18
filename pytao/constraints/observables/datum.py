@@ -44,7 +44,7 @@ class DatumObservation(Observation):
 
     Attributes
     ----------
-    obs_type : str
+    type : str
         Discriminator literal. Always ``"datum"``.
     model_value : float
         Model value of the datum.
@@ -52,7 +52,7 @@ class DatumObservation(Observation):
         Design value of the datum.
     """
 
-    obs_type: Literal["datum"] = "datum"
+    type: Literal["datum"] = "datum"
     model_value: float
     design_value: float
 
@@ -64,7 +64,7 @@ class DatumIsCloseResult(ComparisonResult):
 
     Attributes
     ----------
-    result_type : str
+    type : str
         Discriminator literal. Always ``"datum_is_close"``.
     model_value : CheckResult or None
         Model value comparison result.
@@ -72,7 +72,7 @@ class DatumIsCloseResult(ComparisonResult):
         Design value comparison result.
     """
 
-    result_type: Literal["datum_is_close"] = "datum_is_close"
+    type: Literal["datum_is_close"] = "datum_is_close"
     model_value: CheckResult | None = None
     design_value: CheckResult | None = None
 
@@ -90,7 +90,7 @@ class DatumIsClose(IsClose[DatumObservation, DatumIsCloseResult]):
         Comparison for the design value.
     """
 
-    comp_type: Literal["datum_is_close"] = "datum_is_close"
+    type: Literal["datum_is_close"] = "datum_is_close"
     model_value_test: TolComparison | None = TolComparison()
     design_value_test: TolComparison | None = None
 
@@ -113,7 +113,7 @@ class DatumLessThanResult(ComparisonResult):
 
     Attributes
     ----------
-    result_type : str
+    type : str
         Discriminator literal. Always ``"datum_is_less"``.
     model_value : CheckResult or None
         Model value comparison result.
@@ -121,7 +121,7 @@ class DatumLessThanResult(ComparisonResult):
         Design value comparison result.
     """
 
-    result_type: Literal["datum_is_less"] = "datum_is_less"
+    type: Literal["datum_is_less"] = "datum_is_less"
     model_value: CheckResult | None = None
     design_value: CheckResult | None = None
 
@@ -139,7 +139,7 @@ class DatumLessThan(IsLess[DatumObservation, DatumLessThanResult]):
         Check design value.
     """
 
-    comp_type: Literal["datum_is_less"] = "datum_is_less"
+    type: Literal["datum_is_less"] = "datum_is_less"
     model_value: bool = True
     design_value: bool = False
 
@@ -164,7 +164,7 @@ class DatumLiteral(LiteralObservable[DatumObservation]):
 
     Attributes
     ----------
-    obs_type : str
+    type : str
         Discriminator literal. Always ``"datum_literal"``.
     model_value : float
         Model value for the produced observation.
@@ -172,7 +172,7 @@ class DatumLiteral(LiteralObservable[DatumObservation]):
         Design value for the produced observation.
     """
 
-    obs_type: Literal["datum_literal"] = "datum_literal"
+    type: Literal["datum_literal"] = "datum_literal"
     model_value: float
     design_value: float
 
@@ -189,7 +189,7 @@ class DatumObservable(LatticeObservable[DatumObservation]):
 
     Attributes
     ----------
-    obs_type : str
+    type : str
         Discriminator literal. Always ``"datum"``.
     data_type : str
         Tao datum data type (e.g. ``"orbit.x"``).
@@ -205,7 +205,7 @@ class DatumObservable(LatticeObservable[DatumObservation]):
         Source of the data (lat, data, var, or beam).
     """
 
-    obs_type: Literal["datum"] = "datum"
+    type: Literal["datum"] = "datum"
     data_type: str
     ele_name: str
     ele_start_name: str = ""

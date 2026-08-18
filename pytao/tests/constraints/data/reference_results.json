@@ -125,14 +125,14 @@
         "observables": [
           {
             "lattice_id": "lat_b",
-            "obs_type": "ele",
+            "type": "ele",
             "ele_id": "BEGINNING",
             "ix_uni": 1,
             "ix_branch": 0
           },
           {
             "lattice_id": "lat_a",
-            "obs_type": "ele",
+            "type": "ele",
             "ele_id": "END",
             "ix_uni": 1,
             "ix_branch": 0
@@ -142,7 +142,7 @@
         "comment": "Longer comment included on error and in reports. eg Please rerun `tune_matcher.tao` in event of failure.",
         "result": {
           "error": null,
-          "result_type": "ele_is_close",
+          "type": "ele_is_close",
           "twiss_a": {
             "passed": true,
             "detail": ""
@@ -190,14 +190,14 @@
         "observables": [
           {
             "lattice_id": "lat_c",
-            "obs_type": "ele",
+            "type": "ele",
             "ele_id": "BEGINNING",
             "ix_uni": 1,
             "ix_branch": 0
           },
           {
             "lattice_id": "lat_a",
-            "obs_type": "ele",
+            "type": "ele",
             "ele_id": "END",
             "ix_uni": 1,
             "ix_branch": 0
@@ -207,7 +207,7 @@
         "comment": "",
         "result": {
           "error": null,
-          "result_type": "ele_is_close",
+          "type": "ele_is_close",
           "twiss_a": {
             "passed": true,
             "detail": ""
@@ -263,7 +263,7 @@
         "label": "lat_a[max] < literal",
         "observables": [
           {
-            "obs_type": "ele_literal",
+            "type": "ele_literal",
             "beta_a": 200.0,
             "alpha_a": null,
             "beta_b": 200.0,
@@ -279,7 +279,7 @@
           },
           {
             "lattice_id": "lat_a",
-            "obs_type": "ele_max",
+            "type": "ele_max",
             "ix_uni": 1,
             "ix_branch": 0,
             "begin_ele": null,
@@ -290,7 +290,7 @@
         "comment": "",
         "result": {
           "error": null,
-          "result_type": "ele_is_less",
+          "type": "ele_is_less",
           "beta_a": {
             "passed": true,
             "detail": ""
@@ -318,7 +318,7 @@
         "observables": [
           {
             "lattice_id": "lat_a",
-            "obs_type": "datum",
+            "type": "datum",
             "data_type": "r56_compaction",
             "ele_name": "END",
             "ele_start_name": "",
@@ -327,8 +327,8 @@
             "data_source": "lat"
           },
           {
-            "obs_type": "datum_literal",
-            "model_value": 1.04448e-8,
+            "type": "datum_literal",
+            "model_value": 1.04448e-08,
             "design_value": 0.0
           }
         ],
@@ -336,7 +336,7 @@
         "comment": "",
         "result": {
           "error": null,
-          "result_type": "datum_is_close",
+          "type": "datum_is_close",
           "model_value": {
             "passed": true,
             "detail": ""
