@@ -2713,7 +2713,7 @@ update.</p>
     <span class="n">error_on_new_type</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">raise_if_invalid</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Ask Tao to update the plot region. Returns a new Graph instance.</span>
 
 <span class="sd">    Raises</span>
@@ -2726,7 +2726,7 @@ update.</p>
 <span class="sd">        update.</span>
 <span class="sd">    RuntimeError</span>
 <span class="sd">        If the same graph is no longer found after the update.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">graphs</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">prepare_graphs_by_name</span><span class="p">(</span>
             <span class="n">region_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">region_name</span><span class="p">,</span>
@@ -2746,10 +2746,10 @@ update.</p>
         <span class="k">if</span> <span class="n">graph</span><span class="o">.</span><span class="n">graph_name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph_name</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">error_on_new_type</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Graph type changed from </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">"Graph type changed from </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span>
                 <span class="p">)</span>
             <span class="k">return</span> <span class="n">graph</span>
-    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Plot not found after update?&quot;</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Plot not found after update?"</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2896,7 +2896,7 @@ update.</p>
 
 
 </h7>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">clear</span><span class="p">(</span><span class="n">region_name</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">clear</span><span class="p">(</span><span class="n">region_name</span><span class="o">=</span><span class="s1">'*'</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2948,16 +2948,16 @@ update.</p>
 <span class="normal">1465</span>
 <span class="normal">1466</span>
 <span class="normal">1467</span>
-<span class="normal">1468</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="normal">1468</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"*"</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Clear a single region or all regions.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    region_name : str, optional</span>
-<span class="sd">        Defaults to &#39;*&#39;, which is all regions.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;place -no_buffer </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2"> none&quot;</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="sd">        Defaults to '*', which is all regions.</span>
+<span class="sd">    """</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="sa">f</span><span class="s2">"place -no_buffer </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2"> none"</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">_clear_region</span><span class="p">(</span><span class="n">region_name</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -3086,7 +3086,7 @@ applied to all plots in the region.</p>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">graph_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Configure curves in a region.</span>
 
 <span class="sd">    Parameters</span>
@@ -3098,7 +3098,7 @@ applied to all plots in the region.</p>
 <span class="sd">    graph_name : str, optional</span>
 <span class="sd">        The graph name, if available.  If unspecified, settings will be</span>
 <span class="sd">        applied to all plots in the region.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">graph_name</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">plot_name</span> <span class="ow">in</span> <span class="n">get_plots_in_region</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tao</span><span class="p">,</span> <span class="n">region_name</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">configure_curves</span><span class="p">(</span><span class="n">region_name</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">,</span> <span class="n">graph_name</span><span class="o">=</span><span class="n">plot_name</span><span class="p">)</span>
@@ -3238,7 +3238,7 @@ applied to all plots in the region.</p>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">graph_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Configure graph settings for a region.</span>
 
 <span class="sd">    Parameters</span>
@@ -3250,14 +3250,14 @@ applied to all plots in the region.</p>
 <span class="sd">    graph_name : str, optional</span>
 <span class="sd">        The graph name, if available.  If unspecified, settings will be</span>
 <span class="sd">        applied to all plots in the region.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">graph_name</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">plot_name</span> <span class="ow">in</span> <span class="n">get_plots_in_region</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tao</span><span class="p">,</span> <span class="n">region_name</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">configure_graph</span><span class="p">(</span><span class="n">region_name</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">,</span> <span class="n">graph_name</span><span class="o">=</span><span class="n">plot_name</span><span class="p">)</span>
         <span class="k">return</span>
 
     <span class="n">graph_info</span> <span class="o">=</span> <span class="n">get_plot_graph_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tao</span><span class="p">,</span> <span class="n">region_name</span><span class="p">,</span> <span class="n">graph_name</span><span class="p">)</span>
-    <span class="n">graph_type</span> <span class="o">=</span> <span class="n">graph_info</span><span class="p">[</span><span class="s2">&quot;graph^type&quot;</span><span class="p">]</span>
+    <span class="n">graph_type</span> <span class="o">=</span> <span class="n">graph_info</span><span class="p">[</span><span class="s2">"graph^type"</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">command</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">get_commands</span><span class="p">(</span>
         <span class="n">region_name</span><span class="p">,</span>
         <span class="n">graph_name</span><span class="p">,</span>
@@ -3307,10 +3307,10 @@ applied to all plots in the region.</p>
 <span class="normal">1288</span>
 <span class="normal">1289</span>
 <span class="normal">1290</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_region_to_place_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a region for placing the graph.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Get a region for placing the graph."""</span>
     <span class="k">for</span> <span class="n">region_name</span><span class="p">,</span> <span class="n">to_place</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_place</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">to_place</span> <span class="o">==</span> <span class="n">template_name</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Graph </span><span class="si">%s</span><span class="s2"> found in region </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">template_name</span><span class="p">,</span> <span class="n">region_name</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Graph </span><span class="si">%s</span><span class="s2"> found in region </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">template_name</span><span class="p">,</span> <span class="n">region_name</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">region_name</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -3320,10 +3320,10 @@ applied to all plots in the region.</p>
         <span class="n">plots_in_region</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">template_name</span> <span class="k">for</span> <span class="n">graph</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regions</span><span class="p">[</span><span class="n">region_name</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">plots_in_region</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;All plot regions are in use; reusing plot region </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2"> which has graphs: </span><span class="si">{</span><span class="n">plots_in_region</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"All plot regions are in use; reusing plot region </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2"> which has graphs: </span><span class="si">{</span><span class="n">plots_in_region</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;New region for graph </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">template_name</span><span class="p">,</span> <span class="n">region_name</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"New region for graph </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">template_name</span><span class="p">,</span> <span class="n">region_name</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">region_name</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3489,7 +3489,7 @@ applied to all plots in the region.</p>
     <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">template_graph_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnyGraph</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a graph instance from an already-placed graph.</span>
 
 <span class="sd">    Parameters</span>
@@ -3506,7 +3506,7 @@ applied to all plots in the region.</p>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    AnyGraph</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">make_graph</span><span class="p">(</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tao</span><span class="p">,</span>
         <span class="n">region_name</span><span class="o">=</span><span class="n">region_name</span><span class="p">,</span>
@@ -3660,7 +3660,7 @@ applied to all plots in the region.</p>
     <span class="n">region_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ignore_invalid</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">AnyGraph</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Place `template_name` in `region_name`.</span>
 
 <span class="sd">    Parameters</span>
@@ -3676,7 +3676,7 @@ applied to all plots in the region.</p>
 <span class="sd">    -------</span>
 <span class="sd">    list of graphs</span>
 <span class="sd">        The type of each graph is backend-dependent.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">region_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_place</span><span class="p">(</span><span class="n">template_name</span><span class="p">,</span> <span class="n">region_name</span><span class="p">)</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_region</span><span class="p">(</span>
         <span class="n">region_name</span><span class="o">=</span><span class="n">region_name</span><span class="p">,</span>
@@ -3823,7 +3823,7 @@ applied to all plots in the region.</p>
     <span class="n">ignore_invalid</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">ignore_unsupported</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">AnyGraph</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Place all graphs in the place buffer.</span>
 
 <span class="sd">    Side effect: clears `to_place`.</span>
@@ -3839,11 +3839,11 @@ applied to all plots in the region.</p>
 <span class="sd">    -------</span>
 <span class="sd">    Dict[str, List[AnyGraph]]</span>
 <span class="sd">        Region to list of graphs.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">to_place</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_place</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">to_place</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Placing all plots: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">to_place</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Placing all plots: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">to_place</span><span class="p">)</span>
     <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">region_name</span><span class="p">,</span> <span class="n">template_name</span> <span class="ow">in</span> <span class="n">to_place</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
@@ -3975,8 +3975,8 @@ applied to all plots in the region.</p>
     <span class="n">include_layout</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Plot all &quot;placed&quot; graphs.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Plot all "placed" graphs.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -3986,7 +3986,7 @@ applied to all plots in the region.</p>
 <span class="sd">        Include a layout plot.</span>
 <span class="sd">    **kwargs</span>
 <span class="sd">        Keyword arguments are passed to `.plot_grid()`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">template_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_place</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">grid</span><span class="p">:</span>
         <span class="n">grid</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">template_names</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
@@ -4279,7 +4279,7 @@ applied to all plots in the region.</p>
     <span class="n">xlim</span><span class="p">:</span> <span class="n">Limit</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ylim</span><span class="p">:</span> <span class="n">Limit</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">AnyGraph</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Prepare a graph for plotting.</span>
 
 <span class="sd">    Parameters</span>
@@ -4307,7 +4307,7 @@ applied to all plots in the region.</p>
 <span class="sd">    -------</span>
 <span class="sd">    list of graphs</span>
 <span class="sd">        The type of each graph is backend-dependent.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">place</span><span class="p">:</span>
         <span class="n">region_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_place</span><span class="p">(</span><span class="n">template_name</span><span class="o">=</span><span class="n">template_name</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="n">region_name</span><span class="p">)</span>
     <span class="k">elif</span> <span class="ow">not</span> <span class="n">region_name</span><span class="p">:</span>
@@ -4554,7 +4554,7 @@ placed graphs prior to plotting.</p>
     <span class="n">xlim</span><span class="p">:</span> <span class="n">OptionalLimit</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">OptionalLimit</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ylim</span><span class="p">:</span> <span class="n">OptionalLimit</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">OptionalLimit</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Prepare multiple graphs for a grid plot.</span>
 
 <span class="sd">    Applies per-graph curve settings and also region/graph settings.</span>
@@ -4577,7 +4577,7 @@ placed graphs prior to plotting.</p>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    list of graphs</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">num_graphs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">template_names</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">curves</span><span class="p">:</span>
         <span class="n">curves</span> <span class="o">=</span> <span class="p">[{}]</span> <span class="o">*</span> <span class="n">num_graphs</span>
@@ -4614,7 +4614,7 @@ placed graphs prior to plotting.</p>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">graphs</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">UnsupportedGraphError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;No supported plots from these templates: </span><span class="si">{</span><span class="n">template_names</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"No supported plots from these templates: </span><span class="si">{</span><span class="n">template_names</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">graphs</span>
 </code></pre></div></td></tr></table></div>
@@ -4645,7 +4645,7 @@ placed graphs prior to plotting.</p>
 <span class="normal">1227</span>
 <span class="normal">1228</span>
 <span class="normal">1229</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">tao_init_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Tao has reinitialized; clear our state.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Tao has reinitialized; clear our state."""</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">regions</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_to_place</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
@@ -4839,7 +4839,7 @@ placed graphs prior to plotting.</p>
     <span class="n">ignore_invalid</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">ignore_unsupported</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">AnyGraph</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Query information about already-placed graphs in a given region.</span>
 
 <span class="sd">    Parameters</span>
@@ -4857,7 +4857,7 @@ placed graphs prior to plotting.</p>
 <span class="sd">    -------</span>
 <span class="sd">    list of graphs</span>
 <span class="sd">        The type of each graph is backend-dependent.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_clear_region</span><span class="p">(</span><span class="n">region_name</span><span class="p">)</span>
 
     <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
@@ -4874,18 +4874,18 @@ placed graphs prior to plotting.</p>
             <span class="p">)</span>
         <span class="k">except</span> <span class="n">UnsupportedGraphError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">ignore_unsupported</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported graph in region </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported graph in region </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
                 <span class="k">continue</span>
             <span class="k">raise</span>
         <span class="k">except</span> <span class="n">GraphInvalidError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">ignore_invalid</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid graph in region </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid graph in region </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
                 <span class="k">continue</span>
             <span class="k">raise</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">regions</span><span class="p">[</span><span class="n">region_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-        <span class="s2">&quot;Updating region: </span><span class="si">%s</span><span class="s2"> template: </span><span class="si">%s</span><span class="s2"> generated </span><span class="si">%d</span><span class="s2"> plots&quot;</span><span class="p">,</span>
+        <span class="s2">"Updating region: </span><span class="si">%s</span><span class="s2"> template: </span><span class="si">%s</span><span class="s2"> generated </span><span class="si">%d</span><span class="s2"> plots"</span><span class="p">,</span>
         <span class="n">region_name</span><span class="p">,</span>
         <span class="n">template_name</span><span class="p">,</span>
         <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">),</span>
@@ -5042,12 +5042,12 @@ this functionality.</p>
     <span class="n">x_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">y2_floor</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">layout_shapes</span><span class="o">.</span><span class="n">AnyWrappedLayoutShape</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">PlotAnnotation</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Element is wrapped around the lattice ends, and s1 &gt;= s2.</span>
 
 <span class="sd">    `$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wake` shows off</span>
 <span class="sd">    this functionality.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">assert</span> <span class="n">s1</span> <span class="o">&gt;=</span> <span class="n">s2</span>
     <span class="n">s_min</span> <span class="o">=</span> <span class="nb">max</span><span class="p">((</span><span class="n">x_min</span><span class="p">,</span> <span class="n">s1</span> <span class="o">+</span> <span class="p">(</span><span class="n">s1</span> <span class="o">+</span> <span class="n">s2</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">))</span>
     <span class="n">s_max</span> <span class="o">=</span> <span class="nb">min</span><span class="p">((</span><span class="n">x_max</span><span class="p">,</span> <span class="n">s1</span> <span class="o">-</span> <span class="p">(</span><span class="n">s1</span> <span class="o">+</span> <span class="n">s2</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">))</span>
@@ -5055,7 +5055,7 @@ this functionality.</p>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">shape_cls</span> <span class="o">=</span> <span class="n">layout_shapes</span><span class="o">.</span><span class="n">wrapped_shape_to_class</span><span class="p">[</span><span class="n">shape</span><span class="p">]</span>
     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported wrappedlayout shape type: </span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported wrappedlayout shape type: </span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">shape_instance</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">shape_instance</span> <span class="o">=</span> <span class="n">shape_cls</span><span class="p">(</span>
@@ -5075,8 +5075,8 @@ this functionality.</p>
             <span class="n">x</span><span class="o">=</span><span class="n">s_max</span><span class="p">,</span>
             <span class="n">y</span><span class="o">=</span><span class="mf">1.1</span> <span class="o">*</span> <span class="n">y2_floor</span><span class="p">,</span>
             <span class="n">text</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-            <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>
-            <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span>
+            <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">"right"</span><span class="p">,</span>
+            <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">"top"</span><span class="p">,</span>
             <span class="n">clip_on</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
         <span class="p">),</span>
@@ -5084,8 +5084,8 @@ this functionality.</p>
             <span class="n">x</span><span class="o">=</span><span class="n">s_min</span><span class="p">,</span>
             <span class="n">y</span><span class="o">=</span><span class="mf">1.1</span> <span class="o">*</span> <span class="n">y2_floor</span><span class="p">,</span>
             <span class="n">text</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-            <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
-            <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span>
+            <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">"left"</span><span class="p">,</span>
+            <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">"top"</span><span class="p">,</span>
             <span class="n">clip_on</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
         <span class="p">),</span>
@@ -5214,12 +5214,12 @@ Tao data, or variable values such as quadrupole strengths. The
 data values will depend upon where the data comes from. This is
 determined, in part, by the setting of the component parameter in the
 tao_template_graph namelist. The component may be one of:</p>
-<div class="highlight"><pre><span></span><code>&quot;model&quot;, for model values. This is the default.
-&quot;design&quot;, for design values.
-&quot;base&quot;, for base values.
-&quot;meas&quot;, for data values.
-&quot;ref&quot;, for reference data values.
-&quot;beam_chamber_wall&quot;, for beam chamber wall data.
+<div class="highlight"><pre><span></span><code>"model", for model values. This is the default.
+"design", for design values.
+"base", for base values.
+"meas", for data values.
+"ref", for reference data values.
+"beam_chamber_wall", for beam chamber wall data.
 </code></pre></div>
 <p>Additionally, component may be set to plot a linear combination of the
 above. For example:
@@ -5456,13 +5456,13 @@ This will plot the difference between the model and design values.</p>
 <span class="normal">126</span>
 <span class="normal">127</span>
 <span class="normal">128</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mathjax_string</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Takes string with pgplot characters and returns string with characters replaced with MathJax equivalent.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">mpl_string</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">res</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"$"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">res</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"$"</span><span class="p">):</span>
         <span class="c1"># MathJAX strings are $$ ... $$ instead of just $ ... $</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s2">$&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"$</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s2">$"</span>
     <span class="k">return</span> <span class="n">res</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -5499,15 +5499,15 @@ This will plot the difference between the model and design values.</p>
 <span class="normal">17</span>
 <span class="normal">18</span>
 <span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mpl_color</span><span class="p">(</span><span class="n">pgplot_color</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pgplot color to matplotlib color.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Pgplot color to matplotlib color."""</span>
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;yellow_green&quot;</span><span class="p">:</span> <span class="s2">&quot;greenyellow&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;light_green&quot;</span><span class="p">:</span> <span class="s2">&quot;limegreen&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;navy_blue&quot;</span><span class="p">:</span> <span class="s2">&quot;navy&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;reddish_purple&quot;</span><span class="p">:</span> <span class="s2">&quot;mediumvioletred&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;dark_grey&quot;</span><span class="p">:</span> <span class="s2">&quot;gray&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;light_grey&quot;</span><span class="p">:</span> <span class="s2">&quot;lightgray&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;transparent&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+        <span class="s2">"yellow_green"</span><span class="p">:</span> <span class="s2">"greenyellow"</span><span class="p">,</span>
+        <span class="s2">"light_green"</span><span class="p">:</span> <span class="s2">"limegreen"</span><span class="p">,</span>
+        <span class="s2">"navy_blue"</span><span class="p">:</span> <span class="s2">"navy"</span><span class="p">,</span>
+        <span class="s2">"reddish_purple"</span><span class="p">:</span> <span class="s2">"mediumvioletred"</span><span class="p">,</span>
+        <span class="s2">"dark_grey"</span><span class="p">:</span> <span class="s2">"gray"</span><span class="p">,</span>
+        <span class="s2">"light_grey"</span><span class="p">:</span> <span class="s2">"lightgray"</span><span class="p">,</span>
+        <span class="s2">"transparent"</span><span class="p">:</span> <span class="s2">"none"</span><span class="p">,</span>
     <span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pgplot_color</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">pgplot_color</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -5573,43 +5573,43 @@ This will plot the difference between the model and design values.</p>
 <span class="normal">115</span>
 <span class="normal">116</span>
 <span class="normal">117</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">mpl_string</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Takes string with pgplot characters and returns string with characters replaced with matplotlib equivalent.&quot;&quot;&quot;</span>
-    <span class="n">backslash</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="sd">"""Takes string with pgplot characters and returns string with characters replaced with matplotlib equivalent."""</span>
+    <span class="n">backslash</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\\</span><span class="s2">"</span>
     <span class="k">if</span> <span class="n">backslash</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">value</span>
 
-    <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">backslash</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">backslash</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"</span><span class="se">\\</span><span class="s2">"</span><span class="p">)</span>
 
-    <span class="n">result</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">$&quot;</span>
-    <span class="k">while</span> <span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">d&quot;</span> <span class="ow">in</span> <span class="n">result</span> <span class="ow">and</span> <span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">u&quot;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
-        <span class="n">d_pos</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">d&quot;</span><span class="p">)</span>
-        <span class="n">u_pos</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">u&quot;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"$</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">$"</span>
+    <span class="k">while</span> <span class="sa">r</span><span class="s2">"</span><span class="se">\\</span><span class="s2">d"</span> <span class="ow">in</span> <span class="n">result</span> <span class="ow">and</span> <span class="sa">r</span><span class="s2">"</span><span class="se">\\</span><span class="s2">u"</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+        <span class="n">d_pos</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="sa">r</span><span class="s2">"</span><span class="se">\\</span><span class="s2">d"</span><span class="p">)</span>
+        <span class="n">u_pos</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="sa">r</span><span class="s2">"</span><span class="se">\\</span><span class="s2">u"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">d_pos</span> <span class="o">&lt;</span> <span class="n">u_pos</span><span class="p">:</span>
             <span class="c1"># Subscript</span>
-            <span class="n">modifier</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span>
+            <span class="n">modifier</span> <span class="o">=</span> <span class="s2">"_"</span>
             <span class="n">sx</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">d_pos</span> <span class="p">:</span> <span class="n">u_pos</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Superscript</span>
-            <span class="n">modifier</span> <span class="o">=</span> <span class="s2">&quot;^&quot;</span>
+            <span class="n">modifier</span> <span class="o">=</span> <span class="s2">"^"</span>
             <span class="n">sx</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">u_pos</span> <span class="p">:</span> <span class="n">d_pos</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span>
 
         <span class="n">subscript</span> <span class="o">=</span> <span class="n">sx</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>  <span class="c1"># or superscript</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subscript</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">sx</span><span class="p">,</span> <span class="n">modifier</span> <span class="o">+</span> <span class="s2">&quot;{&quot;</span> <span class="o">+</span> <span class="n">subscript</span> <span class="o">+</span> <span class="s2">&quot;}&quot;</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">sx</span><span class="p">,</span> <span class="n">modifier</span> <span class="o">+</span> <span class="s2">"{"</span> <span class="o">+</span> <span class="n">subscript</span> <span class="o">+</span> <span class="s2">"}"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">sx</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">modifier</span><span class="si">}{</span><span class="n">subscript</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">sx</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">modifier</span><span class="si">}{</span><span class="n">subscript</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="c1"># TODO this is far from performant, but this is unlikely to be called</span>
-    <span class="c1"># frequently so I&#39;m leaving it for now</span>
+    <span class="c1"># frequently so I'm leaving it for now</span>
     <span class="k">for</span> <span class="n">from_</span><span class="p">,</span> <span class="n">to</span> <span class="ow">in</span> <span class="n">_pgplot_to_mpl_chars</span><span class="p">:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">from_</span><span class="p">,</span> <span class="n">to</span><span class="p">)</span>
 
     <span class="c1"># Replace any instances of \1 with non-LaTeX equivalents, as these can be</span>
     <span class="c1"># used in component names.</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\\\</span><span class="s2">(\d+)&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">backslash\1&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"</span><span class="se">\\\\</span><span class="s2">(\d+)"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"</span><span class="se">\\</span><span class="s2">backslash\1"</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown pgplot character in string: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="sa">r</span><span class="s2">"</span><span class="se">\\</span><span class="s2">"</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown pgplot character in string: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div></td></tr></table></div>
@@ -5879,7 +5879,7 @@ This will plot the difference between the model and design values.</p>
     <span class="n">graph_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">parent_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get command strings to apply these settings with Tao.</span>
 
 <span class="sd">    Parameters</span>
@@ -5895,9 +5895,9 @@ This will plot the difference between the model and design values.</p>
 <span class="sd">    -------</span>
 <span class="sd">    list of str</span>
 <span class="sd">        Commands to send to Tao to apply these settings.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="p">[</span>
-        <span class="sa">f</span><span class="s2">&quot;set graph </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">graph_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">parent_name</span><span class="si">}</span><span class="s2">%</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">"set graph </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">graph_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">parent_name</span><span class="si">}</span><span class="s2">%</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
     <span class="p">]</span>
@@ -6159,7 +6159,7 @@ This will plot the difference between the model and design values.</p>
     <span class="n">graph_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">parent_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get command strings to apply these settings with Tao.</span>
 
 <span class="sd">    Parameters</span>
@@ -6175,9 +6175,9 @@ This will plot the difference between the model and design values.</p>
 <span class="sd">    -------</span>
 <span class="sd">    list of str</span>
 <span class="sd">        Commands to send to Tao to apply these settings.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="p">[</span>
-        <span class="sa">f</span><span class="s2">&quot;set graph </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">graph_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">parent_name</span><span class="si">}</span><span class="s2">%</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">"set graph </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">graph_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">parent_name</span><span class="si">}</span><span class="s2">%</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
     <span class="p">]</span>
@@ -6607,7 +6607,7 @@ to use it instead.</p>
     <span class="n">region_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">axis_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get command strings to apply these settings with Tao.</span>
 
 <span class="sd">    Parameters</span>
@@ -6621,28 +6621,28 @@ to use it instead.</p>
 <span class="sd">    -------</span>
 <span class="sd">    list of str</span>
 <span class="sd">        Commands to send to Tao to apply these settings.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">items</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
-    <span class="n">scale</span> <span class="o">=</span> <span class="n">items</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;scale&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-    <span class="n">scale_gang</span> <span class="o">=</span> <span class="n">items</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;scale_gang&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="n">items</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"scale"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">scale_gang</span> <span class="o">=</span> <span class="n">items</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"scale_gang"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="n">commands</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="n">scale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">scale_low</span><span class="p">,</span> <span class="n">scale_high</span> <span class="o">=</span> <span class="n">scale</span>
         <span class="n">scale_cmd</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="s2">&quot;x_scale&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;x2&quot;</span><span class="p">:</span> <span class="s2">&quot;x_scale&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="s2">&quot;scale -y&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;y2&quot;</span><span class="p">:</span> <span class="s2">&quot;scale -y2&quot;</span><span class="p">,</span>
+            <span class="s2">"x"</span><span class="p">:</span> <span class="s2">"x_scale"</span><span class="p">,</span>
+            <span class="s2">"x2"</span><span class="p">:</span> <span class="s2">"x_scale"</span><span class="p">,</span>
+            <span class="s2">"y"</span><span class="p">:</span> <span class="s2">"scale -y"</span><span class="p">,</span>
+            <span class="s2">"y2"</span><span class="p">:</span> <span class="s2">"scale -y2"</span><span class="p">,</span>
         <span class="p">}[</span><span class="n">axis_name</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">scale_gang</span><span class="p">:</span>
-            <span class="n">scale_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">scale_cmd</span><span class="si">}</span><span class="s2"> -gang&quot;</span>
+            <span class="n">scale_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">scale_cmd</span><span class="si">}</span><span class="s2"> -gang"</span>
         <span class="k">elif</span> <span class="n">scale_gang</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>  <span class="c1"># note: may be None</span>
-            <span class="n">scale_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">scale_cmd</span><span class="si">}</span><span class="s2"> -nogang&quot;</span>
-        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">scale_cmd</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">scale_low</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">scale_high</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">scale_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">scale_cmd</span><span class="si">}</span><span class="s2"> -nogang"</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">scale_cmd</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">scale_low</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">scale_high</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">commands</span> <span class="o">+</span> <span class="p">[</span>
-        <span class="sa">f</span><span class="s2">&quot;set graph </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">axis_name</span><span class="si">}</span><span class="s2">%</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">"set graph </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">axis_name</span><span class="si">}</span><span class="s2">%</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">items</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
     <span class="p">]</span>
 </code></pre></div></td></tr></table></div>
@@ -6981,7 +6981,7 @@ clockwise in the (x, y) plane.</p>
     <span class="n">region_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">graph_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get command strings to apply these settings with Tao.</span>
 
 <span class="sd">    Parameters</span>
@@ -6995,9 +6995,9 @@ clockwise in the (x, y) plane.</p>
 <span class="sd">    -------</span>
 <span class="sd">    list of str</span>
 <span class="sd">        Commands to send to Tao to apply these settings.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="p">[</span>
-        <span class="sa">f</span><span class="s2">&quot;set graph </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2"> floor_plan%</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">"set graph </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2"> floor_plan%</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
     <span class="p">]</span>
@@ -7124,12 +7124,12 @@ Tao data, or variable values such as quadrupole strengths. The
 data values will depend upon where the data comes from. This is
 determined, in part, by the setting of the component parameter in the
 tao_template_graph namelist. The component may be one of:</p>
-<div class="highlight"><pre><span></span><code>&quot;model&quot;, for model values. This is the default.
-&quot;design&quot;, for design values.
-&quot;base&quot;, for base values.
-&quot;meas&quot;, for data values.
-&quot;ref&quot;, for reference data values.
-&quot;beam_chamber_wall&quot;, for beam chamber wall data.
+<div class="highlight"><pre><span></span><code>"model", for model values. This is the default.
+"design", for design values.
+"base", for base values.
+"meas", for data values.
+"ref", for reference data values.
+"beam_chamber_wall", for beam chamber wall data.
 </code></pre></div>
 <p>Additionally, component may be set to plot a linear combination of the
 above. For example:
@@ -7655,7 +7655,7 @@ horizontal scale will be in millimeters. Also see
     <span class="n">graph_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">graph_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get command strings to apply these settings with Tao.</span>
 
 <span class="sd">    Parameters</span>
@@ -7672,14 +7672,14 @@ horizontal scale will be in millimeters. Also see
 <span class="sd">    -------</span>
 <span class="sd">    list of str</span>
 <span class="sd">        Commands to send to Tao to apply these settings.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">continue</span>
 
-        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;commands&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">"commands"</span><span class="p">:</span>
             <span class="n">result</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
                 <span class="p">[</span>
                     <span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -7687,16 +7687,16 @@ horizontal scale will be in millimeters. Also see
                         <span class="n">region</span><span class="o">=</span><span class="n">region_name</span><span class="p">,</span>
                         <span class="n">graph_name</span><span class="o">=</span><span class="n">graph_name</span><span class="p">,</span>
                         <span class="n">graph_type</span><span class="o">=</span><span class="n">graph_type</span><span class="p">,</span>
-                        <span class="n">graph</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">graph_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="n">graph</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">graph_name</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
                     <span class="p">)</span>
                     <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="n">value</span>
                     <span class="k">if</span> <span class="n">cmd</span>
                 <span class="p">]</span>
             <span class="p">)</span>
             <span class="k">continue</span>
-        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;curve_legend_origin&quot;</span><span class="p">,)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"curve_legend_origin"</span><span class="p">,)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">QuickPlotPoint</span><span class="p">(</span><span class="o">*</span><span class="n">value</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;scale_margin&quot;</span><span class="p">,</span> <span class="s2">&quot;margin&quot;</span><span class="p">,</span> <span class="s2">&quot;text_legend_origin&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"scale_margin"</span><span class="p">,</span> <span class="s2">"margin"</span><span class="p">,</span> <span class="s2">"text_legend_origin"</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
             <span class="n">value</span><span class="p">,</span> <span class="nb">tuple</span>
         <span class="p">):</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">QuickPlotRectangle</span><span class="p">(</span><span class="o">*</span><span class="n">value</span><span class="p">)</span>
@@ -7709,21 +7709,21 @@ horizontal scale will be in millimeters. Also see
             <span class="n">result</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">get_commands</span><span class="p">(</span><span class="n">region_name</span><span class="p">,</span> <span class="n">graph_name</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">TaoAxisSettings</span><span class="p">):</span>
             <span class="n">result</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">get_commands</span><span class="p">(</span><span class="n">region_name</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;n_curve_points&quot;</span><span class="p">:</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;set plot </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2"> n_curve_pts = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;text_legend&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">"n_curve_points"</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"set plot </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2"> n_curve_pts = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">"text_legend"</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">legend_index</span><span class="p">,</span> <span class="n">legend_value</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;set graph </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2"> text_legend(</span><span class="si">{</span><span class="n">legend_index</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">legend_value</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">"set graph </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2"> text_legend(</span><span class="si">{</span><span class="n">legend_index</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">legend_value</span><span class="si">}</span><span class="s2">"</span>
                 <span class="p">)</span>
-        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;box&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">"box"</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">box_index</span><span class="p">,</span> <span class="n">box_value</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;set graph </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2"> box(</span><span class="si">{</span><span class="n">box_index</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">box_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"set graph </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2"> box(</span><span class="si">{</span><span class="n">box_index</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">box_value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">TaoFloorPlanSettings</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">graph_type</span> <span class="o">==</span> <span class="s2">&quot;floor_plan&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">graph_type</span> <span class="o">==</span> <span class="s2">"floor_plan"</span><span class="p">:</span>
                 <span class="n">result</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">get_commands</span><span class="p">(</span><span class="n">region_name</span><span class="p">,</span> <span class="n">graph_name</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;set graph </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">graph_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"set graph </span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">graph_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div></td></tr></table></div>
             </details>

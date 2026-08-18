@@ -2461,7 +2461,7 @@ for serialization to JSON, compressed JSON (<code>.json.gz</code>), msgpack, and
     <span class="o">*</span><span class="p">,</span>
     <span class="nb">format</span><span class="p">:</span> <span class="n">ArchiveFormat</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Load Tao model data from a previously-written file.</span>
 
 <span class="sd">    Parameters</span>
@@ -2471,7 +2471,7 @@ for serialization to JSON, compressed JSON (<code>.json.gz</code>), msgpack, and
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    TaoModel</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">load_model</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">(),</span> <span class="bp">cls</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2587,7 +2587,7 @@ for serialization to JSON, compressed JSON (<code>.json.gz</code>), msgpack, and
 <span class="normal">233</span>
 <span class="normal">234</span>
 <span class="normal">235</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include_metadata</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Serialize the model to a dictionary.</span>
 
 <span class="sd">    Parameters</span>
@@ -2596,16 +2596,16 @@ for serialization to JSON, compressed JSON (<code>.json.gz</code>), msgpack, and
 <span class="sd">        If True, includes base metadata fields like `command_args` and</span>
 <span class="sd">        `__class_name__` in the serialized output. Default is False.</span>
 <span class="sd">    **kwargs</span>
-<span class="sd">        Additional arguments to pass to Pydantic&#39;s `model_dump`.</span>
+<span class="sd">        Additional arguments to pass to Pydantic's `model_dump`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    dict[str, Any]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">include_metadata</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">res</span>
-    <span class="k">return</span> <span class="n">_strip_metadata</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;__class_name__&quot;</span><span class="p">,</span> <span class="s2">&quot;command_args&quot;</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">_strip_metadata</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="p">{</span><span class="s2">"__class_name__"</span><span class="p">,</span> <span class="s2">"command_args"</span><span class="p">})</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2813,7 +2813,7 @@ Defaults to True.</p>
     <span class="n">indent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">sort_keys</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Write the model data to a file in JSON or YAML format.</span>
 
 <span class="sd">    Parameters</span>
@@ -2834,7 +2834,7 @@ Defaults to True.</p>
 <span class="sd">        Indent the output, if applicable based on the file format.</span>
 <span class="sd">    sort_keys : bool, optional</span>
 <span class="sd">        Sort the output keys, if applicable based on the file format.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">return</span> <span class="n">dump_model</span><span class="p">(</span>
         <span class="n">filename</span><span class="p">,</span>
@@ -2993,7 +2993,7 @@ Defaults to True.</p>
 <span class="normal">289</span>
 <span class="normal">290</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Self</span><span class="p">],</span> <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create this structure by querying Tao for its current values.</span>
 
 <span class="sd">    Parameters</span>
@@ -3001,11 +3001,11 @@ Defaults to True.</p>
 <span class="sd">    tao : Tao</span>
 <span class="sd">    **kwargs</span>
 <span class="sd">        Keyword arguments to pass to the relevant ``tao`` command.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">cmd_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_tao_command_default_args_</span><span class="p">)</span>
     <span class="n">cmd_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_tao_command_attr_</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;pipe &quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_tao_command_attr_</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"pipe "</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_tao_command_attr_</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">cmd_kwargs</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_tao_command_attr_</span><span class="p">)</span>
@@ -3039,7 +3039,7 @@ Defaults to True.</p>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">262</span>
 <span class="normal">263</span>
 <span class="normal">264</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Query Tao again to generate a new instance of this model.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Query Tao again to generate a new instance of this model."""</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">command_args</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3286,7 +3286,7 @@ If <code>None</code>, all attributes to be set will be used.</p>
 <span class="normal">425</span>
 <span class="normal">426</span>
 <span class="normal">427</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_set_commands</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Generate a list of set commands to apply this configuration to `tao`.</span>
 
 <span class="sd">    Parameters</span>
@@ -3301,7 +3301,7 @@ If <code>None</code>, all attributes to be set will be used.</p>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    cmds : list of str</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">cmds</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="n">tao</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">to_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_changed_attributes</span><span class="p">(</span><span class="n">tao</span><span class="p">)</span>
@@ -3309,19 +3309,19 @@ If <code>None</code>, all attributes to be set will be used.</p>
         <span class="n">to_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_all_attributes_to_set</span>
 
     <span class="n">set_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tao_set_name_</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tao_command_attr_</span>
-    <span class="n">ix_uni</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">command_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ix_uni&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">ix_uni</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">command_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ix_uni"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">to_set</span><span class="p">:</span>
         <span class="n">tao_attr_name</span> <span class="o">=</span> <span class="n">_fix_tao_attr_name</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">ix_uni</span><span class="p">:</span>
-            <span class="n">tao_attr_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ix_uni</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">tao_attr_name</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">tao_attr_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ix_uni</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">tao_attr_name</span><span class="si">}</span><span class="s2">"</span>
         <span class="n">set_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_set_value</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-        <span class="n">cmds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;set </span><span class="si">{</span><span class="n">set_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">tao_attr_name</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">set_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">cmds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"set </span><span class="si">{</span><span class="n">set_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">tao_attr_name</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">set_value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_extra</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s2">&quot;Unhandled extra fields - code regeneration required. Class &#39;</span><span class="si">%s</span><span class="s2">&#39;: </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">,</span>
+            <span class="s2">"Unhandled extra fields - code regeneration required. Class '</span><span class="si">%s</span><span class="s2">': </span><span class="si">%s</span><span class="s2">."</span><span class="p">,</span>
             <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-            <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_extra</span><span class="p">)),</span>
+            <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_extra</span><span class="p">)),</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">cmds</span>
 </code></pre></div></td></tr></table></div>
@@ -3338,7 +3338,7 @@ If <code>None</code>, all attributes to be set will be used.</p>
 
 
 </h5>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">set</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">allow_errors</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">only_changed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">suppress_plotting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">suppress_lattice_calc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="s1">&#39;DEBUG&#39;</span><span class="p">,</span> <span class="n">exclude_matches</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">set</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">allow_errors</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">only_changed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">suppress_plotting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">suppress_lattice_calc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="s1">'DEBUG'</span><span class="p">,</span> <span class="n">exclude_matches</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3565,10 +3565,10 @@ If <code>None</code>, all attributes to be set will be used.</p>
     <span class="n">only_changed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">suppress_plotting</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">suppress_lattice_calc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">log</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span>
+    <span class="n">log</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"DEBUG"</span><span class="p">,</span>
     <span class="n">exclude_matches</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Apply this configuration to Tao.</span>
 
 <span class="sd">    Parameters</span>
@@ -3583,14 +3583,14 @@ If <code>None</code>, all attributes to be set will be used.</p>
 <span class="sd">        Suppress any plotting updates during the commands.</span>
 <span class="sd">    suppress_lattice_calc : bool, default=True</span>
 <span class="sd">        Suppress lattice calculations during the commands.</span>
-<span class="sd">    log : str, default=&quot;DEBUG&quot;</span>
+<span class="sd">    log : str, default="DEBUG"</span>
 <span class="sd">        The log level to use during the configuration application.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    success : bool</span>
 <span class="sd">        Returns True if the configuration was applied without errors.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">cmds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_set_commands</span><span class="p">(</span><span class="n">tao</span><span class="o">=</span><span class="n">tao</span> <span class="k">if</span> <span class="n">only_changed</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">cmds</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">True</span>
@@ -3598,15 +3598,15 @@ If <code>None</code>, all attributes to be set will be used.</p>
     <span class="n">success</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="n">tao_global</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">tao</span><span class="o">.</span><span class="n">tao_global</span><span class="p">())</span>
-    <span class="n">plot_on</span> <span class="o">=</span> <span class="n">tao_global</span><span class="p">[</span><span class="s2">&quot;plot_on&quot;</span><span class="p">]</span>
-    <span class="n">lat_calc_on</span> <span class="o">=</span> <span class="n">tao_global</span><span class="p">[</span><span class="s2">&quot;lattice_calc_on&quot;</span><span class="p">]</span>
+    <span class="n">plot_on</span> <span class="o">=</span> <span class="n">tao_global</span><span class="p">[</span><span class="s2">"plot_on"</span><span class="p">]</span>
+    <span class="n">lat_calc_on</span> <span class="o">=</span> <span class="n">tao_global</span><span class="p">[</span><span class="s2">"lattice_calc_on"</span><span class="p">]</span>
 
     <span class="n">exclude_matches</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">exclude_matches</span> <span class="ow">or</span> <span class="p">[])</span>
 
     <span class="k">if</span> <span class="n">suppress_plotting</span> <span class="ow">and</span> <span class="n">plot_on</span><span class="p">:</span>
-        <span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s2">&quot;set global plot_on = F&quot;</span><span class="p">)</span>
+        <span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s2">"set global plot_on = F"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">suppress_lattice_calc</span> <span class="ow">and</span> <span class="n">lat_calc_on</span><span class="p">:</span>
-        <span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s2">&quot;set global lattice_calc_on = F&quot;</span><span class="p">)</span>
+        <span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s2">"set global lattice_calc_on = F"</span><span class="p">)</span>
 
     <span class="n">exclude</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">exclude_matches</span><span class="p">]</span>
 
@@ -3617,20 +3617,20 @@ If <code>None</code>, all attributes to be set will be used.</p>
             <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span> <span class="k">for</span> <span class="n">regex</span> <span class="ow">in</span> <span class="n">exclude</span><span class="p">):</span>
                 <span class="k">continue</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">log_level</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Tao&gt; </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">log_level</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Tao&gt; </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="n">cmd</span><span class="p">):</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">log_level</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">log_level</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">allow_errors</span><span class="p">:</span>
                     <span class="k">raise</span>
                 <span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>
-                <span class="n">reason</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">indent</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">),</span> <span class="s2">&quot;  &quot;</span><span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cmd</span><span class="si">!r}</span><span class="s2"> failed with:</span><span class="se">\n</span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">reason</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">indent</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">),</span> <span class="s2">"  "</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">cmd</span><span class="si">!r}</span><span class="s2"> failed with:</span><span class="se">\n</span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">finally</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">suppress_plotting</span> <span class="ow">and</span> <span class="n">plot_on</span><span class="p">:</span>
-            <span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s2">&quot;set global plot_on = T&quot;</span><span class="p">)</span>
+            <span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s2">"set global plot_on = T"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">suppress_lattice_calc</span> <span class="ow">and</span> <span class="n">lat_calc_on</span><span class="p">:</span>
-            <span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s2">&quot;set global lattice_calc_on = T&quot;</span><span class="p">)</span>
+            <span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s2">"set global lattice_calc_on = T"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">success</span>
 </code></pre></div></td></tr></table></div>
@@ -3703,7 +3703,7 @@ value:</p>
 <span class="normal">544</span>
 <span class="normal">545</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">set_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Apply this configuration to Tao **only** for the given ``with`` block.</span>
 
 <span class="sd">    Examples</span>
@@ -3724,7 +3724,7 @@ value:</p>
 <span class="sd">    value:</span>
 
 <span class="sd">    &gt;&gt;&gt; assert new_state.query(tao).param == 1</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">pre_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">tao</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_commands</span><span class="p">:</span>
         <span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
@@ -3879,7 +3879,7 @@ If True, all conversions will be applied recursively to the data.</p>
     <span class="nb">format</span><span class="p">:</span> <span class="n">ArchiveFormat</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">raw</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Read the raw model data from a file in JSON, YAML, or msgpack format.</span>
 
 <span class="sd">    Parameters</span>
@@ -3894,27 +3894,27 @@ If True, all conversions will be applied recursively to the data.</p>
 <span class="sd">        as-is from the source format.  Specifically, when using the MessagePack</span>
 <span class="sd">        format, NDArray instances may be returned as an encoded dictionary.</span>
 <span class="sd">        If True, all conversions will be applied recursively to the data.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">fname</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
     <span class="nb">format</span> <span class="o">=</span> <span class="nb">format</span> <span class="ow">or</span> <span class="n">format_from_filename</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;yaml&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">"yaml"</span><span class="p">:</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>  <span class="c1"># NOTE: yaml is not a required dependency</span>
 
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s2">&quot;rt&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s2">"rt"</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;msgpack&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">"msgpack"</span><span class="p">:</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">ormsgpack</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="n">ormsgpack</span><span class="o">.</span><span class="n">unpackb</span><span class="p">(</span><span class="n">fname</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(),</span> <span class="n">option</span><span class="o">=</span><span class="n">ormsgpack</span><span class="o">.</span><span class="n">OPT_NON_STR_KEYS</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">raw</span><span class="p">:</span>
             <span class="n">_msgpack_restore_ndarrays</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">data</span>
-    <span class="k">elif</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;json.gz&quot;</span><span class="p">:</span>
-        <span class="k">with</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">"json.gz"</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">orjson</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-    <span class="k">elif</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;json&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">"json"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">orjson</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">fname</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">())</span>
     <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="nb">format</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -4031,7 +4031,7 @@ The file format is determined by the extension.</p>
     <span class="o">*</span><span class="p">,</span>
     <span class="nb">format</span><span class="p">:</span> <span class="n">ArchiveFormat</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Read the model from a file in JSON, YAML, or msgpack format.</span>
 
 <span class="sd">    Parameters</span>
@@ -4043,7 +4043,7 @@ The file format is determined by the extension.</p>
 
 <span class="sd">    format : ArchiveFormat or None, optional</span>
 <span class="sd">        File format.  If not specified, determined by file extension.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">load_model_data</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -4310,7 +4310,7 @@ Defaults to True.</p>
     <span class="n">indent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">sort_keys</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Write the model data to a file in JSON, YAML, or msgpack format.</span>
 
 <span class="sd">    Parameters</span>
@@ -4333,7 +4333,7 @@ Defaults to True.</p>
 <span class="sd">        Indent the output, if applicable based on the file format.</span>
 <span class="sd">    sort_keys : bool, optional</span>
 <span class="sd">        Sort the output keys, if applicable based on the file format.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">fname</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
     <span class="nb">format</span> <span class="o">=</span> <span class="nb">format</span> <span class="ow">or</span> <span class="n">format_from_filename</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
@@ -4341,13 +4341,13 @@ Defaults to True.</p>
     <span class="k">if</span> <span class="n">backup_existing</span><span class="p">:</span>
         <span class="n">date_coded_rename</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">datefmt</span><span class="o">=</span><span class="n">datefmt</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;msgpack&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">"msgpack"</span><span class="p">:</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">ormsgpack</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span>
             <span class="n">exclude_defaults</span><span class="o">=</span><span class="n">exclude_defaults</span><span class="p">,</span>
             <span class="n">exclude_computed_fields</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;python&quot;</span><span class="p">,</span>
+            <span class="n">mode</span><span class="o">=</span><span class="s2">"python"</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">dumped</span> <span class="o">=</span> <span class="n">ormsgpack</span><span class="o">.</span><span class="n">packb</span><span class="p">(</span>
             <span class="n">data</span><span class="p">,</span>
@@ -4360,14 +4360,14 @@ Defaults to True.</p>
     <span class="n">data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span>
         <span class="n">exclude_defaults</span><span class="o">=</span><span class="n">exclude_defaults</span><span class="p">,</span>
         <span class="n">exclude_computed_fields</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">,</span>
+        <span class="n">mode</span><span class="o">=</span><span class="s2">"json"</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;yaml&quot;</span><span class="p">:</span>
-        <span class="k">with</span> <span class="n">fname</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;wt&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">"yaml"</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">fname</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"wt"</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>  <span class="c1"># NOTE: yaml is not a required dependency</span>
 
             <span class="n">yaml</span><span class="o">.</span><span class="n">safe_dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fp</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="nb">format</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;json.gz&quot;</span><span class="p">,</span> <span class="s2">&quot;json&quot;</span><span class="p">):</span>
+    <span class="k">elif</span> <span class="nb">format</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"json.gz"</span><span class="p">,</span> <span class="s2">"json"</span><span class="p">):</span>
         <span class="n">options</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="n">indent</span><span class="p">:</span>
             <span class="n">options</span> <span class="o">|=</span> <span class="n">orjson</span><span class="o">.</span><span class="n">OPT_INDENT_2</span>
@@ -4375,8 +4375,8 @@ Defaults to True.</p>
             <span class="n">options</span> <span class="o">|=</span> <span class="n">orjson</span><span class="o">.</span><span class="n">OPT_SORT_KEYS</span>
         <span class="n">dumped</span> <span class="o">=</span> <span class="n">orjson</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">option</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;json.gz&quot;</span><span class="p">:</span>
-            <span class="k">with</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">"json.gz"</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
                 <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">dumped</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="n">dumped</span><span class="p">)</span>

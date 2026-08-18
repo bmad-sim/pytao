@@ -4767,7 +4767,7 @@ data.</p>
     <span class="n">comb_data</span><span class="p">:</span> <span class="n">Comb</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">use_cache</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Fills various attributes of the Tao object based on the provided flags.</span>
 
 <span class="sd">    Parameters</span>
@@ -4818,7 +4818,7 @@ data.</p>
 <span class="sd">    use_cache : bool, default=True</span>
 <span class="sd">        use cached data if available.  Will not overwrite already-fetched</span>
 <span class="sd">        data.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">should_update</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">use_cache</span>
@@ -4878,7 +4878,7 @@ data.</p>
   </span>
 
 </h5>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_tao</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">ele</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">&#39;attrs&#39;</span><span class="p">),</span> <span class="n">bunch_params</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">&#39;bunch_params&#39;</span><span class="p">),</span> <span class="n">chamber_walls</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">&#39;chamber_walls&#39;</span><span class="p">),</span> <span class="n">comb</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">&#39;comb&#39;</span><span class="p">),</span> <span class="n">control_vars</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">&#39;control_vars&#39;</span><span class="p">),</span> <span class="n">floor</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">&#39;floor&#39;</span><span class="p">),</span> <span class="n">grid_field</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">&#39;grid_field&#39;</span><span class="p">),</span> <span class="n">grid_field_points</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">&#39;grid_field_points&#39;</span><span class="p">),</span> <span class="n">lord_slave</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">&#39;lord_slave&#39;</span><span class="p">),</span> <span class="n">mat6</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">&#39;mat6&#39;</span><span class="p">),</span> <span class="n">multipoles</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">&#39;multipoles&#39;</span><span class="p">),</span> <span class="n">orbit</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">&#39;orbit&#39;</span><span class="p">),</span> <span class="n">photon</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">&#39;photon&#39;</span><span class="p">),</span> <span class="n">twiss</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">&#39;twiss&#39;</span><span class="p">),</span> <span class="n">wake</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">&#39;wake&#39;</span><span class="p">),</span> <span class="n">wall3d</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">&#39;wall3d&#39;</span><span class="p">),</span> <span class="n">wall3d_table</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">&#39;wall3d_table&#39;</span><span class="p">),</span> <span class="n">comb_data</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_tao</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">ele</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">'model'</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'attrs'</span><span class="p">),</span> <span class="n">bunch_params</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'bunch_params'</span><span class="p">),</span> <span class="n">chamber_walls</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'chamber_walls'</span><span class="p">),</span> <span class="n">comb</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'comb'</span><span class="p">),</span> <span class="n">control_vars</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'control_vars'</span><span class="p">),</span> <span class="n">floor</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'floor'</span><span class="p">),</span> <span class="n">grid_field</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'grid_field'</span><span class="p">),</span> <span class="n">grid_field_points</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'grid_field_points'</span><span class="p">),</span> <span class="n">lord_slave</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'lord_slave'</span><span class="p">),</span> <span class="n">mat6</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'mat6'</span><span class="p">),</span> <span class="n">multipoles</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'multipoles'</span><span class="p">),</span> <span class="n">orbit</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'orbit'</span><span class="p">),</span> <span class="n">photon</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'photon'</span><span class="p">),</span> <span class="n">twiss</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'twiss'</span><span class="p">),</span> <span class="n">wake</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'wake'</span><span class="p">),</span> <span class="n">wall3d</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'wall3d'</span><span class="p">),</span> <span class="n">wall3d_table</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'wall3d_table'</span><span class="p">),</span> <span class="n">comb_data</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -4915,16 +4915,16 @@ print(Element.DEFAULTS)
 
 <p><span class="doc-section-title">Examples:</span></p>
     <p>Get an Element with the defaults (loads attrs, twiss, orbit, etc.):</p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">ele</span> <span class="o">=</span> <span class="n">Element</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">ele</span> <span class="o">=</span> <span class="n">Element</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="s2">"1"</span><span class="p">)</span>
 </code></pre></div>
     <p>Get an Element but skip orbit calculations:</p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">ele</span> <span class="o">=</span> <span class="n">Element</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">orbit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">ele</span> <span class="o">=</span> <span class="n">Element</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="s2">"1"</span><span class="p">,</span> <span class="n">orbit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </code></pre></div>
     <p>Get an Element AND add comb data (usually off):</p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">ele</span> <span class="o">=</span> <span class="n">Element</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">comb</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">ele</span> <span class="o">=</span> <span class="n">Element</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="s2">"1"</span><span class="p">,</span> <span class="n">comb</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
     <p>Get a minimal Element (disable everything explicit):</p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">ele</span> <span class="o">=</span> <span class="n">Element</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">ele</span> <span class="o">=</span> <span class="n">Element</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="s2">"1"</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </code></pre></div>
 
 
@@ -5457,29 +5457,29 @@ the full comb data.</p>
     <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">,</span>
     <span class="n">ele</span><span class="p">:</span> <span class="n">AnyElementID</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">which</span><span class="p">:</span> <span class="n">Which</span> <span class="o">=</span> <span class="s2">&quot;model&quot;</span><span class="p">,</span>
+    <span class="n">which</span><span class="p">:</span> <span class="n">Which</span> <span class="o">=</span> <span class="s2">"model"</span><span class="p">,</span>
     <span class="n">defaults</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="c1"># Individually fillable elements:</span>
-    <span class="n">attrs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">&quot;attrs&quot;</span><span class="p">),</span>
-    <span class="n">bunch_params</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">&quot;bunch_params&quot;</span><span class="p">),</span>
-    <span class="n">chamber_walls</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">&quot;chamber_walls&quot;</span><span class="p">),</span>
-    <span class="n">comb</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">&quot;comb&quot;</span><span class="p">),</span>
-    <span class="n">control_vars</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">&quot;control_vars&quot;</span><span class="p">),</span>
-    <span class="n">floor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">&quot;floor&quot;</span><span class="p">),</span>
-    <span class="n">grid_field</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">&quot;grid_field&quot;</span><span class="p">),</span>
-    <span class="n">grid_field_points</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">&quot;grid_field_points&quot;</span><span class="p">),</span>
-    <span class="n">lord_slave</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">&quot;lord_slave&quot;</span><span class="p">),</span>
-    <span class="n">mat6</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">&quot;mat6&quot;</span><span class="p">),</span>
-    <span class="n">multipoles</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">&quot;multipoles&quot;</span><span class="p">),</span>
-    <span class="n">orbit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">&quot;orbit&quot;</span><span class="p">),</span>
-    <span class="n">photon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">&quot;photon&quot;</span><span class="p">),</span>
-    <span class="n">twiss</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">&quot;twiss&quot;</span><span class="p">),</span>
-    <span class="n">wake</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">&quot;wake&quot;</span><span class="p">),</span>
-    <span class="n">wall3d</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">&quot;wall3d&quot;</span><span class="p">),</span>
-    <span class="n">wall3d_table</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">&quot;wall3d_table&quot;</span><span class="p">),</span>
+    <span class="n">attrs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"attrs"</span><span class="p">),</span>
+    <span class="n">bunch_params</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"bunch_params"</span><span class="p">),</span>
+    <span class="n">chamber_walls</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"chamber_walls"</span><span class="p">),</span>
+    <span class="n">comb</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"comb"</span><span class="p">),</span>
+    <span class="n">control_vars</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"control_vars"</span><span class="p">),</span>
+    <span class="n">floor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"floor"</span><span class="p">),</span>
+    <span class="n">grid_field</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"grid_field"</span><span class="p">),</span>
+    <span class="n">grid_field_points</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"grid_field_points"</span><span class="p">),</span>
+    <span class="n">lord_slave</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"lord_slave"</span><span class="p">),</span>
+    <span class="n">mat6</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"mat6"</span><span class="p">),</span>
+    <span class="n">multipoles</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"multipoles"</span><span class="p">),</span>
+    <span class="n">orbit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"orbit"</span><span class="p">),</span>
+    <span class="n">photon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"photon"</span><span class="p">),</span>
+    <span class="n">twiss</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"twiss"</span><span class="p">),</span>
+    <span class="n">wake</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"wake"</span><span class="p">),</span>
+    <span class="n">wall3d</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"wall3d"</span><span class="p">),</span>
+    <span class="n">wall3d_table</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"wall3d_table"</span><span class="p">),</span>
     <span class="n">comb_data</span><span class="p">:</span> <span class="n">Comb</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create an `Element` by querying Tao.</span>
 
 <span class="sd">    Use `defaults` to fill the most commonly-used element information.</span>
@@ -5493,28 +5493,28 @@ the full comb data.</p>
 
 <span class="sd">    &gt;&gt;&gt; from pytao.model import Element</span>
 <span class="sd">    &gt;&gt;&gt; print(Element.DEFAULTS)</span>
-<span class="sd">    {&#39;attrs&#39;, &#39;bunch_params&#39;, &#39;chamber_walls&#39;, &#39;control_vars&#39;, &#39;floor&#39;,</span>
-<span class="sd">    &#39;grid_field&#39;, &#39;lord_slave&#39;, &#39;mat6&#39;, &#39;multipoles&#39;, &#39;orbit&#39;, &#39;photon&#39;,</span>
-<span class="sd">    &#39;twiss&#39;, &#39;wake&#39;, &#39;wall3d&#39;}</span>
+<span class="sd">    {'attrs', 'bunch_params', 'chamber_walls', 'control_vars', 'floor',</span>
+<span class="sd">    'grid_field', 'lord_slave', 'mat6', 'multipoles', 'orbit', 'photon',</span>
+<span class="sd">    'twiss', 'wake', 'wall3d'}</span>
 
 <span class="sd">    With the following, the default will change to only query `attrs`:</span>
 
-<span class="sd">    &gt;&gt;&gt; Element.DEFAULTS = {&quot;attrs&quot;}</span>
+<span class="sd">    &gt;&gt;&gt; Element.DEFAULTS = {"attrs"}</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 
 <span class="sd">    Get an Element with the defaults (loads attrs, twiss, orbit, etc.):</span>
-<span class="sd">    &gt;&gt;&gt; ele = Element.from_tao(tao, &quot;1&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; ele = Element.from_tao(tao, "1")</span>
 
 <span class="sd">    Get an Element but skip orbit calculations:</span>
-<span class="sd">    &gt;&gt;&gt; ele = Element.from_tao(tao, &quot;1&quot;, orbit=False)</span>
+<span class="sd">    &gt;&gt;&gt; ele = Element.from_tao(tao, "1", orbit=False)</span>
 
 <span class="sd">    Get an Element AND add comb data (usually off):</span>
-<span class="sd">    &gt;&gt;&gt; ele = Element.from_tao(tao, &quot;1&quot;, comb=True)</span>
+<span class="sd">    &gt;&gt;&gt; ele = Element.from_tao(tao, "1", comb=True)</span>
 
 <span class="sd">    Get a minimal Element (disable everything explicit):</span>
-<span class="sd">    &gt;&gt;&gt; ele = Element.from_tao(tao, &quot;1&quot;, defaults=False)</span>
+<span class="sd">    &gt;&gt;&gt; ele = Element.from_tao(tao, "1", defaults=False)</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -5522,8 +5522,8 @@ the full comb data.</p>
 <span class="sd">        The Tao instance.</span>
 <span class="sd">    ele : int, str, or ElementID</span>
 <span class="sd">        The element identifier.</span>
-<span class="sd">    which : &quot;base&quot;, &quot;model&quot;, or &quot;design&quot;, optional</span>
-<span class="sd">        Specifies which Tao lattice to use, by default &quot;model&quot;.</span>
+<span class="sd">    which : "base", "model", or "design", optional</span>
+<span class="sd">        Specifies which Tao lattice to use, by default "model".</span>
 <span class="sd">    defaults : bool, default=True</span>
 <span class="sd">        Fill default items.  Defaults are set by name in `Element.DEFAULTS`.</span>
 <span class="sd">    attrs : bool, optional</span>
@@ -5565,7 +5565,7 @@ the full comb data.</p>
 <span class="sd">        Fill 3D wall data.</span>
 <span class="sd">    wall3d_table : bool, optional</span>
 <span class="sd">        Fill 3D wall table data.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">ele</span> <span class="o">=</span> <span class="n">to_ele_id</span><span class="p">(</span><span class="n">ele</span><span class="p">)</span>
 
     <span class="n">head</span> <span class="o">=</span> <span class="n">get_head</span><span class="p">(</span><span class="n">tao</span><span class="o">=</span><span class="n">tao</span><span class="p">,</span> <span class="n">ele</span><span class="o">=</span><span class="n">ele</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="n">which</span><span class="p">)</span>
@@ -5575,7 +5575,7 @@ the full comb data.</p>
         <span class="k">if</span> <span class="n">flag</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">or</span> <span class="n">flag</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">flag</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">FillDefault</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected flag: </span><span class="si">{</span><span class="n">flag</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unexpected flag: </span><span class="si">{</span><span class="n">flag</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">defaults</span> <span class="ow">and</span> <span class="p">(</span><span class="n">flag</span><span class="o">.</span><span class="n">attr</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">DEFAULTS</span><span class="p">)</span>
 
@@ -5871,7 +5871,7 @@ by name, key (element type), and index.</p>
     <span class="o">*</span><span class="p">,</span>
     <span class="nb">format</span><span class="p">:</span> <span class="n">ArchiveFormat</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Load Tao model data from a previously-written file.</span>
 
 <span class="sd">    Parameters</span>
@@ -5881,7 +5881,7 @@ by name, key (element type), and index.</p>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    Lattice</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">lat</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span>
     <span class="n">lat</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">lat</span>
@@ -5903,7 +5903,7 @@ by name, key (element type), and index.</p>
   </span>
 
 </h5>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_tao_eles</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">eles</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">comb_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comb</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_tao_eles</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">eles</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">'model'</span><span class="p">,</span> <span class="n">comb_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comb</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -6061,12 +6061,12 @@ by name, key (element type), and index.</p>
     <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">,</span>
     <span class="n">eles</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AnyElementID</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">which</span><span class="p">:</span> <span class="n">Which</span> <span class="o">=</span> <span class="s2">&quot;model&quot;</span><span class="p">,</span>
+    <span class="n">which</span><span class="p">:</span> <span class="n">Which</span> <span class="o">=</span> <span class="s2">"model"</span><span class="p">,</span>
     <span class="n">comb_data</span><span class="p">:</span> <span class="n">Comb</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">comb</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a `Lattice` object from a list of element names, indices, or IDs.</span>
 
 <span class="sd">    Parameters</span>
@@ -6074,16 +6074,16 @@ by name, key (element type), and index.</p>
 <span class="sd">    tao : Tao</span>
 <span class="sd">    eles : list of int, str, or ElementID</span>
 <span class="sd">        Element names, indices, or identifiers.</span>
-<span class="sd">    which : &quot;base&quot;, &quot;model&quot;, or &quot;design&quot;, default=&quot;model&quot;</span>
+<span class="sd">    which : "base", "model", or "design", default="model"</span>
 <span class="sd">    **kwargs : dict</span>
 <span class="sd">        Additional keyword arguments passed to `Element.from_tao`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    Lattice</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">comb</span> <span class="ow">and</span> <span class="n">comb_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># If &#39;comb&#39; is specified for all elements, calculate it once ahead</span>
+        <span class="c1"># If 'comb' is specified for all elements, calculate it once ahead</span>
         <span class="c1"># of time.</span>
         <span class="n">comb_data</span> <span class="o">=</span> <span class="n">Comb</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="n">tao</span><span class="p">)</span>
     <span class="n">elements</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
@@ -6114,7 +6114,7 @@ by name, key (element type), and index.</p>
   </span>
 
 </h5>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_tao_tracking</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">track_start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">track_end</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">orbit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">twiss</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ix_branch</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_tao_tracking</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">track_start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">track_end</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">'model'</span><span class="p">,</span> <span class="n">orbit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">twiss</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ix_branch</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -6376,20 +6376,20 @@ the last element in the lattice.</p>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">track_start</span><span class="p">:</span> <span class="n">ElementID</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">track_end</span><span class="p">:</span> <span class="n">ElementID</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">which</span><span class="p">:</span> <span class="n">Which</span> <span class="o">=</span> <span class="s2">&quot;model&quot;</span><span class="p">,</span>
+    <span class="n">which</span><span class="p">:</span> <span class="n">Which</span> <span class="o">=</span> <span class="s2">"model"</span><span class="p">,</span>
     <span class="n">orbit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">twiss</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">ix_branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">ix_branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
+    <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a `Lattice` object from tracking elements of the lattice.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    tao : Tao</span>
-<span class="sd">    which : &quot;base&quot;, &quot;model&quot;, or &quot;design&quot;, default=&quot;model&quot;</span>
+<span class="sd">    which : "base", "model", or "design", default="model"</span>
 <span class="sd">    track_start : str, optional</span>
 <span class="sd">        The first element to get information from (inclusive).  Defaults to</span>
 <span class="sd">        element 0.</span>
@@ -6401,23 +6401,23 @@ the last element in the lattice.</p>
 <span class="sd">    twiss : bool, default=True</span>
 <span class="sd">        Twiss information is included by default.</span>
 <span class="sd">    ix_branch : str, optional</span>
-<span class="sd">        Branch index, by default &quot;&quot;</span>
+<span class="sd">        Branch index, by default ""</span>
 <span class="sd">    ix_uni : str, optional</span>
-<span class="sd">        Universe index, by default &quot;&quot;</span>
+<span class="sd">        Universe index, by default ""</span>
 <span class="sd">    **kwargs : dict</span>
 <span class="sd">        Additional keyword arguments passed to `Element.from_tao`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    Lattice</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">indices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
         <span class="nb">int</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">cast</span><span class="p">(</span>
             <span class="nb">list</span><span class="p">,</span>
             <span class="n">tao</span><span class="o">.</span><span class="n">lat_list</span><span class="p">(</span>
-                <span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;ele.ix_ele&quot;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="s2">&quot;-track_only&quot;</span><span class="p">,</span> <span class="n">ix_branch</span><span class="o">=</span><span class="n">ix_branch</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="n">ix_uni</span>
+                <span class="s2">"*"</span><span class="p">,</span> <span class="s2">"ele.ix_ele"</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="s2">"-track_only"</span><span class="p">,</span> <span class="n">ix_branch</span><span class="o">=</span><span class="n">ix_branch</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="n">ix_uni</span>
             <span class="p">),</span>
         <span class="p">)</span>
     <span class="p">]</span>
@@ -6449,7 +6449,7 @@ the last element in the lattice.</p>
   </span>
 
 </h5>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_tao_unique</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">track_start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">track_end</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ix_branch</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_tao_unique</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">'model'</span><span class="p">,</span> <span class="n">track_start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">track_end</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ix_branch</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -6672,20 +6672,20 @@ This does not need to be a unique element itself.</p>
     <span class="bp">cls</span><span class="p">,</span>
     <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">which</span><span class="p">:</span> <span class="n">Which</span> <span class="o">=</span> <span class="s2">&quot;model&quot;</span><span class="p">,</span>
+    <span class="n">which</span><span class="p">:</span> <span class="n">Which</span> <span class="o">=</span> <span class="s2">"model"</span><span class="p">,</span>
     <span class="n">track_start</span><span class="p">:</span> <span class="n">ElementID</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">track_end</span><span class="p">:</span> <span class="n">ElementID</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">ix_branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">ix_branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
+    <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a `Lattice` object from unique elements of the lattice.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    tao : Tao</span>
-<span class="sd">    which : &quot;base&quot;, &quot;model&quot;, or &quot;design&quot;, default=&quot;model&quot;</span>
+<span class="sd">    which : "base", "model", or "design", default="model"</span>
 <span class="sd">    track_start : str, optional</span>
 <span class="sd">        The first element to get information from (inclusive).  Defaults to</span>
 <span class="sd">        element 0.</span>
@@ -6695,22 +6695,22 @@ This does not need to be a unique element itself.</p>
 <span class="sd">        the last element in the lattice.</span>
 <span class="sd">        This does not need to be a unique element itself.</span>
 <span class="sd">    ix_branch : str, optional</span>
-<span class="sd">        Branch index, by default &quot;&quot;</span>
+<span class="sd">        Branch index, by default ""</span>
 <span class="sd">    ix_uni : str, optional</span>
-<span class="sd">        Universe index, by default &quot;&quot;</span>
+<span class="sd">        Universe index, by default ""</span>
 <span class="sd">    **kwargs : dict</span>
 <span class="sd">        Additional keyword arguments passed to `Element.from_tao`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    Lattice</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">indices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
         <span class="nb">int</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">cast</span><span class="p">(</span>
             <span class="nb">list</span><span class="p">,</span>
             <span class="n">tao</span><span class="o">.</span><span class="n">lat_list</span><span class="p">(</span>
-                <span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;ele.ix_ele&quot;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="s2">&quot;-no_slaves&quot;</span><span class="p">,</span> <span class="n">ix_branch</span><span class="o">=</span><span class="n">ix_branch</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="n">ix_uni</span>
+                <span class="s2">"*"</span><span class="p">,</span> <span class="s2">"ele.ix_ele"</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="s2">"-no_slaves"</span><span class="p">,</span> <span class="n">ix_branch</span><span class="o">=</span><span class="n">ix_branch</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="n">ix_uni</span>
             <span class="p">),</span>
         <span class="p">)</span>
     <span class="p">]</span>
@@ -7118,7 +7118,7 @@ branch, key, name, match number, and offset.</p>
 <span class="normal">450</span>
 <span class="normal">451</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ElementID</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Construct an ElementID from the Tao string representation.</span>
 
 <span class="sd">    Parameters</span>
@@ -7128,22 +7128,22 @@ branch, key, name, match number, and offset.</p>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    ElementID</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;,&quot;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="s2">","</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Comma (&#39;,&#39;) found in the identifier </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">.  This indicates multiple elements. &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;Use `.from_tao_any` instead.&quot;</span>
+            <span class="sa">f</span><span class="s2">"Comma (',') found in the identifier </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">.  This indicates multiple elements. "</span>
+            <span class="sa">f</span><span class="s2">"Use `.from_tao_any` instead."</span>
         <span class="p">)</span>
-    <span class="k">if</span> <span class="s2">&quot;&amp;&quot;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"&amp;"</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Ampersand (&#39;&amp;&#39;) found in the identifier </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">.  This indicates the intersection of multiple elements. &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;Use `.from_tao_any` instead.&quot;</span>
+            <span class="sa">f</span><span class="s2">"Ampersand ('&amp;') found in the identifier </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">.  This indicates the intersection of multiple elements. "</span>
+            <span class="sa">f</span><span class="s2">"Use `.from_tao_any` instead."</span>
         <span class="p">)</span>
 
     <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">EmptyElementNameError</span><span class="p">(</span><span class="s2">&quot;No element name specified&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">EmptyElementNameError</span><span class="p">(</span><span class="s2">"No element name specified"</span><span class="p">)</span>
 
     <span class="n">ele_id</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">key</span> <span class="o">=</span> <span class="kc">None</span>
@@ -7154,8 +7154,8 @@ branch, key, name, match number, and offset.</p>
     <span class="n">match_offset</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">negated</span> <span class="o">=</span> <span class="kc">False</span>
 
-    <span class="k">if</span> <span class="s2">&quot;@&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s2">&quot;::&quot;</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s2">&quot;&gt;&gt;&quot;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;::&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s2">"@"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s2">"::"</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s2">"&gt;&gt;"</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">"::"</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">"&gt;&gt;"</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_tao_old_syntax</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
     <span class="n">remaining</span> <span class="o">=</span> <span class="n">value</span>
 
@@ -7166,37 +7166,37 @@ branch, key, name, match number, and offset.</p>
 
     <span class="c1"># Universe prefix *first*, then negation, then branch/key (mirroring</span>
     <span class="c1"># lat_ele_locator).</span>
-    <span class="n">universe</span><span class="p">,</span> <span class="n">remaining</span> <span class="o">=</span> <span class="n">split_next</span><span class="p">(</span><span class="s2">&quot;@&quot;</span><span class="p">)</span>
+    <span class="n">universe</span><span class="p">,</span> <span class="n">remaining</span> <span class="o">=</span> <span class="n">split_next</span><span class="p">(</span><span class="s2">"@"</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">remaining</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">remaining</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"~"</span><span class="p">):</span>
         <span class="n">negated</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">remaining</span> <span class="o">=</span> <span class="n">remaining</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 
-    <span class="n">branch</span><span class="p">,</span> <span class="n">remaining</span> <span class="o">=</span> <span class="n">split_next</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&quot;</span><span class="p">)</span>
-    <span class="n">key</span><span class="p">,</span> <span class="n">remaining</span> <span class="o">=</span> <span class="n">split_next</span><span class="p">(</span><span class="s2">&quot;::&quot;</span><span class="p">)</span>
+    <span class="n">branch</span><span class="p">,</span> <span class="n">remaining</span> <span class="o">=</span> <span class="n">split_next</span><span class="p">(</span><span class="s2">"&gt;&gt;"</span><span class="p">)</span>
+    <span class="n">key</span><span class="p">,</span> <span class="n">remaining</span> <span class="o">=</span> <span class="n">split_next</span><span class="p">(</span><span class="s2">"::"</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;##&quot;</span> <span class="ow">in</span> <span class="n">remaining</span><span class="p">:</span>
-        <span class="n">ele_id</span><span class="p">,</span> <span class="n">match_number</span> <span class="o">=</span> <span class="n">split_next</span><span class="p">(</span><span class="s2">&quot;##&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">"##"</span> <span class="ow">in</span> <span class="n">remaining</span><span class="p">:</span>
+        <span class="n">ele_id</span><span class="p">,</span> <span class="n">match_number</span> <span class="o">=</span> <span class="n">split_next</span><span class="p">(</span><span class="s2">"##"</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="s2">&quot;+&quot;</span> <span class="ow">in</span> <span class="n">match_number</span><span class="p">:</span>
-            <span class="n">match_number</span><span class="p">,</span> <span class="n">match_offset</span> <span class="o">=</span> <span class="n">match_number</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">"+"</span> <span class="ow">in</span> <span class="n">match_number</span><span class="p">:</span>
+            <span class="n">match_number</span><span class="p">,</span> <span class="n">match_offset</span> <span class="o">=</span> <span class="n">match_number</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"+"</span><span class="p">)</span>
             <span class="n">match_offset</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">match_offset</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="s2">&quot;-&quot;</span> <span class="ow">in</span> <span class="n">match_number</span><span class="p">:</span>
-            <span class="n">match_number</span><span class="p">,</span> <span class="n">match_offset</span> <span class="o">=</span> <span class="n">match_number</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">"-"</span> <span class="ow">in</span> <span class="n">match_number</span><span class="p">:</span>
+            <span class="n">match_number</span><span class="p">,</span> <span class="n">match_offset</span> <span class="o">=</span> <span class="n">match_number</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"-"</span><span class="p">)</span>
             <span class="n">match_offset</span> <span class="o">=</span> <span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">match_offset</span><span class="p">)</span>
 
         <span class="n">match_number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">match_number</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">match_offset</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">match_offset</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="s2">&quot;+&quot;</span> <span class="ow">in</span> <span class="n">remaining</span><span class="p">:</span>
-        <span class="n">ele_id</span><span class="p">,</span> <span class="n">match_offset</span> <span class="o">=</span> <span class="n">split_next</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s2">"+"</span> <span class="ow">in</span> <span class="n">remaining</span><span class="p">:</span>
+        <span class="n">ele_id</span><span class="p">,</span> <span class="n">match_offset</span> <span class="o">=</span> <span class="n">split_next</span><span class="p">(</span><span class="s2">"+"</span><span class="p">)</span>
         <span class="n">match_offset</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">match_offset</span><span class="p">)</span>
-        <span class="n">remaining</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="k">elif</span> <span class="s2">&quot;-&quot;</span> <span class="ow">in</span> <span class="n">remaining</span><span class="p">:</span>
-        <span class="n">ele_id</span><span class="p">,</span> <span class="n">match_offset</span> <span class="o">=</span> <span class="n">split_next</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+        <span class="n">remaining</span> <span class="o">=</span> <span class="s2">""</span>
+    <span class="k">elif</span> <span class="s2">"-"</span> <span class="ow">in</span> <span class="n">remaining</span><span class="p">:</span>
+        <span class="n">ele_id</span><span class="p">,</span> <span class="n">match_offset</span> <span class="o">=</span> <span class="n">split_next</span><span class="p">(</span><span class="s2">"-"</span><span class="p">)</span>
         <span class="n">match_offset</span> <span class="o">=</span> <span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">match_offset</span><span class="p">)</span>
-        <span class="n">remaining</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">remaining</span> <span class="o">=</span> <span class="s2">""</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">ele_id</span><span class="p">,</span> <span class="n">remaining</span> <span class="o">=</span> <span class="n">remaining</span><span class="p">,</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">ele_id</span><span class="p">,</span> <span class="n">remaining</span> <span class="o">=</span> <span class="n">remaining</span><span class="p">,</span> <span class="s2">""</span>
 
     <span class="n">branch</span> <span class="o">=</span> <span class="n">_maybe_int</span><span class="p">(</span><span class="n">branch</span><span class="p">)</span>
     <span class="n">universe</span> <span class="o">=</span> <span class="n">_maybe_int</span><span class="p">(</span><span class="n">universe</span><span class="p">)</span>
@@ -7204,7 +7204,7 @@ branch, key, name, match number, and offset.</p>
         <span class="n">match_number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">match_number</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">ele_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No element ID found in the string&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"No element ID found in the string"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
         <span class="n">ele_id</span><span class="o">=</span><span class="n">ele_id</span><span class="p">,</span>
@@ -7327,7 +7327,7 @@ an intersection of elements.</p>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao_any</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">split_range</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ElementID</span> <span class="o">|</span> <span class="n">ElementList</span> <span class="o">|</span> <span class="n">ElementIntersection</span> <span class="o">|</span> <span class="n">ElementRange</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create the most appropriate instance of an Element class for the given</span>
 <span class="sd">    Tao element string.</span>
 
@@ -7340,12 +7340,12 @@ an intersection of elements.</p>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    ElementID, ElementList, or ElementIntersection</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;,&quot;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="s2">","</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ElementList</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">split_range</span> <span class="ow">and</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;::&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">split_range</span> <span class="ow">and</span> <span class="s2">":"</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"::"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">ElementRange</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s2">&quot;&amp;&quot;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"&amp;"</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ElementIntersection</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
     <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -7490,7 +7490,7 @@ an intersection of elements.</p>
 <span class="normal">350</span>
 <span class="normal">351</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao_old_syntax</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ElementID</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Convert a Tao old syntax Element identifier.</span>
 
 <span class="sd">    Parameters</span>
@@ -7500,7 +7500,7 @@ an intersection of elements.</p>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    ElementID</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">ele_id</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">key</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">universe</span> <span class="o">=</span> <span class="kc">None</span>
@@ -7511,10 +7511,10 @@ an intersection of elements.</p>
     <span class="n">negated</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="n">EmptyElementNameError</span><span class="p">(</span><span class="s2">&quot;No element name specified&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">EmptyElementNameError</span><span class="p">(</span><span class="s2">"No element name specified"</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;::&quot;</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s2">&quot;&gt;&gt;&quot;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-        <span class="k">assert</span> <span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;::&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">"::"</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s2">"&gt;&gt;"</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">"::"</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">value</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">"&gt;&gt;"</span><span class="p">)</span>
 
     <span class="n">remaining</span> <span class="o">=</span> <span class="n">value</span>
 
@@ -7523,11 +7523,11 @@ an intersection of elements.</p>
             <span class="k">return</span> <span class="n">remaining</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">delim</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="n">remaining</span>
 
-    <span class="n">key</span><span class="p">,</span> <span class="n">remaining</span> <span class="o">=</span> <span class="n">split_next</span><span class="p">(</span><span class="s2">&quot;::&quot;</span><span class="p">)</span>
-    <span class="n">branch</span><span class="p">,</span> <span class="n">remaining</span> <span class="o">=</span> <span class="n">split_next</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&quot;</span><span class="p">)</span>
+    <span class="n">key</span><span class="p">,</span> <span class="n">remaining</span> <span class="o">=</span> <span class="n">split_next</span><span class="p">(</span><span class="s2">"::"</span><span class="p">)</span>
+    <span class="n">branch</span><span class="p">,</span> <span class="n">remaining</span> <span class="o">=</span> <span class="n">split_next</span><span class="p">(</span><span class="s2">"&gt;&gt;"</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;##&quot;</span> <span class="ow">in</span> <span class="n">remaining</span><span class="p">:</span>
-        <span class="n">ele_id</span><span class="p">,</span> <span class="n">match_number</span> <span class="o">=</span> <span class="n">split_next</span><span class="p">(</span><span class="s2">&quot;##&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">"##"</span> <span class="ow">in</span> <span class="n">remaining</span><span class="p">:</span>
+        <span class="n">ele_id</span><span class="p">,</span> <span class="n">match_number</span> <span class="o">=</span> <span class="n">split_next</span><span class="p">(</span><span class="s2">"##"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">ele_id</span> <span class="o">=</span> <span class="n">remaining</span>
 
@@ -7536,7 +7536,7 @@ an intersection of elements.</p>
         <span class="n">match_number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">match_number</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">ele_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No element ID found in the string&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"No element ID found in the string"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
         <span class="n">ele_id</span><span class="o">=</span><span class="n">ele_id</span><span class="p">,</span>
@@ -11896,7 +11896,7 @@ instances.</p>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Self</span><span class="p">],</span> <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">check_ds_save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">ix_branch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a Comb instance from Tao.</span>
 
 <span class="sd">    Parameters</span>
@@ -11911,9 +11911,9 @@ instances.</p>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    Comb</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">check_ds_save</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">tao</span><span class="o">.</span><span class="n">beam</span><span class="p">(</span><span class="n">ix_branch</span><span class="p">)[</span><span class="s2">&quot;ds_save&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">tao</span><span class="o">.</span><span class="n">beam</span><span class="p">(</span><span class="n">ix_branch</span><span class="p">)[</span><span class="s2">"ds_save"</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">cls</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">comb_data_from_tao</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">ix_branch</span><span class="o">=</span><span class="n">ix_branch</span><span class="p">))</span>
@@ -12060,8 +12060,8 @@ Otherwise, it excludes these boundaries.</p>
 <span class="normal">357</span>
 <span class="normal">358</span>
 <span class="normal">359</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">slice_by_s</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s_start</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">s_end</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">inclusive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Comb</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Slice the Comb data by &#39;s&#39; position between specified start and end values.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Slice the Comb data by 's' position between specified start and end values.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -12077,7 +12077,7 @@ Otherwise, it excludes these boundaries.</p>
 <span class="sd">    -------</span>
 <span class="sd">    Comb</span>
 <span class="sd">        A new instance of the Comb class with the sliced data.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">inclusive</span><span class="p">:</span>
         <span class="p">(</span><span class="n">indices</span><span class="p">,)</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">s</span> <span class="o">&lt;=</span> <span class="n">s_end</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">s</span> <span class="o">&gt;=</span> <span class="n">s_start</span><span class="p">))</span>
@@ -12125,7 +12125,7 @@ Otherwise, it excludes these boundaries.</p>
 <span class="normal">298</span>
 <span class="normal">299</span>
 <span class="normal">300</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">sort_by_s</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Comb</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sort array data by `s` position.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Sort array data by `s` position."""</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">Comb</span><span class="p">()</span>
     <span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">_comb_array_attrs</span><span class="p">:</span>
@@ -12319,7 +12319,7 @@ ElementList.</p>
 <span class="normal">112</span>
 <span class="normal">113</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ElementRange</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Convert a Tao representation of comma-delimited elements to an</span>
 <span class="sd">    ElementList.</span>
 
@@ -12330,15 +12330,15 @@ ElementList.</p>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    ElementList or ElementRange</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No colon delimiter found in element identifier </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="s2">":"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No colon delimiter found in element identifier </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="n">ele_id</span> <span class="o">=</span> <span class="n">ElementID</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-    <span class="n">ele1</span><span class="p">,</span> <span class="n">ele2</span> <span class="o">=</span> <span class="n">ele_id</span><span class="o">.</span><span class="n">ele_id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+    <span class="n">ele1</span><span class="p">,</span> <span class="n">ele2</span> <span class="o">=</span> <span class="n">ele_id</span><span class="o">.</span><span class="n">ele_id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">)</span>
 
     <span class="n">common</span> <span class="o">=</span> <span class="n">ele_id</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
-    <span class="n">common</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ele_id&quot;</span><span class="p">)</span>
+    <span class="n">common</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"ele_id"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
         <span class="n">start</span><span class="o">=</span><span class="n">ElementID</span><span class="p">(</span><span class="n">ele_id</span><span class="o">=</span><span class="n">ele1</span><span class="p">,</span> <span class="o">**</span><span class="n">common</span><span class="p">),</span>
@@ -12518,7 +12518,7 @@ ElementList.</p>
 <span class="normal">148</span>
 <span class="normal">149</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ElementList</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Convert a Tao representation of comma-delimited elements to an</span>
 <span class="sd">    ElementList.</span>
 
@@ -12529,10 +12529,10 @@ ElementList.</p>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    ElementList</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;,&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No comma delimiter found in element identifier </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">ElementID</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)))</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="s2">","</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No comma delimiter found in element identifier </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">ElementID</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">)))</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -12705,7 +12705,7 @@ ElementList.</p>
 <span class="normal">178</span>
 <span class="normal">179</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ElementIntersection</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create an ElementIntersection instance from a Tao format, ampersand-delimited string.</span>
 
 <span class="sd">    Parameters</span>
@@ -12715,10 +12715,10 @@ ElementList.</p>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    ElementIntersection</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;&amp;&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No intersection found in element identifier </span><span class="si">{value!r}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">ElementID</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&amp;&quot;</span><span class="p">)))</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="s2">"&amp;"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"No intersection found in element identifier </span><span class="si">{value!r}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">ElementID</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"&amp;"</span><span class="p">)))</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

@@ -1866,9 +1866,9 @@ These models can be queried from Tao, modified in Python, and applied back.</p>
   floor coordinates, multipoles, wake fields, chamber walls, and more.
   Data loading is controlled per-field.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="n">ele</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">ele</span><span class="p">(</span><span class="s2">&quot;Q00W&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">ele</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">ele</span><span class="p">(</span><span class="s2">"Q00W"</span><span class="p">)</span>
 <span class="n">ele</span><span class="o">.</span><span class="n">twiss</span><span class="o">.</span><span class="n">beta_a</span>
-<span class="n">ele</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;k1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<span class="n">ele</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"k1"</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="n">ele</span><span class="o">.</span><span class="n">floor</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">actual</span><span class="o">.</span><span class="n">x</span>
 </code></pre></div>
 <ul>
@@ -1882,8 +1882,8 @@ These models can be queried from Tao, modified in Python, and applied back.</p>
   matching syntax (wildcards, ranges, key filters):</p>
 </li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="n">quads</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">eles</span><span class="p">(</span><span class="s2">&quot;quad::*&quot;</span><span class="p">)</span>
-<span class="n">eles_1_to_20</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">eles</span><span class="p">(</span><span class="s2">&quot;1:20&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">quads</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">eles</span><span class="p">(</span><span class="s2">"quad::*"</span><span class="p">)</span>
+<span class="n">eles_1_to_20</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">eles</span><span class="p">(</span><span class="s2">"1:20"</span><span class="p">)</span>
 </code></pre></div>
 <ul>
 <li>
@@ -1904,8 +1904,8 @@ These models can be queried from Tao, modified in Python, and applied back.</p>
 <li><strong><code>tao.particles()</code></strong> — is a new shortcut to get an openPMD-BeamPhysics <code>ParticleGroup</code>
   instance for a given element.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="n">P</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">particles</span><span class="p">(</span><span class="s2">&quot;quad::Q1&quot;</span><span class="p">)</span>  <span class="c1"># type: beamphysics.ParticleGroup</span>
-<span class="n">P</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;px&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">P</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">particles</span><span class="p">(</span><span class="s2">"quad::Q1"</span><span class="p">)</span>  <span class="c1"># type: beamphysics.ParticleGroup</span>
+<span class="n">P</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"px"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="session-archiving">Session archiving</h3>
 <ul>
@@ -1913,7 +1913,7 @@ These models can be queried from Tao, modified in Python, and applied back.</p>
   the current lattice (via <code>write bmad</code>), a Tao command file with all <code>set</code>
   commands, and a bash script that re-launches the session.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="n">sh_file</span><span class="p">,</span> <span class="n">cmd_file</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">archive</span><span class="p">(</span><span class="s2">&quot;my_archive&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">sh_file</span><span class="p">,</span> <span class="n">cmd_file</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">archive</span><span class="p">(</span><span class="s2">"my_archive"</span><span class="p">)</span>
 </code></pre></div>
 <ul>
 <li><strong><code>config.write_bash_loader_script()</code></strong> provides lower-level control over

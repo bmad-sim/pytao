@@ -2420,7 +2420,7 @@ dictionary of settings keys to values.</p>
   </span>
 
 </h5>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_tao</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">ix_branch</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_tao</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="n">ix_branch</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2548,9 +2548,9 @@ dictionary of settings keys to values.</p>
 <span class="normal">172</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao</span><span class="p">(</span>
-    <span class="bp">cls</span><span class="p">,</span> <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">,</span> <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ix_branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="bp">cls</span><span class="p">,</span> <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">,</span> <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">ix_branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TaoConfig</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get a configuration object representing the state of Tao.</span>
 
 <span class="sd">    Parameters</span>
@@ -2558,16 +2558,16 @@ dictionary of settings keys to values.</p>
 <span class="sd">    tao : Tao</span>
 
 <span class="sd">    ix_branch : str, optional</span>
-<span class="sd">        Branch index, by default &quot;&quot;</span>
+<span class="sd">        Branch index, by default ""</span>
 <span class="sd">    ix_uni : str, optional</span>
-<span class="sd">        Universe index, by default &quot;&quot;</span>
+<span class="sd">        Universe index, by default ""</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    TaoConfig</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
-        <span class="n">command_args</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;ix_branch&quot;</span><span class="p">:</span> <span class="n">ix_branch</span><span class="p">,</span> <span class="s2">&quot;ix_uni&quot;</span><span class="p">:</span> <span class="n">ix_uni</span><span class="p">},</span>
+        <span class="n">command_args</span><span class="o">=</span><span class="p">{</span><span class="s2">"ix_branch"</span><span class="p">:</span> <span class="n">ix_branch</span><span class="p">,</span> <span class="s2">"ix_uni"</span><span class="p">:</span> <span class="n">ix_uni</span><span class="p">},</span>
         <span class="n">startup</span><span class="o">=</span><span class="n">tao</span><span class="o">.</span><span class="n">init_settings</span><span class="p">,</span>
         <span class="n">com</span><span class="o">=</span><span class="n">BmadCom</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
         <span class="n">space_charge_com</span><span class="o">=</span><span class="n">SpaceChargeCom</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
@@ -2691,7 +2691,7 @@ If <code>None</code>, all attributes to be set will be used.</p>
 <span class="normal">235</span>
 <span class="normal">236</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_set_commands</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Generate a list of set commands to apply this configuration to `tao`.</span>
 
 <span class="sd">    Parameters</span>
@@ -2706,7 +2706,7 @@ If <code>None</code>, all attributes to be set will be used.</p>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    cmds : list of str</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">tao</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_commands</span>
 
@@ -2736,7 +2736,7 @@ If <code>None</code>, all attributes to be set will be used.</p>
 
 
 </h5>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">write_bash_loader_script</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;run_tao&#39;</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">mkdir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tao</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lat_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shebang</span><span class="o">=</span><span class="s1">&#39;/usr/bin/env bash&#39;</span><span class="p">,</span> <span class="n">tao_binary</span><span class="o">=</span><span class="s1">&#39;tao&#39;</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">write_bash_loader_script</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">'run_tao'</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">mkdir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tao</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lat_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shebang</span><span class="o">=</span><span class="s1">'/usr/bin/env bash'</span><span class="p">,</span> <span class="n">tao_binary</span><span class="o">=</span><span class="s1">'tao'</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2945,15 +2945,15 @@ Defaults to <code>"{prefix}.lat.bmad"</code>.</p>
 <span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">write_bash_loader_script</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">directory</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;run_tao&quot;</span><span class="p">,</span>
+    <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"run_tao"</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">mkdir</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">lat_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">shebang</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;/usr/bin/env bash&quot;</span><span class="p">,</span>
-    <span class="n">tao_binary</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;tao&quot;</span><span class="p">,</span>
+    <span class="n">shebang</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"/usr/bin/env bash"</span><span class="p">,</span>
+    <span class="n">tao_binary</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"tao"</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Write a loader script to launch Tao with these startup parameters.</span>
 
 <span class="sd">    Parameters</span>
@@ -2961,7 +2961,7 @@ Defaults to <code>"{prefix}.lat.bmad"</code>.</p>
 <span class="sd">    directory : pathlib.Path</span>
 <span class="sd">        Directory where the generated scripts will be saved.</span>
 <span class="sd">    prefix : str, optional</span>
-<span class="sd">        Filename prefix for the generated scripts. By default &quot;run_tao&quot;.</span>
+<span class="sd">        Filename prefix for the generated scripts. By default "run_tao".</span>
 <span class="sd">    mkdir : bool, optional</span>
 <span class="sd">        If True, creates the directory and its parents if they do not exist.</span>
 <span class="sd">        By default True.</span>
@@ -2970,36 +2970,36 @@ Defaults to <code>"{prefix}.lat.bmad"</code>.</p>
 <span class="sd">        to the directory with `lat_name` as the name.</span>
 <span class="sd">    lat_name : str or None, optional</span>
 <span class="sd">        The lattice filename to write, if `tao` is specified.</span>
-<span class="sd">        Defaults to ``&quot;{prefix}.lat.bmad&quot;``.</span>
+<span class="sd">        Defaults to ``"{prefix}.lat.bmad"``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    tuple[pathlib.Path, pathlib.Path]</span>
 <span class="sd">        A tuple containing the paths to the generated bash shell script</span>
 <span class="sd">        (`sh_file`) and the Tao command file (`cmd_file`).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">directory</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">mkdir</span><span class="p">:</span>
         <span class="n">directory</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">sh_file</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">.sh&quot;</span>
-    <span class="n">cmd_file</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">.cmd&quot;</span>
+    <span class="n">sh_file</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">.sh"</span>
+    <span class="n">cmd_file</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">.cmd"</span>
 
     <span class="n">set_commands</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="o">*</span><span class="p">([</span><span class="s2">&quot;set global plot_on = F&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">globals</span><span class="o">.</span><span class="n">plot_on</span> <span class="k">else</span> <span class="p">[]),</span>
-        <span class="o">*</span><span class="p">([</span><span class="s2">&quot;set global lattice_calc_on = F&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">globals</span><span class="o">.</span><span class="n">lattice_calc_on</span> <span class="k">else</span> <span class="p">[]),</span>
+        <span class="o">*</span><span class="p">([</span><span class="s2">"set global plot_on = F"</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">globals</span><span class="o">.</span><span class="n">plot_on</span> <span class="k">else</span> <span class="p">[]),</span>
+        <span class="o">*</span><span class="p">([</span><span class="s2">"set global lattice_calc_on = F"</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">globals</span><span class="o">.</span><span class="n">lattice_calc_on</span> <span class="k">else</span> <span class="p">[]),</span>
         <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">set_commands</span><span class="p">,</span>
-        <span class="o">*</span><span class="p">([</span><span class="s2">&quot;set global plot_on = T&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">globals</span><span class="o">.</span><span class="n">plot_on</span> <span class="k">else</span> <span class="p">[]),</span>
-        <span class="o">*</span><span class="p">([</span><span class="s2">&quot;set global lattice_calc_on = T&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">globals</span><span class="o">.</span><span class="n">lattice_calc_on</span> <span class="k">else</span> <span class="p">[]),</span>
+        <span class="o">*</span><span class="p">([</span><span class="s2">"set global plot_on = T"</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">globals</span><span class="o">.</span><span class="n">plot_on</span> <span class="k">else</span> <span class="p">[]),</span>
+        <span class="o">*</span><span class="p">([</span><span class="s2">"set global lattice_calc_on = T"</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">globals</span><span class="o">.</span><span class="n">lattice_calc_on</span> <span class="k">else</span> <span class="p">[]),</span>
     <span class="p">]</span>
-    <span class="n">cmd_file</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">set_commands</span><span class="p">))</span>
+    <span class="n">cmd_file</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">set_commands</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="n">tao</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># No Tao instance - reuse the existing lattice on disk</span>
         <span class="n">startup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">startup</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># Tao instance - write lattice to disk with &#39;write bmad&#39;</span>
+        <span class="c1"># Tao instance - write lattice to disk with 'write bmad'</span>
         <span class="k">if</span> <span class="n">lat_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">lat_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">.lat.bmad&quot;</span>
+            <span class="n">lat_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">.lat.bmad"</span>
 
         <span class="n">startup</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">startup</span><span class="p">)</span>
         <span class="n">startup</span><span class="o">.</span><span class="n">init_file</span> <span class="o">=</span> <span class="kc">None</span>
@@ -3008,14 +3008,14 @@ Defaults to <code>"{prefix}.lat.bmad"</code>.</p>
         <span class="n">full_lat_path</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">/</span> <span class="n">lat_name</span>
         <span class="k">if</span> <span class="n">mkdir</span><span class="p">:</span>
             <span class="n">full_lat_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;write bmad &#39;</span><span class="si">{</span><span class="n">full_lat_path</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+        <span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="sa">f</span><span class="s2">"write bmad '</span><span class="si">{</span><span class="n">full_lat_path</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
 
     <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="sa">f</span><span class="s2">&quot;#!</span><span class="si">{</span><span class="n">shebang</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tao_binary</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">startup</span><span class="o">.</span><span class="n">tao_init</span><span class="si">}</span><span class="s1"> -command &quot;call </span><span class="si">{</span><span class="n">cmd_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&quot; &quot;$@&quot;&#39;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">"#!</span><span class="si">{</span><span class="n">shebang</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">tao_binary</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">startup</span><span class="o">.</span><span class="n">tao_init</span><span class="si">}</span><span class="s1"> -command "call </span><span class="si">{</span><span class="n">cmd_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">" "$@"'</span><span class="p">,</span>
     <span class="p">]</span>
 
-    <span class="n">sh_file</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">))</span>
+    <span class="n">sh_file</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">sh_file</span><span class="p">,</span> <span class="n">cmd_file</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3240,7 +3240,7 @@ Defaults to <code>"{prefix}.lat.bmad"</code>.</p>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">order</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a TaylorMap instance from Tao.</span>
 
 <span class="sd">    Parameters</span>
@@ -3256,7 +3256,7 @@ Defaults to <code>"{prefix}.lat.bmad"</code>.</p>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    TaylorMap</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span>
         <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="nb">float</span><span class="p">]],</span>
         <span class="n">tao</span><span class="o">.</span><span class="n">taylor_map</span><span class="p">(</span>

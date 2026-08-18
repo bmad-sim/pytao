@@ -1958,13 +1958,13 @@ when done with it.  This can be done manually:</p>
 <div class="highlight"><pre><span></span><code>&gt;&gt;&gt; tao.close_subprocess()
 </code></pre></div>
 <p>Or automatically by way of a context manager:</p>
-<div class="highlight"><pre><span></span><code>&gt;&gt;&gt; with SubprocessTao(init_file=&quot;$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init&quot;, plot=True) as tao:
-...     tao.plot(&quot;floor&quot;)
+<div class="highlight"><pre><span></span><code>&gt;&gt;&gt; with SubprocessTao(init_file="$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init", plot=True) as tao:
+...     tao.plot("floor")
 </code></pre></div>
 <p>To add a new environment variable in addition to the parent process
 environment:</p>
 <div class="highlight"><pre><span></span><code>&gt;&gt;&gt; import os
-&gt;&gt;&gt; with SubprocessTao(init_file=&quot;...&quot;, env={**os.environ, &quot;NEW_VAR&quot;: &quot;NEW_VALUE&quot;}) as tao:
+&gt;&gt;&gt; with SubprocessTao(init_file="...", env={**os.environ, "NEW_VAR": "NEW_VALUE"}) as tao:
 ...     print(tao.version())
 </code></pre></div>
 </details>
@@ -2127,7 +2127,7 @@ That is, <code>tao.close_subprocess()</code> and <code>tao.init()</code>.</p>
 <span class="normal">496</span>
 <span class="normal">497</span>
 <span class="normal">498</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">close_subprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">force</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Close the Tao subprocess.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Close the Tao subprocess."""</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subproc_pipe_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">force</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_subproc_pipe_</span><span class="o">.</span><span class="n">close_forcefully</span><span class="p">()</span>
@@ -2164,9 +2164,9 @@ That is, <code>tao.close_subprocess()</code> and <code>tao.init()</code>.</p>
 <span class="normal">608</span>
 <span class="normal">609</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">raises</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Runs a command, and returns the output.&quot;&quot;&quot;</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tao&gt; </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_command_through_pipe</span><span class="p">(</span><span class="s2">&quot;cmd&quot;</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="n">raises</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Runs a command, and returns the output."""</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Tao&gt; </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_command_through_pipe</span><span class="p">(</span><span class="s2">"cmd"</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="n">raises</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2199,10 +2199,10 @@ That is, <code>tao.close_subprocess()</code> and <code>tao.init()</code>.</p>
 <span class="normal">624</span>
 <span class="normal">625</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">cmd_integer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">raises</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Runs a command, and returns an integer array.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Runs a command, and returns an integer array."""</span>
     <span class="k">return</span> <span class="n">cast</span><span class="p">(</span>
         <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_send_command_through_pipe</span><span class="p">(</span><span class="s2">&quot;cmd_integer&quot;</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="n">raises</span><span class="p">),</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_send_command_through_pipe</span><span class="p">(</span><span class="s2">"cmd_integer"</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="n">raises</span><span class="p">),</span>
     <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2236,10 +2236,10 @@ That is, <code>tao.close_subprocess()</code> and <code>tao.init()</code>.</p>
 <span class="normal">616</span>
 <span class="normal">617</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">cmd_real</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">raises</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Runs a command, and returns a floating point array.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Runs a command, and returns a floating point array."""</span>
     <span class="k">return</span> <span class="n">cast</span><span class="p">(</span>
         <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_send_command_through_pipe</span><span class="p">(</span><span class="s2">&quot;cmd_real&quot;</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="n">raises</span><span class="p">),</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_send_command_through_pipe</span><span class="p">(</span><span class="s2">"cmd_real"</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="n">raises</span><span class="p">),</span>
     <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2269,7 +2269,7 @@ That is, <code>tao.close_subprocess()</code> and <code>tao.init()</code>.</p>
 <span class="normal">628</span>
 <span class="normal">629</span>
 <span class="normal">630</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_active_beam_track_element</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the active element index being tracked via shared memory.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Get the active element index being tracked via shared memory."""</span>
     <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subproc_pipe_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subproc_pipe_</span><span class="o">.</span><span class="n">read_beam_track_element</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
@@ -2316,18 +2316,18 @@ keyword only.</p>
 <span class="normal">591</span>
 <span class="normal">592</span>
 <span class="normal">593</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">subprocess_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Run a custom function in the subprocess.</span>
 
 <span class="sd">    The function must be readily importable by Python and not a dynamically</span>
 <span class="sd">    created function or `lambda`.  The first argument passed will be the</span>
 <span class="sd">    `tao` object, and the remainder of the arguments are user-specified by</span>
 <span class="sd">    keyword only.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">subprocess_alive</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">TaoDisconnectedError</span><span class="p">(</span>
-            <span class="s2">&quot;Tao subprocess is no longer running. Make a new `SubprocessTao` &quot;</span>
-            <span class="s2">&quot;object or reinitialize with `.init()`.&quot;</span>
+            <span class="s2">"Tao subprocess is no longer running. Make a new `SubprocessTao` "</span>
+            <span class="s2">"object or reinitialize with `.init()`."</span>
         <span class="p">)</span>
     <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subproc_pipe_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subproc_pipe_</span><span class="o">.</span><span class="n">send_receive_custom</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
@@ -2462,7 +2462,7 @@ The Tao subprocess is forcefully terminated at this point.</p>
 <span class="normal">524</span>
 <span class="normal">525</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">when</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Context manager to set a timeout for a block of SubprocessTao calls.</span>
 
 <span class="sd">    Note that there is no possibility for a graceful timeout. In the event</span>
@@ -2483,7 +2483,7 @@ The Tao subprocess is forcefully terminated at this point.</p>
 <span class="sd">    TimeoutError</span>
 <span class="sd">        If the block of code does not execute within `when` seconds.</span>
 <span class="sd">        The Tao subprocess is forcefully terminated at this point.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">with</span> <span class="n">subprocess_timeout_context</span><span class="p">([</span><span class="bp">self</span><span class="p">],</span> <span class="n">timeout</span><span class="o">=</span><span class="n">when</span><span class="p">):</span>
         <span class="k">yield</span>
 </code></pre></div></td></tr></table></div>

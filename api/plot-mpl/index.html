@@ -2405,7 +2405,7 @@ applied to the placed graph prior to plotting.</p>
     <span class="n">curves</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">TaoCurveSettings</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">axes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot a graph with Matplotlib.</span>
 
 <span class="sd">    Parameters</span>
@@ -2423,7 +2423,7 @@ applied to the placed graph prior to plotting.</p>
 <span class="sd">    figsize : (float, float), optional</span>
 <span class="sd">        Figure size. Alternative to specifying `width` and `height`</span>
 <span class="sd">        separately.  This takes precedence over `width` and `height`.</span>
-<span class="sd">        Defaults to Matplotlib&#39;s `rcParams[&quot;figure.figsize&quot;]``.</span>
+<span class="sd">        Defaults to Matplotlib's `rcParams["figure.figsize"]``.</span>
 <span class="sd">    width : float, optional</span>
 <span class="sd">        Width of the whole plot.</span>
 <span class="sd">    height : float, optional</span>
@@ -2450,10 +2450,10 @@ applied to the placed graph prior to plotting.</p>
 <span class="sd">    list of graphs</span>
 <span class="sd">        List of plotted graphs.</span>
 <span class="sd">    matplotlib.Figure</span>
-<span class="sd">        To gain access to the resulting plot objects, use the backend&#39;s</span>
+<span class="sd">        To gain access to the resulting plot objects, use the backend's</span>
 <span class="sd">        `plot` method directly.</span>
 <span class="sd">    List[matplotlib.axes.Axes]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">graphs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prepare_graphs_by_name</span><span class="p">(</span>
         <span class="n">template_name</span><span class="o">=</span><span class="n">template</span><span class="p">,</span>
         <span class="n">region_name</span><span class="o">=</span><span class="n">region_name</span><span class="p">,</span>
@@ -2463,7 +2463,7 @@ applied to the placed graph prior to plotting.</p>
         <span class="n">ylim</span><span class="o">=</span><span class="n">ylim</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">graphs</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">UnsupportedGraphError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No supported plots from this template: </span><span class="si">{</span><span class="n">template</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">UnsupportedGraphError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No supported plots from this template: </span><span class="si">{</span><span class="n">template</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="n">figsize</span> <span class="o">=</span> <span class="n">get_figsize</span><span class="p">(</span><span class="n">figsize</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
 
@@ -2480,7 +2480,7 @@ applied to the placed graph prior to plotting.</p>
     <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">axes</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">graphs</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Not enough axes provided. Expected </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graphs</span><span class="p">)</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">axes</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"Not enough axes provided. Expected </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graphs</span><span class="p">)</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">axes</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">figure</span>
     <span class="k">else</span><span class="p">:</span>
@@ -2527,10 +2527,10 @@ applied to the placed graph prior to plotting.</p>
             <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
-            <span class="n">title</span> <span class="o">=</span> <span class="n">graphs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">title</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;plot-</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">graphs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">title</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">"plot-</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
             <span class="k">if</span> <span class="n">save</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="n">save</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">.png&quot;</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saving plot to </span><span class="si">{</span><span class="n">save</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">save</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">.png"</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Saving plot to </span><span class="si">{</span><span class="n">save</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
             <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">graphs</span><span class="p">,</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span>
@@ -2749,7 +2749,7 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
     <span class="n">ax</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot field information for a given element.</span>
 
 <span class="sd">    Parameters</span>
@@ -2758,7 +2758,7 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
 <span class="sd">        Element ID.</span>
 <span class="sd">    colormap : str, optional</span>
 <span class="sd">        Colormap for the plot.</span>
-<span class="sd">        Matplotlib defaults to &quot;PRGn_r&quot;, and bokeh defaults to &quot;&quot;.</span>
+<span class="sd">        Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</span>
 <span class="sd">    radius : float, default=0.015</span>
 <span class="sd">        Radius.</span>
 <span class="sd">    num_points : int, default=100</span>
@@ -2767,7 +2767,7 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
 <span class="sd">        The axes to place the plot in.</span>
 <span class="sd">    save : pathlib.Path or str, optional</span>
 <span class="sd">        Save the plot to the given filename.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">user_specified_axis</span> <span class="o">=</span> <span class="n">ax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
     <span class="n">figsize</span> <span class="o">=</span> <span class="n">get_figsize</span><span class="p">(</span><span class="n">figsize</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
@@ -2794,10 +2794,10 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
 
         <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">save</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="n">save</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ele_id</span><span class="si">}</span><span class="s2">_field.png&quot;</span>
+                <span class="n">save</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ele_id</span><span class="si">}</span><span class="s2">_field.png"</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">save</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span><span class="p">:</span>
-                <span class="n">save</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">save</span><span class="si">}</span><span class="s2">.png&quot;</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saving plot to </span><span class="si">{</span><span class="n">save</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">save</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">save</span><span class="si">}</span><span class="s2">.png"</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Saving plot to </span><span class="si">{</span><span class="n">save</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
             <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">field</span><span class="p">,</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span>
@@ -2815,7 +2815,7 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
 
 
 </h7>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">plot_grid</span><span class="p">(</span><span class="n">templates</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">include_layout</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tight_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">share_x</span><span class="o">=</span><span class="s1">&#39;col&#39;</span><span class="p">,</span> <span class="n">layout_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">curves</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">plot_grid</span><span class="p">(</span><span class="n">templates</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">include_layout</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tight_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">share_x</span><span class="o">=</span><span class="s1">'col'</span><span class="p">,</span> <span class="n">layout_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">curves</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3270,7 +3270,7 @@ placed graphs prior to plotting.</p>
     <span class="n">include_layout</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">figsize</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">tight_layout</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">share_x</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="s2">&quot;col&quot;</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;col&quot;</span><span class="p">,</span>
+    <span class="n">share_x</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"row"</span><span class="p">,</span> <span class="s2">"col"</span><span class="p">,</span> <span class="s2">"all"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"col"</span><span class="p">,</span>
     <span class="n">layout_height</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">width</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">height</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -3281,7 +3281,7 @@ placed graphs prior to plotting.</p>
     <span class="n">save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">axes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot graphs on a grid with Matplotlib.</span>
 
 <span class="sd">    Parameters</span>
@@ -3297,7 +3297,7 @@ placed graphs prior to plotting.</p>
 <span class="sd">    figsize : (float, float), optional</span>
 <span class="sd">        Figure size. Alternative to specifying `width` and `height`</span>
 <span class="sd">        separately.  This takes precedence over `width` and `height`.</span>
-<span class="sd">        Defaults to Matplotlib&#39;s `rcParams[&quot;figure.figsize&quot;]``.</span>
+<span class="sd">        Defaults to Matplotlib's `rcParams["figure.figsize"]``.</span>
 <span class="sd">    width : float, optional</span>
 <span class="sd">        Width of the whole plot.</span>
 <span class="sd">    height : float, optional</span>
@@ -3305,9 +3305,9 @@ placed graphs prior to plotting.</p>
 <span class="sd">    layout_height : int, optional</span>
 <span class="sd">        Normalized height of the layout plot - assuming regular plots are</span>
 <span class="sd">        of height 1.  Default is 0.5 which is configurable with `set_defaults`.</span>
-<span class="sd">    share_x : bool, &quot;row&quot;, &quot;col&quot;, &quot;all&quot;, default=&quot;col&quot;</span>
-<span class="sd">        Share all x-axes (`True` or &quot;all&quot;), share x-axes in rows (&quot;row&quot;) or</span>
-<span class="sd">        in columns (&quot;col&quot;).</span>
+<span class="sd">    share_x : bool, "row", "col", "all", default="col"</span>
+<span class="sd">        Share all x-axes (`True` or "all"), share x-axes in rows ("row") or</span>
+<span class="sd">        in columns ("col").</span>
 <span class="sd">    xlim : list of (float, float), optional</span>
 <span class="sd">        X axis limits for each graph.</span>
 <span class="sd">    ylim : list of (float, float), optional</span>
@@ -3326,11 +3326,11 @@ placed graphs prior to plotting.</p>
 <span class="sd">    list of graphs</span>
 <span class="sd">        List of plotted graphs.</span>
 <span class="sd">    matplotlib.Figure</span>
-<span class="sd">        To gain access to the resulting plot objects, use the backend&#39;s</span>
+<span class="sd">        To gain access to the resulting plot objects, use the backend's</span>
 <span class="sd">        `plot` method directly.</span>
 <span class="sd">    List[List[matplotlib.axes.Axes]]</span>
 <span class="sd">        Gridded axes, accessible with `grid[row][col]`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">graphs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prepare_grid_by_names</span><span class="p">(</span>
         <span class="n">template_names</span><span class="o">=</span><span class="n">templates</span><span class="p">,</span>
@@ -3392,7 +3392,7 @@ placed graphs prior to plotting.</p>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_axis_on</span><span class="p">()</span>
 
             <span class="n">xl</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="k">if</span> <span class="n">share_x</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="s2">&quot;col&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">}</span> <span class="ow">and</span> <span class="n">nrows</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">share_x</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"all"</span><span class="p">,</span> <span class="s2">"col"</span><span class="p">,</span> <span class="kc">True</span><span class="p">}</span> <span class="ow">and</span> <span class="n">nrows</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">xl</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
                 <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
@@ -3404,10 +3404,10 @@ placed graphs prior to plotting.</p>
         <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">save</span> <span class="ow">and</span> <span class="n">fig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">title</span> <span class="o">=</span> <span class="n">graphs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">title</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;plot-</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">graphs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">title</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">"plot-</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">if</span> <span class="n">save</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">save</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">.png&quot;</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saving plot to </span><span class="si">{</span><span class="n">save</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">save</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">.png"</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Saving plot to </span><span class="si">{</span><span class="n">save</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">graphs</span><span class="p">,</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span>
@@ -3648,7 +3648,7 @@ placed graphs prior to plotting.</p>
     <span class="n">height</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">dpi</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Set default values for Matplotlib plot settings.</span>
 
 <span class="sd">    Parameters</span>
@@ -3656,7 +3656,7 @@ placed graphs prior to plotting.</p>
 <span class="sd">    layout_height : float, optional</span>
 <span class="sd">        Height of the layout. Default is 0.5.</span>
 <span class="sd">    colormap : str, optional</span>
-<span class="sd">        Colormap to use for plotting. Default is &quot;PRGn_r&quot;.</span>
+<span class="sd">        Colormap to use for plotting. Default is "PRGn_r".</span>
 <span class="sd">    line_width_scale : float, optional</span>
 <span class="sd">        Scale factor for line widths, excluding floor plan lines. Default is 0.5.</span>
 <span class="sd">    floor_line_width_scale : float, optional</span>
@@ -3669,7 +3669,7 @@ placed graphs prior to plotting.</p>
 <span class="sd">        Height of the figure in inches. Default is as-configured in matplotlib rcParams.</span>
 <span class="sd">    dpi : int, optional</span>
 <span class="sd">        Dots per inch for the figure. Default is as-configured in matplotlib rcParams.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">if</span> <span class="n">layout_height</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">_Defaults</span><span class="o">.</span><span class="n">layout_height</span> <span class="o">=</span> <span class="n">layout_height</span>
@@ -3680,15 +3680,15 @@ placed graphs prior to plotting.</p>
     <span class="k">if</span> <span class="n">floor_line_width_scale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">_Defaults</span><span class="o">.</span><span class="n">floor_line_width_scale</span> <span class="o">=</span> <span class="n">floor_line_width_scale</span>
     <span class="k">if</span> <span class="n">figsize</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">figsize</span>
+        <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">"figure.figsize"</span><span class="p">]</span> <span class="o">=</span> <span class="n">figsize</span>
     <span class="k">if</span> <span class="n">width</span> <span class="ow">and</span> <span class="n">height</span><span class="p">:</span>
-        <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+        <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">"figure.figsize"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">dpi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.dpi&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dpi</span>
+        <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">"figure.dpi"</span><span class="p">]</span> <span class="o">=</span> <span class="n">dpi</span>
 
-    <span class="n">info</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="n">_Defaults</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)}</span>
-    <span class="n">info</span><span class="p">[</span><span class="s2">&quot;figsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">]</span>
-    <span class="n">info</span><span class="p">[</span><span class="s2">&quot;dpi&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.dpi&quot;</span><span class="p">]</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="n">_Defaults</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)}</span>
+    <span class="n">info</span><span class="p">[</span><span class="s2">"figsize"</span><span class="p">]</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">"figure.figsize"</span><span class="p">]</span>
+    <span class="n">info</span><span class="p">[</span><span class="s2">"dpi"</span><span class="p">]</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">"figure.dpi"</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">info</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3726,7 +3726,7 @@ placed graphs prior to plotting.</p>
 <span class="normal">172</span>
 <span class="normal">173</span>
 <span class="normal">174</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">setup_matplotlib_axis</span><span class="p">(</span><span class="n">graph</span><span class="p">:</span> <span class="n">AnyGraph</span><span class="p">,</span> <span class="n">ax</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configure limits, title, and basic info for the given axes.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Configure limits, title, and basic info for the given axes."""</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">graph</span><span class="o">.</span><span class="n">show_axes</span><span class="p">:</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
 
@@ -3736,7 +3736,7 @@ placed graphs prior to plotting.</p>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_axisbelow</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">graph</span><span class="o">.</span><span class="n">draw_grid</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">draw_grid</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;major&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">draw_grid</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">"major"</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">"both"</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

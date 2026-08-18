@@ -1878,55 +1878,55 @@
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pytao</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tao</span>
 
 <span class="c1"># Best available (Bokeh first, Matplotlib second)</span>
-<span class="n">tao</span> <span class="o">=</span> <span class="n">Tao</span><span class="p">(</span><span class="n">init_file</span><span class="o">=</span><span class="s2">&quot;$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">tao</span> <span class="o">=</span> <span class="n">Tao</span><span class="p">(</span><span class="n">init_file</span><span class="o">=</span><span class="s2">"$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init"</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="c1"># Matplotlib:</span>
-<span class="n">tao</span> <span class="o">=</span> <span class="n">Tao</span><span class="p">(</span><span class="n">init_file</span><span class="o">=</span><span class="s2">&quot;$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="s2">&quot;mpl&quot;</span><span class="p">)</span>
+<span class="n">tao</span> <span class="o">=</span> <span class="n">Tao</span><span class="p">(</span><span class="n">init_file</span><span class="o">=</span><span class="s2">"$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init"</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="s2">"mpl"</span><span class="p">)</span>
 <span class="c1"># Bokeh</span>
-<span class="n">tao</span> <span class="o">=</span> <span class="n">Tao</span><span class="p">(</span><span class="n">init_file</span><span class="o">=</span><span class="s2">&quot;$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="s2">&quot;bokeh&quot;</span><span class="p">)</span>
+<span class="n">tao</span> <span class="o">=</span> <span class="n">Tao</span><span class="p">(</span><span class="n">init_file</span><span class="o">=</span><span class="s2">"$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init"</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="s2">"bokeh"</span><span class="p">)</span>
 </code></pre></div>
 <p>If you wish to use Tao's internal plotting mechanism, leave the <code>plot</code> keyword argument off or specify <code>plot="tao"</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pytao</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tao</span>
 
-<span class="c1"># Use Tao&#39;s internal plotting mechanism:</span>
-<span class="n">tao</span> <span class="o">=</span> <span class="n">Tao</span><span class="p">(</span><span class="n">init_file</span><span class="o">=</span><span class="s2">&quot;$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init&quot;</span><span class="p">)</span>
+<span class="c1"># Use Tao's internal plotting mechanism:</span>
+<span class="n">tao</span> <span class="o">=</span> <span class="n">Tao</span><span class="p">(</span><span class="n">init_file</span><span class="o">=</span><span class="s2">"$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init"</span><span class="p">)</span>
 </code></pre></div>
 <p>To disable plotting entirely, use:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pytao</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tao</span>
 
-<span class="c1"># Use Tao&#39;s internal plotting mechanism:</span>
-<span class="n">tao</span> <span class="o">=</span> <span class="n">Tao</span><span class="p">(</span><span class="n">init_file</span><span class="o">=</span><span class="s2">&quot;$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init&quot;</span><span class="p">,</span> <span class="n">noplot</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># Use Tao's internal plotting mechanism:</span>
+<span class="n">tao</span> <span class="o">=</span> <span class="n">Tao</span><span class="p">(</span><span class="n">init_file</span><span class="o">=</span><span class="s2">"$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init"</span><span class="p">,</span> <span class="n">noplot</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <p>The <code>Tao</code> object supports all Tao initialization arguments as Python keyword arguments.
 That is, any of the following may be specified to <code>Tao</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="n">Tao</span><span class="p">(</span>
-  <span class="n">beam_file</span><span class="o">=</span><span class="s2">&quot;file_name&quot;</span><span class="p">,</span>                <span class="c1"># File containing the tao_beam_init namelist.</span>
-  <span class="n">beam_init_position_file</span><span class="o">=</span><span class="s2">&quot;file_name&quot;</span><span class="p">,</span>  <span class="c1"># File containing initial particle positions.</span>
-  <span class="n">building_wall_file</span><span class="o">=</span><span class="s2">&quot;file_name&quot;</span><span class="p">,</span>       <span class="c1"># Define the building tunnel wall</span>
-  <span class="n">command</span><span class="o">=</span><span class="s2">&quot;command_string&quot;</span><span class="p">,</span>             <span class="c1"># Commands to run after startup file commands</span>
-  <span class="n">data_file</span><span class="o">=</span><span class="s2">&quot;file_name&quot;</span><span class="p">,</span>                <span class="c1"># Define data for plotting and optimization</span>
+  <span class="n">beam_file</span><span class="o">=</span><span class="s2">"file_name"</span><span class="p">,</span>                <span class="c1"># File containing the tao_beam_init namelist.</span>
+  <span class="n">beam_init_position_file</span><span class="o">=</span><span class="s2">"file_name"</span><span class="p">,</span>  <span class="c1"># File containing initial particle positions.</span>
+  <span class="n">building_wall_file</span><span class="o">=</span><span class="s2">"file_name"</span><span class="p">,</span>       <span class="c1"># Define the building tunnel wall</span>
+  <span class="n">command</span><span class="o">=</span><span class="s2">"command_string"</span><span class="p">,</span>             <span class="c1"># Commands to run after startup file commands</span>
+  <span class="n">data_file</span><span class="o">=</span><span class="s2">"file_name"</span><span class="p">,</span>                <span class="c1"># Define data for plotting and optimization</span>
   <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                           <span class="c1"># Debug mode for Wizards</span>
   <span class="n">disable_smooth_line_calc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>        <span class="c1"># Disable the smooth line calc used in plotting</span>
   <span class="n">external_plotting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>               <span class="c1"># Tells Tao that plotting is done externally to Tao.</span>
-  <span class="n">geometry</span><span class="o">=</span><span class="s2">&quot;&lt;width&gt;x&lt;height&gt;&quot;</span><span class="p">,</span>          <span class="c1"># Plot window geometry (pixels)</span>
-  <span class="n">hook_init_file</span><span class="o">=</span><span class="s2">&quot;file_name&quot;</span><span class="p">,</span>           <span class="c1"># Init file for hook routines (Default = tao_hook.init)</span>
-  <span class="n">init_file</span><span class="o">=</span><span class="s2">&quot;file_name&quot;</span><span class="p">,</span>                <span class="c1"># Tao init file</span>
-  <span class="n">lattice_file</span><span class="o">=</span><span class="s2">&quot;file_name&quot;</span><span class="p">,</span>             <span class="c1"># Bmad lattice file</span>
+  <span class="n">geometry</span><span class="o">=</span><span class="s2">"&lt;width&gt;x&lt;height&gt;"</span><span class="p">,</span>          <span class="c1"># Plot window geometry (pixels)</span>
+  <span class="n">hook_init_file</span><span class="o">=</span><span class="s2">"file_name"</span><span class="p">,</span>           <span class="c1"># Init file for hook routines (Default = tao_hook.init)</span>
+  <span class="n">init_file</span><span class="o">=</span><span class="s2">"file_name"</span><span class="p">,</span>                <span class="c1"># Tao init file</span>
+  <span class="n">lattice_file</span><span class="o">=</span><span class="s2">"file_name"</span><span class="p">,</span>             <span class="c1"># Bmad lattice file</span>
   <span class="n">log_startup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                     <span class="c1"># Write startup debugging info</span>
   <span class="n">no_stopping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                     <span class="c1"># For debugging: Prevents Tao from exiting on errors</span>
   <span class="n">noinit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                          <span class="c1"># Do not use Tao init file.</span>
   <span class="n">noplot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                          <span class="c1"># Do not open a plotting window</span>
   <span class="n">nostartup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                       <span class="c1"># Do not open a startup command file</span>
   <span class="n">no_rad_int</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                      <span class="c1"># Do not do any radiation integrals calculations.</span>
-  <span class="n">plot_file</span><span class="o">=</span><span class="s2">&quot;file_name&quot;</span><span class="p">,</span>                <span class="c1"># Plotting initialization file</span>
-  <span class="n">prompt_color</span><span class="o">=</span><span class="s2">&quot;color&quot;</span><span class="p">,</span>                 <span class="c1"># Set color of prompt string. Default is blue.</span>
+  <span class="n">plot_file</span><span class="o">=</span><span class="s2">"file_name"</span><span class="p">,</span>                <span class="c1"># Plotting initialization file</span>
+  <span class="n">prompt_color</span><span class="o">=</span><span class="s2">"color"</span><span class="p">,</span>                 <span class="c1"># Set color of prompt string. Default is blue.</span>
   <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                         <span class="c1"># Reverse lattice element order?</span>
-  <span class="n">rf_on</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                           <span class="c1"># Use &quot;--rf_on&quot; to turn off RF (default is now RF on)</span>
+  <span class="n">rf_on</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                           <span class="c1"># Use "--rf_on" to turn off RF (default is now RF on)</span>
   <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                           <span class="c1"># Suppress terminal output when running a command file?</span>
-  <span class="n">slice_lattice</span><span class="o">=</span><span class="s2">&quot;ele_list&quot;</span><span class="p">,</span>             <span class="c1"># Discards elements from lattice that are not in the list</span>
-  <span class="n">start_branch_at</span><span class="o">=</span><span class="s2">&quot;ele_name&quot;</span><span class="p">,</span>           <span class="c1"># Start lattice branch at element.</span>
-  <span class="n">startup_file</span><span class="o">=</span><span class="s2">&quot;file_name&quot;</span><span class="p">,</span>             <span class="c1"># Commands to run after parsing Tao init file</span>
+  <span class="n">slice_lattice</span><span class="o">=</span><span class="s2">"ele_list"</span><span class="p">,</span>             <span class="c1"># Discards elements from lattice that are not in the list</span>
+  <span class="n">start_branch_at</span><span class="o">=</span><span class="s2">"ele_name"</span><span class="p">,</span>           <span class="c1"># Start lattice branch at element.</span>
+  <span class="n">startup_file</span><span class="o">=</span><span class="s2">"file_name"</span><span class="p">,</span>             <span class="c1"># Commands to run after parsing Tao init file</span>
   <span class="n">symbol_import</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                   <span class="c1"># Import symbols defined in lattice files(s)?</span>
-  <span class="n">var_file</span><span class="o">=</span><span class="s2">&quot;file_name&quot;</span><span class="p">,</span>                 <span class="c1"># Define variables for plotting and optimization</span>
+  <span class="n">var_file</span><span class="o">=</span><span class="s2">"file_name"</span><span class="p">,</span>                 <span class="c1"># Define variables for plotting and optimization</span>
 <span class="p">)</span>
 </code></pre></div>
 <p>Note that <code>quiet</code> mode may cause portions of PyTao to function improperly. See
@@ -1936,22 +1936,22 @@ upstream <a href="https://github.com/bmad-sim/bmad-ecosystem/issues/1380">issue<
 It can be used in the same way as the <code>Tao</code> class.</p>
 <p>Use this form when possible:</p>
 <div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">SubprocessTao</span><span class="p">(</span><span class="n">lattice_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">tao</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s2">&quot;show lat&quot;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s2">"show lat"</span><span class="p">))</span>
 </code></pre></div>
 <p>Once the <code>with</code> block ends, the subprocess will automatically be closed and cleaned up.
 For manual lifetime control, use <code>tao.close_subprocess()</code>.</p>
 <h2 id="pytao-on-the-command-line">PyTao on the command-line</h2>
 <p>PyTao has a simple IPython entrypoint, giving you quick access to Tao in Python.</p>
 <p>The following will start IPython with a <code>Tao</code> instance available as <code>tao</code>:</p>
-<div class="highlight"><pre><span></span><code>pytao<span class="w"> </span>-init_file<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ACC_ROOT_DIR</span><span class="s2">/bmad-doc/tao_examples/cbeta_cell/tao.init&quot;</span>
+<div class="highlight"><pre><span></span><code>pytao<span class="w"> </span>-init_file<span class="w"> </span><span class="s2">"</span><span class="nv">$ACC_ROOT_DIR</span><span class="s2">/bmad-doc/tao_examples/cbeta_cell/tao.init"</span>
 </code></pre></div>
 <p>To use PyTao's Matplotlib backend, set <code>--pyplot=mpl</code>:</p>
-<div class="highlight"><pre><span></span><code>pytao<span class="w"> </span>--pyplot<span class="o">=</span>mpl<span class="w"> </span>-init<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ACC_ROOT_DIR</span><span class="s2">/bmad-doc/tao_examples/cbeta_cell/tao.init&quot;</span>
+<div class="highlight"><pre><span></span><code>pytao<span class="w"> </span>--pyplot<span class="o">=</span>mpl<span class="w"> </span>-init<span class="w"> </span><span class="s2">"</span><span class="nv">$ACC_ROOT_DIR</span><span class="s2">/bmad-doc/tao_examples/cbeta_cell/tao.init"</span>
 </code></pre></div>
 <p>Or use the environment variable <code>PYTAO_PLOT</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nv">PYTAO_PLOT</span><span class="o">=</span>mpl<span class="w"> </span>pytao<span class="w"> </span>-init_file<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ACC_ROOT_DIR</span><span class="s2">/bmad-doc/tao_examples/cbeta_cell/tao.init&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nv">PYTAO_PLOT</span><span class="o">=</span>mpl<span class="w"> </span>pytao<span class="w"> </span>-init_file<span class="w"> </span><span class="s2">"</span><span class="nv">$ACC_ROOT_DIR</span><span class="s2">/bmad-doc/tao_examples/cbeta_cell/tao.init"</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">tao</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s2">&quot;beta&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">tao</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s2">"beta"</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="logging">Logging</h2>
 <p>PyTao uses the standard Python <a href="https://docs.python.org/3/library/logging.html"><code>logging</code></a>
@@ -1961,7 +1961,7 @@ never emits unexpected output or interferes with other logging in your program.<
 <p>The simplest way to turn logging on is <code>pytao.configure_logging</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytao</span>
 
-<span class="n">pytao</span><span class="o">.</span><span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">)</span>
+<span class="n">pytao</span><span class="o">.</span><span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">"DEBUG"</span><span class="p">)</span>
 </code></pre></div>
 <p>This configures the <code>"pytao"</code> logger alone. It does <strong>not</strong> touch the root
 logger, and PyTao's records do not propagate to it, so <code>configure_logging</code> will
@@ -2010,7 +2010,7 @@ elsewhere.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
-<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;pytao&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"pytao"</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
 </code></pre></div>
 <p>Messages that Tao itself reports (<code>[INFO ...]</code>, <code>[ERROR ...]</code>, and so on) are
 captured from its output and re-emitted as Python log records on the
@@ -2079,26 +2079,26 @@ be set through <code>configure_logging(mode=...)</code>, or changed at runtime w
 <code>pytao.set_log_mode</code> (and read back with <code>pytao.get_log_mode</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytao</span>
 
-<span class="n">pytao</span><span class="o">.</span><span class="n">set_log_mode</span><span class="p">(</span><span class="s2">&quot;matching&quot;</span><span class="p">)</span>
+<span class="n">pytao</span><span class="o">.</span><span class="n">set_log_mode</span><span class="p">(</span><span class="s2">"matching"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="logging-on-the-command-line">Logging on the command-line</h3>
 <p>At startup the <code>pytao</code> CLI calls <code>configure_logging</code> for you, mapping
 <code>--pylog</code> to <code>level</code>, <code>--pylog-file</code> to <code>filename</code>, and <code>--pylog-mode</code> to
 <code>mode</code>. Each falls back to its environment variable (<code>PYTAO_LOG</code>,
 <code>PYTAO_LOG_FILE</code>, <code>PYTAO_LOG_MODE</code>), with <code>--pylog</code> defaulting to <code>WARNING</code>.</p>
-<div class="highlight"><pre><span></span><code>pytao<span class="w"> </span>--pylog<span class="w"> </span>DEBUG<span class="w"> </span>-init_file<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ACC_ROOT_DIR</span><span class="s2">/bmad-doc/tao_examples/cbeta_cell/tao.init&quot;</span>
+<div class="highlight"><pre><span></span><code>pytao<span class="w"> </span>--pylog<span class="w"> </span>DEBUG<span class="w"> </span>-init_file<span class="w"> </span><span class="s2">"</span><span class="nv">$ACC_ROOT_DIR</span><span class="s2">/bmad-doc/tao_examples/cbeta_cell/tao.init"</span>
 </code></pre></div>
 <p>Combining <code>PYTAO_LOG_MODE=matching</code> with <code>--pylog INFO</code> shows Tao's
 informational and warning messages as they arrive, without PyTao's internal
 debugging output:</p>
-<div class="highlight"><pre><span></span><code><span class="nv">PYTAO_LOG_MODE</span><span class="o">=</span>matching<span class="w"> </span>pytao<span class="w"> </span>--pylog<span class="w"> </span>INFO<span class="w"> </span>-init_file<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ACC_ROOT_DIR</span><span class="s2">/bmad-doc/tao_examples/cbeta_cell/tao.init&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nv">PYTAO_LOG_MODE</span><span class="o">=</span>matching<span class="w"> </span>pytao<span class="w"> </span>--pylog<span class="w"> </span>INFO<span class="w"> </span>-init_file<span class="w"> </span><span class="s2">"</span><span class="nv">$ACC_ROOT_DIR</span><span class="s2">/bmad-doc/tao_examples/cbeta_cell/tao.init"</span>
 </code></pre></div>
 <p>To leave logging entirely unconfigured, set <code>PYTAO_LOG</code> to an empty string
 (and omit <code>--pylog</code>).</p>
 <p>For debugging, <code>--pylog-file</code> (or the <code>PYTAO_LOG_FILE</code> environment variable)
 additionally writes PyTao logs to a file. The file always captures <code>DEBUG</code>
 level and above, while console output stays at the <code>--pylog</code> level:</p>
-<div class="highlight"><pre><span></span><code>pytao<span class="w"> </span>--pylog-file<span class="w"> </span>pytao-debug.log<span class="w"> </span>-init_file<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ACC_ROOT_DIR</span><span class="s2">/bmad-doc/tao_examples/cbeta_cell/tao.init&quot;</span>
+<div class="highlight"><pre><span></span><code>pytao<span class="w"> </span>--pylog-file<span class="w"> </span>pytao-debug.log<span class="w"> </span>-init_file<span class="w"> </span><span class="s2">"</span><span class="nv">$ACC_ROOT_DIR</span><span class="s2">/bmad-doc/tao_examples/cbeta_cell/tao.init"</span>
 </code></pre></div>
 <h2 id="pytao-plotting-and-startup-scripts">PyTao plotting and startup scripts</h2>
 <p>When PyTao is instructed to use its Matplotlib or Bokeh backends, it configures
@@ -2115,10 +2115,10 @@ from using your Tao object.</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pytao</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tao</span><span class="p">,</span> <span class="n">filter_tao_messages_context</span>
 
 
-<span class="k">with</span> <span class="n">filter_tao_messages_context</span><span class="p">(</span><span class="n">functions</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tao_find_plots&quot;</span><span class="p">]):</span>
-    <span class="n">tao</span> <span class="o">=</span> <span class="n">Tao</span><span class="p">(</span><span class="n">init_file</span><span class="o">=</span><span class="s2">&quot;tao.init&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="s2">&quot;mpl&quot;</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">filter_tao_messages_context</span><span class="p">(</span><span class="n">functions</span><span class="o">=</span><span class="p">[</span><span class="s2">"tao_find_plots"</span><span class="p">]):</span>
+    <span class="n">tao</span> <span class="o">=</span> <span class="n">Tao</span><span class="p">(</span><span class="n">init_file</span><span class="o">=</span><span class="s2">"tao.init"</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="s2">"mpl"</span><span class="p">)</span>
 
-<span class="n">tao</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s2">&quot;beta&quot;</span><span class="p">)</span>
+<span class="n">tao</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s2">"beta"</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div>
 <h2 id="notes-about-bokeh-on-jupyterhub">Notes about Bokeh on JupyterHub</h2>

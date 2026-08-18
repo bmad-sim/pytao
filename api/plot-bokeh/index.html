@@ -2061,7 +2061,7 @@ callbacks resulting from user interaction.</p>
     <span class="n">ylim</span><span class="p">:</span> <span class="n">OptionalLimit</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">OptionalLimit</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">graphs</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;BokehAppCreator requires 1 or more graph&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"BokehAppCreator requires 1 or more graph"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">LatticeLayoutGraph</span><span class="p">)</span> <span class="k">for</span> <span class="n">graph</span> <span class="ow">in</span> <span class="n">graphs</span><span class="p">):</span>
         <span class="n">include_layout</span> <span class="o">=</span> <span class="kc">False</span>
@@ -2134,7 +2134,7 @@ callbacks resulting from user interaction.</p>
 <span class="normal">1361</span>
 <span class="normal">1362</span>
 <span class="normal">1363</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BokehAppState</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an independent application state based on the graph data.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Create an independent application state based on the graph data."""</span>
     <span class="n">pairs</span><span class="p">,</span> <span class="n">layout_pairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_figures</span><span class="p">()</span>
     <span class="n">grid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grid_figures</span><span class="p">(</span><span class="n">pairs</span><span class="p">,</span> <span class="n">layout_pairs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">BokehAppState</span><span class="p">(</span>
@@ -2599,7 +2599,7 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
     <span class="n">curves</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">TaoCurveSettings</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">settings</span><span class="p">:</span> <span class="n">TaoGraphSettings</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">AnyGraph</span><span class="p">],</span> <span class="n">BokehAppCreator</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot a graph with Bokeh.</span>
 
 <span class="sd">    Parameters</span>
@@ -2614,7 +2614,7 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
 <span class="sd">        the x-axis).</span>
 <span class="sd">    sizing_mode : Optional[SizingModeType]</span>
 <span class="sd">        Set the sizing mode for all graphs.  Default is configured on a</span>
-<span class="sd">        per-graph basis, typically &quot;inherit&quot;.</span>
+<span class="sd">        per-graph basis, typically "inherit".</span>
 <span class="sd">    width : int, optional</span>
 <span class="sd">        Width of each plot.</span>
 <span class="sd">    height : int, optional</span>
@@ -2642,7 +2642,7 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
 <span class="sd">    list of graphs</span>
 
 <span class="sd">    BokehAppCreator</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">graphs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prepare_graphs_by_name</span><span class="p">(</span>
         <span class="n">template_name</span><span class="o">=</span><span class="n">template</span><span class="p">,</span>
         <span class="n">region_name</span><span class="o">=</span><span class="n">region_name</span><span class="p">,</span>
@@ -2653,7 +2653,7 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">graphs</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">UnsupportedGraphError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No supported plots from this template: </span><span class="si">{</span><span class="n">template</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">UnsupportedGraphError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No supported plots from this template: </span><span class="si">{</span><span class="n">template</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="n">app</span> <span class="o">=</span> <span class="n">BokehAppCreator</span><span class="p">(</span>
         <span class="n">manager</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
@@ -2672,9 +2672,9 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
 
     <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">save</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">save</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">save</span> <span class="o">=</span> <span class="s2">""</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">save</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saving plot to </span><span class="si">{</span><span class="n">filename</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Saving plot to </span><span class="si">{</span><span class="n">filename</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">graphs</span><span class="p">,</span> <span class="n">app</span>
 </code></pre></div></td></tr></table></div>
@@ -2947,7 +2947,7 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
     <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot field information for a given element.</span>
 
 <span class="sd">    Parameters</span>
@@ -2956,7 +2956,7 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
 <span class="sd">        Element ID.</span>
 <span class="sd">    colormap : str, optional</span>
 <span class="sd">        Colormap for the plot.</span>
-<span class="sd">        Matplotlib defaults to &quot;PRGn_r&quot;, and bokeh defaults to &quot;&quot;.</span>
+<span class="sd">        Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</span>
 <span class="sd">    radius : float, default=0.015</span>
 <span class="sd">        Radius.</span>
 <span class="sd">    num_points : int, default=100</span>
@@ -2971,42 +2971,42 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
 <span class="sd">    ElementField</span>
 
 <span class="sd">    figure</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">field</span> <span class="o">=</span> <span class="n">ElementField</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tao</span><span class="p">,</span> <span class="n">ele_id</span><span class="p">,</span> <span class="n">num_points</span><span class="o">=</span><span class="n">num_points</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">)</span>
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Field of </span><span class="si">{</span><span class="n">ele_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Field of </span><span class="si">{</span><span class="n">ele_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="n">palette</span> <span class="o">=</span> <span class="n">colormap</span> <span class="ow">or</span> <span class="n">_Defaults</span><span class="o">.</span><span class="n">palette</span>
 
     <span class="n">source</span> <span class="o">=</span> <span class="n">_fields_to_data_source</span><span class="p">([</span><span class="n">field</span><span class="p">],</span> <span class="n">x_scale</span><span class="o">=</span><span class="n">x_scale</span><span class="p">)</span>
     <span class="n">cmap</span> <span class="o">=</span> <span class="n">bokeh</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">LinearColorMapper</span><span class="p">(</span>
         <span class="n">palette</span><span class="o">=</span><span class="n">palette</span> <span class="ow">or</span> <span class="n">_Defaults</span><span class="o">.</span><span class="n">palette</span><span class="p">,</span>
-        <span class="n">low</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;by&quot;</span><span class="p">]),</span>
-        <span class="n">high</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;by&quot;</span><span class="p">]),</span>
+        <span class="n">low</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">"by"</span><span class="p">]),</span>
+        <span class="n">high</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">"by"</span><span class="p">]),</span>
     <span class="p">)</span>
 
     <span class="n">fig</span><span class="o">.</span><span class="n">image</span><span class="p">(</span>
-        <span class="n">image</span><span class="o">=</span><span class="s2">&quot;by&quot;</span><span class="p">,</span>
-        <span class="n">x</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>
+        <span class="n">image</span><span class="o">=</span><span class="s2">"by"</span><span class="p">,</span>
+        <span class="n">x</span><span class="o">=</span><span class="s2">"x"</span><span class="p">,</span>
         <span class="n">y</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">dw</span><span class="o">=</span><span class="s2">&quot;dw&quot;</span><span class="p">,</span>
-        <span class="n">dh</span><span class="o">=</span><span class="s2">&quot;dh&quot;</span><span class="p">,</span>
+        <span class="n">dw</span><span class="o">=</span><span class="s2">"dw"</span><span class="p">,</span>
+        <span class="n">dh</span><span class="o">=</span><span class="s2">"dh"</span><span class="p">,</span>
         <span class="n">color_mapper</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
         <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;field_images&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"field_images"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">color_bar</span> <span class="o">=</span> <span class="n">bokeh</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">ColorBar</span><span class="p">(</span><span class="n">color_mapper</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">add_layout</span><span class="p">(</span><span class="n">color_bar</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">add_layout</span><span class="p">(</span><span class="n">color_bar</span><span class="p">,</span> <span class="s2">"right"</span><span class="p">)</span>
 
     <span class="n">fig</span><span class="o">.</span><span class="n">frame_width</span> <span class="o">=</span> <span class="n">width</span> <span class="ow">or</span> <span class="n">_Defaults</span><span class="o">.</span><span class="n">width</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">frame_height</span> <span class="o">=</span> <span class="n">height</span> <span class="ow">or</span> <span class="n">_Defaults</span><span class="o">.</span><span class="n">height</span>
 
     <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">save</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">save</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ele_id</span><span class="si">}</span><span class="s2">_field.html&quot;</span>
+            <span class="n">save</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ele_id</span><span class="si">}</span><span class="s2">_field.html"</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">save</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span><span class="p">:</span>
-            <span class="n">save</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">save</span><span class="si">}</span><span class="s2">.html&quot;</span>
+            <span class="n">save</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">save</span><span class="si">}</span><span class="s2">.html"</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="n">bokeh</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">save</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saving plot to </span><span class="si">{</span><span class="n">filename</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Saving plot to </span><span class="si">{</span><span class="n">filename</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">field</span><span class="p">,</span> <span class="n">fig</span>
 </code></pre></div></td></tr></table></div>
@@ -3399,7 +3399,7 @@ placed graphs prior to plotting.</p>
     <span class="n">settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">TaoGraphSettings</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot graphs on a grid with Bokeh.</span>
 
 <span class="sd">    Parameters</span>
@@ -3440,7 +3440,7 @@ placed graphs prior to plotting.</p>
 <span class="sd">    list of graphs</span>
 
 <span class="sd">    BokehAppCreator</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">graphs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prepare_grid_by_names</span><span class="p">(</span>
         <span class="n">template_names</span><span class="o">=</span><span class="n">templates</span><span class="p">,</span>
         <span class="n">curves</span><span class="o">=</span><span class="n">curves</span><span class="p">,</span>
@@ -3468,9 +3468,9 @@ placed graphs prior to plotting.</p>
 
     <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">save</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">save</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">save</span> <span class="o">=</span> <span class="s2">""</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">save</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saving plot to </span><span class="si">{</span><span class="n">filename</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Saving plot to </span><span class="si">{</span><span class="n">filename</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">graphs</span><span class="p">,</span> <span class="n">app</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3572,7 +3572,7 @@ placed graphs prior to plotting.</p>
 <span class="normal">1789</span>
 <span class="normal">1790</span>
 <span class="normal">1791</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_bokeh_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">AnyGraph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnyBokehGraph</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a Bokeh graph instance from the backend-agnostic AnyGraph version.</span>
 
 <span class="sd">    For example, `BasicGraph` becomes `BokehBasicGraph`.</span>
@@ -3584,7 +3584,7 @@ placed graphs prior to plotting.</p>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    AnyBokehGraph</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">BasicGraph</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">BokehBasicGraph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">LatticeLayoutGraph</span><span class="p">):</span>
@@ -4049,7 +4049,7 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
     <span class="n">curves</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">TaoCurveSettings</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">settings</span><span class="p">:</span> <span class="n">TaoGraphSettings</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">AnyGraph</span><span class="p">],</span> <span class="n">BokehAppCreator</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot a graph with Bokeh.</span>
 
 <span class="sd">    Parameters</span>
@@ -4064,7 +4064,7 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
 <span class="sd">        the x-axis).</span>
 <span class="sd">    sizing_mode : Optional[SizingModeType]</span>
 <span class="sd">        Set the sizing mode for all graphs.  Default is configured on a</span>
-<span class="sd">        per-graph basis, typically &quot;inherit&quot;.</span>
+<span class="sd">        per-graph basis, typically "inherit".</span>
 <span class="sd">    width : int, optional</span>
 <span class="sd">        Width of each plot.</span>
 <span class="sd">    height : int, optional</span>
@@ -4075,7 +4075,7 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
 <span class="sd">        Share x-axes where sensible (`None`) or force sharing x-axes (True)</span>
 <span class="sd">        for all plots.</span>
 <span class="sd">    vars : bool, default=False</span>
-<span class="sd">        Show Tao variables as adjustable widgets, like &quot;single mode&quot;.</span>
+<span class="sd">        Show Tao variables as adjustable widgets, like "single mode".</span>
 <span class="sd">    xlim : (float, float), optional</span>
 <span class="sd">        X axis limits.</span>
 <span class="sd">    ylim : (float, float), optional</span>
@@ -4092,7 +4092,7 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    BokehAppCreator</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">graphs</span><span class="p">,</span> <span class="n">app</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="n">region_name</span><span class="o">=</span><span class="n">region_name</span><span class="p">,</span>
         <span class="n">template</span><span class="o">=</span><span class="n">template</span><span class="p">,</span>
@@ -4324,7 +4324,7 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
     <span class="n">x_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="n">save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot field information for a given element.</span>
 
 <span class="sd">    Parameters</span>
@@ -4333,7 +4333,7 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
 <span class="sd">        Element ID.</span>
 <span class="sd">    colormap : str, optional</span>
 <span class="sd">        Colormap for the plot.</span>
-<span class="sd">        Matplotlib defaults to &quot;PRGn_r&quot;, and bokeh defaults to &quot;&quot;.</span>
+<span class="sd">        Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</span>
 <span class="sd">    radius : float, default=0.015</span>
 <span class="sd">        Radius.</span>
 <span class="sd">    num_points : int, default=100</span>
@@ -4342,7 +4342,7 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
 <span class="sd">    height : int, optional</span>
 <span class="sd">    save : pathlib.Path or str, optional</span>
 <span class="sd">        Save the plot to the given filename.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">field</span><span class="p">,</span> <span class="n">fig</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">plot_field</span><span class="p">(</span>
         <span class="n">ele_id</span><span class="p">,</span>
         <span class="n">colormap</span><span class="o">=</span><span class="n">colormap</span><span class="p">,</span>
@@ -4754,7 +4754,7 @@ placed graphs prior to plotting.</p>
     <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot graphs on a grid with Bokeh.</span>
 
 <span class="sd">    Parameters</span>
@@ -4769,7 +4769,7 @@ placed graphs prior to plotting.</p>
 <span class="sd">        Share x-axes where sensible (`None`) or force sharing x-axes (True)</span>
 <span class="sd">        for all plots.</span>
 <span class="sd">    vars : bool, default=False</span>
-<span class="sd">        Show Tao variables as adjustable widgets, like &quot;single mode&quot;.</span>
+<span class="sd">        Show Tao variables as adjustable widgets, like "single mode".</span>
 <span class="sd">    figsize : (int, int), optional</span>
 <span class="sd">        Figure size. Alternative to specifying `width` and `height`</span>
 <span class="sd">        separately.  This takes precedence over `width` and `height`.</span>
@@ -4797,7 +4797,7 @@ placed graphs prior to plotting.</p>
 <span class="sd">    list of graphs</span>
 
 <span class="sd">    BokehAppCreator</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">graphs</span><span class="p">,</span> <span class="n">app</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">(</span>
         <span class="n">templates</span><span class="o">=</span><span class="n">templates</span><span class="p">,</span>
         <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">,</span>
@@ -5282,7 +5282,7 @@ ensure that all data is visible despite drawing method differences.</p>
     <span class="n">line_width_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">floor_line_width_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Change defaults used for Bokeh plots.</span>
 
 <span class="sd">    Parameters</span>
@@ -5299,9 +5299,9 @@ ensure that all data is visible despite drawing method differences.</p>
 <span class="sd">        Palette for `plot_field`.</span>
 <span class="sd">    show_bokeh_logo : bool, optional</span>
 <span class="sd">        Show Bokeh logo on each plot.</span>
-<span class="sd">    tools : str, default=&quot;pan,wheel_zoom,box_zoom,reset,hover,crosshair&quot;</span>
+<span class="sd">    tools : str, default="pan,wheel_zoom,box_zoom,reset,hover,crosshair"</span>
 <span class="sd">        Bokeh tools to use.</span>
-<span class="sd">    grid_toolbar_location : str, default=&quot;right&quot;</span>
+<span class="sd">    grid_toolbar_location : str, default="right"</span>
 <span class="sd">        Toolbar location for gridded plots.</span>
 <span class="sd">    lattice_layout_tools : str, optional</span>
 <span class="sd">        Bokeh tools to use specifically for lattice layouts.</span>
@@ -5321,10 +5321,10 @@ ensure that all data is visible despite drawing method differences.</p>
 <span class="sd">    show_sliders : bool, default=True</span>
 <span class="sd">        Show sliders alongside the spinners in single mode.</span>
 <span class="sd">    line_width_scale : float, default=1.0</span>
-<span class="sd">        Plot line width scaling factor applied to Tao&#39;s line width.</span>
+<span class="sd">        Plot line width scaling factor applied to Tao's line width.</span>
 <span class="sd">    floor_line_width_scale : float, default=0.5</span>
-<span class="sd">        Floor plan line width scaling factor applied to Tao&#39;s line width.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        Floor plan line width scaling factor applied to Tao's line width.</span>
+<span class="sd">    """</span>
 
     <span class="k">if</span> <span class="n">width</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">_Defaults</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">width</span><span class="p">)</span>
@@ -5367,7 +5367,7 @@ ensure that all data is visible despite drawing method differences.</p>
     <span class="k">return</span> <span class="p">{</span>
         <span class="n">key</span><span class="p">:</span> <span class="n">value</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="n">_Defaults</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;get_size_for_class&quot;</span><span class="p">}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"get_size_for_class"</span><span class="p">}</span>
     <span class="p">}</span>
 </code></pre></div></td></tr></table></div>
             </details>
