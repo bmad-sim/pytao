@@ -9,10 +9,9 @@ from pydantic import Field, computed_field
 from pytao import Tao
 from pytao.constraints.observables.base import (
     CheckResult,
+    ComparisonResult,
     IsClose,
-    IsCloseResult,
     IsLess,
-    IsLessResult,
     LatticeObservable,
     LiteralObservable,
     Observation,
@@ -72,7 +71,7 @@ class TolComparison(ConstraintsBase):
         return CheckResult(passed=False, detail=detail)
 
 
-class EleIsCloseResult(IsCloseResult):
+class EleIsCloseResult(ComparisonResult):
     """Result of an EleIsClose comparison with per-field check results.
 
     Each field is ``None`` if the corresponding comparison was not run.
@@ -147,7 +146,7 @@ class EleIsCloseResult(IsCloseResult):
         return all(ran) if ran else True
 
 
-class EleIsClose(IsClose[EleObservation]):
+class EleIsClose(IsClose[EleObservation, EleIsCloseResult]):
     """IsClose operator comparing two EleObservation instances across all available data.
 
     Set a field to ``None`` to skip that comparison.
@@ -282,7 +281,7 @@ class EleIsClose(IsClose[EleObservation]):
         )
 
 
-class EleLessThanResult(IsLessResult):
+class EleLessThanResult(ComparisonResult):
     """Result of an EleLessThan comparison with per-field less-than check results.
 
     Each field is ``None`` if the corresponding component was not checked.
@@ -361,7 +360,7 @@ class EleLessThanResult(IsLessResult):
         return all(ran) if ran else True
 
 
-class EleLessThan(IsLess[EleObservation]):
+class EleLessThan(IsLess[EleObservation, EleLessThanResult]):
     """Component-wise less-than comparison between two EleObservations.
 
     Set a field to ``True`` to enable the less-than check for that component.

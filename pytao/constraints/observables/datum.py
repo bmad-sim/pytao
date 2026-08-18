@@ -10,10 +10,9 @@ from pytao import Tao
 from pytao.errors import TaoCommandError
 from pytao.constraints.observables.base import (
     CheckResult,
+    ComparisonResult,
     IsClose,
-    IsCloseResult,
     IsLess,
-    IsLessResult,
     LatticeObservable,
     LiteralObservable,
     Observation,
@@ -61,7 +60,7 @@ class DatumObservation(Observation):
     design_value: float
 
 
-class DatumIsCloseResult(IsCloseResult):
+class DatumIsCloseResult(ComparisonResult):
     """Result of a DatumIsClose comparison with per-field check results.
 
     Each field is ``None`` if the corresponding comparison was not run.
@@ -89,7 +88,7 @@ class DatumIsCloseResult(IsCloseResult):
         return all(ran) if ran else True
 
 
-class DatumIsClose(IsClose[DatumObservation]):
+class DatumIsClose(IsClose[DatumObservation, DatumIsCloseResult]):
     """IsClose operator comparing two DatumObservation instances.
 
     Set a field to ``None`` to skip that comparison.
@@ -118,7 +117,7 @@ class DatumIsClose(IsClose[DatumObservation]):
         return DatumIsCloseResult(model_value=model_value, design_value=design_value)
 
 
-class DatumLessThanResult(IsLessResult):
+class DatumLessThanResult(ComparisonResult):
     """Result of a DatumLessThan comparison with per-field less-than check results.
 
     Each field is ``None`` if the corresponding component was not checked.
@@ -146,7 +145,7 @@ class DatumLessThanResult(IsLessResult):
         return all(ran) if ran else True
 
 
-class DatumLessThan(IsLess[DatumObservation]):
+class DatumLessThan(IsLess[DatumObservation, DatumLessThanResult]):
     """Component-wise less-than comparison between two DatumObservations.
 
     Set a field to ``True`` to enable the less-than check for that component.
