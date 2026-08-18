@@ -3,11 +3,7 @@ from __future__ import annotations
 from enum import Enum
 from typing import Literal
 
-
-from pydantic import computed_field
-
 from pytao import Tao
-from pytao.errors import TaoCommandError
 from pytao.constraints.observables.base import (
     CheckResult,
     ComparisonResult,
@@ -18,6 +14,7 @@ from pytao.constraints.observables.base import (
     Observation,
 )
 from pytao.constraints.observables.ele import TolComparison
+from pytao.errors import TaoCommandError
 
 
 class DataSource(str, Enum):
@@ -79,14 +76,6 @@ class DatumIsCloseResult(ComparisonResult):
     model_value: CheckResult | None = None
     design_value: CheckResult | None = None
 
-    @computed_field
-    @property
-    def is_satisfied(self) -> bool:
-        if not super().is_satisfied:
-            return False
-        ran = [r for r in [self.model_value, self.design_value] if r is not None]
-        return all(ran) if ran else True
-
 
 class DatumIsClose(IsClose[DatumObservation, DatumIsCloseResult]):
     """IsClose operator comparing two DatumObservation instances.
@@ -135,14 +124,6 @@ class DatumLessThanResult(ComparisonResult):
     result_type: Literal["datum_is_less"] = "datum_is_less"
     model_value: CheckResult | None = None
     design_value: CheckResult | None = None
-
-    @computed_field
-    @property
-    def is_satisfied(self) -> bool:
-        if not super().is_satisfied:
-            return False
-        ran = [r for r in [self.model_value, self.design_value] if r is not None]
-        return all(ran) if ran else True
 
 
 class DatumLessThan(IsLess[DatumObservation, DatumLessThanResult]):

@@ -4,9 +4,7 @@ from collections.abc import Callable
 from typing import Literal
 
 import numpy as np
-from pydantic import Field, computed_field
-
-from pytao.constraints.pydantic import ConstraintsBase
+from pydantic import Field
 
 from pytao import Tao
 from pytao.constraints.observables.base import (
@@ -19,6 +17,7 @@ from pytao.constraints.observables.base import (
     Observation,
 )
 from pytao.constraints.observables.twiss import AnyTwissComparison, BmagTwissComparison
+from pytao.constraints.pydantic import ConstraintsBase
 from pytao.model import (
     ElementFloor,
     ElementFloorAll,
@@ -120,31 +119,6 @@ class EleIsCloseResult(ComparisonResult):
     floor_x: CheckResult | None = None
     floor_y: CheckResult | None = None
     floor_z: CheckResult | None = None
-
-    @computed_field
-    @property
-    def is_satisfied(self) -> bool:
-        if not super().is_satisfied:
-            return False
-        ran = [
-            r
-            for r in [
-                self.twiss_a,
-                self.twiss_b,
-                self.eta_x,
-                self.etap_x,
-                self.eta_y,
-                self.etap_y,
-                self.ref_energy,
-                self.p0c,
-                self.orbit,
-                self.floor_x,
-                self.floor_y,
-                self.floor_z,
-            ]
-            if r is not None
-        ]
-        return all(ran) if ran else True
 
 
 class EleIsClose(IsClose[EleObservation, EleIsCloseResult]):
@@ -333,32 +307,6 @@ class EleLessThanResult(ComparisonResult):
     floor_x: CheckResult | None = None
     floor_y: CheckResult | None = None
     floor_z: CheckResult | None = None
-
-    @computed_field
-    @property
-    def is_satisfied(self) -> bool:
-        if not super().is_satisfied:
-            return False
-        ran = [
-            r
-            for r in [
-                self.beta_a,
-                self.alpha_a,
-                self.beta_b,
-                self.alpha_b,
-                self.eta_x,
-                self.etap_x,
-                self.eta_y,
-                self.etap_y,
-                self.ref_energy,
-                self.p0c,
-                self.floor_x,
-                self.floor_y,
-                self.floor_z,
-            ]
-            if r is not None
-        ]
-        return all(ran) if ran else True
 
 
 class EleLessThan(IsLess[EleObservation, EleLessThanResult]):
