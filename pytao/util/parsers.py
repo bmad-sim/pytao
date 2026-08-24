@@ -1808,7 +1808,7 @@ def parse_show_version(lines, cmd="", as_date: bool = False) -> datetime.datetim
         return None
 
 
-def parse_ele_wake(lines, cmd="") -> dict[str, Any] | list[list]:
+def parse_ele_wake(lines, cmd="") -> dict[str, Any] | list[list[float | str]] | np.ndarray:
     """
     Parse ele:wake data.
 
@@ -1819,6 +1819,7 @@ def parse_ele_wake(lines, cmd="") -> dict[str, Any] | list[list]:
     args = _get_cmd_args(cmd)
     if len(args) > 1 and args[1].lower() in {
         "sr_long_table",
+        "sr_z_long_table",
         "lr_mode_table",
         "sr_trans_table",
     }:
@@ -1829,7 +1830,11 @@ def parse_ele_wake(lines, cmd="") -> dict[str, Any] | list[list]:
             except ValueError:
                 return str(value).strip()
 
-        return [[fix_maybe_none(value) for value in line.split(";")] for line in lines]
+        res = [[fix_maybe_none(value) for value in line.split(";")] for line in lines]
+
+        if args[1].lower() in {"sr_z_long_table"}:
+            res = np.asarray(res)
+        return res
 
     return parse_tao_python_data(lines)
 

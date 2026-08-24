@@ -1577,6 +1577,7 @@ class ElementWakeBase(TaoModel):
     has_lr_mode : bool
     has_sr_long : bool
     has_sr_trans : bool
+    has_sr_z_long : bool
     lr_amp_scale : float
         Wake amplitude scale factor.
     lr_freq_spread : float
@@ -1600,6 +1601,7 @@ class ElementWakeBase(TaoModel):
     has_lr_mode: bool = Field(default=False, alias="has#lr_mode", frozen=True)
     has_sr_long: bool = Field(default=False, alias="has#sr_long", frozen=True)
     has_sr_trans: bool = Field(default=False, alias="has#sr_trans", frozen=True)
+    has_sr_z_long: bool = Field(default=False, alias="has#sr_z_long", frozen=True)
     lr_amp_scale: float = Field(
         default=1.0, description="Wake amplitude scale factor.", alias="lr%amp_scale"
     )

@@ -5,10 +5,12 @@ import pytest
 
 from .. import AnyTao
 from ..util.parsers import (
+    _value_float_or_none as value_float_or_none,
+)
+from ..util.parsers import (
     parse_derivative,
     parse_show_version,
     parse_tao_python_data,
-    _value_float_or_none as value_float_or_none,
 )
 from .conftest import ensure_successful_parsing
 from .test_interface_commands import new_tao
