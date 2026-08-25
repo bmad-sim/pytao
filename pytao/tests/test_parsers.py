@@ -26,6 +26,8 @@ from ..util.parsers import (
     parse_var_v_array_line,
     parse_wave,
 )
+from ..errors import TaoDataInvalidError
+from ..util import parsers
 from .conftest import ensure_successful_parsing, test_root
 from .test_interface_commands import new_tao
 
@@ -1054,3 +1056,77 @@ def test_malformed_exponents_in_parsers():
     var_line = parse_var_v_array_line("1;q[k1];1-300;2-300;3-300;T;T;1+300")
     assert var_line["meas_value"] == 1e-300
     assert var_line["weight"] == 1e300
+
+
+@pytest.mark.parametrize(
+    ["parser", "cmd"],
+    [
+        pytest.param(parsers.parse_bunch_comb, "", id="bunch_comb"),
+        pytest.param(parsers.parse_da_aperture, "", id="da_aperture"),
+        pytest.param(parsers.parse_data_d_array, "", id="data_d_array"),
+        pytest.param(parsers.parse_data_d1_array, "", id="data_d1_array"),
+        pytest.param(parsers.parse_data_d2_array, "", id="data_d2_array"),
+        pytest.param(
+            parsers.parse_data_parameter,
+            "pipe data_parameter twiss.end meas_value",
+            id="data_parameter",
+        ),
+        pytest.param(parsers.parse_datum_has_ele, "", id="datum_has_ele"),
+        pytest.param(parsers.parse_derivative, "", id="derivative"),
+        pytest.param(parsers.parse_ele_ac_kicker, "", id="ele_ac_kicker"),
+        pytest.param(
+            parsers.parse_ele_cartesian_map,
+            "pipe ele:cartesian_map 1 1 terms",
+            id="ele_cartesian_map",
+        ),
+        pytest.param(parsers.parse_ele_chamber_wall, "", id="ele_chamber_wall"),
+        pytest.param(parsers.parse_ele_control_var, "", id="ele_control_var"),
+        pytest.param(
+            parsers.parse_ele_cylindrical_map,
+            "pipe ele:cylindrical_map 1 1 terms",
+            id="ele_cylindrical_map",
+        ),
+        pytest.param(parsers.parse_ele_elec_multipoles, "", id="ele_elec_multipoles"),
+        pytest.param(
+            parsers.parse_ele_grid_field, "pipe ele:grid_field 1 1 points", id="ele_grid_field"
+        ),
+        pytest.param(parsers.parse_ele_multipoles, "", id="ele_multipoles"),
+        pytest.param(parsers.parse_ele_taylor, "", id="ele_taylor"),
+        pytest.param(parsers.parse_ele_wall3d, "pipe ele:wall3d 1 1 table", id="ele_wall3d"),
+        pytest.param(parsers.parse_ele_wake, "pipe ele:wake 1 sr_long_table", id="ele_wake"),
+        pytest.param(parsers.parse_em_field, "", id="em_field"),
+        pytest.param(parsers.parse_enum, "", id="enum"),
+        pytest.param(parsers.parse_evaluate, "", id="evaluate"),
+        pytest.param(parsers.parse_floor_plan, "", id="floor_plan"),
+        pytest.param(parsers.parse_floor_orbit, "", id="floor_orbit"),
+        pytest.param(parsers.parse_inum, "", id="inum"),
+        pytest.param(parsers.parse_lat_ele_list, "", id="lat_ele_list"),
+        pytest.param(parsers.parse_lat_list, "", id="lat_list"),
+        pytest.param(parsers.parse_lat_param_units, "", id="lat_param_units"),
+        pytest.param(parsers.parse_matrix, "", id="matrix"),
+        pytest.param(parsers.parse_merit, "", id="merit"),
+        pytest.param(parsers.parse_plot_list, "pipe plot_list r", id="plot_list"),
+        pytest.param(parsers.parse_species_to_int, "", id="species_to_int"),
+        pytest.param(parsers.parse_species_to_str, "", id="species_to_str"),
+        pytest.param(parsers.parse_taylor_map, "", id="taylor_map"),
+        pytest.param(parsers.parse_var_v_array, "", id="var_v_array"),
+        pytest.param(parsers.parse_wave, "pipe wave params", id="wave"),
+    ],
+)
+def test_invalid_raises(monkeypatch, parser, cmd: str):
+    with pytest.raises(TaoDataInvalidError):
+        parser(["INVALID"], cmd=cmd)
+
+
+def test_invalid_appended_after_data(monkeypatch):
+    # Tao's invalid() appends INVALID after any lines already written.
+    monkeypatch.setattr(parsers.Settings, "ensure_count", False)
+    with pytest.raises(TaoDataInvalidError):
+        parse_ele_param(["taylor_map_includes_offsets;LOGIC;T;F", "INVALID"])
+    with pytest.raises(TaoDataInvalidError):
+        parsers.parse_ele_taylor(["taylor_map_includes_offsets;LOGIC;T;F", "INVALID"])
+
+
+def test_em_field_empty_output_raises():
+    with pytest.raises(TaoDataInvalidError):
+        parsers.parse_em_field([])

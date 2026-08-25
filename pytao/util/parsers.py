@@ -120,6 +120,19 @@ def parse_bool(s) -> bool:
         raise ValueError("Unknown bool: " + s)
 
 
+def _check_invalid(lines: list[str]) -> None:
+    """
+    Raise `TaoDataInvalidError` if Tao marked the output as INVALID.
+
+    Tao's ``invalid()`` appends a bare INVALID line after any lines already
+    written, so the whole output is scanned.
+    """
+    if isinstance(lines, np.ndarray):
+        pass
+    elif any(line == "INVALID" for line in lines):
+        raise TaoDataInvalidError("Data unavailable - Tao marked it as INVALID")
+
+
 def parse_tao_lat_ele_list(lines) -> dict[str, int]:
     """
     returns mapping of names to index
@@ -181,12 +194,6 @@ def parse_pytype(type, val: str | list[str]) -> FieldType:
 
     if type == "STRUCT":
         return {name: parse_pytype(t1, v1) for name, t1, v1 in chunks(val, 3)}
-
-    if type in [
-        "STR_ARR",
-        "ENUM_ARR",
-    ]:
-        return val
 
     if type in [
         "STR",
@@ -358,6 +365,7 @@ def parse_data_d_array(lines, cmd="") -> list[DataDArrayInfo]:
             'weight', 'exists'
 
     """
+    _check_invalid(lines)
     result = []
     for line in lines:
         d = {}
@@ -389,6 +397,7 @@ def parse_derivative(lines, cmd="") -> dict[int, np.ndarray]:
         with dModel_dVar as the value:
             np.ndarray with shape (n_data, n_var)
     """
+    _check_invalid(lines)
     lines = [ln for ln in lines if ln and len(ln.split(";")) > 3]
 
     # Calculate matrix bounds
@@ -437,6 +446,7 @@ def parse_ele_control_var(lines, cmd="") -> dict[str, float]:
     dict of attributes and values
 
     """
+    _check_invalid(lines)
     d = {}
     for line in lines:
         try:
@@ -464,7 +474,7 @@ def parse_lat_ele_list(lines, cmd="") -> list[str]:
     list of str of element names
 
     """
-
+    _check_invalid(lines)
     return [s.split(";")[1] for s in lines]
 
 
@@ -485,6 +495,7 @@ def parse_matrix(lines, cmd="") -> MatrixResult:
 
 
     """
+    _check_invalid(lines)
     m7 = np.array([[_float(x) for x in line.split(";")[1:]] for line in lines])
     return MatrixResult(mat6=m7[:, 0:6], vec0=m7[:, 6])
 
@@ -503,6 +514,7 @@ def parse_merit(lines, cmd="") -> float:
     merit: float
         Value of the merit function
     """
+    _check_invalid(lines)
     assert len(lines) == 1
     return _float(lines[0])
 
@@ -533,6 +545,7 @@ def parse_plot_list(lines, cmd="") -> dict[str, int] | list[PlotListRegionInfo]:
             x1, x2, y1, y1
 
     """
+    _check_invalid(lines)
 
     if not lines:
         return {}
@@ -609,6 +622,7 @@ def parse_taylor_map(lines, cmd="") -> dict[int, dict[tuple[int, ...], float]]:
 
 
     """
+    _check_invalid(lines)
     tt = {i: {} for i in range(1, 7)}
     for term_str in lines:
         t = term_str.split(";")
@@ -641,6 +655,7 @@ def parse_var_v_array(lines, cmd="") -> list[VarVArrayLineResult]:
     -------
     list of dict
     """
+    _check_invalid(lines)
     return [parse_var_v_array_line(line) for line in lines]
 
 
@@ -702,10 +717,10 @@ def _parse_by_keys_to_types(
     if ensure_count is None:
         ensure_count = Settings.ensure_count
 
+    _check_invalid(lines)
+
     if ensure_count:
         for line in lines:
-            if line == "INVALID":
-                raise TaoDataInvalidError("Data unavailable - Tao marked it as INVALID")
             assert len(key_to_type) == len(line.split(";"))
 
     return [
@@ -911,6 +926,7 @@ def parse_data_d2_array(lines, cmd="") -> list[str]:
     -------
     list of str
     """
+    _check_invalid(lines)
     return lines
 
 
@@ -980,6 +996,7 @@ def parse_data_parameter(lines, cmd="") -> list[DataParameterLineInfo]:
             data=[fix_value(val, expected_type) for val in values],
         )
 
+    _check_invalid(lines)
     return [fix_line(line) for line in lines]
 
 
@@ -992,6 +1009,7 @@ def parse_datum_has_ele(lines, cmd="") -> str | None:
     str or None
         "no", "yes", "maybe", "provisional"
     """
+    _check_invalid(lines)
     return lines[0] if lines else None
 
 
@@ -1113,6 +1131,7 @@ def parse_ele_elec_multipoles(lines, cmd="") -> dict[str, Any]:
     -------
     dict
     """
+    _check_invalid(lines)
     logic_lines = [line for line in lines if "LOGIC" in line]
     lines = [line for line in lines if line not in logic_lines]
     key_to_type = {"index": int}
@@ -1139,7 +1158,7 @@ def parse_ele_grid_field(lines, cmd="") -> list[EleGridFieldPointInfo] | dict[st
         "points" mode will be a list of dictionaries.
         Normal mode will be a single dictionary.
     """
-
+    _check_invalid(lines)
     args = _get_cmd_args(cmd)
     if args[-1].lower() == "points":
 
@@ -1215,6 +1234,7 @@ def parse_ele_multipoles(lines, cmd="") -> dict[str, Any]:
     -------
     dict
     """
+    _check_invalid(lines)
     logic_lines = [line for line in lines if "LOGIC" in line]
     lines = [line for line in lines if line not in logic_lines]
     key_to_type = {"index": int}
@@ -1271,6 +1291,7 @@ def parse_ele_taylor(lines, cmd="") -> dict[str, Any]:
     -------
     dict
     """
+    _check_invalid(lines)
 
     def split_sections(lines):
         sections = []
@@ -1347,6 +1368,7 @@ def parse_ele_wall3d(lines, cmd="") -> list[dict[str, Any]] | dict[str, Any]:
     -------
     list of dict
     """
+    _check_invalid(lines)
 
     def split_sections(lines):
         sections = []
@@ -1395,6 +1417,9 @@ def parse_em_field(lines, cmd="") -> EmFieldResult:
     -------
     dict
     """
+    if not lines:
+        # em_field_calc failures produce no output and no INVALID marker.
+        raise TaoDataInvalidError("em_field returned no data (calculation failed)")
     return _parse_by_keys_to_types(
         lines,
         {
@@ -1506,6 +1531,7 @@ def parse_inum(lines, cmd="") -> list[int]:
     -------
     list of int
     """
+    _check_invalid(lines)
     return [int(num) for num in lines]
 
 
@@ -1547,6 +1573,7 @@ def parse_lat_param_units(lines, cmd="") -> str:
     -------
     str
     """
+    _check_invalid(lines)
     return lines[0]
 
 
@@ -1768,6 +1795,7 @@ def parse_species_to_int(lines, cmd="") -> int:
     -------
     int
     """
+    _check_invalid(lines)
     return int(lines[0])
 
 
@@ -1779,6 +1807,7 @@ def parse_species_to_str(lines, cmd="") -> str:
     -------
     str
     """
+    _check_invalid(lines)
     return lines[0]
 
 
@@ -1903,6 +1932,9 @@ def parse_lat_list(lines, cmd="") -> np.ndarray | list[float]:
     -------
     list of str
     """
+    if isinstance(lines, np.ndarray):
+        return lines
+    _check_invalid(lines)
     return lines
 
 
@@ -2016,6 +2048,7 @@ def parse_ele_wake(lines, cmd="") -> dict[str, Any] | list[list[float | str]] | 
     -------
     dict, or list of dict
     """
+    _check_invalid(lines)
     args = _get_cmd_args(cmd)
     if len(args) > 1 and args[1].lower() in {
         "sr_long_table",
@@ -2044,6 +2077,7 @@ def parse_evaluate(lines, cmd="") -> np.ndarray | list[float]:
     if isinstance(lines, np.ndarray):
         return lines
 
+    _check_invalid(lines)
     return [_float(line.rsplit(";")[1]) for line in lines]
 
 
