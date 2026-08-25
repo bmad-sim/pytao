@@ -58,7 +58,9 @@ from .parser_types import (
 logger = logging.getLogger(__name__)
 
 
-FieldType = int | float | bool | str | complex | np.ndarray | dict[str, "FieldType"]
+FieldType = (
+    int | float | bool | str | complex | np.ndarray | list[str] | dict[str, "FieldType"]
+)
 
 
 class Settings:
@@ -134,7 +136,7 @@ def parse_tao_lat_ele_list(lines) -> dict[str, int]:
     return ix
 
 
-def parse_pytype(type, val: str) -> FieldType:
+def parse_pytype(type, val: str | list[str]) -> FieldType:
     """
     Parses the various types from `tao_pipe_cmd`
 
@@ -165,15 +167,26 @@ def parse_pytype(type, val: str) -> FieldType:
     ]:
         return val
 
+    if isinstance(val, str):
+        val = [val]
+
     if type == "INT_ARR":
-        return np.array(val).astype(int)
+        return np.array([int(v) for v in val])
 
     if type == "REAL_ARR":
-        return np.array(val).astype(float)
+        return np.array([_float(v) for v in val])
 
-    if isinstance(val, list):
-        if len(val) == 1:
-            val = val[0]
+    if type == "COMPLEX":
+        return complex(*(_float(v) for v in val))
+
+    if type == "STRUCT":
+        return {name: parse_pytype(t1, v1) for name, t1, v1 in chunks(val, 3)}
+
+    if type in [
+        "STR_ARR",
+        "ENUM_ARR",
+    ]:
+        return val
 
     if type in [
         "STR",
@@ -186,23 +199,27 @@ def parse_pytype(type, val: str) -> FieldType:
         "SPECIES",
         "ELE_PARAM",
     ]:
-        return val
+        # The value itself may contain semicolons (e.g. in a lattice title).
+        return ";".join(val)
+
+    if len(val) == 1:
+        scalar = val[0]
+    elif not val:
+        scalar = ""
+    else:
+        raise ValueError(f"Unexpected multi-value {type} field: {val!r}")
 
     if type == "LOGIC":
-        return parse_bool(val)
+        return parse_bool(scalar)
 
     if type in ["INT", "INUM"]:
-        return int(val or 0)
+        return int(scalar or 0)
 
     if type == "REAL":
         # Note that some pipe commands may return any empty value instead of 0
-        return float(val or 0)
-
-    if type == "COMPLEX":
-        return complex(*(float(v) for v in val))
-
-    if type == "STRUCT":
-        return {name: parse_pytype(t1, v1) for name, t1, v1 in chunks(val, 3)}
+        if not scalar:
+            return 0.0
+        return _float(scalar)
 
     # Not found
     raise ValueError("Unknown type: " + type)
@@ -401,7 +418,7 @@ def parse_derivative(lines, cmd="") -> dict[int, np.ndarray]:
         nv = len(cells) - 3  # Number of vars
 
         # Populate matrix
-        universe[iu][id - 1, iv0 - 1 : iv0 + nv - 1] = [float(x) for x in cells[3:]]
+        universe[iu][id - 1, iv0 - 1 : iv0 + nv - 1] = [_float(x) for x in cells[3:]]
 
     return universe
 
@@ -429,7 +446,7 @@ def parse_ele_control_var(lines, cmd="") -> dict[str, float]:
         except ValueError:
             logger.warning("Skipping value: %s", line)
         else:
-            d[name] = float(value)
+            d[name] = _float(value)
     return d
 
 
@@ -468,7 +485,7 @@ def parse_matrix(lines, cmd="") -> MatrixResult:
 
 
     """
-    m7 = np.array([[float(x) for x in line.split(";")[1:]] for line in lines])
+    m7 = np.array([[_float(x) for x in line.split(";")[1:]] for line in lines])
     return MatrixResult(mat6=m7[:, 0:6], vec0=m7[:, 6])
 
 
@@ -487,7 +504,7 @@ def parse_merit(lines, cmd="") -> float:
         Value of the merit function
     """
     assert len(lines) == 1
-    return float(lines[0])
+    return _float(lines[0])
 
 
 def parse_plot_list(lines, cmd="") -> dict[str, int] | list[PlotListRegionInfo]:
@@ -517,6 +534,9 @@ def parse_plot_list(lines, cmd="") -> dict[str, int] | list[PlotListRegionInfo]:
 
     """
 
+    if not lines:
+        return {}
+
     # infer region or template output
     nv = len(lines[0].split(";"))
 
@@ -539,10 +559,10 @@ def parse_plot_list(lines, cmd="") -> dict[str, int] | list[PlotListRegionInfo]:
                     ix=int(ix),
                     plot_name=plot_name,
                     visible=_parse_str_bool(visible),
-                    x1=float(x1),
-                    x2=float(x2),
-                    y1=float(y1),
-                    y2=float(y2),
+                    x1=_float(x1),
+                    x2=_float(x2),
+                    y1=_float(y1),
+                    y2=_float(y2),
                 )
             )
         return region_output
@@ -593,7 +613,7 @@ def parse_taylor_map(lines, cmd="") -> dict[int, dict[tuple[int, ...], float]]:
     for term_str in lines:
         t = term_str.split(";")
         out = int(t[0])
-        coef = float(t[2])
+        coef = _float(t[2])
         exponents = tuple([int(i) for i in t[3:]])
         tt[out][exponents] = coef
     return tt
@@ -604,12 +624,12 @@ def parse_var_v_array_line(line, cmd="") -> VarVArrayLineResult:
     return VarVArrayLineResult(
         ix_v1=int(v[0]),
         var_attrib_name=v[1],
-        meas_value=float(v[2]),
-        model_value=float(v[3]),
-        design_value=float(v[4]),
+        meas_value=_float(v[2]),
+        model_value=_float(v[3]),
+        design_value=_float(v[4]),
         useit_opt=_parse_str_bool(v[5]),
         good_user=_parse_str_bool(v[6]),
-        weight=float(v[7]),
+        weight=_float(v[7]),
     )
 
 
@@ -645,7 +665,7 @@ def fix_value(value: str, typ: type):
     if typ is FloatOrNone:
         return _value_float_or_none(value)
     if typ is float:
-        return _fix_float_scientific_notation(value)
+        return _float(value)
 
     return typ(value)
 
@@ -793,7 +813,7 @@ def parse_bunch_comb(lines, cmd="") -> np.ndarray:
         if line == "INVALID":
             raise TaoDataInvalidError("Data unavailable - Tao marked it as INVALID")
         _index, value = line.split(";")
-        values.append(_fix_float_scientific_notation(value))
+        values.append(_float(value))
     return np.asarray(values)
 
 
@@ -1071,12 +1091,12 @@ def parse_ele_cylindrical_map(
                 {
                     "index": int(index),
                     "e_coef": complex(
-                        _fix_float_scientific_notation(e_re),
-                        _fix_float_scientific_notation(e_im),
+                        _float(e_re),
+                        _float(e_im),
                     ),
                     "b_coef": complex(
-                        _fix_float_scientific_notation(b_re),
-                        _fix_float_scientific_notation(b_im),
+                        _float(b_re),
+                        _float(b_im),
                     ),
                 }
             )
@@ -1125,7 +1145,7 @@ def parse_ele_grid_field(lines, cmd="") -> list[EleGridFieldPointInfo] | dict[st
         def parse_point_line(line: str) -> EleGridFieldPointInfo:
             parts = line.split(";")
             i, j, k = (int(part) for part in parts[:3])
-            data = [ast.literal_eval(part.strip()) for part in parts[3:]]
+            data = [_float(part) for part in parts[3:]]
             return EleGridFieldPointInfo(
                 i=i,
                 j=j,
@@ -1233,7 +1253,7 @@ def parse_ele_param(lines, cmd="") -> dict[str, Any]:
     if len(lines) == 1 and lines[0] != "INVALID":
         name, type_, _settable, *values = lines[0].split(";")
         if type_ == "REAL" and len(values) > 1:
-            arr = np.array([_fix_float_scientific_notation(value) for value in values])
+            arr = np.array([_float(value) for value in values])
             shape = _ELE_PARAM_SHAPES.get(name)
             if shape is not None:
                 arr = arr.reshape(shape)
@@ -1529,11 +1549,17 @@ def parse_lat_param_units(lines, cmd="") -> str:
     return lines[0]
 
 
-def _fix_float_scientific_notation(value: str) -> float:
+def _float(value: str) -> float:
+    """
+    Fix scientific notation without an 'e' and infinity/nan markers.
+
+    Fortran es22.14 output can drop the "E" for 3-digit exponents:
+      e.g., 1.42+245 -> 1.42e245
+
+    This handles NaN/Infinity/-Infinity as well.
+    """
+    value = value.strip()
     if ("-" in value or "+" in value) and "e" not in value:
-        # TODO: some floating point values like gg%deriv of ele_gen_grad_map
-        # are formatted incorrectly:
-        #   e.g., 1.42+245 -> 1.42e245
         try:
             return float(value)
         except ValueError:
@@ -1548,7 +1574,7 @@ def _fix_float_scientific_notation(value: str) -> float:
 
 def _value_float_or_none(s: str):
     s = s.strip()
-    return None if s == "" else _fix_float_scientific_notation(s)
+    return None if s == "" else _float(s)
 
 
 def parse_lord_control(lines, cmd="") -> list[LordControlInfo]:
@@ -1909,7 +1935,10 @@ def parse_show_plot_page(lines, cmd="") -> dict[str, Any]:
         try:
             return ast.literal_eval(value.strip())
         except (ValueError, SyntaxError):
-            return value
+            try:
+                return _float(value)
+            except ValueError:
+                return value
 
     result = {}
     for line in lines:
@@ -2014,7 +2043,7 @@ def parse_evaluate(lines, cmd="") -> np.ndarray | list[float]:
     if isinstance(lines, np.ndarray):
         return lines
 
-    return [float(line.rsplit(";")[1]) for line in lines]
+    return [_float(line.rsplit(";")[1]) for line in lines]
 
 
 def _parse_wave_param_value(type_: str, value: str) -> FieldType:

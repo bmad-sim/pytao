@@ -14,9 +14,16 @@ from ..util.parsers import (
     parse_derivative,
     parse_ele_ac_kicker,
     parse_ele_cylindrical_map,
+    parse_ele_grid_field,
     parse_ele_param,
+    parse_evaluate,
+    parse_matrix,
+    parse_merit,
+    parse_pytype,
     parse_show_version,
     parse_tao_python_data,
+    parse_taylor_map,
+    parse_var_v_array_line,
     parse_wave,
 )
 from .conftest import ensure_successful_parsing, test_root
@@ -1005,3 +1012,45 @@ def test_da_aperture(tao_cls: type[AnyTao]):
         assert {point["ix_scan"] for point in points} == {1}
         assert {point["ix_point"] for point in points} == {1, 2, 3}
         assert all(point["y"] >= 0 for point in points)
+
+
+@pytest.mark.parametrize(
+    ["type_", "value", "expected"],
+    [
+        pytest.param("REAL", ["1.42000000000000+245"], 1.42e245),
+        pytest.param("REAL", ["-1.42000000000000-245"], -1.42e-245),
+        pytest.param("REAL_ARR", ["1.0", "1.42+245"], np.array([1.0, 1.42e245])),
+        pytest.param("COMPLEX", ["1.0-300", "2.0+300"], complex(1e-300, 2e300)),
+    ],
+)
+def test_parse_pytype_malformed_exponent(type_: str, value: list[str], expected):
+    parsed = parse_pytype(type_, value)
+    if isinstance(expected, np.ndarray):
+        assert isinstance(parsed, np.ndarray)
+        np.testing.assert_allclose(parsed, expected)
+    else:
+        assert parsed == expected
+
+
+def test_malformed_exponents_in_parsers():
+    assert parse_evaluate(["1;  1.42000000000000+245"]) == [1.42e245]
+    assert parse_merit(["  1.00000000000000+100"]) == 1e100
+
+    taylor = parse_taylor_map(["1;1;  1.00000000000000-300;1;0;0;0;0;0"])
+    assert taylor[1][(1, 0, 0, 0, 0, 0)] == 1e-300
+
+    matrix = parse_matrix(["1;1-300;0.0;0.0;0.0;0.0;0.0;2+300"])
+    assert matrix["mat6"][0, 0] == 1e-300
+    assert matrix["vec0"][0] == 2e300
+
+    points = parse_ele_grid_field(
+        ["1;2;3;  1.00000000000000+300; NaN"],
+        cmd="pipe ele:grid_field 1@0>>1|model 1 points",
+    )
+    assert isinstance(points, list)
+    assert points[0]["data"][0] == 1e300
+    assert math.isnan(points[0]["data"][1])
+
+    var_line = parse_var_v_array_line("1;q[k1];1-300;2-300;3-300;T;T;1+300")
+    assert var_line["meas_value"] == 1e-300
+    assert var_line["weight"] == 1e300
