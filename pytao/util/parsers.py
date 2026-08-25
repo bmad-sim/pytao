@@ -6,8 +6,11 @@ import datetime
 import logging
 import re
 from collections import defaultdict
-from typing import cast, Any, TypeVar
+from typing import Any, TypeVar, cast
 
+import numpy as np
+
+from ..errors import TaoDataInvalidError
 from .parser_types import (
     BuildingWallGlobalInfo,
     BuildingWallGraphInfo,
@@ -17,9 +20,10 @@ from .parser_types import (
     DataD1ArrayInfo,
     DataDArrayInfo,
     DataParameterLineInfo,
+    EleCartesianMapInfo,
     EleChamberWallInfo,
-    EleGenGradientDerivInfo,
     EleGenGradientBase,
+    EleGenGradientDerivInfo,
     EleGridFieldPointInfo,
     EleLordSlaveInfo,
     EleSpinTaylorInfo,
@@ -46,9 +50,6 @@ from .parser_types import (
     VarVArrayLineResult,
 )
 
-import numpy as np
-from ..errors import TaoDataInvalidError
-
 logger = logging.getLogger(__name__)
 
 
@@ -62,8 +63,6 @@ class Settings:
 # Custom type for float or None values
 class FloatOrNone:
     """Type marker for values that should be parsed as float or None if empty."""
-
-    pass
 
 
 T = TypeVar("T", bound=str | int | float | bool)
@@ -931,6 +930,37 @@ def parse_datum_has_ele(lines, cmd="") -> str | None:
         "no", "yes", "maybe", "provisional"
     """
     return lines[0] if lines else None
+
+
+def parse_ele_cartesian_map(lines, cmd="") -> list[EleCartesianMapInfo] | dict[str, Any]:
+    """
+    Parse ele_cartesian_map results.
+
+    Returns
+    -------
+    dict or list of dict
+        "terms" mode will be a list of EleCartesianMapInfo dictionaries.
+        Normal mode will be a single dictionary.
+    """
+    args = _get_cmd_args(cmd)
+    if args[-1].lower() == "terms":
+        return _parse_by_keys_to_types(
+            lines,
+            {
+                "index": int,
+                "coef": float,
+                "kx": float,
+                "ky": float,
+                "kz": float,
+                "x0": float,
+                "y0": float,
+                "phi_z": float,
+                "family": str,
+                "form": str,
+            },
+        )
+
+    return parse_tao_python_data(lines)
 
 
 def parse_ele_chamber_wall(lines, cmd="") -> list[EleChamberWallInfo]:

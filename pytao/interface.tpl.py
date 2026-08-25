@@ -16,6 +16,7 @@ from .util.parser_types import (  # noqa: F401
     DataD1ArrayInfo,
     DataDArrayInfo,
     DataParameterLineInfo,
+    EleCartesianMapInfo,
     EleChamberWallInfo,
     EleGenGradientBase,
     EleGenGradientDerivInfo,

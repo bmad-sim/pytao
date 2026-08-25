@@ -277,6 +277,19 @@ class EleGridFieldPointInfo(TypedDict):
     data: list[Any]
 
 
+class EleCartesianMapInfo(TypedDict):
+    index: int
+    coef: float
+    kx: float
+    ky: float
+    kz: float
+    x0: float
+    y0: float
+    phi_z: float
+    family: str
+    form: str
+
+
 EleGenGradientBase = TypedDict(
     "EleGenGradientBase",
     {
