@@ -322,6 +322,7 @@ class TaoCommandError(TaoExceptionWithOutput, RuntimeError):
     """
 
     tao_output: str
+    inner_exc: Exception | None = None
 
 
 error_filter_context: contextvars.ContextVar[TaoErrorFilterContext | None] = (
