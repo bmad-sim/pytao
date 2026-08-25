@@ -16,6 +16,7 @@ from .util.parser_types import (  # noqa: F401
     DataD1ArrayInfo,
     DataDArrayInfo,
     DataParameterLineInfo,
+    EleCartesianMapInfo,
     EleChamberWallInfo,
     EleGenGradientBase,
     EleGenGradientDerivInfo,
@@ -41,8 +42,8 @@ from .util.parser_types import (  # noqa: F401
     SpinInvariantInfo,
     VarGeneralInfo,
     VarSlaveInfo,
-    VarVArrayLineResult,
     VarV1ArrayDataInfo,
+    VarVArrayLineResult,
 )
 
 logger = logging.getLogger(__name__)

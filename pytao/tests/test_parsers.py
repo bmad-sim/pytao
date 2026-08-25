@@ -787,3 +787,24 @@ def test_parse_derivative_mixed_universes_and_chunking():
 )
 def test_fix_sci_notation(value: str, expected):
     assert value_float_or_none(value) == expected
+
+
+def test_ele_cartesian_map(tao_cls):
+    with new_tao(
+        tao_cls,
+        "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_em_field",
+        external_plotting=False,
+    ) as tao:
+        base = tao.ele_cartesian_map(
+            ele_id="1@0>>1", which="model", index="1", who="base", verbose=True
+        )
+        assert isinstance(base, dict)
+        assert "file" in base
+
+        terms = tao.ele_cartesian_map(
+            ele_id="1@0>>1", which="model", index="1", who="terms", verbose=True
+        )
+        assert isinstance(terms, list)
+        assert len(terms)
+        assert all("coef" in term for term in terms)
+        assert all("family" in term for term in terms)
