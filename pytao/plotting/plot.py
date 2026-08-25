@@ -1048,9 +1048,9 @@ class FloorOrbits:
         xs = []
         ys = []
         for info in floor_orbit_info:
-            if info["ele_key"] == "x":
+            if info["axis"] == "x":
                 xs.extend(info["orbits"])
-            elif info["ele_key"] == "y":
+            elif info["axis"] == "y":
                 ys.extend(info["orbits"])
 
         return cls(
