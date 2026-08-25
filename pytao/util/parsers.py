@@ -1500,8 +1500,8 @@ def parse_floor_orbit(lines, cmd="") -> list[FloorOrbitInfo]:
             [line],
             {
                 "branch_index": int,
-                "index": int,
-                "ele_key": str,
+                # "index": int,  # TODO -> this was incorrect and removed
+                "ele_key": str,  # TODO: -> this is really ix_ele
                 "axis": str,
             },
             ensure_count=False,
