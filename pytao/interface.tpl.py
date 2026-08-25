@@ -42,8 +42,8 @@ from .util.parser_types import (  # noqa: F401
     SpinInvariantInfo,
     VarGeneralInfo,
     VarSlaveInfo,
-    VarVArrayLineResult,
     VarV1ArrayDataInfo,
+    VarVArrayLineResult,
 )
 
 logger = logging.getLogger(__name__)
