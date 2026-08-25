@@ -145,7 +145,7 @@ class FloorPlanElementInfo(TypedDict):
 
 class FloorOrbitInfo(TypedDict):
     branch_index: int
-    index: int
+    # TODO: `ele_key` actually holds the element index (ix_ele)
     ele_key: str
     axis: str
     orbits: list[float]

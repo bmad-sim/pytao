@@ -329,7 +329,8 @@ def test_floor_orbit_1(tao_cls: type[AnyTao]):
         res = tao.floor_orbit(graph="r33.g")
     assert isinstance(res, list)
     assert isinstance(res[0], dict)
-    assert "index" in res[0]
+    assert "branch_index" in res[0]
+    assert "ele_key" in res[0]
     assert "orbits" in res[0]
 
 
