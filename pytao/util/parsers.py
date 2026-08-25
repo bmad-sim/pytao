@@ -1115,7 +1115,8 @@ def parse_ele_elec_multipoles(lines, cmd="") -> dict[str, Any]:
     """
     logic_lines = [line for line in lines if "LOGIC" in line]
     lines = [line for line in lines if line not in logic_lines]
-    key_to_type = {key: float for key in lines[0].split(";")}
+    key_to_type = {"index": int}
+    key_to_type.update({key: float for key in lines[0].split(";")})
     settings = parse_tao_python_data(logic_lines)
 
     # TODO: 'data' is not actually parsed in the test suite
