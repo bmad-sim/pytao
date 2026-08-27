@@ -10,16 +10,13 @@ from pytao.constraints.config import (
     EleLessThanConstraint,
 )
 from pytao.constraints.main import run
+from pytao.constraints.observables.base import ComparisonResult
 from pytao.constraints.observables.datum import (
-    DatumIsCloseResult,
-    DatumLessThanResult,
     DatumLiteral,
     DatumObservable,
     DatumObservation,
 )
 from pytao.constraints.observables.ele import (
-    EleIsCloseResult,
-    EleLessThanResult,
     EleLiteral,
     EleObservable,
 )
@@ -150,18 +147,10 @@ def test_run_error_result_types():
     _, results = run(config, DATA_DIR)
     crs = results.constraints[None]
     assert len(crs) == 4
-    assert isinstance(crs[0].result, EleIsCloseResult)
-    assert not crs[0].result.is_satisfied
-    assert crs[0].result.error is not None
-    assert isinstance(crs[1].result, EleLessThanResult)
-    assert not crs[1].result.is_satisfied
-    assert crs[1].result.error is not None
-    assert isinstance(crs[2].result, DatumIsCloseResult)
-    assert not crs[2].result.is_satisfied
-    assert crs[2].result.error is not None
-    assert isinstance(crs[3].result, DatumLessThanResult)
-    assert not crs[3].result.is_satisfied
-    assert crs[3].result.error is not None
+    for cr in crs:
+        assert isinstance(cr.result, ComparisonResult)
+        assert not cr.result.is_satisfied
+        assert cr.result.error is not None
 
 
 def test_run_saved_observations():

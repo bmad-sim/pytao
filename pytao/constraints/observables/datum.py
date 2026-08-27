@@ -57,27 +57,7 @@ class DatumObservation(Observation):
     design_value: float
 
 
-class DatumIsCloseResult(ComparisonResult):
-    """Result of a DatumIsClose comparison with per-field check results.
-
-    Each field is ``None`` if the corresponding comparison was not run.
-
-    Attributes
-    ----------
-    type : str
-        Discriminator literal. Always ``"datum_is_close"``.
-    model_value : CheckResult or None
-        Model value comparison result.
-    design_value : CheckResult or None
-        Design value comparison result.
-    """
-
-    type: Literal["datum_is_close"] = "datum_is_close"
-    model_value: CheckResult | None = None
-    design_value: CheckResult | None = None
-
-
-class DatumIsClose(IsClose[DatumObservation, DatumIsCloseResult]):
+class DatumIsClose(IsClose[DatumObservation]):
     """IsClose operator comparing two DatumObservation instances.
 
     Set a field to ``None`` to skip that comparison.
@@ -94,39 +74,19 @@ class DatumIsClose(IsClose[DatumObservation, DatumIsCloseResult]):
     model_value_test: TolComparison | None = TolComparison()
     design_value_test: TolComparison | None = None
 
-    def compare(self, obja: DatumObservation, objb: DatumObservation) -> DatumIsCloseResult:
-        model_value = None
-        design_value = None
-
+    def compare(self, obja: DatumObservation, objb: DatumObservation) -> ComparisonResult:
+        checks = {}
         if self.model_value_test is not None:
-            model_value = self.model_value_test(obja.model_value, objb.model_value)
+            checks["model_value"] = self.model_value_test(obja.model_value, objb.model_value)
         if self.design_value_test is not None:
-            design_value = self.design_value_test(obja.design_value, objb.design_value)
+            checks["design_value"] = self.design_value_test(
+                obja.design_value, objb.design_value
+            )
 
-        return DatumIsCloseResult(model_value=model_value, design_value=design_value)
-
-
-class DatumLessThanResult(ComparisonResult):
-    """Result of a DatumLessThan comparison with per-field less-than check results.
-
-    Each field is ``None`` if the corresponding component was not checked.
-
-    Attributes
-    ----------
-    type : str
-        Discriminator literal. Always ``"datum_is_less"``.
-    model_value : CheckResult or None
-        Model value comparison result.
-    design_value : CheckResult or None
-        Design value comparison result.
-    """
-
-    type: Literal["datum_is_less"] = "datum_is_less"
-    model_value: CheckResult | None = None
-    design_value: CheckResult | None = None
+        return ComparisonResult(checks=checks)
 
 
-class DatumLessThan(IsLess[DatumObservation, DatumLessThanResult]):
+class DatumLessThan(IsLess[DatumObservation]):
     """Component-wise less-than comparison between two DatumObservations.
 
     Set a field to ``True`` to enable the less-than check for that component.
@@ -149,14 +109,13 @@ class DatumLessThan(IsLess[DatumObservation, DatumLessThanResult]):
             passed=passed, detail="" if passed else f"a={va:.6g} not < b={vb:.6g}"
         )
 
-    def compare(self, obja: DatumObservation, objb: DatumObservation) -> DatumLessThanResult:
-        model_value = (
-            self._check(obja.model_value, objb.model_value) if self.model_value else None
-        )
-        design_value = (
-            self._check(obja.design_value, objb.design_value) if self.design_value else None
-        )
-        return DatumLessThanResult(model_value=model_value, design_value=design_value)
+    def compare(self, obja: DatumObservation, objb: DatumObservation) -> ComparisonResult:
+        checks = {}
+        if self.model_value:
+            checks["model_value"] = self._check(obja.model_value, objb.model_value)
+        if self.design_value:
+            checks["design_value"] = self._check(obja.design_value, objb.design_value)
+        return ComparisonResult(checks=checks)
 
 
 class DatumLiteral(LiteralObservable[DatumObservation]):

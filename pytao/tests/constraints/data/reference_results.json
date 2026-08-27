@@ -145,46 +145,44 @@
         "comment": "Longer comment included on error and in reports. eg Please rerun `tune_matcher.tao` in event of failure.",
         "result": {
           "error": null,
-          "type": "ele_is_close",
-          "twiss_a": {
-            "passed": true,
-            "detail": ""
+          "checks": {
+            "twiss_a": {
+              "passed": true,
+              "detail": ""
+            },
+            "twiss_b": {
+              "passed": true,
+              "detail": ""
+            },
+            "eta_x": {
+              "passed": true,
+              "detail": ""
+            },
+            "etap_x": {
+              "passed": true,
+              "detail": ""
+            },
+            "eta_y": {
+              "passed": true,
+              "detail": ""
+            },
+            "etap_y": {
+              "passed": true,
+              "detail": ""
+            },
+            "ref_energy": {
+              "passed": true,
+              "detail": ""
+            },
+            "p0c": {
+              "passed": true,
+              "detail": ""
+            },
+            "orbit": {
+              "passed": true,
+              "detail": ""
+            }
           },
-          "twiss_b": {
-            "passed": true,
-            "detail": ""
-          },
-          "eta_x": {
-            "passed": true,
-            "detail": ""
-          },
-          "etap_x": {
-            "passed": true,
-            "detail": ""
-          },
-          "eta_y": {
-            "passed": true,
-            "detail": ""
-          },
-          "etap_y": {
-            "passed": true,
-            "detail": ""
-          },
-          "ref_energy": {
-            "passed": true,
-            "detail": ""
-          },
-          "p0c": {
-            "passed": true,
-            "detail": ""
-          },
-          "orbit": {
-            "passed": true,
-            "detail": ""
-          },
-          "floor_x": null,
-          "floor_y": null,
-          "floor_z": null,
           "is_satisfied": true
         }
       },
@@ -210,54 +208,55 @@
         "comment": "",
         "result": {
           "error": null,
-          "type": "ele_is_close",
-          "twiss_a": {
-            "passed": true,
-            "detail": ""
-          },
-          "twiss_b": {
-            "passed": false,
-            "detail": "bmag=1.0862 outside [0.99, 1.01]  (beta0=4.625, alpha0=1.375)  (beta1=3.625, alpha1=1.375)"
-          },
-          "eta_x": {
-            "passed": true,
-            "detail": ""
-          },
-          "etap_x": {
-            "passed": true,
-            "detail": ""
-          },
-          "eta_y": {
-            "passed": true,
-            "detail": ""
-          },
-          "etap_y": {
-            "passed": true,
-            "detail": ""
-          },
-          "ref_energy": {
-            "passed": false,
-            "detail": "a=5e+09, b=4e+09, diff=1.000e+09"
-          },
-          "p0c": {
-            "passed": false,
-            "detail": "a=5e+09, b=4e+09, diff=1.000e+09"
-          },
-          "orbit": {
-            "passed": true,
-            "detail": ""
-          },
-          "floor_x": {
-            "passed": true,
-            "detail": ""
-          },
-          "floor_y": {
-            "passed": true,
-            "detail": ""
-          },
-          "floor_z": {
-            "passed": false,
-            "detail": "a=1, b=0, diff=1.000e+00"
+          "checks": {
+            "twiss_a": {
+              "passed": true,
+              "detail": ""
+            },
+            "twiss_b": {
+              "passed": false,
+              "detail": "bmag=1.0862 outside [0.99, 1.01]  (beta0=4.625, alpha0=1.375)  (beta1=3.625, alpha1=1.375)"
+            },
+            "eta_x": {
+              "passed": true,
+              "detail": ""
+            },
+            "etap_x": {
+              "passed": true,
+              "detail": ""
+            },
+            "eta_y": {
+              "passed": true,
+              "detail": ""
+            },
+            "etap_y": {
+              "passed": true,
+              "detail": ""
+            },
+            "ref_energy": {
+              "passed": false,
+              "detail": "a=5e+09, b=4e+09, diff=1.000e+09"
+            },
+            "p0c": {
+              "passed": false,
+              "detail": "a=5e+09, b=4e+09, diff=1.000e+09"
+            },
+            "orbit": {
+              "passed": true,
+              "detail": ""
+            },
+            "floor_x": {
+              "passed": true,
+              "detail": ""
+            },
+            "floor_y": {
+              "passed": true,
+              "detail": ""
+            },
+            "floor_z": {
+              "passed": false,
+              "detail": "a=1, b=0, diff=1.000e+00"
+            }
           },
           "is_satisfied": false
         }
@@ -293,26 +292,16 @@
         "comment": "",
         "result": {
           "error": null,
-          "type": "ele_is_less",
-          "beta_a": {
-            "passed": true,
-            "detail": ""
+          "checks": {
+            "beta_a": {
+              "passed": true,
+              "detail": ""
+            },
+            "beta_b": {
+              "passed": true,
+              "detail": ""
+            }
           },
-          "alpha_a": null,
-          "beta_b": {
-            "passed": true,
-            "detail": ""
-          },
-          "alpha_b": null,
-          "eta_x": null,
-          "etap_x": null,
-          "eta_y": null,
-          "etap_y": null,
-          "ref_energy": null,
-          "p0c": null,
-          "floor_x": null,
-          "floor_y": null,
-          "floor_z": null,
           "is_satisfied": true
         }
       },
@@ -339,12 +328,12 @@
         "comment": "",
         "result": {
           "error": null,
-          "type": "datum_is_close",
-          "model_value": {
-            "passed": true,
-            "detail": ""
+          "checks": {
+            "model_value": {
+              "passed": true,
+              "detail": ""
+            }
           },
-          "design_value": null,
           "is_satisfied": true
         }
       }

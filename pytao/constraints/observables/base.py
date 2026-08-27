@@ -114,16 +114,20 @@ class LiteralObservable(Observable[ObservationT]):
 
 
 class ComparisonResult(ConstraintsBase):
-    """Base class for all constraint check results.
+    """Result of a constraint comparison.
 
     Attributes
     ----------
     error : str or None
         Set to a non-empty string when evaluation failed (e.g. a Tao error).
         When set, ``is_satisfied`` returns ``False`` regardless of per-field results.
+    checks : dict[str, CheckResult]
+        Per-field check results, keyed by field name. Only fields that were
+        actually checked are present.
     """
 
     error: str | None = None
+    checks: dict[str, CheckResult] = Field(default_factory=dict)
 
     @model_validator(mode="before")
     @classmethod
@@ -147,33 +151,26 @@ class ComparisonResult(ConstraintsBase):
         return all(check_results.values())
 
     def check_results(self) -> dict[str, CheckResult]:
-        return {
-            name: getattr(self, name)
-            for name in type(self).model_fields
-            if isinstance(getattr(self, name), CheckResult)
-        }
+        return self.checks
 
 
-ResultT = TypeVar("ResultT", bound=ComparisonResult)
-
-
-class Comparison(ConstraintsBase, Generic[ObservationT, ResultT]):
+class Comparison(ConstraintsBase, Generic[ObservationT]):
     """Abstract base for comparison operators between two observations."""
 
-    def compare(self, obja: ObservationT, objb: ObservationT) -> ResultT: ...
+    def compare(self, obja: ObservationT, objb: ObservationT) -> ComparisonResult: ...
 
 
-class IsClose(Comparison[ObservationT, ResultT]):
+class IsClose(Comparison[ObservationT]):
     """
     Approximate equality operator between two observations.
 
     This class retained to restrict RegressionConstraints to only IsClose operations
     """
 
-    def compare(self, obja: ObservationT, objb: ObservationT) -> ResultT: ...
+    def compare(self, obja: ObservationT, objb: ObservationT) -> ComparisonResult: ...
 
 
-class IsLess(Comparison[ObservationT, ResultT]):
+class IsLess(Comparison[ObservationT]):
     """Component-wise less-than operator between two observations."""
 
-    def compare(self, obja: ObservationT, objb: ObservationT) -> ResultT: ...
+    def compare(self, obja: ObservationT, objb: ObservationT) -> ComparisonResult: ...

@@ -70,9 +70,9 @@ def test_ele_is_satisfied_missing_data_fails(ele_lit):
     obs_b = ele_lit.observe()
     result = EleIsClose().compare(obs_a, obs_b)
     assert not result.is_satisfied
-    assert result.ref_energy is not None
-    assert not result.ref_energy.passed
-    assert result.ref_energy.detail
+    assert "ref_energy" in result.checks
+    assert not result.checks["ref_energy"].passed
+    assert result.checks["ref_energy"].detail
 
 
 @pytest.mark.parametrize(

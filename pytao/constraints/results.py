@@ -4,9 +4,9 @@ from collections.abc import Iterator
 from datetime import datetime
 
 from pytao.constraints.observables import (
-    AnyComparisonResult,
     AnyObservable,
     AnyObservation,
+    ComparisonResult,
     LatticeObservable,
 )
 from pytao.constraints.pydantic import ConstraintsBase
@@ -18,7 +18,7 @@ class ConstraintResult(ConstraintsBase):
     observables: list[AnyObservable]
     description: str = ""
     comment: str = ""
-    result: AnyComparisonResult
+    result: ComparisonResult
 
 
 class RegressionResult(ConstraintsBase):
@@ -27,7 +27,7 @@ class RegressionResult(ConstraintsBase):
     description: str = ""
     comment: str = ""
     observable: AnyObservable
-    result: AnyComparisonResult
+    result: ComparisonResult
 
 
 class SavedEntry(ConstraintsBase):

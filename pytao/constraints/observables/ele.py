@@ -71,57 +71,7 @@ class TolComparison(ConstraintsBase):
         return CheckResult(passed=False, detail=detail)
 
 
-class EleIsCloseResult(ComparisonResult):
-    """Result of an EleIsClose comparison with per-field check results.
-
-    Each field is ``None`` if the corresponding comparison was not run.
-
-    Attributes
-    ----------
-    type : str
-        Discriminator literal. Always ``"ele_is_close"``.
-    twiss_a : CheckResult or None
-        Mode A Twiss comparison (beta_a, alpha_a).
-    twiss_b : CheckResult or None
-        Mode B Twiss comparison (beta_b, alpha_b).
-    eta_x : CheckResult or None
-        Horizontal dispersion.
-    etap_x : CheckResult or None
-        Horizontal dispersion slope.
-    eta_y : CheckResult or None
-        Vertical dispersion.
-    etap_y : CheckResult or None
-        Vertical dispersion slope.
-    ref_energy : CheckResult or None
-        Total reference energy (e_tot).
-    p0c : CheckResult or None
-        Reference momentum.
-    orbit : CheckResult or None
-        Orbit, as 6D vector.
-    floor_x : CheckResult or None
-        Global floor x coordinate.
-    floor_y : CheckResult or None
-        Global floor y coordinate.
-    floor_z : CheckResult or None
-        Global floor z coordinate.
-    """
-
-    type: Literal["ele_is_close"] = "ele_is_close"
-    twiss_a: CheckResult | None = None
-    twiss_b: CheckResult | None = None
-    eta_x: CheckResult | None = None
-    etap_x: CheckResult | None = None
-    eta_y: CheckResult | None = None
-    etap_y: CheckResult | None = None
-    ref_energy: CheckResult | None = None
-    p0c: CheckResult | None = None
-    orbit: CheckResult | None = None
-    floor_x: CheckResult | None = None
-    floor_y: CheckResult | None = None
-    floor_z: CheckResult | None = None
-
-
-class EleIsClose(IsClose[EleObservation, EleIsCloseResult]):
+class EleIsClose(IsClose[EleObservation]):
     """IsClose operator comparing two EleObservation instances across all available data.
 
     Set a field to ``None`` to skip that comparison.
@@ -170,7 +120,7 @@ class EleIsClose(IsClose[EleObservation, EleIsCloseResult]):
     floor_y: TolComparison | None = None
     floor_z: TolComparison | None = None
 
-    def compare(self, obja: EleObservation, objb: EleObservation) -> EleIsCloseResult:
+    def compare(self, obja: EleObservation, objb: EleObservation) -> ComparisonResult:
         ea, eb = obja.element, objb.element
 
         twiss_a = twiss_b = eta_x = etap_x = eta_y = etap_y = None
@@ -240,76 +190,28 @@ class EleIsClose(IsClose[EleObservation, EleIsCloseResult]):
         if self.floor_z is not None:
             floor_z = self.floor_z(fa.z, fb.z) if floor_ok else no_floor
 
-        return EleIsCloseResult(
-            twiss_a=twiss_a,
-            twiss_b=twiss_b,
-            eta_x=eta_x,
-            etap_x=etap_x,
-            eta_y=eta_y,
-            etap_y=etap_y,
-            ref_energy=ref_energy,
-            p0c=p0c,
-            orbit=orbit,
-            floor_x=floor_x,
-            floor_y=floor_y,
-            floor_z=floor_z,
-        )
+        checks = {
+            name: value
+            for name, value in [
+                ("twiss_a", twiss_a),
+                ("twiss_b", twiss_b),
+                ("eta_x", eta_x),
+                ("etap_x", etap_x),
+                ("eta_y", eta_y),
+                ("etap_y", etap_y),
+                ("ref_energy", ref_energy),
+                ("p0c", p0c),
+                ("orbit", orbit),
+                ("floor_x", floor_x),
+                ("floor_y", floor_y),
+                ("floor_z", floor_z),
+            ]
+            if value is not None
+        }
+        return ComparisonResult(checks=checks)
 
 
-class EleLessThanResult(ComparisonResult):
-    """Result of an EleLessThan comparison with per-field less-than check results.
-
-    Each field is ``None`` if the corresponding component was not checked.
-
-    Attributes
-    ----------
-    type : str
-        Discriminator literal. Always ``"ele_is_less"``.
-    beta_a : CheckResult or None
-        Mode A beta function.
-    alpha_a : CheckResult or None
-        Mode A alpha function.
-    beta_b : CheckResult or None
-        Mode B beta function.
-    alpha_b : CheckResult or None
-        Mode B alpha function.
-    eta_x : CheckResult or None
-        Horizontal dispersion.
-    etap_x : CheckResult or None
-        Horizontal dispersion slope.
-    eta_y : CheckResult or None
-        Vertical dispersion.
-    etap_y : CheckResult or None
-        Vertical dispersion slope.
-    ref_energy : CheckResult or None
-        Total reference energy.
-    p0c : CheckResult or None
-        Reference momentum.
-    floor_x : CheckResult or None
-        Global floor x coordinate.
-    floor_y : CheckResult or None
-        Global floor y coordinate.
-    floor_z : CheckResult or None
-        Global floor z coordinate.
-    """
-
-    type: Literal["ele_is_less"] = "ele_is_less"
-    beta_a: CheckResult | None = None
-    alpha_a: CheckResult | None = None
-    beta_b: CheckResult | None = None
-    alpha_b: CheckResult | None = None
-    eta_x: CheckResult | None = None
-    etap_x: CheckResult | None = None
-    eta_y: CheckResult | None = None
-    etap_y: CheckResult | None = None
-    ref_energy: CheckResult | None = None
-    p0c: CheckResult | None = None
-    floor_x: CheckResult | None = None
-    floor_y: CheckResult | None = None
-    floor_z: CheckResult | None = None
-
-
-class EleLessThan(IsLess[EleObservation, EleLessThanResult]):
+class EleLessThan(IsLess[EleObservation]):
     """Component-wise less-than comparison between two EleObservations.
 
     Set a field to ``True`` to enable the less-than check for that component.
@@ -366,7 +268,7 @@ class EleLessThan(IsLess[EleObservation, EleLessThanResult]):
             passed=passed, detail="" if passed else f"a={va:.6g} not < b={vb:.6g}"
         )
 
-    def compare(self, obja: EleObservation, objb: EleObservation) -> EleLessThanResult:
+    def compare(self, obja: EleObservation, objb: EleObservation) -> ComparisonResult:
         ea, eb = obja.element, objb.element
         beta_a = alpha_a = beta_b = alpha_b = None
         eta_x = etap_x = eta_y = etap_y = None
@@ -428,21 +330,26 @@ class EleLessThan(IsLess[EleObservation, EleLessThanResult]):
         if self.floor_z:
             floor_z = self._check(fa.z, fb.z) if floor_ok else no_floor
 
-        return EleLessThanResult(
-            beta_a=beta_a,
-            alpha_a=alpha_a,
-            beta_b=beta_b,
-            alpha_b=alpha_b,
-            eta_x=eta_x,
-            etap_x=etap_x,
-            eta_y=eta_y,
-            etap_y=etap_y,
-            ref_energy=ref_energy,
-            p0c=p0c,
-            floor_x=floor_x,
-            floor_y=floor_y,
-            floor_z=floor_z,
-        )
+        checks = {
+            name: value
+            for name, value in [
+                ("beta_a", beta_a),
+                ("alpha_a", alpha_a),
+                ("beta_b", beta_b),
+                ("alpha_b", alpha_b),
+                ("eta_x", eta_x),
+                ("etap_x", etap_x),
+                ("eta_y", eta_y),
+                ("etap_y", etap_y),
+                ("ref_energy", ref_energy),
+                ("p0c", p0c),
+                ("floor_x", floor_x),
+                ("floor_y", floor_y),
+                ("floor_z", floor_z),
+            ]
+            if value is not None
+        }
+        return ComparisonResult(checks=checks)
 
 
 def _build_ele_observation(

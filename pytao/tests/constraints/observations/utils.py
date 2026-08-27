@@ -11,7 +11,7 @@ def assert_result_fields(result, fields: dict) -> None:
         or False (failed with non-empty detail).
     """
     for field, expected in fields.items():
-        value = getattr(result, field)
+        value = result.checks.get(field)
         if expected is None:
             assert value is None, f"{field} expected None, got {value!r}"
         elif expected is True:

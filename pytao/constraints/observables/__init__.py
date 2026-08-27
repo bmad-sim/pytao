@@ -12,14 +12,11 @@ from .base import (
     LiteralObservable,
     Observable,
     Observation,
-    ResultT,
 )
 from .datum import (
     DataSource,
     DatumIsClose,
-    DatumIsCloseResult,
     DatumLessThan,
-    DatumLessThanResult,
     DatumLiteral,
     DatumObservable,
     DatumObservation,
@@ -27,9 +24,7 @@ from .datum import (
 )
 from .ele import (
     EleIsClose,
-    EleIsCloseResult,
     EleLessThan,
-    EleLessThanResult,
     EleLiteral,
     EleMaxObservable,
     EleMinObservable,
@@ -66,18 +61,7 @@ AnyComparison = Annotated[
     ],
     Field(discriminator="type"),
 ]
-AnyComparisonResult = Annotated[
-    Union[
-        EleIsCloseResult,
-        DatumIsCloseResult,
-        EleLessThanResult,
-        DatumLessThanResult,
-    ],
-    Field(discriminator="type"),
-]
-
 __all__ = [
-    "AnyComparisonResult",
     "AnyObservable",
     "AnyObservation",
     "AnyTwissComparison",
@@ -87,16 +71,12 @@ __all__ = [
     "ComparisonResult",
     "DataSource",
     "DatumIsClose",
-    "DatumIsCloseResult",
     "DatumLessThan",
-    "DatumLessThanResult",
     "DatumLiteral",
     "DatumObservable",
     "DatumObservation",
     "EleIsClose",
-    "EleIsCloseResult",
     "EleLessThan",
-    "EleLessThanResult",
     "EleLiteral",
     "EleMaxObservable",
     "EleMinObservable",
@@ -109,7 +89,6 @@ __all__ = [
     "LiteralObservable",
     "Observable",
     "Observation",
-    "ResultT",
     "TolComparison",
     "TwissComparisonMethod",
 ]
