@@ -3,8 +3,6 @@ from typing import Annotated, Any, Generic, Literal, TypeVar, Union, cast
 
 from pydantic import Field, model_validator
 
-from pytao.constraints.pydantic import ConstraintsBase
-
 from pytao.constraints.observables import (
     AnyComparison,
     Comparison,
@@ -32,20 +30,22 @@ from pytao.constraints.observables import (
     Observable,
     Observation,
 )
+from pytao.constraints.observables.base import ObservableT, ResultT
+from pytao.constraints.pydantic import ConstraintsBase
 from pytao.constraints.results import ConstraintResult, RegressionResult
 from pytao.startup import TaoStartup
 
-CompT = TypeVar("CompT", bound=Comparison[Any])
+CompT = TypeVar("CompT", bound=Comparison[Any, Any])
 
 
 EleObservables = Annotated[
     Union[EleObservable, EleMaxObservable, EleMinObservable, EleLiteral],
-    Field(discriminator="obs_type"),
+    Field(discriminator="type"),
 ]
 
 DatumObservables = Annotated[
     Union[DatumObservable, DatumLiteral],
-    Field(discriminator="obs_type"),
+    Field(discriminator="type"),
 ]
 
 
@@ -86,32 +86,40 @@ class Constraint(ConstraintsBase):
     ) -> tuple[list[ConstraintResult], list[RegressionResult]]: ...
 
 
-class ComparisonConstraint(Constraint, Generic[CompT]):
+class ComparisonConstraint(Constraint, Generic[ObservableT, CompT, ResultT]):
     """Base for constraints that compare two observations against each other."""
 
+    obs_a: ObservableT
+    obs_b: ObservableT
     comparison: CompT | str
 
     # comparison object to be filled by `.run()`
     _comparison_obj: CompT | None = None
 
-    def is_satisfied(self, observations: dict[Observable, Observation]) -> ComparisonResult:
+    @property
+    def required_observables(self) -> frozenset[ObservableT]:
+        return frozenset((self.obs_a, self.obs_b))
+
+    def is_satisfied(self, observations: dict[Observable, Observation]) -> ResultT:
         if self._comparison_obj is None:
             raise RuntimeError(
                 "Comparison has not been run, cannot return a meaningful result"
             )
 
+        return self._comparison_obj.compare(observations[self.obs_a], observations[self.obs_b])
+
     def run(
         self,
         obs_map: dict[Observable, Observation],
         expected_obs_map: dict[Observable, Observation] | None,
-        common_comparisons_map: dict[str, AnyComparison],
+        common_comparison_map: dict[str, AnyComparison],
         group: str | None,
     ) -> tuple[list[ConstraintResult], list[RegressionResult]]:
         # replace string comparison reference with real comparison
         if isinstance(self.comparison, str):
-            if self.comparison not in common_comparisons_map:
+            if self.comparison not in common_comparison_map:
                 raise ValueError(f"Referenced comparison ({self.comparison}) not defined")
-            self._comparison_obj = cast(CompT, common_comparisons_map[self.comparison])
+            self._comparison_obj = cast(CompT, common_comparison_map[self.comparison])
         else:
             self._comparison_obj = self.comparison
 
@@ -133,7 +141,7 @@ class ComparisonConstraint(Constraint, Generic[CompT]):
         return [cr], []
 
 
-class IsCloseConstraint(ComparisonConstraint[CompT]):
+class IsCloseConstraint(ComparisonConstraint[ObservableT, CompT, ResultT]):
     """Base for constraints that use an IsClose comparison operator.
 
     When ``regression_check`` is ``True`` and a comparison baseline is available,
@@ -212,7 +220,7 @@ class IsCloseConstraint(ComparisonConstraint[CompT]):
         return crs, reg
 
 
-class IsLessConstraint(ComparisonConstraint[CompT]):
+class IsLessConstraint(ComparisonConstraint[ObservableT, CompT, ResultT]):
     """Base for constraints that use an IsLess comparison operator.
 
     Attributes
@@ -296,12 +304,12 @@ class RegressionConstraint(Constraint, Generic[CompT]):
         ]
 
 
-class EleIsCloseConstraint(IsCloseConstraint[EleIsClose]):
+class EleIsCloseConstraint(IsCloseConstraint[EleObservables, EleIsClose, EleIsCloseResult]):
     """Constraint checking that two element observables are approximately equal.
 
     Attributes
     ----------
-    constraint_type : str
+    type : str
         Discriminator literal. Always ``"ele_eq"``.
     obs_a : EleObservables
         First element observable.
@@ -311,7 +319,7 @@ class EleIsCloseConstraint(IsCloseConstraint[EleIsClose]):
         Comparison operator applied to the two observations.
     """
 
-    constraint_type: Literal["ele_eq"] = "ele_eq"
+    type: Literal["ele_eq"] = "ele_eq"
     obs_a: EleObservables
     obs_b: EleObservables
     comparison: EleIsClose | str = EleIsClose()
@@ -322,24 +330,16 @@ class EleIsCloseConstraint(IsCloseConstraint[EleIsClose]):
             return self.obs_a.label
         return f"{self.obs_a.label} == {self.obs_b.label}"
 
-    @property
-    def required_observables(self) -> frozenset[Observable]:
-        return frozenset((self.obs_a, self.obs_b))
-
-    def is_satisfied(self, observations: dict[Observable, Observation]) -> EleIsCloseResult:
-        super().is_satisfied(observations=observations)
-        return self._comparison_obj.compare(observations[self.obs_a], observations[self.obs_b])
-
     def error_result(self, error: str) -> EleIsCloseResult:
         return EleIsCloseResult(error=error)
 
 
-class EleLessThanConstraint(IsLessConstraint[EleLessThan]):
+class EleLessThanConstraint(IsLessConstraint[EleObservables, EleLessThan, EleLessThanResult]):
     """Constraint checking that ``obs_a`` is component-wise less than ``obs_b``.
 
     Attributes
     ----------
-    constraint_type : str
+    type : str
         Discriminator literal. Always ``"ele_lt"``.
     obs_a : EleObservables
         Left-hand side observable.
@@ -349,7 +349,7 @@ class EleLessThanConstraint(IsLessConstraint[EleLessThan]):
         Less-than operator configuration.
     """
 
-    constraint_type: Literal["ele_lt"] = "ele_lt"
+    type: Literal["ele_lt"] = "ele_lt"
     obs_a: EleObservables
     obs_b: EleObservables
     comparison: EleLessThan | str = EleLessThan()
@@ -358,24 +358,18 @@ class EleLessThanConstraint(IsLessConstraint[EleLessThan]):
     def label(self) -> str:
         return f"{self.obs_a.label} < {self.obs_b.label}"
 
-    @property
-    def required_observables(self) -> frozenset[Observable]:
-        return frozenset((self.obs_a, self.obs_b))
-
-    def is_satisfied(self, observations: dict[Observable, Observation]) -> EleLessThanResult:
-        super().is_satisfied(observations=observations)
-        return self._comparison_obj.compare(observations[self.obs_a], observations[self.obs_b])
-
     def error_result(self, error: str) -> EleLessThanResult:
         return EleLessThanResult(error=error)
 
 
-class DatumIsCloseConstraint(IsCloseConstraint[DatumIsClose]):
+class DatumIsCloseConstraint(
+    IsCloseConstraint[DatumObservables, DatumIsClose, DatumIsCloseResult]
+):
     """Constraint checking that two datum observables are approximately equal.
 
     Attributes
     ----------
-    constraint_type : str
+    type : str
         Discriminator literal. Always ``"datum_eq"``.
     obs_a : DatumObservables
         First datum observable.
@@ -385,7 +379,7 @@ class DatumIsCloseConstraint(IsCloseConstraint[DatumIsClose]):
         Comparison operator applied to the two observations.
     """
 
-    constraint_type: Literal["datum_eq"] = "datum_eq"
+    type: Literal["datum_eq"] = "datum_eq"
     obs_a: DatumObservables
     obs_b: DatumObservables
     comparison: DatumIsClose | str = DatumIsClose()
@@ -396,24 +390,18 @@ class DatumIsCloseConstraint(IsCloseConstraint[DatumIsClose]):
             return self.obs_a.label
         return f"{self.obs_a.label} == {self.obs_b.label}"
 
-    @property
-    def required_observables(self) -> frozenset[Observable]:
-        return frozenset((self.obs_a, self.obs_b))
-
-    def is_satisfied(self, observations: dict[Observable, Observation]) -> DatumIsCloseResult:
-        super().is_satisfied(observations=observations)
-        return self._comparison_obj.compare(observations[self.obs_a], observations[self.obs_b])
-
     def error_result(self, error: str) -> DatumIsCloseResult:
         return DatumIsCloseResult(error=error)
 
 
-class DatumLessThanConstraint(IsLessConstraint[DatumLessThan]):
+class DatumLessThanConstraint(
+    IsLessConstraint[DatumObservables, DatumLessThan, DatumLessThanResult]
+):
     """Constraint checking that ``obs_a`` is component-wise less than ``obs_b``.
 
     Attributes
     ----------
-    constraint_type : str
+    type : str
         Discriminator literal. Always ``"datum_lt"``.
     obs_a : DatumObservables
         Left-hand side observable.
@@ -423,7 +411,7 @@ class DatumLessThanConstraint(IsLessConstraint[DatumLessThan]):
         Less-than operator configuration.
     """
 
-    constraint_type: Literal["datum_lt"] = "datum_lt"
+    type: Literal["datum_lt"] = "datum_lt"
     obs_a: DatumObservables
     obs_b: DatumObservables
     comparison: DatumLessThan | str = DatumLessThan()
@@ -431,14 +419,6 @@ class DatumLessThanConstraint(IsLessConstraint[DatumLessThan]):
     @property
     def label(self) -> str:
         return f"{self.obs_a.label} < {self.obs_b.label}"
-
-    @property
-    def required_observables(self) -> frozenset[Observable]:
-        return frozenset((self.obs_a, self.obs_b))
-
-    def is_satisfied(self, observations: dict[Observable, Observation]) -> DatumLessThanResult:
-        super().is_satisfied(observations=observations)
-        return self._comparison_obj.compare(observations[self.obs_a], observations[self.obs_b])
 
     def error_result(self, error: str) -> DatumLessThanResult:
         return DatumLessThanResult(error=error)
@@ -449,7 +429,7 @@ class EleRegressionConstraint(RegressionConstraint[EleIsClose]):
 
     Attributes
     ----------
-    constraint_type : str
+    type : str
         Discriminator literal. Always ``"ele_reg"``.
     obs : EleObservables
         Element observable to evaluate and compare.
@@ -457,7 +437,7 @@ class EleRegressionConstraint(RegressionConstraint[EleIsClose]):
         Comparison operator used to check current against reference.
     """
 
-    constraint_type: Literal["ele_reg"] = "ele_reg"
+    type: Literal["ele_reg"] = "ele_reg"
     obs: EleObservables
     comparison: EleIsClose | str = EleIsClose()
 
@@ -481,7 +461,7 @@ class DatumRegressionConstraint(RegressionConstraint[DatumIsClose]):
 
     Attributes
     ----------
-    constraint_type : str
+    type : str
         Discriminator literal. Always ``"datum_reg"``.
     obs : DatumObservables
         Datum observable to evaluate and compare.
@@ -489,7 +469,7 @@ class DatumRegressionConstraint(RegressionConstraint[DatumIsClose]):
         Comparison operator used to check current against reference.
     """
 
-    constraint_type: Literal["datum_reg"] = "datum_reg"
+    type: Literal["datum_reg"] = "datum_reg"
     obs: DatumObservables
     comparison: DatumIsClose | str = DatumIsClose()
 
@@ -519,7 +499,7 @@ AnyConstraint = Annotated[
         EleRegressionConstraint,
         DatumRegressionConstraint,
     ],
-    Field(discriminator="constraint_type"),
+    Field(discriminator="type"),
 ]
 
 

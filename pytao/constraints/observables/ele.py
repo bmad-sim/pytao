@@ -4,22 +4,20 @@ from collections.abc import Callable
 from typing import Literal
 
 import numpy as np
-from pydantic import Field, computed_field
-
-from pytao.constraints.pydantic import ConstraintsBase
+from pydantic import Field
 
 from pytao import Tao
 from pytao.constraints.observables.base import (
     CheckResult,
+    ComparisonResult,
     IsClose,
-    IsCloseResult,
     IsLess,
-    IsLessResult,
     LatticeObservable,
     LiteralObservable,
     Observation,
 )
 from pytao.constraints.observables.twiss import AnyTwissComparison, BmagTwissComparison
+from pytao.constraints.pydantic import ConstraintsBase
 from pytao.model import (
     ElementFloor,
     ElementFloorAll,
@@ -37,13 +35,13 @@ class EleObservation(Observation):
 
     Attributes
     ----------
-    obs_type : str
+    type : str
         Discriminator literal. Always ``"ele"``.
     element : Element
         Element data including Twiss parameters, orbit, floor position, and attributes.
     """
 
-    obs_type: Literal["ele"] = "ele"
+    type: Literal["ele"] = "ele"
     element: Element
 
 
@@ -73,14 +71,14 @@ class TolComparison(ConstraintsBase):
         return CheckResult(passed=False, detail=detail)
 
 
-class EleIsCloseResult(IsCloseResult):
+class EleIsCloseResult(ComparisonResult):
     """Result of an EleIsClose comparison with per-field check results.
 
     Each field is ``None`` if the corresponding comparison was not run.
 
     Attributes
     ----------
-    result_type : str
+    type : str
         Discriminator literal. Always ``"ele_is_close"``.
     twiss_a : CheckResult or None
         Mode A Twiss comparison (beta_a, alpha_a).
@@ -108,7 +106,7 @@ class EleIsCloseResult(IsCloseResult):
         Global floor z coordinate.
     """
 
-    result_type: Literal["ele_is_close"] = "ele_is_close"
+    type: Literal["ele_is_close"] = "ele_is_close"
     twiss_a: CheckResult | None = None
     twiss_b: CheckResult | None = None
     eta_x: CheckResult | None = None
@@ -122,33 +120,8 @@ class EleIsCloseResult(IsCloseResult):
     floor_y: CheckResult | None = None
     floor_z: CheckResult | None = None
 
-    @computed_field
-    @property
-    def is_satisfied(self) -> bool:
-        if not super().is_satisfied:
-            return False
-        ran = [
-            r
-            for r in [
-                self.twiss_a,
-                self.twiss_b,
-                self.eta_x,
-                self.etap_x,
-                self.eta_y,
-                self.etap_y,
-                self.ref_energy,
-                self.p0c,
-                self.orbit,
-                self.floor_x,
-                self.floor_y,
-                self.floor_z,
-            ]
-            if r is not None
-        ]
-        return all(ran) if ran else True
 
-
-class EleIsClose(IsClose[EleObservation]):
+class EleIsClose(IsClose[EleObservation, EleIsCloseResult]):
     """IsClose operator comparing two EleObservation instances across all available data.
 
     Set a field to ``None`` to skip that comparison.
@@ -181,7 +154,7 @@ class EleIsClose(IsClose[EleObservation]):
         Comparison for global floor z coordinate.
     """
 
-    comp_type: Literal["ele_is_close"] = "ele_is_close"
+    type: Literal["ele_is_close"] = "ele_is_close"
     twiss_a: AnyTwissComparison | None = BmagTwissComparison()
     twiss_b: AnyTwissComparison | None = BmagTwissComparison()
 
@@ -283,14 +256,14 @@ class EleIsClose(IsClose[EleObservation]):
         )
 
 
-class EleLessThanResult(IsLessResult):
+class EleLessThanResult(ComparisonResult):
     """Result of an EleLessThan comparison with per-field less-than check results.
 
     Each field is ``None`` if the corresponding component was not checked.
 
     Attributes
     ----------
-    result_type : str
+    type : str
         Discriminator literal. Always ``"ele_is_less"``.
     beta_a : CheckResult or None
         Mode A beta function.
@@ -320,7 +293,7 @@ class EleLessThanResult(IsLessResult):
         Global floor z coordinate.
     """
 
-    result_type: Literal["ele_is_less"] = "ele_is_less"
+    type: Literal["ele_is_less"] = "ele_is_less"
     beta_a: CheckResult | None = None
     alpha_a: CheckResult | None = None
     beta_b: CheckResult | None = None
@@ -335,34 +308,8 @@ class EleLessThanResult(IsLessResult):
     floor_y: CheckResult | None = None
     floor_z: CheckResult | None = None
 
-    @computed_field
-    @property
-    def is_satisfied(self) -> bool:
-        if not super().is_satisfied:
-            return False
-        ran = [
-            r
-            for r in [
-                self.beta_a,
-                self.alpha_a,
-                self.beta_b,
-                self.alpha_b,
-                self.eta_x,
-                self.etap_x,
-                self.eta_y,
-                self.etap_y,
-                self.ref_energy,
-                self.p0c,
-                self.floor_x,
-                self.floor_y,
-                self.floor_z,
-            ]
-            if r is not None
-        ]
-        return all(ran) if ran else True
 
-
-class EleLessThan(IsLess[EleObservation]):
+class EleLessThan(IsLess[EleObservation, EleLessThanResult]):
     """Component-wise less-than comparison between two EleObservations.
 
     Set a field to ``True`` to enable the less-than check for that component.
@@ -397,7 +344,7 @@ class EleLessThan(IsLess[EleObservation]):
         Check global floor z coordinate.
     """
 
-    comp_type: Literal["ele_is_less"] = "ele_is_less"
+    type: Literal["ele_is_less"] = "ele_is_less"
 
     beta_a: bool = False
     alpha_a: bool = False
@@ -572,7 +519,7 @@ class EleLiteral(LiteralObservable[EleObservation]):
 
     Attributes
     ----------
-    obs_type : str
+    type : str
         Discriminator literal. Always ``"ele_literal"``.
     beta_a : float or None
         Mode A beta function.
@@ -600,7 +547,7 @@ class EleLiteral(LiteralObservable[EleObservation]):
         Global floor z coordinate.
     """
 
-    obs_type: Literal["ele_literal"] = "ele_literal"
+    type: Literal["ele_literal"] = "ele_literal"
     beta_a: float | None = None
     alpha_a: float | None = None
     beta_b: float | None = None
@@ -619,7 +566,7 @@ class EleLiteral(LiteralObservable[EleObservation]):
         return "literal"
 
     def _make_observation(self) -> EleObservation:
-        return _build_ele_observation(**self.model_dump(exclude={"obs_type"}))
+        return _build_ele_observation(**self.model_dump(exclude={"type"}))
 
 
 def _ele_reduce(
@@ -695,7 +642,7 @@ class EleObservable(LatticeObservable[EleObservation]):
 
     Attributes
     ----------
-    obs_type : str
+    type : str
         Discriminator literal. Always ``"ele"``.
     ele_id : str or int
         Element index or name passed to ``tao.ele()``.
@@ -705,7 +652,7 @@ class EleObservable(LatticeObservable[EleObservation]):
         Branch index.
     """
 
-    obs_type: Literal["ele"] = "ele"
+    type: Literal["ele"] = "ele"
     ele_id: str | int
     ix_uni: int = Field(default=1, ge=0)
     ix_branch: int = Field(default=0, ge=0)
@@ -732,7 +679,7 @@ class EleMaxObservable(LatticeObservable[EleObservation]):
 
     Attributes
     ----------
-    obs_type : str
+    type : str
         Discriminator literal. Always ``"ele_max"``.
     ix_uni : int
         Universe index.
@@ -740,7 +687,7 @@ class EleMaxObservable(LatticeObservable[EleObservation]):
         Branch index.
     """
 
-    obs_type: Literal["ele_max"] = "ele_max"
+    type: Literal["ele_max"] = "ele_max"
     ix_uni: int = Field(default=1, ge=0)
     ix_branch: int = Field(default=0, ge=0)
     begin_ele: str | int | None = None
@@ -771,7 +718,7 @@ class EleMinObservable(LatticeObservable[EleObservation]):
 
     Attributes
     ----------
-    obs_type : str
+    type : str
         Discriminator literal. Always ``"ele_min"``.
     ix_uni : int
         Universe index.
@@ -779,7 +726,7 @@ class EleMinObservable(LatticeObservable[EleObservation]):
         Branch index.
     """
 
-    obs_type: Literal["ele_min"] = "ele_min"
+    type: Literal["ele_min"] = "ele_min"
     ix_uni: int = Field(default=1, ge=0)
     ix_branch: int = Field(default=0, ge=0)
     begin_ele: str | int | None = None
