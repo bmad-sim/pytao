@@ -1134,10 +1134,11 @@ def get_comb(
     tao_classes.ElementMat6Error
     """
     ele = to_ele_id(ele)
-    if comb is None:
-        comb = Comb.from_tao(tao, which=which)
     if head is None:
         head = get_head(tao=tao, ele=ele, which=which)
+    if comb is None:
+        # NOTE: this is *always* which='model' under the hood
+        comb = Comb.from_tao(tao, ix_uni=head.universe, ix_branch=head.ix_branch)
     return comb.slice_by_s(head.s_start, head.s)
 
 

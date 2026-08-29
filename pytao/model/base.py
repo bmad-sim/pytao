@@ -497,7 +497,11 @@ class TaoSettableModel(TaoModel):
                 if any(regex.match(cmd) for regex in exclude):
                     continue
                 try:
-                    logger.log(log_level, f"Tao> {cmd}")
+                    if log_level > logging.DEBUG:
+                        # NOTE: this already goes through the pytao logger as
+                        # 'debug'; don't need to repeat unless it might reach
+                        # the user.
+                        logger.log(log_level, f"Tao> {cmd}")
                     for line in tao.cmd(cmd):
                         logger.log(log_level, f"{line}")
                 except Exception as ex:
