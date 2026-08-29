@@ -1826,8 +1826,9 @@ class Element(TaoBaseModel, extra="forbid"):
     def __repr_args__(self) -> Iterable[tuple[str | None, Any]]:
         for key, value in super().__repr_args__():
             if key == "attrs":
-                # Swap out 'attrs' with 'attribs' for just the repr
-                yield "attribs", self.attribs
+                if value is not None:
+                    # Swap out 'attrs' with 'attribs' for just the repr
+                    yield "attribs", self.attribs
             else:
                 yield key, value
 
