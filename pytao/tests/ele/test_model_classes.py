@@ -69,6 +69,7 @@ def test_tao_config_shell_script(
 
     if with_tao:
         assert (tmp_path / "foo.lat.bmad").exists()
+        assert "no_digested" in (tmp_path / "foo.lat.bmad").read_text()
     else:
         assert not (tmp_path / "foo.lat.bmad").exists()
 
