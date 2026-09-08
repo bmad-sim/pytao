@@ -22,7 +22,8 @@ import argparse
 import sys
 from collections.abc import Sequence
 from typing import ClassVar
-from typing_extensions import override, Self
+
+from typing_extensions import Self, override
 
 logger = logging.getLogger(__name__)
 
@@ -316,6 +317,11 @@ class TaoStartup:
         Tao init file
     lattice_file : str or pathlib.Path, default=None
         Bmad lattice file
+    lattice_file2 : str or pathlib.Path, default=None
+        Secondary Bmad lattice file, parsed after `lattice_file`.  Equivalent
+        to Tao's comma-delimited form: ``-lattice_file file1,file2``.
+        A comma-delimited `lattice_file` is automatically split into
+        `lattice_file` and `lattice_file2`.
     log_startup : bool, default=False
         Write startup debugging info
     no_stopping : bool, default=False
@@ -375,6 +381,7 @@ class TaoStartup:
     hook_init_file: AnyPath | None = None
     init_file: AnyPath | None = None
     lattice_file: AnyPath | None = None
+    lattice_file2: AnyPath | None = None
     log_startup: bool = False
     no_stopping: bool = False
     noinit: bool = False
@@ -391,6 +398,36 @@ class TaoStartup:
     startup_file: AnyPath | None = None
     symbol_import: bool = False
     var_file: AnyPath | None = None
+
+    @pydantic.model_validator(mode="after")
+    def _split_lattice_file(self) -> Self:
+        if self.lattice_file is None:
+            return self
+
+        lattice_file = str(self.lattice_file)
+        if "|" in lattice_file:
+            if self.lattice_file2 is not None:
+                raise ValueError(
+                    f"'lattice_file2' ({self.lattice_file2!r}) may not be used with a "
+                    f"multi-universe (`|`-delimited) lattice_file={lattice_file!r}; "
+                    f"specify per-universe secondary files with commas in 'lattice_file' "
+                    f"instead."
+                )
+            return self
+
+        if "," not in lattice_file:
+            return self
+
+        # Tao splits on the first comma: '-lattice_file file1,file2'
+        file1, file2 = lattice_file.split(",", 1)
+        if self.lattice_file2 is not None and str(self.lattice_file2) != file2:
+            raise ValueError(
+                f"Conflicting secondary lattice files: 'lattice_file' ({lattice_file!r}) "
+                f"contains {file2!r} but 'lattice_file2' is {self.lattice_file2!r}."
+            )
+        self.lattice_file = file1
+        self.lattice_file2 = file2
+        return self
 
     def __post_init__(self, init: str):
         if not init:
@@ -423,6 +460,7 @@ class TaoStartup:
         "hook_init_file",
         "init_file",
         "lattice_file",
+        "lattice_file2",
         "plot_file",
         "startup_file",
         "var_file",
@@ -481,6 +519,23 @@ class TaoStartup:
         # For tao.init(), we throw away Tao class-specific things:
         params.pop("so_lib", None)
         params.pop("plot", None)
+        lattice_file2 = params.pop("lattice_file2", None)
+        if lattice_file2 is not None:
+            # Tao expects '-lattice_file file1,file2'.
+            lattice_file = params.get("lattice_file")
+            if lattice_file is None:
+                raise TaoInvalidArgumentsError(
+                    f"'lattice_file2' ({lattice_file2!r}) requires 'lattice_file' "
+                    f"to be set as well."
+                )
+            if "|" in str(lattice_file):
+                raise ValueError(
+                    f"'lattice_file2' ({self.lattice_file2!r}) may not be used with a "
+                    f"multi-universe (`|`-delimited) lattice_file={lattice_file!r}; "
+                    f"specify per-universe secondary files with commas in 'lattice_file' "
+                    f"instead."
+                )
+            params["lattice_file"] = f"{lattice_file},{lattice_file2}"
         return make_tao_init("", **params)
 
     def run(self, use_subprocess: bool = False) -> AnyTao:
