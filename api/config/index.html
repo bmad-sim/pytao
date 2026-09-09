@@ -2516,7 +2516,8 @@ dictionary of settings keys to values.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/config.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">143</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">142</span>
+<span class="normal">143</span>
 <span class="normal">144</span>
 <span class="normal">145</span>
 <span class="normal">146</span>
@@ -2544,8 +2545,7 @@ dictionary of settings keys to values.</p>
 <span class="normal">168</span>
 <span class="normal">169</span>
 <span class="normal">170</span>
-<span class="normal">171</span>
-<span class="normal">172</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">171</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span> <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">,</span> <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">ix_branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
@@ -2657,7 +2657,11 @@ If <code>None</code>, all attributes to be set will be used.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/config.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">204</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
 <span class="normal">205</span>
 <span class="normal">206</span>
 <span class="normal">207</span>
@@ -2682,14 +2686,7 @@ If <code>None</code>, all attributes to be set will be used.</p>
 <span class="normal">226</span>
 <span class="normal">227</span>
 <span class="normal">228</span>
-<span class="normal">229</span>
-<span class="normal">230</span>
-<span class="normal">231</span>
-<span class="normal">232</span>
-<span class="normal">233</span>
-<span class="normal">234</span>
-<span class="normal">235</span>
-<span class="normal">236</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
+<span class="normal">229</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_set_commands</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Generate a list of set commands to apply this configuration to `tao`.</span>
@@ -2710,18 +2707,15 @@ If <code>None</code>, all attributes to be set will be used.</p>
     <span class="k">if</span> <span class="n">tao</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_commands</span>
 
-    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span>
-        <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">com</span><span class="o">.</span><span class="n">get_set_commands</span><span class="p">(</span><span class="n">tao</span><span class="o">=</span><span class="n">tao</span><span class="p">),</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">space_charge_com</span><span class="o">.</span><span class="n">get_set_commands</span><span class="p">(</span><span class="n">tao</span><span class="o">=</span><span class="n">tao</span><span class="p">),</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">beam_init</span><span class="o">.</span><span class="n">get_set_commands</span><span class="p">(</span><span class="n">tao</span><span class="o">=</span><span class="n">tao</span><span class="p">),</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">beam</span><span class="o">.</span><span class="n">get_set_commands</span><span class="p">(</span><span class="n">tao</span><span class="o">=</span><span class="n">tao</span><span class="p">),</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">globals</span><span class="o">.</span><span class="n">get_set_commands</span><span class="p">(</span><span class="n">tao</span><span class="o">=</span><span class="n">tao</span><span class="p">),</span>
-            <span class="c1"># TODO by element if changed</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">per_element_commands</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="p">[],</span>
-    <span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">com</span><span class="o">.</span><span class="n">get_set_commands</span><span class="p">(</span><span class="n">tao</span><span class="o">=</span><span class="n">tao</span><span class="p">),</span>
+        <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">space_charge_com</span><span class="o">.</span><span class="n">get_set_commands</span><span class="p">(</span><span class="n">tao</span><span class="o">=</span><span class="n">tao</span><span class="p">),</span>
+        <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">beam_init</span><span class="o">.</span><span class="n">get_set_commands</span><span class="p">(</span><span class="n">tao</span><span class="o">=</span><span class="n">tao</span><span class="p">),</span>
+        <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">beam</span><span class="o">.</span><span class="n">get_set_commands</span><span class="p">(</span><span class="n">tao</span><span class="o">=</span><span class="n">tao</span><span class="p">),</span>
+        <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">globals</span><span class="o">.</span><span class="n">get_set_commands</span><span class="p">(</span><span class="n">tao</span><span class="o">=</span><span class="n">tao</span><span class="p">),</span>
+        <span class="c1"># TODO by element if changed</span>
+        <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">per_element_commands</span><span class="p">,</span>
+    <span class="p">]</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2868,7 +2862,8 @@ Defaults to <code>"{prefix}.lat.bmad"</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/config.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 67</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 66</span>
+<span class="normal"> 67</span>
 <span class="normal"> 68</span>
 <span class="normal"> 69</span>
 <span class="normal"> 70</span>
@@ -2941,8 +2936,7 @@ Defaults to <code>"{prefix}.lat.bmad"</code>.</p>
 <span class="normal">137</span>
 <span class="normal">138</span>
 <span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">write_bash_loader_script</span><span class="p">(</span>
+<span class="normal">140</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">write_bash_loader_script</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">directory</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"run_tao"</span><span class="p">,</span>
@@ -3194,7 +3188,14 @@ Defaults to <code>"{prefix}.lat.bmad"</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/config.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">249</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
 <span class="normal">250</span>
 <span class="normal">251</span>
 <span class="normal">252</span>
@@ -3223,14 +3224,7 @@ Defaults to <code>"{prefix}.lat.bmad"</code>.</p>
 <span class="normal">275</span>
 <span class="normal">276</span>
 <span class="normal">277</span>
-<span class="normal">278</span>
-<span class="normal">279</span>
-<span class="normal">280</span>
-<span class="normal">281</span>
-<span class="normal">282</span>
-<span class="normal">283</span>
-<span class="normal">284</span>
-<span class="normal">285</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">278</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Self</span><span class="p">],</span>
