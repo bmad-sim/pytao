@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 from __future__ import annotations
 
 import copy
@@ -27,7 +26,7 @@ if typing.TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 # make auto-generated log messages come from this module
-setattr(_tao_pystructs_logger, "logger", logger)
+_tao_pystructs_logger.logger = logger
 
 
 class TaoConfig(TaoSettableModel):
@@ -189,17 +188,14 @@ class TaoConfig(TaoSettableModel):
         -------
         list of str
         """
-        return sum(
-            (
-                self.com.set_commands,
-                self.space_charge_com.set_commands,
-                self.beam_init.set_commands,
-                self.beam.set_commands,
-                self.globals.set_commands,
-                self.per_element_commands,
-            ),
-            [],
-        )
+        return [
+            *self.com.set_commands,
+            *self.space_charge_com.set_commands,
+            *self.beam_init.set_commands,
+            *self.beam.set_commands,
+            *self.globals.set_commands,
+            *self.per_element_commands,
+        ]
 
     @override
     def get_set_commands(self, tao: Tao | None = None) -> list[str]:
@@ -222,18 +218,15 @@ class TaoConfig(TaoSettableModel):
         if tao is None:
             return self.set_commands
 
-        return sum(
-            (
-                self.com.get_set_commands(tao=tao),
-                self.space_charge_com.get_set_commands(tao=tao),
-                self.beam_init.get_set_commands(tao=tao),
-                self.beam.get_set_commands(tao=tao),
-                self.globals.get_set_commands(tao=tao),
-                # TODO by element if changed
-                self.per_element_commands,
-            ),
-            [],
-        )
+        return [
+            *self.com.get_set_commands(tao=tao),
+            *self.space_charge_com.get_set_commands(tao=tao),
+            *self.beam_init.get_set_commands(tao=tao),
+            *self.beam.get_set_commands(tao=tao),
+            *self.globals.get_set_commands(tao=tao),
+            # TODO by element if changed
+            *self.per_element_commands,
+        ]
 
 
 class TaylorMap(TaoModel):
