@@ -1,3 +1,5 @@
+import pathlib
+
 import pytest
 
 from ..errors import TaoInitializationError, TaoInvalidArgumentsError
@@ -133,6 +135,79 @@ def test_startup_from_lattice_contents() -> None:
         "Q2",
         "END",
     ]
+
+
+def test_startup_lattice_file2(tmp_path: pathlib.Path) -> None:
+    lat1 = tmp_path / "lat1.bmad"
+    lat1.write_text(fodo_lattice)
+    lat2 = tmp_path / "lat2.bmad"
+    lat2.write_text("q1[k1] = 0.5\n")
+
+    with SubprocessTao(lattice_file=lat1, lattice_file2=lat2, noplot=True) as tao:
+        assert tao.ele_gen_attribs("Q1")["K1"] == 0.5
+
+
+@pytest.mark.parametrize(
+    "startup",
+    [
+        pytest.param(TaoStartup(lattice_file="a.bmad,b.bmad"), id="kwarg"),
+        pytest.param(TaoStartup("-lattice_file a.bmad,b.bmad"), id="init_string"),
+        pytest.param(
+            TaoStartup.from_cli_args(["-lattice_file", "a.bmad,b.bmad"]), id="cli_args"
+        ),
+        pytest.param(TaoStartup(lattice_file="a.bmad", lattice_file2="b.bmad"), id="explicit"),
+        pytest.param(
+            TaoStartup(lattice_file="a.bmad,b.bmad", lattice_file2="b.bmad"),
+            id="redundant",
+        ),
+    ],
+)
+def test_lattice_file2_split(startup: TaoStartup) -> None:
+    assert startup.lattice_file == "a.bmad"
+    assert startup.lattice_file2 == "b.bmad"
+    assert startup.tao_init == "-lattice_file a.bmad,b.bmad"
+
+
+def test_lattice_file2_split_on_assignment() -> None:
+    startup = TaoStartup()
+    startup.lattice_file = "a.bmad,b.bmad"
+    assert startup.lattice_file == "a.bmad"
+    assert startup.lattice_file2 == "b.bmad"
+
+
+def test_lattice_file2_split_on_first_comma() -> None:
+    startup = TaoStartup(lattice_file="a,b,c")
+    assert startup.lattice_file == "a"
+    assert startup.lattice_file2 == "b,c"
+
+
+def test_lattice_file2_multi_universe_passthrough() -> None:
+    startup = TaoStartup(lattice_file="a,b|c,d")
+    assert startup.lattice_file == "a,b|c,d"
+    assert startup.lattice_file2 is None
+
+
+def test_lattice_file2_conflict() -> None:
+    with pytest.raises(ValueError, match="Conflicting"):
+        TaoStartup(lattice_file="a.bmad,b.bmad", lattice_file2="c.bmad")
+
+
+def test_lattice_file2_multi_universe_conflict() -> None:
+    with pytest.raises(ValueError, match="multi-universe"):
+        TaoStartup(lattice_file="a.bmad|b.bmad", lattice_file2="c.bmad")
+
+
+def test_lattice_file2_requires_lattice_file() -> None:
+    with pytest.raises(TaoInvalidArgumentsError):
+        _ = TaoStartup(lattice_file2="b.bmad").tao_init
+
+
+def test_lattice_file2_with_path_prefix() -> None:
+    startup = TaoStartup(lattice_file="a.bmad,b.bmad").with_path_prefix(
+        pathlib.Path("/prefix")
+    )
+    assert startup.lattice_file == pathlib.Path("/prefix/a.bmad")
+    assert startup.lattice_file2 == pathlib.Path("/prefix/b.bmad")
 
 
 @pytest.mark.parametrize(

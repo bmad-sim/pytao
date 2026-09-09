@@ -10,13 +10,13 @@ from unittest.mock import MagicMock, Mock, patch
 
 import pytest
 
+from .. import core
 from ..cli import (
     PytaoArgs,
     init,
     main_ipython,
     main_python,
 )
-from .. import core
 from ..core import configure_logging, configure_logging_from_env, register_input_transformer
 
 
@@ -324,8 +324,9 @@ def test_main_python_script(tmp_path: pathlib.Path):
     with open(fn, "w") as fp:
         print("print('script')", file=fp)
 
-    with patch.object(code, "InteractiveConsole", Mock()):
-        with patch.object(
+    with (
+        patch.object(code, "InteractiveConsole", Mock()),
+        patch.object(
             sys,
             "argv",
             [
@@ -336,8 +337,9 @@ def test_main_python_script(tmp_path: pathlib.Path):
                 "-lat",
                 "$ACC_ROOT_DIR/bmad-doc/tao_examples/fodo/fodo.bmad",
             ],
-        ):
-            main_python()
+        ),
+    ):
+        main_python()
 
 
 @patch("pytao.cli.init")
@@ -512,9 +514,9 @@ def test_register_input_transformer_custom_prefix():
 
 
 def test_import_error_handling():
-    with patch.dict(sys.modules, {"IPython": None}):
-        with patch(
-            "builtins.__import__", side_effect=ImportError("No module named 'IPython'")
-        ):
-            with pytest.raises(ImportError):
-                register_input_transformer(prefix="`")
+    with (
+        patch.dict(sys.modules, {"IPython": None}),
+        patch("builtins.__import__", side_effect=ImportError("No module named 'IPython'")),
+        pytest.raises(ImportError),
+    ):
+        register_input_transformer(prefix="`")
