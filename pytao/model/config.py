@@ -29,6 +29,22 @@ logger = logging.getLogger(__name__)
 _tao_pystructs_logger.logger = logger
 
 
+def _prepend_no_digested(fn: pathlib.Path) -> bool:
+    """
+    Prepend `no_digested` marker in the lattice file.
+
+    Returns
+    -------
+    `True` if the file was rewritten.
+    """
+    contents = fn.read_text()
+    if "no_digested" in contents:
+        return False
+
+    fn.write_text(f"no_digested\n{contents}")
+    return True
+
+
 class TaoConfig(TaoSettableModel):
     """
     Tao Configuration model which defines how to start Tao and configure it.
@@ -73,6 +89,7 @@ class TaoConfig(TaoSettableModel):
         lat_name: str | None = None,
         shebang: str = "/usr/bin/env bash",
         tao_binary: str = "tao",
+        no_digested: bool = True,
     ) -> tuple[pathlib.Path, pathlib.Path]:
         """
         Write a loader script to launch Tao with these startup parameters.
@@ -92,6 +109,10 @@ class TaoConfig(TaoSettableModel):
         lat_name : str or None, optional
             The lattice filename to write, if `tao` is specified.
             Defaults to ``"{prefix}.lat.bmad"``.
+        no_digested : bool, optional
+            If True, sets `no_digested` in the written lattice file.
+            Only applies when `tao` instance is provided.
+            By default True.
 
         Returns
         -------
@@ -130,6 +151,9 @@ class TaoConfig(TaoSettableModel):
             if mkdir:
                 full_lat_path.parent.mkdir(exist_ok=True, parents=True)
             tao.cmd(f"write bmad '{full_lat_path}'")
+
+            if no_digested:
+                _prepend_no_digested(full_lat_path)
 
         lines = [
             f"#!{shebang}",
