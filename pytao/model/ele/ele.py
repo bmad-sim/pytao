@@ -2361,6 +2361,9 @@ class Lattice(TaoBaseModel):
         """
         Create a `Lattice` object from unique elements of the lattice.
 
+        When `track_start` or `track_end` are specified, unique elements
+        associated with elements in that range are returned.
+
         Parameters
         ----------
         tao : Tao
@@ -2384,20 +2387,32 @@ class Lattice(TaoBaseModel):
         -------
         Lattice
         """
-        indices: list[int] = [
-            int(idx)
-            for idx in cast(
-                list,
-                tao.lat_list(
-                    "*", "ele.ix_ele", flags="-no_slaves", ix_branch=ix_branch, ix_uni=ix_uni
-                ),
+
+        if track_start is not None or track_end is not None:
+            indices = _used_unique_element_indices(
+                tao,
+                track_start=track_start,
+                track_end=track_end,
+                ix_uni=ix_uni,
+                ix_branch=ix_branch,
             )
-        ]
-        ix_start = get_element_index(tao, track_start) if track_start else 0
-        ix_end = get_element_index(tao, track_end) if track_end else max(indices)
+        else:
+            indices = [
+                int(idx)
+                for idx in list(
+                    tao.lat_list(
+                        "*",
+                        "ele.ix_ele",
+                        flags="-no_slaves",
+                        ix_branch=ix_branch,
+                        ix_uni=ix_uni,
+                    ),
+                )
+            ]
+
         return cls.from_tao_eles(
             tao=tao,
-            eles=[ix_ele for ix_ele in indices if ix_start <= ix_ele <= ix_end],
+            eles=list(indices),
             which=which,
             **kwargs,
         )
@@ -2454,8 +2469,8 @@ class Lattice(TaoBaseModel):
                 ),
             )
         ]
-        ix_start = get_element_index(tao, track_start) if track_start else 0
-        ix_end = get_element_index(tao, track_end) if track_end else max(indices)
+        ix_start = get_element_index(tao, track_start) if track_start is not None else 0
+        ix_end = get_element_index(tao, track_end) if track_end is not None else max(indices)
         return cls.from_tao_eles(
             tao=tao,
             eles=[ix_ele for ix_ele in indices if ix_start <= ix_ele <= ix_end],
@@ -2527,3 +2542,95 @@ def restore_raw_element_ndarrays(ele: dict) -> None:
             value = comb.get(key)
             if value is not None:
                 comb[key] = _PydanticNDArray._pydantic_validate(value, None)
+
+
+def _id_to_branch_and_index(location: str) -> tuple[str, int]:
+    """
+    Split an element ID like ``"1@0>>874"`` into branch and index.
+    """
+
+    prefix, _, ix = location.rpartition(">>")
+    return prefix.split("@")[-1], int(ix)
+
+
+def _direct_lord_ids(tao: Tao, ele_id: str, branch: str, ix_ele: int) -> set[str]:
+    """
+    Get the IDs (e.g., ``"0>>874"``) of the direct lords of an element.
+    """
+    lords: set[str] = set()
+    in_block = False
+    for row in tao.ele_lord_slave(ele_id):
+        location = row.get("location_name", "")
+        if row["type"] == "Element":
+            in_block = _id_to_branch_and_index(location) == (branch, ix_ele)
+        elif row["type"] == "Lord" and in_block:
+            lords.add(location)
+    return lords
+
+
+def _used_unique_element_indices(
+    tao: Tao,
+    *,
+    track_start: ElementID | str | int | None = None,
+    track_end: ElementID | str | int | None = None,
+    ix_uni: str = "",
+    ix_branch: str = "",
+) -> list[int]:
+    """
+    Find the unique (no-slave) elements used within a tracked range.
+
+    The result contains the in-range tracked elements which are not slaves,
+    plus all lords (super, multipass, overlay, group, girder, ...) reachable
+    from any in-range tracked element.
+
+    Parameters
+    ----------
+    tao : Tao
+        Tao instance.
+    track_start : str or int, optional
+        First tracked element (inclusive).  Defaults to the start of the
+        branch.  This does not need to be a unique element itself.
+    track_end : str or int, optional
+        Last tracked element (inclusive).  Defaults to the end of the branch.
+    ix_uni : str, optional
+        Universe index, by default "".
+    ix_branch : str, optional
+        Branch index, by default "".
+
+    Returns
+    -------
+    list of int
+    """
+
+    def lat_list(who: str, flags: str) -> list:
+        return list(tao.lat_list("*", who, flags=flags, ix_uni=ix_uni, ix_branch=ix_branch))
+
+    unique_indices = {int(ix) for ix in lat_list("ele.ix_ele", "-no_slaves")}
+    track_indices = [int(ix) for ix in lat_list("ele.ix_ele", "-track_only")]
+    track_num_lords = [int(num) for num in lat_list("ele.n_lord", "-track_only")]
+
+    ix_start = get_element_index(tao, track_start) if track_start is not None else 0
+    ix_end = get_element_index(tao, track_end) if track_end is not None else max(track_indices)
+
+    uni_prefix = f"{ix_uni}@" if ix_uni else ""
+    branch = ix_branch or "0"
+
+    used: set[int] = set()
+    pending: set[str] = set()
+    for ix, num_lords in zip(track_indices, track_num_lords):
+        if ix_start <= ix <= ix_end:
+            used.add(ix)
+            if num_lords:
+                pending.add(f"{branch}>>{ix}")
+
+    seen_locations = set(pending)
+    while pending:
+        lords: set[str] = set()
+        for location in pending:
+            lord_branch, ix = _id_to_branch_and_index(location)
+            lords |= _direct_lord_ids(tao, f"{uni_prefix}{location}", lord_branch, ix)
+        pending = lords - seen_locations
+        seen_locations |= lords
+        used |= {_id_to_branch_and_index(location)[1] for location in lords}
+
+    return sorted(used & unique_indices)
