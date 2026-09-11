@@ -28,7 +28,7 @@ from pytao.model import (
     ElementTwiss,
 )
 from pytao.model import _generated as tao_classes
-from pytao.model.ele.ele import Element, get_head
+from pytao.model.ele.ele import Element
 
 
 class EleObservation(Observation):
@@ -633,14 +633,17 @@ def _ele_reduce(
     ix_begin: int | None = None
     ix_end: int | None = None
 
+    def get_ix_ele(ele: str | int) -> int:
+        return tao_classes.ElementHead.from_tao(tao, ele_id=ele, which="model").ix_ele
+
     if begin_ele is not None or end_ele is not None:
-        ix_end_marker = get_head(tao, "END", which="model").ix_ele
+        ix_end_marker = get_ix_ele("END")
         if begin_ele is not None:
-            ix_begin = get_head(tao, begin_ele, which="model").ix_ele
+            ix_begin = get_ix_ele(begin_ele)
             if ix_begin >= ix_end_marker:
                 raise ValueError(f"begin_ele {begin_ele!r} is not a tracking element")
         if end_ele is not None:
-            ix_end = get_head(tao, end_ele, which="model").ix_ele
+            ix_end = get_ix_ele(end_ele)
             if ix_end >= ix_end_marker:
                 raise ValueError(f"end_ele {end_ele!r} is not a tracking element")
 

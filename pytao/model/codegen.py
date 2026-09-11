@@ -1302,11 +1302,13 @@ def generate_structures(
         res["ElementGridField"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, "ele:grid_field G1 1 base"),
             class_name="ElementGridField",
+            tao_command_default_args={"who": "base"},
             reference_structures=(structs_by_name["grid_field_struct"],),
         )
         res["ElementGridFieldPoints"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, "ele:grid_field G1 1 points"),
             class_name="ElementGridFieldPoints",
+            tao_command_default_args={"who": "points"},
             reference_structures=(structs_by_name["grid_field_pt_struct"],),
         )
         res["ElementGridFieldPoints"].members["data"].dimension = None
@@ -1314,16 +1316,19 @@ def generate_structures(
         res["ElementCartesianMap"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, "ele:cartesian_map Q1 1 base"),
             class_name="ElementCartesianMap",
+            tao_command_default_args={"who": "base"},
             reference_structures=(structs_by_name["cartesian_map_struct"],),
         )
         res["ElementCylindricalMap"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, "ele:cylindrical_map M1 1 base"),
             class_name="ElementCylindricalMap",
+            tao_command_default_args={"who": "base"},
             reference_structures=(structs_by_name["cylindrical_map_struct"],),
         )
         res["ElementGenGradients"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, "ele:gen_gradients GG 1 base"),
             class_name="ElementGenGradients",
+            tao_command_default_args={"who": "base"},
             reference_structures=(structs_by_name["gen_gradients_struct"],),
         )
 
@@ -1348,18 +1353,21 @@ def generate_structures(
         res["ElementMat6"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, "ele:mat6 1 mat6"),
             class_name="ElementMat6",
+            tao_command_default_args={"who": "mat6"},
             reference_structures=(),
         )
 
         res["ElementMat6Vec0"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, "ele:mat6 1 vec0"),
             class_name="ElementMat6Vec0",
+            tao_command_default_args={"who": "vec0"},
             reference_structures=(),
         )
 
         res["ElementMat6Error"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, "ele:mat6 1 err"),
             class_name="ElementMat6Error",
+            tao_command_default_args={"who": "err"},
             reference_structures=(),
         )
 
@@ -1372,12 +1380,14 @@ def generate_structures(
         res["ElementWall3DTable"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, "ele:wall3d 1 1 table"),
             class_name="ElementWall3DTable",
+            tao_command_default_args={"who": "table"},
             reference_structures=(structs_by_name["wall3d_section_struct"],),
         )
 
         res["ElementWall3DBase"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, "ele:wall3d 1 1 base"),
             class_name="ElementWall3DBase",
+            tao_command_default_args={"who": "base"},
             reference_structures=(
                 structs_by_name["wall3d_section_struct"],
                 structs_by_name["wall3d_struct"],
@@ -1479,11 +1489,13 @@ def generate_structures(
         res["ElementPhotonBase"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, f"ele:photon {mask1_index} base"),
             class_name="ElementPhotonBase",
+            tao_command_default_args={"who": "base"},
             reference_structures=(structs_by_name["photon_element_struct"],),
         )
         res["ElementPhotonCurvature"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, f"ele:photon {mask1_index} curvature"),
             class_name="ElementPhotonCurvature",
+            tao_command_default_args={"who": "curvature"},
             reference_structures=(structs_by_name["photon_element_struct"],),
         )
 
@@ -1495,6 +1507,7 @@ def generate_structures(
         res["ElementPhotonMaterial"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, f"ele:photon {mirror1_index} material"),
             class_name="ElementPhotonMaterial",
+            tao_command_default_args={"who": "material"},
             reference_structures=(structs_by_name["photon_element_struct"],),
             mark_optional=("f0_m1",),
         )
@@ -1507,6 +1520,7 @@ def generate_structures(
             res["ElementWakeBase"] = PipeOutputStructure.from_cmd(
                 TaoCommandAndResult.from_tao(tao, "ele:wake P3 base"),
                 class_name="ElementWakeBase",
+                tao_command_default_args={"who": "base"},
                 reference_structures=(
                     structs_by_name["wake_struct"],
                     structs_by_name["wake_sr_struct"],
@@ -1517,12 +1531,14 @@ def generate_structures(
             res["ElementWakeSrLong"] = PipeOutputStructure.from_cmd(
                 TaoCommandAndResult.from_tao(tao, "ele:wake P3 sr_long"),
                 class_name="ElementWakeSrLong",
+                tao_command_default_args={"who": "sr_long"},
                 reference_structures=(structs_by_name["wake_sr_struct"],),
                 mark_optional=(),
             )
             res["ElementWakeSrTrans"] = PipeOutputStructure.from_cmd(
                 TaoCommandAndResult.from_tao(tao, "ele:wake P3 sr_trans"),
                 class_name="ElementWakeSrTrans",
+                tao_command_default_args={"who": "sr_trans"},
                 reference_structures=(structs_by_name["wake_sr_struct"],),
                 mark_optional=(),
             )

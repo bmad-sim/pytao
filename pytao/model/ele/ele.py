@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import functools
 import pathlib
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, ClassVar, Iterable, Literal, cast
@@ -9,7 +8,6 @@ import pydantic
 from pydantic import Field
 from typing_extensions import Self
 
-from ...errors import TaoCommandError
 from .. import _generated as tao_classes
 from ..base import ArchiveFormat, TaoBaseModel
 from ..types import _PydanticComplexNDArray, _PydanticNDArray
@@ -20,7 +18,7 @@ from .comb import Comb, _comb_array_attrs
 from .sections import (
     AnyElementAcKicker,
     AnyElementMultipoles,
-    ChamberWallWho,
+    ChamberWallWho as ChamberWallWho,
     ElementAcKicker,
     ElementAcKickerAmpVsTime as ElementAcKickerAmpVsTime,
     ElementAcKickerFrequencies as ElementAcKickerFrequencies,
@@ -518,657 +516,9 @@ class ElementID(pydantic.BaseModel, extra="forbid"):
 AnyElementID = int | str | ElementID
 
 
-def _maybe_reraise(ele: str, ex: TaoCommandError):
-    if "Cannot locate element" not in str(ex):
-        raise
-
-    if ex.errors:
-        msg = ex.errors[0].message
-    else:
-        msg = "Element not found"
-
-    raise ElementNotFoundError(f"{ele} {msg}") from None
-
-
-def _catch_element_not_found_error(func):
-    @functools.wraps(func)
-    def wrapped(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except TaoCommandError as ex:
-            _maybe_reraise(kwargs.get("ele", None), ex)
-
-    return wrapped
-
-
-def get_element_index(
-    tao: Tao,
-    ele: AnyElementID,
-) -> int:
-    """
-    Get the index of a specified element from Tao.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The element as a string or ElementID.
-
-    Returns
-    -------
-    int
-
-    Raises
-    ------
-    ElementNotFoundError
-        If the element cannot be located.
-
-    TaoCommandError
-        For other unexpected errors.
-    """
-    head = get_head(tao, ele=ele, which="model")
-    return head.ix_ele
-
-
-@_catch_element_not_found_error
-def get_head(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> tao_classes.ElementHead:
-    """
-    Retrieve the head of a Tao element.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao object instance.
-    ele : str or ElementID
-        The element identifier, either as a string or an ElementID object.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementHead
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementHead.from_tao(tao, ele_id=ele, which=which)
-
-
-@_catch_element_not_found_error
-def get_twiss(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> tao_classes.ElementTwiss:
-    """
-    Retrieve Twiss parameters from a Tao object for a specified element.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao object instance.
-    ele : str or ElementID
-        The element identifier, either as a string or an ElementID object.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementTwiss
-        The Twiss parameters of the specified element.
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementTwiss.from_tao(tao, ele_id=ele, which=which)
-
-
-@_catch_element_not_found_error
-def get_orbit(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> tao_classes.ElementOrbit:
-    """
-    Get the orbit of an element from the Tao model.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao object instance.
-    ele : str or ElementID
-        The element identifier, either as a string or an ElementID object.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementOrbit
-        The orbit of the specified element in the Tao model.
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementOrbit.from_tao(tao, ele_id=ele, which=which)
-
-
-@_catch_element_not_found_error
-def get_lord_slave(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> list[tao_classes.ElementLordSlave]:
-    """
-    Retrieve the lord and slave elements from a Tao instance.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The element identifier, either as a string or an ElementID object.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    list of ElementLordSlave
-    """
-    ele = to_ele_id(ele)
-    adapter = pydantic.TypeAdapter("list[tao_classes.ElementLordSlave]")
-    return adapter.validate_python(tao.ele_lord_slave(ele_id=ele))
-
-
-@_catch_element_not_found_error
-def get_chamber_wall(
-    tao: Tao,
-    ele: AnyElementID,
-    index: int,
-    who: ChamberWallWho,
-    which: Which = "model",
-) -> list[tao_classes.ElementChamberWall]:
-    """
-    Retrieve the chamber wall data for a specified element from Tao.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The identifier of the element. This can be a string or an ElementID instance.
-    index : int
-        The index of the wall.
-    who : ChamberWallWho
-        Specifies which chamber wall data to retrieve.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    list of ElementChamberWall
-        A list of ElementChamberWall objects containing the chamber wall data for the specified element.
-    """
-    ele = to_ele_id(ele)
-    adapter = pydantic.TypeAdapter("list[tao_classes.ElementChamberWall]")
-    return adapter.validate_python(
-        tao.ele_chamber_wall(ele_id=ele, index=index, which=which, who=who)
-    )
-
-
-@_catch_element_not_found_error
-def get_wall3d_base(
-    tao: Tao,
-    ele: AnyElementID,
-    index: int,
-    which: Which = "model",
-) -> tao_classes.ElementWall3DBase:
-    """
-    Retrieve the 3D wall base information for a specified element from Tao.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The identifier of the element. Can be a string name or an ElementID object.
-    index : int
-        The index of the wall.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementWall3DBase
-        The 3D wall base information of the specified element.
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementWall3DBase.from_tao(
-        tao,
-        ele_id=ele,
-        index=index,
-        which=which,
-        who="base",
-    )
-
-
-@_catch_element_not_found_error
-def get_wall3d_table(
-    tao: Tao,
-    ele: AnyElementID,
-    index: int,
-    which: Which = "model",
-) -> list[tao_classes.ElementWall3DTable]:
-    """
-    Retrieve the 3D wall table for a specified element from Tao.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The element identifier, either as a string or an ElementID.
-    index : int
-        The index of the wall.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    list[tao_classes.ElementWall3DTable]
-        A list of ElementWall3DTable objects for the specified element.
-    """
-    ele = to_ele_id(ele)
-    adapter = pydantic.TypeAdapter("list[tao_classes.ElementWall3DTable]")
-    return adapter.validate_python(
-        tao.ele_wall3d(ele_id=ele, index=index, which=which, who="table")
-    )
-
-
-@_catch_element_not_found_error
-def get_multipoles(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> AnyElementMultipoles | None:
-    """
-    Retrieve the multipole coefficients for a specified element in a Tao model.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao object.
-    ele : str or ElementID
-        The identifier of the element. Can be a string name or an ElementID object.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    AnyElementMultipoles or None
-        The multipole coefficients for the specified element, or None if not found.
-    """
-    ele = to_ele_id(ele)
-
-    multipoles: dict = tao.ele_multipoles(ele_id=ele, which=which)
-    adapter = pydantic.TypeAdapter(AnyElementMultipoles)
-    if not multipoles["multipoles_on"]:
-        return None
-
-    multipoles["command_args"] = {"ele_id": ele, "which": which}
-    if not len(multipoles.get("data", [])):
-        # perf: it's ambiguous, so choose a general class
-        return tao_classes.ElementMultipoles.model_validate(multipoles)
-    return adapter.validate_python(multipoles)
-
-
-@_catch_element_not_found_error
-def get_bunch_params(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> tao_classes.ElementBunchParams:
-    """
-    Retrieve the bunch parameters of a specified element in a Tao instance.
-
-    Parameters
-    ----------
-    tao : Tao
-        Tao instance.
-    ele : str or ElementID
-        Identifier for the element, either as a string or an ElementID object.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementBunchParams
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementBunchParams.from_tao(tao, ele_id=ele, which=which)
-
-
-@_catch_element_not_found_error
-def get_photon_base(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> tao_classes.ElementPhotonBase:
-    """
-    Retrieve the photon base information of a specified element in a Tao instance.
-
-    Parameters
-    ----------
-    tao : Tao
-        Tao instance.
-    ele : str or ElementID
-        Identifier for the element, either as a string or an ElementID object.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementPhotonBase
-        The photon base of the specified element.
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementPhotonBase.from_tao(tao, ele_id=ele, which=which, who="base")
-
-
-@_catch_element_not_found_error
-def get_photon_material(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> tao_classes.ElementPhotonMaterial:
-    """
-    Retrieve the photon material properties of a specified element from a Tao object.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The identifier of the element.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementPhotonMaterial
-        The photon material properties of the specified element.
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementPhotonMaterial.from_tao(
-        tao, ele_id=ele, which=which, who="material"
-    )
-
-
-@_catch_element_not_found_error
-def get_photon_curvature(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> tao_classes.ElementPhotonCurvature:
-    """
-    Get the photon curvature for a specified element in Tao.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The element identifier.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementPhotonCurvature
-        The photon curvature of the specified element.
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementPhotonCurvature.from_tao(
-        tao, ele_id=ele, which=which, who="curvature"
-    )
-
-
-@_catch_element_not_found_error
-def get_grid_field_base(
-    tao: Tao,
-    ele: AnyElementID,
-    index: int,
-    which: Which = "model",
-) -> tao_classes.ElementGridField:
-    """
-    Get the base grid field of a specified element from Tao.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The element identifier, either as a string or an ElementID object.
-    index : int
-        The index of the element's grid field.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementGridField
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementGridField.from_tao(
-        tao, ele_id=ele, which=which, index=index, who="base"
-    )
-
-
-@_catch_element_not_found_error
-def get_grid_field_points(
-    tao: Tao,
-    ele: AnyElementID,
-    index: int,
-    which: Which = "model",
-) -> list[tao_classes.ElementGridFieldPoints]:
-    """
-    Retrieve the grid field points for a specified element in Tao.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The element identifier, either as a string or an ElementID object.
-    index : int
-        The grid field instance.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    list of ElementGridFieldPoints
-        A list of ElementGridFieldPoints corresponding to the specified element.
-    """
-    ele = to_ele_id(ele)
-    adapter = pydantic.TypeAdapter("list[tao_classes.ElementGridFieldPoints]")
-    return adapter.validate_python(
-        tao.ele_grid_field(ele_id=ele, which=which, index=index, who="points")
-    )
-
-
-@_catch_element_not_found_error
-def get_wake_base(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> tao_classes.ElementWakeBase:
-    """
-    Get the wake base of a Tao element.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The identifier of the element whose wake base is to be retrieved.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementWakeBase
-        The wake base of the specified Tao element.
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementWakeBase.from_tao(tao, ele_id=ele, which=which, who="base")
-
-
-@_catch_element_not_found_error
-def get_wake_sr_long(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> ElementSrWakeData:
-    """
-    Get the short-range longitudinal wake of a specific element in the Tao model.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The element identifier.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementWakeSrLong
-        The short-range longitudinal wake of the specified element.
-    """
-    ele = to_ele_id(ele)
-    return ElementSrWakeData.from_tao(tao, ele=ele, which=which, who="longitudinal")
-
-
-@_catch_element_not_found_error
-def get_wake_sr_trans(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> ElementSrWakeData:
-    """
-    Retrieve the short-range transverse wakefield response of a specified
-    element in a Tao model.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The element identifier, which can be either a string or an ElementID instance.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementWakeSrTrans
-        The transverse wakefield response of the specified element.
-    """
-    ele = to_ele_id(ele)
-    return ElementSrWakeData.from_tao(tao, ele=ele, which=which, who="transverse")
-
-
-@_catch_element_not_found_error
-def get_mat6(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> tao_classes.ElementMat6:
-    """
-    Get the 6x6 linear transfer map (mat6 matrix) for a specified element in Tao.
-
-    Parameters
-    ----------
-    tao : Tao
-        An instance of the Tao class.
-    ele : str or ElementID
-        The identifier of the element. This can be a string or an ElementID object.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementMat6
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementMat6.from_tao(tao, ele_id=ele, which=which, who="mat6")
-
-
-@_catch_element_not_found_error
-def get_mat6_vec0(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> tao_classes.ElementMat6Vec0:
-    """
-    Retrieve the 6-vector for a specified element from a Tao model.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The identifier of the element.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementMat6Vec0
-        The 6-vector associated with the specified element.
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementMat6Vec0.from_tao(tao, ele_id=ele, which=which, who="vec0")
-
-
-@_catch_element_not_found_error
-def get_mat6_error(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> tao_classes.ElementMat6Error:
-    """
-    Retrieve the 6x6 linear transfer map matrix error for a specified element.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The identifier of the element for which to retrieve the error matrix.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementMat6Error
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementMat6Error.from_tao(tao, ele_id=ele, which=which, who="err")
-
-
-@_catch_element_not_found_error
-def get_comb(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-    *,
-    head: tao_classes.ElementHead | None = None,
-    comb: Comb | None = None,
-) -> Comb:
-    """
-    Retrieve Comb data for the given element.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The identifier of the element for which to retrieve the error matrix.
-    which : "base", "model", or "design", default="model"
-    comb : Comb or None, optional
-        If available, the provided Comb data can be reused for multiple
-        elements and significantly speed up using `get_comb` on a full lattice.
-
-    Returns
-    -------
-    tao_classes.ElementMat6Error
-    """
-    ele = to_ele_id(ele)
-    if comb is None:
-        comb = Comb.from_tao(tao, which=which)
-    if head is None:
-        head = get_head(tao=tao, ele=ele, which=which)
-    return comb.slice_by_s(head.s_start, head.s)
+def get_element_index(tao: Tao, ele: AnyElementID) -> int:
+    """Get the lattice index of a specified element from Tao."""
+    return tao_classes.ElementHead.from_tao(tao, ele_id=ele, which="model").ix_ele
 
 
 @dataclass
@@ -1478,7 +828,7 @@ class Element(TaoBaseModel, extra="forbid"):
         """
         ele = to_ele_id(ele)
 
-        head = get_head(tao=tao, ele=ele, which=which)
+        head = tao_classes.ElementHead.from_tao(tao, ele_id=ele, which=which)
         instance = cls(which=which, head=head, ele=ele)
 
         def should_fill(flag: bool | FillDefault):
@@ -1527,7 +877,7 @@ class Element(TaoBaseModel, extra="forbid"):
 
     @_pytao_stats.time_decorator
     def _fill_head(self, tao: Tao):
-        self.head = get_head(tao=tao, ele=self.ele_id, which=self.which)
+        self.head = tao_classes.ElementHead.from_tao(tao, ele_id=self.ele_id, which=self.which)
 
     @_pytao_stats.time_decorator
     def _fill_attrs(self, tao: Tao):
@@ -1535,7 +885,9 @@ class Element(TaoBaseModel, extra="forbid"):
 
     @_pytao_stats.time_decorator
     def _fill_bunch_params(self, tao: Tao):
-        self.bunch_params = get_bunch_params(tao=tao, ele=self.ele_id, which=self.which)
+        self.bunch_params = tao_classes.ElementBunchParams.from_tao(
+            tao, ele_id=self.ele_id, which=self.which
+        )
 
     @_pytao_stats.time_decorator
     def _fill_floor(self, tao: Tao):
@@ -1543,9 +895,9 @@ class Element(TaoBaseModel, extra="forbid"):
 
     @_pytao_stats.time_decorator
     def _fill_comb(self, tao: Tao, comb_data: Comb | None):
-        self.comb = get_comb(
-            tao=tao, ele=self.ele_id, which=self.which, head=self.head, comb=comb_data
-        )
+        if comb_data is None:
+            comb_data = Comb.from_tao(tao, which=self.which)
+        self.comb = comb_data.slice_by_s(self.head.s_start, self.head.s)
 
     @_pytao_stats.time_decorator
     def _fill_control_vars(self, tao: Tao):
@@ -1559,7 +911,9 @@ class Element(TaoBaseModel, extra="forbid"):
     @_pytao_stats.time_decorator
     def _fill_lord_slave(self, tao: Tao):
         if self.head.has_lord_slave:
-            self.lord_slave = get_lord_slave(tao=tao, ele=self.ele_id, which=self.which)
+            self.lord_slave = tao_classes.ElementLordSlave.from_tao_list(
+                tao, ele_id=self.ele_id
+            )
         else:
             self.lord_slave = None
 
@@ -1572,18 +926,33 @@ class Element(TaoBaseModel, extra="forbid"):
 
     @_pytao_stats.time_decorator
     def _fill_orbit(self, tao: Tao):
-        self.orbit = get_orbit(tao=tao, ele=self.ele_id, which=self.which)
+        self.orbit = tao_classes.ElementOrbit.from_tao(
+            tao, ele_id=self.ele_id, which=self.which
+        )
 
     @_pytao_stats.time_decorator
     def _fill_twiss(self, tao: Tao):
         if self.head.has_twiss:
-            self.twiss = get_twiss(tao=tao, ele=self.ele_id, which=self.which)
+            self.twiss = tao_classes.ElementTwiss.from_tao(
+                tao, ele_id=self.ele_id, which=self.which
+            )
         else:
             self.twiss = None
 
     @_pytao_stats.time_decorator
     def _fill_multipoles(self, tao: Tao):
-        self.multipoles = get_multipoles(tao=tao, ele=self.ele_id, which=self.which)
+        multipoles: dict = tao.ele_multipoles(ele_id=self.ele_id, which=self.which)
+        if not multipoles["multipoles_on"]:
+            self.multipoles = None
+            return
+
+        multipoles["command_args"] = {"ele_id": self.ele_id, "which": self.which}
+        if not len(multipoles.get("data", [])):
+            # perf: it's ambiguous, so choose a general class
+            self.multipoles = tao_classes.ElementMultipoles.model_validate(multipoles)
+        else:
+            adapter = pydantic.TypeAdapter(AnyElementMultipoles)
+            self.multipoles = adapter.validate_python(multipoles)
 
     @_pytao_stats.time_decorator
     def _fill_wall3d(self, tao: Tao, fill_table: bool):

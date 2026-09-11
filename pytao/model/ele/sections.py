@@ -1,9 +1,8 @@
 """
 Hand-written models for the fillable data sections of an `Element`.
 
-The `get_*` helpers these models query live in `.ele`; they are imported
-inside methods to avoid a circular import (`.ele` imports this module for
-`Element`'s field types).
+`to_ele_id` lives in `.ele` and is imported inside methods to avoid a
+circular import (`.ele` imports this module for `Element`'s field types).
 """
 
 from __future__ import annotations
@@ -246,15 +245,15 @@ class ElementChamberWall(TaoBaseModel, extra="forbid"):
         *,
         which: Which,
     ):
-        from .ele import get_chamber_wall, to_ele_id
-
-        ele = to_ele_id(ele)
-
         return cls(
             which=which,
             index=index,
-            x=get_chamber_wall(tao, ele, index, which=which, who="x"),
-            y=get_chamber_wall(tao, ele, index, which=which, who="y"),
+            x=tao_classes.ElementChamberWall.from_tao_list(
+                tao, ele_id=ele, index=index, which=which, who="x"
+            ),
+            y=tao_classes.ElementChamberWall.from_tao_list(
+                tao, ele_id=ele, index=index, which=which, who="y"
+            ),
         )
 
 
@@ -286,14 +285,14 @@ class ElementWall3D(tao_classes.ElementWall3DBase, extra="forbid"):
         which: Which,
         fill_table: bool = False,
     ):
-        from .ele import get_wall3d_base, get_wall3d_table, to_ele_id
-
-        ele = to_ele_id(ele)
-
-        base = get_wall3d_base(tao, ele, index, which=which)
+        base = tao_classes.ElementWall3DBase.from_tao(
+            tao, ele_id=ele, index=index, which=which
+        )
         table = None
         if fill_table:
-            table = get_wall3d_table(tao, ele, index, which=which)
+            table = tao_classes.ElementWall3DTable.from_tao_list(
+                tao, ele_id=ele, index=index, which=which
+            )
 
         data = base.model_dump()
         data.pop("__class_name__")
@@ -334,22 +333,15 @@ class ElementPhoton(tao_classes.ElementPhotonBase, extra="forbid"):
         *,
         which: Which,
     ):
-        from .ele import (
-            get_photon_base,
-            get_photon_curvature,
-            get_photon_material,
-            to_ele_id,
-        )
-
-        ele = to_ele_id(ele)
-
-        base = get_photon_base(tao, ele, which=which)
+        base = tao_classes.ElementPhotonBase.from_tao(tao, ele_id=ele, which=which)
         data = base.model_dump()
         data.pop("__class_name__")
         return cls(
             which=which,
-            curvature=get_photon_curvature(tao, ele, which=which),
-            material=get_photon_material(tao, ele, which=which),
+            curvature=tao_classes.ElementPhotonCurvature.from_tao(
+                tao, ele_id=ele, which=which
+            ),
+            material=tao_classes.ElementPhotonMaterial.from_tao(tao, ele_id=ele, which=which),
             **data,
         )
 
@@ -394,13 +386,9 @@ class ElementMat6(TaoModel, extra="forbid"):
         *,
         which: Which,
     ):
-        from .ele import get_mat6, get_mat6_error, get_mat6_vec0, to_ele_id
-
-        ele = to_ele_id(ele)
-
-        base = get_mat6(tao, ele, which=which)
-        vec0 = get_mat6_vec0(tao, ele, which=which)
-        err = get_mat6_error(tao, ele, which=which)
+        base = tao_classes.ElementMat6.from_tao(tao, ele_id=ele, which=which)
+        vec0 = tao_classes.ElementMat6Vec0.from_tao(tao, ele_id=ele, which=which)
+        err = tao_classes.ElementMat6Error.from_tao(tao, ele_id=ele, which=which)
 
         mat6 = np.asarray(
             [base.data_1, base.data_2, base.data_3, base.data_4, base.data_5, base.data_6],
@@ -428,13 +416,11 @@ class ElementGridField(tao_classes.ElementGridField, extra="forbid"):
         which: Which,
         fill_points: bool = False,
     ):
-        from .ele import get_grid_field_base, get_grid_field_points, to_ele_id
-
-        ele = to_ele_id(ele)
-
-        base = get_grid_field_base(tao, ele, which=which, index=index)
+        base = tao_classes.ElementGridField.from_tao(tao, ele_id=ele, index=index, which=which)
         if fill_points:
-            points = get_grid_field_points(tao, ele, which=which, index=index)
+            points = tao_classes.ElementGridFieldPoints.from_tao_list(
+                tao, ele_id=ele, index=index, which=which
+            )
         else:
             points = None
 
@@ -513,18 +499,18 @@ class ElementWake(tao_classes.ElementWakeBase, extra="forbid"):
         *,
         which: Which,
     ):
-        from .ele import get_wake_base, get_wake_sr_long, get_wake_sr_trans, to_ele_id
+        from .ele import to_ele_id
 
         ele = to_ele_id(ele)
 
-        base = get_wake_base(tao, ele, which=which)
+        base = tao_classes.ElementWakeBase.from_tao(tao, ele_id=ele, which=which)
         sr_long = None
         sr_trans = None
         lr_mode = None
         if base.has_sr_long:
-            sr_long = get_wake_sr_long(tao, ele, which=which)
+            sr_long = ElementSrWakeData.from_tao(tao, ele, which=which, who="longitudinal")
         if base.has_sr_trans:
-            sr_trans = get_wake_sr_trans(tao, ele, which=which)
+            sr_trans = ElementSrWakeData.from_tao(tao, ele, which=which, who="transverse")
         if base.has_lr_mode:
             lr_mode: list[list[str | float]] = tao.ele_wake(
                 ele, which=which, who="lr_mode_table"
