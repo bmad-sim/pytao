@@ -1963,7 +1963,7 @@ class Element(TaoBaseModel, extra="forbid"):
             if flag is True or flag is False:
                 return flag
             if not isinstance(flag, FillDefault):
-                raise ValueError(f"Unexpected flag: {flag}")
+                raise TypeError(f"Unexpected flag: {flag}")
 
             return defaults and (flag.attr in cls.DEFAULTS)
 
