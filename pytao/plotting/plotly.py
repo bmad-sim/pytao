@@ -492,6 +492,8 @@ def _add_polygon_patch(
                 color=plotly_color(patch.color),
                 width=line_width or patch.linewidth,
             ),
+            fill="toself" if patch.fill else None,
+            fillcolor=plotly_color(patch.color) if patch.fill else None,
             showlegend=False,
         ),
         row=row,
@@ -508,7 +510,7 @@ def _add_arc_patch(
 ) -> None:
     """Add an arc patch to Plotly figure."""
     x_center, y_center = patch.xy
-    radius = patch.width / 2  # Assuming circular arc
+    a, b = patch.width / 2, patch.height / 2
 
     # Convert angles to radians
     theta1_rad = math.radians(patch.theta1)
@@ -519,8 +521,14 @@ def _add_arc_patch(
         theta2_rad += 2 * np.pi
 
     angles = np.linspace(theta1_rad, theta2_rad, 100)
-    x_arc = x_center + radius * np.cos(angles)
-    y_arc = y_center + radius * np.sin(angles)
+    x_ellipse = a * np.cos(angles)
+    y_ellipse = b * np.sin(angles)
+
+    # Rotate the ellipse arc by the patch angle, as matplotlib's Arc does
+    angle_rad = math.radians(patch.angle)
+    cos_angle, sin_angle = math.cos(angle_rad), math.sin(angle_rad)
+    x_arc = x_center + x_ellipse * cos_angle - y_ellipse * sin_angle
+    y_arc = y_center + x_ellipse * sin_angle + y_ellipse * cos_angle
 
     fig.add_trace(
         go.Scatter(
