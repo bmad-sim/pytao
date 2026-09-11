@@ -88,18 +88,16 @@ def _clean_pytao_output(dct: dict, typ: type[T]) -> T:
 
 def _normalize_universe_prefixed_keys(dct: dict) -> dict:
     """
-    Strip Tao's ``"{ix_universe}^"`` prefix from graph/curve info keys.
+    Strip Tao's `"{ix_universe}^"` prefix from graph/curve info keys.
 
-    Tao's ``plot_graph``/``plot_curve`` output prefixes per-universe fields with
-    the universe index (e.g. ``"-1^ix_branch"``, ``"2^ix_bunch"``).  Collapsing
-    these to stable keys (``"ix_branch"``, ``"ix_bunch"``) keeps the info usable
-    regardless of universe.  Compound field names like ``"graph^type"`` (whose
-    prefix is not an integer) are left untouched.
+    Tao's `plot_graph`/`plot_curve` output prefixes per-universe fields with
+    the universe index (e.g. `"-1^ix_branch"`, `"2^ix_bunch"`), which are
+    collapsed into stable keys (`"ix_branch"`, `"ix_bunch"`).
 
-    A graph/curve has a single ``ix_universe``, so each record carries only one
-    universe prefix and distinct suffixes never collide.  If Tao ever emits the
-    same suffix under two universes in one record, that invariant is broken; we
-    raise rather than silently discard a value.
+    Raises
+    ------
+    ValueError
+        If Tao ever starts returning universe-prefixed keys that collide.
     """
     for key in list(dct):
         prefix, sep, rest = key.partition("^")
@@ -113,6 +111,15 @@ def _normalize_universe_prefixed_keys(dct: dict) -> dict:
     return dct
 
 
+def get_default_universe(tao: Tao) -> int:
+    """
+    Get the index of Tao's default universe (``s%global%default_universe``).
+
+    Graphs and curves with ``ix_universe = -1`` refer to this universe.
+    """
+    return int(tao.universe("")["ix_universe"])
+
+
 def _should_use_symbol_color(symbol_type: str, fill_pattern: str) -> bool:
     if (
         symbol_type in ("dot", "1")
@@ -121,10 +128,7 @@ def _should_use_symbol_color(symbol_type: str, fill_pattern: str) -> bool:
     ):
         return True
 
-    if pgplot.fills[fill_pattern] == "full":
-        return True
-
-    return False
+    return pgplot.fills[fill_pattern] == "full"
 
 
 # We don't want a single new key from bmad commands to break our implementation,
@@ -230,11 +234,14 @@ class PlotCurve:
     @property
     def legend_label(self) -> str:
         legend_text = self.info["legend_text"]
-        if legend_text:
-            return legend_text
+        if not legend_text:
+            data_type = self.info["data_type"]
+            legend_text = data_type if data_type == "physical_aperture" else ""
 
-        data_type = self.info["data_type"]
-        return data_type if data_type == "physical_aperture" else ""
+        ix_universe = self.info.get("ix_universe", -1)
+        if legend_text and ix_universe is not None and ix_universe >= 0:
+            return f"{ix_universe}@{legend_text}"
+        return legend_text
 
     @classmethod
     def from_tao(
@@ -775,7 +782,12 @@ class LatticeLayoutGraph(GraphBase):
             raise ValueError(f"Incorrect graph type: {graph_type} for {cls.__name__}")
 
         raw_ix_universe = info["ix_universe"]
-        universe = 1 if raw_ix_universe == -1 else raw_ix_universe
+        if raw_ix_universe < 0:
+            # -1 means the default universe; -2 means "all universes", which a
+            # single lattice layout cannot show - fall back to the default.
+            universe = get_default_universe(tao)
+        else:
+            universe = raw_ix_universe
         branch = info["ix_branch"]
         try:
             all_elem_info = tao.plot_lat_layout(ix_uni=universe, ix_branch=branch)
@@ -1143,21 +1155,26 @@ class FloorPlanGraph(GraphBase):
             )
             for fpe_info in elem_infos
         ]
-        building_walls = BuildingWalls.from_info(
-            building_wall_graph=cast(
-                list[BuildingWallGraphInfo],
-                tao.building_wall_graph(full_name),
-            ),
-            wall_list=cast(list[BuildingWallInfo], tao.building_wall_list()),
-        )
         floor_orbits = None
-        if float(info["floor_plan_orbit_scale"]) != 0:
-            floor_orbits = FloorOrbits.from_tao(
-                tao,
-                region_name=region_name,
-                graph_name=graph_name,
-                color=info["floor_plan_orbit_color"].lower(),
+        if info["ix_universe"] == -2:
+            # TODO: Tao crashes when attempting to get building walls from all
+            # universes
+            building_walls = BuildingWalls()
+        else:
+            building_walls = BuildingWalls.from_info(
+                building_wall_graph=cast(
+                    list[BuildingWallGraphInfo],
+                    tao.building_wall_graph(full_name),
+                ),
+                wall_list=cast(list[BuildingWallInfo], tao.building_wall_list()),
             )
+            if float(info["floor_plan_orbit_scale"]) != 0:
+                floor_orbits = FloorOrbits.from_tao(
+                    tao,
+                    region_name=region_name,
+                    graph_name=graph_name,
+                    color=info["floor_plan_orbit_color"].lower(),
+                )
 
         return cls(
             info=info,
@@ -1280,25 +1297,100 @@ class GraphManager(ABC):
     @property
     def lattice_layout_graph(self) -> LatticeLayoutGraph:
         """The lattice layout graph.  Placed if not already available."""
-        for region in self.regions.values():
-            for graph in region:
-                if isinstance(graph, LatticeLayoutGraph):
-                    return graph
+        return self.get_lattice_layout_graph()
 
-        (graph,) = self.place(self.layout_template)
-        assert isinstance(graph, LatticeLayoutGraph)
-        return graph
+    def get_lattice_layout_graph(self, ix_uni: int | None = None) -> LatticeLayoutGraph:
+        """
+        Get the lattice layout graph, placing it if not already available.
+
+        Parameters
+        ----------
+        ix_uni : int, optional
+            Universe whose lattice the layout should show
+            A negative index is resolved to the default universe.
+
+        Returns
+        -------
+        LatticeLayoutGraph
+        """
+        graph = None
+        for region in self.regions.values():
+            for region_graph in region:
+                if isinstance(region_graph, LatticeLayoutGraph):
+                    graph = region_graph
+                    break
+            if graph is not None:
+                break
+
+        if graph is None:
+            (graph,) = self.place(self.layout_template)
+            assert isinstance(graph, LatticeLayoutGraph)
+
+        if ix_uni is None:
+            return graph
+        if ix_uni < 0:
+            ix_uni = get_default_universe(self.tao)
+        if graph.universe == ix_uni:
+            return graph
+
+        self.tao.cmd(
+            f"set graph {graph.region_name}.{graph.graph_name} ix_universe = {ix_uni}"
+        )
+        graphs = self.update_region(
+            region_name=graph.region_name,
+            template_name=graph.template_name or self.layout_template,
+        )
+        for graph in graphs:
+            if isinstance(graph, LatticeLayoutGraph):
+                return graph
+        raise RuntimeError("Lattice layout graph not found after universe change")
 
     @property
     def floor_plan_graph(self) -> FloorPlanGraph:
         """The floor plan graph. Placed if not already available."""
+        return self.get_floor_plan_graph()
+
+    def get_floor_plan_graph(self, ix_uni: int | None = None) -> FloorPlanGraph:
+        """
+        Get the floor plan graph, placing it if not already available.
+
+        Parameters
+        ----------
+        ix_uni : int, optional
+            Universe whose lattice the floor plan should show. Universe `-1`
+            resolves to the default universe, whereas `-2` shows all universes.
+
+        Returns
+        -------
+        FloorPlanGraph
+        """
+        graph = None
         for region in self.regions.values():
-            for graph in region:
-                if isinstance(graph, FloorPlanGraph):
-                    return graph
-        (graph,) = self.place(self.floor_plan_template)
-        assert isinstance(graph, FloorPlanGraph)
-        return graph
+            for region_graph in region:
+                if isinstance(region_graph, FloorPlanGraph):
+                    graph = region_graph
+                    break
+            if graph is not None:
+                break
+
+        if graph is None:
+            (graph,) = self.place(self.floor_plan_template)
+            assert isinstance(graph, FloorPlanGraph)
+
+        if ix_uni is None or graph.info["ix_universe"] == ix_uni:
+            return graph
+
+        self.tao.cmd(
+            f"set graph {graph.region_name}.{graph.graph_name} ix_universe = {ix_uni}"
+        )
+        graphs = self.update_region(
+            region_name=graph.region_name,
+            template_name=graph.template_name or self.floor_plan_template,
+        )
+        for graph in graphs:
+            if isinstance(graph, FloorPlanGraph):
+                return graph
+        raise RuntimeError("Floor plan graph not found after universe change")
 
     def get_region_to_place_template(self, template_name: str) -> str:
         """Get a region for placing the graph."""
@@ -1601,10 +1693,6 @@ class GraphManager(ABC):
             Graph customization settings.
         curves : Dict[int, TaoCurveSettings], optional
             Curve settings, keyed by curve number.
-        ix_uni : int, optional
-            Plot data from this universe.  Sets the graph-level ``ix_universe``,
-            which every curve with ``ix_universe = -1`` (the default) inherits.
-            Ignored if ``settings.ix_universe`` is already set.
         ignore_unsupported : bool
             Ignore unsupported graph types (e.g., key tables).
         ignore_invalid : bool
@@ -1616,9 +1704,9 @@ class GraphManager(ABC):
         ylim : (float, float), optional
             Y axis limits.
         ix_uni : int, optional
-            Plot data from this universe.  Sets the graph-level ``ix_universe``,
-            which every curve with ``ix_universe = -1`` (the default) inherits.
-            Ignored if ``settings.ix_universe`` is already set.
+            Plot data from this universe.  Sets the graph-level `ix_universe`,
+            which every curve with `ix_universe = -1` (the default) inherits.
+            Ignored if `settings.ix_universe` is already set.
 
         Returns
         -------

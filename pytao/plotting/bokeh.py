@@ -1300,6 +1300,7 @@ class BokehAppCreator:
     height: int | None
     include_layout: bool
     layout_height: int | None
+    ix_uni: int | None
     xlim: list[OptionalLimit]
     ylim: list[OptionalLimit]
     figures: list[figure]
@@ -1319,6 +1320,7 @@ class BokehAppCreator:
         layout_height: int | None = None,
         xlim: OptionalLimit | Sequence[OptionalLimit] = None,
         ylim: OptionalLimit | Sequence[OptionalLimit] = None,
+        ix_uni: int | None = None,
     ) -> None:
         if not len(graphs):
             raise ValueError("BokehAppCreator requires 1 or more graph")
@@ -1349,6 +1351,7 @@ class BokehAppCreator:
         self.graph_sizing_mode = graph_sizing_mode
         self.include_layout = include_layout
         self.layout_height = layout_height
+        self.ix_uni = ix_uni
         self.xlim = fix_grid_limits(xlim, num_graphs=len(graphs))
         self.ylim = fix_grid_limits(ylim, num_graphs=len(graphs))
 
@@ -1387,7 +1390,9 @@ class BokehAppCreator:
         if not self.include_layout:
             layout_pairs = []
         else:
-            lattice_layout = self.manager.to_bokeh_graph(self.manager.lattice_layout_graph)
+            lattice_layout = self.manager.to_bokeh_graph(
+                self.manager.get_lattice_layout_graph(ix_uni=self.ix_uni)
+            )
             layout_pairs = [
                 BGraphAndFigure(
                     fig=lattice_layout.create_figure(
@@ -1876,6 +1881,7 @@ class BokehGraphManager(GraphManager):
             include_layout=include_layout,
             xlim=xlim,
             ylim=ylim,
+            ix_uni=ix_uni,
         )
 
         if save:
@@ -1975,6 +1981,7 @@ class BokehGraphManager(GraphManager):
             graph_sizing_mode=sizing_mode,
             xlim=[xlim],
             ylim=[ylim],
+            ix_uni=ix_uni,
         )
 
         if save:

@@ -603,7 +603,7 @@ class MatplotlibGraphManager(GraphManager):
             setup_matplotlib_ticks(graph, ax, user_xlim=xl, user_ylim=yl)
 
         if include_layout:
-            layout_graph = self.lattice_layout_graph
+            layout_graph = self.get_lattice_layout_graph(ix_uni=ix_uni)
             for col in range(ncols):
                 ax = axes[-1][col]
                 plot(layout_graph, ax)
@@ -720,8 +720,10 @@ class MatplotlibGraphManager(GraphManager):
             and not any(isinstance(graph, LatticeLayoutGraph) for graph in graphs)
             and any(graph.is_s_plot for graph in graphs)
         ):
-            layout_graph = self.lattice_layout_graph
-            graphs.append(layout_graph)
+            graphs = [
+                *graphs,
+                self.get_lattice_layout_graph(ix_uni=ix_uni),
+            ]
         else:
             include_layout = False
 
@@ -752,9 +754,6 @@ class MatplotlibGraphManager(GraphManager):
                 )
             axes = list(gs[:, 0])
             assert axes is not None
-
-        if include_layout:
-            layout_graph = self.lattice_layout_graph
 
         for ax, graph in zip(axes, graphs):
             try:
