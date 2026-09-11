@@ -587,24 +587,30 @@ def _get_rotated_rectangle_corners(patch: PlotPatchRectangle) -> list[tuple[floa
     width, height = patch.width, patch.height
     angle_rad = math.radians(patch.angle)
 
-    # Rectangle corners relative to center
-    center_x = x0 + width / 2
-    center_y = y0 + height / 2
+    if patch.rotation_point == "center":
+        rot_x, rot_y = patch.center
+    elif patch.rotation_point == "xy":
+        rot_x, rot_y = patch.xy
+    else:
+        rot_x, rot_y = patch.rotation_point
 
-    corners_relative = [
-        (-width / 2, -height / 2),
-        (width / 2, -height / 2),
-        (width / 2, height / 2),
-        (-width / 2, height / 2),
+    corners_unrotated = [
+        (x0, y0),
+        (x0 + width, y0),
+        (x0 + width, y0 + height),
+        (x0, y0 + height),
     ]
 
-    # Rotate and translate corners
     cos_angle, sin_angle = math.cos(angle_rad), math.sin(angle_rad)
     corners = []
-    for dx, dy in corners_relative:
-        x_rot = dx * cos_angle - dy * sin_angle + center_x
-        y_rot = dx * sin_angle + dy * cos_angle + center_y
-        corners.append((x_rot, y_rot))
+    for x, y in corners_unrotated:
+        dx, dy = x - rot_x, y - rot_y
+        corners.append(
+            (
+                dx * cos_angle - dy * sin_angle + rot_x,
+                dx * sin_angle + dy * cos_angle + rot_y,
+            )
+        )
 
     return corners
 
