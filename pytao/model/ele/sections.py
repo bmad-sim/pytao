@@ -18,7 +18,7 @@ from pydantic import Field
 from ...util.parsers import Attr, parse_tao_python_data_with_units
 from .. import _generated as tao_classes
 from ..base import TaoBaseModel, TaoModel
-from ..types import NDArray
+from ..types import ComplexNDArray, NDArray
 
 if TYPE_CHECKING:
     from pytao import Tao
@@ -546,6 +546,527 @@ AnyElementMultipoles = (
     | tao_classes.ElementMultipolesAB
     | tao_classes.ElementMultipolesScaled
 )
+
+
+class ElementAcKicker(TaoBaseModel):
+    """
+    Base class for AC kicker settings.
+
+    Use `from_tao` to fetch the representation appropriate for the element.
+    """
+
+    @classmethod
+    def from_tao(
+        cls,
+        tao: Tao,
+        ele: AnyElementID,
+        *,
+        which: Which,
+    ) -> AnyElementAcKicker | None:
+        """
+        Retrieve AC kicker settings for a specified element.
+
+        Parameters
+        ----------
+        tao : Tao
+            The Tao object.
+        ele : str or ElementID
+            The identifier of the element. Can be a string name or an ElementID object.
+        which : "base", "model", or "design"
+
+        Returns
+        -------
+        ElementAcKickerAmpVsTime, ElementAcKickerFrequencies, or None
+            The AC kicker settings in one of its two representations, or None
+            if the element has no AC kick.
+        """
+        from .ele import to_ele_id
+
+        ele = to_ele_id(ele)
+
+        res: dict = tao.ele_ac_kicker(ele_id=ele, which=which)
+        data = res["data"]
+        if res["mode"] == "amp_vs_time":
+            return ElementAcKickerAmpVsTime(
+                amp=np.asarray([row["amp"] for row in data]),
+                time=np.asarray([row["time"] for row in data]),
+            )
+        if res["mode"] == "frequencies":
+            return ElementAcKickerFrequencies(
+                frequency=np.asarray([row["frequency"] for row in data]),
+                amp=np.asarray([row["amp"] for row in data]),
+                phi=np.asarray([row["phi"] for row in data]),
+            )
+        return None
+
+
+class ElementAcKickerAmpVsTime(ElementAcKicker, extra="forbid"):
+    """
+    AC kicker settings specified as kick amplitude versus time.
+
+    Attributes
+    ----------
+    amp : NDArray of shape (N,)
+        Kick amplitudes.
+    time : NDArray of shape (N,)
+        Times corresponding to each amplitude. [s]
+    """
+
+    amp: NDArray
+    time: NDArray
+
+
+class ElementAcKickerFrequencies(ElementAcKicker, extra="forbid"):
+    """
+    AC kicker settings specified as a sum of frequency components.
+
+    Attributes
+    ----------
+    frequency : NDArray of shape (N,)
+        Frequencies. [Hz]
+    amp : NDArray of shape (N,)
+        Amplitude of each frequency component.
+    phi : NDArray of shape (N,)
+        Phase of each frequency component.
+    """
+
+    frequency: NDArray
+    amp: NDArray
+    phi: NDArray
+
+
+AnyElementAcKicker = ElementAcKickerAmpVsTime | ElementAcKickerFrequencies
+
+
+class ElementMethods(TaoModel, extra="forbid"):
+    """
+    Element tracking and calculation method settings.
+
+    Every field is conditional on the element type supporting the
+    corresponding attribute, so all fields may be None.
+
+    Attributes
+    ----------
+    crystal_type : str or None
+    material_type : str or None
+    origin_ele : str or None
+    physical_source : str or None
+    mat6_calc_method : str or None
+    tracking_method : str or None
+    spin_tracking_method : str or None
+    csr_method : str or None
+    space_charge_method : str or None
+    ptc_integration_type : str or None
+    field_calc : str or None
+    longitudinal_orientation : int or None
+        +1 or -1; -1 if the element is longitudinally reversed.
+    """
+
+    _tao_command_attr_: ClassVar[str] = "ele_methods"
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+
+    crystal_type: str | None = None
+    material_type: str | None = None
+    origin_ele: str | None = None
+    physical_source: str | None = None
+    mat6_calc_method: str | None = None
+    tracking_method: str | None = None
+    spin_tracking_method: str | None = None
+    csr_method: str | None = None
+    space_charge_method: str | None = None
+    ptc_integration_type: str | None = None
+    field_calc: str | None = None
+    longitudinal_orientation: int | None = None
+
+
+def _taylor_terms_to_arrays(terms: list[dict]) -> tuple[np.ndarray, np.ndarray]:
+    """Convert row-oriented Taylor term dictionaries to (coef, exponents) arrays."""
+    coef = np.asarray([term["coef"] for term in terms], dtype=float)
+    exponents = np.asarray(
+        [[term[f"exp{n}"] for n in range(1, 7)] for term in terms],
+        dtype=int,
+    ).reshape(-1, 6)
+    return coef, exponents
+
+
+class ElementTaylorSection(TaoBaseModel, extra="forbid"):
+    """
+    Taylor map terms for a single output phase-space coordinate.
+
+    Attributes
+    ----------
+    index : int
+        Output phase-space coordinate index (1-6).
+    ref : float
+        Reference orbit value.
+    coef : NDArray of shape (N,)
+        Coefficients of each term.
+    exponents : NDArray of shape (N, 6)
+        Input coordinate exponents of each term.
+    """
+
+    index: int
+    ref: float = 0.0
+    coef: NDArray
+    exponents: NDArray
+
+    _normalize_exponents = pydantic.field_validator("exponents")(
+        lambda v: np.asarray(v, dtype=int).reshape(-1, 6)
+    )
+
+
+class ElementTaylor(TaoModel, extra="forbid"):
+    """
+    Element Taylor map.
+
+    Attributes
+    ----------
+    which : "base", "model", or "design"
+    taylor_map_includes_offsets : bool or None
+        None if the element type does not have this attribute.
+    sections : list of ElementTaylorSection
+        One section per output phase-space coordinate (indices 1-6).
+    """
+
+    _tao_command_attr_: ClassVar[str] = "ele_taylor"
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+
+    which: Which = pydantic.Field(frozen=True)
+    taylor_map_includes_offsets: bool | None = None
+    sections: list[ElementTaylorSection] = []
+
+    @classmethod
+    def from_tao(
+        cls,
+        tao: Tao,
+        ele: AnyElementID,
+        *,
+        which: Which,
+    ):
+        from .ele import to_ele_id
+
+        ele = to_ele_id(ele)
+        data: dict = tao.ele_taylor(ele_id=ele, which=which)
+
+        sections = []
+        for section in data["data"]:
+            coef, exponents = _taylor_terms_to_arrays(section["data"])
+            sections.append(
+                ElementTaylorSection(
+                    index=section["index"],
+                    ref=section["ref"],
+                    coef=coef,
+                    exponents=exponents,
+                )
+            )
+        return cls(
+            which=which,
+            taylor_map_includes_offsets=data.get("taylor_map_includes_offsets"),
+            sections=sections,
+        )
+
+
+class ElementSpinTaylorComponent(TaoBaseModel, extra="forbid"):
+    """
+    Spin Taylor map terms for a single quaternion component.
+
+    Attributes
+    ----------
+    index : int
+        Quaternion component index (0-3).
+    coef : NDArray of shape (N,)
+        Coefficients of each term.
+    exponents : NDArray of shape (N, 6)
+        Input coordinate exponents of each term.
+    """
+
+    index: int
+    coef: NDArray
+    exponents: NDArray
+
+    _normalize_exponents = pydantic.field_validator("exponents")(
+        lambda v: np.asarray(v, dtype=int).reshape(-1, 6)
+    )
+
+
+class ElementSpinTaylor(TaoModel, extra="forbid"):
+    """
+    Element spin Taylor map.
+
+    Attributes
+    ----------
+    which : "base", "model", or "design"
+    components : list of ElementSpinTaylorComponent
+        One entry per quaternion component (indices 0-3).
+    """
+
+    _tao_command_attr_: ClassVar[str] = "ele_spin_taylor"
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+
+    which: Which = pydantic.Field(frozen=True)
+    components: list[ElementSpinTaylorComponent] = []
+
+    @classmethod
+    def from_tao(
+        cls,
+        tao: Tao,
+        ele: AnyElementID,
+        *,
+        which: Which,
+    ):
+        from .ele import to_ele_id
+
+        ele = to_ele_id(ele)
+        rows: list[dict] = tao.ele_spin_taylor(ele_id=ele, which=which)
+
+        components = []
+        for index in range(4):
+            coef, exponents = _taylor_terms_to_arrays(
+                [row for row in rows if row["index"] == index]
+            )
+            components.append(
+                ElementSpinTaylorComponent(index=index, coef=coef, exponents=exponents)
+            )
+        return cls(which=which, components=components)
+
+
+class ElementCartesianMapTerms(TaoBaseModel, extra="forbid"):
+    """
+    Cartesian map terms in column-array form.
+
+    Attributes
+    ----------
+    coef, kx, ky, kz, x0, y0, phi_z : NDArray of shape (N,)
+        Per-term coefficients and wave numbers.
+    family : list of str
+        Term family ("X", "Y", "QU", or "SQ") per term.
+    form : list of str
+        Term form ("Hyper_Y", "Hyper_XY", or "Hyper_X") per term.
+    """
+
+    coef: NDArray
+    kx: NDArray
+    ky: NDArray
+    kz: NDArray
+    x0: NDArray
+    y0: NDArray
+    phi_z: NDArray
+    family: list[str] = []
+    form: list[str] = []
+
+
+class ElementCartesianMap(tao_classes.ElementCartesianMap, extra="forbid"):
+    """
+    Element cartesian map field parameters.
+
+    Attributes
+    ----------
+    which : "base", "model", or "design"
+    index : int
+        The index of the cartesian map.
+    terms : ElementCartesianMapTerms or None
+        Per-term data, if requested.
+    """
+
+    which: Which = pydantic.Field(frozen=True)
+
+    index: int
+    terms: ElementCartesianMapTerms | None = None
+
+    @classmethod
+    def from_tao(
+        cls,
+        tao: Tao,
+        ele: AnyElementID,
+        index: int,
+        *,
+        which: Which,
+        fill_terms: bool = False,
+    ):
+        from .ele import to_ele_id
+
+        ele = to_ele_id(ele)
+
+        base_data: dict = tao.ele_cartesian_map(
+            ele_id=ele, index=index, who="base", which=which
+        )
+        terms = None
+        if fill_terms:
+            rows: list[dict] = tao.ele_cartesian_map(
+                ele_id=ele, index=index, who="terms", which=which
+            )
+            terms = ElementCartesianMapTerms(
+                coef=np.asarray([row["coef"] for row in rows]),
+                kx=np.asarray([row["kx"] for row in rows]),
+                ky=np.asarray([row["ky"] for row in rows]),
+                kz=np.asarray([row["kz"] for row in rows]),
+                x0=np.asarray([row["x0"] for row in rows]),
+                y0=np.asarray([row["y0"] for row in rows]),
+                phi_z=np.asarray([row["phi_z"] for row in rows]),
+                family=[row["family"] for row in rows],
+                form=[row["form"] for row in rows],
+            )
+
+        return cls(
+            which=which,
+            index=index,
+            terms=terms,
+            command_args={"ele_id": ele, "index": index, "which": which},
+            **base_data,
+        )
+
+
+class ElementCylindricalMapTerms(TaoBaseModel, extra="forbid"):
+    """
+    Cylindrical map terms in column-array form.
+
+    Attributes
+    ----------
+    e_coef : ComplexNDArray of shape (N,)
+        Electric field coefficients.
+    b_coef : ComplexNDArray of shape (N,)
+        Magnetic field coefficients.
+    """
+
+    e_coef: ComplexNDArray
+    b_coef: ComplexNDArray
+
+
+class ElementCylindricalMap(tao_classes.ElementCylindricalMap, extra="forbid"):
+    """
+    Element cylindrical map field parameters.
+
+    Attributes
+    ----------
+    which : "base", "model", or "design"
+    index : int
+        The index of the cylindrical map.
+    terms : ElementCylindricalMapTerms or None
+        Per-term data, if requested.
+    """
+
+    which: Which = pydantic.Field(frozen=True)
+
+    index: int
+    terms: ElementCylindricalMapTerms | None = None
+
+    @classmethod
+    def from_tao(
+        cls,
+        tao: Tao,
+        ele: AnyElementID,
+        index: int,
+        *,
+        which: Which,
+        fill_terms: bool = False,
+    ):
+        from .ele import to_ele_id
+
+        ele = to_ele_id(ele)
+
+        base_data: dict = tao.ele_cylindrical_map(
+            ele_id=ele, index=index, who="base", which=which
+        )
+        terms = None
+        if fill_terms:
+            rows: list[dict] = tao.ele_cylindrical_map(
+                ele_id=ele, index=index, who="terms", which=which
+            )
+            terms = ElementCylindricalMapTerms(
+                e_coef=np.asarray([row["e_coef"] for row in rows], dtype=complex),
+                b_coef=np.asarray([row["b_coef"] for row in rows], dtype=complex),
+            )
+
+        return cls(
+            which=which,
+            index=index,
+            terms=terms,
+            command_args={"ele_id": ele, "index": index, "which": which},
+            **base_data,
+        )
+
+
+class ElementGenGradientCurve(TaoBaseModel, extra="forbid"):
+    """
+    Derivative data for a single generalized gradient curve.
+
+    Attributes
+    ----------
+    z : NDArray of shape (nz,)
+        Longitudinal positions. [m]
+    deriv : NDArray of shape (nz, n_deriv + 1)
+        Derivative of order k at each longitudinal position, for
+        k = 0 to n_deriv.
+    """
+
+    z: NDArray
+    deriv: NDArray
+
+
+class ElementGenGradients(tao_classes.ElementGenGradients, extra="forbid"):
+    """
+    Element generalized gradient map parameters.
+
+    Attributes
+    ----------
+    which : "base", "model", or "design"
+    index : int
+        The index of the gen_grad map.
+    curves : list of ElementGenGradientCurve or None
+        Per-curve derivative tables, if requested.
+    """
+
+    which: Which = pydantic.Field(frozen=True)
+
+    index: int
+    curves: list[ElementGenGradientCurve] | None = None
+
+    @classmethod
+    def from_tao(
+        cls,
+        tao: Tao,
+        ele: AnyElementID,
+        index: int,
+        *,
+        which: Which,
+        fill_curves: bool = False,
+    ):
+        from .ele import to_ele_id
+
+        ele = to_ele_id(ele)
+
+        base_data: dict = tao.ele_gen_gradients(
+            ele_id=ele, index=index, who="base", which=which
+        )
+        curves = None
+        if fill_curves:
+            rows: list[dict] = tao.ele_gen_gradients(
+                ele_id=ele, index=index, who="derivs", which=which
+            )
+            by_curve: dict[int, list[dict]] = {}
+            for row in rows:
+                by_curve.setdefault(row["i"], []).append(row)
+
+            curves = []
+            for curve_index in sorted(by_curve):
+                curve_rows = by_curve[curve_index]
+                z_indices = sorted({row["j"] for row in curve_rows})
+                n_deriv = max(row["k"] for row in curve_rows)
+                z_to_row = {j: idx for idx, j in enumerate(z_indices)}
+                z = np.zeros(len(z_indices))
+                deriv = np.zeros((len(z_indices), n_deriv + 1))
+                for row in curve_rows:
+                    z[z_to_row[row["j"]]] = row["dz"]
+                    deriv[z_to_row[row["j"]], row["k"]] = row["deriv"]
+                curves.append(ElementGenGradientCurve(z=z, deriv=deriv))
+
+        return cls(
+            which=which,
+            index=index,
+            curves=curves,
+            command_args={"ele_id": ele, "index": index, "which": which},
+            **base_data,
+        )
 
 
 class _AttributeDict(dict):
