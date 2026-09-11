@@ -220,8 +220,8 @@ def _get_default(
                     fortran_default = f"{fortran_default}.0"
             try:
                 default = ast.literal_eval(fortran_default)
-                if isinstance(default, list):
-                    return tuple(default), ""
+                if isinstance(default, (list, tuple)):
+                    return list(default), ""
                 return default, ""
             except (SyntaxError, ValueError):
                 pass
@@ -237,7 +237,7 @@ def _get_default(
             "float": 0.0,
             "type": None,
             "bool": False,
-            "Complex": 0.0,
+            "complex": 0j,
         }.get(python_type, None)
         return default, ""
     return "", "list"
@@ -261,7 +261,7 @@ def match_default_from_struct(member: PipeOutputParameter, reference: StructureM
 
     ft = param_type_to_python_type[member.type]
     if not isinstance(default, ft.cls) or (
-        isinstance(default, list) and not isinstance(default[0], ft.inner_cls)
+        isinstance(default, list) and default and not isinstance(default[0], ft.inner_cls)
     ):
         if ft.inner_cls is not None:
             cls = f"{ft.cls}[{ft.inner_cls}]"
@@ -1217,7 +1217,17 @@ def get_element_index(tao: pytao.Tao, name: str) -> int:
     return tao.lat_list(name, flags="", who="ele.ix_ele")[0]
 
 
-def generate_structures():
+def load_structs(structs_json_file: AnyPath) -> dict[str, ParsedStructure]:
+    """
+    Load Fortran structure metadata dumped by cppbmad's codegen utilities.
+    """
+    adapter = pydantic.TypeAdapter(dict[str, ParsedStructure])
+    return adapter.validate_json(pathlib.Path(structs_json_file).read_bytes())
+
+
+def generate_structures(
+    structs_by_name: dict[str, ParsedStructure],
+) -> dict[str, PipeOutputStructure]:
     res: dict[str, PipeOutputStructure] = {}
     with pytao.SubprocessTao(
         init_file="$ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
@@ -1300,6 +1310,36 @@ def generate_structures():
             reference_structures=(structs_by_name["grid_field_pt_struct"],),
         )
         res["ElementGridFieldPoints"].members["data"].dimension = None
+
+        res["ElementCartesianMap"] = PipeOutputStructure.from_cmd(
+            TaoCommandAndResult.from_tao(tao, "ele:cartesian_map Q1 1 base"),
+            class_name="ElementCartesianMap",
+            reference_structures=(structs_by_name["cartesian_map_struct"],),
+        )
+        res["ElementCylindricalMap"] = PipeOutputStructure.from_cmd(
+            TaoCommandAndResult.from_tao(tao, "ele:cylindrical_map M1 1 base"),
+            class_name="ElementCylindricalMap",
+            reference_structures=(structs_by_name["cylindrical_map_struct"],),
+        )
+        res["ElementGenGradients"] = PipeOutputStructure.from_cmd(
+            TaoCommandAndResult.from_tao(tao, "ele:gen_gradients GG 1 base"),
+            class_name="ElementGenGradients",
+            reference_structures=(structs_by_name["gen_gradients_struct"],),
+        )
+
+    with SubprocessTao(
+        lattice_file="$ACC_ROOT_DIR/regression_tests/tracking_method_test/tracking_method_test.bmad",
+        noinit=True,
+        noplot=True,
+    ) as tao:
+        # crab_cavity1 carries elec multipole data, exercising both the LOGIC
+        # settings and the data table.
+        res["ElementElecMultipoles"] = PipeOutputStructure.from_cmd(
+            TaoCommandAndResult.from_tao(tao, "ele:elec_multipoles crab_cavity1"),
+            class_name="ElementElecMultipoles",
+            reference_structures=(structs_by_name["ele_struct"],),
+            mark_optional=("scale_multipoles",),
+        )
 
     with SubprocessTao(
         init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall3d",
@@ -1481,7 +1521,7 @@ def generate_structures():
                 mark_optional=(),
             )
             res["ElementWakeSrTrans"] = PipeOutputStructure.from_cmd(
-                TaoCommandAndResult.from_tao(tao, "ele:wake P3 sr_long"),
+                TaoCommandAndResult.from_tao(tao, "ele:wake P3 sr_trans"),
                 class_name="ElementWakeSrTrans",
                 reference_structures=(structs_by_name["wake_sr_struct"],),
                 mark_optional=(),
@@ -1578,8 +1618,8 @@ def try_deserializing(
         deserialize(mod, output_struct, cls, output_struct.cmd.result)
 
 
-def main_tao_pystructs():
-    structures = generate_structures()
+def main_tao_pystructs(structs_by_name: dict[str, ParsedStructure]):
+    structures = generate_structures(structs_by_name)
     mod, classes = write_source(
         MODULE_PATH / "_generated.py",
         structures,
@@ -1644,9 +1684,5 @@ def main_tao_pystructs():
 
 
 if __name__ == "__main__":
-    structs_json_file = sys.argv[1]
-    adapter = pydantic.TypeAdapter(dict[str, ParsedStructure])
-    structs_by_name = adapter.validate_json(pathlib.Path(structs_json_file).read_bytes())
-
-    mod, res, classes = main_tao_pystructs()
+    mod, res, classes = main_tao_pystructs(load_structs(sys.argv[1]))
     # mod_ga, res_ga, classes_ga = main_gen_attr()
