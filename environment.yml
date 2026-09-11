@@ -4,6 +4,7 @@ channels:
   - conda-forge
 dependencies:
   - python >=3.10
+  - anywidget # live plotly FigureWidget updates
   - bmad >=20260712.0
   - bokeh
   - h5py
@@ -15,6 +16,7 @@ dependencies:
   - numpydoc
   - openpmd-beamphysics >=0.14.1
   - orjson
+  - plotly
   - ormsgpack
   - pydantic >=2.12.5
   - rich
