@@ -584,7 +584,10 @@ class ElementAcKicker(TaoBaseModel):
 
         ele = to_ele_id(ele)
 
-        res: dict = tao.ele_ac_kicker(ele_id=ele, which=which)
+        res: dict | None = tao.ele_ac_kicker(ele_id=ele, which=which)
+        if res is None:
+            return None
+
         data = res["data"]
         if res["mode"] == "amp_vs_time":
             return ElementAcKickerAmpVsTime(

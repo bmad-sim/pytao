@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Literal
 
 import numpy as np
 from typing_extensions import NotRequired, TypedDict
@@ -107,12 +107,48 @@ class EleSpinTaylorInfo(TypedDict):
     index: int
     term: str
     coef: float
-    exp1: float
-    exp2: float
-    exp3: float
-    exp4: float
-    exp5: float
-    exp6: float
+    exp1: int
+    exp2: int
+    exp3: int
+    exp4: int
+    exp5: int
+    exp6: int
+
+
+class EleTaylorTermInfo(TypedDict):
+    i: int
+    j: int
+    coef: float
+    exp1: int
+    exp2: int
+    exp3: int
+    exp4: int
+    exp5: int
+    exp6: int
+
+
+class EleAcKickerAmpVsTimeInfo(TypedDict):
+    index: int
+    amp: float
+    time: float
+
+
+class EleAcKickerFrequencyInfo(TypedDict):
+    index: int
+    frequency: float
+    amp: float
+    phi: float
+
+
+class EleAcKickerResult(TypedDict):
+    mode: Literal["amp_vs_time", "frequencies"]
+    data: list[EleAcKickerAmpVsTimeInfo] | list[EleAcKickerFrequencyInfo]
+
+
+class EleCylindricalMapTermInfo(TypedDict):
+    index: int
+    e_coef: complex
+    b_coef: complex
 
 
 class EnumInfo(TypedDict):
