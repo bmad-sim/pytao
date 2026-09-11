@@ -1092,6 +1092,7 @@ class PlotlyGraphManager(GraphManager):
         share_x: bool | None = None,
         width: int | None = None,
         height: int | None = None,
+        layout_height: int | None = None,
     ) -> Figure:
         """Assemble a gridded Plotly figure from prepared graphs."""
         nrows, ncols = grid
@@ -1100,8 +1101,13 @@ class PlotlyGraphManager(GraphManager):
 
         subplot_titles = [graph.title for graph in graphs]
         subplot_titles.extend([""] * (ncols * nrows - len(graphs)))
+        row_heights = None
         if include_layout:
             subplot_titles.extend([f"Layout {i + 1}" for i in range(ncols)])
+            layout_ratio = (
+                layout_height or _PlotlyDefaults.layout_height
+            ) / _PlotlyDefaults.stacked_height
+            row_heights = [1.0] * nrows + [layout_ratio]
             nrows += 1
 
         fig = plotly.subplots.make_subplots(
@@ -1109,6 +1115,7 @@ class PlotlyGraphManager(GraphManager):
             cols=ncols,
             subplot_titles=subplot_titles,
             shared_xaxes=share_x or False,
+            row_heights=row_heights,
             vertical_spacing=_PlotlyDefaults.grid_spacing,
             horizontal_spacing=_PlotlyDefaults.grid_spacing,
         )
@@ -1165,6 +1172,7 @@ class PlotlyGraphManager(GraphManager):
         share_x: bool | None = None,
         width: int | None = None,
         height: int | None = None,
+        layout_height: int | None = None,
     ) -> Figure:
         """Assemble a single-column Plotly figure from prepared graphs."""
         include_layout = include_layout and any(graph.is_s_plot for graph in graphs)
@@ -1178,8 +1186,13 @@ class PlotlyGraphManager(GraphManager):
 
         nrows = len(graphs)
         subplot_titles = [graph.title for graph in graphs]
+        row_heights = None
         if include_layout:
             subplot_titles.append("Lattice Layout")
+            layout_ratio = (
+                layout_height or _PlotlyDefaults.layout_height
+            ) / _PlotlyDefaults.stacked_height
+            row_heights = [1.0] * nrows + [layout_ratio]
             nrows += 1
 
         fig = plotly.subplots.make_subplots(
@@ -1187,6 +1200,7 @@ class PlotlyGraphManager(GraphManager):
             cols=1,
             subplot_titles=subplot_titles,
             shared_xaxes=share_x or (share_x is None),
+            row_heights=row_heights,
             vertical_spacing=_PlotlyDefaults.grid_spacing,
         )
 
@@ -1303,6 +1317,7 @@ class PlotlyGraphManager(GraphManager):
             share_x=share_x,
             width=width,
             height=height,
+            layout_height=layout_height,
         )
 
         if save:
@@ -1387,6 +1402,7 @@ class PlotlyGraphManager(GraphManager):
             share_x=share_x,
             width=width,
             height=height,
+            layout_height=layout_height,
         )
 
         if save:
@@ -1804,6 +1820,7 @@ class PlotlyNotebookGraphManager(PlotlyGraphManager):
                 share_x=share_x,
                 width=width,
                 height=height,
+                layout_height=layout_height,
             )
 
         app = PlotlyAppCreator(
@@ -1897,6 +1914,7 @@ class PlotlyNotebookGraphManager(PlotlyGraphManager):
                 share_x=share_x,
                 width=width,
                 height=height,
+                layout_height=layout_height,
             )
 
         app = PlotlyAppCreator(
