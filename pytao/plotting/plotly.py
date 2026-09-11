@@ -709,6 +709,7 @@ class PlotlyBasicGraph(PlotlyGraphBase[BasicGraph]):
             return
 
         if isinstance(updated, BasicGraph):
+            self.graph = updated
             fig.data = []
             for curve in updated.curves:
                 _plot_curve(fig, curve, line_width_scale=_PlotlyDefaults.line_width_scale)
