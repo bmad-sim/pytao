@@ -6,10 +6,10 @@ This file is auto-generated; do not hand-edit it.
 from __future__ import annotations
 
 import logging
+from collections.abc import Sequence
 from typing import (
     Any,
     ClassVar,
-    Sequence,
 )
 
 from pydantic import Field
@@ -850,6 +850,41 @@ class ElementBunchParams(TaoModel):
     twiss_sigma_z: float = Field(default=0.0, frozen=True)
 
 
+class ElementCartesianMap(TaoModel):
+    """
+    Structure which corresponds to Tao `pipe ele:cartesian_map Q1 1 base`, for example.
+
+    Attributes
+    ----------
+    ele_anchor_pt : str
+        anchor_beginning$, anchor_center$, or anchor_end$
+    field_scale : float
+        Factor to scale the fields by
+    file : str
+    master_parameter : str
+        Master parameter in ele%value(:) array to use for scaling the field.
+    nongrid_field_type : str
+    r0 : sequence of floats
+        Field origin offset.
+    """
+
+    _tao_command_attr_: ClassVar[str] = "ele_cartesian_map"
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    ele_anchor_pt: str = Field(
+        default="", description="anchor_beginning$, anchor_center$, or anchor_end$"
+    )
+    field_scale: float = Field(default=1.0, description="Factor to scale the fields by")
+    file: str = ""
+    master_parameter: str = Field(
+        default="",
+        description="Master parameter in ele%value(:) array to use for scaling the field.",
+    )
+    nongrid_field_type: str = Field(default="", alias="nongrid^field_type")
+    r0: FloatSequence = Field(
+        default=[0.0, 0.0, 0.0], max_length=3, description="Field origin offset."
+    )
+
+
 class ElementChamberWall(TaoModel):
     """
     Structure which corresponds to Tao `pipe ele:chamber_wall 1 1 x`, for example.
@@ -868,6 +903,188 @@ class ElementChamberWall(TaoModel):
     section: int = 0
     z1: float = 0.0
     z2_neg: float = Field(default=0.0, alias="-z2")
+
+
+class ElementCylindricalMap(TaoModel):
+    """
+    Structure which corresponds to Tao `pipe ele:cylindrical_map M1 1 base`, for example.
+
+    Attributes
+    ----------
+    dz : float
+        Distance between sampled field points.
+    ele_anchor_pt : str
+        anchor_beginning$, anchor_center$, or anchor_end$
+    field_scale : float
+        Factor to scale the fields by
+    file : str
+    harmonic : int
+        Harmonic of fundamental
+    m : int
+        Azimuthal Mode: varies as cos(m*phi - theta0_azimuth)
+    master_parameter : str
+        Master parameter in ele%value(:) array to use for scaling the field.
+    number_of_terms : int
+    phi0_fieldmap : float
+        Mode oscillates as: twopi * (f * t + phi0_fieldmap)
+    r0 : sequence of floats
+        Field origin offset.
+    theta0_azimuth : float
+        Azimuthal ((x, y) plane) orientation of mode.
+    """
+
+    _tao_command_attr_: ClassVar[str] = "ele_cylindrical_map"
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    dz: float = Field(default=0.0, description="Distance between sampled field points.")
+    ele_anchor_pt: str = Field(
+        default="", description="anchor_beginning$, anchor_center$, or anchor_end$"
+    )
+    field_scale: float = Field(default=1.0, description="Factor to scale the fields by")
+    file: str = ""
+    harmonic: int = Field(default=0, description="Harmonic of fundamental")
+    m: int = Field(
+        default=0, description="Azimuthal Mode: varies as cos(m*phi - theta0_azimuth)"
+    )
+    master_parameter: str = Field(
+        default="",
+        description="Master parameter in ele%value(:) array to use for scaling the field.",
+    )
+    number_of_terms: int = Field(default=0, frozen=True)
+    phi0_fieldmap: float = Field(
+        default=0.0, description="Mode oscillates as: twopi * (f * t + phi0_fieldmap)"
+    )
+    r0: FloatSequence = Field(
+        default=[0.0, 0.0, 0.0], max_length=3, description="Field origin offset."
+    )
+    theta0_azimuth: float = Field(
+        default=0.0, description="Azimuthal ((x, y) plane) orientation of mode."
+    )
+
+
+class ElementElecMultipoles_Data(TaoModel):
+    """
+    Structure which corresponds to Tao `pipe ele:elec_multipoles crab_cavity1`, for example.
+
+    Attributes
+    ----------
+    an_elec : float
+    an_elec_scaled : float
+    bn_elec : float
+    bn_elec_scaled : float
+    index : int
+    """
+
+    _tao_command_attr_: ClassVar[str] = "ele_elec_multipoles"
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    an_elec: float = Field(default=0.0, alias="An_elec")
+    an_elec_scaled: float = Field(default=0.0, alias="An_elec (Scaled)")
+    bn_elec: float = Field(default=0.0, alias="Bn_elec")
+    bn_elec_scaled: float = Field(default=0.0, alias="Bn_elec (Scaled)")
+    index: int = 0
+
+
+class ElementElecMultipoles(TaoModel):
+    """
+    Structure which corresponds to Tao `pipe ele:elec_multipoles crab_cavity1`, for example.
+
+    Attributes
+    ----------
+    data : ElementElecMultipoles_Data
+        Structure which corresponds to Tao `pipe ele:elec_multipoles
+    crab_cavity1`, for example.
+    multipoles_on : bool
+        For turning multipoles on/off
+    scale_multipoles : bool or None
+        Are ab_multipoles within other elements (EG: quads, etc.) scaled by
+    the strength of the element?
+    """
+
+    _tao_command_attr_: ClassVar[str] = "ele_elec_multipoles"
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    data: Sequence[ElementElecMultipoles_Data] = Field(
+        default_factory=list,
+        description=(
+            "Structure which corresponds to Tao `pipe ele:elec_multipoles "
+            "crab_cavity1`, for example."
+        ),
+    )
+    multipoles_on: bool = Field(default=True, description="For turning multipoles on/off")
+    scale_multipoles: bool | None = Field(
+        default=None,
+        description=(
+            "Are ab_multipoles within other elements (EG: quads, etc.) scaled by the "
+            "strength of the element?"
+        ),
+    )
+
+
+class ElementGenGradients(TaoModel):
+    """
+    Structure which corresponds to Tao `pipe ele:gen_gradients GG 1 base`, for example.
+
+    Attributes
+    ----------
+    dz : float
+        Point spacing between base planes.
+    ele_anchor_pt : str
+        anchor_beginning$, anchor_center$, or anchor_end$
+    field_scale : float
+        Factor to scale the fields by.
+    file : str
+        Input file name. Used also as ID for instances.
+    g_ref : float
+        Reference-frame curvature 1/rho (0 => straight frame). Must be equal
+    to g for a bend and zero for all else.
+    iz0 : int
+        curve%deriv(iz0:iz1, :) lower bound.
+    iz1 : int
+        curve%deriv(iz0:iz1, :) upper bound.
+    master_parameter : str
+        Master parameter in ele%value(:) array to use for scaling the field.
+    nongrid_field_type : str
+    r0 : sequence of floats
+        Field origin relative to ele_anchor_pt. r0(1:2) = transverse expansion
+    axis (GGCoefs origin), r0(3) = longitudinal offset.
+    size_of_curve : int
+    """
+
+    _tao_command_attr_: ClassVar[str] = "ele_gen_gradients"
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    dz: float = Field(default=0.0, description="Point spacing between base planes.")
+    ele_anchor_pt: str = Field(
+        default="", description="anchor_beginning$, anchor_center$, or anchor_end$"
+    )
+    field_scale: float = Field(default=1.0, description="Factor to scale the fields by.")
+    file: str = Field(
+        default="", description="Input file name. Used also as ID for instances."
+    )
+    g_ref: float = Field(
+        default=0.0,
+        description=(
+            "Reference-frame curvature 1/rho (0 => straight frame). Must be equal to g "
+            "for a bend and zero for all else."
+        ),
+    )
+    iz0: int = Field(
+        default=0, description="curve%deriv(iz0:iz1, :) lower bound.", frozen=True
+    )
+    iz1: int = Field(
+        default=0, description="curve%deriv(iz0:iz1, :) upper bound.", frozen=True
+    )
+    master_parameter: str = Field(
+        default="",
+        description="Master parameter in ele%value(:) array to use for scaling the field.",
+    )
+    nongrid_field_type: str = Field(default="", alias="nongrid^field_type")
+    r0: FloatSequence = Field(
+        default=[0.0, 0.0, 0.0],
+        max_length=3,
+        description=(
+            "Field origin relative to ele_anchor_pt. r0(1:2) = transverse expansion "
+            "axis (GGCoefs origin), r0(3) = longitudinal offset."
+        ),
+    )
+    size_of_curve: int = Field(default=0, frozen=True)
 
 
 class ElementGridField(TaoModel):
@@ -1650,7 +1867,7 @@ class ElementWakeSrLong(TaoModel):
 
 class ElementWakeSrTrans(TaoModel):
     """
-    Structure which corresponds to Tao `pipe ele:wake P3 sr_long`, for example.
+    Structure which corresponds to Tao `pipe ele:wake P3 sr_trans`, for example.
 
     Attributes
     ----------

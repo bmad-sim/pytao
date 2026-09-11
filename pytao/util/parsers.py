@@ -20,8 +20,10 @@ from .parser_types import (
     DataD1ArrayInfo,
     DataDArrayInfo,
     DataParameterLineInfo,
+    EleAcKickerResult,
     EleCartesianMapInfo,
     EleChamberWallInfo,
+    EleCylindricalMapTermInfo,
     EleGenGradientBase,
     EleGenGradientDerivInfo,
     EleGridFieldPointInfo,
@@ -111,6 +113,19 @@ def parse_bool(s) -> bool:
         return False
     else:
         raise ValueError("Unknown bool: " + s)
+
+
+def _check_invalid(lines: list[str]) -> None:
+    """
+    Raise `TaoDataInvalidError` if Tao marked the output as INVALID.
+
+    Tao's ``invalid()`` appends a bare INVALID line after any lines already
+    written, so the whole output is scanned.
+    """
+    if isinstance(lines, np.ndarray):
+        pass
+    elif any(line == "INVALID" for line in lines):
+        raise TaoDataInvalidError("Data unavailable - Tao marked it as INVALID")
 
 
 def parse_tao_lat_ele_list(lines) -> dict[str, int]:
@@ -640,7 +655,7 @@ def fix_value(value: str, typ: type):
     if typ is FloatOrNone:
         return _value_float_or_none(value)
     if typ is float:
-        return _fix_float_scientific_notation(value)
+        return _float(value)
 
     return typ(value)
 
@@ -677,10 +692,10 @@ def _parse_by_keys_to_types(
     if ensure_count is None:
         ensure_count = Settings.ensure_count
 
+    _check_invalid(lines)
+
     if ensure_count:
         for line in lines:
-            if line == "INVALID":
-                raise TaoDataInvalidError("Data unavailable - Tao marked it as INVALID")
             assert len(key_to_type) == len(line.split(";"))
 
     return [
@@ -932,6 +947,34 @@ def parse_datum_has_ele(lines, cmd="") -> str | None:
     return lines[0] if lines else None
 
 
+def parse_ele_ac_kicker(lines, cmd="") -> EleAcKickerResult | None:
+    """
+    Parse ele_ac_kicker results.
+
+    Returns
+    -------
+    EleAcKickerResult or None
+        ``None`` if the element has no associated ac_kicker.  Otherwise a
+        dictionary with ``mode`` (either ``"amp_vs_time"`` or
+        ``"frequencies"``) and the corresponding list of terms in ``data``.
+    """
+    if not lines:
+        return None
+    if lines[0] == "INVALID":
+        raise TaoDataInvalidError("Data unavailable - Tao marked it as INVALID")
+
+    mode = lines[0].removeprefix("has#")
+    key_to_type: dict[str, type]
+    if mode == "amp_vs_time":
+        key_to_type = {"index": int, "amp": float, "time": float}
+    elif mode == "frequencies":
+        key_to_type = {"index": int, "frequency": float, "amp": float, "phi": float}
+    else:
+        raise ValueError(f"Unexpected ele_ac_kicker mode: {lines[0]!r}")
+
+    return {"mode": mode, "data": _parse_by_keys_to_types(lines[1:], key_to_type)}
+
+
 def parse_ele_cartesian_map(lines, cmd="") -> list[EleCartesianMapInfo] | dict[str, Any]:
     """
     Parse ele_cartesian_map results.
@@ -977,6 +1020,43 @@ def parse_ele_chamber_wall(lines, cmd="") -> list[EleChamberWallInfo]:
     )
 
 
+def parse_ele_cylindrical_map(
+    lines, cmd=""
+) -> list[EleCylindricalMapTermInfo] | dict[str, Any]:
+    """
+    Parse ele_cylindrical_map results.
+
+    Returns
+    -------
+    dict or list of dict
+        "terms" mode will be a list of EleCylindricalMapTermInfo dictionaries.
+        Normal mode will be a single dictionary.
+    """
+    args = _get_cmd_args(cmd)
+    if args[-1] == "terms":
+        terms = []
+        for line in lines:
+            if line == "INVALID":
+                raise TaoDataInvalidError("Data unavailable - Tao marked it as INVALID")
+            index, e_re, e_im, b_re, b_im = line.split(";")
+            terms.append(
+                {
+                    "index": int(index),
+                    "e_coef": complex(
+                        _float(e_re),
+                        _float(e_im),
+                    ),
+                    "b_coef": complex(
+                        _float(b_re),
+                        _float(b_im),
+                    ),
+                }
+            )
+        return terms
+
+    return parse_tao_python_data(lines)
+
+
 def parse_ele_elec_multipoles(lines, cmd="") -> dict[str, Any]:
     """
     Parse ele_elec_multipoles results.
@@ -985,12 +1065,14 @@ def parse_ele_elec_multipoles(lines, cmd="") -> dict[str, Any]:
     -------
     dict
     """
+    _check_invalid(lines)
     logic_lines = [line for line in lines if "LOGIC" in line]
     lines = [line for line in lines if line not in logic_lines]
-    key_to_type = {key: float for key in lines[0].split(";")}
+    # Data rows carry a leading multipole order index not named in the header.
+    key_to_type = {"index": int}
+    key_to_type.update({key: float for key in lines[0].split(";")})
     settings = parse_tao_python_data(logic_lines)
 
-    # TODO: 'data' is not actually parsed in the test suite
     return {
         **settings,
         "data": _parse_by_keys_to_types(
@@ -1042,7 +1124,6 @@ def parse_ele_gen_gradients(
         "derivs" mode will be a list of dictionaries.
         Normal mode will be a single dictionary.
     """
-
     args = _get_cmd_args(cmd)
     if args[-1].lower() == "derivs":
         return _parse_by_keys_to_types(
@@ -1086,6 +1167,7 @@ def parse_ele_multipoles(lines, cmd="") -> dict[str, Any]:
     -------
     dict
     """
+    _check_invalid(lines)
     logic_lines = [line for line in lines if "LOGIC" in line]
     lines = [line for line in lines if line not in logic_lines]
     key_to_type = {"index": int}
@@ -1102,6 +1184,38 @@ def parse_ele_multipoles(lines, cmd="") -> dict[str, Any]:
     }
 
 
+_ELE_PARAM_SHAPES = {
+    "ele.mat6": (6, 6),
+    "ele.vec0": (6,),
+    "ele.c_mat": (2, 2),
+}
+
+
+def parse_ele_param(lines, cmd="") -> dict[str, Any]:
+    """
+    Parse ele_param results.
+
+    Returns
+    -------
+    dict
+        Single key of the requested ``who``, with dots replaced by
+        underscores.  Matrix-valued ``who`` values (``ele.mat6``,
+        ``ele.vec0``, ``ele.c_mat``) map to appropriately-shaped ndarrays.
+    """
+    # Matrix-valued `who` emit multiple values on one line which Tao marks as
+    # REAL (not REAL_ARR), so the default parser cannot handle them.
+    if len(lines) == 1 and lines[0] != "INVALID":
+        name, type_, _settable, *values = lines[0].split(";")
+        if type_ == "REAL" and len(values) > 1:
+            arr = np.array([_float(value) for value in values])
+            shape = _ELE_PARAM_SHAPES.get(name)
+            if shape is not None:
+                arr = arr.reshape(shape)
+            return {name.replace(".", "_"): arr}
+
+    return parse_tao_python_data(lines)
+
+
 def parse_ele_taylor(lines, cmd="") -> dict[str, Any]:
     """
     Parse ele_taylor results.
@@ -1110,6 +1224,7 @@ def parse_ele_taylor(lines, cmd="") -> dict[str, Any]:
     -------
     dict
     """
+    _check_invalid(lines)
 
     def split_sections(lines):
         sections = []
@@ -1133,12 +1248,12 @@ def parse_ele_taylor(lines, cmd="") -> dict[str, Any]:
                 "i": int,
                 "j": int,
                 "coef": float,
-                "exp1": float,
-                "exp2": float,
-                "exp3": float,
-                "exp4": float,
-                "exp5": float,
-                "exp6": float,
+                "exp1": int,
+                "exp2": int,
+                "exp3": int,
+                "exp4": int,
+                "exp5": int,
+                "exp6": int,
             },
         )
         return info
@@ -1168,12 +1283,12 @@ def parse_ele_spin_taylor(lines, cmd="") -> list[EleSpinTaylorInfo]:
             "index": int,
             "term": str,
             "coef": float,
-            "exp1": float,
-            "exp2": float,
-            "exp3": float,
-            "exp4": float,
-            "exp5": float,
-            "exp6": float,
+            "exp1": int,
+            "exp2": int,
+            "exp3": int,
+            "exp4": int,
+            "exp5": int,
+            "exp6": int,
         },
     )
 
@@ -1389,11 +1504,17 @@ def parse_lat_param_units(lines, cmd="") -> str:
     return lines[0]
 
 
-def _fix_float_scientific_notation(value: str) -> float:
+def _float(value: str) -> float:
+    """
+    Fix scientific notation without an 'e' and infinity/nan markers.
+
+    Fortran es22.14 output can drop the "E" for 3-digit exponents:
+      e.g., 1.42+245 -> 1.42e245
+
+    This handles NaN/Infinity/-Infinity as well.
+    """
+    value = value.strip()
     if ("-" in value or "+" in value) and "e" not in value:
-        # TODO: some floating point values like gg%deriv of ele_gen_grad_map
-        # are formatted incorrectly:
-        #   e.g., 1.42+245 -> 1.42e245
         try:
             return float(value)
         except ValueError:
@@ -1408,7 +1529,7 @@ def _fix_float_scientific_notation(value: str) -> float:
 
 def _value_float_or_none(s: str):
     s = s.strip()
-    return None if s == "" else _fix_float_scientific_notation(s)
+    return None if s == "" else _float(s)
 
 
 def parse_lord_control(lines, cmd="") -> list[LordControlInfo]:
