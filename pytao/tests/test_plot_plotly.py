@@ -16,7 +16,7 @@ from ..plotting.plotly import (
 )
 from ..plotting.settings import TaoFloorPlanSettings, TaoGraphSettings
 from ..subproc import AnyTao
-from ..tao_ctypes.util import filter_tao_messages_context
+from ..errors import filter_tao_messages_context
 from .conftest import get_example, test_artifacts
 
 try:
@@ -47,6 +47,7 @@ def annotate_and_save(figure: go.Figure, graphs, test_name: str, filename_base: 
         else:
             figure.layout.title = title_suffix
 
+    test_artifacts.mkdir(exist_ok=True)
     fn = test_artifacts / f"{filename_base}.html"
     figure.write_html(fn)
     return fn

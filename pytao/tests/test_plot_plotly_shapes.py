@@ -91,6 +91,7 @@ def test_floor_plan_shapes_plotly(request: pytest.FixtureRequest):
     fig.update_yaxes(range=[-5, 85], row=2, col=1)
 
     # Save to HTML file
+    test_artifacts.mkdir(exist_ok=True)
     filename = test_artifacts / f"{request.node.name}.html"
     fig.write_html(filename)
     print(f"Saved Plotly floor plan shapes test to {filename}")
