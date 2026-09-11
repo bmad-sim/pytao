@@ -228,6 +228,51 @@ def test_plotly_notebook_plot_vars(
 
 
 @pytest.mark.skipif(not PLOTLY_AVAILABLE, reason="plotly not available")
+@pytest.mark.parametrize(
+    ("grid",),
+    [
+        pytest.param(True, id="grid"),
+        pytest.param(False, id="normal"),
+    ],
+)
+def test_plotly_app_update_plots(
+    request: pytest.FixtureRequest,
+    monkeypatch: pytest.MonkeyPatch,
+    grid: bool,
+):
+    """update_plots should rebuild the figure with the same structure."""
+    with optics_matching_plotly(request) as (tao, _):
+        gm = get_notebook_plotly_manager(tao, monkeypatch)
+
+        if not IPYWIDGETS_AVAILABLE:
+            pytest.skip("ipywidgets not available")
+
+        if grid:
+            _graphs, app = gm.plot_grid(
+                ["alpha", "beta"], grid=(2, 1), include_layout=True, vars=True
+            )
+        else:
+            _graphs, app = gm.plot("alpha", vars=True)
+
+        num_traces = len(app.figure.data)
+        num_shapes = len(app.figure.layout.shapes)
+        app.update_plots()
+        assert len(app.figure.data) == num_traces
+        assert len(app.figure.layout.shapes) == num_shapes
+
+
+@pytest.mark.skipif(not PLOTLY_AVAILABLE, reason="plotly not available")
+def test_plotly_include_layout(request: pytest.FixtureRequest):
+    """Lattice layout shapes and annotations should carry over into subplots."""
+    with optics_matching_plotly(request) as (tao, _):
+        _graphs, figure = tao.plotly.plot("beta", include_layout=True)
+        assert len(figure.layout.shapes) > 0
+
+        _graphs, figure_no_layout = tao.plotly.plot("beta", include_layout=False)
+        assert len(figure_no_layout.data) <= len(figure.data)
+
+
+@pytest.mark.skipif(not PLOTLY_AVAILABLE, reason="plotly not available")
 def test_plotly_floor_orbits(
     request: pytest.FixtureRequest,
     monkeypatch: pytest.MonkeyPatch,
