@@ -6,32 +6,21 @@ import math
 import pathlib
 import typing
 from abc import ABC, abstractmethod
+from collections.abc import Callable, Sequence
 from typing import (
     Any,
     ClassVar,
-    Dict,
     Generic,
-    List,
-    Optional,
-    Sequence,
-    Tuple,
-    Type,
     TypeVar,
     Union,
+    cast,
 )
 
 import numpy as np
 import plotly.graph_objects as go
+import plotly.offline as pyo
 import plotly.subplots
 from plotly.graph_objs import Figure
-
-try:
-    import plotly.io
-    import plotly.offline as pyo
-
-    PLOTLY_AVAILABLE = True
-except ImportError:
-    PLOTLY_AVAILABLE = False
 
 try:
     import ipywidgets as widgets
@@ -41,23 +30,10 @@ try:
 except ImportError:
     IPYWIDGETS_AVAILABLE = False
 
-from ..interface_commands import AnyPath
-from ..tao_ctypes.core import TaoCommandError
-from .curves import CurveIndexToCurve, TaoCurveSettings
-from .fields import ElementField
-from .plot import AnyGraph
-from .settings import TaoGraphSettings
-from .types import FloatVariableInfo
-from .util import Limit, OptionalLimit
-
-if typing.TYPE_CHECKING:
-    from plotly.graph_objs import Figure
-
-    from .. import Tao
-
-
+from ..core import AnyPath, TaoCommandError
 from . import floor_plan_shapes, pgplot, util
-from .curves import PlotCurveLine, PlotCurveSymbols
+from .curves import CurveIndexToCurve, PlotCurveLine, PlotCurveSymbols, TaoCurveSettings
+from .fields import ElementField
 from .layout_shapes import LayoutShape
 from .patches import (
     PlotPatch,
@@ -69,6 +45,7 @@ from .patches import (
     PlotPatchSbend,
 )
 from .plot import (
+    AnyGraph,
     BasicGraph,
     FloorPlanGraph,
     GraphBase,
@@ -77,6 +54,9 @@ from .plot import (
     PlotCurve,
     UnsupportedGraphError,
 )
+from .settings import TaoGraphSettings
+from .types import FloatVariableInfo
+from .util import Limit, OptionalLimit
 
 if typing.TYPE_CHECKING:
     from .. import Tao
@@ -131,10 +111,10 @@ class _PlotlyDefaults:
     @classmethod
     def get_size_for_class(
         cls,
-        typ: Type[AnyPlotlyGraph],
-        user_width: Optional[int] = None,
-        user_height: Optional[int] = None,
-    ) -> Tuple[int, int]:
+        typ: type[AnyPlotlyGraph],
+        user_width: int | None = None,
+        user_height: int | None = None,
+    ) -> tuple[int, int]:
         default = {
             PlotlyBasicGraph: (cls.width, cls.height),
             PlotlyLatticeLayoutGraph: (cls.width, cls.layout_height),
@@ -144,21 +124,21 @@ class _PlotlyDefaults:
 
 
 def set_plotly_defaults(
-    width: Optional[int] = None,
-    height: Optional[int] = None,
-    stacked_height: Optional[int] = None,
-    layout_height: Optional[int] = None,
-    colorscale: Optional[str] = None,
-    show_toolbar: Optional[bool] = None,
-    grid_spacing: Optional[float] = None,
-    limit_scale_factor: Optional[float] = None,
-    max_data_points: Optional[int] = None,
-    variables_per_row: Optional[int] = None,
-    show_sliders: Optional[bool] = None,
-    line_width_scale: Optional[float] = None,
-    floor_line_width_scale: Optional[float] = None,
-    marker_size_scale: Optional[float] = None,
-) -> Dict[str, Any]:
+    width: int | None = None,
+    height: int | None = None,
+    stacked_height: int | None = None,
+    layout_height: int | None = None,
+    colorscale: str | None = None,
+    show_toolbar: bool | None = None,
+    grid_spacing: float | None = None,
+    limit_scale_factor: float | None = None,
+    max_data_points: int | None = None,
+    variables_per_row: int | None = None,
+    show_sliders: bool | None = None,
+    line_width_scale: float | None = None,
+    floor_line_width_scale: float | None = None,
+    marker_size_scale: float | None = None,
+) -> dict[str, Any]:
     """
     Change defaults used for Plotly plots.
 
@@ -230,12 +210,27 @@ def set_plotly_defaults(
     }
 
 
+def _plotly_config() -> dict[str, Any]:
+    """Plotly figure display configuration from the current defaults."""
+    return {"displayModeBar": _PlotlyDefaults.show_toolbar}
+
+
+def _copy_figure_to_subplot(fig: Figure, single_fig: Figure, row: int, col: int) -> None:
+    """Copy a standalone figure's traces, shapes, and annotations into a subplot cell."""
+    for trace in single_fig.data:
+        fig.add_trace(trace, row=row, col=col)
+    for shape in single_fig.layout.shapes:
+        fig.add_shape(shape, row=row, col=col)
+    for annotation in single_fig.layout.annotations:
+        fig.add_annotation(annotation, row=row, col=col)
+
+
 def _plot_curve_symbols(
     fig: Figure,
     symbol: PlotCurveSymbols,
     name: str,
-    row: Optional[int] = None,
-    col: Optional[int] = None,
+    row: int | None = None,
+    col: int | None = None,
     showlegend: bool = True,
 ) -> None:
     """Add curve symbols to a Plotly figure."""
@@ -262,9 +257,9 @@ def _plot_curve_symbols(
 def _plot_curve_line(
     fig: Figure,
     line: PlotCurveLine,
-    name: Optional[str] = None,
-    row: Optional[int] = None,
-    col: Optional[int] = None,
+    name: str | None = None,
+    row: int | None = None,
+    col: int | None = None,
     line_width_scale: float = 1.0,
     showlegend: bool = True,
 ) -> None:
@@ -289,8 +284,8 @@ def _plot_curve_line(
 def _plot_curve(
     fig: Figure,
     curve: PlotCurve,
-    row: Optional[int] = None,
-    col: Optional[int] = None,
+    row: int | None = None,
+    col: int | None = None,
     line_width_scale: float = 1.0,
 ) -> None:
     """Plot a complete curve (line and/or symbols) on a Plotly figure."""
@@ -338,9 +333,9 @@ def _get_plotly_marker(marker: str) -> str:
 def _add_patch_to_figure(
     fig: Figure,
     patch: PlotPatch,
-    row: Optional[int] = None,
-    col: Optional[int] = None,
-    line_width: Optional[float] = None,
+    row: int | None = None,
+    col: int | None = None,
+    line_width: float | None = None,
 ) -> None:
     """Add a patch to a Plotly figure."""
     if isinstance(patch, PlotPatchRectangle):
@@ -362,9 +357,9 @@ def _add_patch_to_figure(
 def _add_rectangle_patch(
     fig: Figure,
     patch: PlotPatchRectangle,
-    row: Optional[int],
-    col: Optional[int],
-    line_width: Optional[float],
+    row: int | None,
+    col: int | None,
+    line_width: float | None,
 ) -> None:
     """Add a rectangle patch to Plotly figure."""
     x0, y0 = patch.xy
@@ -411,9 +406,9 @@ def _add_rectangle_patch(
 def _add_circle_patch(
     fig: Figure,
     patch: PlotPatchCircle,
-    row: Optional[int],
-    col: Optional[int],
-    line_width: Optional[float],
+    row: int | None,
+    col: int | None,
+    line_width: float | None,
 ) -> None:
     """Add a circle patch to Plotly figure."""
     x_center, y_center = patch.xy
@@ -438,9 +433,9 @@ def _add_circle_patch(
 def _add_ellipse_patch(
     fig: Figure,
     patch: PlotPatchEllipse,
-    row: Optional[int],
-    col: Optional[int],
-    line_width: Optional[float],
+    row: int | None,
+    col: int | None,
+    line_width: float | None,
 ) -> None:
     """Add an ellipse patch to Plotly figure."""
     # Plotly can't rotate built-in shapes, so we'll approximate with a polygon
@@ -479,9 +474,9 @@ def _add_ellipse_patch(
 def _add_polygon_patch(
     fig: Figure,
     patch: PlotPatchPolygon,
-    row: Optional[int],
-    col: Optional[int],
-    line_width: Optional[float],
+    row: int | None,
+    col: int | None,
+    line_width: float | None,
 ) -> None:
     """Add a polygon patch to Plotly figure."""
     vertices = patch.vertices + [patch.vertices[0]]  # Close the polygon
@@ -507,9 +502,9 @@ def _add_polygon_patch(
 def _add_arc_patch(
     fig: Figure,
     patch: PlotPatchArc,
-    row: Optional[int],
-    col: Optional[int],
-    line_width: Optional[float],
+    row: int | None,
+    col: int | None,
+    line_width: float | None,
 ) -> None:
     """Add an arc patch to Plotly figure."""
     x_center, y_center = patch.xy
@@ -546,9 +541,9 @@ def _add_arc_patch(
 def _add_sbend_patch(
     fig: Figure,
     patch: PlotPatchSbend,
-    row: Optional[int],
-    col: Optional[int],
-    line_width: Optional[float],
+    row: int | None,
+    col: int | None,
+    line_width: float | None,
 ) -> None:
     """Add an S-bend patch to Plotly figure."""
     # This is a complex shape - for now, we'll draw the splines as lines
@@ -586,7 +581,7 @@ def _add_sbend_patch(
     )
 
 
-def _get_rotated_rectangle_corners(patch: PlotPatchRectangle) -> List[Tuple[float, float]]:
+def _get_rotated_rectangle_corners(patch: PlotPatchRectangle) -> list[tuple[float, float]]:
     """Calculate corners of a rotated rectangle."""
     x0, y0 = patch.xy
     width, height = patch.width, patch.height
@@ -622,18 +617,18 @@ class PlotlyGraphBase(ABC, Generic[TGraph]):
 
     manager: GraphManager
     graph: TGraph
-    width: Optional[int]
-    height: Optional[int]
-    xlim: Tuple[float, float]
-    ylim: Tuple[float, float]
+    width: int | None
+    height: int | None
+    xlim: tuple[float, float]
+    ylim: tuple[float, float]
 
     def __init__(
         self,
         manager: GraphManager,
         graph: TGraph,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        limit_scale_factor: Optional[float] = None,
+        width: int | None = None,
+        height: int | None = None,
+        limit_scale_factor: float | None = None,
     ) -> None:
         self.graph = graph
         self.manager = manager
@@ -656,14 +651,14 @@ class PlotlyBasicGraph(PlotlyGraphBase[BasicGraph]):
     graph_type: ClassVar[str] = "basic"
     graph: BasicGraph
     num_points: int
-    view_x_range: Tuple[float, float]
+    view_x_range: tuple[float, float]
 
     def __init__(
         self,
         manager: GraphManager,
         graph: BasicGraph,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
+        width: int | None = None,
+        height: int | None = None,
     ) -> None:
         super().__init__(
             manager=manager,
@@ -746,8 +741,8 @@ class PlotlyLatticeLayoutGraph(PlotlyGraphBase[LatticeLayoutGraph]):
         self,
         manager: GraphManager,
         graph: LatticeLayoutGraph,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
+        width: int | None = None,
+        height: int | None = None,
     ) -> None:
         super().__init__(
             manager=manager,
@@ -845,7 +840,8 @@ class PlotlyLatticeLayoutGraph(PlotlyGraphBase[LatticeLayoutGraph]):
                             size=10,
                             color=plotly_color(annotation.color),
                         ),
-                        textangle=annotation.rotation,
+                        # Plotly's textangle is clockwise; annotation rotation is CCW
+                        textangle=-annotation.rotation,
                         xanchor="center",
                         yanchor="middle",
                     )
@@ -917,8 +913,8 @@ class PlotlyFloorPlanGraph(PlotlyGraphBase[FloorPlanGraph]):
         self,
         manager: GraphManager,
         graph: FloorPlanGraph,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
+        width: int | None = None,
+        height: int | None = None,
     ) -> None:
         super().__init__(
             manager=manager,
@@ -985,7 +981,13 @@ class PlotlyFloorPlanGraph(PlotlyGraphBase[FloorPlanGraph]):
         building_walls = self.graph.building_walls
 
         for line in building_walls.lines:
-            _plot_curve_line(fig, line, name="building_wall", showlegend=False)
+            _plot_curve_line(
+                fig,
+                line,
+                name="building_wall",
+                line_width_scale=_PlotlyDefaults.floor_line_width_scale,
+                showlegend=False,
+            )
 
         for patch in building_walls.patches:
             line_width = (
@@ -1010,7 +1012,8 @@ class PlotlyFloorPlanGraph(PlotlyGraphBase[FloorPlanGraph]):
                             size=8,
                             color=plotly_color(annotation.color),
                         ),
-                        textangle=annotation.rotation,
+                        # Plotly's textangle is clockwise; annotation rotation is CCW
+                        textangle=-annotation.rotation,
                         xanchor="center",
                         yanchor="middle",
                     )
@@ -1043,7 +1046,7 @@ class PlotlyGraphManager(GraphManager):
     _key_: ClassVar[str] = "plotly"
 
     @functools.wraps(set_plotly_defaults)
-    def configure(self, **kwargs) -> Dict[str, Any]:
+    def configure(self, **kwargs) -> dict[str, Any]:
         return set_plotly_defaults(**kwargs)
 
     def to_plotly_graph(self, graph: AnyGraph) -> AnyPlotlyGraph:
@@ -1066,23 +1069,171 @@ class PlotlyGraphManager(GraphManager):
             return PlotlyFloorPlanGraph(self, graph)
         raise NotImplementedError(f"Graph type {type(graph).__name__} not supported")
 
-    def plot_grid(
+    def _compose_grid_figure(
         self,
-        templates: List[str],
-        grid: Tuple[int, int],
+        graphs: list[AnyGraph],
+        grid: tuple[int, int],
         *,
         include_layout: bool = False,
-        share_x: Optional[bool] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        figsize: Optional[Tuple[int, int]] = None,
-        layout_height: Optional[int] = None,
-        xlim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
-        ylim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
-        curves: Optional[List[CurveIndexToCurve]] = None,
-        settings: Optional[List[TaoGraphSettings]] = None,
-        save: Union[bool, str, pathlib.Path, None] = None,
-    ) -> Tuple[List[AnyGraph], Figure]:
+        share_x: bool | None = None,
+        width: int | None = None,
+        height: int | None = None,
+    ) -> Figure:
+        """Assemble a gridded Plotly figure from prepared graphs."""
+        nrows, ncols = grid
+        while ncols * nrows < len(graphs):
+            nrows += 1
+
+        subplot_titles = [graph.title for graph in graphs]
+        subplot_titles.extend([""] * (ncols * nrows - len(graphs)))
+        if include_layout:
+            subplot_titles.extend([f"Layout {i + 1}" for i in range(ncols)])
+            nrows += 1
+
+        fig = plotly.subplots.make_subplots(
+            rows=nrows,
+            cols=ncols,
+            subplot_titles=subplot_titles,
+            shared_xaxes=share_x or False,
+            vertical_spacing=_PlotlyDefaults.grid_spacing,
+            horizontal_spacing=_PlotlyDefaults.grid_spacing,
+        )
+
+        for i, graph in enumerate(graphs):
+            row = (i // ncols) + 1
+            col = (i % ncols) + 1
+
+            plotly_graph = self.to_plotly_graph(graph)
+            single_fig = plotly_graph.create_figure()
+
+            _copy_figure_to_subplot(fig, single_fig, row=row, col=col)
+
+            fig.update_xaxes(
+                title_text=pgplot.mathjax_string(graph.xlabel),
+                range=list(plotly_graph.xlim),
+                row=row,
+                col=col,
+            )
+            fig.update_yaxes(
+                title_text=pgplot.mathjax_string(graph.ylabel),
+                range=list(plotly_graph.ylim),
+                row=row,
+                col=col,
+            )
+
+        if include_layout:
+            lattice_layout = self.to_plotly_graph(self.lattice_layout_graph)
+            layout_fig = lattice_layout.create_figure()
+
+            for col in range(1, ncols + 1):
+                _copy_figure_to_subplot(fig, layout_fig, row=nrows, col=col)
+                fig.update_yaxes(
+                    range=list(lattice_layout.ylim),
+                    showticklabels=False,
+                    showgrid=False,
+                    row=nrows,
+                    col=col,
+                )
+
+        fig.update_layout(
+            width=width or _PlotlyDefaults.width * ncols,
+            height=height or _PlotlyDefaults.stacked_height * nrows,
+            showlegend=False,
+        )
+
+        return fig
+
+    def _compose_figure(
+        self,
+        graphs: list[AnyGraph],
+        *,
+        include_layout: bool = True,
+        share_x: bool | None = None,
+        width: int | None = None,
+        height: int | None = None,
+    ) -> Figure:
+        """Assemble a single-column Plotly figure from prepared graphs."""
+        include_layout = include_layout and any(graph.is_s_plot for graph in graphs)
+
+        if len(graphs) == 1 and not include_layout:
+            plotly_graph = self.to_plotly_graph(graphs[0])
+            fig = plotly_graph.create_figure()
+            if width or height:
+                fig.update_layout(width=width, height=height)
+            return fig
+
+        nrows = len(graphs)
+        subplot_titles = [graph.title for graph in graphs]
+        if include_layout:
+            subplot_titles.append("Lattice Layout")
+            nrows += 1
+
+        fig = plotly.subplots.make_subplots(
+            rows=nrows,
+            cols=1,
+            subplot_titles=subplot_titles,
+            shared_xaxes=share_x or (share_x is None),
+            vertical_spacing=_PlotlyDefaults.grid_spacing,
+        )
+
+        for i, graph in enumerate(graphs):
+            plotly_graph = self.to_plotly_graph(graph)
+            single_fig = plotly_graph.create_figure()
+
+            _copy_figure_to_subplot(fig, single_fig, row=i + 1, col=1)
+
+            fig.update_xaxes(
+                title_text=pgplot.mathjax_string(graph.xlabel),
+                range=list(plotly_graph.xlim),
+                row=i + 1,
+                col=1,
+            )
+            fig.update_yaxes(
+                title_text=pgplot.mathjax_string(graph.ylabel),
+                range=list(plotly_graph.ylim),
+                row=i + 1,
+                col=1,
+            )
+
+        if include_layout:
+            lattice_layout = self.to_plotly_graph(self.lattice_layout_graph)
+            layout_fig = lattice_layout.create_figure()
+
+            _copy_figure_to_subplot(fig, layout_fig, row=nrows, col=1)
+
+            fig.update_yaxes(
+                range=list(lattice_layout.ylim),
+                showticklabels=False,
+                showgrid=False,
+                row=nrows,
+                col=1,
+            )
+
+        fig.update_layout(
+            width=width or _PlotlyDefaults.width,
+            height=height or _PlotlyDefaults.stacked_height * nrows,
+            showlegend=True,
+        )
+
+        return fig
+
+    def plot_grid(
+        self,
+        templates: list[str],
+        grid: tuple[int, int],
+        *,
+        include_layout: bool = False,
+        share_x: bool | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        figsize: tuple[int, int] | None = None,
+        layout_height: int | None = None,
+        xlim: OptionalLimit | Sequence[OptionalLimit] = None,
+        ylim: OptionalLimit | Sequence[OptionalLimit] = None,
+        curves: list[CurveIndexToCurve] | None = None,
+        settings: list[TaoGraphSettings] | None = None,
+        save: bool | str | pathlib.Path | None = None,
+    ) -> tuple[list[AnyGraph], Figure]:
         """
         Plot graphs on a grid with Plotly.
 
@@ -1131,50 +1282,13 @@ class PlotlyGraphManager(GraphManager):
         if figsize is not None:
             width, height = figsize
 
-        nrows, ncols = grid
-        subplot_titles = [graph.title for graph in graphs]
-        if include_layout:
-            subplot_titles.extend([f"Layout {i + 1}" for i in range(ncols)])
-            nrows += 1
-
-        while ncols * nrows < len(graphs):
-            nrows += 1
-            # TODO
-            # raise ValueError(
-            #     f"Not enough rows x columns ({nrows}x{ncols}) to fit {len(graphs)} graphs"
-            # )
-
-        fig = plotly.subplots.make_subplots(
-            rows=nrows,
-            cols=ncols,
-            subplot_titles=subplot_titles,
-            shared_xaxes=share_x or False,
-            vertical_spacing=_PlotlyDefaults.grid_spacing,
-            horizontal_spacing=_PlotlyDefaults.grid_spacing,
-        )
-
-        for i, graph in enumerate(graphs):
-            row = (i // ncols) + 1
-            col = (i % ncols) + 1
-
-            plotly_graph = self.to_plotly_graph(graph)
-            single_fig = plotly_graph.create_figure()
-
-            for trace in single_fig.data:
-                fig.add_trace(trace, row=row, col=col)
-
-        if include_layout:
-            lattice_layout = self.to_plotly_graph(self.lattice_layout_graph)
-            layout_fig = lattice_layout.create_figure()
-
-            for col in range(1, ncols + 1):
-                for trace in layout_fig.data:
-                    fig.add_trace(trace, row=nrows, col=col)
-
-        fig.update_layout(
-            width=width or _PlotlyDefaults.width * ncols,
-            height=height or _PlotlyDefaults.stacked_height * nrows,
-            showlegend=False,
+        fig = self._compose_grid_figure(
+            graphs,
+            grid,
+            include_layout=include_layout,
+            share_x=share_x,
+            width=width,
+            height=height,
         )
 
         if save:
@@ -1182,7 +1296,7 @@ class PlotlyGraphManager(GraphManager):
                 save = "plot_grid.html"
             if not pathlib.Path(save).suffix:
                 save = f"{save}.html"
-            fig.write_html(save)
+            fig.write_html(save, config=_plotly_config())
             logger.info(f"Saving plot to {save!r}")
 
         return graphs, fig
@@ -1191,19 +1305,19 @@ class PlotlyGraphManager(GraphManager):
         self,
         template: str,
         *,
-        region_name: Optional[str] = None,
+        region_name: str | None = None,
         include_layout: bool = True,
-        figsize: Optional[Tuple[int, int]] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        layout_height: Optional[int] = None,
-        share_x: Optional[bool] = None,
-        xlim: Optional[Tuple[float, float]] = None,
-        ylim: Optional[Tuple[float, float]] = None,
-        save: Union[bool, str, pathlib.Path, None] = None,
-        curves: Optional[Dict[int, TaoCurveSettings]] = None,
-        settings: Optional[TaoGraphSettings] = None,
-    ) -> Tuple[List[AnyGraph], Figure]:
+        figsize: tuple[int, int] | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        layout_height: int | None = None,
+        share_x: bool | None = None,
+        xlim: tuple[float, float] | None = None,
+        ylim: tuple[float, float] | None = None,
+        save: bool | str | pathlib.Path | None = None,
+        curves: dict[int, TaoCurveSettings] | None = None,
+        settings: TaoGraphSettings | None = None,
+    ) -> tuple[list[AnyGraph], Figure]:
         """
         Plot a graph with Plotly.
 
@@ -1253,52 +1367,20 @@ class PlotlyGraphManager(GraphManager):
         if figsize is not None:
             width, height = figsize
 
-        if len(graphs) == 1 and not include_layout:
-            plotly_graph = self.to_plotly_graph(graphs[0])
-            fig = plotly_graph.create_figure()
-        else:
-            nrows = len(graphs)
-            if include_layout and any(graph.is_s_plot for graph in graphs):
-                nrows += 1
-
-            subplot_titles = [graph.title for graph in graphs]
-            if include_layout:
-                subplot_titles.append("Lattice Layout")
-
-            fig = plotly.subplots.make_subplots(
-                rows=nrows,
-                cols=1,
-                subplot_titles=subplot_titles,
-                shared_xaxes=share_x or (share_x is None),
-                vertical_spacing=_PlotlyDefaults.grid_spacing,
-            )
-
-            for i, graph in enumerate(graphs):
-                plotly_graph = self.to_plotly_graph(graph)
-                single_fig = plotly_graph.create_figure()
-
-                for trace in single_fig.data:
-                    fig.add_trace(trace, row=i + 1, col=1)
-
-            if include_layout and any(graph.is_s_plot for graph in graphs):
-                lattice_layout = self.to_plotly_graph(self.lattice_layout_graph)
-                layout_fig = lattice_layout.create_figure()
-
-                for trace in layout_fig.data:
-                    fig.add_trace(trace, row=nrows, col=1)
-
-            fig.update_layout(
-                width=width or _PlotlyDefaults.width,
-                height=height or _PlotlyDefaults.stacked_height * nrows,
-                showlegend=True,
-            )
+        fig = self._compose_figure(
+            graphs,
+            include_layout=include_layout,
+            share_x=share_x,
+            width=width,
+            height=height,
+        )
 
         if save:
             if save is True:
                 save = f"{template}.html"
             if not pathlib.Path(save).suffix:
                 save = f"{save}.html"
-            fig.write_html(save)
+            fig.write_html(save, config=_plotly_config())
             logger.info(f"Saving plot to {save!r}")
 
         return graphs, fig
@@ -1307,14 +1389,14 @@ class PlotlyGraphManager(GraphManager):
         self,
         ele_id: str,
         *,
-        colormap: Optional[str] = None,
+        colormap: str | None = None,
         radius: float = 0.015,
         num_points: int = 100,
         x_scale: float = 1.0,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        save: Union[bool, str, pathlib.Path, None] = None,
-    ) -> Tuple[ElementField, Figure]:
+        width: int | None = None,
+        height: int | None = None,
+        save: bool | str | pathlib.Path | None = None,
+    ) -> tuple[ElementField, Figure]:
         """
         Plot field information for a given element.
 
@@ -1371,7 +1453,7 @@ class PlotlyGraphManager(GraphManager):
                 save = f"{ele_id}_field.html"
             if not pathlib.Path(save).suffix:
                 save = f"{save}.html"
-            fig.write_html(save)
+            fig.write_html(save, config=_plotly_config())
             logger.info(f"Saving plot to {save!r}")
 
         return field, fig
@@ -1399,9 +1481,9 @@ class PlotlyVariable:
     def create_widgets(
         self,
         tao: Tao,
-        update_callback: callable,
+        update_callback: Callable[[], None],
         show_sliders: bool = True,
-    ) -> List[widgets.Widget]:
+    ) -> list[widgets.Widget]:
         """Create interactive widgets for this variable."""
         if not IPYWIDGETS_AVAILABLE:
             raise ImportError("ipywidgets is required for interactive variables")
@@ -1409,7 +1491,7 @@ class PlotlyVariable:
         self._update_callback = update_callback
 
         # Create spinner (number input)
-        spinner = widgets.FloatText(
+        spinner = widgets.BoundedFloatText(
             description=self.name,
             value=self.value,
             step=self.step,
@@ -1420,10 +1502,9 @@ class PlotlyVariable:
         )
 
         def on_spinner_change(change):
-            if change["type"] == "change" and change["name"] == "value":
-                self._handle_value_change(change["new"], tao)
+            self._handle_value_change(change["new"], tao)
 
-        spinner.observe(on_spinner_change)
+        spinner.observe(on_spinner_change, names="value")
 
         if not show_sliders:
             self._widgets = [spinner]
@@ -1440,19 +1521,7 @@ class PlotlyVariable:
             layout=widgets.Layout(width="200px"),
         )
 
-        def on_slider_change(change):
-            if change["type"] == "change" and change["name"] == "value":
-                spinner.value = change["new"]  # This will trigger spinner change
-
-        slider.observe(on_slider_change)
-
-        # Link widgets
-        def on_spinner_change_linked(change):
-            if change["type"] == "change" and change["name"] == "value":
-                slider.value = change["new"]
-                self._handle_value_change(change["new"], tao)
-
-        spinner.observe(on_spinner_change_linked)
+        widgets.link((slider, "value"), (spinner, "value"))
 
         self._widgets = [slider, spinner]
         return self._widgets
@@ -1474,8 +1543,6 @@ class PlotlyVariable:
     @classmethod
     def from_tao(cls, tao: Tao, name: str, *, parameter: str = "model") -> PlotlyVariable:
         """Create a PlotlyVariable from Tao variable info."""
-        from typing import cast
-
         info = cast(FloatVariableInfo, tao.var(name))
         return cls(
             name=name,
@@ -1486,7 +1553,7 @@ class PlotlyVariable:
         )
 
     @classmethod
-    def from_tao_all(cls, tao: Tao, *, parameter: str = "model") -> List[PlotlyVariable]:
+    def from_tao_all(cls, tao: Tao, *, parameter: str = "model") -> list[PlotlyVariable]:
         """Create PlotlyVariables for all Tao variables."""
         return [
             cls.from_tao(
@@ -1507,64 +1574,55 @@ class PlotlyAppCreator:
     def __init__(
         self,
         manager: PlotlyGraphManager,
-        graphs: List[AnyGraph],
+        graphs: list[AnyGraph],
         figure: Figure,
-        variables: Optional[List[PlotlyVariable]] = None,
+        variables: list[PlotlyVariable] | None = None,
+        figure_factory: Callable[[list[AnyGraph]], Figure] | None = None,
     ):
         self.manager = manager
         self.graphs = graphs
         self.figure = figure
         self.variables = variables or []
-        self._current_figures = {}
+        self.figure_factory = figure_factory
 
-    def create_variable_widgets(self) -> Optional[widgets.Widget]:
+    def update_plots(self) -> None:
+        """Re-fetch graph data from Tao and refresh the figure."""
+        try:
+            updated_graphs = []
+            for graph in self.graphs:
+                try:
+                    updated = graph.update(self.manager)
+                except Exception:
+                    logger.exception(f"Error updating graph {graph}")
+                    updated = None
+                # Keep the original graph if the update fails
+                updated_graphs.append(updated if updated is not None else graph)
+
+            self.graphs = updated_graphs
+
+            if self.figure_factory is not None:
+                new_fig = self.figure_factory(updated_graphs)
+            else:
+                new_fig = self.manager._compose_figure(
+                    updated_graphs,
+                    include_layout=False,
+                    width=self.figure.layout.width,
+                    height=self.figure.layout.height,
+                )
+
+            with self.figure.batch_update():
+                self.figure.data = ()
+                self.figure.layout = new_fig.layout
+                self.figure.add_traces(new_fig.data)
+        except Exception:
+            logger.exception("Error updating plots")
+
+    def create_variable_widgets(self) -> widgets.Widget | None:
         """Create interactive widgets for variables."""
         if not self.variables or not IPYWIDGETS_AVAILABLE:
             return None
 
-        def update_plots():
-            """Update all plots when variables change."""
-            try:
-                # Re-create the plots with updated data
-                updated_graphs = []
-                for graph in self.graphs:
-                    try:
-                        updated = graph.update(self.manager)
-                        if updated is not None:
-                            updated_graphs.append(updated)
-                    except Exception as ex:
-                        logger.error(f"Error updating graph {graph}: {ex}")
-                        updated_graphs.append(graph)  # Keep original if update fails
-
-                if updated_graphs:
-                    # Create new figure with updated data
-                    if len(updated_graphs) == 1:
-                        plotly_graph = self.manager.to_plotly_graph(updated_graphs[0])
-                        new_fig = plotly_graph.create_figure()
-                    else:
-                        # For multiple graphs, recreate the subplot
-                        import plotly.subplots
-
-                        new_fig = plotly.subplots.make_subplots(
-                            rows=len(updated_graphs),
-                            cols=1,
-                            subplot_titles=[graph.title for graph in updated_graphs],
-                        )
-
-                        for i, graph in enumerate(updated_graphs):
-                            plotly_graph = self.manager.to_plotly_graph(graph)
-                            single_fig = plotly_graph.create_figure()
-
-                            for trace in single_fig.data:
-                                new_fig.add_trace(trace, row=i + 1, col=1)
-
-                    # Update the display
-                    with self.figure.batch_update():
-                        self.figure.data = new_fig.data
-                        self.figure.layout = new_fig.layout
-
-            except Exception as ex:
-                logger.error(f"Error updating plots: {ex}")
+        update_plots = self.update_plots
 
         # Create widgets for each variable
         widget_rows = []
@@ -1592,30 +1650,36 @@ class PlotlyAppCreator:
 
     def show(self, notebook_handle: bool = True):
         """Display the plot in Jupyter notebook."""
-        if not PLOTLY_AVAILABLE:
-            raise ImportError("plotly is required for PlotlyNotebookGraphManager")
-
         # Create variable widgets if any
         variable_widget = self.create_variable_widgets()
 
-        if variable_widget and IPYWIDGETS_AVAILABLE:
+        if variable_widget is not None:
+            try:
+                # A FigureWidget reflects updates live as variables change
+                self.figure = go.FigureWidget(self.figure)
+            except ImportError:
+                logger.warning(
+                    "Install `anywidget` for live plot updates when changing variables."
+                )
             # Display widgets above the plot
             display(variable_widget)
 
         # Display the plot
-        if notebook_handle:
-            pyo.iplot(self.figure)
+        if isinstance(self.figure, go.FigureWidget):
+            display(self.figure)
+        elif notebook_handle:
+            pyo.iplot(self.figure, config=_plotly_config())
         else:
-            self.figure.show()
+            self.figure.show(config=_plotly_config())
 
     def save(
         self,
         filename: AnyPath = "",
         *,
-        title: Optional[str] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-    ) -> Optional[pathlib.Path]:
+        title: str | None = None,
+        width: int | None = None,
+        height: int | None = None,
+    ) -> pathlib.Path | None:
         """Save the plot to an HTML file."""
         if not filename:
             title = title or "plotly_plot"
@@ -1623,7 +1687,12 @@ class PlotlyAppCreator:
         if not pathlib.Path(filename).suffix:
             filename = f"{filename}.html"
 
-        self.figure.write_html(filename)
+        if title is not None:
+            self.figure.update_layout(title=pgplot.mathjax_string(title))
+        if width or height:
+            self.figure.update_layout(width=width, height=height)
+
+        self.figure.write_html(filename, config=_plotly_config())
         return pathlib.Path(filename)
 
 
@@ -1634,23 +1703,23 @@ class PlotlyNotebookGraphManager(PlotlyGraphManager):
 
     def plot_grid(
         self,
-        templates: List[str],
-        grid: Tuple[int, int],
+        templates: list[str],
+        grid: tuple[int, int],
         *,
-        curves: Optional[List[CurveIndexToCurve]] = None,
-        settings: Optional[List[TaoGraphSettings]] = None,
+        curves: list[CurveIndexToCurve] | None = None,
+        settings: list[TaoGraphSettings] | None = None,
         include_layout: bool = False,
-        share_x: Optional[bool] = None,
+        share_x: bool | None = None,
         vars: bool = False,
-        figsize: Optional[Tuple[int, int]] = None,
-        layout_height: Optional[int] = None,
-        xlim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
-        ylim: Union[OptionalLimit, Sequence[OptionalLimit]] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        save: Union[bool, str, pathlib.Path, None] = None,
+        figsize: tuple[int, int] | None = None,
+        layout_height: int | None = None,
+        xlim: OptionalLimit | Sequence[OptionalLimit] = None,
+        ylim: OptionalLimit | Sequence[OptionalLimit] = None,
+        width: int | None = None,
+        height: int | None = None,
+        save: bool | str | pathlib.Path | None = None,
         notebook_handle: bool = True,
-    ) -> Tuple[List[AnyGraph], PlotlyAppCreator]:
+    ) -> tuple[list[AnyGraph], PlotlyAppCreator]:
         """
         Plot graphs on a grid with Plotly in Jupyter notebook.
 
@@ -1710,11 +1779,25 @@ class PlotlyNotebookGraphManager(PlotlyGraphManager):
 
         variables = PlotlyVariable.from_tao_all(self.tao) if vars else []
 
+        if figsize is not None:
+            width, height = figsize
+
+        def figure_factory(updated_graphs: list[AnyGraph]) -> Figure:
+            return self._compose_grid_figure(
+                updated_graphs,
+                grid,
+                include_layout=include_layout,
+                share_x=share_x,
+                width=width,
+                height=height,
+            )
+
         app = PlotlyAppCreator(
             manager=self,
             graphs=graphs,
             figure=figure,
             variables=variables,
+            figure_factory=figure_factory,
         )
 
         app.show(notebook_handle=notebook_handle)
@@ -1724,20 +1807,20 @@ class PlotlyNotebookGraphManager(PlotlyGraphManager):
         self,
         template: str,
         *,
-        region_name: Optional[str] = None,
+        region_name: str | None = None,
         include_layout: bool = True,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
-        layout_height: Optional[int] = None,
-        share_x: Optional[bool] = None,
+        width: int | None = None,
+        height: int | None = None,
+        layout_height: int | None = None,
+        share_x: bool | None = None,
         vars: bool = False,
-        xlim: Optional[Limit] = None,
-        ylim: Optional[Limit] = None,
+        xlim: Limit | None = None,
+        ylim: Limit | None = None,
         notebook_handle: bool = True,
-        save: Union[bool, str, pathlib.Path, None] = None,
-        curves: Optional[Dict[int, TaoCurveSettings]] = None,
-        settings: Optional[TaoGraphSettings] = None,
-    ) -> Tuple[List[AnyGraph], PlotlyAppCreator]:
+        save: bool | str | pathlib.Path | None = None,
+        curves: dict[int, TaoCurveSettings] | None = None,
+        settings: TaoGraphSettings | None = None,
+    ) -> tuple[list[AnyGraph], PlotlyAppCreator]:
         """
         Plot a graph with Plotly in Jupyter notebook.
 
@@ -1793,11 +1876,21 @@ class PlotlyNotebookGraphManager(PlotlyGraphManager):
 
         variables = PlotlyVariable.from_tao_all(self.tao) if vars else []
 
+        def figure_factory(updated_graphs: list[AnyGraph]) -> Figure:
+            return self._compose_figure(
+                updated_graphs,
+                include_layout=include_layout,
+                share_x=share_x,
+                width=width,
+                height=height,
+            )
+
         app = PlotlyAppCreator(
             manager=self,
             graphs=graphs,
             figure=figure,
             variables=variables,
+            figure_factory=figure_factory,
         )
 
         app.show(notebook_handle=notebook_handle)
@@ -1807,15 +1900,15 @@ class PlotlyNotebookGraphManager(PlotlyGraphManager):
         self,
         ele_id: str,
         *,
-        colormap: Optional[str] = None,
+        colormap: str | None = None,
         radius: float = 0.015,
         num_points: int = 100,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
+        width: int | None = None,
+        height: int | None = None,
         x_scale: float = 1.0,
-        save: Union[bool, str, pathlib.Path, None] = None,
+        save: bool | str | pathlib.Path | None = None,
         notebook_handle: bool = True,
-    ) -> Tuple[ElementField, Figure]:
+    ) -> tuple[ElementField, Figure]:
         """
         Plot field information for a given element in Jupyter notebook.
 
@@ -1854,18 +1947,15 @@ class PlotlyNotebookGraphManager(PlotlyGraphManager):
         )
 
         if notebook_handle:
-            pyo.iplot(figure)
+            pyo.iplot(figure, config=_plotly_config())
         else:
-            figure.show()
+            figure.show(config=_plotly_config())
 
         return field, figure
 
 
-@functools.cache
-def select_graph_manager_class():
+def select_graph_manager_class() -> type[PlotlyGraphManager]:
     """Select the appropriate Plotly graph manager class."""
-    from . import util  # Assuming util has is_jupyter function
-
     if util.is_jupyter():
         return PlotlyNotebookGraphManager
     return PlotlyGraphManager
