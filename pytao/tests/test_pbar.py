@@ -1,12 +1,13 @@
-from typing import Type
-
 import numpy as np
 
-from .. import AnyTao
+import threading
+import time
+
+from .. import AnyTao, SubprocessTao
 from .test_interface_commands import new_tao
 
 
-def test_get_active_beam_track_element(tao_cls: Type[AnyTao]):
+def test_get_active_beam_track_element(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall"
     ) as tao:
@@ -42,7 +43,7 @@ def set_gaussian(
     tao.cmd("set global lattice_calc_on = T")
 
 
-def test_cli_progress_bar(tao_cls: Type[AnyTao]):
+def test_cli_progress_bar(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall"
     ) as tao:
@@ -51,7 +52,39 @@ def test_cli_progress_bar(tao_cls: Type[AnyTao]):
         tao.track_beam(use_progress_bar=True)
 
 
-def test_cli_progress_bar_track_start(tao_cls: Type[AnyTao]):
+def _sleep_cmd(tao: SubprocessTao):
+    time.sleep(1)
+
+
+def test_shm_read_during_tracking():
+    with new_tao(
+        SubprocessTao,
+        init_file="$ACC_ROOT_DIR/bmad-doc/tao_examples/optics_matching/tao.init",
+    ) as tao:
+        observed = []
+        start = threading.Event()
+        stop = threading.Event()
+
+        def poll_active_element():
+            start.wait()
+            while not stop.is_set():
+                observed.append(tao.get_active_beam_track_element())
+                time.sleep(0.1)
+
+        poller = threading.Thread(target=poll_active_element, daemon=True)
+        poller.start()
+        try:
+            start.set()
+            # tao.track_beam(use_progress_bar=False)
+            tao.subprocess_call(_sleep_cmd)
+        finally:
+            stop.set()
+            poller.join(timeout=2)
+
+        assert len(observed) > 5, "Should observe at least 5 element calls during the sleep"
+
+
+def test_cli_progress_bar_track_start(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall"
     ) as tao:

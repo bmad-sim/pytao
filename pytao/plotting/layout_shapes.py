@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 from abc import ABC
-from typing import List, Tuple, Union
+from typing import Literal, Union
 
 import pydantic.dataclasses as dataclasses
 from pydantic import ConfigDict
-from typing_extensions import Literal
 
 from .curves import PlotCurveLine
 from .patches import (
@@ -44,7 +43,7 @@ class LayoutShape:
         )
 
     @property
-    def center(self) -> Tuple[float, float]:
+    def center(self) -> tuple[float, float]:
         return (
             (self.s1 + self.s2) / 2,
             (self.y1 + self.y2) / 2,
@@ -54,7 +53,7 @@ class LayoutShape:
     def lines(self):
         return []
 
-    def to_lines(self) -> List[PlotCurveLine]:
+    def to_lines(self) -> list[PlotCurveLine]:
         lines = self.lines
         if not lines:
             return []
@@ -68,7 +67,7 @@ class LayoutShape:
             for line in self.lines
         ]
 
-    def to_patches(self) -> List[PlotPatch]:
+    def to_patches(self) -> list[PlotPatch]:
         return []
 
     @property
@@ -82,7 +81,7 @@ class LayoutShape:
 
 @dataclasses.dataclass(config=_dcls_config)
 class LayoutBox(LayoutShape):
-    def to_patches(self) -> List[PlotPatch]:
+    def to_patches(self) -> list[PlotPatch]:
         width, height = self.dimensions
         return [
             PlotPatchRectangle(
@@ -103,7 +102,7 @@ class LayoutXBox(LayoutShape):
             [(self.s1, self.y2), (self.s2, self.y1)],
         ]
 
-    def to_patches(self) -> List[PlotPatch]:
+    def to_patches(self) -> list[PlotPatch]:
         width, height = self.dimensions
         return [
             PlotPatchRectangle(
@@ -173,7 +172,7 @@ class LayoutDiamond(LayoutShape):
 
 @dataclasses.dataclass(config=_dcls_config)
 class LayoutCircle(LayoutShape):
-    def to_patches(self) -> List[PlotPatch]:
+    def to_patches(self) -> list[PlotPatch]:
         s_mid, _ = self.center
         width, height = self.dimensions
         return [
@@ -203,7 +202,7 @@ class LayoutTriangle(LayoutShape):
             return [(self.s1, self.y1), (self.s1, self.y2), (self.s2, y_mid)]
         raise ValueError(f"Unsupported orientation: {self.orientation}")
 
-    def to_patches(self) -> List[PlotPatch]:
+    def to_patches(self) -> list[PlotPatch]:
         return [PlotPatchPolygon(vertices=self.vertices, **self.patch_kwargs)]
 
 
@@ -247,7 +246,7 @@ class LayoutWrappedShape(ABC):
     def lines(self):
         return []
 
-    def to_lines(self) -> List[PlotCurveLine]:
+    def to_lines(self) -> list[PlotCurveLine]:
         lines = self.lines
         if not lines:
             return []

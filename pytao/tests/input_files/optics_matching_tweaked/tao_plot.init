@@ -4,32 +4,31 @@ The following namelist block defines how the plot window (also called
 the plot page) is broken up.
 
 &tao_plot_page
-  plot_page%size = 800, 600
-  plot_page%text_height = 12.0 
-  plot_page%border = 0, 0, 0, 0, '%PAGE'
+  plot_page%size        = 800, 600
+  plot_page%text_height = 12.0
+  plot_page%border      = 0, 0, 0, 0, '%PAGE'
   plot_page%n_curve_pts = 900
 /
 
-
 !------------------ layout ------
 &tao_template_plot
-  plot%name = 'layout'
+  plot%name             = 'layout'
   default_graph%x%label = ' '
-  plot%n_graph = 1
-  plot%x_axis_type = 's'
+  plot%n_graph          = 1
+  plot%x_axis_type      = 's'
 /
 
 &tao_template_graph
-  graph_index = 1
-  graph%name = 'u1'
-  graph%type = 'lat_layout'
-  graph%box = 1, 1, 1, 1
-  graph%x%draw_numbers = False
-  graph%ix_universe = -1 !Syntax Changed from 0
-  graph%margin =  0.15, 0.05, 0.12, 0.12, '%BOX'
-  graph%y%max =  20
-  graph%y%min = -20
-  graph%y%major_div = 4
+  graph_index          = 1
+  graph%name           = 'u1'
+  graph%type           = 'lat_layout'
+  graph%box            = 1, 1, 1, 1
+  graph%x%draw_numbers = F
+  graph%ix_universe    = -1                              !Syntax Changed from 0
+  graph%margin         = 0.15, 0.05, 0.12, 0.12, '%BOX'
+  graph%y%max          = 20
+  graph%y%min          = -20
+  graph%y%major_div    = 4
 /
 
 &lat_layout_drawing
@@ -49,7 +48,7 @@ the plot page) is broken up.
   ele_shape(14) = "rfcavity::*"        "XBox"          "Red"    100     'none'
   ele_shape(15) = "E_GUN::*"           "XBox"          "Black"   20     'none'
   ele_shape(16) = "EM_FIELD::*"        "Box"           "Blue"    20     'none'
-/       
+/
 
 &floor_plan_drawing
   ele_shape(1)  = "Quadrupole::*"      "Box"      "Blue"    15    'none'
@@ -68,8 +67,8 @@ the plot page) is broken up.
   ele_shape(14) = "rfcavity::*"        "XBox"     "Red"     10    'none'
   ele_shape(15) = "E_GUN::*"           "XBox"     "Black"   20    'none'
   ele_shape(16) = "EM_FIELD::*"        "Box"      "Blue"    20    'none'
-/  
-                                            
+/
+
 ! Colors: 
 !"BLACK" 
 !"RED" 
@@ -113,94 +112,93 @@ the plot page) is broken up.
 ! * alpha
 
 &tao_template_plot
-  plot%name = 'alpha1'
-  plot%x%min =  0
-  plot%x%max = 10
+  plot%name        = 'alpha1'
+  plot%x%min       = 0
+  plot%x%max       = 10
   !plot%x%major_div =10
   !plot%x%label = 's (m)'
   plot%x_axis_type = 's'
   !plot%x%label_offset = 1.2
-  plot%n_graph = 1
+  plot%n_graph     = 1
 /
 
 &tao_template_graph
-  graph%name = 'a'
-  graph%x%draw_numbers = .false.
-  graph%x%draw_label = .false.
-  graph_index = 1
-  graph%box = 1, 1, 1, 1
- ! graph%title = 'Lattice \gb functions'
- ! graph%margin =  0.15, 0.06, 0.12, 0.12, '%BOX'
-  graph%margin =  0.15, 0.06, 0.06, 0.0, '%BOX'
-  graph%y%label = '\ga\dx\u, \ga\dy\u (m)'
-  graph%y%label_offset=.1
-  graph%y%max =  20
-  graph%y%min = -20
-  graph%y%major_div = 4
+  graph%name                   = 'a'
+  graph%x%draw_numbers         = F
+  graph%x%draw_label           = F
+  graph_index                  = 1
+  graph%box                    = 1, 1, 1, 1
+  ! graph%title = 'Lattice \gb functions'
+  ! graph%margin =  0.15, 0.06, 0.12, 0.12, '%BOX'
+  graph%margin                 = 0.15, 0.06, 0.06, 0.0, '%BOX'
+  graph%y%label                = '\ga\dx\u, \ga\dy\u (m)'
+  graph%y%label_offset         = .1
+  graph%y%max                  = 20
+  graph%y%min                  = -20
+  graph%y%major_div            = 4
   !!not needed: graph%n_curve = 2
-  curve(1)%smooth_line_calc = T
-  curve(1)%data_source = 'lattice'
-  curve(1)%data_type   = 'alpha.a'
+  curve(1)%smooth_line_calc    = T
+  curve(1)%data_source         = 'lattice'
+  curve(1)%data_type           = 'alpha.a'
   curve(1)%y_axis_scale_factor = 1
-  curve(1)%line%color=2
-  curve(1)%line%width=2
-  curve(1)%draw_symbols=.false.
-  curve(1)%legend_text = '\ga\dx\u'
-  curve(2)%smooth_line_calc = T
-  curve(2)%data_source = 'lattice'
-  curve(2)%data_type   = 'alpha.b'
+  curve(1)%line%color          = 'red'
+  curve(1)%line%width          = 2
+  curve(1)%draw_symbols        = F
+  curve(1)%legend_text         = '\ga\dx\u'
+  curve(2)%smooth_line_calc    = T
+  curve(2)%data_source         = 'lattice'
+  curve(2)%data_type           = 'alpha.b'
   curve(2)%y_axis_scale_factor = 1
-  curve(2)%draw_symbols= F
-  curve(2)%line%color = 3
-  curve(2)%line%width=2
-  curve(2)%legend_text = '\ga\dy\u'
+  curve(2)%draw_symbols        = F
+  curve(2)%line%color          = 'green'
+  curve(2)%line%width          = 2
+  curve(2)%legend_text         = '\ga\dy\u'
 /
-
 
 ! betadispersion
 &tao_template_plot
-  plot%name = 'betadispersion'
-  plot%x%min =  0
-  plot%x%max = 10
+  plot%name        = 'betadispersion'
+  plot%x%min       = 0
+  plot%x%max       = 10
   !plot%x%major_div =10
   !plot%x%label = 's (m)'
   plot%x_axis_type = 's'
-  plot%n_graph = 1
+  plot%n_graph     = 1
 /
 
 &tao_template_graph
-  graph%name = 'a'
-  graph%x%draw_numbers = .false.
-  graph%x%draw_label = .false.
-  graph_index = 1
-  graph%box = 1, 1, 1, 1
-  graph%title = 'Lattice \gb functions'
- ! graph%margin =  0.15, 0.06, 0.12, 0.12, '%BOX'
-  
-  graph%margin =  0.15, 0.06, 0.06, 0.12, '%BOX'
-    !----y1
-  graph%y%label = '\gb\dx\u (m), \gb\dy\u (m)'
-  graph%y%max =  20
-  graph%y%min = -20
-  graph%y%major_div = 4
-   !-----y2
-  graph%y2%label='yafaf'
-  graph%y2%max =  20
-  graph%y2%min = -20
-  graph%y2%major_div = 4        
-  graph%y2%label_color=2
-  
+  graph%name           = 'a'
+  graph%x%draw_numbers = F
+  graph%x%draw_label   = F
+  graph_index          = 1
+  graph%box            = 1, 1, 1, 1
+  graph%title          = 'Lattice \gb functions'
+  ! graph%margin =  0.15, 0.06, 0.12, 0.12, '%BOX'
+
+  graph%margin         = 0.15, 0.06, 0.06, 0.12, '%BOX'
+  !----y1
+  graph%y%label        = '\gb\dx\u (m), \gb\dy\u (m)'
+  graph%y%max          = 20
+  graph%y%min          = -20
+  graph%y%major_div    = 4
+  !-----y2
+  graph%y2%label       = 'yafaf'
+  graph%y2%max         = 20
+  graph%y2%min         = -20
+  graph%y2%major_div   = 4
+  graph%y2%label_color = 'red'
+
   !!not needed: graph%n_curve = 2
-  curve(1)%data_source = 'lattice'
-  curve(1)%data_type   = 'beta.a'
+  curve(1)%data_source         = 'lattice'
+  curve(1)%data_type           = 'beta.a'
   curve(1)%y_axis_scale_factor = 1
-  curve(1)%line%color=2
-  curve(1)%line%width=2
-  curve(1)%draw_symbols=.false.
-  curve(2)%data_source = 'lattice'
-  curve(2)%data_type   = 'eta.a'
+  curve(1)%line%color          = 'red'
+  curve(1)%line%width          = 2
+  curve(1)%draw_symbols        = F
+  curve(2)%data_source         = 'lattice'
+  curve(2)%data_type           = 'eta.a'
   curve(2)%y_axis_scale_factor = 1
-  curve(2)%draw_symbols=.false.
-  curve(2)%line%color = 3
-  curve(2)%line%width=2
+  curve(2)%draw_symbols        = F
+  curve(2)%line%color          = 'green'
+  curve(2)%line%width          = 2
 /

@@ -11,13 +11,13 @@ Documentation for Bmad and Tao, as well as information for downloading the code 
 
 ## Installation
 
-See the [PyTao installation instructions](https://bmad-sim.github.io/pytao/user_docs/index.html) for details. The preferred installation method is using conda:
+See the [PyTao installation instructions](https://bmad-sim.github.io/pytao/installation/) for details. The preferred installation method is using conda:
 
 ```
 conda install -c conda-forge pytao
 ```
 
-Currently PyTao requires an installed Bmad distribution compiled with the `ACC_ENABLE_SHARED="Y"` flag. This can be set in the `bmad_dist/util/dist_prefs` file.
+Currently PyTao requires an installed Bmad distribution compiled with the `ACC_ENABLE_SHARED="Y"` or `ACC_ENABLE_SHARED_ONLY="Y"` flag. This can be set in the `bmad_dist/util/dist_prefs` file (the default setting is fine).
 
 ## Current Build status and Release Info
 
@@ -66,11 +66,28 @@ Type `tao.` and hit tab to see available commands.
 * Matplotlib mode configured. Pyplot available as `plt`. *
 ```
 
-Start pytao's GUI from the command-line with:
+## Logging
 
-```bash
-pytao-gui -init tao.init
+PyTao stays quiet by default. To see its log output, call `pytao.configure_logging`:
+
+```python
+import pytao
+
+pytao.configure_logging(level="DEBUG")
 ```
+
+On the command line, use `--pylog` (e.g. `pytao --pylog DEBUG -init tao.init`). See the
+[logging documentation](https://bmad-sim.github.io/pytao/usage/#logging) for the full details,
+including writing to a file and controlling how Tao's own message levels map to Python logging.
+
+## Release process
+
+To release a new PyTao version with updated bindings for the Fortran functions:
+
+1. Activate a conda environment with `bmad` installed with the target version
+2. Double-check that bmad is updated in the environment via `conda list |grep bmad`
+3. Run `bash scripts/bump_minimum_version.sh`
+4. Commit, push, merge PR, tag, ...
 
 ## License
 

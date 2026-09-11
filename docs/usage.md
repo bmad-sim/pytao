@@ -8,7 +8,6 @@ Start up JupyterLab as you would normally:
 
 ```bash
 jupyter lab
-
 ```
 
 And then use PyTao, enabling your preferred plotting backend:
@@ -86,6 +85,21 @@ Tao(
 Note that `quiet` mode may cause portions of PyTao to function improperly. See
 upstream [issue](https://github.com/bmad-sim/bmad-ecosystem/issues/1380).
 
+### `SubprocessTao` - Tao in a subprocess
+
+If you wish to load multiple lattices at the same time, consider using `SubprocessTao`.
+It can be used in the same way as the `Tao` class.
+
+Use this form when possible:
+
+```python
+with SubprocessTao(lattice_file) as tao:
+    print(tao.cmd("show lat"))
+```
+
+Once the `with` block ends, the subprocess will automatically be closed and cleaned up.
+For manual lifetime control, use `tao.close_subprocess()`.
+
 ## PyTao on the command-line
 
 PyTao has a simple IPython entrypoint, giving you quick access to Tao in Python.
@@ -110,6 +124,118 @@ PYTAO_PLOT=mpl pytao -init_file "$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/
 
 ```python
 In [1]: tao.plot("beta")
+```
+
+## Logging
+
+PyTao uses the standard Python [`logging`](https://docs.python.org/3/library/logging.html)
+module, with all of its loggers under the `"pytao"` namespace. Until logging is
+configured, PyTao stays silent: a `NullHandler` is attached at import, so it
+never emits unexpected output or interferes with other logging in your program.
+
+The simplest way to turn logging on is `pytao.configure_logging`:
+
+```python
+import pytao
+
+pytao.configure_logging(level="DEBUG")
+```
+
+This configures the `"pytao"` logger alone. It does **not** touch the root
+logger, and PyTao's records do not propagate to it, so `configure_logging` will
+not conflict with — or be affected by — logging your application configures
+elsewhere.
+
+`configure_logging` accepts the following arguments (all optional):
+
+| Argument   | Default                            | Description                                                                                       |
+| ---------- | ---------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `level`    | `PYTAO_LOG` env, else `WARNING`    | Console logging level for the `pytao` logger, e.g. `"DEBUG"` or `"WARNING"`.                      |
+| `filename` | `PYTAO_LOG_FILE` env               | If set, also write logs at `DEBUG` to this file while the console stays at `level`.               |
+| `mode`     | `PYTAO_LOG_MODE` env, else `quiet` | How Tao message levels map onto Python logging levels (see [below](#tao-message-levels)).         |
+| `console`  | `True`                             | Emit records to the console (stderr) at `level`. Set `False` for file-only logging.               |
+| `format`   | timestamped default                | [Format string](https://docs.python.org/3/library/logging.html#logrecord-attributes) for records. |
+
+It returns the configured `"pytao"` logger.
+
+If you would rather configure logging yourself, everything lives under the
+`"pytao"` logger and can be driven with the standard library directly:
+
+```python
+import logging
+
+logging.basicConfig()
+logging.getLogger("pytao").setLevel(logging.DEBUG)
+```
+
+Messages that Tao itself reports (`[INFO ...]`, `[ERROR ...]`, and so on) are
+captured from its output and re-emitted as Python log records on the
+`pytao.core` logger.
+
+### Tao message levels
+
+Tao messages have their own severity levels (`INFO`, `SUCCESS`, `MESSAGE`,
+`WARNING`, `ERROR`, `FATAL`, and `ABORT`). How these are translated to Python
+logging levels is controlled by the `PYTAO_LOG_MODE` environment variable:
+
+- `quiet` (default): non-error Tao messages are logged at `DEBUG` so that
+  chatty Bmad/Tao output stays out of the way; errors are logged at `ERROR`.
+- `matching`: each Tao level is translated to its closest Python equivalent,
+  so standard logging verbosity settings (`INFO`, `WARNING`, ...) apply to Tao
+  messages as you would expect.
+
+| Tao level | `quiet` (default) | `matching` |
+| --------- | ----------------- | ---------- |
+| `INFO`    | `DEBUG`           | `INFO`     |
+| `SUCCESS` | `DEBUG`           | `INFO`     |
+| `MESSAGE` | `DEBUG`           | `INFO`     |
+| `WARNING` | `DEBUG`           | `WARNING`  |
+| `ERROR`   | `ERROR`           | `ERROR`    |
+| `FATAL`   | `ERROR`           | `CRITICAL` |
+| `ABORT`   | `ERROR`           | `CRITICAL` |
+
+```bash
+PYTAO_LOG_MODE=matching python my_script.py
+```
+
+The mode is read from `PYTAO_LOG_MODE` once when PyTao is imported. It may also
+be set through `configure_logging(mode=...)`, or changed at runtime with
+`pytao.set_log_mode` (and read back with `pytao.get_log_mode`):
+
+```python
+import pytao
+
+pytao.set_log_mode("matching")
+```
+
+### Logging on the command-line
+
+At startup the `pytao` CLI calls `configure_logging` for you, mapping
+`--pylog` to `level`, `--pylog-file` to `filename`, and `--pylog-mode` to
+`mode`. Each falls back to its environment variable (`PYTAO_LOG`,
+`PYTAO_LOG_FILE`, `PYTAO_LOG_MODE`), with `--pylog` defaulting to `WARNING`.
+
+```bash
+pytao --pylog DEBUG -init_file "$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init"
+```
+
+Combining `PYTAO_LOG_MODE=matching` with `--pylog INFO` shows Tao's
+informational and warning messages as they arrive, without PyTao's internal
+debugging output:
+
+```bash
+PYTAO_LOG_MODE=matching pytao --pylog INFO -init_file "$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init"
+```
+
+To leave logging entirely unconfigured, set `PYTAO_LOG` to an empty string
+(and omit `--pylog`).
+
+For debugging, `--pylog-file` (or the `PYTAO_LOG_FILE` environment variable)
+additionally writes PyTao logs to a file. The file always captures `DEBUG`
+level and above, while console output stays at the `--pylog` level:
+
+```bash
+pytao --pylog-file pytao-debug.log -init_file "$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init"
 ```
 
 ## PyTao plotting and startup scripts
@@ -137,14 +263,6 @@ Consider these alternatives:
    plt.show()
    ```
 
-## PyTao (deprecated/experimental) GUI
-
-Start the experimental (and mostly unsupported/deprecated) GUI by using the following:
-
-```bash
-pytao-gui -init_file "$ACC_ROOT_DIR/bmad-doc/tao_examples/cbeta_cell/tao.init"
-```
-
 ## Notes about Bokeh on JupyterHub
 
 If you are using PyTao with Bokeh on your computer and are running JupyterLab
@@ -163,3 +281,14 @@ Additionally, you may be required to:
 
 - In the JupyterHub environment, `conda install jupyter-server-proxy`
 - Restart JupyterHub
+
+## Environment variables
+
+| Variable                | Default   | Description                                                                                                                                                                                                           |
+| ----------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PYTAO_LOG_MODE`        | `quiet`   | How Tao message levels are translated to Python logging levels. `quiet` logs non-error Tao messages at `DEBUG`; `matching` translates each to its closest Python equivalent. See [Logging](#logging).                 |
+| `PYTAO_LOG`             | `WARNING` | Default `level` for `configure_logging` (and the `pytao` CLI when `--pylog` is not given). Set to an empty string to leave logging unconfigured.                                                                       |
+| `PYTAO_LOG_FILE`        | (unset)   | Default `filename` for `configure_logging` (and the `pytao` CLI when `--pylog-file` is not given). The file captures `DEBUG` and above; console output stays at the `level`.                                          |
+| `PYTAO_PLOT`            | `tao`     | Plotting backend for the `pytao` CLI: `tao`, `mpl`, or `bokeh`. Takes precedence over `--pyplot`.                                                                                                                     |
+| `PYTAO_FILTER_TAB`      | `y`       | Filter tab completion on PyTao model classes, hiding private and pydantic-internal attributes. Set to `n` to show all attributes. Also toggleable at runtime with `pytao.model.base.toggle_tab_completion_filtering`. |
+| `PYTAO_BOKEH_NBCONVERT` | (unset)   | Set to `1` or `y` when exporting notebooks with `nbconvert`. Bokeh plots are then rendered as static grid plots instead of server-backed applications, which would show up blank in exported HTML.                    |

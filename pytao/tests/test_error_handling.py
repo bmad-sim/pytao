@@ -1,10 +1,19 @@
+import logging
+
 import pytest
 
-from ..tao_ctypes.util import (
+from .. import errors
+from ..errors import (
     TaoCommandError,
-    filter_tao_messages_context as filter_ctx,
-    filter_tao_messages,
+    TaoMessage,
+    TaoMessageLevel,
+    capture_messages_from_functions,
     error_filter_context,
+    filter_tao_messages,
+    raise_for_error_messages,
+)
+from ..errors import (
+    filter_tao_messages_context as filter_ctx,
 )
 
 
@@ -50,3 +59,73 @@ def test_capture_context_by_command() -> None:
     with pytest.raises(TaoCommandError):
         with filter_ctx(functions=[], by_level={"ERROR": ["tao_plot"]}) as ctx:
             ctx.check_output("cmd", ["[ERROR] tao_plot:", "[FATAL] tao_plot:"])
+
+
+def test_raise_for_error_messages():
+    lines = [
+        "[FATAL] fatal_func:",
+        "   func fatal",
+        "[ERROR] error_func:",
+        "   func error",
+        "[ABORT] abort_func:",
+        "   func abort",
+        "[INFO] info_func:",
+        "   func info",
+        "actual output",
+    ]
+
+    expected_errors = [
+        TaoMessage(level="FATAL", function="fatal_func", message="func fatal"),
+        TaoMessage(level="ERROR", function="error_func", message="func error"),
+        TaoMessage(level="ABORT", function="abort_func", message="func abort"),
+    ]
+    expected_messages = [
+        *expected_errors,
+        TaoMessage(level="INFO", function="info_func", message="func info"),
+    ]
+    _, messages = capture_messages_from_functions(lines)
+    with pytest.raises(TaoCommandError) as cap:
+        raise_for_error_messages(cmd="foo", lines=lines, errors=messages)
+    ex = cap.value
+    assert ex.messages == expected_messages
+    assert ex.errors == expected_errors
+    assert "\n".join(lines) == ex.tao_output
+
+
+@pytest.mark.parametrize(
+    ("level", "quiet", "matching"),
+    [
+        ("INFO", logging.DEBUG, logging.INFO),
+        ("SUCCESS", logging.DEBUG, logging.INFO),
+        ("MESSAGE", logging.DEBUG, logging.INFO),
+        ("WARNING", logging.DEBUG, logging.WARNING),
+        ("ERROR", logging.ERROR, logging.ERROR),
+        ("FATAL", logging.ERROR, logging.CRITICAL),
+        ("ABORT", logging.ERROR, logging.CRITICAL),
+    ],
+)
+def test_message_log_level_translation(
+    monkeypatch: pytest.MonkeyPatch,
+    level: TaoMessageLevel,
+    quiet: int,
+    matching: int,
+) -> None:
+    msg = TaoMessage(level=level, function="some_func", message="text")
+    assert msg.quiet_log_level == quiet
+    assert msg.matching_log_level == matching
+
+    monkeypatch.setattr(errors, "_pytao_log_mode", "quiet")
+    assert msg.log_level == quiet
+
+    monkeypatch.setattr(errors, "_pytao_log_mode", "matching")
+    assert msg.log_level == matching
+
+
+def test_message_to_string() -> None:
+    msg = TaoMessage(level="ERROR", function="tao_parse", message="line1\nline2")
+    assert str(msg) == "[ERROR tao_parse] line1\n  line2"
+    assert msg.to_string(include_level=False) == "[tao_parse] line1\n  line2"
+    assert (
+        msg.to_string(include_level=True, newline_prefix="    ")
+        == "[ERROR tao_parse] line1\n    line2"
+    )

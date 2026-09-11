@@ -8,9 +8,12 @@ nav:
   - Installation: installation.md
 
   - Usage: usage.md
+  - Releases: release_notes.md
 
   - Examples:
       - examples/basic.ipynb
+      - examples/elements.ipynb
+      - examples/config.ipynb
       - examples/plot-matplotlib.ipynb
       - examples/plot-bokeh.ipynb
       - examples/plot-bokeh-vars.ipynb
@@ -18,8 +21,15 @@ nav:
       - examples/bunch.ipynb
       - examples/special_parsers.ipynb
       - examples/fodo.ipynb
-      - examples/advanced.ipynb
       - examples/beam_track_progress_bar.ipynb
+
+  - Constraints:
+      - constraints/index.md
+      - constraints/config.md
+      - API:
+        - constraints/api/index.md
+        - constraints/api/ele.md
+        - constraints/api/datum.md
 
   - Dev:
       - development.md
@@ -27,6 +37,9 @@ nav:
   - API:
       - Tao: api/tao.md
       - SubprocessTao: api/subprocesstao.md
+      - Model Base Classes: api/model.md
+      - TaoConfig: api/config.md
+      - Lattice / Element: api/element.md
       - Plotting: api/plot.md
       - Matplotlib: api/plot-mpl.md
       - Bokeh: api/plot-bokeh.md
@@ -57,7 +70,11 @@ theme:
 
 markdown_extensions:
   - pymdownx.highlight
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 
 extra:
   generator: false

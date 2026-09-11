@@ -93,7 +93,7 @@ def _plot_show_to_savefig(
 def make_shapes(width: float, height: float, angle_low: int, angle_high: int):
     for angle in range(angle_low, angle_high, 5):
         x = angle
-        for shape in [
+        yield from [
             Box(
                 x1=x,
                 y1=0.0,
@@ -200,8 +200,7 @@ def make_shapes(width: float, height: float, angle_low: int, angle_high: int):
                 off2=height,
                 angle_start=math.radians(angle),
             ),
-        ]:
-            yield shape
+        ]
 
 
 def test_floor_plan_shapes_mpl():

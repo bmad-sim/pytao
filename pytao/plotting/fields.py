@@ -14,7 +14,7 @@ def get_field_grid(
     ele_id: str,
     radius: float = 0.015,
     num_points: int = 100,
-) -> typing.Tuple[np.ndarray, np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     ele_head = tao.ele_head(ele_id)
     s0 = ele_head["s_start"]
     s1 = ele_head["s"]
@@ -39,9 +39,9 @@ def get_field_grid(
 @dataclasses.dataclass
 class ElementField:
     ele_id: str
-    s: typing.List[typing.List[float]]
-    x: typing.List[typing.List[float]]
-    by: typing.List[typing.List[float]]
+    s: list[list[float]]
+    x: list[list[float]]
+    by: list[list[float]]
 
     @classmethod
     def from_tao(

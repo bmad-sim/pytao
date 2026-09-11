@@ -2,12 +2,11 @@ from __future__ import annotations
 
 import math
 from functools import cached_property
-from typing import List, Optional, Union
+from typing import Literal, Union
 
 import numpy as np
 import pydantic.dataclasses as dataclasses
 from pydantic import ConfigDict
-from typing_extensions import Literal
 
 from . import util
 from .curves import PlotCurveLine
@@ -61,14 +60,14 @@ class Shape:
     def vertices(self):
         return []
 
-    def to_lines(self) -> List[PlotCurveLine]:
+    def to_lines(self) -> list[PlotCurveLine]:
         vertices = self.vertices
         if not vertices:
             return []
         vx, vy = self.vertices
         return [PlotCurveLine(vx, vy, linewidth=self.line_width, color=self.color)]
 
-    def to_patches(self) -> List[PlotPatch]:
+    def to_patches(self) -> list[PlotPatch]:
         return []
 
 
@@ -81,7 +80,7 @@ class LineSegment(Shape):
 
 @dataclasses.dataclass(config=_dcls_config)
 class Circle(Shape):
-    def to_patches(self) -> List[PlotPatch]:
+    def to_patches(self) -> list[PlotPatch]:
         circle = PlotPatchCircle(
             xy=(self.x1 + (self.x2 - self.x1) / 2, self.y1 + (self.y2 - self.y1) / 2),
             radius=self.off1,
@@ -132,7 +131,7 @@ class BowTie(Shape):
 
 @dataclasses.dataclass(config=_dcls_config)
 class Box(Shape):
-    def to_patches(self) -> List[PlotPatch]:
+    def to_patches(self) -> list[PlotPatch]:
         patch = PlotPatchRectangle(
             xy=(
                 self.x1 + self.off2 * np.sin(self.angle_start),
@@ -281,7 +280,7 @@ def _create_sbend_patches(
     angle_end: float,
     rel_angle_start: float,
     rel_angle_end: float,
-) -> List[PlotPatch]:
+) -> list[PlotPatch]:
     ix, iy = intersection
 
     a0 = angle_start - rel_angle_start
@@ -331,7 +330,7 @@ def _create_sbend_patches(
     rel_cos = np.cos(a0)
     width1 = 2.0 * np.sqrt((x1 - off1 * rel_sin - ix) ** 2 + (y1 + off1 * rel_cos - iy) ** 2)
     width2 = 2.0 * np.sqrt((x1 + off2 * rel_sin - ix) ** 2 + (y1 - off2 * rel_cos - iy) ** 2)
-    patches: List[PlotPatch] = [
+    patches: list[PlotPatch] = [
         PlotPatchArc(
             xy=(ix, iy),
             width=width1,
@@ -390,7 +389,7 @@ class SBend(Shape):
         ]
 
     @cached_property
-    def intersection(self) -> Optional[util.Intersection]:
+    def intersection(self) -> util.Intersection | None:
         line1 = util.line(
             (
                 self.x1 - self.off1 * np.sin(self.angle_start),
@@ -416,7 +415,7 @@ class SBend(Shape):
         except util.NoIntersectionError:
             return None
 
-    def to_lines(self) -> List[PlotCurveLine]:
+    def to_lines(self) -> list[PlotCurveLine]:
         """Lines to draw when there's no intersection."""
         if self.intersection is not None:
             return []
@@ -438,7 +437,7 @@ class SBend(Shape):
             ),
         ]
 
-    def to_patches(self) -> List[PlotPatch]:
+    def to_patches(self) -> list[PlotPatch]:
         if self.intersection is None:
             return []
 

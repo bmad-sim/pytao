@@ -1,5 +1,3 @@
-from typing import List, Optional
-
 import pytest
 from pytest import FixtureRequest
 
@@ -69,7 +67,7 @@ def test_graph_settings_empty():
         ),
     ],
 )
-def test_graph_settings(settings: TaoGraphSettings, expected_commands: List[str]):
+def test_graph_settings(settings: TaoGraphSettings, expected_commands: list[str]):
     assert settings.get_commands("a", "b", graph_type="lat_layout") == expected_commands
 
 
@@ -98,9 +96,9 @@ def test_graph_settings(settings: TaoGraphSettings, expected_commands: List[str]
     ],
 )
 def test_graph_settings_xlim_ylim(
-    xlim: Optional[Limit],
-    ylim: Optional[Limit],
-    expected_commands: List[str],
+    xlim: Limit | None,
+    ylim: Limit | None,
+    expected_commands: list[str],
 ):
     settings = TaoGraphSettings()
     settings.xlim = xlim

@@ -1,23 +1,24 @@
-"""
-pytao is the python interface to tao.  Contains backend implementations in both
-ctypes and pexpect.  The gui package supports a GUI interface to tao, in
-place of the tao command line interface, with matplotlib plotting capabilities.
-pytao also has some pre-defined constructs for dealing with data from tao
-in the util package.
-"""
+from __future__ import annotations
+import logging
 
-from .interface_commands import Tao, TaoStartup
-from .subproc import AnyTao, SubprocessTao
-from .tao_ctypes import TaoModel, run_tao
-from .tao_ctypes.core import (
+from .startup import TaoStartup
+from .core import (
     TaoCommandError,
     TaoInitializationError,
     TaoSharedLibraryNotFoundError,
+    configure_logging,
 )
-from .tao_ctypes.evaluate import evaluate_tao
-from .tao_ctypes.util import TaoException, filter_tao_messages, filter_tao_messages_context
-from .tao_interface import tao_interface
-from .tao_pexpect import tao_io
+from .errors import (
+    TaoException,
+    filter_tao_messages,
+    filter_tao_messages_context,
+    get_log_mode,
+    set_log_mode,
+)
+from .subproc import AnyTao, SubprocessTao
+from .tao import Tao
+
+logging.getLogger("pytao").addHandler(logging.NullHandler())
 
 try:
     from ._version import __version__
@@ -31,13 +32,11 @@ __all__ = [
     "TaoCommandError",
     "TaoException",
     "TaoInitializationError",
-    "TaoModel",
     "TaoSharedLibraryNotFoundError",
     "TaoStartup",
-    "evaluate_tao",
+    "configure_logging",
     "filter_tao_messages",
     "filter_tao_messages_context",
-    "run_tao",
-    "tao_interface",
-    "tao_io",
+    "get_log_mode",
+    "set_log_mode",
 ]

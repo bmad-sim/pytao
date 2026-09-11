@@ -1,6 +1,6 @@
 import logging
 import re
-from typing import List, Type, Union
+from typing import Union
 
 import bokeh.io
 import bokeh.layouts
@@ -52,7 +52,7 @@ def _plot_show_to_savefig(
 def make_shapes(
     width: float,
     height: float,
-    kwarg_list: List[dict],
+    kwarg_list: list[dict],
 ):
     separation = width * 2.5
     s = 0
@@ -151,7 +151,7 @@ shape_classes = pytest.mark.parametrize(
 
 
 @shape_classes
-def test_plot_layout_wrapped_shapes_mpl(shape_cls: Type[layout_shapes.AnyWrappedLayoutShape]):
+def test_plot_layout_wrapped_shapes_mpl(shape_cls: type[layout_shapes.AnyWrappedLayoutShape]):
     fig = plt.figure(figsize=(3, 3))
     ax = fig.subplots()
     assert isinstance(ax, matplotlib.axes.Axes)
@@ -174,7 +174,7 @@ def test_plot_layout_wrapped_shapes_mpl(shape_cls: Type[layout_shapes.AnyWrapped
 
 @shape_classes
 def test_plot_layout_wrapped_shapes_bokeh(
-    shape_cls: Type[layout_shapes.AnyWrappedLayoutShape],
+    shape_cls: type[layout_shapes.AnyWrappedLayoutShape],
 ):
     bokeh.io.output_file(test_artifacts / f"test_plot_shapes_bokeh_{shape_cls.__name__}.html")
 

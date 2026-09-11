@@ -1,0 +1,70 @@
+# Lattice definitions in the form of a dict: lattice_id -> TaoStartup (ie the arguments to Tao(...))
+lattices:
+  lat_a:
+    lattice_file: lat_a.lat.bmad
+  lat_b:
+    lattice_file: lat_b.lat.bmad
+  lat_c:
+    lattice_file: lat_c.lat.bmad
+
+# List of constraints. Each constraint defined by its `constraint_type`. The constraints each have two observables, the type of
+# which is set by `obs_type` and can be derived from the lattice or a literal. The constraints may include short descriptions
+# and longer comments for documentation.
+constraints:
+  - constraint_type: ele_eq
+    description: Short description, lat_a, lat_b treaty point
+    comment: Longer comment included on error and in reports. eg Please rerun `tune_matcher.tao` in event of failure.
+    obs_a:
+      obs_type: ele
+      lattice_id: lat_a
+      ele_id: END
+    obs_b:
+      obs_type: ele
+      lattice_id: lat_b
+      ele_id: BEGINNING
+
+  - constraint_type: ele_eq
+    description: Example of a failing constraint
+    obs_a:
+      obs_type: ele
+      lattice_id: lat_a
+      ele_id: END
+    obs_b:
+      obs_type: ele
+      lattice_id: lat_c
+      ele_id: BEGINNING
+    comparison:
+      twiss_a:
+        type: bmag
+        max_bmag: 1.05
+      floor_x:
+        atol: 1e-6
+      floor_y:
+        atol: 1e-6
+      floor_z:
+        atol: 1e-6
+
+  - constraint_type: ele_lt
+    description: lat_a beta sanity check
+    obs_a:
+      obs_type: ele_max
+      lattice_id: lat_a
+    obs_b:
+      obs_type: ele_literal
+      beta_a: 200
+      beta_b: 200
+    comparison:
+      beta_a: true
+      beta_b: true
+
+  - constraint_type: datum_eq
+    description: Datum and literal example
+    obs_a:
+      obs_type: datum
+      lattice_id: lat_a
+      data_type: r56_compaction
+      ele_name: END
+    obs_b:
+      obs_type: datum_literal
+      model_value: 1.04448e-08
+      design_value: 0.0

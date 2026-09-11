@@ -17,7 +17,9 @@ repos:
       # Check XML files for valid syntax:
       - id: check-xml
       # Check YAML files for valid syntax:
+      # --unsafe allows !!python/name tags used by mkdocs superfences for mermaid
       - id: check-yaml
+        args: [--unsafe]
       # Check TOML files for valid syntax:
       - id: check-toml
       # Check that there are no remnants of merge conflicts in files:
