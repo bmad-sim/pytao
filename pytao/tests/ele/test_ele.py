@@ -73,6 +73,45 @@ elements.extend(
     ]
 )
 
+elements.extend(
+    [
+        TestElement(
+            init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_em_field",
+            lat_file=None,
+            element=ele,
+        )
+        # Cartesian map, cylindrical map, and gen_gradients elements.
+        for ele in ("Q1", "M1", "GG")
+    ]
+)
+
+elements.extend(
+    [
+        TestElement(
+            init_file=None,
+            lat_file="$ACC_ROOT_DIR/regression_tests/tracking_method_test/tracking_method_test.bmad",
+            element=ele,
+        )
+        # AC kicker (both modes) and electric multipole elements.
+        for ele in ("AC_KICKER1", "AC_KICKER2", "CRAB_CAVITY1")
+    ]
+)
+
+elements.extend(
+    [
+        TestElement(
+            init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_taylor",
+            lat_file=None,
+            element="TAYLOR1",
+        ),
+        TestElement(
+            init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_spin",
+            lat_file=None,
+            element="2",
+        ),
+    ]
+)
+
 
 @pytest.fixture(scope="module")
 def _tao() -> SubprocessTao:
@@ -142,7 +181,14 @@ def test_tao_ele_method(tao: SubprocessTao, ele_id: str):
 
 def test_element_fill(tao: SubprocessTao, ele_id: str):
     ele = Element.from_tao(tao, ele_id, which="model", attrs=True)
-    ele.fill(tao, grid_field_points=True, wall3d_table=True)
+    ele.fill(
+        tao,
+        grid_field_points=True,
+        wall3d_table=True,
+        cartesian_map_terms=True,
+        cylindrical_map_terms=True,
+        gen_gradient_curves=True,
+    )
 
     assert ele.attrs is not None
 
@@ -170,6 +216,73 @@ def test_element_fill(tao: SubprocessTao, ele_id: str):
         assert ele.wake is not None
     if ele.head.has_control:
         assert ele.control_vars is not None
+    if ele.head.has_ac_kick:
+        assert ele.ac_kicker is not None
+    if ele.head.has_methods:
+        assert ele.methods is not None
+    if ele.head.has_spin_taylor:
+        assert ele.spin_taylor is not None
+        assert len(ele.spin_taylor.components) == 4
+        assert ele.spin_taylor.components[0].exponents.shape[1:] == (6,)
+    if ele.head.has_taylor:
+        assert ele.taylor is not None
+        assert len(ele.taylor.sections) == 6
+        assert ele.taylor.sections[0].exponents.shape[1:] == (6,)
+    if ele.head.num_cartesian_map:
+        assert ele.cartesian_map is not None
+        assert len(ele.cartesian_map) == ele.head.num_cartesian_map
+        assert ele.cartesian_map[0].terms is not None
+        assert len(ele.cartesian_map[0].terms.coef)
+    if ele.head.num_cylindrical_map:
+        assert ele.cylindrical_map is not None
+        assert len(ele.cylindrical_map) == ele.head.num_cylindrical_map
+        terms = ele.cylindrical_map[0].terms
+        assert terms is not None
+        assert np.iscomplexobj(terms.e_coef)
+        assert len(terms.e_coef) == ele.cylindrical_map[0].number_of_terms
+    if ele.head.num_gen_gradients:
+        assert ele.gen_gradients is not None
+        assert len(ele.gen_gradients) == ele.head.num_gen_gradients
+        curves = ele.gen_gradients[0].curves
+        assert curves is not None
+        assert curves[0].deriv.shape[0] == len(curves[0].z)
+
+
+def test_element_json_roundtrip_field_maps():
+    with SubprocessTao(
+        init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_em_field",
+        noplot=True,
+    ) as tao:
+        ele = Element.from_tao(
+            tao,
+            "M1",
+            cylindrical_map_terms=True,
+            cartesian_map_terms=True,
+            gen_gradient_curves=True,
+        )
+
+    restored = Element.model_validate_json(ele.model_dump_json())
+    terms = restored.cylindrical_map[0].terms
+    assert terms is not None
+    assert terms.e_coef.dtype == np.complex128
+    numpy.testing.assert_array_equal(terms.e_coef, ele.cylindrical_map[0].terms.e_coef)
+    numpy.testing.assert_array_equal(terms.b_coef, ele.cylindrical_map[0].terms.b_coef)
+    assert restored == ele
+
+
+def test_element_json_roundtrip_taylor():
+    with SubprocessTao(
+        init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_taylor",
+        noplot=True,
+    ) as tao:
+        ele = Element.from_tao(tao, "TAYLOR1")
+
+    assert ele.taylor is not None
+    restored = Element.model_validate_json(ele.model_dump_json())
+    section = restored.taylor.sections[0]
+    assert section.exponents.dtype.kind == "i"
+    numpy.testing.assert_array_equal(section.exponents, ele.taylor.sections[0].exponents)
+    assert restored == ele
 
 
 def test_element_update(tao: SubprocessTao, ele_id: str):
