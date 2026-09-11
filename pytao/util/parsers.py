@@ -4,6 +4,7 @@ import ast
 import dataclasses
 import datetime
 import logging
+import math
 import re
 from collections import defaultdict
 from typing import Any, TypeVar, cast
@@ -17,11 +18,14 @@ from .parser_types import (
     BuildingWallInfo,
     ConstraintDataInfo,
     ConstraintVarInfo,
+    DaApertureInfo,
     DataD1ArrayInfo,
     DataDArrayInfo,
     DataParameterLineInfo,
+    EleAcKickerResult,
     EleCartesianMapInfo,
     EleChamberWallInfo,
+    EleCylindricalMapTermInfo,
     EleGenGradientBase,
     EleGenGradientDerivInfo,
     EleGridFieldPointInfo,
@@ -48,12 +52,15 @@ from .parser_types import (
     VarSlaveInfo,
     VarV1ArrayDataInfo,
     VarVArrayLineResult,
+    WaveKickInfo,
 )
 
 logger = logging.getLogger(__name__)
 
 
-FieldType = int | float | bool | str | complex | np.ndarray | dict[str, "FieldType"]
+FieldType = (
+    int | float | bool | str | complex | np.ndarray | list[str] | dict[str, "FieldType"]
+)
 
 
 class Settings:
@@ -113,6 +120,19 @@ def parse_bool(s) -> bool:
         raise ValueError("Unknown bool: " + s)
 
 
+def _check_invalid(lines: list[str]) -> None:
+    """
+    Raise `TaoDataInvalidError` if Tao marked the output as INVALID.
+
+    Tao's ``invalid()`` appends a bare INVALID line after any lines already
+    written, so the whole output is scanned.
+    """
+    if isinstance(lines, np.ndarray):
+        pass
+    elif any(line == "INVALID" for line in lines):
+        raise TaoDataInvalidError("Data unavailable - Tao marked it as INVALID")
+
+
 def parse_tao_lat_ele_list(lines) -> dict[str, int]:
     """
     returns mapping of names to index
@@ -129,7 +149,7 @@ def parse_tao_lat_ele_list(lines) -> dict[str, int]:
     return ix
 
 
-def parse_pytype(type, val: str) -> FieldType:
+def parse_pytype(type, val: str | list[str]) -> FieldType:
     """
     Parses the various types from `tao_pipe_cmd`
 
@@ -160,15 +180,20 @@ def parse_pytype(type, val: str) -> FieldType:
     ]:
         return val
 
+    if isinstance(val, str):
+        val = [val]
+
     if type == "INT_ARR":
-        return np.array(val).astype(int)
+        return np.array([int(v) for v in val])
 
     if type == "REAL_ARR":
-        return np.array(val).astype(float)
+        return np.array([_float(v) for v in val])
 
-    if isinstance(val, list):
-        if len(val) == 1:
-            val = val[0]
+    if type == "COMPLEX":
+        return complex(*(_float(v) for v in val))
+
+    if type == "STRUCT":
+        return {name: parse_pytype(t1, v1) for name, t1, v1 in chunks(val, 3)}
 
     if type in [
         "STR",
@@ -181,23 +206,27 @@ def parse_pytype(type, val: str) -> FieldType:
         "SPECIES",
         "ELE_PARAM",
     ]:
-        return val
+        # The value itself may contain semicolons (e.g. in a lattice title).
+        return ";".join(val)
+
+    if len(val) == 1:
+        scalar = val[0]
+    elif not val:
+        scalar = ""
+    else:
+        raise ValueError(f"Unexpected multi-value {type} field: {val!r}")
 
     if type == "LOGIC":
-        return parse_bool(val)
+        return parse_bool(scalar)
 
     if type in ["INT", "INUM"]:
-        return int(val or 0)
+        return int(scalar or 0)
 
     if type == "REAL":
         # Note that some pipe commands may return any empty value instead of 0
-        return float(val or 0)
-
-    if type == "COMPLEX":
-        return complex(*(float(v) for v in val))
-
-    if type == "STRUCT":
-        return {name: parse_pytype(t1, v1) for name, t1, v1 in chunks(val, 3)}
+        if not scalar:
+            return 0.0
+        return _float(scalar)
 
     # Not found
     raise ValueError("Unknown type: " + type)
@@ -336,6 +365,7 @@ def parse_data_d_array(lines, cmd="") -> list[DataDArrayInfo]:
             'weight', 'exists'
 
     """
+    _check_invalid(lines)
     result = []
     for line in lines:
         d = {}
@@ -367,6 +397,7 @@ def parse_derivative(lines, cmd="") -> dict[int, np.ndarray]:
         with dModel_dVar as the value:
             np.ndarray with shape (n_data, n_var)
     """
+    _check_invalid(lines)
     lines = [ln for ln in lines if ln and len(ln.split(";")) > 3]
 
     # Calculate matrix bounds
@@ -396,7 +427,7 @@ def parse_derivative(lines, cmd="") -> dict[int, np.ndarray]:
         nv = len(cells) - 3  # Number of vars
 
         # Populate matrix
-        universe[iu][id - 1, iv0 - 1 : iv0 + nv - 1] = [float(x) for x in cells[3:]]
+        universe[iu][id - 1, iv0 - 1 : iv0 + nv - 1] = [_float(x) for x in cells[3:]]
 
     return universe
 
@@ -415,6 +446,7 @@ def parse_ele_control_var(lines, cmd="") -> dict[str, float]:
     dict of attributes and values
 
     """
+    _check_invalid(lines)
     d = {}
     for line in lines:
         try:
@@ -424,7 +456,7 @@ def parse_ele_control_var(lines, cmd="") -> dict[str, float]:
         except ValueError:
             logger.warning("Skipping value: %s", line)
         else:
-            d[name] = float(value)
+            d[name] = _float(value)
     return d
 
 
@@ -442,7 +474,7 @@ def parse_lat_ele_list(lines, cmd="") -> list[str]:
     list of str of element names
 
     """
-
+    _check_invalid(lines)
     return [s.split(";")[1] for s in lines]
 
 
@@ -463,7 +495,8 @@ def parse_matrix(lines, cmd="") -> MatrixResult:
 
 
     """
-    m7 = np.array([[float(x) for x in line.split(";")[1:]] for line in lines])
+    _check_invalid(lines)
+    m7 = np.array([[_float(x) for x in line.split(";")[1:]] for line in lines])
     return MatrixResult(mat6=m7[:, 0:6], vec0=m7[:, 6])
 
 
@@ -481,8 +514,9 @@ def parse_merit(lines, cmd="") -> float:
     merit: float
         Value of the merit function
     """
+    _check_invalid(lines)
     assert len(lines) == 1
-    return float(lines[0])
+    return _float(lines[0])
 
 
 def parse_plot_list(lines, cmd="") -> dict[str, int] | list[PlotListRegionInfo]:
@@ -511,6 +545,10 @@ def parse_plot_list(lines, cmd="") -> dict[str, int] | list[PlotListRegionInfo]:
             x1, x2, y1, y1
 
     """
+    _check_invalid(lines)
+
+    if not lines:
+        return {}
 
     # infer region or template output
     nv = len(lines[0].split(";"))
@@ -534,10 +572,10 @@ def parse_plot_list(lines, cmd="") -> dict[str, int] | list[PlotListRegionInfo]:
                     ix=int(ix),
                     plot_name=plot_name,
                     visible=_parse_str_bool(visible),
-                    x1=float(x1),
-                    x2=float(x2),
-                    y1=float(y1),
-                    y2=float(y2),
+                    x1=_float(x1),
+                    x2=_float(x2),
+                    y1=_float(y1),
+                    y2=_float(y2),
                 )
             )
         return region_output
@@ -584,11 +622,12 @@ def parse_taylor_map(lines, cmd="") -> dict[int, dict[tuple[int, ...], float]]:
 
 
     """
+    _check_invalid(lines)
     tt = {i: {} for i in range(1, 7)}
     for term_str in lines:
         t = term_str.split(";")
         out = int(t[0])
-        coef = float(t[2])
+        coef = _float(t[2])
         exponents = tuple([int(i) for i in t[3:]])
         tt[out][exponents] = coef
     return tt
@@ -599,12 +638,12 @@ def parse_var_v_array_line(line, cmd="") -> VarVArrayLineResult:
     return VarVArrayLineResult(
         ix_v1=int(v[0]),
         var_attrib_name=v[1],
-        meas_value=float(v[2]),
-        model_value=float(v[3]),
-        design_value=float(v[4]),
+        meas_value=_float(v[2]),
+        model_value=_float(v[3]),
+        design_value=_float(v[4]),
         useit_opt=_parse_str_bool(v[5]),
         good_user=_parse_str_bool(v[6]),
-        weight=float(v[7]),
+        weight=_float(v[7]),
     )
 
 
@@ -616,6 +655,7 @@ def parse_var_v_array(lines, cmd="") -> list[VarVArrayLineResult]:
     -------
     list of dict
     """
+    _check_invalid(lines)
     return [parse_var_v_array_line(line) for line in lines]
 
 
@@ -640,7 +680,7 @@ def fix_value(value: str, typ: type):
     if typ is FloatOrNone:
         return _value_float_or_none(value)
     if typ is float:
-        return _fix_float_scientific_notation(value)
+        return _float(value)
 
     return typ(value)
 
@@ -677,10 +717,10 @@ def _parse_by_keys_to_types(
     if ensure_count is None:
         ensure_count = Settings.ensure_count
 
+    _check_invalid(lines)
+
     if ensure_count:
         for line in lines:
-            if line == "INVALID":
-                raise TaoDataInvalidError("Data unavailable - Tao marked it as INVALID")
             assert len(key_to_type) == len(line.split(";"))
 
     return [
@@ -770,6 +810,28 @@ def parse_building_wall_graph(lines, cmd="") -> list[BuildingWallGraphInfo]:
     )
 
 
+def parse_bunch_comb(lines, cmd="") -> np.ndarray:
+    """
+    Parse bunch_comb results.
+
+    Returns
+    -------
+    np.ndarray
+        Values at each comb point, regardless of whether ``-array_out`` was
+        used.
+    """
+    if isinstance(lines, np.ndarray):
+        return lines
+
+    values = []
+    for line in lines:
+        if line == "INVALID":
+            raise TaoDataInvalidError("Data unavailable - Tao marked it as INVALID")
+        _index, value = line.split(";")
+        values.append(_float(value))
+    return np.asarray(values)
+
+
 def parse_constraints(lines, cmd="") -> list[ConstraintDataInfo] | list[ConstraintVarInfo]:
     """
     Parse constraints results.
@@ -818,6 +880,22 @@ def parse_constraints(lines, cmd="") -> list[ConstraintDataInfo] | list[Constrai
     )
 
 
+def parse_da_aperture(lines, cmd="") -> list[DaApertureInfo]:
+    """
+    Parse da_aperture results.
+
+    Returns
+    -------
+    list of DaApertureInfo
+        One aperture boundary point per entry, where ``ix_scan`` indexes the
+        pz values of the scan and ``ix_point`` the angles.
+    """
+    return _parse_by_keys_to_types(
+        lines,
+        {"ix_scan": int, "ix_point": int, "x": float, "y": float},
+    )
+
+
 def parse_data_d1_array(lines, cmd="") -> list[DataD1ArrayInfo]:
     """
     Parse data_d1_array results.
@@ -848,6 +926,7 @@ def parse_data_d2_array(lines, cmd="") -> list[str]:
     -------
     list of str
     """
+    _check_invalid(lines)
     return lines
 
 
@@ -917,6 +996,7 @@ def parse_data_parameter(lines, cmd="") -> list[DataParameterLineInfo]:
             data=[fix_value(val, expected_type) for val in values],
         )
 
+    _check_invalid(lines)
     return [fix_line(line) for line in lines]
 
 
@@ -929,7 +1009,36 @@ def parse_datum_has_ele(lines, cmd="") -> str | None:
     str or None
         "no", "yes", "maybe", "provisional"
     """
+    _check_invalid(lines)
     return lines[0] if lines else None
+
+
+def parse_ele_ac_kicker(lines, cmd="") -> EleAcKickerResult | None:
+    """
+    Parse ele_ac_kicker results.
+
+    Returns
+    -------
+    EleAcKickerResult or None
+        ``None`` if the element has no associated ac_kicker.  Otherwise a
+        dictionary with ``mode`` (either ``"amp_vs_time"`` or
+        ``"frequencies"``) and the corresponding list of terms in ``data``.
+    """
+    if not lines:
+        return None
+    if lines[0] == "INVALID":
+        raise TaoDataInvalidError("Data unavailable - Tao marked it as INVALID")
+
+    mode = lines[0].removeprefix("has#")
+    key_to_type: dict[str, type]
+    if mode == "amp_vs_time":
+        key_to_type = {"index": int, "amp": float, "time": float}
+    elif mode == "frequencies":
+        key_to_type = {"index": int, "frequency": float, "amp": float, "phi": float}
+    else:
+        raise ValueError(f"Unexpected ele_ac_kicker mode: {lines[0]!r}")
+
+    return {"mode": mode, "data": _parse_by_keys_to_types(lines[1:], key_to_type)}
 
 
 def parse_ele_cartesian_map(lines, cmd="") -> list[EleCartesianMapInfo] | dict[str, Any]:
@@ -977,6 +1086,43 @@ def parse_ele_chamber_wall(lines, cmd="") -> list[EleChamberWallInfo]:
     )
 
 
+def parse_ele_cylindrical_map(
+    lines, cmd=""
+) -> list[EleCylindricalMapTermInfo] | dict[str, Any]:
+    """
+    Parse ele_cylindrical_map results.
+
+    Returns
+    -------
+    dict or list of dict
+        "terms" mode will be a list of EleCylindricalMapTermInfo dictionaries.
+        Normal mode will be a single dictionary.
+    """
+    args = _get_cmd_args(cmd)
+    if args[-1] == "terms":
+        terms = []
+        for line in lines:
+            if line == "INVALID":
+                raise TaoDataInvalidError("Data unavailable - Tao marked it as INVALID")
+            index, e_re, e_im, b_re, b_im = line.split(";")
+            terms.append(
+                {
+                    "index": int(index),
+                    "e_coef": complex(
+                        _float(e_re),
+                        _float(e_im),
+                    ),
+                    "b_coef": complex(
+                        _float(b_re),
+                        _float(b_im),
+                    ),
+                }
+            )
+        return terms
+
+    return parse_tao_python_data(lines)
+
+
 def parse_ele_elec_multipoles(lines, cmd="") -> dict[str, Any]:
     """
     Parse ele_elec_multipoles results.
@@ -985,9 +1131,11 @@ def parse_ele_elec_multipoles(lines, cmd="") -> dict[str, Any]:
     -------
     dict
     """
+    _check_invalid(lines)
     logic_lines = [line for line in lines if "LOGIC" in line]
     lines = [line for line in lines if line not in logic_lines]
-    key_to_type = {key: float for key in lines[0].split(";")}
+    key_to_type = {"index": int}
+    key_to_type.update({key: float for key in lines[0].split(";")})
     settings = parse_tao_python_data(logic_lines)
 
     # TODO: 'data' is not actually parsed in the test suite
@@ -1010,14 +1158,14 @@ def parse_ele_grid_field(lines, cmd="") -> list[EleGridFieldPointInfo] | dict[st
         "points" mode will be a list of dictionaries.
         Normal mode will be a single dictionary.
     """
-
+    _check_invalid(lines)
     args = _get_cmd_args(cmd)
     if args[-1].lower() == "points":
 
         def parse_point_line(line: str) -> EleGridFieldPointInfo:
             parts = line.split(";")
             i, j, k = (int(part) for part in parts[:3])
-            data = [ast.literal_eval(part.strip()) for part in parts[3:]]
+            data = [_float(part) for part in parts[3:]]
             return EleGridFieldPointInfo(
                 i=i,
                 j=j,
@@ -1086,6 +1234,7 @@ def parse_ele_multipoles(lines, cmd="") -> dict[str, Any]:
     -------
     dict
     """
+    _check_invalid(lines)
     logic_lines = [line for line in lines if "LOGIC" in line]
     lines = [line for line in lines if line not in logic_lines]
     key_to_type = {"index": int}
@@ -1102,6 +1251,38 @@ def parse_ele_multipoles(lines, cmd="") -> dict[str, Any]:
     }
 
 
+_ELE_PARAM_SHAPES = {
+    "ele.mat6": (6, 6),
+    "ele.vec0": (6,),
+    "ele.c_mat": (2, 2),
+}
+
+
+def parse_ele_param(lines, cmd="") -> dict[str, Any]:
+    """
+    Parse ele_param results.
+
+    Returns
+    -------
+    dict
+        Single key of the requested ``who``, with dots replaced by
+        underscores.  Matrix-valued ``who`` values (``ele.mat6``,
+        ``ele.vec0``, ``ele.c_mat``) map to appropriately-shaped ndarrays.
+    """
+    # Matrix-valued `who` emit multiple values on one line which Tao marks as
+    # REAL (not REAL_ARR), so the default parser cannot handle them.
+    if len(lines) == 1 and lines[0] != "INVALID":
+        name, type_, _settable, *values = lines[0].split(";")
+        if type_ == "REAL" and len(values) > 1:
+            arr = np.array([_float(value) for value in values])
+            shape = _ELE_PARAM_SHAPES.get(name)
+            if shape is not None:
+                arr = arr.reshape(shape)
+            return {name.replace(".", "_"): arr}
+
+    return parse_tao_python_data(lines)
+
+
 def parse_ele_taylor(lines, cmd="") -> dict[str, Any]:
     """
     Parse ele_taylor results.
@@ -1110,6 +1291,7 @@ def parse_ele_taylor(lines, cmd="") -> dict[str, Any]:
     -------
     dict
     """
+    _check_invalid(lines)
 
     def split_sections(lines):
         sections = []
@@ -1186,6 +1368,7 @@ def parse_ele_wall3d(lines, cmd="") -> list[dict[str, Any]] | dict[str, Any]:
     -------
     list of dict
     """
+    _check_invalid(lines)
 
     def split_sections(lines):
         sections = []
@@ -1234,6 +1417,9 @@ def parse_em_field(lines, cmd="") -> EmFieldResult:
     -------
     dict
     """
+    if not lines:
+        # em_field_calc failures produce no output and no INVALID marker.
+        raise TaoDataInvalidError("em_field returned no data (calculation failed)")
     return _parse_by_keys_to_types(
         lines,
         {
@@ -1314,8 +1500,8 @@ def parse_floor_orbit(lines, cmd="") -> list[FloorOrbitInfo]:
             [line],
             {
                 "branch_index": int,
-                "index": int,
-                "ele_key": str,
+                # "index": int,  # TODO -> this was incorrect and removed
+                "ele_key": str,  # TODO: -> this is really ix_ele
                 "axis": str,
             },
             ensure_count=False,
@@ -1345,6 +1531,7 @@ def parse_inum(lines, cmd="") -> list[int]:
     -------
     list of int
     """
+    _check_invalid(lines)
     return [int(num) for num in lines]
 
 
@@ -1386,14 +1573,21 @@ def parse_lat_param_units(lines, cmd="") -> str:
     -------
     str
     """
+    _check_invalid(lines)
     return lines[0]
 
 
-def _fix_float_scientific_notation(value: str) -> float:
+def _float(value: str) -> float:
+    """
+    Fix scientific notation without an 'e' and infinity/nan markers.
+
+    Fortran es22.14 output can drop the "E" for 3-digit exponents:
+      e.g., 1.42+245 -> 1.42e245
+
+    This handles NaN/Infinity/-Infinity as well.
+    """
+    value = value.strip()
     if ("-" in value or "+" in value) and "e" not in value:
-        # TODO: some floating point values like gg%deriv of ele_gen_grad_map
-        # are formatted incorrectly:
-        #   e.g., 1.42+245 -> 1.42e245
         try:
             return float(value)
         except ValueError:
@@ -1408,7 +1602,7 @@ def _fix_float_scientific_notation(value: str) -> float:
 
 def _value_float_or_none(s: str):
     s = s.strip()
-    return None if s == "" else _fix_float_scientific_notation(s)
+    return None if s == "" else _float(s)
 
 
 def parse_lord_control(lines, cmd="") -> list[LordControlInfo]:
@@ -1601,6 +1795,7 @@ def parse_species_to_int(lines, cmd="") -> int:
     -------
     int
     """
+    _check_invalid(lines)
     return int(lines[0])
 
 
@@ -1612,6 +1807,7 @@ def parse_species_to_str(lines, cmd="") -> str:
     -------
     str
     """
+    _check_invalid(lines)
     return lines[0]
 
 
@@ -1736,6 +1932,9 @@ def parse_lat_list(lines, cmd="") -> np.ndarray | list[float]:
     -------
     list of str
     """
+    if isinstance(lines, np.ndarray):
+        return lines
+    _check_invalid(lines)
     return lines
 
 
@@ -1769,7 +1968,10 @@ def parse_show_plot_page(lines, cmd="") -> dict[str, Any]:
         try:
             return ast.literal_eval(value.strip())
         except (ValueError, SyntaxError):
-            return value
+            try:
+                return _float(value)
+            except ValueError:
+                return value
 
     result = {}
     for line in lines:
@@ -1846,6 +2048,7 @@ def parse_ele_wake(lines, cmd="") -> dict[str, Any] | list[list[float | str]] | 
     -------
     dict, or list of dict
     """
+    _check_invalid(lines)
     args = _get_cmd_args(cmd)
     if len(args) > 1 and args[1].lower() in {
         "sr_long_table",
@@ -1874,4 +2077,72 @@ def parse_evaluate(lines, cmd="") -> np.ndarray | list[float]:
     if isinstance(lines, np.ndarray):
         return lines
 
-    return [float(line.rsplit(";")[1]) for line in lines]
+    _check_invalid(lines)
+    return [_float(line.rsplit(";")[1]) for line in lines]
+
+
+def _parse_wave_param_value(type_: str, value: str) -> FieldType:
+    value = value.strip()
+    if value and set(value) == {"*"}:
+        # Fixed-format (f8.3) field overflow.
+        return math.nan
+    return parse_pytype(type_, value)
+
+
+def parse_wave(lines, cmd="") -> dict[str, Any] | list[WaveKickInfo] | list[PlotLineInfo]:
+    """
+    Parse wave analysis results.
+
+    Returns
+    -------
+    dict or list of dict
+        "params" and "loc_header" produce a dictionary; "locations" a list of
+        WaveKickInfo; "plot1"/"plot2"/"plot3" a list of PlotLineInfo.
+    """
+    who = _get_cmd_args(cmd)[0]
+
+    if who == "params":
+        data: dict[str, Any] = {}
+        for line in lines:
+            if line == "INVALID":
+                raise TaoDataInvalidError("Data unavailable - Tao marked it as INVALID")
+            parts = line.split(";")
+            if len(parts) >= 4:
+                name, type_, _settable = parts[:3]
+                data[name] = _parse_wave_param_value(type_, ";".join(parts[3:]))
+            else:
+                # Some ping/cbar lines omit the ';REAL;F;' marker; the value
+                # is a fixed-width f8.3 field appended directly to the name.
+                data[line[:-8].strip()] = _parse_wave_param_value("REAL", line[-8:])
+        return data
+
+    if who == "loc_header":
+        header: dict[str, Any] = {}
+        for line in lines:
+            if line.startswith("columns;"):
+                header["columns"] = line.split(";")[1:]
+            else:
+                name, _type, _settable, value = _parse_tao_python_data1(line)
+                header[name] = value
+        return header
+
+    if who == "locations":
+        key_to_type: dict[str, type] = {
+            "ix_dat_before_kick": int,
+            "amp": float,
+            "s": float,
+            "ix_ele": int,
+            "ele_name": str,
+        }
+        if lines and len(lines[0].split(";")) == 6:
+            key_to_type["phi"] = float
+        else:
+            key_to_type.update(
+                {"phi_s": float, "phi_r": float, "phi_a": float, "phi_b": float}
+            )
+        return _parse_by_keys_to_types(lines, key_to_type)
+
+    if who in {"plot1", "plot2", "plot3"}:
+        return _parse_by_keys_to_types(lines, {"index": int, "x": float, "y": float})
+
+    return parse_tao_python_data(lines)

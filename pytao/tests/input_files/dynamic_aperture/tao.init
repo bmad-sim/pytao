@@ -1,0 +1,21 @@
+&tao_start
+/
+
+&tao_design_lattice
+  n_universes = 1
+  design_lattice(1)%file = "$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/bmad_L9A18A000-_MOVEREC.lat"
+  design_lattice(1)%dynamic_aperture_calc = T
+/
+
+&tao_params
+  global%plot_on = F
+/
+
+! Keep the scan tiny so the startup dynamic aperture calc stays fast.
+&tao_dynamic_aperture
+  da_param%n_turn = 2
+  da_param%n_angle = 3
+  da_param%rel_accuracy = 1e-1
+  da_param%abs_accuracy = 1e-3
+  pz(1) = 0
+/

@@ -145,7 +145,7 @@ class FloorPlanElementInfo(TypedDict):
 
 class FloorOrbitInfo(TypedDict):
     branch_index: int
-    index: int
+    # TODO: `ele_key` actually holds the element index (ix_ele)
     ele_key: str
     axis: str
     orbits: list[float]
@@ -277,6 +277,24 @@ class EleGridFieldPointInfo(TypedDict):
     data: list[Any]
 
 
+class EleAcKickerAmpVsTimeInfo(TypedDict):
+    index: int
+    amp: float
+    time: float
+
+
+class EleAcKickerFrequencyInfo(TypedDict):
+    index: int
+    frequency: float
+    amp: float
+    phi: float
+
+
+class EleAcKickerResult(TypedDict):
+    mode: str
+    data: list[EleAcKickerAmpVsTimeInfo] | list[EleAcKickerFrequencyInfo]
+
+
 class EleCartesianMapInfo(TypedDict):
     index: int
     coef: float
@@ -288,6 +306,12 @@ class EleCartesianMapInfo(TypedDict):
     phi_z: float
     family: str
     form: str
+
+
+class EleCylindricalMapTermInfo(TypedDict):
+    index: int
+    e_coef: complex
+    b_coef: complex
 
 
 EleGenGradientBase = TypedDict(
@@ -335,6 +359,28 @@ class ShapePatternPointInfo(TypedDict):
 class DataParameterLineInfo(TypedDict):
     index: int
     data: list[Any]
+
+
+class DaApertureInfo(TypedDict):
+    ix_scan: int
+    ix_point: int
+    x: float
+    y: float
+
+
+class WaveKickInfo(TypedDict):
+    ix_dat_before_kick: int
+    amp: float
+    s: float
+    ix_ele: int
+    ele_name: str
+    # Only for orbit/eta/beta/phase/ping amp+phase data types:
+    phi: NotRequired[float]
+    # Only for ping sin/cos and cbar data types:
+    phi_s: NotRequired[float]
+    phi_r: NotRequired[float]
+    phi_a: NotRequired[float]
+    phi_b: NotRequired[float]
 
 
 class VarV1ArrayDataInfo(TypedDict):

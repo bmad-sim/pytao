@@ -1,3 +1,4 @@
+import math
 from datetime import datetime
 
 import numpy as np
@@ -8,11 +9,26 @@ from ..util.parsers import (
     _value_float_or_none as value_float_or_none,
 )
 from ..util.parsers import (
+    parse_bunch_comb,
+    parse_da_aperture,
     parse_derivative,
+    parse_ele_ac_kicker,
+    parse_ele_cylindrical_map,
+    parse_ele_grid_field,
+    parse_ele_param,
+    parse_evaluate,
+    parse_matrix,
+    parse_merit,
+    parse_pytype,
     parse_show_version,
     parse_tao_python_data,
+    parse_taylor_map,
+    parse_var_v_array_line,
+    parse_wave,
 )
-from .conftest import ensure_successful_parsing
+from ..errors import TaoDataInvalidError
+from ..util import parsers
+from .conftest import ensure_successful_parsing, test_root
 from .test_interface_commands import new_tao
 
 
@@ -313,7 +329,8 @@ def test_floor_orbit_1(tao_cls: type[AnyTao]):
         res = tao.floor_orbit(graph="r33.g")
     assert isinstance(res, list)
     assert isinstance(res[0], dict)
-    assert "index" in res[0]
+    assert "branch_index" in res[0]
+    assert "ele_key" in res[0]
     assert "orbits" in res[0]
 
 
@@ -808,3 +825,309 @@ def test_ele_cartesian_map(tao_cls):
         assert len(terms)
         assert all("coef" in term for term in terms)
         assert all("family" in term for term in terms)
+
+
+def test_parse_bunch_comb():
+    lines = ["0;  1.00000000000000E+00", "1;  2.50000000000000E-01"]
+    np.testing.assert_allclose(parse_bunch_comb(lines), [1.0, 0.25])
+
+    passthrough = np.array([1.0, 2.0])
+    assert parse_bunch_comb(passthrough) is passthrough
+
+
+def test_parse_da_aperture():
+    lines = [
+        "1;1;  1.000000E-02;  2.000000E-03",
+        "1;2; -1.000000E-02;  2.000000E-03",
+    ]
+    points = parse_da_aperture(lines)
+    assert points == [
+        {"ix_scan": 1, "ix_point": 1, "x": 0.01, "y": 0.002},
+        {"ix_scan": 1, "ix_point": 2, "x": -0.01, "y": 0.002},
+    ]
+
+
+def test_parse_ele_ac_kicker():
+    assert parse_ele_ac_kicker([]) is None
+
+    amp_vs_time = parse_ele_ac_kicker(
+        [
+            "has#amp_vs_time",
+            "1;  1.00000000000000E+00;  2.00000000000000E-09",
+        ]
+    )
+    assert amp_vs_time == {
+        "mode": "amp_vs_time",
+        "data": [{"index": 1, "amp": 1.0, "time": 2e-9}],
+    }
+
+    frequencies = parse_ele_ac_kicker(
+        [
+            "has#frequencies",
+            "1;  1.30000000000000E+09;  5.00000000000000E-01;  1.57000000000000E+00",
+        ]
+    )
+    assert frequencies == {
+        "mode": "frequencies",
+        "data": [{"index": 1, "frequency": 1.3e9, "amp": 0.5, "phi": 1.57}],
+    }
+
+
+def test_parse_ele_cylindrical_map_terms():
+    terms = parse_ele_cylindrical_map(
+        [
+            "1;  1.00000000000000E+00; -2.00000000000000E+00;  3.00000000000000E+00;  4.00000000000000E+00"
+        ],
+        cmd="pipe ele:cylindrical_map m1|model 1 terms",
+    )
+    assert terms == [{"index": 1, "e_coef": 1 - 2j, "b_coef": 3 + 4j}]
+
+
+@pytest.mark.parametrize(
+    ["who", "values", "expected_shape"],
+    [
+        pytest.param("ele.mat6", 36, (6, 6)),
+        pytest.param("ele.vec0", 6, (6,)),
+        pytest.param("ele.c_mat", 4, (2, 2)),
+    ],
+)
+def test_parse_ele_param_matrix(who: str, values: int, expected_shape: tuple[int, ...]):
+    line = f"{who};REAL;F;" + ";".join(f"  {float(i)}E+00" for i in range(values))
+    (value,) = parse_ele_param([line]).values()
+    assert value.shape == expected_shape
+    np.testing.assert_allclose(value.ravel(), np.arange(values, dtype=float))
+
+
+def test_parse_ele_param_scalar():
+    assert parse_ele_param(["orbit.vec.1;REAL;F;  1.50000000000000E-03"]) == {
+        "orbit_vec_1": 0.0015
+    }
+
+
+def test_parse_wave_params():
+    data = parse_wave(
+        [
+            "wave_data_type;ENUM;T;cbar.12",
+            "ix_a1;INT;T;10",
+            "A Region Sigma_+/Amp_+;REAL;F;   0.023",
+            "Kick |K+|  12.345",
+            "Sigma_K+/K+********",
+        ],
+        cmd="pipe wave params",
+    )
+    assert isinstance(data, dict)
+    assert data["wave_data_type"] == "cbar.12"
+    assert data["ix_a1"] == 10
+    assert data["A Region Sigma_+/Amp_+"] == 0.023
+    assert data["Kick |K+|"] == 12.345
+    assert math.isnan(data["Sigma_K+/K+"])
+
+
+def test_parse_wave_loc_header():
+    header = parse_wave(
+        [
+            "header1;STR;F;Normalized Kick = kick * sqrt(beta)  [urad * sqrt(meter)]",
+            "columns;After Dat#;Norm_Kick;s;ix_ele;ele@kick;phi",
+        ],
+        cmd="pipe wave loc_header",
+    )
+    assert header == {
+        "header1": "Normalized Kick = kick * sqrt(beta)  [urad * sqrt(meter)]",
+        "columns": ["After Dat#", "Norm_Kick", "s", "ix_ele", "ele@kick", "phi"],
+    }
+
+
+def test_parse_wave_locations():
+    assert parse_wave(
+        ["23;12.34;145.20;678;Q03W;0.523"],
+        cmd="pipe wave locations",
+    ) == [
+        {
+            "ix_dat_before_kick": 23,
+            "amp": 12.34,
+            "s": 145.2,
+            "ix_ele": 678,
+            "ele_name": "Q03W",
+            "phi": 0.523,
+        }
+    ]
+
+    assert parse_wave(
+        ["23;0.1234;145.20;678;Q03W;0.523;0.312;0.417;0.105"],
+        cmd="pipe wave locations",
+    ) == [
+        {
+            "ix_dat_before_kick": 23,
+            "amp": 0.1234,
+            "s": 145.2,
+            "ix_ele": 678,
+            "ele_name": "Q03W",
+            "phi_s": 0.523,
+            "phi_r": 0.312,
+            "phi_a": 0.417,
+            "phi_b": 0.105,
+        }
+    ]
+
+
+def test_parse_wave_plot():
+    assert parse_wave(
+        ["1;  1.234560E+00; -2.000000E-01"],
+        cmd="pipe wave plot1",
+    ) == [{"index": 1, "x": 1.23456, "y": -0.2}]
+
+
+def test_bunch_comb_string_output(tao_cls: type[AnyTao]):
+    with new_tao(
+        tao_cls,
+        "-init $ACC_ROOT_DIR/regression_tests/pipe_test/csr_beam_tracking/tao.init",
+        external_plotting=False,
+    ) as tao:
+        from_strings = tao.bunch_comb(who="x.beta", flags="")
+        from_buffer = tao.bunch_comb(who="x.beta")
+        assert isinstance(from_strings, np.ndarray)
+        np.testing.assert_allclose(from_strings, from_buffer)
+
+
+def test_ele_cylindrical_map(tao_cls: type[AnyTao]):
+    with new_tao(
+        tao_cls,
+        "-init $ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_em_field",
+        external_plotting=False,
+    ) as tao:
+        base = tao.ele_cylindrical_map(ele_id="m1", which="model", index="1", who="base")
+        assert isinstance(base, dict)
+        assert "file" in base
+
+        terms = tao.ele_cylindrical_map(ele_id="m1", which="model", index="1", who="terms")
+        assert isinstance(terms, list)
+        assert len(terms)
+        assert all(isinstance(term["e_coef"], complex) for term in terms)
+
+
+def test_da_aperture(tao_cls: type[AnyTao]):
+    # `set dynamic_aperture` segfaults Tao when the init file lacks a
+    # &tao_dynamic_aperture namelist (unallocated %pz), so the scan is
+    # configured entirely at startup here.
+    init_file = test_root / "input_files" / "dynamic_aperture" / "tao.init"
+    with new_tao(tao_cls, init_file=str(init_file)) as tao:
+        points = tao.da_aperture(ix_uni="1")
+        assert {point["ix_scan"] for point in points} == {1}
+        assert {point["ix_point"] for point in points} == {1, 2, 3}
+        assert all(point["y"] >= 0 for point in points)
+
+
+@pytest.mark.parametrize(
+    ["type_", "value", "expected"],
+    [
+        pytest.param("REAL", ["1.42000000000000+245"], 1.42e245),
+        pytest.param("REAL", ["-1.42000000000000-245"], -1.42e-245),
+        pytest.param("REAL_ARR", ["1.0", "1.42+245"], np.array([1.0, 1.42e245])),
+        pytest.param("COMPLEX", ["1.0-300", "2.0+300"], complex(1e-300, 2e300)),
+    ],
+)
+def test_parse_pytype_malformed_exponent(type_: str, value: list[str], expected):
+    parsed = parse_pytype(type_, value)
+    if isinstance(expected, np.ndarray):
+        assert isinstance(parsed, np.ndarray)
+        np.testing.assert_allclose(parsed, expected)
+    else:
+        assert parsed == expected
+
+
+def test_malformed_exponents_in_parsers():
+    assert parse_evaluate(["1;  1.42000000000000+245"]) == [1.42e245]
+    assert parse_merit(["  1.00000000000000+100"]) == 1e100
+
+    taylor = parse_taylor_map(["1;1;  1.00000000000000-300;1;0;0;0;0;0"])
+    assert taylor[1][(1, 0, 0, 0, 0, 0)] == 1e-300
+
+    matrix = parse_matrix(["1;1-300;0.0;0.0;0.0;0.0;0.0;2+300"])
+    assert matrix["mat6"][0, 0] == 1e-300
+    assert matrix["vec0"][0] == 2e300
+
+    points = parse_ele_grid_field(
+        ["1;2;3;  1.00000000000000+300; NaN"],
+        cmd="pipe ele:grid_field 1@0>>1|model 1 points",
+    )
+    assert isinstance(points, list)
+    assert points[0]["data"][0] == 1e300
+    assert math.isnan(points[0]["data"][1])
+
+    var_line = parse_var_v_array_line("1;q[k1];1-300;2-300;3-300;T;T;1+300")
+    assert var_line["meas_value"] == 1e-300
+    assert var_line["weight"] == 1e300
+
+
+@pytest.mark.parametrize(
+    ["parser", "cmd"],
+    [
+        pytest.param(parsers.parse_bunch_comb, "", id="bunch_comb"),
+        pytest.param(parsers.parse_da_aperture, "", id="da_aperture"),
+        pytest.param(parsers.parse_data_d_array, "", id="data_d_array"),
+        pytest.param(parsers.parse_data_d1_array, "", id="data_d1_array"),
+        pytest.param(parsers.parse_data_d2_array, "", id="data_d2_array"),
+        pytest.param(
+            parsers.parse_data_parameter,
+            "pipe data_parameter twiss.end meas_value",
+            id="data_parameter",
+        ),
+        pytest.param(parsers.parse_datum_has_ele, "", id="datum_has_ele"),
+        pytest.param(parsers.parse_derivative, "", id="derivative"),
+        pytest.param(parsers.parse_ele_ac_kicker, "", id="ele_ac_kicker"),
+        pytest.param(
+            parsers.parse_ele_cartesian_map,
+            "pipe ele:cartesian_map 1 1 terms",
+            id="ele_cartesian_map",
+        ),
+        pytest.param(parsers.parse_ele_chamber_wall, "", id="ele_chamber_wall"),
+        pytest.param(parsers.parse_ele_control_var, "", id="ele_control_var"),
+        pytest.param(
+            parsers.parse_ele_cylindrical_map,
+            "pipe ele:cylindrical_map 1 1 terms",
+            id="ele_cylindrical_map",
+        ),
+        pytest.param(parsers.parse_ele_elec_multipoles, "", id="ele_elec_multipoles"),
+        pytest.param(
+            parsers.parse_ele_grid_field, "pipe ele:grid_field 1 1 points", id="ele_grid_field"
+        ),
+        pytest.param(parsers.parse_ele_multipoles, "", id="ele_multipoles"),
+        pytest.param(parsers.parse_ele_taylor, "", id="ele_taylor"),
+        pytest.param(parsers.parse_ele_wall3d, "pipe ele:wall3d 1 1 table", id="ele_wall3d"),
+        pytest.param(parsers.parse_ele_wake, "pipe ele:wake 1 sr_long_table", id="ele_wake"),
+        pytest.param(parsers.parse_em_field, "", id="em_field"),
+        pytest.param(parsers.parse_enum, "", id="enum"),
+        pytest.param(parsers.parse_evaluate, "", id="evaluate"),
+        pytest.param(parsers.parse_floor_plan, "", id="floor_plan"),
+        pytest.param(parsers.parse_floor_orbit, "", id="floor_orbit"),
+        pytest.param(parsers.parse_inum, "", id="inum"),
+        pytest.param(parsers.parse_lat_ele_list, "", id="lat_ele_list"),
+        pytest.param(parsers.parse_lat_list, "", id="lat_list"),
+        pytest.param(parsers.parse_lat_param_units, "", id="lat_param_units"),
+        pytest.param(parsers.parse_matrix, "", id="matrix"),
+        pytest.param(parsers.parse_merit, "", id="merit"),
+        pytest.param(parsers.parse_plot_list, "pipe plot_list r", id="plot_list"),
+        pytest.param(parsers.parse_species_to_int, "", id="species_to_int"),
+        pytest.param(parsers.parse_species_to_str, "", id="species_to_str"),
+        pytest.param(parsers.parse_taylor_map, "", id="taylor_map"),
+        pytest.param(parsers.parse_var_v_array, "", id="var_v_array"),
+        pytest.param(parsers.parse_wave, "pipe wave params", id="wave"),
+    ],
+)
+def test_invalid_raises(monkeypatch, parser, cmd: str):
+    with pytest.raises(TaoDataInvalidError):
+        parser(["INVALID"], cmd=cmd)
+
+
+def test_invalid_appended_after_data(monkeypatch):
+    # Tao's invalid() appends INVALID after any lines already written.
+    monkeypatch.setattr(parsers.Settings, "ensure_count", False)
+    with pytest.raises(TaoDataInvalidError):
+        parse_ele_param(["taylor_map_includes_offsets;LOGIC;T;F", "INVALID"])
+    with pytest.raises(TaoDataInvalidError):
+        parsers.parse_ele_taylor(["taylor_map_includes_offsets;LOGIC;T;F", "INVALID"])
+
+
+def test_em_field_empty_output_raises():
+    with pytest.raises(TaoDataInvalidError):
+        parsers.parse_em_field([])
