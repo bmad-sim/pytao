@@ -18,6 +18,7 @@ nav:
       - examples/plot-bokeh.ipynb
       - examples/plot-bokeh-vars.ipynb
       - examples/plot-bokeh-particles.ipynb
+      - examples/plot-plotly.ipynb
       - examples/bunch.ipynb
       - examples/special_parsers.ipynb
       - examples/fodo.ipynb
@@ -43,6 +44,7 @@ nav:
       - Plotting: api/plot.md
       - Matplotlib: api/plot-mpl.md
       - Bokeh: api/plot-bokeh.md
+      - Plotly: api/plot-plotly.md
 
 theme:
   icon:

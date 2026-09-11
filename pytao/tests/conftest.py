@@ -234,10 +234,10 @@ def new_tao(
         tao.close_subprocess()
 
 
-BackendName = Literal["mpl", "bokeh"]
+BackendName = Literal["mpl", "bokeh", "plotly"]
 
 
-@pytest.fixture(params=["bokeh", "mpl"])
+@pytest.fixture(params=["bokeh", "mpl", "plotly"])
 def plot_backend(
     request: pytest.FixtureRequest,
 ) -> BackendName:

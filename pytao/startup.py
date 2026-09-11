@@ -282,11 +282,13 @@ class TaoStartup:
     so_lib : str, optional
         Path to the Tao shared library.  Auto-detected if not specified.
     plot : str, bool, optional
-        Use pytao's plotting mechanism with matplotlib or bokeh, if available.
+        Use pytao's plotting mechanism with matplotlib, bokeh, or plotly, if
+        available.
         If `True`, pytao will pick an appropriate plotting backend.
         If `False` or "tao", Tao plotting will be used. (Default)
         If "mpl", the pytao matplotlib plotting backend will be selected.
         If "bokeh", the pytao Bokeh plotting backend will be selected.
+        If "plotly", the pytao Plotly plotting backend will be selected.
     metadata : dict[str, Any], optional
         User-specified metadata about this startup.  Not passed to Tao.
     env : dict[str, str], optional
