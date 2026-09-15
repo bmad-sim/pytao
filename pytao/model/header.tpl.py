@@ -15,6 +15,7 @@ from typing import (
 from pydantic import Field  # noqa: F401
 
 from .base import (
+    FromTaoListMixin,  # noqa: F401
     TaoModel,  # noqa: F401
     TaoSettableModel,  # noqa: F401
 )

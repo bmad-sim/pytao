@@ -387,9 +387,9 @@ def generate_class_code(py_struct: PipeOutputStructure) -> str:
             output.append(generate_class_code(param))
 
     class_name = py_struct.class_name
-    base_class = py_struct.base_class
+    bases = [name.strip() for name in py_struct.base_class.split(",")]
 
-    class_def = [f"class {class_name}({base_class}):"]
+    class_def = [f"class {class_name}({py_struct.base_class}):"]
 
     docstring_content = generate_docstring_content(py_struct)
     raw_prefix = maybe_raw_string(docstring_content)
@@ -398,7 +398,7 @@ def generate_class_code(py_struct: PipeOutputStructure) -> str:
     class_def.append(f"    {docstring_content}")
     class_def.append('    """')
 
-    if base_class in ["TaoModel", "TaoSettableModel"]:
+    if any(name in ["TaoModel", "TaoSettableModel"] for name in bases):
         class_def.append(f'    _tao_command_attr_: ClassVar[str] = "{py_struct.tao_command}"')
 
         if py_struct.tao_set_name and py_struct.tao_set_name != py_struct.tao_command:
@@ -408,7 +408,7 @@ def generate_class_code(py_struct: PipeOutputStructure) -> str:
             f"    _tao_command_default_args_: ClassVar[dict[str, Any]] = {py_struct.tao_command_default_args}"
         )
 
-    if base_class in ["TaoSettableModel", "TaoAttributesModel"]:
+    if any(name in ["TaoSettableModel", "TaoAttributesModel"] for name in bases):
         class_def.append(
             f"    _tao_skip_if_0_: ClassVar[tuple[str, ...]] = {py_struct.skip_if_0}"
         )
@@ -1310,6 +1310,7 @@ def generate_structures(
             class_name="ElementGridFieldPoints",
             tao_command_default_args={"who": "points"},
             reference_structures=(structs_by_name["grid_field_pt_struct"],),
+            base_class="TaoModel, FromTaoListMixin",
         )
         res["ElementGridFieldPoints"].members["data"].dimension = None
 
@@ -1375,6 +1376,7 @@ def generate_structures(
             TaoCommandAndResult.from_tao(tao, "ele:chamber_wall 1 1 x"),
             class_name="ElementChamberWall",
             reference_structures=(),
+            base_class="TaoModel, FromTaoListMixin",
         )
 
         res["ElementWall3DTable"] = PipeOutputStructure.from_cmd(
@@ -1382,6 +1384,7 @@ def generate_structures(
             class_name="ElementWall3DTable",
             tao_command_default_args={"who": "table"},
             reference_structures=(structs_by_name["wall3d_section_struct"],),
+            base_class="TaoModel, FromTaoListMixin",
         )
 
         res["ElementWall3DBase"] = PipeOutputStructure.from_cmd(
@@ -1465,6 +1468,7 @@ def generate_structures(
             TaoCommandAndResult.from_tao(tao, "ele:lord_slave 1 1 x"),
             class_name="ElementLordSlave",
             reference_structures=(),
+            base_class="TaoModel, FromTaoListMixin",
         )
 
     with SubprocessTao(
@@ -1571,6 +1575,7 @@ def write_source(
     header_filename: AnyPath = header_filename,
     module_name_prefix: str = "pytao.model.",
 ):
+    print(f"Writing to: {fn}")
     python_src = render_python_source(res, header_filename=header_filename)
     python_src = python_src.replace("# noqa: F401", "")
     python_src = python_src.replace("# noqa: F821", "")

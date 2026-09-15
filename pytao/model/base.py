@@ -312,24 +312,6 @@ class TaoModel(
         data = cls._process_tao_data(data)
         return cls(command_args=cmd_kwargs, **data)
 
-    @classmethod
-    def from_tao_list(cls: type[Self], tao: Tao, **kwargs) -> list[Self]:
-        """
-        Query Tao and validate the result as a list of this model.
-
-        For commands whose output is a table, with one instance per row.
-
-        Parameters
-        ----------
-        tao : Tao
-        **kwargs
-            Keyword arguments to pass to the relevant ``tao`` command.
-            An ``ele_id`` keyword may be an integer, string, or ElementID.
-        """
-        cmd_kwargs = cls._tao_command_kwargs(kwargs)
-        data = cls._query_tao(tao, cmd_kwargs)
-        return pydantic.TypeAdapter(list[cls]).validate_python(data)
-
     @pydantic.model_serializer(mode="wrap")
     def _serialize_with_class_name(
         self, handler: pydantic.SerializerFunctionWrapHandler
@@ -356,6 +338,26 @@ class TaoModel(
             raise ValueError(f"Unable to find '{clsname}' subclass of {cls.__name__}.")
 
         return handler(value)
+
+
+class FromTaoListMixin:
+    @classmethod
+    def from_tao_list(cls: type[Self], tao: Tao, **kwargs) -> list[Self]:
+        """
+        Query Tao and validate the result as a list of this model.
+
+        For commands whose output is a table, with one instance per row.
+
+        Parameters
+        ----------
+        tao : Tao
+        **kwargs
+            Keyword arguments to pass to the relevant ``tao`` command.
+            An ``ele_id`` keyword may be an integer, string, or ElementID.
+        """
+        cmd_kwargs = cls._tao_command_kwargs(kwargs)
+        data = cls._query_tao(tao, cmd_kwargs)
+        return pydantic.TypeAdapter(list[cls]).validate_python(data)
 
 
 class SetField(NamedTuple):
