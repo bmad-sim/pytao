@@ -7,7 +7,7 @@ import pathlib
 import sys
 import textwrap
 from ctypes.util import find_library
-from typing import TYPE_CHECKING, Literal, Union
+from typing import TYPE_CHECKING, Literal
 
 import numpy as np
 
@@ -23,17 +23,22 @@ from .errors import (
     set_log_mode,
 )
 from .util import parsers as _pytao_parsers
+
 # from .util.parameters import tao_parameter_dict
 
 if TYPE_CHECKING:
     from .subproc import SubprocessTao
     from .tao import Tao
 
-    AnyTao = Union[Tao, SubprocessTao]
+    AnyTao = Tao | SubprocessTao
 
 logger = logging.getLogger(__name__)
-AnyPath = Union[pathlib.Path, str]
+AnyPath = pathlib.Path | str
 Quiet = Literal["all", "warnings"]
+
+# Characters permitted before a universe "@" in an element locator, mirroring
+# Tao's `tao_uni_atsign_index`.
+_UNI_AT_PREFIX_CHARS = frozenset("-0123456789:,[]*")
 
 
 def is_in_subprocess() -> bool:
@@ -474,11 +479,11 @@ class TaoCore:
             return _pytao_parsers.parse_tao_python_data(raw_output)
         except Exception as ex:
             if raises:
-                setattr(ex, "tao_output", raw_output)
+                ex.tao_output = raw_output
                 if isinstance(ex, TaoCommandError):
                     raise
                 new_ex = TaoCommandError(f"Failed to parse output from command {cmd!r}: {ex}")
-                setattr(new_ex, "inner_exc", ex)
+                new_ex.inner_exc = ex
                 raise new_ex from ex
             logger.exception(
                 "Failed to parse string data with custom parser. Returning raw value."
@@ -516,7 +521,7 @@ class TaoCore:
         finally:
             self.reset_output()
 
-    def _read_array(self, dtype: type[float] | type[int]) -> np.ndarray:
+    def _read_array(self, dtype: type[float | int]) -> np.ndarray:
         """
         Read the array from Tao's shared memory.
 
@@ -556,7 +561,7 @@ class TaoCore:
     def _get_array(
         self,
         cmd: str,
-        dtype: type[float] | type[int],
+        dtype: type[float | int],
         raises: bool,
     ) -> np.ndarray | None:
         """
@@ -847,7 +852,7 @@ def configure_logging(
     def add_handler(handler: logging.Handler, handler_level: int | str) -> None:
         handler.setLevel(handler_level)
         handler.setFormatter(formatter)
-        setattr(handler, "_pytao_handler_", True)
+        handler._pytao_handler_ = True
         logger.addHandler(handler)
 
     if console:
@@ -867,6 +872,55 @@ def configure_logging_from_env():
     Only applies if PYTAO_LOG and/or PYTAO_LOG_FILE are set in the environment.
     """
     if not _logging_configured_once and any(
-        env in os.environ for env in {"PYTAO_LOG", "PYTAO_LOG_FILE"}
+        env in os.environ for env in ("PYTAO_LOG", "PYTAO_LOG_FILE")
     ):
         configure_logging()
+
+
+def split_locator(locator: str) -> tuple[str | None, str | None, str, bool]:
+    """
+    Split a Tao element locator into universe, branch, and element parts.
+
+    Follows the Tao locator grammar `{uni@}{~}{branch>>}{key::}ele_id...`
+    (see `ElementID`), including the old `{key::}{branch>>}ele_id` ordering.
+    Mirrors Tao's `tao_uni_atsign_index` rule: an `@` only delimits the
+    universe if every preceding character is one of `-0123456789:,[]*`.
+
+    Parameters
+    ----------
+    locator : str
+
+    Returns
+    -------
+    universe : str or None
+        Universe part, if present. `""` means Tao's default universe.
+    branch : str or None
+        Branch part (index, name, or wildcard), if present.
+    elements : str
+        The remaining element locator, with any universe/branch/negation
+        prefixes removed.
+    negated : bool
+        Whether the locator was negated with a leading `~`.
+    """
+    remaining = locator.strip()
+    universe = None
+    branch = None
+
+    at = remaining.find("@")
+    if at >= 0 and not (set(remaining[:at]) - _UNI_AT_PREFIX_CHARS):
+        universe = remaining[:at]
+        remaining = remaining[at + 1 :]
+
+    negated = remaining.startswith("~")
+    remaining = remaining.removeprefix("~")
+
+    if ">>" in remaining:
+        maybe_branch, rest = remaining.split(">>", 1)
+        if "::" in maybe_branch:
+            # Old syntax: {key::}{branch>>}ele_id
+            key, maybe_branch = maybe_branch.split("::", 1)
+            rest = f"{key}::{rest}"
+        branch = maybe_branch
+        remaining = rest
+
+    return universe, branch, remaining, negated
