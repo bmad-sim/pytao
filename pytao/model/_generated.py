@@ -15,6 +15,7 @@ from typing import (
 from pydantic import Field
 
 from .base import (
+    FromTaoListMixin,
     TaoModel,
     TaoSettableModel,
 )
@@ -885,7 +886,7 @@ class ElementCartesianMap(TaoModel):
     )
 
 
-class ElementChamberWall(TaoModel):
+class ElementChamberWall(TaoModel, FromTaoListMixin):
     """
     Structure which corresponds to Tao `pipe ele:chamber_wall 1 1 x`, for example.
 
@@ -1145,7 +1146,7 @@ class ElementGridField(TaoModel):
     )
 
 
-class ElementGridFieldPoints(TaoModel):
+class ElementGridFieldPoints(TaoModel, FromTaoListMixin):
     """
     Structure which corresponds to Tao `pipe ele:grid_field G1 1 points`, for example.
 
@@ -1268,7 +1269,7 @@ class ElementHead(TaoModel):
     universe: int = Field(default=0, frozen=True)
 
 
-class ElementLordSlave(TaoModel):
+class ElementLordSlave(TaoModel, FromTaoListMixin):
     """
     Structure which corresponds to Tao `pipe ele:lord_slave 1 1 x`, for example.
 
@@ -1933,7 +1934,7 @@ class ElementWall3DTable_Data(TaoModel):
     y: float = 0.0
 
 
-class ElementWall3DTable(TaoModel):
+class ElementWall3DTable(TaoModel, FromTaoListMixin):
     """
     Structure which corresponds to Tao `pipe ele:wall3d 1 1 table`, for example.
 
