@@ -5844,27 +5844,27 @@ by name, key (element type), and index.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/ele/ele.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2468</span>
-<span class="normal">2469</span>
-<span class="normal">2470</span>
-<span class="normal">2471</span>
-<span class="normal">2472</span>
-<span class="normal">2473</span>
-<span class="normal">2474</span>
-<span class="normal">2475</span>
-<span class="normal">2476</span>
-<span class="normal">2477</span>
-<span class="normal">2478</span>
-<span class="normal">2479</span>
-<span class="normal">2480</span>
-<span class="normal">2481</span>
-<span class="normal">2482</span>
-<span class="normal">2483</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2483</span>
 <span class="normal">2484</span>
 <span class="normal">2485</span>
 <span class="normal">2486</span>
 <span class="normal">2487</span>
-<span class="normal">2488</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">2488</span>
+<span class="normal">2489</span>
+<span class="normal">2490</span>
+<span class="normal">2491</span>
+<span class="normal">2492</span>
+<span class="normal">2493</span>
+<span class="normal">2494</span>
+<span class="normal">2495</span>
+<span class="normal">2496</span>
+<span class="normal">2497</span>
+<span class="normal">2498</span>
+<span class="normal">2499</span>
+<span class="normal">2500</span>
+<span class="normal">2501</span>
+<span class="normal">2502</span>
+<span class="normal">2503</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_file</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
@@ -6308,22 +6308,7 @@ the last element in the lattice.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/ele/ele.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2405</span>
-<span class="normal">2406</span>
-<span class="normal">2407</span>
-<span class="normal">2408</span>
-<span class="normal">2409</span>
-<span class="normal">2410</span>
-<span class="normal">2411</span>
-<span class="normal">2412</span>
-<span class="normal">2413</span>
-<span class="normal">2414</span>
-<span class="normal">2415</span>
-<span class="normal">2416</span>
-<span class="normal">2417</span>
-<span class="normal">2418</span>
-<span class="normal">2419</span>
-<span class="normal">2420</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2420</span>
 <span class="normal">2421</span>
 <span class="normal">2422</span>
 <span class="normal">2423</span>
@@ -6369,7 +6354,22 @@ the last element in the lattice.</p>
 <span class="normal">2463</span>
 <span class="normal">2464</span>
 <span class="normal">2465</span>
-<span class="normal">2466</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">2466</span>
+<span class="normal">2467</span>
+<span class="normal">2468</span>
+<span class="normal">2469</span>
+<span class="normal">2470</span>
+<span class="normal">2471</span>
+<span class="normal">2472</span>
+<span class="normal">2473</span>
+<span class="normal">2474</span>
+<span class="normal">2475</span>
+<span class="normal">2476</span>
+<span class="normal">2477</span>
+<span class="normal">2478</span>
+<span class="normal">2479</span>
+<span class="normal">2480</span>
+<span class="normal">2481</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao_tracking</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span>
     <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">,</span>
@@ -6421,8 +6421,8 @@ the last element in the lattice.</p>
             <span class="p">),</span>
         <span class="p">)</span>
     <span class="p">]</span>
-    <span class="n">ix_start</span> <span class="o">=</span> <span class="n">get_element_index</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">track_start</span><span class="p">)</span> <span class="k">if</span> <span class="n">track_start</span> <span class="k">else</span> <span class="mi">0</span>
-    <span class="n">ix_end</span> <span class="o">=</span> <span class="n">get_element_index</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">track_end</span><span class="p">)</span> <span class="k">if</span> <span class="n">track_end</span> <span class="k">else</span> <span class="nb">max</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span>
+    <span class="n">ix_start</span> <span class="o">=</span> <span class="n">get_element_index</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">track_start</span><span class="p">)</span> <span class="k">if</span> <span class="n">track_start</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">ix_end</span> <span class="o">=</span> <span class="n">get_element_index</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">track_end</span><span class="p">)</span> <span class="k">if</span> <span class="n">track_end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">max</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span>
     <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_tao_eles</span><span class="p">(</span>
         <span class="n">tao</span><span class="o">=</span><span class="n">tao</span><span class="p">,</span>
         <span class="n">eles</span><span class="o">=</span><span class="p">[</span><span class="n">ix_ele</span> <span class="k">for</span> <span class="n">ix_ele</span> <span class="ow">in</span> <span class="n">indices</span> <span class="k">if</span> <span class="n">ix_start</span> <span class="o">&lt;=</span> <span class="n">ix_ele</span> <span class="o">&lt;=</span> <span class="n">ix_end</span><span class="p">],</span>
@@ -6455,6 +6455,8 @@ the last element in the lattice.</p>
     <div class="doc doc-contents ">
 
         <p>Create a <code>Lattice</code> object from unique elements of the lattice.</p>
+<p>When <code>track_start</code> or <code>track_end</code> are specified, unique elements
+associated with elements in that range are returned.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -6667,7 +6669,22 @@ This does not need to be a unique element itself.</p>
 <span class="normal">2400</span>
 <span class="normal">2401</span>
 <span class="normal">2402</span>
-<span class="normal">2403</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">2403</span>
+<span class="normal">2404</span>
+<span class="normal">2405</span>
+<span class="normal">2406</span>
+<span class="normal">2407</span>
+<span class="normal">2408</span>
+<span class="normal">2409</span>
+<span class="normal">2410</span>
+<span class="normal">2411</span>
+<span class="normal">2412</span>
+<span class="normal">2413</span>
+<span class="normal">2414</span>
+<span class="normal">2415</span>
+<span class="normal">2416</span>
+<span class="normal">2417</span>
+<span class="normal">2418</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao_unique</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span>
     <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">,</span>
@@ -6681,6 +6698,9 @@ This does not need to be a unique element itself.</p>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a `Lattice` object from unique elements of the lattice.</span>
+
+<span class="sd">    When `track_start` or `track_end` are specified, unique elements</span>
+<span class="sd">    associated with elements in that range are returned.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -6705,20 +6725,32 @@ This does not need to be a unique element itself.</p>
 <span class="sd">    -------</span>
 <span class="sd">    Lattice</span>
 <span class="sd">    """</span>
-    <span class="n">indices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="nb">int</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">cast</span><span class="p">(</span>
-            <span class="nb">list</span><span class="p">,</span>
-            <span class="n">tao</span><span class="o">.</span><span class="n">lat_list</span><span class="p">(</span>
-                <span class="s2">"*"</span><span class="p">,</span> <span class="s2">"ele.ix_ele"</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="s2">"-no_slaves"</span><span class="p">,</span> <span class="n">ix_branch</span><span class="o">=</span><span class="n">ix_branch</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="n">ix_uni</span>
-            <span class="p">),</span>
+
+    <span class="k">if</span> <span class="n">track_start</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">track_end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">_used_unique_element_indices</span><span class="p">(</span>
+            <span class="n">tao</span><span class="p">,</span>
+            <span class="n">track_start</span><span class="o">=</span><span class="n">track_start</span><span class="p">,</span>
+            <span class="n">track_end</span><span class="o">=</span><span class="n">track_end</span><span class="p">,</span>
+            <span class="n">ix_uni</span><span class="o">=</span><span class="n">ix_uni</span><span class="p">,</span>
+            <span class="n">ix_branch</span><span class="o">=</span><span class="n">ix_branch</span><span class="p">,</span>
         <span class="p">)</span>
-    <span class="p">]</span>
-    <span class="n">ix_start</span> <span class="o">=</span> <span class="n">get_element_index</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">track_start</span><span class="p">)</span> <span class="k">if</span> <span class="n">track_start</span> <span class="k">else</span> <span class="mi">0</span>
-    <span class="n">ix_end</span> <span class="o">=</span> <span class="n">get_element_index</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">track_end</span><span class="p">)</span> <span class="k">if</span> <span class="n">track_end</span> <span class="k">else</span> <span class="nb">max</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span>
+                <span class="n">tao</span><span class="o">.</span><span class="n">lat_list</span><span class="p">(</span>
+                    <span class="s2">"*"</span><span class="p">,</span>
+                    <span class="s2">"ele.ix_ele"</span><span class="p">,</span>
+                    <span class="n">flags</span><span class="o">=</span><span class="s2">"-no_slaves"</span><span class="p">,</span>
+                    <span class="n">ix_branch</span><span class="o">=</span><span class="n">ix_branch</span><span class="p">,</span>
+                    <span class="n">ix_uni</span><span class="o">=</span><span class="n">ix_uni</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+
     <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_tao_eles</span><span class="p">(</span>
         <span class="n">tao</span><span class="o">=</span><span class="n">tao</span><span class="p">,</span>
-        <span class="n">eles</span><span class="o">=</span><span class="p">[</span><span class="n">ix_ele</span> <span class="k">for</span> <span class="n">ix_ele</span> <span class="ow">in</span> <span class="n">indices</span> <span class="k">if</span> <span class="n">ix_start</span> <span class="o">&lt;=</span> <span class="n">ix_ele</span> <span class="o">&lt;=</span> <span class="n">ix_end</span><span class="p">],</span>
+        <span class="n">eles</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">indices</span><span class="p">),</span>
         <span class="n">which</span><span class="o">=</span><span class="n">which</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span>
