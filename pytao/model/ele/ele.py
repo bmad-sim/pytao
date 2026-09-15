@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 import pathlib
+from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, ClassVar, Iterable, Literal, cast
+from typing import TYPE_CHECKING, Any, ClassVar, Literal, cast
 
 import pydantic
 from pydantic import Field
@@ -12,44 +13,43 @@ from .. import _generated as tao_classes
 from ..base import ArchiveFormat, TaoBaseModel
 from ..types import _PydanticComplexNDArray, _PydanticNDArray
 from .comb import Comb, _comb_array_attrs
-
-# Some of these imports are re-exports kept for backwards compatibility --
-# these classes lived in this module before pytao.model.ele.sections existed.
 from .sections import (
     AnyElementAcKicker,
     AnyElementMultipoles,
-    ChamberWallWho as ChamberWallWho,
     ElementAcKicker,
-    ElementAcKickerAmpVsTime as ElementAcKickerAmpVsTime,
-    ElementAcKickerFrequencies as ElementAcKickerFrequencies,
     ElementCartesianMap,
-    ElementCartesianMapTerms as ElementCartesianMapTerms,
     ElementChamberWall,
     ElementCylindricalMap,
-    ElementCylindricalMapTerms as ElementCylindricalMapTerms,
-    ElementFloor as ElementFloor,
     ElementFloorAll,
-    ElementFloorItem as ElementFloorItem,
-    ElementFloorPosition as ElementFloorPosition,
-    ElementGenGradientCurve as ElementGenGradientCurve,
     ElementGenGradients,
     ElementGridField,
     ElementMat6,
     ElementMethods,
     ElementPhoton,
     ElementSpinTaylor,
-    ElementSpinTaylorComponent as ElementSpinTaylorComponent,
-    ElementSrWakeData as ElementSrWakeData,
     ElementTaylor,
-    ElementTaylorSection as ElementTaylorSection,
     ElementWake,
     ElementWall3D,
-    FloorWhere as FloorWhere,
     GeneralAttributes,
-    PhotonWho as PhotonWho,
     Which,
     _AttributeDict,
 )
+
+# Re-exporting for back-compat
+from .sections import ChamberWallWho as ChamberWallWho
+from .sections import ElementAcKickerAmpVsTime as ElementAcKickerAmpVsTime
+from .sections import ElementAcKickerFrequencies as ElementAcKickerFrequencies
+from .sections import ElementCartesianMapTerms as ElementCartesianMapTerms
+from .sections import ElementCylindricalMapTerms as ElementCylindricalMapTerms
+from .sections import ElementFloor as ElementFloor
+from .sections import ElementFloorItem as ElementFloorItem
+from .sections import ElementFloorPosition as ElementFloorPosition
+from .sections import ElementGenGradientCurve as ElementGenGradientCurve
+from .sections import ElementSpinTaylorComponent as ElementSpinTaylorComponent
+from .sections import ElementSrWakeData as ElementSrWakeData
+from .sections import ElementTaylorSection as ElementTaylorSection
+from .sections import FloorWhere as FloorWhere
+from .sections import PhotonWho as PhotonWho
 from .time_stats import _pytao_stats
 
 if TYPE_CHECKING:
@@ -539,49 +539,49 @@ class Element(TaoBaseModel, extra="forbid"):
     which : "base", "model", or "design"
     head : ElementHead
         The head data of the element.
-    ac_kicker : ElementAcKickerAmpVsTime, ElementAcKickerFrequencies, or None, default=None
+    ac_kicker : ElementAcKickerAmpVsTime, ElementAcKickerFrequencies, or None
         AC kicker settings, in one of two representations.
-    attrs : GeneralAttributes or None, default=None
+    attrs : GeneralAttributes or None
         General attributes associated with the element.  The information held
         differs depending on the element's key (i.e., `ele.head.key`).
-    cartesian_map : list[ElementCartesianMap] or None, default=None
+    cartesian_map : list[ElementCartesianMap] or None
         List of cartesian field maps.
-    chamber_walls : list[ElementChamberWall] or None, default=None
+    chamber_walls : list[ElementChamberWall] or None
         List of chamber walls.
-    control_vars : dict[str, float] or None, default=None
+    control_vars : dict[str, float] or None
         Dictionary of control variables with their corresponding current
         values.
-    cylindrical_map : list[ElementCylindricalMap] or None, default=None
+    cylindrical_map : list[ElementCylindricalMap] or None
         List of cylindrical field maps.
-    elec_multipoles : tao_classes.ElementElecMultipoles or None, default=None
+    elec_multipoles : tao_classes.ElementElecMultipoles or None
         Electric multipole attributes.
-    floor : ElementFloorAll or None, default=None
+    floor : ElementFloorAll or None
         Floor positions.
-    gen_gradients : list[ElementGenGradients] or None, default=None
+    gen_gradients : list[ElementGenGradients] or None
         List of generalized gradient maps.
-    grid_field : list[ElementGridField] or None, default=None
+    grid_field : list[ElementGridField] or None
         List of grid field data.
-    lord_slave : list[tao_classes.ElementLordSlave] or None, default=None
+    lord_slave : list[tao_classes.ElementLordSlave] or None
         List of lord-slave relationships.
-    mat6 : ElementMat6 or None, default=None
+    mat6 : ElementMat6 or None
         Mat6 (linear transfer map) information.
-    methods : ElementMethods or None, default=None
+    methods : ElementMethods or None
         Tracking and calculation method settings.
-    multipoles : AnyElementMultipoles or None, default=None
+    multipoles : AnyElementMultipoles or None
         Multipoleattributes.
-    orbit : ElementOrbit or None, default=None
+    orbit : ElementOrbit or None
         Orbit attributes.
-    photon : ElementPhoton or None, default=None
+    photon : ElementPhoton or None
         Photon attributes.
-    spin_taylor : ElementSpinTaylor or None, default=None
+    spin_taylor : ElementSpinTaylor or None
         Spin Taylor map.
-    taylor : ElementTaylor or None, default=None
+    taylor : ElementTaylor or None
         Taylor map.
-    twiss : ElementTwiss or None, default=None
+    twiss : ElementTwiss or None
         Twiss parameters.
-    wake : ElementWake or None, default=None
+    wake : ElementWake or None
         Wake attributes.
-    wall3d : list[ElementWall3D] or None, default=None
+    wall3d : list[ElementWall3D] or None
         List of 3D walls.
     """
 
@@ -590,16 +590,16 @@ class Element(TaoBaseModel, extra="forbid"):
         "attrs",
         "bunch_params",
         "cartesian_map",
-        # "cartesian_map_terms",
+        "cartesian_map_terms",
         "chamber_walls",
         # "comb",
         "control_vars",
         "cylindrical_map",
-        # "cylindrical_map_terms",
+        "cylindrical_map_terms",
         "elec_multipoles",
         "floor",
         "gen_gradients",
-        # "gen_gradient_curves",
+        "gen_gradient_curves",
         "grid_field",
         # "grid_field_points",
         "lord_slave",
@@ -685,34 +685,34 @@ class Element(TaoBaseModel, extra="forbid"):
         which: Which = "model",
         defaults: bool = True,
         # Individually fillable elements:
-        ac_kicker: bool | FillDefault = FillDefault("ac_kicker"),
-        attrs: bool | FillDefault = FillDefault("attrs"),
-        bunch_params: bool | FillDefault = FillDefault("bunch_params"),
-        cartesian_map: bool | FillDefault = FillDefault("cartesian_map"),
-        cartesian_map_terms: bool | FillDefault = FillDefault("cartesian_map_terms"),
-        chamber_walls: bool | FillDefault = FillDefault("chamber_walls"),
-        comb: bool | FillDefault = FillDefault("comb"),
-        control_vars: bool | FillDefault = FillDefault("control_vars"),
-        cylindrical_map: bool | FillDefault = FillDefault("cylindrical_map"),
-        cylindrical_map_terms: bool | FillDefault = FillDefault("cylindrical_map_terms"),
-        elec_multipoles: bool | FillDefault = FillDefault("elec_multipoles"),
-        floor: bool | FillDefault = FillDefault("floor"),
-        gen_gradients: bool | FillDefault = FillDefault("gen_gradients"),
-        gen_gradient_curves: bool | FillDefault = FillDefault("gen_gradient_curves"),
-        grid_field: bool | FillDefault = FillDefault("grid_field"),
-        grid_field_points: bool | FillDefault = FillDefault("grid_field_points"),
-        lord_slave: bool | FillDefault = FillDefault("lord_slave"),
-        mat6: bool | FillDefault = FillDefault("mat6"),
-        methods: bool | FillDefault = FillDefault("methods"),
-        multipoles: bool | FillDefault = FillDefault("multipoles"),
-        orbit: bool | FillDefault = FillDefault("orbit"),
-        photon: bool | FillDefault = FillDefault("photon"),
-        spin_taylor: bool | FillDefault = FillDefault("spin_taylor"),
-        taylor: bool | FillDefault = FillDefault("taylor"),
-        twiss: bool | FillDefault = FillDefault("twiss"),
-        wake: bool | FillDefault = FillDefault("wake"),
-        wall3d: bool | FillDefault = FillDefault("wall3d"),
-        wall3d_table: bool | FillDefault = FillDefault("wall3d_table"),
+        ac_kicker: bool | FillDefault = FillDefault("ac_kicker"),  # noqa: B008
+        attrs: bool | FillDefault = FillDefault("attrs"),  # noqa: B008
+        bunch_params: bool | FillDefault = FillDefault("bunch_params"),  # noqa: B008
+        cartesian_map: bool | FillDefault = FillDefault("cartesian_map"),  # noqa: B008
+        cartesian_map_terms: bool | FillDefault = FillDefault("cartesian_map_terms"),  # noqa: B008
+        chamber_walls: bool | FillDefault = FillDefault("chamber_walls"),  # noqa: B008
+        comb: bool | FillDefault = FillDefault("comb"),  # noqa: B008
+        control_vars: bool | FillDefault = FillDefault("control_vars"),  # noqa: B008
+        cylindrical_map: bool | FillDefault = FillDefault("cylindrical_map"),  # noqa: B008
+        cylindrical_map_terms: bool | FillDefault = FillDefault("cylindrical_map_terms"),  # noqa: B008
+        elec_multipoles: bool | FillDefault = FillDefault("elec_multipoles"),  # noqa: B008
+        floor: bool | FillDefault = FillDefault("floor"),  # noqa: B008
+        gen_gradients: bool | FillDefault = FillDefault("gen_gradients"),  # noqa: B008
+        gen_gradient_curves: bool | FillDefault = FillDefault("gen_gradient_curves"),  # noqa: B008
+        grid_field: bool | FillDefault = FillDefault("grid_field"),  # noqa: B008
+        grid_field_points: bool | FillDefault = FillDefault("grid_field_points"),  # noqa: B008
+        lord_slave: bool | FillDefault = FillDefault("lord_slave"),  # noqa: B008
+        mat6: bool | FillDefault = FillDefault("mat6"),  # noqa: B008
+        methods: bool | FillDefault = FillDefault("methods"),  # noqa: B008
+        multipoles: bool | FillDefault = FillDefault("multipoles"),  # noqa: B008
+        orbit: bool | FillDefault = FillDefault("orbit"),  # noqa: B008
+        photon: bool | FillDefault = FillDefault("photon"),  # noqa: B008
+        spin_taylor: bool | FillDefault = FillDefault("spin_taylor"),  # noqa: B008
+        taylor: bool | FillDefault = FillDefault("taylor"),  # noqa: B008
+        twiss: bool | FillDefault = FillDefault("twiss"),  # noqa: B008
+        wake: bool | FillDefault = FillDefault("wake"),  # noqa: B008
+        wall3d: bool | FillDefault = FillDefault("wall3d"),  # noqa: B008
+        wall3d_table: bool | FillDefault = FillDefault("wall3d_table"),  # noqa: B008
         comb_data: Comb | None = None,
     ):
         """
