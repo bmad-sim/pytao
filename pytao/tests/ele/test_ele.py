@@ -11,7 +11,11 @@ import pytao
 from pytao import SubprocessTao
 from pytao.model.base import TaoBaseModel, format_from_filename
 from pytao.model.ele import Element, Lattice
-from pytao.model.ele.ele import restore_raw_element_ndarrays
+from pytao.model.ele.ele import (
+    _used_unique_element_indices,
+    get_element_index,
+    restore_raw_element_ndarrays,
+)
 from pytao.model.ele.time_stats import _PytaoStatistics, get_pytao_statistics
 from pytao.model.types import NDArray, empty_ndarray
 
@@ -322,6 +326,102 @@ def test_lattice_track_start(cbeta_ffag_tao: SubprocessTao, pytao_stats: _PytaoS
     assert len(removed_indices)
     for idx in removed_indices:
         assert idx not in until_20.by_element_index
+
+
+@pytest.fixture(scope="module")
+def erl_tao():
+    with SubprocessTao(
+        init_file="$ACC_ROOT_DIR/bmad-doc/tao_examples/erl/tao.init",
+        noplot=True,
+    ) as tao:
+        yield tao
+
+
+def _element_names_by_index(tao: SubprocessTao) -> dict[int, str]:
+    return {
+        int(ix): name
+        for ix, name in zip(
+            tao.lat_list("*", "ele.ix_ele", flags=""),
+            tao.lat_list("*", "ele.name", flags=""),
+        )
+    }
+
+
+def _used_unique_names(
+    tao: SubprocessTao,
+    track_start: str | int,
+    track_end: str | int,
+) -> set[str]:
+    names = _element_names_by_index(tao)
+    indices = _used_unique_element_indices(tao, track_start=track_start, track_end=track_end)
+    return {names[ix] for ix in indices}
+
+
+@pytest.mark.parametrize("tao_fixture", ["erl_tao", "cbeta_ffag_tao"])
+def test_used_unique_full_range_matches_no_slaves(
+    request: pytest.FixtureRequest, tao_fixture: str
+):
+    tao: SubprocessTao = request.getfixturevalue(tao_fixture)
+    last_tracked = max(int(ix) for ix in tao.lat_list("*", "ele.ix_ele", flags="-track_only"))
+    no_slaves = sorted(int(ix) for ix in tao.lat_list("*", "ele.ix_ele", flags="-no_slaves"))
+    assert (
+        _used_unique_element_indices(tao, track_start=0, track_end=last_tracked) == no_slaves
+    )
+
+
+@pytest.mark.parametrize(
+    ("element", "expected"),
+    [
+        # Multipass slave -> its multipass lord, plus the overlay controlling
+        # the lord.  Unrelated elements sharing the overlay (e.g. CAV2 for a
+        # CAV1 range) must not be pulled in.
+        pytest.param("CAV1\\1", {"CAV1", "O_PHASE"}, id="multipass-pass-1"),
+        pytest.param("CAV2\\2", {"CAV2", "O_PHASE"}, id="multipass-pass-2"),
+        pytest.param("T1", {"T1"}, id="free-element"),
+        pytest.param(0, {"BEGINNING"}, id="track-end-zero"),
+    ],
+)
+def test_used_unique_multipass(erl_tao: SubprocessTao, element: str | int, expected: set[str]):
+    assert _used_unique_names(erl_tao, element, element) == expected
+
+
+def test_used_unique_multipass_range(erl_tao: SubprocessTao):
+    # Tracking through all of pass 1 uses every multipass lord and the
+    # overlay, but not the elements beyond the range (T1, END).
+    ix_end = get_element_index(erl_tao, "LINAC.END\\1")
+    assert _used_unique_names(erl_tao, 0, ix_end) == {
+        "BEGINNING",
+        "LINAC.BEG",
+        "D1",
+        "CAV1",
+        "D2",
+        "CAV2",
+        "D3",
+        "LINAC.END",
+        "O_PHASE",
+    }
+
+
+@pytest.mark.parametrize(
+    ("element", "expected"),
+    [
+        pytest.param("FA.QUA01#1", {"FA.QUA01"}, id="super-slave"),
+        # A super slave with two overlapping superimposed lords
+        pytest.param("FA.PIP02\\FA.COR01", {"FA.PIP02", "FA.COR01"}, id="overlapping-lords"),
+    ],
+)
+def test_used_unique_superimposed(
+    cbeta_ffag_tao: SubprocessTao, element: str, expected: set[str]
+):
+    ix = get_element_index(cbeta_ffag_tao, element)
+    assert _used_unique_names(cbeta_ffag_tao, ix, ix) == expected
+
+
+def test_from_tao_unique_range_multipass(erl_tao: SubprocessTao):
+    lat = Lattice.from_tao_unique(
+        erl_tao, defaults=True, track_start="CAV1\\1", track_end="CAV1\\1"
+    )
+    assert {ele.name for ele in lat.elements} == {"CAV1", "O_PHASE"}
 
 
 @pytest.mark.parametrize(
