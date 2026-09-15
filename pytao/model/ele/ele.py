@@ -829,7 +829,7 @@ class Element(TaoBaseModel, extra="forbid"):
         ele = to_ele_id(ele)
 
         head = tao_classes.ElementHead.from_tao(tao, ele_id=ele, which=which)
-        instance = cls(which=which, head=head, ele=ele)
+        instance = cls(which=which, head=head, ele_id=ele)
 
         def should_fill(flag: bool | FillDefault):
             if flag is True or flag is False:
