@@ -521,7 +521,7 @@ def get_element_index(tao: Tao, ele: AnyElementID) -> int:
     return tao_classes.ElementHead.from_tao(tao, ele_id=ele, which="model").ix_ele
 
 
-@dataclass
+@dataclass(frozen=True)
 class FillDefault:
     attr: str
 
