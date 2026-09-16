@@ -23,7 +23,7 @@ from .errors import (
     set_log_mode,
 )
 from .util import parsers as _pytao_parsers
-
+from .util.completion import line_candidates, make_readline_completer
 # from .util.parameters import tao_parameter_dict
 
 if TYPE_CHECKING:
@@ -99,28 +99,20 @@ def ipython_shell(tao: AnyTao) -> None:
         banner1="Entering Tao interactive shell. Type commands as in Tao.",
     )
 
-    def tao_top_level_completer(ipython, event):
-        """Tab completion for top-level Tao commands."""
-        options = list(tao._autocomplete_usage_)
+    def tao_pipe_completer(ipython, event):
+        """Tab completion driven by Tao's own completion engine (pipe complete)."""
+        line = getattr(event, "text_until_cursor", event.line)
+        try:
+            _, matches = line_candidates(tao, line)
+        except Exception:
+            logger.debug("Tao completion failed", exc_info=True)
+            return None
+        return matches
 
-        parts = [part.lower() for part in event.line.lstrip().split()]
-
-        if " ".join(parts[:2]) in {"change ele", "set ele", "show ele"}:
-            return tao.lat_list(f"{event.symbol}*", "ele.name")
-
-        cmd = parts[0] if parts else None
-
-        if cmd not in tao._autocomplete_usage_:
-            return [opt for opt in options if opt.startswith(event.symbol.lower())]
-
-        level = len(parts)
-        return [
-            option.split(" ")[level]
-            for option, _help in tao._autocomplete_usage_[cmd]
-            if option.count(" ") > level and "{" not in option and "<" not in option
-        ]
-
-    ipshell.set_hook("complete_command", tao_top_level_completer, re_key="^")
+    ipshell.set_hook("complete_command", tao_pipe_completer, re_key="^")
+    # Tao completion candidates are full replacements for blank-delimited
+    # tokens, so tokens like "orbit.x" or "2@q1" must not be split further.
+    ipshell.Completer.splitter.delims = " \t"
 
     print("Type 'exit', 'quit', or press Ctrl-D on a blank line to return to IPython mode.")
 
@@ -151,21 +143,38 @@ def simple_shell(tao: Tao) -> None:
     print("Entering Tao interactive shell.")
     print("Type 'exit', 'quit', or press Ctrl-D on a blank line to return to Python mode.")
 
-    while True:
-        try:
-            cmd = input("Tao> ")
-            if cmd.lower() in ("exit", "quit"):
+    try:
+        import readline
+    except ImportError:
+        readline = None
+
+    if readline is not None:
+        old_completer = readline.get_completer()
+        old_delims = readline.get_completer_delims()
+        readline.set_completer(make_readline_completer(tao))
+        readline.set_completer_delims(" \t")
+        readline.parse_and_bind("tab: complete")
+
+    try:
+        while True:
+            try:
+                cmd = input("Tao> ")
+                if cmd.lower() in ("exit", "quit"):
+                    break
+                result = tao.cmd(cmd)
+                res = tao.cmd(cmd, raises=False)
+                if isinstance(res, str):
+                    res = [res]
+                if res:
+                    print("\n".join(result))
+            except (KeyboardInterrupt, EOFError):
                 break
-            result = tao.cmd(cmd)
-            res = tao.cmd(cmd, raises=False)
-            if isinstance(res, str):
-                res = [res]
-            if res:
-                print("\n".join(result))
-        except (KeyboardInterrupt, EOFError):
-            break
-        except Exception as e:
-            print(f"Error: {e}")
+            except Exception as e:
+                print(f"Error: {e}")
+    finally:
+        if readline is not None:
+            readline.set_completer(old_completer)
+            readline.set_completer_delims(old_delims)
 
 
 def register_input_transformer(prefix: str = "`"):
@@ -205,6 +214,36 @@ def register_input_transformer(prefix: str = "`"):
 
     # Register the transformer in the IPython instance
     ip.input_transformers_post.append(tao_transform)
+
+    from IPython.core.completer import SimpleCompletion, context_matcher
+
+    @context_matcher()
+    def tao_prefix_matcher(context):
+        """Complete Tao command lines entered with the input-transformer prefix."""
+        no_match = {"completions": [], "suppress": False}
+
+        stripped = context.text_until_cursor.lstrip()
+        if not stripped.startswith(prefix):
+            return no_match
+
+        # The transformer sends the line to the `tao` object in the user namespace.
+        tao = ip.user_ns.get("tao")
+        if tao is None:
+            return no_match
+
+        try:
+            word, matches = line_candidates(tao, stripped[len(prefix) :])
+        except Exception:
+            logger.debug("Tao completion failed", exc_info=True)
+            return no_match
+
+        return {
+            "completions": [SimpleCompletion(match) for match in matches],
+            "suppress": bool(matches),
+            "matched_fragment": word,
+        }
+
+    ip.Completer.custom_matchers.append(tao_prefix_matcher)
 
 
 def _tao_line_cell_magic(tao_instance: Tao, line: str, cell: str | None = None):
@@ -664,7 +703,7 @@ class TaoCore:
         ... sho lat
         """
 
-        register_input_transformer()
+        register_input_transformer(prefix)
 
     def register_cell_magic(self):
         """
