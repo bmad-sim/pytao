@@ -15,6 +15,7 @@ from .parser_types import (
     BuildingWallGlobalInfo,
     BuildingWallGraphInfo,
     BuildingWallInfo,
+    CompleteResult,
     ConstraintDataInfo,
     ConstraintVarInfo,
     DataD1ArrayInfo,
@@ -784,6 +785,26 @@ def parse_building_wall_graph(lines, cmd="") -> list[BuildingWallGraphInfo]:
             "radius": float,
         },
     )
+
+
+def parse_complete(lines, cmd="") -> CompleteResult:
+    """
+    Parse pipe complete results.
+
+    Parameters
+    ----------
+    lines : list of str
+        The output of the 'pipe complete' command to parse.
+
+    Returns
+    -------
+    dict
+        With keys ``word`` (the partial token being completed), ``context``
+        (``"LIST"``, ``"FILE"``, or ``"NONE"``), and ``matches`` (full
+        replacement candidates for ``word``).
+    """
+    word, _, context = lines[0].rpartition(";")
+    return CompleteResult(word=word, context=context, matches=lines[1:])
 
 
 def parse_constraints(lines, cmd="") -> list[ConstraintDataInfo] | list[ConstraintVarInfo]:

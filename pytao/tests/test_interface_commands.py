@@ -174,6 +174,16 @@ def test_complete_1(caplog, tao_cls):
         tao.complete(line="sho", verbose=True)
 
 
+def test_complete_1(caplog, tao_cls):
+    with ensure_successful_parsing(caplog):
+        with new_tao(
+            tao_cls,
+            "-init $ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init",
+            external_plotting=False,
+        ) as tao:
+            tao.complete(line="sho", verbose=True)
+
+
 def test_constraints_1(caplog, tao_cls):
     with (
         ensure_successful_parsing(caplog),

@@ -293,6 +293,12 @@ class PlotListRegionInfo(TypedDict):
     y2: float
 
 
+class CompleteResult(TypedDict):
+    word: str
+    context: str
+    matches: list[str]
+
+
 class ConstraintDataInfo(TypedDict):
     datum_name: str
     constraint_type_name: str
