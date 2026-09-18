@@ -281,7 +281,8 @@
           },
           {
             "lattice_id": "lat_a",
-            "type": "ele_max",
+            "type": "ele_reduce",
+            "operator": "max",
             "ix_uni": 1,
             "ix_branch": 0,
             "begin_ele": null,

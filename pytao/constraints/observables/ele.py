@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections import defaultdict
+from collections.abc import Callable, Sequence
+from enum import Enum
 from typing import Literal
 
 import numpy as np
@@ -476,9 +478,22 @@ class EleLiteral(LiteralObservable[EleObservation]):
         return _build_ele_observation(**self.model_dump(exclude={"type"}))
 
 
+class ReduceMode(str, Enum):
+    MIN = "min"
+    MAX = "max"
+    AVG = "avg"
+
+
+REDUCE_FN_MAP: dict[ReduceMode, Callable[[Sequence[float]], float]] = {
+    ReduceMode.MIN: min,
+    ReduceMode.MAX: max,
+    ReduceMode.AVG: np.mean,
+}
+
+
 def _ele_reduce(
     tao: Tao,
-    reduce_fn: Callable[[float, float], float],
+    reduce_mode: ReduceMode,
     ix_uni: str = "1",
     ix_branch: str = "0",
     begin_ele: str | int | None = None,
@@ -486,6 +501,8 @@ def _ele_reduce(
 ) -> EleObservation:
     ix_begin: int | None = None
     ix_end: int | None = None
+
+    reduce_fn = REDUCE_FN_MAP[reduce_mode]
 
     if begin_ele is not None or end_ele is not None:
         ix_end_marker = get_element_index(tao, "END")
@@ -498,11 +515,7 @@ def _ele_reduce(
             if ix_end >= ix_end_marker:
                 raise ValueError(f"end_ele {end_ele!r} is not a tracking element")
 
-    beta_a = alpha_a = beta_b = alpha_b = None
-    eta_x = etap_x = eta_y = etap_y = None
-    p0c = None
-    floor_x = floor_y = floor_z = None
-
+    values: dict[str, list[float]] = defaultdict(list)
     for ix_ele in tao.lat_list("*", "ele.ix_ele", ix_uni=ix_uni, ix_branch=ix_branch):
         ix_ele_int = int(ix_ele)
         if ix_begin is not None and ix_ele_int < ix_begin:
@@ -511,37 +524,26 @@ def _ele_reduce(
             continue
         ele = tao.ele(ix_ele, ix_uni=ix_uni, ix_branch=ix_branch)
         if ele.twiss is not None:
-            t = ele.twiss
-            beta_a = reduce_fn(beta_a, t.beta_a) if beta_a is not None else t.beta_a
-            alpha_a = reduce_fn(alpha_a, t.alpha_a) if alpha_a is not None else t.alpha_a
-            beta_b = reduce_fn(beta_b, t.beta_b) if beta_b is not None else t.beta_b
-            alpha_b = reduce_fn(alpha_b, t.alpha_b) if alpha_b is not None else t.alpha_b
-            eta_x = reduce_fn(eta_x, t.eta_x) if eta_x is not None else t.eta_x
-            etap_x = reduce_fn(etap_x, t.etap_x) if etap_x is not None else t.etap_x
-            eta_y = reduce_fn(eta_y, t.eta_y) if eta_y is not None else t.eta_y
-            etap_y = reduce_fn(etap_y, t.etap_y) if etap_y is not None else t.etap_y
+            for twiss_param in (
+                "beta_a",
+                "alpha_a",
+                "beta_b",
+                "alpha_b",
+                "eta_x",
+                "eta_y",
+                "etap_x",
+                "etap_y",
+            ):
+                values[twiss_param].append(getattr(ele.twiss, twiss_param))
         if ele.orbit is not None:
-            p0c = reduce_fn(p0c, ele.orbit.p0c) if p0c is not None else ele.orbit.p0c
+            values["p0c"].append(ele.orbit.p0c)
         if ele.floor is not None and ele.floor.end.actual is not None:
             fa = ele.floor.end.actual
-            floor_x = reduce_fn(floor_x, fa.x) if floor_x is not None else fa.x
-            floor_y = reduce_fn(floor_y, fa.y) if floor_y is not None else fa.y
-            floor_z = reduce_fn(floor_z, fa.z) if floor_z is not None else fa.z
+            values["floor_x"].append(fa.x)
+            values["floor_y"].append(fa.y)
+            values["floor_z"].append(fa.z)
 
-    return _build_ele_observation(
-        beta_a=beta_a,
-        alpha_a=alpha_a,
-        beta_b=beta_b,
-        alpha_b=alpha_b,
-        eta_x=eta_x,
-        etap_x=etap_x,
-        eta_y=eta_y,
-        etap_y=etap_y,
-        p0c=p0c,
-        floor_x=floor_x,
-        floor_y=floor_y,
-        floor_z=floor_z,
-    )
+    return _build_ele_observation(**{name: reduce_fn(vals) for name, vals in values.items()})
 
 
 class EleObservable(LatticeObservable[EleObservation]):
@@ -581,20 +583,28 @@ class EleObservable(LatticeObservable[EleObservation]):
         )
 
 
-class EleMaxObservable(LatticeObservable[EleObservation]):
-    """Observable yielding the per-field maximum across all tracking elements.
+class EleReduceObservable(LatticeObservable[EleObservation]):
+    """
+    Observable that performs a reduction across all tracking elements
 
     Attributes
     ----------
     type : str
-        Discriminator literal. Always ``"ele_max"``.
+        Discriminator literal. Always ``"ele_reduce"``.
     ix_uni : int
         Universe index.
     ix_branch : int
         Branch index.
+    begin_ele : str | int | None, optional
+        Starting element name or index.  None implies first element.
+        By default None.
+    end_ele : str | int | None, optional
+        Ending element name or index.  None implies end element.
+        By default None.
     """
 
-    type: Literal["ele_max"] = "ele_max"
+    type: Literal["ele_reduce"] = "ele_reduce"
+    operator: ReduceMode
     ix_uni: int = Field(default=1, ge=0)
     ix_branch: int = Field(default=0, ge=0)
     begin_ele: str | int | None = None
@@ -607,51 +617,12 @@ class EleMaxObservable(LatticeObservable[EleObservation]):
             if self.ix_uni != 1 or self.ix_branch != 0
             else ""
         )
-        return f"{self.lattice_id}[max{suffix}]"
+        return f"{self.lattice_id}[{self.operator.value}{suffix}]"
 
     def _make_observation(self, tao: Tao) -> EleObservation:
         return _ele_reduce(
             tao,
-            max,
-            ix_uni=str(self.ix_uni),
-            ix_branch=str(self.ix_branch),
-            begin_ele=self.begin_ele,
-            end_ele=self.end_ele,
-        )
-
-
-class EleMinObservable(LatticeObservable[EleObservation]):
-    """Observable yielding the per-field minimum across all tracking elements.
-
-    Attributes
-    ----------
-    type : str
-        Discriminator literal. Always ``"ele_min"``.
-    ix_uni : int
-        Universe index.
-    ix_branch : int
-        Branch index.
-    """
-
-    type: Literal["ele_min"] = "ele_min"
-    ix_uni: int = Field(default=1, ge=0)
-    ix_branch: int = Field(default=0, ge=0)
-    begin_ele: str | int | None = None
-    end_ele: str | int | None = None
-
-    @property
-    def label(self) -> str:
-        suffix = (
-            f"@{self.ix_uni}:{self.ix_branch}"
-            if self.ix_uni != 1 or self.ix_branch != 0
-            else ""
-        )
-        return f"{self.lattice_id}[min{suffix}]"
-
-    def _make_observation(self, tao: Tao) -> EleObservation:
-        return _ele_reduce(
-            tao,
-            min,
+            self.operator,
             ix_uni=str(self.ix_uni),
             ix_branch=str(self.ix_branch),
             begin_ele=self.begin_ele,

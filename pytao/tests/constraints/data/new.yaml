@@ -7,30 +7,36 @@ lattices:
   lat_c:
     lattice_file: lattices/lat_c.lat.bmad
 
-# List of constraints. Each constraint defined by its `type`. The constraints each have two observables, the type of
-# which is set by `type` and can be derived from the lattice or a literal. The constraints may include short descriptions
+comparisons:
+  default_comp:
+    comp_type: ele_is_less
+    beta_a: true
+    beta_b: true
+
+# List of constraints. Each constraint defined by its `constraint_type`. The constraints each have two observables, the type of
+# which is set by `obs_type` and can be derived from the lattice or a literal. The constraints may include short descriptions
 # and longer comments for documentation.
 constraints:
-  - type: ele_eq
+  - constraint_type: ele_eq
     description: Short description, lat_a, lat_b treaty point
     comment: Longer comment included on error and in reports. eg Please rerun `tune_matcher.tao` in event of failure.
     obs_a:
-      type: ele
+      obs_type: ele
       lattice_id: lat_a
       ele_id: END
     obs_b:
-      type: ele
+      obs_type: ele
       lattice_id: lat_b
       ele_id: BEGINNING
 
-  - type: ele_eq
+  - constraint_type: ele_eq
     description: Example of a failing constraint
     obs_a:
-      type: ele
+      obs_type: ele
       lattice_id: lat_a
       ele_id: END
     obs_b:
-      type: ele
+      obs_type: ele
       lattice_id: lat_c
       ele_id: BEGINNING
     comparison:
@@ -44,28 +50,25 @@ constraints:
       floor_z:
         atol: 1e-6
 
-  - type: ele_lt
+  - constraint_type: ele_lt
     description: lat_a beta sanity check
     obs_a:
-      type: ele_reduce
-      operator: max
+      obs_type: ele_max
       lattice_id: lat_a
     obs_b:
-      type: ele_literal
+      obs_type: ele_literal
       beta_a: 200
       beta_b: 200
-    comparison:
-      beta_a: true
-      beta_b: true
+    comparison: default_comp
 
-  - type: datum_eq
+  - constraint_type: datum_eq
     description: Datum and literal example
     obs_a:
-      type: datum
+      obs_type: datum
       lattice_id: lat_a
       data_type: r56_compaction
       ele_name: END
     obs_b:
-      type: datum_literal
+      obs_type: datum_literal
       model_value: 1.04448e-08
       design_value: 0.0

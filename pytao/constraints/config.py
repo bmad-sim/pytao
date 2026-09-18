@@ -15,8 +15,7 @@ from pytao.constraints.observables import (
     EleIsClose,
     EleLessThan,
     EleLiteral,
-    EleMaxObservable,
-    EleMinObservable,
+    EleReduceObservable,
     EleObservable,
     EleObservation,
     IsClose,
@@ -35,7 +34,7 @@ CompT = TypeVar("CompT", bound=Comparison[Any])
 
 
 EleObservables = Annotated[
-    Union[EleObservable, EleMaxObservable, EleMinObservable, EleLiteral],
+    Union[EleObservable, EleReduceObservable, EleLiteral],
     Field(discriminator="type"),
 ]
 
