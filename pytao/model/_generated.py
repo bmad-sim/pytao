@@ -6,15 +6,16 @@ This file is auto-generated; do not hand-edit it.
 from __future__ import annotations
 
 import logging
+from collections.abc import Sequence
 from typing import (
     Any,
     ClassVar,
-    Sequence,
 )
 
 from pydantic import Field
 
 from .base import (
+    FromTaoListMixin,
     TaoModel,
     TaoSettableModel,
 )
@@ -850,7 +851,42 @@ class ElementBunchParams(TaoModel):
     twiss_sigma_z: float = Field(default=0.0, frozen=True)
 
 
-class ElementChamberWall(TaoModel):
+class ElementCartesianMap(TaoModel):
+    """
+    Structure which corresponds to Tao `pipe ele:cartesian_map Q1 1 base`, for example.
+
+    Attributes
+    ----------
+    ele_anchor_pt : str
+        anchor_beginning$, anchor_center$, or anchor_end$
+    field_scale : float
+        Factor to scale the fields by
+    file : str
+    master_parameter : str
+        Master parameter in ele%value(:) array to use for scaling the field.
+    nongrid_field_type : str
+    r0 : sequence of floats
+        Field origin offset.
+    """
+
+    _tao_command_attr_: ClassVar[str] = "ele_cartesian_map"
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {"who": "base"}
+    ele_anchor_pt: str = Field(
+        default="", description="anchor_beginning$, anchor_center$, or anchor_end$"
+    )
+    field_scale: float = Field(default=1.0, description="Factor to scale the fields by")
+    file: str = ""
+    master_parameter: str = Field(
+        default="",
+        description="Master parameter in ele%value(:) array to use for scaling the field.",
+    )
+    nongrid_field_type: str = Field(default="", alias="nongrid^field_type")
+    r0: FloatSequence = Field(
+        default=[0.0, 0.0, 0.0], max_length=3, description="Field origin offset."
+    )
+
+
+class ElementChamberWall(TaoModel, FromTaoListMixin):
     """
     Structure which corresponds to Tao `pipe ele:chamber_wall 1 1 x`, for example.
 
@@ -868,6 +904,188 @@ class ElementChamberWall(TaoModel):
     section: int = 0
     z1: float = 0.0
     z2_neg: float = Field(default=0.0, alias="-z2")
+
+
+class ElementCylindricalMap(TaoModel):
+    """
+    Structure which corresponds to Tao `pipe ele:cylindrical_map M1 1 base`, for example.
+
+    Attributes
+    ----------
+    dz : float
+        Distance between sampled field points.
+    ele_anchor_pt : str
+        anchor_beginning$, anchor_center$, or anchor_end$
+    field_scale : float
+        Factor to scale the fields by
+    file : str
+    harmonic : int
+        Harmonic of fundamental
+    m : int
+        Azimuthal Mode: varies as cos(m*phi - theta0_azimuth)
+    master_parameter : str
+        Master parameter in ele%value(:) array to use for scaling the field.
+    number_of_terms : int
+    phi0_fieldmap : float
+        Mode oscillates as: twopi * (f * t + phi0_fieldmap)
+    r0 : sequence of floats
+        Field origin offset.
+    theta0_azimuth : float
+        Azimuthal ((x, y) plane) orientation of mode.
+    """
+
+    _tao_command_attr_: ClassVar[str] = "ele_cylindrical_map"
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {"who": "base"}
+    dz: float = Field(default=0.0, description="Distance between sampled field points.")
+    ele_anchor_pt: str = Field(
+        default="", description="anchor_beginning$, anchor_center$, or anchor_end$"
+    )
+    field_scale: float = Field(default=1.0, description="Factor to scale the fields by")
+    file: str = ""
+    harmonic: int = Field(default=0, description="Harmonic of fundamental")
+    m: int = Field(
+        default=0, description="Azimuthal Mode: varies as cos(m*phi - theta0_azimuth)"
+    )
+    master_parameter: str = Field(
+        default="",
+        description="Master parameter in ele%value(:) array to use for scaling the field.",
+    )
+    number_of_terms: int = Field(default=0, frozen=True)
+    phi0_fieldmap: float = Field(
+        default=0.0, description="Mode oscillates as: twopi * (f * t + phi0_fieldmap)"
+    )
+    r0: FloatSequence = Field(
+        default=[0.0, 0.0, 0.0], max_length=3, description="Field origin offset."
+    )
+    theta0_azimuth: float = Field(
+        default=0.0, description="Azimuthal ((x, y) plane) orientation of mode."
+    )
+
+
+class ElementElecMultipoles_Data(TaoModel):
+    """
+    Structure which corresponds to Tao `pipe ele:elec_multipoles crab_cavity1`, for example.
+
+    Attributes
+    ----------
+    an_elec : float
+    an_elec_scaled : float
+    bn_elec : float
+    bn_elec_scaled : float
+    index : int
+    """
+
+    _tao_command_attr_: ClassVar[str] = "ele_elec_multipoles"
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    an_elec: float = Field(default=0.0, alias="An_elec")
+    an_elec_scaled: float = Field(default=0.0, alias="An_elec (Scaled)")
+    bn_elec: float = Field(default=0.0, alias="Bn_elec")
+    bn_elec_scaled: float = Field(default=0.0, alias="Bn_elec (Scaled)")
+    index: int = 0
+
+
+class ElementElecMultipoles(TaoModel):
+    """
+    Structure which corresponds to Tao `pipe ele:elec_multipoles crab_cavity1`, for example.
+
+    Attributes
+    ----------
+    data : ElementElecMultipoles_Data
+        Structure which corresponds to Tao `pipe ele:elec_multipoles
+    crab_cavity1`, for example.
+    multipoles_on : bool
+        For turning multipoles on/off
+    scale_multipoles : bool or None
+        Are ab_multipoles within other elements (EG: quads, etc.) scaled by
+    the strength of the element?
+    """
+
+    _tao_command_attr_: ClassVar[str] = "ele_elec_multipoles"
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    data: Sequence[ElementElecMultipoles_Data] = Field(
+        default_factory=list,
+        description=(
+            "Structure which corresponds to Tao `pipe ele:elec_multipoles "
+            "crab_cavity1`, for example."
+        ),
+    )
+    multipoles_on: bool = Field(default=True, description="For turning multipoles on/off")
+    scale_multipoles: bool | None = Field(
+        default=None,
+        description=(
+            "Are ab_multipoles within other elements (EG: quads, etc.) scaled by the "
+            "strength of the element?"
+        ),
+    )
+
+
+class ElementGenGradients(TaoModel):
+    """
+    Structure which corresponds to Tao `pipe ele:gen_gradients GG 1 base`, for example.
+
+    Attributes
+    ----------
+    dz : float
+        Point spacing between base planes.
+    ele_anchor_pt : str
+        anchor_beginning$, anchor_center$, or anchor_end$
+    field_scale : float
+        Factor to scale the fields by.
+    file : str
+        Input file name. Used also as ID for instances.
+    g_ref : float
+        Reference-frame curvature 1/rho (0 => straight frame). Must be equal
+    to g for a bend and zero for all else.
+    iz0 : int
+        curve%deriv(iz0:iz1, :) lower bound.
+    iz1 : int
+        curve%deriv(iz0:iz1, :) upper bound.
+    master_parameter : str
+        Master parameter in ele%value(:) array to use for scaling the field.
+    nongrid_field_type : str
+    r0 : sequence of floats
+        Field origin relative to ele_anchor_pt. r0(1:2) = transverse expansion
+    axis (GGCoefs origin), r0(3) = longitudinal offset.
+    size_of_curve : int
+    """
+
+    _tao_command_attr_: ClassVar[str] = "ele_gen_gradients"
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {"who": "base"}
+    dz: float = Field(default=0.0, description="Point spacing between base planes.")
+    ele_anchor_pt: str = Field(
+        default="", description="anchor_beginning$, anchor_center$, or anchor_end$"
+    )
+    field_scale: float = Field(default=1.0, description="Factor to scale the fields by.")
+    file: str = Field(
+        default="", description="Input file name. Used also as ID for instances."
+    )
+    g_ref: float = Field(
+        default=0.0,
+        description=(
+            "Reference-frame curvature 1/rho (0 => straight frame). Must be equal to g "
+            "for a bend and zero for all else."
+        ),
+    )
+    iz0: int = Field(
+        default=0, description="curve%deriv(iz0:iz1, :) lower bound.", frozen=True
+    )
+    iz1: int = Field(
+        default=0, description="curve%deriv(iz0:iz1, :) upper bound.", frozen=True
+    )
+    master_parameter: str = Field(
+        default="",
+        description="Master parameter in ele%value(:) array to use for scaling the field.",
+    )
+    nongrid_field_type: str = Field(default="", alias="nongrid^field_type")
+    r0: FloatSequence = Field(
+        default=[0.0, 0.0, 0.0],
+        max_length=3,
+        description=(
+            "Field origin relative to ele_anchor_pt. r0(1:2) = transverse expansion "
+            "axis (GGCoefs origin), r0(3) = longitudinal offset."
+        ),
+    )
+    size_of_curve: int = Field(default=0, frozen=True)
 
 
 class ElementGridField(TaoModel):
@@ -900,7 +1118,7 @@ class ElementGridField(TaoModel):
     """
 
     _tao_command_attr_: ClassVar[str] = "ele_grid_field"
-    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {"who": "base"}
     curved_ref_frame: bool = False
     dr: FloatSequence = Field(
         default=[0.0, 0.0, 0.0], max_length=3, description="Grid spacing."
@@ -928,7 +1146,7 @@ class ElementGridField(TaoModel):
     )
 
 
-class ElementGridFieldPoints(TaoModel):
+class ElementGridFieldPoints(TaoModel, FromTaoListMixin):
     """
     Structure which corresponds to Tao `pipe ele:grid_field G1 1 points`, for example.
 
@@ -941,7 +1159,7 @@ class ElementGridFieldPoints(TaoModel):
     """
 
     _tao_command_attr_: ClassVar[str] = "ele_grid_field"
-    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {"who": "points"}
     data: FloatSequence = list()
     i: int = 0
     j: int = 0
@@ -1051,7 +1269,7 @@ class ElementHead(TaoModel):
     universe: int = Field(default=0, frozen=True)
 
 
-class ElementLordSlave(TaoModel):
+class ElementLordSlave(TaoModel, FromTaoListMixin):
     """
     Structure which corresponds to Tao `pipe ele:lord_slave 1 1 x`, for example.
 
@@ -1088,7 +1306,7 @@ class ElementMat6(TaoModel):
     """
 
     _tao_command_attr_: ClassVar[str] = "ele_mat6"
-    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {"who": "mat6"}
     data_1: FloatSequence = Field(default_factory=list, max_length=6, alias="1", frozen=True)
     data_2: FloatSequence = Field(default_factory=list, max_length=6, alias="2", frozen=True)
     data_3: FloatSequence = Field(default_factory=list, max_length=6, alias="3", frozen=True)
@@ -1107,7 +1325,7 @@ class ElementMat6Error(TaoModel):
     """
 
     _tao_command_attr_: ClassVar[str] = "ele_mat6"
-    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {"who": "err"}
     symplectic_error: float = Field(default=0.0, frozen=True)
 
 
@@ -1121,7 +1339,7 @@ class ElementMat6Vec0(TaoModel):
     """
 
     _tao_command_attr_: ClassVar[str] = "ele_mat6"
-    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {"who": "vec0"}
     vec0: FloatSequence = Field(default_factory=list, max_length=6, frozen=True)
 
 
@@ -1433,7 +1651,7 @@ class ElementPhotonBase(TaoModel):
     """
 
     _tao_command_attr_: ClassVar[str] = "ele_photon"
-    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {"who": "base"}
     has_material: bool = Field(default=False, alias="has#material", frozen=True)
     has_pixel: bool = Field(default=False, alias="has#pixel", frozen=True)
 
@@ -1456,7 +1674,7 @@ class ElementPhotonCurvature(TaoModel):
     """
 
     _tao_command_attr_: ClassVar[str] = "ele_photon"
-    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {"who": "curvature"}
     elliptical_curvature: FloatSequence = Field(default_factory=list, max_length=3)
     spherical_curvature: float = 0.0
     xy_0: FloatSequence = Field(default_factory=list, max_length=7, alias="xy(0,:)")
@@ -1482,7 +1700,7 @@ class ElementPhotonMaterial(TaoModel):
     """
 
     _tao_command_attr_: ClassVar[str] = "ele_photon"
-    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {"who": "material"}
     f0_m1: complex | None = Field(default=None, alias="F0_m1", frozen=True)
     f0_m2: complex = Field(default=0j, alias="F0_m2", frozen=True)
     f_h: complex = Field(default=0j, alias="F_H", frozen=True)
@@ -1597,7 +1815,7 @@ class ElementWakeBase(TaoModel):
     """
 
     _tao_command_attr_: ClassVar[str] = "ele_wake"
-    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {"who": "base"}
     has_lr_mode: bool = Field(default=False, alias="has#lr_mode", frozen=True)
     has_sr_long: bool = Field(default=False, alias="has#sr_long", frozen=True)
     has_sr_trans: bool = Field(default=False, alias="has#sr_trans", frozen=True)
@@ -1644,13 +1862,13 @@ class ElementWakeSrLong(TaoModel):
     """
 
     _tao_command_attr_: ClassVar[str] = "ele_wake"
-    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {"who": "sr_long"}
     z_ref: float = 0.0
 
 
 class ElementWakeSrTrans(TaoModel):
     """
-    Structure which corresponds to Tao `pipe ele:wake P3 sr_long`, for example.
+    Structure which corresponds to Tao `pipe ele:wake P3 sr_trans`, for example.
 
     Attributes
     ----------
@@ -1658,7 +1876,7 @@ class ElementWakeSrTrans(TaoModel):
     """
 
     _tao_command_attr_: ClassVar[str] = "ele_wake"
-    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {"who": "sr_trans"}
     z_ref: float = 0.0
 
 
@@ -1681,7 +1899,7 @@ class ElementWall3DBase(TaoModel):
     """
 
     _tao_command_attr_: ClassVar[str] = "ele_wall3d"
-    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {"who": "base"}
     clear_material: str | None = None
     ele_anchor_pt: str = Field(
         default="", description="anchor_beginning$, anchor_center$, or anchor_end$"
@@ -1716,7 +1934,7 @@ class ElementWall3DTable_Data(TaoModel):
     y: float = 0.0
 
 
-class ElementWall3DTable(TaoModel):
+class ElementWall3DTable(TaoModel, FromTaoListMixin):
     """
     Structure which corresponds to Tao `pipe ele:wall3d 1 1 table`, for example.
 
@@ -1736,7 +1954,7 @@ class ElementWall3DTable(TaoModel):
     """
 
     _tao_command_attr_: ClassVar[str] = "ele_wall3d"
-    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {"who": "table"}
     data: Sequence[ElementWall3DTable_Data] = Field(
         default_factory=list,
         description="Structure which corresponds to Tao `pipe ele:wall3d 1 1 table`, for example.",

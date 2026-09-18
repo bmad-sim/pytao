@@ -220,8 +220,8 @@ def _get_default(
                     fortran_default = f"{fortran_default}.0"
             try:
                 default = ast.literal_eval(fortran_default)
-                if isinstance(default, list):
-                    return tuple(default), ""
+                if isinstance(default, (list, tuple)):
+                    return list(default), ""
                 return default, ""
             except (SyntaxError, ValueError):
                 pass
@@ -237,7 +237,7 @@ def _get_default(
             "float": 0.0,
             "type": None,
             "bool": False,
-            "Complex": 0.0,
+            "complex": 0j,
         }.get(python_type, None)
         return default, ""
     return "", "list"
@@ -261,7 +261,7 @@ def match_default_from_struct(member: PipeOutputParameter, reference: StructureM
 
     ft = param_type_to_python_type[member.type]
     if not isinstance(default, ft.cls) or (
-        isinstance(default, list) and not isinstance(default[0], ft.inner_cls)
+        isinstance(default, list) and default and not isinstance(default[0], ft.inner_cls)
     ):
         if ft.inner_cls is not None:
             cls = f"{ft.cls}[{ft.inner_cls}]"
@@ -387,9 +387,9 @@ def generate_class_code(py_struct: PipeOutputStructure) -> str:
             output.append(generate_class_code(param))
 
     class_name = py_struct.class_name
-    base_class = py_struct.base_class
+    bases = [name.strip() for name in py_struct.base_class.split(",")]
 
-    class_def = [f"class {class_name}({base_class}):"]
+    class_def = [f"class {class_name}({py_struct.base_class}):"]
 
     docstring_content = generate_docstring_content(py_struct)
     raw_prefix = maybe_raw_string(docstring_content)
@@ -398,7 +398,7 @@ def generate_class_code(py_struct: PipeOutputStructure) -> str:
     class_def.append(f"    {docstring_content}")
     class_def.append('    """')
 
-    if base_class in ["TaoModel", "TaoSettableModel"]:
+    if any(name in ["TaoModel", "TaoSettableModel"] for name in bases):
         class_def.append(f'    _tao_command_attr_: ClassVar[str] = "{py_struct.tao_command}"')
 
         if py_struct.tao_set_name and py_struct.tao_set_name != py_struct.tao_command:
@@ -408,7 +408,7 @@ def generate_class_code(py_struct: PipeOutputStructure) -> str:
             f"    _tao_command_default_args_: ClassVar[dict[str, Any]] = {py_struct.tao_command_default_args}"
         )
 
-    if base_class in ["TaoSettableModel", "TaoAttributesModel"]:
+    if any(name in ["TaoSettableModel", "TaoAttributesModel"] for name in bases):
         class_def.append(
             f"    _tao_skip_if_0_: ClassVar[tuple[str, ...]] = {py_struct.skip_if_0}"
         )
@@ -1217,7 +1217,17 @@ def get_element_index(tao: pytao.Tao, name: str) -> int:
     return tao.lat_list(name, flags="", who="ele.ix_ele")[0]
 
 
-def generate_structures():
+def load_structs(structs_json_file: AnyPath) -> dict[str, ParsedStructure]:
+    """
+    Load Fortran structure metadata dumped by cppbmad's codegen utilities.
+    """
+    adapter = pydantic.TypeAdapter(dict[str, ParsedStructure])
+    return adapter.validate_json(pathlib.Path(structs_json_file).read_bytes())
+
+
+def generate_structures(
+    structs_by_name: dict[str, ParsedStructure],
+) -> dict[str, PipeOutputStructure]:
     res: dict[str, PipeOutputStructure] = {}
     with pytao.SubprocessTao(
         init_file="$ACC_ROOT_DIR/regression_tests/python_test/tao.init_optics_matching",
@@ -1292,14 +1302,50 @@ def generate_structures():
         res["ElementGridField"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, "ele:grid_field G1 1 base"),
             class_name="ElementGridField",
+            tao_command_default_args={"who": "base"},
             reference_structures=(structs_by_name["grid_field_struct"],),
         )
         res["ElementGridFieldPoints"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, "ele:grid_field G1 1 points"),
             class_name="ElementGridFieldPoints",
+            tao_command_default_args={"who": "points"},
             reference_structures=(structs_by_name["grid_field_pt_struct"],),
+            base_class="TaoModel, FromTaoListMixin",
         )
         res["ElementGridFieldPoints"].members["data"].dimension = None
+
+        res["ElementCartesianMap"] = PipeOutputStructure.from_cmd(
+            TaoCommandAndResult.from_tao(tao, "ele:cartesian_map Q1 1 base"),
+            class_name="ElementCartesianMap",
+            tao_command_default_args={"who": "base"},
+            reference_structures=(structs_by_name["cartesian_map_struct"],),
+        )
+        res["ElementCylindricalMap"] = PipeOutputStructure.from_cmd(
+            TaoCommandAndResult.from_tao(tao, "ele:cylindrical_map M1 1 base"),
+            class_name="ElementCylindricalMap",
+            tao_command_default_args={"who": "base"},
+            reference_structures=(structs_by_name["cylindrical_map_struct"],),
+        )
+        res["ElementGenGradients"] = PipeOutputStructure.from_cmd(
+            TaoCommandAndResult.from_tao(tao, "ele:gen_gradients GG 1 base"),
+            class_name="ElementGenGradients",
+            tao_command_default_args={"who": "base"},
+            reference_structures=(structs_by_name["gen_gradients_struct"],),
+        )
+
+    with SubprocessTao(
+        lattice_file="$ACC_ROOT_DIR/regression_tests/tracking_method_test/tracking_method_test.bmad",
+        noinit=True,
+        noplot=True,
+    ) as tao:
+        # crab_cavity1 carries elec multipole data, exercising both the LOGIC
+        # settings and the data table.
+        res["ElementElecMultipoles"] = PipeOutputStructure.from_cmd(
+            TaoCommandAndResult.from_tao(tao, "ele:elec_multipoles crab_cavity1"),
+            class_name="ElementElecMultipoles",
+            reference_structures=(structs_by_name["ele_struct"],),
+            mark_optional=("scale_multipoles",),
+        )
 
     with SubprocessTao(
         init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wall3d",
@@ -1308,18 +1354,21 @@ def generate_structures():
         res["ElementMat6"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, "ele:mat6 1 mat6"),
             class_name="ElementMat6",
+            tao_command_default_args={"who": "mat6"},
             reference_structures=(),
         )
 
         res["ElementMat6Vec0"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, "ele:mat6 1 vec0"),
             class_name="ElementMat6Vec0",
+            tao_command_default_args={"who": "vec0"},
             reference_structures=(),
         )
 
         res["ElementMat6Error"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, "ele:mat6 1 err"),
             class_name="ElementMat6Error",
+            tao_command_default_args={"who": "err"},
             reference_structures=(),
         )
 
@@ -1327,17 +1376,21 @@ def generate_structures():
             TaoCommandAndResult.from_tao(tao, "ele:chamber_wall 1 1 x"),
             class_name="ElementChamberWall",
             reference_structures=(),
+            base_class="TaoModel, FromTaoListMixin",
         )
 
         res["ElementWall3DTable"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, "ele:wall3d 1 1 table"),
             class_name="ElementWall3DTable",
+            tao_command_default_args={"who": "table"},
             reference_structures=(structs_by_name["wall3d_section_struct"],),
+            base_class="TaoModel, FromTaoListMixin",
         )
 
         res["ElementWall3DBase"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, "ele:wall3d 1 1 base"),
             class_name="ElementWall3DBase",
+            tao_command_default_args={"who": "base"},
             reference_structures=(
                 structs_by_name["wall3d_section_struct"],
                 structs_by_name["wall3d_struct"],
@@ -1415,6 +1468,7 @@ def generate_structures():
             TaoCommandAndResult.from_tao(tao, "ele:lord_slave 1 1 x"),
             class_name="ElementLordSlave",
             reference_structures=(),
+            base_class="TaoModel, FromTaoListMixin",
         )
 
     with SubprocessTao(
@@ -1439,11 +1493,13 @@ def generate_structures():
         res["ElementPhotonBase"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, f"ele:photon {mask1_index} base"),
             class_name="ElementPhotonBase",
+            tao_command_default_args={"who": "base"},
             reference_structures=(structs_by_name["photon_element_struct"],),
         )
         res["ElementPhotonCurvature"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, f"ele:photon {mask1_index} curvature"),
             class_name="ElementPhotonCurvature",
+            tao_command_default_args={"who": "curvature"},
             reference_structures=(structs_by_name["photon_element_struct"],),
         )
 
@@ -1455,6 +1511,7 @@ def generate_structures():
         res["ElementPhotonMaterial"] = PipeOutputStructure.from_cmd(
             TaoCommandAndResult.from_tao(tao, f"ele:photon {mirror1_index} material"),
             class_name="ElementPhotonMaterial",
+            tao_command_default_args={"who": "material"},
             reference_structures=(structs_by_name["photon_element_struct"],),
             mark_optional=("f0_m1",),
         )
@@ -1467,6 +1524,7 @@ def generate_structures():
             res["ElementWakeBase"] = PipeOutputStructure.from_cmd(
                 TaoCommandAndResult.from_tao(tao, "ele:wake P3 base"),
                 class_name="ElementWakeBase",
+                tao_command_default_args={"who": "base"},
                 reference_structures=(
                     structs_by_name["wake_struct"],
                     structs_by_name["wake_sr_struct"],
@@ -1477,12 +1535,14 @@ def generate_structures():
             res["ElementWakeSrLong"] = PipeOutputStructure.from_cmd(
                 TaoCommandAndResult.from_tao(tao, "ele:wake P3 sr_long"),
                 class_name="ElementWakeSrLong",
+                tao_command_default_args={"who": "sr_long"},
                 reference_structures=(structs_by_name["wake_sr_struct"],),
                 mark_optional=(),
             )
             res["ElementWakeSrTrans"] = PipeOutputStructure.from_cmd(
-                TaoCommandAndResult.from_tao(tao, "ele:wake P3 sr_long"),
+                TaoCommandAndResult.from_tao(tao, "ele:wake P3 sr_trans"),
                 class_name="ElementWakeSrTrans",
+                tao_command_default_args={"who": "sr_trans"},
                 reference_structures=(structs_by_name["wake_sr_struct"],),
                 mark_optional=(),
             )
@@ -1515,6 +1575,7 @@ def write_source(
     header_filename: AnyPath = header_filename,
     module_name_prefix: str = "pytao.model.",
 ):
+    print(f"Writing to: {fn}")
     python_src = render_python_source(res, header_filename=header_filename)
     python_src = python_src.replace("# noqa: F401", "")
     python_src = python_src.replace("# noqa: F821", "")
@@ -1578,8 +1639,8 @@ def try_deserializing(
         deserialize(mod, output_struct, cls, output_struct.cmd.result)
 
 
-def main_tao_pystructs():
-    structures = generate_structures()
+def main_tao_pystructs(structs_by_name: dict[str, ParsedStructure]):
+    structures = generate_structures(structs_by_name)
     mod, classes = write_source(
         MODULE_PATH / "_generated.py",
         structures,
@@ -1644,9 +1705,5 @@ def main_tao_pystructs():
 
 
 if __name__ == "__main__":
-    structs_json_file = sys.argv[1]
-    adapter = pydantic.TypeAdapter(dict[str, ParsedStructure])
-    structs_by_name = adapter.validate_json(pathlib.Path(structs_json_file).read_bytes())
-
-    mod, res, classes = main_tao_pystructs()
+    mod, res, classes = main_tao_pystructs(load_structs(sys.argv[1]))
     # mod_ga, res_ga, classes_ga = main_gen_attr()

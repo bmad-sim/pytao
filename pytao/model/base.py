@@ -26,6 +26,7 @@ import pydantic
 from pydantic.fields import FieldInfo
 from typing_extensions import Self, override
 
+from ..errors import TaoCommandError
 from .types import ArgumentType, _PydanticNDArray
 
 from rich.pretty import pretty_repr
@@ -268,6 +269,33 @@ class TaoModel(
         return data
 
     @classmethod
+    def _tao_command_kwargs(cls, kwargs: dict[str, Any]) -> dict[str, Any]:
+        cmd_kwargs = dict(cls._tao_command_default_args_)
+        cmd_kwargs.update(**kwargs)
+
+        ele_id = cmd_kwargs.get("ele_id")
+        if ele_id is not None:
+            from .ele.ele import to_ele_id
+
+            cmd_kwargs["ele_id"] = to_ele_id(ele_id)
+        return cmd_kwargs
+
+    @classmethod
+    def _query_tao(cls, tao: Tao, cmd_kwargs: dict[str, Any]):
+        try:
+            if cls._tao_command_attr_.startswith("pipe "):
+                return tao.cmd(cls._tao_command_attr_.format(**cmd_kwargs))
+            cmd = getattr(tao, cls._tao_command_attr_)
+            return cmd(**cmd_kwargs)
+        except TaoCommandError as ex:
+            if "ele_id" in cmd_kwargs and "Cannot locate element" in str(ex):
+                from .ele.ele import ElementNotFoundError
+
+                msg = ex.errors[0].message if ex.errors else "Element not found"
+                raise ElementNotFoundError(f"{cmd_kwargs['ele_id']} {msg}") from None
+            raise
+
+    @classmethod
     def from_tao(cls: type[Self], tao: Tao, **kwargs) -> Self:
         """
         Create this structure by querying Tao for its current values.
@@ -276,16 +304,11 @@ class TaoModel(
         ----------
         tao : Tao
         **kwargs
-            Keyword arguments to pass to the relevant ``tao`` command.
+            Keyword arguments to pass to the relevant `tao` command.
+            An `ele_id` keyword may be an integer, string, or ElementID.
         """
-        cmd_kwargs = dict(cls._tao_command_default_args_)
-        cmd_kwargs.update(**kwargs)
-
-        if cls._tao_command_attr_.startswith("pipe "):
-            data = tao.cmd(cls._tao_command_attr_.format(**cmd_kwargs))
-        else:
-            cmd = getattr(tao, cls._tao_command_attr_)
-            data = cmd(**cmd_kwargs)
+        cmd_kwargs = cls._tao_command_kwargs(kwargs)
+        data = cls._query_tao(tao, cmd_kwargs)
         data = cls._process_tao_data(data)
         return cls(command_args=cmd_kwargs, **data)
 
@@ -315,6 +338,26 @@ class TaoModel(
             raise ValueError(f"Unable to find '{clsname}' subclass of {cls.__name__}.")
 
         return handler(value)
+
+
+class FromTaoListMixin:
+    @classmethod
+    def from_tao_list(cls: type[Self], tao: Tao, **kwargs) -> list[Self]:
+        """
+        Query Tao and validate the result as a list of this model.
+
+        For commands whose output is a table, with one instance per row.
+
+        Parameters
+        ----------
+        tao : Tao
+        **kwargs
+            Keyword arguments to pass to the relevant `tao` command.
+            An `ele_id` keyword may be an integer, string, or ElementID.
+        """
+        cmd_kwargs = cls._tao_command_kwargs(kwargs)
+        data = cls._query_tao(tao, cmd_kwargs)
+        return pydantic.TypeAdapter(list[cls]).validate_python(data)
 
 
 class SetField(NamedTuple):

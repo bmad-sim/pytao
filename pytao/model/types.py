@@ -197,6 +197,55 @@ class _PydanticNDArray:
         raise ValueError(f"No conversion from {value!r} to numpy ndarray")
 
 
+class _PydanticComplexNDArray(_PydanticNDArray):
+    """
+    Complex-valued ndarray support.
+
+    JSON cannot represent complex numbers, so arrays serialize as (real, imag)
+    pairs.
+    """
+
+    @classmethod
+    def __get_pydantic_core_schema__(
+        cls,
+        source: type[Any],
+        handler: pydantic.GetCoreSchemaHandler,
+    ) -> pydantic_core.core_schema.CoreSchema:
+        def serialize(obj: np.ndarray, info: pydantic.SerializationInfo):
+            if not isinstance(obj, np.ndarray):
+                raise ValueError(
+                    f"Only supports numpy ndarray. Got {type(obj).__name__}: {obj}"
+                )
+
+            return np.stack([obj.real, obj.imag], axis=-1).tolist()
+
+        return pydantic_core.core_schema.with_info_plain_validator_function(
+            cls._pydantic_validate,
+            serialization=pydantic_core.core_schema.plain_serializer_function_ser_schema(
+                serialize, when_used="json-unless-none", info_arg=True
+            ),
+        )
+
+    @classmethod
+    def _pydantic_validate(
+        cls,
+        value: Any | np.ndarray | Sequence | dict,
+        info: pydantic.ValidationInfo | None,
+    ) -> np.ndarray:
+        arr = super()._pydantic_validate(value, info)
+        if np.iscomplexobj(arr):
+            return arr
+        arr = np.asarray(arr, dtype=float)
+        if arr.size == 0:
+            return arr.astype(complex).reshape(0)
+        if arr.ndim < 1 or arr.shape[-1] != 2:
+            raise ValueError(
+                "Expected a complex array or an array of (real, imag) pairs; "
+                f"got shape {arr.shape}"
+            )
+        return arr[..., 0] + 1j * arr[..., 1]
+
+
 def deserialize_ndarray(value: Any | np.ndarray | Sequence | dict):
     return _PydanticNDArray._pydantic_validate(value, None)
 
@@ -233,6 +282,7 @@ ArgumentType = int | float | str | IntSequence | FloatSequence
 AnyPath = Union[pathlib.Path, str]
 FileKey = Union[str, int]
 NDArray = Annotated[np.ndarray, _PydanticNDArray]
+ComplexNDArray = Annotated[np.ndarray, _PydanticComplexNDArray]
 
 
 if TYPE_CHECKING:

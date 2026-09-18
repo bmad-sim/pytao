@@ -1,22 +1,55 @@
 from __future__ import annotations
 
-import functools
 import pathlib
-import re
+from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, ClassVar, Iterable, Literal, cast
+from typing import TYPE_CHECKING, Any, ClassVar, Literal, cast
 
-import numpy as np
 import pydantic
 from pydantic import Field
 from typing_extensions import Self
 
-from ...errors import TaoCommandError
-from ...util.parsers import Attr, parse_tao_python_data_with_units
 from .. import _generated as tao_classes
-from ..base import ArchiveFormat, TaoBaseModel, TaoModel
-from ..types import NDArray, _PydanticNDArray
+from ..base import ArchiveFormat, TaoBaseModel
+from ..types import _PydanticComplexNDArray, _PydanticNDArray
 from .comb import Comb, _comb_array_attrs
+from .sections import (
+    AnyElementAcKicker,
+    AnyElementMultipoles,
+    ElementAcKicker,
+    ElementCartesianMap,
+    ElementChamberWall,
+    ElementCylindricalMap,
+    ElementFloorAll,
+    ElementGenGradients,
+    ElementGridField,
+    ElementMat6,
+    ElementMethods,
+    ElementPhoton,
+    ElementSpinTaylor,
+    ElementTaylor,
+    ElementWake,
+    ElementWall3D,
+    GeneralAttributes,
+    Which,
+    _AttributeDict,
+)
+
+# Re-exporting for back-compat
+from .sections import ChamberWallWho as ChamberWallWho
+from .sections import ElementAcKickerAmpVsTime as ElementAcKickerAmpVsTime
+from .sections import ElementAcKickerFrequencies as ElementAcKickerFrequencies
+from .sections import ElementCartesianMapTerms as ElementCartesianMapTerms
+from .sections import ElementCylindricalMapTerms as ElementCylindricalMapTerms
+from .sections import ElementFloor as ElementFloor
+from .sections import ElementFloorItem as ElementFloorItem
+from .sections import ElementFloorPosition as ElementFloorPosition
+from .sections import ElementGenGradientCurve as ElementGenGradientCurve
+from .sections import ElementSpinTaylorComponent as ElementSpinTaylorComponent
+from .sections import ElementSrWakeData as ElementSrWakeData
+from .sections import ElementTaylorSection as ElementTaylorSection
+from .sections import FloorWhere as FloorWhere
+from .sections import PhotonWho as PhotonWho
 from .time_stats import _pytao_stats
 
 if TYPE_CHECKING:
@@ -482,1244 +515,13 @@ class ElementID(pydantic.BaseModel, extra="forbid"):
 
 AnyElementID = int | str | ElementID
 
-Which = Literal["base", "model", "design"]
-PhotonWho = Literal["base", "material", "curvature"]
-ChamberWallWho = Literal["x", "y"]
-FloorWhere = Literal["beginning", "center", "end"]
 
+def get_element_index(tao: Tao, ele: AnyElementID) -> int:
+    """Get the lattice index of a specified element from Tao."""
+    return tao_classes.ElementHead.from_tao(tao, ele_id=ele, which="model").ix_ele
 
-def _maybe_reraise(ele: str, ex: TaoCommandError):
-    if "Cannot locate element" not in str(ex):
-        raise
 
-    if ex.errors:
-        msg = ex.errors[0].message
-    else:
-        msg = "Element not found"
-
-    raise ElementNotFoundError(f"{ele} {msg}") from None
-
-
-def _catch_element_not_found_error(func):
-    @functools.wraps(func)
-    def wrapped(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except TaoCommandError as ex:
-            _maybe_reraise(kwargs.get("ele", None), ex)
-
-    return wrapped
-
-
-def get_element_index(
-    tao: Tao,
-    ele: AnyElementID,
-) -> int:
-    """
-    Get the index of a specified element from Tao.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The element as a string or ElementID.
-
-    Returns
-    -------
-    int
-
-    Raises
-    ------
-    ElementNotFoundError
-        If the element cannot be located.
-
-    TaoCommandError
-        For other unexpected errors.
-    """
-    head = get_head(tao, ele=ele, which="model")
-    return head.ix_ele
-
-
-@_catch_element_not_found_error
-def get_head(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> tao_classes.ElementHead:
-    """
-    Retrieve the head of a Tao element.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao object instance.
-    ele : str or ElementID
-        The element identifier, either as a string or an ElementID object.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementHead
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementHead.from_tao(tao, ele_id=ele, which=which)
-
-
-@_catch_element_not_found_error
-def get_twiss(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> tao_classes.ElementTwiss:
-    """
-    Retrieve Twiss parameters from a Tao object for a specified element.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao object instance.
-    ele : str or ElementID
-        The element identifier, either as a string or an ElementID object.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementTwiss
-        The Twiss parameters of the specified element.
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementTwiss.from_tao(tao, ele_id=ele, which=which)
-
-
-@_catch_element_not_found_error
-def get_orbit(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> tao_classes.ElementOrbit:
-    """
-    Get the orbit of an element from the Tao model.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao object instance.
-    ele : str or ElementID
-        The element identifier, either as a string or an ElementID object.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementOrbit
-        The orbit of the specified element in the Tao model.
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementOrbit.from_tao(tao, ele_id=ele, which=which)
-
-
-@_catch_element_not_found_error
-def get_lord_slave(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> list[tao_classes.ElementLordSlave]:
-    """
-    Retrieve the lord and slave elements from a Tao instance.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The element identifier, either as a string or an ElementID object.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    list of ElementLordSlave
-    """
-    ele = to_ele_id(ele)
-    adapter = pydantic.TypeAdapter("list[tao_classes.ElementLordSlave]")
-    return adapter.validate_python(tao.ele_lord_slave(ele_id=ele))
-
-
-@_catch_element_not_found_error
-def get_chamber_wall(
-    tao: Tao,
-    ele: AnyElementID,
-    index: int,
-    who: ChamberWallWho,
-    which: Which = "model",
-) -> list[tao_classes.ElementChamberWall]:
-    """
-    Retrieve the chamber wall data for a specified element from Tao.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The identifier of the element. This can be a string or an ElementID instance.
-    index : int
-        The index of the wall.
-    who : ChamberWallWho
-        Specifies which chamber wall data to retrieve.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    list of ElementChamberWall
-        A list of ElementChamberWall objects containing the chamber wall data for the specified element.
-    """
-    ele = to_ele_id(ele)
-    adapter = pydantic.TypeAdapter("list[tao_classes.ElementChamberWall]")
-    return adapter.validate_python(
-        tao.ele_chamber_wall(ele_id=ele, index=index, which=which, who=who)
-    )
-
-
-@_catch_element_not_found_error
-def get_wall3d_base(
-    tao: Tao,
-    ele: AnyElementID,
-    index: int,
-    which: Which = "model",
-) -> tao_classes.ElementWall3DBase:
-    """
-    Retrieve the 3D wall base information for a specified element from Tao.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The identifier of the element. Can be a string name or an ElementID object.
-    index : int
-        The index of the wall.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementWall3DBase
-        The 3D wall base information of the specified element.
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementWall3DBase.from_tao(
-        tao,
-        ele_id=ele,
-        index=index,
-        which=which,
-        who="base",
-    )
-
-
-@_catch_element_not_found_error
-def get_wall3d_table(
-    tao: Tao,
-    ele: AnyElementID,
-    index: int,
-    which: Which = "model",
-) -> list[tao_classes.ElementWall3DTable]:
-    """
-    Retrieve the 3D wall table for a specified element from Tao.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The element identifier, either as a string or an ElementID.
-    index : int
-        The index of the wall.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    list[tao_classes.ElementWall3DTable]
-        A list of ElementWall3DTable objects for the specified element.
-    """
-    ele = to_ele_id(ele)
-    adapter = pydantic.TypeAdapter("list[tao_classes.ElementWall3DTable]")
-    return adapter.validate_python(
-        tao.ele_wall3d(ele_id=ele, index=index, which=which, who="table")
-    )
-
-
-@_catch_element_not_found_error
-def get_multipoles(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> AnyElementMultipoles | None:
-    """
-    Retrieve the multipole coefficients for a specified element in a Tao model.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao object.
-    ele : str or ElementID
-        The identifier of the element. Can be a string name or an ElementID object.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    AnyElementMultipoles or None
-        The multipole coefficients for the specified element, or None if not found.
-    """
-    ele = to_ele_id(ele)
-
-    multipoles: dict = tao.ele_multipoles(ele_id=ele, which=which)
-    adapter = pydantic.TypeAdapter(AnyElementMultipoles)
-    if not multipoles["multipoles_on"]:
-        return None
-
-    multipoles["command_args"] = {"ele_id": ele, "which": which}
-    if not len(multipoles.get("data", [])):
-        # perf: it's ambiguous, so choose a general class
-        return tao_classes.ElementMultipoles.model_validate(multipoles)
-    return adapter.validate_python(multipoles)
-
-
-@_catch_element_not_found_error
-def get_bunch_params(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> tao_classes.ElementBunchParams:
-    """
-    Retrieve the bunch parameters of a specified element in a Tao instance.
-
-    Parameters
-    ----------
-    tao : Tao
-        Tao instance.
-    ele : str or ElementID
-        Identifier for the element, either as a string or an ElementID object.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementBunchParams
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementBunchParams.from_tao(tao, ele_id=ele, which=which)
-
-
-@_catch_element_not_found_error
-def get_photon_base(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> tao_classes.ElementPhotonBase:
-    """
-    Retrieve the photon base information of a specified element in a Tao instance.
-
-    Parameters
-    ----------
-    tao : Tao
-        Tao instance.
-    ele : str or ElementID
-        Identifier for the element, either as a string or an ElementID object.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementPhotonBase
-        The photon base of the specified element.
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementPhotonBase.from_tao(tao, ele_id=ele, which=which, who="base")
-
-
-@_catch_element_not_found_error
-def get_photon_material(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> tao_classes.ElementPhotonMaterial:
-    """
-    Retrieve the photon material properties of a specified element from a Tao object.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The identifier of the element.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementPhotonMaterial
-        The photon material properties of the specified element.
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementPhotonMaterial.from_tao(
-        tao, ele_id=ele, which=which, who="material"
-    )
-
-
-@_catch_element_not_found_error
-def get_photon_curvature(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> tao_classes.ElementPhotonCurvature:
-    """
-    Get the photon curvature for a specified element in Tao.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The element identifier.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementPhotonCurvature
-        The photon curvature of the specified element.
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementPhotonCurvature.from_tao(
-        tao, ele_id=ele, which=which, who="curvature"
-    )
-
-
-@_catch_element_not_found_error
-def get_grid_field_base(
-    tao: Tao,
-    ele: AnyElementID,
-    index: int,
-    which: Which = "model",
-) -> tao_classes.ElementGridField:
-    """
-    Get the base grid field of a specified element from Tao.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The element identifier, either as a string or an ElementID object.
-    index : int
-        The index of the element's grid field.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementGridField
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementGridField.from_tao(
-        tao, ele_id=ele, which=which, index=index, who="base"
-    )
-
-
-@_catch_element_not_found_error
-def get_grid_field_points(
-    tao: Tao,
-    ele: AnyElementID,
-    index: int,
-    which: Which = "model",
-) -> list[tao_classes.ElementGridFieldPoints]:
-    """
-    Retrieve the grid field points for a specified element in Tao.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The element identifier, either as a string or an ElementID object.
-    index : int
-        The grid field instance.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    list of ElementGridFieldPoints
-        A list of ElementGridFieldPoints corresponding to the specified element.
-    """
-    ele = to_ele_id(ele)
-    adapter = pydantic.TypeAdapter("list[tao_classes.ElementGridFieldPoints]")
-    return adapter.validate_python(
-        tao.ele_grid_field(ele_id=ele, which=which, index=index, who="points")
-    )
-
-
-@_catch_element_not_found_error
-def get_wake_base(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> tao_classes.ElementWakeBase:
-    """
-    Get the wake base of a Tao element.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The identifier of the element whose wake base is to be retrieved.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementWakeBase
-        The wake base of the specified Tao element.
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementWakeBase.from_tao(tao, ele_id=ele, which=which, who="base")
-
-
-@_catch_element_not_found_error
-def get_wake_sr_long(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> ElementSrWakeData:
-    """
-    Get the short-range longitudinal wake of a specific element in the Tao model.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The element identifier.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementWakeSrLong
-        The short-range longitudinal wake of the specified element.
-    """
-    ele = to_ele_id(ele)
-    return ElementSrWakeData.from_tao(tao, ele=ele, which=which, who="longitudinal")
-
-
-@_catch_element_not_found_error
-def get_wake_sr_trans(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> ElementSrWakeData:
-    """
-    Retrieve the short-range transverse wakefield response of a specified
-    element in a Tao model.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The element identifier, which can be either a string or an ElementID instance.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementWakeSrTrans
-        The transverse wakefield response of the specified element.
-    """
-    ele = to_ele_id(ele)
-    return ElementSrWakeData.from_tao(tao, ele=ele, which=which, who="transverse")
-
-
-@_catch_element_not_found_error
-def get_mat6(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> tao_classes.ElementMat6:
-    """
-    Get the 6x6 linear transfer map (mat6 matrix) for a specified element in Tao.
-
-    Parameters
-    ----------
-    tao : Tao
-        An instance of the Tao class.
-    ele : str or ElementID
-        The identifier of the element. This can be a string or an ElementID object.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementMat6
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementMat6.from_tao(tao, ele_id=ele, which=which, who="mat6")
-
-
-@_catch_element_not_found_error
-def get_mat6_vec0(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> tao_classes.ElementMat6Vec0:
-    """
-    Retrieve the 6-vector for a specified element from a Tao model.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The identifier of the element.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementMat6Vec0
-        The 6-vector associated with the specified element.
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementMat6Vec0.from_tao(tao, ele_id=ele, which=which, who="vec0")
-
-
-@_catch_element_not_found_error
-def get_mat6_error(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-) -> tao_classes.ElementMat6Error:
-    """
-    Retrieve the 6x6 linear transfer map matrix error for a specified element.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The identifier of the element for which to retrieve the error matrix.
-    which : "base", "model", or "design", default="model"
-
-    Returns
-    -------
-    tao_classes.ElementMat6Error
-    """
-    ele = to_ele_id(ele)
-    return tao_classes.ElementMat6Error.from_tao(tao, ele_id=ele, which=which, who="err")
-
-
-@_catch_element_not_found_error
-def get_comb(
-    tao: Tao,
-    ele: AnyElementID,
-    which: Which = "model",
-    *,
-    head: tao_classes.ElementHead | None = None,
-    comb: Comb | None = None,
-) -> Comb:
-    """
-    Retrieve Comb data for the given element.
-
-    Parameters
-    ----------
-    tao : Tao
-        The Tao instance.
-    ele : str or ElementID
-        The identifier of the element for which to retrieve the error matrix.
-    which : "base", "model", or "design", default="model"
-    comb : Comb or None, optional
-        If available, the provided Comb data can be reused for multiple
-        elements and significantly speed up using `get_comb` on a full lattice.
-
-    Returns
-    -------
-    tao_classes.ElementMat6Error
-    """
-    ele = to_ele_id(ele)
-    if comb is None:
-        comb = Comb.from_tao(tao, which=which)
-    if head is None:
-        head = get_head(tao=tao, ele=ele, which=which)
-    return comb.slice_by_s(head.s_start, head.s)
-
-
-class ElementFloorPosition(TaoBaseModel, extra="forbid"):
-    """
-    Represents the position and orientation of an element on the floor in a 3D space.
-
-    Attributes
-    ----------
-    x : float, default 0.0
-        The x-coordinate of the position.
-    y : float, default 0.0
-        The y-coordinate of the position.
-    z : float, default 0.0
-        The z-coordinate of the position.
-    theta : float, default 0.0
-        The rotation around the x-axis in radians.
-    phi : float, default 0.0
-        The rotation around the y-axis in radians.
-    psi : float, default 0.0
-        The rotation around the z-axis in radians.
-    wmat : list of list of float, default empty list
-        The transformation matrix representing the orientation of the element.
-    """
-
-    x: float = 0.0
-    y: float = 0.0
-    z: float = 0.0
-    theta: float = 0.0
-    phi: float = 0.0
-    psi: float = 0.0
-    wmat: NDArray  # NOTE: no default to avoid serialization issues
-
-
-class ElementFloorItem(TaoBaseModel, extra="forbid"):
-    """
-    Element floor plan reference and actual position.
-
-    Attributes
-    ----------
-    reference : ElementFloorPosition
-        The reference position on the floor plan.
-    actual : ElementFloorPosition
-        The actual position on the floor plan.
-    """
-
-    reference: ElementFloorPosition = ElementFloorPosition(wmat=np.zeros((3, 3)))
-    actual: ElementFloorPosition = ElementFloorPosition(wmat=np.zeros((3, 3)))
-
-    @staticmethod
-    def from_tao_output(output: dict[str, np.ndarray]) -> dict[int, ElementFloorItem]:
-        """
-        Parse the output of tao.ele_floor into a more usable format.
-        """
-        by_slave = {}
-        base_keys = {
-            "Reference": {"type": "reference", "slave": 0, "suffix": None},
-            "Actual": {"type": "actual", "slave": 0, "suffix": None},
-            "Reference-W": {"type": "reference", "slave": 0, "suffix": "-W"},
-            "Actual-W": {"type": "actual", "slave": 0, "suffix": "-W"},
-        }
-        for key, value in output.items():
-            groupdict = base_keys.get(key, None)
-            if groupdict is None:
-                match = ELE_FLOOR_SLAVE_KEY_RE.match(key)
-
-                if match is None:
-                    raise ValueError(f"Unexpected key for ele:floor {key!r}")
-
-                groupdict = match.groupdict()
-
-            type_ = groupdict["type"].lower()
-            slave_idx = int(groupdict["slave"])
-            suffix = groupdict["suffix"]
-
-            if slave_idx not in by_slave:
-                by_slave[slave_idx] = ElementFloorItem()
-            slave = by_slave[slave_idx]
-            vector = slave.actual if type_ == "actual" else slave.reference
-
-            if suffix == "-W":
-                vector.wmat = value.reshape(3, 3).T.tolist()
-            else:
-                vector.x, vector.y, vector.z, vector.theta, vector.phi, vector.psi = value
-
-        return by_slave
-
-
-ELE_FLOOR_SLAVE_KEY_RE = re.compile(
-    r"(?P<type>Reference|Actual)-Slave(?P<slave>\d+)(?P<suffix>-W)?"
-)
-
-
-class ElementFloor(TaoBaseModel, extra="forbid"):
-    """
-    Represents the floor position of an element.
-
-    Attributes
-    ----------
-    which : "base", "model", or "design"
-    where : "beginning", "center", or "end"
-        The location or placement of the element on the floor.
-    actual : ElementFloorPosition, optional
-        The actual position of the element on the floor.
-    reference : ElementFloorPosition, optional
-        The reference position of the element on the floor.
-    slaves : dict[int, ElementFloorItem]
-        A mapping of integer slave numbers to ElementFloorItem
-        instances.
-    """
-
-    which: Which = pydantic.Field(frozen=True)
-    where: FloorWhere = pydantic.Field(frozen=True)
-
-    actual: ElementFloorPosition | None
-    reference: ElementFloorPosition | None
-    slaves: dict[int, ElementFloorItem]
-
-    @classmethod
-    def from_tao(
-        cls,
-        tao: Tao,
-        ele: AnyElementID,
-        *,
-        which: Which,
-        where: FloorWhere = "end",
-    ):
-        ele = to_ele_id(ele)
-        floor = tao.ele_floor(ele, which=which, where=where)
-        by_slave = ElementFloorItem.from_tao_output(floor)
-
-        floor = by_slave.pop(0, None)
-        return cls(
-            which=which,
-            where=where,
-            slaves=by_slave,
-            actual=floor.actual if floor is not None else None,
-            reference=floor.reference if floor is not None else None,
-        )
-
-
-class ElementFloorAll(TaoBaseModel, extra="forbid"):
-    """
-    Element floor positions based on optical trajectory - at its beginning,
-    center, or end.
-
-    Attributes
-    ----------
-    which : "base", "model", or "design"
-    beginning : ElementFloor
-        The element position at the beginning.
-    center : ElementFloor
-        The element position at its center.
-    end : ElementFloor
-        The element position at its end.
-    """
-
-    which: Which = pydantic.Field(frozen=True)
-
-    beginning: ElementFloor
-    center: ElementFloor
-    end: ElementFloor
-
-    @classmethod
-    def from_tao(
-        cls,
-        tao: Tao,
-        ele: AnyElementID,
-        *,
-        which: Which,
-    ):
-        ele = to_ele_id(ele)
-        beginning = ElementFloor.from_tao(tao, ele=ele, which=which, where="beginning")
-        center = ElementFloor.from_tao(tao, ele=ele, which=which, where="center")
-        end = ElementFloor.from_tao(tao, ele=ele, which=which, where="end")
-
-        return cls(
-            which=which,
-            beginning=beginning,
-            center=center,
-            end=end,
-        )
-
-
-class ElementChamberWall(TaoBaseModel, extra="forbid"):
-    """
-    Represents a chamber wall element in the lattice.
-
-    Attributes
-    ----------
-    which : "base", "model", or "design"
-    index : int
-        The index of the chamber wall of the element.
-    x : list of ElementChamberWall
-        A list of ElementChamberWall objects along the x-axis.
-    y : list of ElementChamberWall
-        A list of ElementChamberWall objects along the y-axis.
-    """
-
-    which: Which = pydantic.Field(frozen=True)
-    index: int
-    x: list[tao_classes.ElementChamberWall]
-    y: list[tao_classes.ElementChamberWall]
-
-    @classmethod
-    def from_tao(
-        cls,
-        tao: Tao,
-        ele: AnyElementID,
-        index: int,
-        *,
-        which: Which,
-    ):
-        ele = to_ele_id(ele)
-
-        return cls(
-            which=which,
-            index=index,
-            x=get_chamber_wall(tao, ele, index, which=which, who="x"),
-            y=get_chamber_wall(tao, ele, index, which=which, who="y"),
-        )
-
-
-class ElementWall3D(tao_classes.ElementWall3DBase, extra="forbid"):
-    """
-    ElementWall3D class representing a 3D wall element in a lattice.
-
-    Attributes
-    ----------
-    which : "base", "model", or "design"
-    index : int
-        The index of the wall element.
-    table : list of ElementWall3DTable or None, optional
-        A table containing wall element details.
-    """
-
-    which: Which = pydantic.Field(frozen=True)
-
-    index: int
-    table: list[tao_classes.ElementWall3DTable] | None = None
-
-    @classmethod
-    def from_tao(
-        cls,
-        tao: Tao,
-        ele: AnyElementID,
-        index: int,
-        *,
-        which: Which,
-        fill_table: bool = False,
-    ):
-        ele = to_ele_id(ele)
-
-        base = get_wall3d_base(tao, ele, index, which=which)
-        table = None
-        if fill_table:
-            table = get_wall3d_table(tao, ele, index, which=which)
-
-        data = base.model_dump()
-        data.pop("__class_name__")
-        return cls(
-            which=which,
-            index=index,
-            table=table,
-            **data,
-        )
-
-
-class ElementPhoton(tao_classes.ElementPhotonBase, extra="forbid"):
-    """
-    Class representing a element's photon details.
-
-    Attributes
-    ----------
-    which : "base", "model", or "design"
-    has_material : bool
-        Whether `material` is present or None.
-    has_pixel : bool
-        Whether `pixel` is present or None.
-    curvature : tao_classes.ElementPhotonCurvature
-        Curvature of the photon element.
-    material : tao_classes.ElementPhotonMaterial
-        Material properties of the photon element.
-    """
-
-    which: Which = pydantic.Field(frozen=True)
-    curvature: tao_classes.ElementPhotonCurvature
-    material: tao_classes.ElementPhotonMaterial
-
-    @classmethod
-    def from_tao(
-        cls,
-        tao: Tao,
-        ele: AnyElementID,
-        *,
-        which: Which,
-    ):
-        ele = to_ele_id(ele)
-
-        base = get_photon_base(tao, ele, which=which)
-        data = base.model_dump()
-        data.pop("__class_name__")
-        return cls(
-            which=which,
-            curvature=get_photon_curvature(tao, ele, which=which),
-            material=get_photon_material(tao, ele, which=which),
-            **data,
-        )
-
-
-class ElementMat6(TaoModel, extra="forbid"):
-    """
-    Linear transfer map (mat6) data.
-
-    Attributes
-    ----------
-    mat6 : NDArray of shape (6, 6)
-    vec0 : NDArray
-    symplectic_error : float
-    """
-
-    which: Which = pydantic.Field(frozen=True)
-
-    vec0: NDArray
-    mat6: NDArray
-    symplectic_error: float = Field(default=0.0, frozen=True)
-
-    @pydantic.model_validator(mode="before")
-    @classmethod
-    def _handle_legacy_raw_data(cls, data: Any) -> Any:
-        """Convert legacy `data_*` keys to a unified `mat6` NDArray."""
-        if not isinstance(data, dict):
-            return data
-
-        legacy_keys = ["data_1", "data_2", "data_3", "data_4", "data_5", "data_6"]
-
-        if "mat6" not in data:
-            mat6_raw = [data.pop(k, [0.0] * 6) for k in legacy_keys]
-            data["mat6"] = np.asarray(mat6_raw, dtype=float)
-
-        return data
-
-    @classmethod
-    def from_tao(
-        cls,
-        tao: Tao,
-        ele: AnyElementID,
-        *,
-        which: Which,
-    ):
-        ele = to_ele_id(ele)
-
-        base = get_mat6(tao, ele, which=which)
-        vec0 = get_mat6_vec0(tao, ele, which=which)
-        err = get_mat6_error(tao, ele, which=which)
-
-        mat6 = np.asarray(
-            [base.data_1, base.data_2, base.data_3, base.data_4, base.data_5, base.data_6],
-        )
-        return cls(
-            which=which,
-            mat6=mat6,
-            vec0=np.asarray(vec0.vec0),
-            symplectic_error=err.symplectic_error,
-        )
-
-
-class ElementGridField(tao_classes.ElementGridField, extra="forbid"):
-    which: Which = pydantic.Field(frozen=True)
-
-    points: list[tao_classes.ElementGridFieldPoints] | None = None
-
-    @classmethod
-    def from_tao(
-        cls,
-        tao: Tao,
-        ele: AnyElementID,
-        index: int,
-        *,
-        which: Which,
-        fill_points: bool = False,
-    ):
-        ele = to_ele_id(ele)
-
-        base = get_grid_field_base(tao, ele, which=which, index=index)
-        if fill_points:
-            points = get_grid_field_points(tao, ele, which=which, index=index)
-        else:
-            points = None
-
-        data = base.model_dump()
-        data.pop("__class_name__")
-        return cls(
-            which=which,
-            points=points,
-            **data,
-        )
-
-
-class ElementSrWakeData(TaoModel):
-    """
-    Per-element short-range wake data - may be longitudinal or transverse.
-
-    Attributes
-    ----------
-    z_ref : float
-    """
-
-    _tao_command_attr_: ClassVar[str] = "ele_wake"
-    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
-    z_ref: float = 0.0
-    table: list[list[str | float]] = []
-
-    @classmethod
-    def from_tao(
-        cls,
-        tao: Tao,
-        ele: AnyElementID,
-        *,
-        which: Which,
-        who: Literal["longitudinal", "transverse"],
-    ):
-        ele_id = to_ele_id(ele)
-        if who == "longitudinal":
-            tao_who = "sr_long"
-        else:
-            tao_who = "sr_trans"
-
-        base_data: dict = tao.ele_wake(ele_id, who=tao_who, which=which)  #  type: ignore
-        table_data: list = tao.ele_wake(ele_id, who=f"{tao_who}_table", which=which)  # type: ignore
-        return cls(**base_data, table=table_data)
-
-
-class ElementWake(tao_classes.ElementWakeBase, extra="forbid"):
-    which: Which = pydantic.Field(frozen=True)
-
-    sr_long: ElementSrWakeData | None = None
-    sr_trans: ElementSrWakeData | None = None
-    lr_mode: list[list[str | float]] | None = None
-
-    @pydantic.field_validator("sr_long", "sr_trans", mode="before")
-    @classmethod
-    def _migrate_sr_wake(cls, value: Any) -> Any:
-        if isinstance(value, dict):
-            cls_name = value.get("__class_name__")
-            if cls_name in ("ElementWakeSrLong", "ElementWakeSrTrans"):
-                value_copy = dict(value)
-                value_copy["__class_name__"] = "ElementSrWakeData"
-                return value_copy
-
-        if isinstance(value, (tao_classes.ElementWakeSrLong, tao_classes.ElementWakeSrTrans)):
-            return ElementSrWakeData(z_ref=value.z_ref)
-
-        return value
-
-    @classmethod
-    def from_tao(
-        cls,
-        tao: Tao,
-        ele: AnyElementID,
-        *,
-        which: Which,
-    ):
-        ele = to_ele_id(ele)
-
-        base = get_wake_base(tao, ele, which=which)
-        sr_long = None
-        sr_trans = None
-        lr_mode = None
-        if base.has_sr_long:
-            sr_long = get_wake_sr_long(tao, ele, which=which)
-        if base.has_sr_trans:
-            sr_trans = get_wake_sr_trans(tao, ele, which=which)
-        if base.has_lr_mode:
-            lr_mode: list[list[str | float]] = tao.ele_wake(
-                ele, which=which, who="lr_mode_table"
-            )  # type: ignore
-
-        data = base.model_dump()
-        data.pop("__class_name__")
-        return cls(
-            which=which,
-            sr_long=sr_long,
-            sr_trans=sr_trans,
-            lr_mode=lr_mode,
-            **data,
-        )
-
-
-AnyElementMultipoles = (
-    tao_classes.ElementMultipoles
-    | tao_classes.ElementMultipolesAB
-    | tao_classes.ElementMultipolesScaled
-)
-
-
-class _AttributeDict(dict):
-    """
-    A dictionary-like container that allows for dotted attribute access.
-    """
-
-    def __getattr__(self, key: str) -> Any:
-        lkey = GeneralAttributes._tao_attr_map_.get(key.lower(), key.lower())
-        try:
-            return self[lkey]
-        except KeyError:
-            raise AttributeError(
-                f"'{self.__class__.__name__}' object has no attribute '{key}'"
-            )
-
-    def _ipython_key_completions_(self) -> list[str]:
-        return list(self.keys())
-
-    def __dir__(self) -> list[str]:
-        base_dir = set(super().__dir__())
-        key_dir = set(self.keys())
-        return sorted(base_dir | key_dir)
-
-
-class GeneralAttributes(TaoModel, extra="allow"):
-    # Note: hacky workaround here so we can inspect if attributes can be set
-    _tao_command_attr_: ClassVar[str] = "pipe ele:gen_attribs {ele_id}"
-    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
-    _tao_attr_map_: ClassVar[dict[str, str]] = {
-        # Every attribute except for "L" is lowercase - by request
-        "l": "L",
-    }
-
-    attrs: dict[str, Attr]
-
-    @classmethod
-    def _fix_key_case(cls, key: str) -> str:
-        return cls._tao_attr_map_.get(key.lower(), key.lower())
-
-    def __getitem__(self, key: str) -> Attr:
-        # TODO: GeneralAttributes -> RootModel and then fully override __iter__
-        return self.attrs[self._fix_key_case(key)]
-
-    def __setitem__(self, key: str, value) -> None:
-        self.attrs[self._fix_key_case(key)].data = value
-
-    @pydantic.model_validator(mode="wrap")
-    @classmethod
-    def _discriminator_validator(
-        cls, value: Any, handler: pydantic.ValidatorFunctionWrapHandler
-    ) -> Any:
-        if isinstance(value, dict):
-            units = value.get("units", None)
-            if isinstance(units, dict) and "settable" not in units:
-                # Support an older version of attribute storage, where each
-                # element key had its own attribute class
-                value = dict(value)
-                value.pop("units")
-                attrs = {
-                    key: {
-                        "name": key,
-                        "data": value,
-                        "units": units.get(key),
-                        "type": "unknown",
-                        "settable": False,
-                    }
-                    for key, value in value.items()
-                    if key not in {"command_args"}
-                }
-                return handler({"attrs": attrs})
-
-        return handler(value)
-
-    @classmethod
-    def _process_tao_data(cls, data) -> dict:
-        attrs_by_key = {
-            cls._fix_key_case(attr): value
-            for attr, value in parse_tao_python_data_with_units(data).items()
-        }
-        return {"attrs": attrs_by_key}
-
-    # @property
-    # def settable_fields(self) -> dict[str, FieldInfo]:
-    #     raise NotImplementedError()
-
-
-@dataclass
+@dataclass(frozen=True)
 class FillDefault:
     attr: str
 
@@ -1737,50 +539,77 @@ class Element(TaoBaseModel, extra="forbid"):
     which : "base", "model", or "design"
     head : ElementHead
         The head data of the element.
-    attrs : GeneralAttributes or None, default=None
+    ac_kicker : ElementAcKickerAmpVsTime, ElementAcKickerFrequencies, or None
+        AC kicker settings, in one of two representations.
+    attrs : GeneralAttributes or None
         General attributes associated with the element.  The information held
         differs depending on the element's key (i.e., `ele.head.key`).
-    chamber_walls : list[ElementChamberWall] or None, default=None
+    cartesian_map : list[ElementCartesianMap] or None
+        List of cartesian field maps.
+    chamber_walls : list[ElementChamberWall] or None
         List of chamber walls.
-    control_vars : dict[str, float] or None, default=None
+    control_vars : dict[str, float] or None
         Dictionary of control variables with their corresponding current
         values.
-    floor : ElementFloorAll or None, default=None
+    cylindrical_map : list[ElementCylindricalMap] or None
+        List of cylindrical field maps.
+    elec_multipoles : tao_classes.ElementElecMultipoles or None
+        Electric multipole attributes.
+    floor : ElementFloorAll or None
         Floor positions.
-    grid_field : list[ElementGridField] or None, default=None
+    gen_gradients : list[ElementGenGradients] or None
+        List of generalized gradient maps.
+    grid_field : list[ElementGridField] or None
         List of grid field data.
-    lord_slave : list[tao_classes.ElementLordSlave] or None, default=None
+    lord_slave : list[tao_classes.ElementLordSlave] or None
         List of lord-slave relationships.
-    mat6 : ElementMat6 or None, default=None
+    mat6 : ElementMat6 or None
         Mat6 (linear transfer map) information.
-    multipoles : AnyElementMultipoles or None, default=None
+    methods : ElementMethods or None
+        Tracking and calculation method settings.
+    multipoles : AnyElementMultipoles or None
         Multipoleattributes.
-    orbit : ElementOrbit or None, default=None
+    orbit : ElementOrbit or None
         Orbit attributes.
-    photon : ElementPhoton or None, default=None
+    photon : ElementPhoton or None
         Photon attributes.
-    twiss : ElementTwiss or None, default=None
+    spin_taylor : ElementSpinTaylor or None
+        Spin Taylor map.
+    taylor : ElementTaylor or None
+        Taylor map.
+    twiss : ElementTwiss or None
         Twiss parameters.
-    wake : ElementWake or None, default=None
+    wake : ElementWake or None
         Wake attributes.
-    wall3d : list[ElementWall3D] or None, default=None
+    wall3d : list[ElementWall3D] or None
         List of 3D walls.
     """
 
     DEFAULTS: ClassVar[set[str]] = {
+        "ac_kicker",
         "attrs",
         "bunch_params",
+        "cartesian_map",
+        "cartesian_map_terms",
         "chamber_walls",
         # "comb",
         "control_vars",
+        "cylindrical_map",
+        "cylindrical_map_terms",
+        "elec_multipoles",
         "floor",
+        "gen_gradients",
+        "gen_gradient_curves",
         "grid_field",
         # "grid_field_points",
         "lord_slave",
         "mat6",
+        "methods",
         "multipoles",
         "orbit",
         "photon",
+        "spin_taylor",
+        "taylor",
         "twiss",
         "wake",
         "wall3d",
@@ -1795,18 +624,26 @@ class Element(TaoBaseModel, extra="forbid"):
     which: Which = pydantic.Field(frozen=True)
 
     head: tao_classes.ElementHead
+    ac_kicker: AnyElementAcKicker | None = None
     attrs: GeneralAttributes | None = None
     bunch_params: tao_classes.ElementBunchParams | None = None
+    cartesian_map: list[ElementCartesianMap] | None = None
     chamber_walls: list[ElementChamberWall] | None = None
     comb: Comb | None = None
     control_vars: dict[str, float] | None = None
+    cylindrical_map: list[ElementCylindricalMap] | None = None
+    elec_multipoles: tao_classes.ElementElecMultipoles | None = None
     floor: ElementFloorAll | None = None
+    gen_gradients: list[ElementGenGradients] | None = None
     grid_field: list[ElementGridField] | None = None
     lord_slave: list[tao_classes.ElementLordSlave] | None = None
     mat6: ElementMat6 | None = None
+    methods: ElementMethods | None = None
     multipoles: AnyElementMultipoles | None = None
     orbit: tao_classes.ElementOrbit | None = None
     photon: ElementPhoton | None = None
+    spin_taylor: ElementSpinTaylor | None = None
+    taylor: ElementTaylor | None = None
     twiss: tao_classes.ElementTwiss | None = None
     wake: ElementWake | None = None
     wall3d: list[ElementWall3D] | None = None
@@ -1848,23 +685,34 @@ class Element(TaoBaseModel, extra="forbid"):
         which: Which = "model",
         defaults: bool = True,
         # Individually fillable elements:
-        attrs: bool | FillDefault = FillDefault("attrs"),
-        bunch_params: bool | FillDefault = FillDefault("bunch_params"),
-        chamber_walls: bool | FillDefault = FillDefault("chamber_walls"),
-        comb: bool | FillDefault = FillDefault("comb"),
-        control_vars: bool | FillDefault = FillDefault("control_vars"),
-        floor: bool | FillDefault = FillDefault("floor"),
-        grid_field: bool | FillDefault = FillDefault("grid_field"),
-        grid_field_points: bool | FillDefault = FillDefault("grid_field_points"),
-        lord_slave: bool | FillDefault = FillDefault("lord_slave"),
-        mat6: bool | FillDefault = FillDefault("mat6"),
-        multipoles: bool | FillDefault = FillDefault("multipoles"),
-        orbit: bool | FillDefault = FillDefault("orbit"),
-        photon: bool | FillDefault = FillDefault("photon"),
-        twiss: bool | FillDefault = FillDefault("twiss"),
-        wake: bool | FillDefault = FillDefault("wake"),
-        wall3d: bool | FillDefault = FillDefault("wall3d"),
-        wall3d_table: bool | FillDefault = FillDefault("wall3d_table"),
+        ac_kicker: bool | FillDefault = FillDefault("ac_kicker"),  # noqa: B008
+        attrs: bool | FillDefault = FillDefault("attrs"),  # noqa: B008
+        bunch_params: bool | FillDefault = FillDefault("bunch_params"),  # noqa: B008
+        cartesian_map: bool | FillDefault = FillDefault("cartesian_map"),  # noqa: B008
+        cartesian_map_terms: bool | FillDefault = FillDefault("cartesian_map_terms"),  # noqa: B008
+        chamber_walls: bool | FillDefault = FillDefault("chamber_walls"),  # noqa: B008
+        comb: bool | FillDefault = FillDefault("comb"),  # noqa: B008
+        control_vars: bool | FillDefault = FillDefault("control_vars"),  # noqa: B008
+        cylindrical_map: bool | FillDefault = FillDefault("cylindrical_map"),  # noqa: B008
+        cylindrical_map_terms: bool | FillDefault = FillDefault("cylindrical_map_terms"),  # noqa: B008
+        elec_multipoles: bool | FillDefault = FillDefault("elec_multipoles"),  # noqa: B008
+        floor: bool | FillDefault = FillDefault("floor"),  # noqa: B008
+        gen_gradients: bool | FillDefault = FillDefault("gen_gradients"),  # noqa: B008
+        gen_gradient_curves: bool | FillDefault = FillDefault("gen_gradient_curves"),  # noqa: B008
+        grid_field: bool | FillDefault = FillDefault("grid_field"),  # noqa: B008
+        grid_field_points: bool | FillDefault = FillDefault("grid_field_points"),  # noqa: B008
+        lord_slave: bool | FillDefault = FillDefault("lord_slave"),  # noqa: B008
+        mat6: bool | FillDefault = FillDefault("mat6"),  # noqa: B008
+        methods: bool | FillDefault = FillDefault("methods"),  # noqa: B008
+        multipoles: bool | FillDefault = FillDefault("multipoles"),  # noqa: B008
+        orbit: bool | FillDefault = FillDefault("orbit"),  # noqa: B008
+        photon: bool | FillDefault = FillDefault("photon"),  # noqa: B008
+        spin_taylor: bool | FillDefault = FillDefault("spin_taylor"),  # noqa: B008
+        taylor: bool | FillDefault = FillDefault("taylor"),  # noqa: B008
+        twiss: bool | FillDefault = FillDefault("twiss"),  # noqa: B008
+        wake: bool | FillDefault = FillDefault("wake"),  # noqa: B008
+        wall3d: bool | FillDefault = FillDefault("wall3d"),  # noqa: B008
+        wall3d_table: bool | FillDefault = FillDefault("wall3d_table"),  # noqa: B008
         comb_data: Comb | None = None,
     ):
         """
@@ -1881,8 +729,10 @@ class Element(TaoBaseModel, extra="forbid"):
 
         >>> from pytao.model import Element
         >>> print(Element.DEFAULTS)
-        {'attrs', 'bunch_params', 'chamber_walls', 'control_vars', 'floor',
-        'grid_field', 'lord_slave', 'mat6', 'multipoles', 'orbit', 'photon',
+        {'ac_kicker', 'attrs', 'bunch_params', 'cartesian_map',
+        'chamber_walls', 'control_vars', 'cylindrical_map', 'elec_multipoles',
+        'floor', 'gen_gradients', 'grid_field', 'lord_slave', 'mat6',
+        'methods', 'multipoles', 'orbit', 'photon', 'spin_taylor', 'taylor',
         'twiss', 'wake', 'wall3d'}
 
         With the following, the default will change to only query `attrs`:
@@ -1914,12 +764,24 @@ class Element(TaoBaseModel, extra="forbid"):
             Specifies which Tao lattice to use, by default "model".
         defaults : bool, default=True
             Fill default items.  Defaults are set by name in `Element.DEFAULTS`.
+        ac_kicker : bool, optional
+            Fill AC kicker settings.
         attrs : bool, optional
             Fill general attributes.
         bunch_params : bool, optional
             Fill bunch parameters.
+        cartesian_map : bool, optional
+            Fill cartesian map data.
+        cartesian_map_terms : bool, default=False
+            Fill cartesian map per-term data.
         chamber_walls : bool, optional
             Fill chamber wall data.
+        cylindrical_map : bool, optional
+            Fill cylindrical map data.
+        cylindrical_map_terms : bool, default=False
+            Fill cylindrical map per-term data.
+        elec_multipoles : bool, optional
+            Fill electric multipole data.
         comb : bool, default=False
             Fill comb data.  If available, pass in `comb_data` as well to avoid
             querying Tao again for the full comb data.
@@ -1931,6 +793,10 @@ class Element(TaoBaseModel, extra="forbid"):
             Fill control variables.
         floor : bool, optional
             Fill floor data.
+        gen_gradients : bool, optional
+            Fill generalized gradient map data.
+        gen_gradient_curves : bool, default=False
+            Fill generalized gradient per-curve derivative tables.
         grid_field : bool, optional
             Fill grid field data.
         grid_field_points : bool, default=False
@@ -1939,12 +805,18 @@ class Element(TaoBaseModel, extra="forbid"):
             Fill lord-slave relationships.
         mat6 : bool, optional
             Fill mat6 data.
+        methods : bool, optional
+            Fill tracking/calculation method settings.
         multipoles : bool, optional
             Fill multipole data.
         orbit : bool, optional
             Fill orbit data.
         photon : bool, optional
             Fill photon data.
+        spin_taylor : bool, optional
+            Fill spin Taylor map data.
+        taylor : bool, optional
+            Fill Taylor map data.
         twiss : bool, optional
             Fill twiss parameters.
         wake : bool, optional
@@ -1956,33 +828,44 @@ class Element(TaoBaseModel, extra="forbid"):
         """
         ele = to_ele_id(ele)
 
-        head = get_head(tao=tao, ele=ele, which=which)
-        instance = cls(which=which, head=head, ele=ele)
+        head = tao_classes.ElementHead.from_tao(tao, ele_id=ele, which=which)
+        instance = cls(which=which, head=head, ele_id=ele)
 
         def should_fill(flag: bool | FillDefault):
             if flag is True or flag is False:
                 return flag
             if not isinstance(flag, FillDefault):
-                raise ValueError(f"Unexpected flag: {flag}")
+                raise TypeError(f"Unexpected flag: {flag}")
 
             return defaults and (flag.attr in cls.DEFAULTS)
 
         instance.fill(
             tao,
             head=False,
+            ac_kicker=should_fill(ac_kicker),
             attrs=should_fill(attrs),
             bunch_params=should_fill(bunch_params),
+            cartesian_map=should_fill(cartesian_map),
+            cartesian_map_terms=should_fill(cartesian_map_terms),
             chamber_walls=should_fill(chamber_walls),
             control_vars=should_fill(control_vars),
             comb=should_fill(comb),
+            cylindrical_map=should_fill(cylindrical_map),
+            cylindrical_map_terms=should_fill(cylindrical_map_terms),
+            elec_multipoles=should_fill(elec_multipoles),
             floor=should_fill(floor),
+            gen_gradients=should_fill(gen_gradients),
+            gen_gradient_curves=should_fill(gen_gradient_curves),
             grid_field=should_fill(grid_field),
             grid_field_points=should_fill(grid_field_points),
             lord_slave=should_fill(lord_slave),
             mat6=should_fill(mat6),
+            methods=should_fill(methods),
             multipoles=should_fill(multipoles),
             orbit=should_fill(orbit),
             photon=should_fill(photon),
+            spin_taylor=should_fill(spin_taylor),
+            taylor=should_fill(taylor),
             twiss=should_fill(twiss),
             wake=should_fill(wake),
             wall3d=should_fill(wall3d),
@@ -1994,7 +877,7 @@ class Element(TaoBaseModel, extra="forbid"):
 
     @_pytao_stats.time_decorator
     def _fill_head(self, tao: Tao):
-        self.head = get_head(tao=tao, ele=self.ele_id, which=self.which)
+        self.head = tao_classes.ElementHead.from_tao(tao, ele_id=self.ele_id, which=self.which)
 
     @_pytao_stats.time_decorator
     def _fill_attrs(self, tao: Tao):
@@ -2002,7 +885,9 @@ class Element(TaoBaseModel, extra="forbid"):
 
     @_pytao_stats.time_decorator
     def _fill_bunch_params(self, tao: Tao):
-        self.bunch_params = get_bunch_params(tao=tao, ele=self.ele_id, which=self.which)
+        self.bunch_params = tao_classes.ElementBunchParams.from_tao(
+            tao, ele_id=self.ele_id, which=self.which
+        )
 
     @_pytao_stats.time_decorator
     def _fill_floor(self, tao: Tao):
@@ -2010,9 +895,9 @@ class Element(TaoBaseModel, extra="forbid"):
 
     @_pytao_stats.time_decorator
     def _fill_comb(self, tao: Tao, comb_data: Comb | None):
-        self.comb = get_comb(
-            tao=tao, ele=self.ele_id, which=self.which, head=self.head, comb=comb_data
-        )
+        if comb_data is None:
+            comb_data = Comb.from_tao(tao, which=self.which)
+        self.comb = comb_data.slice_by_s(self.head.s_start, self.head.s)
 
     @_pytao_stats.time_decorator
     def _fill_control_vars(self, tao: Tao):
@@ -2026,7 +911,9 @@ class Element(TaoBaseModel, extra="forbid"):
     @_pytao_stats.time_decorator
     def _fill_lord_slave(self, tao: Tao):
         if self.head.has_lord_slave:
-            self.lord_slave = get_lord_slave(tao=tao, ele=self.ele_id, which=self.which)
+            self.lord_slave = tao_classes.ElementLordSlave.from_tao_list(
+                tao, ele_id=self.ele_id
+            )
         else:
             self.lord_slave = None
 
@@ -2039,18 +926,33 @@ class Element(TaoBaseModel, extra="forbid"):
 
     @_pytao_stats.time_decorator
     def _fill_orbit(self, tao: Tao):
-        self.orbit = get_orbit(tao=tao, ele=self.ele_id, which=self.which)
+        self.orbit = tao_classes.ElementOrbit.from_tao(
+            tao, ele_id=self.ele_id, which=self.which
+        )
 
     @_pytao_stats.time_decorator
     def _fill_twiss(self, tao: Tao):
         if self.head.has_twiss:
-            self.twiss = get_twiss(tao=tao, ele=self.ele_id, which=self.which)
+            self.twiss = tao_classes.ElementTwiss.from_tao(
+                tao, ele_id=self.ele_id, which=self.which
+            )
         else:
             self.twiss = None
 
     @_pytao_stats.time_decorator
     def _fill_multipoles(self, tao: Tao):
-        self.multipoles = get_multipoles(tao=tao, ele=self.ele_id, which=self.which)
+        multipoles: dict = tao.ele_multipoles(ele_id=self.ele_id, which=self.which)
+        if not multipoles["multipoles_on"]:
+            self.multipoles = None
+            return
+
+        multipoles["command_args"] = {"ele_id": self.ele_id, "which": self.which}
+        if not len(multipoles.get("data", [])):
+            # perf: it's ambiguous, so choose a general class
+            self.multipoles = tao_classes.ElementMultipoles.model_validate(multipoles)
+        else:
+            adapter = pydantic.TypeAdapter(AnyElementMultipoles)
+            self.multipoles = adapter.validate_python(multipoles)
 
     @_pytao_stats.time_decorator
     def _fill_wall3d(self, tao: Tao, fill_table: bool):
@@ -2110,19 +1012,118 @@ class Element(TaoBaseModel, extra="forbid"):
         else:
             self.wake = None
 
+    @_pytao_stats.time_decorator
+    def _fill_ac_kicker(self, tao: Tao):
+        if self.head.has_ac_kick:
+            self.ac_kicker = ElementAcKicker.from_tao(tao, ele=self.ele_id, which=self.which)
+        else:
+            self.ac_kicker = None
+
+    @_pytao_stats.time_decorator
+    def _fill_cartesian_map(self, tao: Tao, terms: bool = False):
+        if self.head.num_cartesian_map > 0:
+            self.cartesian_map = [
+                ElementCartesianMap.from_tao(
+                    tao=tao,
+                    ele=self.ele_id,
+                    which=self.which,
+                    index=index,
+                    fill_terms=terms,
+                )
+                for index in range(1, self.head.num_cartesian_map + 1)
+            ]
+        else:
+            self.cartesian_map = None
+
+    @_pytao_stats.time_decorator
+    def _fill_cylindrical_map(self, tao: Tao, terms: bool = False):
+        if self.head.num_cylindrical_map > 0:
+            self.cylindrical_map = [
+                ElementCylindricalMap.from_tao(
+                    tao=tao,
+                    ele=self.ele_id,
+                    which=self.which,
+                    index=index,
+                    fill_terms=terms,
+                )
+                for index in range(1, self.head.num_cylindrical_map + 1)
+            ]
+        else:
+            self.cylindrical_map = None
+
+    @_pytao_stats.time_decorator
+    def _fill_elec_multipoles(self, tao: Tao):
+        if self.head.has_multipoles_elec:
+            elec = tao_classes.ElementElecMultipoles.from_tao(
+                tao, ele_id=self.ele_id, which=self.which
+            )
+            self.elec_multipoles = elec if elec.multipoles_on else None
+        else:
+            self.elec_multipoles = None
+
+    @_pytao_stats.time_decorator
+    def _fill_gen_gradients(self, tao: Tao, curves: bool = False):
+        if self.head.num_gen_gradients > 0:
+            self.gen_gradients = [
+                ElementGenGradients.from_tao(
+                    tao=tao,
+                    ele=self.ele_id,
+                    which=self.which,
+                    index=index,
+                    fill_curves=curves,
+                )
+                for index in range(1, self.head.num_gen_gradients + 1)
+            ]
+        else:
+            self.gen_gradients = None
+
+    @_pytao_stats.time_decorator
+    def _fill_methods(self, tao: Tao):
+        if self.head.has_methods:
+            self.methods = ElementMethods.from_tao(tao, ele_id=self.ele_id, which=self.which)
+        else:
+            self.methods = None
+
+    @_pytao_stats.time_decorator
+    def _fill_spin_taylor(self, tao: Tao):
+        if self.head.has_spin_taylor:
+            self.spin_taylor = ElementSpinTaylor.from_tao(
+                tao=tao, ele=self.ele_id, which=self.which
+            )
+        else:
+            self.spin_taylor = None
+
+    @_pytao_stats.time_decorator
+    def _fill_taylor(self, tao: Tao):
+        if self.head.has_taylor:
+            self.taylor = ElementTaylor.from_tao(tao=tao, ele=self.ele_id, which=self.which)
+        else:
+            self.taylor = None
+
     def fill(
         self,
         tao: Tao,
         *,
         head: bool = True,
+        ac_kicker: bool = True,
         attrs: bool = True,
         bunch_params: bool = True,
+        cartesian_map: bool = True,
+        cartesian_map_terms: bool = False,
         comb: bool = False,
         control_vars: bool = True,
+        cylindrical_map: bool = True,
+        cylindrical_map_terms: bool = False,
+        elec_multipoles: bool = True,
         floor: bool = True,
+        gen_gradients: bool = True,
+        gen_gradient_curves: bool = False,
         lord_slave: bool = True,
+        methods: bool = True,
         photon: bool = True,
         orbit: bool = True,
+        spin_taylor: bool = True,
+        taylor: bool = True,
         twiss: bool = True,
         grid_field: bool = True,
         grid_field_points: bool = False,
@@ -2145,10 +1146,32 @@ class Element(TaoBaseModel, extra="forbid"):
             The Tao instance to retrieve information from.
         head : bool, default=True
             Update the head attribute.
+        ac_kicker : bool, default=True
+            Fill AC kicker settings.
         attrs : bool, default=True
             Fill attribute data.
         bunch_params : bool, default=True
             Fill bunch parameters.
+        cartesian_map : bool, default=True
+            Fill cartesian map data.
+        cartesian_map_terms : bool, default=False
+            Fill cartesian map per-term data.
+        cylindrical_map : bool, default=True
+            Fill cylindrical map data.
+        cylindrical_map_terms : bool, default=False
+            Fill cylindrical map per-term data.
+        elec_multipoles : bool, default=True
+            Fill electric multipole data.
+        gen_gradients : bool, default=True
+            Fill generalized gradient map data.
+        gen_gradient_curves : bool, default=False
+            Fill generalized gradient per-curve derivative tables.
+        methods : bool, default=True
+            Fill tracking/calculation method settings.
+        spin_taylor : bool, default=True
+            Fill spin Taylor map data.
+        taylor : bool, default=True
+            Fill Taylor map data.
         comb : bool or None, default=False
             Fill comb data.  If available, pass in `comb_data` as well to avoid
             querying Tao again for the full comb data.
@@ -2194,10 +1217,43 @@ class Element(TaoBaseModel, extra="forbid"):
 
         if head and should_update(self.head):
             self._fill_head(tao)
+        if ac_kicker and should_update(self.ac_kicker):
+            self._fill_ac_kicker(tao)
         if attrs and should_update(self.attrs):
             self._fill_attrs(tao)
         if bunch_params and should_update(self.bunch_params):
             self._fill_bunch_params(tao)
+        if cartesian_map or cartesian_map_terms:
+            if self.cartesian_map is None:
+                have_terms = False
+            else:
+                have_terms = any(cm.terms is not None for cm in self.cartesian_map)
+            if should_update(self.cartesian_map) or (not have_terms and cartesian_map_terms):
+                self._fill_cartesian_map(tao, terms=cartesian_map_terms)
+        if cylindrical_map or cylindrical_map_terms:
+            if self.cylindrical_map is None:
+                have_terms = False
+            else:
+                have_terms = any(cm.terms is not None for cm in self.cylindrical_map)
+            if should_update(self.cylindrical_map) or (
+                not have_terms and cylindrical_map_terms
+            ):
+                self._fill_cylindrical_map(tao, terms=cylindrical_map_terms)
+        if elec_multipoles and should_update(self.elec_multipoles):
+            self._fill_elec_multipoles(tao)
+        if gen_gradients or gen_gradient_curves:
+            if self.gen_gradients is None:
+                have_curves = False
+            else:
+                have_curves = any(gg.curves is not None for gg in self.gen_gradients)
+            if should_update(self.gen_gradients) or (not have_curves and gen_gradient_curves):
+                self._fill_gen_gradients(tao, curves=gen_gradient_curves)
+        if methods and should_update(self.methods):
+            self._fill_methods(tao)
+        if spin_taylor and should_update(self.spin_taylor):
+            self._fill_spin_taylor(tao)
+        if taylor and should_update(self.taylor):
+            self._fill_taylor(tao)
         if comb and should_update(self.comb):
             self._fill_comb(tao, comb_data=comb_data)
         if control_vars and should_update(self.control_vars):
@@ -2542,6 +1598,37 @@ def restore_raw_element_ndarrays(ele: dict) -> None:
             value = comb.get(key)
             if value is not None:
                 comb[key] = _PydanticNDArray._pydantic_validate(value, None)
+
+    def restore_keys(data: dict | None, *keys: str, complex_: bool = False):
+        if not data:
+            return
+        cls = _PydanticComplexNDArray if complex_ else _PydanticNDArray
+        for key in keys:
+            value = data.get(key)
+            if value is not None:
+                data[key] = cls._pydantic_validate(value, None)
+
+    restore_keys(ele.get("ac_kicker"), "amp", "time", "frequency", "phi")
+
+    taylor = ele.get("taylor")
+    if taylor:
+        for section in taylor.get("sections") or []:
+            restore_keys(section, "coef", "exponents")
+
+    spin_taylor = ele.get("spin_taylor")
+    if spin_taylor:
+        for component in spin_taylor.get("components") or []:
+            restore_keys(component, "coef", "exponents")
+
+    for cartesian_map in ele.get("cartesian_map") or []:
+        restore_keys(cartesian_map.get("terms"), "coef", "kx", "ky", "kz", "x0", "y0", "phi_z")
+
+    for cylindrical_map in ele.get("cylindrical_map") or []:
+        restore_keys(cylindrical_map.get("terms"), "e_coef", "b_coef", complex_=True)
+
+    for gen_gradients in ele.get("gen_gradients") or []:
+        for curve in gen_gradients.get("curves") or []:
+            restore_keys(curve, "z", "deriv")
 
 
 def _id_to_branch_and_index(location: str) -> tuple[str, int]:

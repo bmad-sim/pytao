@@ -191,6 +191,84 @@ def test_ele_elec_multipoles_1(tao_cls: type[AnyTao]):
         assert "data" in tao.ele_elec_multipoles(ele_id="1@0>>1", which="model")
 
 
+def test_ele_elec_multipoles_with_data(tao_cls: type[AnyTao]):
+    with new_tao(
+        tao_cls,
+        lattice_file="$ACC_ROOT_DIR/regression_tests/tracking_method_test/tracking_method_test.bmad",
+        noinit=True,
+    ) as tao:
+        res = tao.ele_elec_multipoles(ele_id="crab_cavity1", which="model")
+    assert res["multipoles_on"] is True
+    assert set(res["data"][0]) == {
+        "index",
+        "An_elec",
+        "Bn_elec",
+        "An_elec (Scaled)",
+        "Bn_elec (Scaled)",
+    }
+    assert res["data"][0]["index"] == 1
+    assert res["data"][0]["Bn_elec"] == 1.0
+
+
+def test_ele_ac_kicker_amp_vs_time(tao_cls: type[AnyTao]):
+    with new_tao(
+        tao_cls,
+        lattice_file="$ACC_ROOT_DIR/regression_tests/tracking_method_test/tracking_method_test.bmad",
+        noinit=True,
+    ) as tao:
+        res = tao.ele_ac_kicker(ele_id="ac_kicker1", which="model")
+    assert res["mode"] == "amp_vs_time"
+    assert set(res["data"][0]) == {"index", "amp", "time"}
+
+
+def test_ele_ac_kicker_frequencies(tao_cls: type[AnyTao]):
+    with new_tao(
+        tao_cls,
+        lattice_file="$ACC_ROOT_DIR/regression_tests/tracking_method_test/tracking_method_test.bmad",
+        noinit=True,
+    ) as tao:
+        res = tao.ele_ac_kicker(ele_id="ac_kicker2", which="model")
+    assert res["mode"] == "frequencies"
+    assert set(res["data"][0]) == {"index", "frequency", "amp", "phi"}
+
+
+def test_ele_ac_kicker_absent(tao_cls: type[AnyTao]):
+    with new_tao(
+        tao_cls,
+        lattice_file="$ACC_ROOT_DIR/regression_tests/tracking_method_test/tracking_method_test.bmad",
+        noinit=True,
+    ) as tao:
+        res = tao.ele_ac_kicker(ele_id="drift1", which="model")
+    assert res is None
+
+
+def test_ele_cylindrical_map(tao_cls: type[AnyTao]):
+    with new_tao(
+        tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_em_field"
+    ) as tao:
+        base = tao.ele_cylindrical_map(ele_id="m1", index="1", who="base", which="model")
+        terms = tao.ele_cylindrical_map(ele_id="m1", index="1", who="terms", which="model")
+    assert base["number_of_terms"] == len(terms)
+    assert set(terms[0]) == {"index", "e_coef", "b_coef"}
+    assert terms[0]["index"] == 1
+    assert isinstance(terms[0]["e_coef"], complex)
+    assert isinstance(terms[0]["b_coef"], complex)
+
+
+def test_ele_param_multi_value(tao_cls: type[AnyTao]):
+    with new_tao(
+        tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_taylor"
+    ) as tao:
+        mat6 = tao.ele_param(ele_id="34", who="ele.mat6", which="model")["ele_mat6"]
+        vec0 = tao.ele_param(ele_id="34", who="ele.vec0", which="model")["ele_vec0"]
+        c_mat = tao.ele_param(ele_id="34", who="ele.c_mat", which="model")["ele_c_mat"]
+        scalar = tao.ele_param(ele_id="34", who="orbit.vec.1", which="model")
+    assert mat6.shape == (6, 6)
+    assert vec0.shape == (6,)
+    assert c_mat.shape == (2, 2)
+    assert isinstance(scalar["orbit_vec_1"], float)
+
+
 def test_ele_gen_gradients(tao_cls: type[AnyTao]):
     with new_tao(
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_em_field"
@@ -247,6 +325,9 @@ def test_ele_taylor_1(tao_cls: type[AnyTao]):
     assert isinstance(res, dict)
     assert "data" in res
     assert res["data"][0]["index"] == 1
+    term = res["data"][0]["data"][0]
+    assert isinstance(term["exp1"], int)
+    assert isinstance(term["coef"], float)
 
 
 def test_ele_spin_taylor_1(tao_cls: type[AnyTao]):
@@ -265,6 +346,8 @@ def test_ele_spin_taylor_1(tao_cls: type[AnyTao]):
         "exp5",
         "exp6",
     }
+    assert isinstance(res[0]["exp1"], int)
+    assert isinstance(res[0]["coef"], float)
 
 
 def test_ele_wall3d_1(tao_cls: type[AnyTao]):

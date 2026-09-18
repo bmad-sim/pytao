@@ -6,8 +6,6 @@ from typing import Literal
 import numpy as np
 from pydantic import Field, computed_field
 
-from pytao.constraints.pydantic import ConstraintsBase
-
 from pytao import Tao
 from pytao.constraints.observables.base import (
     CheckResult,
@@ -20,6 +18,7 @@ from pytao.constraints.observables.base import (
     Observation,
 )
 from pytao.constraints.observables.twiss import AnyTwissComparison, BmagTwissComparison
+from pytao.constraints.pydantic import ConstraintsBase
 from pytao.model import (
     ElementFloor,
     ElementFloorAll,
@@ -28,7 +27,7 @@ from pytao.model import (
     ElementTwiss,
 )
 from pytao.model import _generated as tao_classes
-from pytao.model.ele.ele import Element, get_head
+from pytao.model.ele.ele import Element, get_element_index
 
 
 class EleObservation(Observation):
@@ -634,13 +633,13 @@ def _ele_reduce(
     ix_end: int | None = None
 
     if begin_ele is not None or end_ele is not None:
-        ix_end_marker = get_head(tao, "END", which="model").ix_ele
+        ix_end_marker = get_element_index(tao, "END")
         if begin_ele is not None:
-            ix_begin = get_head(tao, begin_ele, which="model").ix_ele
+            ix_begin = get_element_index(tao, begin_ele)
             if ix_begin >= ix_end_marker:
                 raise ValueError(f"begin_ele {begin_ele!r} is not a tracking element")
         if end_ele is not None:
-            ix_end = get_head(tao, end_ele, which="model").ix_ele
+            ix_end = get_element_index(tao, end_ele)
             if ix_end >= ix_end_marker:
                 raise ValueError(f"end_ele {end_ele!r} is not a tracking element")
 
