@@ -111,15 +111,6 @@ def _normalize_universe_prefixed_keys(dct: dict) -> dict:
     return dct
 
 
-def get_default_universe(tao: Tao) -> int:
-    """
-    Get the index of Tao's default universe (``s%global%default_universe``).
-
-    Graphs and curves with ``ix_universe = -1`` refer to this universe.
-    """
-    return int(tao.universe("")["ix_universe"])
-
-
 def _should_use_symbol_color(symbol_type: str, fill_pattern: str) -> bool:
     if (
         symbol_type in ("dot", "1")
@@ -785,7 +776,7 @@ class LatticeLayoutGraph(GraphBase):
         if raw_ix_universe < 0:
             # -1 means the default universe; -2 means "all universes", which a
             # single lattice layout cannot show - fall back to the default.
-            universe = get_default_universe(tao)
+            universe = tao.default_universe
         else:
             universe = raw_ix_universe
         branch = info["ix_branch"]
@@ -1329,7 +1320,7 @@ class GraphManager(ABC):
         if ix_uni is None:
             return graph
         if ix_uni < 0:
-            ix_uni = get_default_universe(self.tao)
+            ix_uni = self.tao.default_universe
         if graph.universe == ix_uni:
             return graph
 
