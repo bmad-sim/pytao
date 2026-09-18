@@ -119,7 +119,7 @@ def _check_invalid(lines: list[str]) -> None:
     """
     Raise `TaoDataInvalidError` if Tao marked the output as INVALID.
 
-    Tao's ``invalid()`` appends a bare INVALID line after any lines already
+    Tao's `invalid()` appends a bare INVALID line after any lines already
     written, so the whole output is scanned.
     """
     if isinstance(lines, np.ndarray):
@@ -954,9 +954,9 @@ def parse_ele_ac_kicker(lines, cmd="") -> EleAcKickerResult | None:
     Returns
     -------
     EleAcKickerResult or None
-        ``None`` if the element has no associated ac_kicker.  Otherwise a
-        dictionary with ``mode`` (either ``"amp_vs_time"`` or
-        ``"frequencies"``) and the corresponding list of terms in ``data``.
+        `None` if the element has no associated ac_kicker.  Otherwise a
+        dictionary with `mode` (either `"amp_vs_time"` or
+        `"frequencies"`) and the corresponding list of terms in `data`.
     """
     if not lines:
         return None
@@ -1198,9 +1198,9 @@ def parse_ele_param(lines, cmd="") -> dict[str, Any]:
     Returns
     -------
     dict
-        Single key of the requested ``who``, with dots replaced by
-        underscores.  Matrix-valued ``who`` values (``ele.mat6``,
-        ``ele.vec0``, ``ele.c_mat``) map to appropriately-shaped ndarrays.
+        Single key of the requested `who`, with dots replaced by
+        underscores.  Matrix-valued `who` values (`ele.mat6`,
+        `ele.vec0`, `ele.c_mat`) map to appropriately-shaped ndarrays.
     """
     # Matrix-valued `who` emit multiple values on one line which Tao marks as
     # REAL (not REAL_ARR), so the default parser cannot handle them.

@@ -304,8 +304,8 @@ class TaoModel(
         ----------
         tao : Tao
         **kwargs
-            Keyword arguments to pass to the relevant ``tao`` command.
-            An ``ele_id`` keyword may be an integer, string, or ElementID.
+            Keyword arguments to pass to the relevant `tao` command.
+            An `ele_id` keyword may be an integer, string, or ElementID.
         """
         cmd_kwargs = cls._tao_command_kwargs(kwargs)
         data = cls._query_tao(tao, cmd_kwargs)
@@ -352,8 +352,8 @@ class FromTaoListMixin:
         ----------
         tao : Tao
         **kwargs
-            Keyword arguments to pass to the relevant ``tao`` command.
-            An ``ele_id`` keyword may be an integer, string, or ElementID.
+            Keyword arguments to pass to the relevant `tao` command.
+            An `ele_id` keyword may be an integer, string, or ElementID.
         """
         cmd_kwargs = cls._tao_command_kwargs(kwargs)
         data = cls._query_tao(tao, cmd_kwargs)
