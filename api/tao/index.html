@@ -3373,56 +3373,56 @@ PyTao's command-line entrypoint.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1688</span>
-<span class="normal">1689</span>
-<span class="normal">1690</span>
-<span class="normal">1691</span>
-<span class="normal">1692</span>
-<span class="normal">1693</span>
-<span class="normal">1694</span>
-<span class="normal">1695</span>
-<span class="normal">1696</span>
-<span class="normal">1697</span>
-<span class="normal">1698</span>
-<span class="normal">1699</span>
-<span class="normal">1700</span>
-<span class="normal">1701</span>
-<span class="normal">1702</span>
-<span class="normal">1703</span>
-<span class="normal">1704</span>
-<span class="normal">1705</span>
-<span class="normal">1706</span>
-<span class="normal">1707</span>
-<span class="normal">1708</span>
-<span class="normal">1709</span>
-<span class="normal">1710</span>
-<span class="normal">1711</span>
-<span class="normal">1712</span>
-<span class="normal">1713</span>
-<span class="normal">1714</span>
-<span class="normal">1715</span>
-<span class="normal">1716</span>
-<span class="normal">1717</span>
-<span class="normal">1718</span>
-<span class="normal">1719</span>
-<span class="normal">1720</span>
-<span class="normal">1721</span>
-<span class="normal">1722</span>
-<span class="normal">1723</span>
-<span class="normal">1724</span>
-<span class="normal">1725</span>
-<span class="normal">1726</span>
-<span class="normal">1727</span>
-<span class="normal">1728</span>
-<span class="normal">1729</span>
-<span class="normal">1730</span>
-<span class="normal">1731</span>
-<span class="normal">1732</span>
-<span class="normal">1733</span>
-<span class="normal">1734</span>
-<span class="normal">1735</span>
-<span class="normal">1736</span>
-<span class="normal">1737</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">archive</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1778</span>
+<span class="normal">1779</span>
+<span class="normal">1780</span>
+<span class="normal">1781</span>
+<span class="normal">1782</span>
+<span class="normal">1783</span>
+<span class="normal">1784</span>
+<span class="normal">1785</span>
+<span class="normal">1786</span>
+<span class="normal">1787</span>
+<span class="normal">1788</span>
+<span class="normal">1789</span>
+<span class="normal">1790</span>
+<span class="normal">1791</span>
+<span class="normal">1792</span>
+<span class="normal">1793</span>
+<span class="normal">1794</span>
+<span class="normal">1795</span>
+<span class="normal">1796</span>
+<span class="normal">1797</span>
+<span class="normal">1798</span>
+<span class="normal">1799</span>
+<span class="normal">1800</span>
+<span class="normal">1801</span>
+<span class="normal">1802</span>
+<span class="normal">1803</span>
+<span class="normal">1804</span>
+<span class="normal">1805</span>
+<span class="normal">1806</span>
+<span class="normal">1807</span>
+<span class="normal">1808</span>
+<span class="normal">1809</span>
+<span class="normal">1810</span>
+<span class="normal">1811</span>
+<span class="normal">1812</span>
+<span class="normal">1813</span>
+<span class="normal">1814</span>
+<span class="normal">1815</span>
+<span class="normal">1816</span>
+<span class="normal">1817</span>
+<span class="normal">1818</span>
+<span class="normal">1819</span>
+<span class="normal">1820</span>
+<span class="normal">1821</span>
+<span class="normal">1822</span>
+<span class="normal">1823</span>
+<span class="normal">1824</span>
+<span class="normal">1825</span>
+<span class="normal">1826</span>
+<span class="normal">1827</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">archive</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">directory</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"run_tao"</span><span class="p">,</span>
@@ -3892,7 +3892,7 @@ and plotting updates.</p>
 
 
 </h5>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">ele</span><span class="p">(</span><span class="n">ele_id</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="s1">'1'</span><span class="p">,</span> <span class="n">ix_branch</span><span class="o">=</span><span class="s1">'0'</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">'model'</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'attrs'</span><span class="p">),</span> <span class="n">bunch_params</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'bunch_params'</span><span class="p">),</span> <span class="n">chamber_walls</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'chamber_walls'</span><span class="p">),</span> <span class="n">comb</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'comb'</span><span class="p">),</span> <span class="n">control_vars</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'control_vars'</span><span class="p">),</span> <span class="n">floor</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'floor'</span><span class="p">),</span> <span class="n">grid_field</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'grid_field'</span><span class="p">),</span> <span class="n">grid_field_points</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'grid_field_points'</span><span class="p">),</span> <span class="n">lord_slave</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'lord_slave'</span><span class="p">),</span> <span class="n">mat6</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'mat6'</span><span class="p">),</span> <span class="n">multipoles</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'multipoles'</span><span class="p">),</span> <span class="n">orbit</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'orbit'</span><span class="p">),</span> <span class="n">photon</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'photon'</span><span class="p">),</span> <span class="n">twiss</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'twiss'</span><span class="p">),</span> <span class="n">wake</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'wake'</span><span class="p">),</span> <span class="n">wall3d</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'wall3d'</span><span class="p">),</span> <span class="n">wall3d_table</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'wall3d_table'</span><span class="p">),</span> <span class="n">comb_data</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">ele</span><span class="p">(</span><span class="n">ele_id</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="s1">'1'</span><span class="p">,</span> <span class="n">ix_branch</span><span class="o">=</span><span class="s1">'0'</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">'model'</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ac_kicker</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'ac_kicker'</span><span class="p">),</span> <span class="n">attrs</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'attrs'</span><span class="p">),</span> <span class="n">bunch_params</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'bunch_params'</span><span class="p">),</span> <span class="n">cartesian_map</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'cartesian_map'</span><span class="p">),</span> <span class="n">cartesian_map_terms</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'cartesian_map_terms'</span><span class="p">),</span> <span class="n">chamber_walls</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'chamber_walls'</span><span class="p">),</span> <span class="n">comb</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'comb'</span><span class="p">),</span> <span class="n">control_vars</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'control_vars'</span><span class="p">),</span> <span class="n">cylindrical_map</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'cylindrical_map'</span><span class="p">),</span> <span class="n">cylindrical_map_terms</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'cylindrical_map_terms'</span><span class="p">),</span> <span class="n">elec_multipoles</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'elec_multipoles'</span><span class="p">),</span> <span class="n">floor</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'floor'</span><span class="p">),</span> <span class="n">gen_gradients</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'gen_gradients'</span><span class="p">),</span> <span class="n">gen_gradient_curves</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'gen_gradient_curves'</span><span class="p">),</span> <span class="n">grid_field</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'grid_field'</span><span class="p">),</span> <span class="n">grid_field_points</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'grid_field_points'</span><span class="p">),</span> <span class="n">lord_slave</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'lord_slave'</span><span class="p">),</span> <span class="n">mat6</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'mat6'</span><span class="p">),</span> <span class="n">methods</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'methods'</span><span class="p">),</span> <span class="n">multipoles</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'multipoles'</span><span class="p">),</span> <span class="n">orbit</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'orbit'</span><span class="p">),</span> <span class="n">photon</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'photon'</span><span class="p">),</span> <span class="n">spin_taylor</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'spin_taylor'</span><span class="p">),</span> <span class="n">taylor</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'taylor'</span><span class="p">),</span> <span class="n">twiss</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'twiss'</span><span class="p">),</span> <span class="n">wake</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'wake'</span><span class="p">),</span> <span class="n">wall3d</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'wall3d'</span><span class="p">),</span> <span class="n">wall3d_table</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'wall3d_table'</span><span class="p">),</span> <span class="n">comb_data</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3982,6 +3982,22 @@ notes sections for more details.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
+                <code>ac_kicker</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill AC kicker settings.</p>
+              </div>
+            </td>
+            <td>
+                  <code><span title="pytao.model.ele.FillDefault">FillDefault</span>(&#39;ac_kicker&#39;)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
                 <code>attrs</code>
             </td>
             <td>
@@ -4010,6 +4026,38 @@ notes sections for more details.</p>
             </td>
             <td>
                   <code><span title="pytao.model.ele.FillDefault">FillDefault</span>(&#39;bunch_params&#39;)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>cartesian_map</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill cartesian map data.</p>
+              </div>
+            </td>
+            <td>
+                  <code><span title="pytao.model.ele.FillDefault">FillDefault</span>(&#39;cartesian_map&#39;)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>cartesian_map_terms</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill cartesian map per-term data.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -4081,6 +4129,54 @@ the full comb data.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
+                <code>cylindrical_map</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill cylindrical map data.</p>
+              </div>
+            </td>
+            <td>
+                  <code><span title="pytao.model.ele.FillDefault">FillDefault</span>(&#39;cylindrical_map&#39;)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>cylindrical_map_terms</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill cylindrical map per-term data.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>elec_multipoles</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill electric multipole data.</p>
+              </div>
+            </td>
+            <td>
+                  <code><span title="pytao.model.ele.FillDefault">FillDefault</span>(&#39;elec_multipoles&#39;)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
                 <code>floor</code>
             </td>
             <td>
@@ -4093,6 +4189,38 @@ the full comb data.</p>
             </td>
             <td>
                   <code><span title="pytao.model.ele.FillDefault">FillDefault</span>(&#39;floor&#39;)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>gen_gradients</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill generalized gradient map data.</p>
+              </div>
+            </td>
+            <td>
+                  <code><span title="pytao.model.ele.FillDefault">FillDefault</span>(&#39;gen_gradients&#39;)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>gen_gradient_curves</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill generalized gradient per-curve derivative tables.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -4161,6 +4289,22 @@ the full comb data.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
+                <code>methods</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill tracking/calculation method settings.</p>
+              </div>
+            </td>
+            <td>
+                  <code><span title="pytao.model.ele.FillDefault">FillDefault</span>(&#39;methods&#39;)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
                 <code>multipoles</code>
             </td>
             <td>
@@ -4205,6 +4349,38 @@ the full comb data.</p>
             </td>
             <td>
                   <code><span title="pytao.model.ele.FillDefault">FillDefault</span>(&#39;photon&#39;)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>spin_taylor</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill spin Taylor map data.</p>
+              </div>
+            </td>
+            <td>
+                  <code><span title="pytao.model.ele.FillDefault">FillDefault</span>(&#39;spin_taylor&#39;)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>taylor</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill Taylor map data.</p>
+              </div>
+            </td>
+            <td>
+                  <code><span title="pytao.model.ele.FillDefault">FillDefault</span>(&#39;taylor&#39;)</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -4426,7 +4602,51 @@ the full comb data.</p>
 <span class="normal">1332</span>
 <span class="normal">1333</span>
 <span class="normal">1334</span>
-<span class="normal">1335</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ele</span><span class="p">(</span>
+<span class="normal">1335</span>
+<span class="normal">1336</span>
+<span class="normal">1337</span>
+<span class="normal">1338</span>
+<span class="normal">1339</span>
+<span class="normal">1340</span>
+<span class="normal">1341</span>
+<span class="normal">1342</span>
+<span class="normal">1343</span>
+<span class="normal">1344</span>
+<span class="normal">1345</span>
+<span class="normal">1346</span>
+<span class="normal">1347</span>
+<span class="normal">1348</span>
+<span class="normal">1349</span>
+<span class="normal">1350</span>
+<span class="normal">1351</span>
+<span class="normal">1352</span>
+<span class="normal">1353</span>
+<span class="normal">1354</span>
+<span class="normal">1355</span>
+<span class="normal">1356</span>
+<span class="normal">1357</span>
+<span class="normal">1358</span>
+<span class="normal">1359</span>
+<span class="normal">1360</span>
+<span class="normal">1361</span>
+<span class="normal">1362</span>
+<span class="normal">1363</span>
+<span class="normal">1364</span>
+<span class="normal">1365</span>
+<span class="normal">1366</span>
+<span class="normal">1367</span>
+<span class="normal">1368</span>
+<span class="normal">1369</span>
+<span class="normal">1370</span>
+<span class="normal">1371</span>
+<span class="normal">1372</span>
+<span class="normal">1373</span>
+<span class="normal">1374</span>
+<span class="normal">1375</span>
+<span class="normal">1376</span>
+<span class="normal">1377</span>
+<span class="normal">1378</span>
+<span class="normal">1379</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ele</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ele_id</span><span class="p">:</span> <span class="n">AnyElementID</span><span class="p">,</span>
     <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"1"</span><span class="p">,</span>
@@ -4436,23 +4656,34 @@ the full comb data.</p>
     <span class="n">defaults</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">warn</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="c1"># Individually fillable elements:</span>
-    <span class="n">attrs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"attrs"</span><span class="p">),</span>
-    <span class="n">bunch_params</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"bunch_params"</span><span class="p">),</span>
-    <span class="n">chamber_walls</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"chamber_walls"</span><span class="p">),</span>
-    <span class="n">comb</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"comb"</span><span class="p">),</span>
-    <span class="n">control_vars</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"control_vars"</span><span class="p">),</span>
-    <span class="n">floor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"floor"</span><span class="p">),</span>
-    <span class="n">grid_field</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"grid_field"</span><span class="p">),</span>
-    <span class="n">grid_field_points</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"grid_field_points"</span><span class="p">),</span>
-    <span class="n">lord_slave</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"lord_slave"</span><span class="p">),</span>
-    <span class="n">mat6</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"mat6"</span><span class="p">),</span>
-    <span class="n">multipoles</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"multipoles"</span><span class="p">),</span>
-    <span class="n">orbit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"orbit"</span><span class="p">),</span>
-    <span class="n">photon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"photon"</span><span class="p">),</span>
-    <span class="n">twiss</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"twiss"</span><span class="p">),</span>
-    <span class="n">wake</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"wake"</span><span class="p">),</span>
-    <span class="n">wall3d</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"wall3d"</span><span class="p">),</span>
-    <span class="n">wall3d_table</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"wall3d_table"</span><span class="p">),</span>
+    <span class="n">ac_kicker</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"ac_kicker"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">attrs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"attrs"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">bunch_params</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"bunch_params"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">cartesian_map</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"cartesian_map"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">cartesian_map_terms</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"cartesian_map_terms"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">chamber_walls</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"chamber_walls"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">comb</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"comb"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">control_vars</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"control_vars"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">cylindrical_map</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"cylindrical_map"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">cylindrical_map_terms</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"cylindrical_map_terms"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">elec_multipoles</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"elec_multipoles"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">floor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"floor"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">gen_gradients</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"gen_gradients"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">gen_gradient_curves</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"gen_gradient_curves"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">grid_field</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"grid_field"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">grid_field_points</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"grid_field_points"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">lord_slave</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"lord_slave"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">mat6</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"mat6"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">methods</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"methods"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">multipoles</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"multipoles"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">orbit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"orbit"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">photon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"photon"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">spin_taylor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"spin_taylor"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">taylor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"taylor"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">twiss</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"twiss"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">wake</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"wake"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">wall3d</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"wall3d"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">wall3d_table</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"wall3d_table"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
     <span class="n">comb_data</span><span class="p">:</span> <span class="n">Comb</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Element</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -4488,10 +4719,16 @@ the full comb data.</p>
 <span class="sd">        Specifies which Tao lattice to use, by default "model".</span>
 <span class="sd">    defaults : bool, default=True</span>
 <span class="sd">        Fill default items.  Defaults are set by name in `Element.DEFAULTS`.</span>
+<span class="sd">    ac_kicker : bool, optional</span>
+<span class="sd">        Fill AC kicker settings.</span>
 <span class="sd">    attrs : bool, optional</span>
 <span class="sd">        Fill general attributes.</span>
 <span class="sd">    bunch_params : bool, optional</span>
 <span class="sd">        Fill bunch parameters.</span>
+<span class="sd">    cartesian_map : bool, optional</span>
+<span class="sd">        Fill cartesian map data.</span>
+<span class="sd">    cartesian_map_terms : bool, default=False</span>
+<span class="sd">        Fill cartesian map per-term data.</span>
 <span class="sd">    chamber_walls : bool, optional</span>
 <span class="sd">        Fill chamber wall data.</span>
 <span class="sd">    comb : bool, default=False</span>
@@ -4503,8 +4740,18 @@ the full comb data.</p>
 <span class="sd">        the full comb data.</span>
 <span class="sd">    control_vars : bool, optional</span>
 <span class="sd">        Fill control variables.</span>
+<span class="sd">    cylindrical_map : bool, optional</span>
+<span class="sd">        Fill cylindrical map data.</span>
+<span class="sd">    cylindrical_map_terms : bool, default=False</span>
+<span class="sd">        Fill cylindrical map per-term data.</span>
+<span class="sd">    elec_multipoles : bool, optional</span>
+<span class="sd">        Fill electric multipole data.</span>
 <span class="sd">    floor : bool, optional</span>
 <span class="sd">        Fill floor data.</span>
+<span class="sd">    gen_gradients : bool, optional</span>
+<span class="sd">        Fill generalized gradient map data.</span>
+<span class="sd">    gen_gradient_curves : bool, default=False</span>
+<span class="sd">        Fill generalized gradient per-curve derivative tables.</span>
 <span class="sd">    grid_field : bool, optional</span>
 <span class="sd">        Fill grid field data.</span>
 <span class="sd">    grid_field_points : bool, default=False</span>
@@ -4513,12 +4760,18 @@ the full comb data.</p>
 <span class="sd">        Fill lord-slave relationships.</span>
 <span class="sd">    mat6 : bool, optional</span>
 <span class="sd">        Fill mat6 data.</span>
+<span class="sd">    methods : bool, optional</span>
+<span class="sd">        Fill tracking/calculation method settings.</span>
 <span class="sd">    multipoles : bool, optional</span>
 <span class="sd">        Fill multipole data.</span>
 <span class="sd">    orbit : bool, optional</span>
 <span class="sd">        Fill orbit data.</span>
 <span class="sd">    photon : bool, optional</span>
 <span class="sd">        Fill photon data.</span>
+<span class="sd">    spin_taylor : bool, optional</span>
+<span class="sd">        Fill spin Taylor map data.</span>
+<span class="sd">    taylor : bool, optional</span>
+<span class="sd">        Fill Taylor map data.</span>
 <span class="sd">    twiss : bool, optional</span>
 <span class="sd">        Fill twiss parameters.</span>
 <span class="sd">    wake : bool, optional</span>
@@ -4557,19 +4810,30 @@ the full comb data.</p>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">id_</span><span class="p">,</span>
         <span class="n">defaults</span><span class="o">=</span><span class="n">defaults</span><span class="p">,</span>
+        <span class="n">ac_kicker</span><span class="o">=</span><span class="n">ac_kicker</span><span class="p">,</span>
         <span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">,</span>
         <span class="n">bunch_params</span><span class="o">=</span><span class="n">bunch_params</span><span class="p">,</span>
+        <span class="n">cartesian_map</span><span class="o">=</span><span class="n">cartesian_map</span><span class="p">,</span>
+        <span class="n">cartesian_map_terms</span><span class="o">=</span><span class="n">cartesian_map_terms</span><span class="p">,</span>
         <span class="n">chamber_walls</span><span class="o">=</span><span class="n">chamber_walls</span><span class="p">,</span>
         <span class="n">comb</span><span class="o">=</span><span class="n">comb</span><span class="p">,</span>
         <span class="n">control_vars</span><span class="o">=</span><span class="n">control_vars</span><span class="p">,</span>
+        <span class="n">cylindrical_map</span><span class="o">=</span><span class="n">cylindrical_map</span><span class="p">,</span>
+        <span class="n">cylindrical_map_terms</span><span class="o">=</span><span class="n">cylindrical_map_terms</span><span class="p">,</span>
+        <span class="n">elec_multipoles</span><span class="o">=</span><span class="n">elec_multipoles</span><span class="p">,</span>
         <span class="n">floor</span><span class="o">=</span><span class="n">floor</span><span class="p">,</span>
+        <span class="n">gen_gradients</span><span class="o">=</span><span class="n">gen_gradients</span><span class="p">,</span>
+        <span class="n">gen_gradient_curves</span><span class="o">=</span><span class="n">gen_gradient_curves</span><span class="p">,</span>
         <span class="n">grid_field</span><span class="o">=</span><span class="n">grid_field</span><span class="p">,</span>
         <span class="n">grid_field_points</span><span class="o">=</span><span class="n">grid_field_points</span><span class="p">,</span>
         <span class="n">lord_slave</span><span class="o">=</span><span class="n">lord_slave</span><span class="p">,</span>
         <span class="n">mat6</span><span class="o">=</span><span class="n">mat6</span><span class="p">,</span>
+        <span class="n">methods</span><span class="o">=</span><span class="n">methods</span><span class="p">,</span>
         <span class="n">multipoles</span><span class="o">=</span><span class="n">multipoles</span><span class="p">,</span>
         <span class="n">orbit</span><span class="o">=</span><span class="n">orbit</span><span class="p">,</span>
         <span class="n">photon</span><span class="o">=</span><span class="n">photon</span><span class="p">,</span>
+        <span class="n">spin_taylor</span><span class="o">=</span><span class="n">spin_taylor</span><span class="p">,</span>
+        <span class="n">taylor</span><span class="o">=</span><span class="n">taylor</span><span class="p">,</span>
         <span class="n">twiss</span><span class="o">=</span><span class="n">twiss</span><span class="p">,</span>
         <span class="n">wake</span><span class="o">=</span><span class="n">wake</span><span class="p">,</span>
         <span class="n">wall3d</span><span class="o">=</span><span class="n">wall3d</span><span class="p">,</span>
@@ -4590,7 +4854,7 @@ the full comb data.</p>
 
 
 </h5>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">eles</span><span class="p">(</span><span class="n">ele_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="s1">'1'</span><span class="p">,</span> <span class="n">ix_branch</span><span class="o">=</span><span class="s1">'0'</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">'model'</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'attrs'</span><span class="p">),</span> <span class="n">bunch_params</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'bunch_params'</span><span class="p">),</span> <span class="n">chamber_walls</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'chamber_walls'</span><span class="p">),</span> <span class="n">comb</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'comb'</span><span class="p">),</span> <span class="n">control_vars</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'control_vars'</span><span class="p">),</span> <span class="n">floor</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'floor'</span><span class="p">),</span> <span class="n">grid_field</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'grid_field'</span><span class="p">),</span> <span class="n">grid_field_points</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'grid_field_points'</span><span class="p">),</span> <span class="n">lord_slave</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'lord_slave'</span><span class="p">),</span> <span class="n">mat6</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'mat6'</span><span class="p">),</span> <span class="n">multipoles</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'multipoles'</span><span class="p">),</span> <span class="n">orbit</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'orbit'</span><span class="p">),</span> <span class="n">photon</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'photon'</span><span class="p">),</span> <span class="n">twiss</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'twiss'</span><span class="p">),</span> <span class="n">wake</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'wake'</span><span class="p">),</span> <span class="n">wall3d</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'wall3d'</span><span class="p">),</span> <span class="n">wall3d_table</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'wall3d_table'</span><span class="p">),</span> <span class="n">comb_data</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">eles</span><span class="p">(</span><span class="n">ele_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="s1">'1'</span><span class="p">,</span> <span class="n">ix_branch</span><span class="o">=</span><span class="s1">'0'</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">'model'</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ac_kicker</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'ac_kicker'</span><span class="p">),</span> <span class="n">attrs</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'attrs'</span><span class="p">),</span> <span class="n">bunch_params</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'bunch_params'</span><span class="p">),</span> <span class="n">cartesian_map</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'cartesian_map'</span><span class="p">),</span> <span class="n">cartesian_map_terms</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'cartesian_map_terms'</span><span class="p">),</span> <span class="n">chamber_walls</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'chamber_walls'</span><span class="p">),</span> <span class="n">comb</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'comb'</span><span class="p">),</span> <span class="n">control_vars</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'control_vars'</span><span class="p">),</span> <span class="n">cylindrical_map</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'cylindrical_map'</span><span class="p">),</span> <span class="n">cylindrical_map_terms</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'cylindrical_map_terms'</span><span class="p">),</span> <span class="n">elec_multipoles</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'elec_multipoles'</span><span class="p">),</span> <span class="n">floor</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'floor'</span><span class="p">),</span> <span class="n">gen_gradients</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'gen_gradients'</span><span class="p">),</span> <span class="n">gen_gradient_curves</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'gen_gradient_curves'</span><span class="p">),</span> <span class="n">grid_field</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'grid_field'</span><span class="p">),</span> <span class="n">grid_field_points</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'grid_field_points'</span><span class="p">),</span> <span class="n">lord_slave</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'lord_slave'</span><span class="p">),</span> <span class="n">mat6</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'mat6'</span><span class="p">),</span> <span class="n">methods</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'methods'</span><span class="p">),</span> <span class="n">multipoles</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'multipoles'</span><span class="p">),</span> <span class="n">orbit</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'orbit'</span><span class="p">),</span> <span class="n">photon</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'photon'</span><span class="p">),</span> <span class="n">spin_taylor</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'spin_taylor'</span><span class="p">),</span> <span class="n">taylor</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'taylor'</span><span class="p">),</span> <span class="n">twiss</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'twiss'</span><span class="p">),</span> <span class="n">wake</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'wake'</span><span class="p">),</span> <span class="n">wall3d</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'wall3d'</span><span class="p">),</span> <span class="n">wall3d_table</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'wall3d_table'</span><span class="p">),</span> <span class="n">comb_data</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -4616,8 +4880,10 @@ settings on a per-call basis (by using <code>False</code>).</p>
 <blockquote>
 <p>from pytao.model import Element
 print(Element.DEFAULTS)
-{'attrs', 'bunch_params', 'chamber_walls', 'control_vars', 'floor',
-'grid_field', 'lord_slave', 'mat6', 'multipoles', 'orbit', 'photon',
+{'ac_kicker', 'attrs', 'bunch_params', 'cartesian_map',
+'chamber_walls', 'control_vars', 'cylindrical_map', 'elec_multipoles',
+'floor', 'gen_gradients', 'grid_field', 'lord_slave', 'mat6',
+'methods', 'multipoles', 'orbit', 'photon', 'spin_taylor', 'taylor',
 'twiss', 'wake', 'wall3d'}</p>
 </blockquote>
 </blockquote>
@@ -4739,6 +5005,22 @@ notes sections for more details.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
+                <code>ac_kicker</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill AC kicker settings.</p>
+              </div>
+            </td>
+            <td>
+                  <code><span title="pytao.model.ele.FillDefault">FillDefault</span>(&#39;ac_kicker&#39;)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
                 <code>attrs</code>
             </td>
             <td>
@@ -4767,6 +5049,38 @@ notes sections for more details.</p>
             </td>
             <td>
                   <code><span title="pytao.model.ele.FillDefault">FillDefault</span>(&#39;bunch_params&#39;)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>cartesian_map</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill cartesian map data.</p>
+              </div>
+            </td>
+            <td>
+                  <code><span title="pytao.model.ele.FillDefault">FillDefault</span>(&#39;cartesian_map&#39;)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>cartesian_map_terms</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill cartesian map per-term data.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -4838,6 +5152,54 @@ the full comb data.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
+                <code>cylindrical_map</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill cylindrical map data.</p>
+              </div>
+            </td>
+            <td>
+                  <code><span title="pytao.model.ele.FillDefault">FillDefault</span>(&#39;cylindrical_map&#39;)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>cylindrical_map_terms</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill cylindrical map per-term data.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>elec_multipoles</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill electric multipole data.</p>
+              </div>
+            </td>
+            <td>
+                  <code><span title="pytao.model.ele.FillDefault">FillDefault</span>(&#39;elec_multipoles&#39;)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
                 <code>floor</code>
             </td>
             <td>
@@ -4850,6 +5212,38 @@ the full comb data.</p>
             </td>
             <td>
                   <code><span title="pytao.model.ele.FillDefault">FillDefault</span>(&#39;floor&#39;)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>gen_gradients</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill generalized gradient map data.</p>
+              </div>
+            </td>
+            <td>
+                  <code><span title="pytao.model.ele.FillDefault">FillDefault</span>(&#39;gen_gradients&#39;)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>gen_gradient_curves</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill generalized gradient per-curve derivative tables.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -4918,6 +5312,22 @@ the full comb data.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
+                <code>methods</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill tracking/calculation method settings.</p>
+              </div>
+            </td>
+            <td>
+                  <code><span title="pytao.model.ele.FillDefault">FillDefault</span>(&#39;methods&#39;)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
                 <code>multipoles</code>
             </td>
             <td>
@@ -4962,6 +5372,38 @@ the full comb data.</p>
             </td>
             <td>
                   <code><span title="pytao.model.ele.FillDefault">FillDefault</span>(&#39;photon&#39;)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>spin_taylor</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill spin Taylor map data.</p>
+              </div>
+            </td>
+            <td>
+                  <code><span title="pytao.model.ele.FillDefault">FillDefault</span>(&#39;spin_taylor&#39;)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>taylor</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill Taylor map data.</p>
+              </div>
+            </td>
+            <td>
+                  <code><span title="pytao.model.ele.FillDefault">FillDefault</span>(&#39;taylor&#39;)</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -5034,51 +5476,7 @@ the full comb data.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1337</span>
-<span class="normal">1338</span>
-<span class="normal">1339</span>
-<span class="normal">1340</span>
-<span class="normal">1341</span>
-<span class="normal">1342</span>
-<span class="normal">1343</span>
-<span class="normal">1344</span>
-<span class="normal">1345</span>
-<span class="normal">1346</span>
-<span class="normal">1347</span>
-<span class="normal">1348</span>
-<span class="normal">1349</span>
-<span class="normal">1350</span>
-<span class="normal">1351</span>
-<span class="normal">1352</span>
-<span class="normal">1353</span>
-<span class="normal">1354</span>
-<span class="normal">1355</span>
-<span class="normal">1356</span>
-<span class="normal">1357</span>
-<span class="normal">1358</span>
-<span class="normal">1359</span>
-<span class="normal">1360</span>
-<span class="normal">1361</span>
-<span class="normal">1362</span>
-<span class="normal">1363</span>
-<span class="normal">1364</span>
-<span class="normal">1365</span>
-<span class="normal">1366</span>
-<span class="normal">1367</span>
-<span class="normal">1368</span>
-<span class="normal">1369</span>
-<span class="normal">1370</span>
-<span class="normal">1371</span>
-<span class="normal">1372</span>
-<span class="normal">1373</span>
-<span class="normal">1374</span>
-<span class="normal">1375</span>
-<span class="normal">1376</span>
-<span class="normal">1377</span>
-<span class="normal">1378</span>
-<span class="normal">1379</span>
-<span class="normal">1380</span>
-<span class="normal">1381</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1381</span>
 <span class="normal">1382</span>
 <span class="normal">1383</span>
 <span class="normal">1384</span>
@@ -5246,7 +5644,97 @@ the full comb data.</p>
 <span class="normal">1546</span>
 <span class="normal">1547</span>
 <span class="normal">1548</span>
-<span class="normal">1549</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">eles</span><span class="p">(</span>
+<span class="normal">1549</span>
+<span class="normal">1550</span>
+<span class="normal">1551</span>
+<span class="normal">1552</span>
+<span class="normal">1553</span>
+<span class="normal">1554</span>
+<span class="normal">1555</span>
+<span class="normal">1556</span>
+<span class="normal">1557</span>
+<span class="normal">1558</span>
+<span class="normal">1559</span>
+<span class="normal">1560</span>
+<span class="normal">1561</span>
+<span class="normal">1562</span>
+<span class="normal">1563</span>
+<span class="normal">1564</span>
+<span class="normal">1565</span>
+<span class="normal">1566</span>
+<span class="normal">1567</span>
+<span class="normal">1568</span>
+<span class="normal">1569</span>
+<span class="normal">1570</span>
+<span class="normal">1571</span>
+<span class="normal">1572</span>
+<span class="normal">1573</span>
+<span class="normal">1574</span>
+<span class="normal">1575</span>
+<span class="normal">1576</span>
+<span class="normal">1577</span>
+<span class="normal">1578</span>
+<span class="normal">1579</span>
+<span class="normal">1580</span>
+<span class="normal">1581</span>
+<span class="normal">1582</span>
+<span class="normal">1583</span>
+<span class="normal">1584</span>
+<span class="normal">1585</span>
+<span class="normal">1586</span>
+<span class="normal">1587</span>
+<span class="normal">1588</span>
+<span class="normal">1589</span>
+<span class="normal">1590</span>
+<span class="normal">1591</span>
+<span class="normal">1592</span>
+<span class="normal">1593</span>
+<span class="normal">1594</span>
+<span class="normal">1595</span>
+<span class="normal">1596</span>
+<span class="normal">1597</span>
+<span class="normal">1598</span>
+<span class="normal">1599</span>
+<span class="normal">1600</span>
+<span class="normal">1601</span>
+<span class="normal">1602</span>
+<span class="normal">1603</span>
+<span class="normal">1604</span>
+<span class="normal">1605</span>
+<span class="normal">1606</span>
+<span class="normal">1607</span>
+<span class="normal">1608</span>
+<span class="normal">1609</span>
+<span class="normal">1610</span>
+<span class="normal">1611</span>
+<span class="normal">1612</span>
+<span class="normal">1613</span>
+<span class="normal">1614</span>
+<span class="normal">1615</span>
+<span class="normal">1616</span>
+<span class="normal">1617</span>
+<span class="normal">1618</span>
+<span class="normal">1619</span>
+<span class="normal">1620</span>
+<span class="normal">1621</span>
+<span class="normal">1622</span>
+<span class="normal">1623</span>
+<span class="normal">1624</span>
+<span class="normal">1625</span>
+<span class="normal">1626</span>
+<span class="normal">1627</span>
+<span class="normal">1628</span>
+<span class="normal">1629</span>
+<span class="normal">1630</span>
+<span class="normal">1631</span>
+<span class="normal">1632</span>
+<span class="normal">1633</span>
+<span class="normal">1634</span>
+<span class="normal">1635</span>
+<span class="normal">1636</span>
+<span class="normal">1637</span>
+<span class="normal">1638</span>
+<span class="normal">1639</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">eles</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ele_id</span><span class="p">:</span> <span class="n">AnyElementID</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">AnyElementID</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"1"</span><span class="p">,</span>
@@ -5255,23 +5743,34 @@ the full comb data.</p>
     <span class="n">which</span><span class="p">:</span> <span class="n">Which</span> <span class="o">=</span> <span class="s2">"model"</span><span class="p">,</span>
     <span class="n">defaults</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="c1"># Individually fillable elements:</span>
-    <span class="n">attrs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"attrs"</span><span class="p">),</span>
-    <span class="n">bunch_params</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"bunch_params"</span><span class="p">),</span>
-    <span class="n">chamber_walls</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"chamber_walls"</span><span class="p">),</span>
-    <span class="n">comb</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"comb"</span><span class="p">),</span>
-    <span class="n">control_vars</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"control_vars"</span><span class="p">),</span>
-    <span class="n">floor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"floor"</span><span class="p">),</span>
-    <span class="n">grid_field</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"grid_field"</span><span class="p">),</span>
-    <span class="n">grid_field_points</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"grid_field_points"</span><span class="p">),</span>
-    <span class="n">lord_slave</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"lord_slave"</span><span class="p">),</span>
-    <span class="n">mat6</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"mat6"</span><span class="p">),</span>
-    <span class="n">multipoles</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"multipoles"</span><span class="p">),</span>
-    <span class="n">orbit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"orbit"</span><span class="p">),</span>
-    <span class="n">photon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"photon"</span><span class="p">),</span>
-    <span class="n">twiss</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"twiss"</span><span class="p">),</span>
-    <span class="n">wake</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"wake"</span><span class="p">),</span>
-    <span class="n">wall3d</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"wall3d"</span><span class="p">),</span>
-    <span class="n">wall3d_table</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"wall3d_table"</span><span class="p">),</span>
+    <span class="n">ac_kicker</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"ac_kicker"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">attrs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"attrs"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">bunch_params</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"bunch_params"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">cartesian_map</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"cartesian_map"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">cartesian_map_terms</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"cartesian_map_terms"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">chamber_walls</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"chamber_walls"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">comb</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"comb"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">control_vars</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"control_vars"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">cylindrical_map</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"cylindrical_map"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">cylindrical_map_terms</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"cylindrical_map_terms"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">elec_multipoles</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"elec_multipoles"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">floor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"floor"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">gen_gradients</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"gen_gradients"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">gen_gradient_curves</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"gen_gradient_curves"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">grid_field</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"grid_field"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">grid_field_points</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"grid_field_points"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">lord_slave</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"lord_slave"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">mat6</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"mat6"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">methods</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"methods"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">multipoles</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"multipoles"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">orbit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"orbit"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">photon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"photon"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">spin_taylor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"spin_taylor"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">taylor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"taylor"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">twiss</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"twiss"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">wake</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"wake"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">wall3d</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"wall3d"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">wall3d_table</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"wall3d_table"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
     <span class="n">comb_data</span><span class="p">:</span> <span class="n">Comb</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Element</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -5298,8 +5797,10 @@ the full comb data.</p>
 
 <span class="sd">    &gt;&gt;&gt; from pytao.model import Element</span>
 <span class="sd">    &gt;&gt;&gt; print(Element.DEFAULTS)</span>
-<span class="sd">    {'attrs', 'bunch_params', 'chamber_walls', 'control_vars', 'floor',</span>
-<span class="sd">    'grid_field', 'lord_slave', 'mat6', 'multipoles', 'orbit', 'photon',</span>
+<span class="sd">    {'ac_kicker', 'attrs', 'bunch_params', 'cartesian_map',</span>
+<span class="sd">    'chamber_walls', 'control_vars', 'cylindrical_map', 'elec_multipoles',</span>
+<span class="sd">    'floor', 'gen_gradients', 'grid_field', 'lord_slave', 'mat6',</span>
+<span class="sd">    'methods', 'multipoles', 'orbit', 'photon', 'spin_taylor', 'taylor',</span>
 <span class="sd">    'twiss', 'wake', 'wall3d'}</span>
 
 <span class="sd">    With the following, the default will change to only query `attrs`:</span>
@@ -5368,10 +5869,16 @@ the full comb data.</p>
 <span class="sd">        Specifies which Tao lattice to use, by default "model".</span>
 <span class="sd">    defaults : bool, default=True</span>
 <span class="sd">        Fill default items.  Defaults are set by name in `Element.DEFAULTS`.</span>
+<span class="sd">    ac_kicker : bool, optional</span>
+<span class="sd">        Fill AC kicker settings.</span>
 <span class="sd">    attrs : bool, optional</span>
 <span class="sd">        Fill general attributes.</span>
 <span class="sd">    bunch_params : bool, optional</span>
 <span class="sd">        Fill bunch parameters.</span>
+<span class="sd">    cartesian_map : bool, optional</span>
+<span class="sd">        Fill cartesian map data.</span>
+<span class="sd">    cartesian_map_terms : bool, default=False</span>
+<span class="sd">        Fill cartesian map per-term data.</span>
 <span class="sd">    chamber_walls : bool, optional</span>
 <span class="sd">        Fill chamber wall data.</span>
 <span class="sd">    comb : bool, default=False</span>
@@ -5383,8 +5890,18 @@ the full comb data.</p>
 <span class="sd">        the full comb data.</span>
 <span class="sd">    control_vars : bool, optional</span>
 <span class="sd">        Fill control variables.</span>
+<span class="sd">    cylindrical_map : bool, optional</span>
+<span class="sd">        Fill cylindrical map data.</span>
+<span class="sd">    cylindrical_map_terms : bool, default=False</span>
+<span class="sd">        Fill cylindrical map per-term data.</span>
+<span class="sd">    elec_multipoles : bool, optional</span>
+<span class="sd">        Fill electric multipole data.</span>
 <span class="sd">    floor : bool, optional</span>
 <span class="sd">        Fill floor data.</span>
+<span class="sd">    gen_gradients : bool, optional</span>
+<span class="sd">        Fill generalized gradient map data.</span>
+<span class="sd">    gen_gradient_curves : bool, default=False</span>
+<span class="sd">        Fill generalized gradient per-curve derivative tables.</span>
 <span class="sd">    grid_field : bool, optional</span>
 <span class="sd">        Fill grid field data.</span>
 <span class="sd">    grid_field_points : bool, default=False</span>
@@ -5393,12 +5910,18 @@ the full comb data.</p>
 <span class="sd">        Fill lord-slave relationships.</span>
 <span class="sd">    mat6 : bool, optional</span>
 <span class="sd">        Fill mat6 data.</span>
+<span class="sd">    methods : bool, optional</span>
+<span class="sd">        Fill tracking/calculation method settings.</span>
 <span class="sd">    multipoles : bool, optional</span>
 <span class="sd">        Fill multipole data.</span>
 <span class="sd">    orbit : bool, optional</span>
 <span class="sd">        Fill orbit data.</span>
 <span class="sd">    photon : bool, optional</span>
 <span class="sd">        Fill photon data.</span>
+<span class="sd">    spin_taylor : bool, optional</span>
+<span class="sd">        Fill spin Taylor map data.</span>
+<span class="sd">    taylor : bool, optional</span>
+<span class="sd">        Fill Taylor map data.</span>
 <span class="sd">    twiss : bool, optional</span>
 <span class="sd">        Fill twiss parameters.</span>
 <span class="sd">    wake : bool, optional</span>
@@ -5438,19 +5961,30 @@ the full comb data.</p>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">id_</span><span class="p">,</span>
             <span class="n">defaults</span><span class="o">=</span><span class="n">defaults</span><span class="p">,</span>
+            <span class="n">ac_kicker</span><span class="o">=</span><span class="n">ac_kicker</span><span class="p">,</span>
             <span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">,</span>
             <span class="n">bunch_params</span><span class="o">=</span><span class="n">bunch_params</span><span class="p">,</span>
+            <span class="n">cartesian_map</span><span class="o">=</span><span class="n">cartesian_map</span><span class="p">,</span>
+            <span class="n">cartesian_map_terms</span><span class="o">=</span><span class="n">cartesian_map_terms</span><span class="p">,</span>
             <span class="n">chamber_walls</span><span class="o">=</span><span class="n">chamber_walls</span><span class="p">,</span>
             <span class="n">comb</span><span class="o">=</span><span class="n">comb</span><span class="p">,</span>
             <span class="n">control_vars</span><span class="o">=</span><span class="n">control_vars</span><span class="p">,</span>
+            <span class="n">cylindrical_map</span><span class="o">=</span><span class="n">cylindrical_map</span><span class="p">,</span>
+            <span class="n">cylindrical_map_terms</span><span class="o">=</span><span class="n">cylindrical_map_terms</span><span class="p">,</span>
+            <span class="n">elec_multipoles</span><span class="o">=</span><span class="n">elec_multipoles</span><span class="p">,</span>
             <span class="n">floor</span><span class="o">=</span><span class="n">floor</span><span class="p">,</span>
+            <span class="n">gen_gradients</span><span class="o">=</span><span class="n">gen_gradients</span><span class="p">,</span>
+            <span class="n">gen_gradient_curves</span><span class="o">=</span><span class="n">gen_gradient_curves</span><span class="p">,</span>
             <span class="n">grid_field</span><span class="o">=</span><span class="n">grid_field</span><span class="p">,</span>
             <span class="n">grid_field_points</span><span class="o">=</span><span class="n">grid_field_points</span><span class="p">,</span>
             <span class="n">lord_slave</span><span class="o">=</span><span class="n">lord_slave</span><span class="p">,</span>
             <span class="n">mat6</span><span class="o">=</span><span class="n">mat6</span><span class="p">,</span>
+            <span class="n">methods</span><span class="o">=</span><span class="n">methods</span><span class="p">,</span>
             <span class="n">multipoles</span><span class="o">=</span><span class="n">multipoles</span><span class="p">,</span>
             <span class="n">orbit</span><span class="o">=</span><span class="n">orbit</span><span class="p">,</span>
             <span class="n">photon</span><span class="o">=</span><span class="n">photon</span><span class="p">,</span>
+            <span class="n">spin_taylor</span><span class="o">=</span><span class="n">spin_taylor</span><span class="p">,</span>
+            <span class="n">taylor</span><span class="o">=</span><span class="n">taylor</span><span class="p">,</span>
             <span class="n">twiss</span><span class="o">=</span><span class="n">twiss</span><span class="p">,</span>
             <span class="n">wake</span><span class="o">=</span><span class="n">wake</span><span class="p">,</span>
             <span class="n">wall3d</span><span class="o">=</span><span class="n">wall3d</span><span class="p">,</span>
@@ -5708,22 +6242,22 @@ is currently being tracked.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1671</span>
-<span class="normal">1672</span>
-<span class="normal">1673</span>
-<span class="normal">1674</span>
-<span class="normal">1675</span>
-<span class="normal">1676</span>
-<span class="normal">1677</span>
-<span class="normal">1678</span>
-<span class="normal">1679</span>
-<span class="normal">1680</span>
-<span class="normal">1681</span>
-<span class="normal">1682</span>
-<span class="normal">1683</span>
-<span class="normal">1684</span>
-<span class="normal">1685</span>
-<span class="normal">1686</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">ix_branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TaoConfig</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1761</span>
+<span class="normal">1762</span>
+<span class="normal">1763</span>
+<span class="normal">1764</span>
+<span class="normal">1765</span>
+<span class="normal">1766</span>
+<span class="normal">1767</span>
+<span class="normal">1768</span>
+<span class="normal">1769</span>
+<span class="normal">1770</span>
+<span class="normal">1771</span>
+<span class="normal">1772</span>
+<span class="normal">1773</span>
+<span class="normal">1774</span>
+<span class="normal">1775</span>
+<span class="normal">1776</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">ix_branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TaoConfig</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get a configuration object representing the state of Tao.</span>
 
@@ -8410,61 +8944,61 @@ the presence of Jupyter.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1615</span>
-<span class="normal">1616</span>
-<span class="normal">1617</span>
-<span class="normal">1618</span>
-<span class="normal">1619</span>
-<span class="normal">1620</span>
-<span class="normal">1621</span>
-<span class="normal">1622</span>
-<span class="normal">1623</span>
-<span class="normal">1624</span>
-<span class="normal">1625</span>
-<span class="normal">1626</span>
-<span class="normal">1627</span>
-<span class="normal">1628</span>
-<span class="normal">1629</span>
-<span class="normal">1630</span>
-<span class="normal">1631</span>
-<span class="normal">1632</span>
-<span class="normal">1633</span>
-<span class="normal">1634</span>
-<span class="normal">1635</span>
-<span class="normal">1636</span>
-<span class="normal">1637</span>
-<span class="normal">1638</span>
-<span class="normal">1639</span>
-<span class="normal">1640</span>
-<span class="normal">1641</span>
-<span class="normal">1642</span>
-<span class="normal">1643</span>
-<span class="normal">1644</span>
-<span class="normal">1645</span>
-<span class="normal">1646</span>
-<span class="normal">1647</span>
-<span class="normal">1648</span>
-<span class="normal">1649</span>
-<span class="normal">1650</span>
-<span class="normal">1651</span>
-<span class="normal">1652</span>
-<span class="normal">1653</span>
-<span class="normal">1654</span>
-<span class="normal">1655</span>
-<span class="normal">1656</span>
-<span class="normal">1657</span>
-<span class="normal">1658</span>
-<span class="normal">1659</span>
-<span class="normal">1660</span>
-<span class="normal">1661</span>
-<span class="normal">1662</span>
-<span class="normal">1663</span>
-<span class="normal">1664</span>
-<span class="normal">1665</span>
-<span class="normal">1666</span>
-<span class="normal">1667</span>
-<span class="normal">1668</span>
-<span class="normal">1669</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">unique_ele_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">selectors</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1705</span>
+<span class="normal">1706</span>
+<span class="normal">1707</span>
+<span class="normal">1708</span>
+<span class="normal">1709</span>
+<span class="normal">1710</span>
+<span class="normal">1711</span>
+<span class="normal">1712</span>
+<span class="normal">1713</span>
+<span class="normal">1714</span>
+<span class="normal">1715</span>
+<span class="normal">1716</span>
+<span class="normal">1717</span>
+<span class="normal">1718</span>
+<span class="normal">1719</span>
+<span class="normal">1720</span>
+<span class="normal">1721</span>
+<span class="normal">1722</span>
+<span class="normal">1723</span>
+<span class="normal">1724</span>
+<span class="normal">1725</span>
+<span class="normal">1726</span>
+<span class="normal">1727</span>
+<span class="normal">1728</span>
+<span class="normal">1729</span>
+<span class="normal">1730</span>
+<span class="normal">1731</span>
+<span class="normal">1732</span>
+<span class="normal">1733</span>
+<span class="normal">1734</span>
+<span class="normal">1735</span>
+<span class="normal">1736</span>
+<span class="normal">1737</span>
+<span class="normal">1738</span>
+<span class="normal">1739</span>
+<span class="normal">1740</span>
+<span class="normal">1741</span>
+<span class="normal">1742</span>
+<span class="normal">1743</span>
+<span class="normal">1744</span>
+<span class="normal">1745</span>
+<span class="normal">1746</span>
+<span class="normal">1747</span>
+<span class="normal">1748</span>
+<span class="normal">1749</span>
+<span class="normal">1750</span>
+<span class="normal">1751</span>
+<span class="normal">1752</span>
+<span class="normal">1753</span>
+<span class="normal">1754</span>
+<span class="normal">1755</span>
+<span class="normal">1756</span>
+<span class="normal">1757</span>
+<span class="normal">1758</span>
+<span class="normal">1759</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">unique_ele_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">selectors</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Retrieve unique element IDs based on universe/branch-selectors and/or specific IDs.</span>
 
@@ -8613,36 +9147,36 @@ the presence of Jupyter.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1551</span>
-<span class="normal">1552</span>
-<span class="normal">1553</span>
-<span class="normal">1554</span>
-<span class="normal">1555</span>
-<span class="normal">1556</span>
-<span class="normal">1557</span>
-<span class="normal">1558</span>
-<span class="normal">1559</span>
-<span class="normal">1560</span>
-<span class="normal">1561</span>
-<span class="normal">1562</span>
-<span class="normal">1563</span>
-<span class="normal">1564</span>
-<span class="normal">1565</span>
-<span class="normal">1566</span>
-<span class="normal">1567</span>
-<span class="normal">1568</span>
-<span class="normal">1569</span>
-<span class="normal">1570</span>
-<span class="normal">1571</span>
-<span class="normal">1572</span>
-<span class="normal">1573</span>
-<span class="normal">1574</span>
-<span class="normal">1575</span>
-<span class="normal">1576</span>
-<span class="normal">1577</span>
-<span class="normal">1578</span>
-<span class="normal">1579</span>
-<span class="normal">1580</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">unique_ele_ids_from_branch</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1641</span>
+<span class="normal">1642</span>
+<span class="normal">1643</span>
+<span class="normal">1644</span>
+<span class="normal">1645</span>
+<span class="normal">1646</span>
+<span class="normal">1647</span>
+<span class="normal">1648</span>
+<span class="normal">1649</span>
+<span class="normal">1650</span>
+<span class="normal">1651</span>
+<span class="normal">1652</span>
+<span class="normal">1653</span>
+<span class="normal">1654</span>
+<span class="normal">1655</span>
+<span class="normal">1656</span>
+<span class="normal">1657</span>
+<span class="normal">1658</span>
+<span class="normal">1659</span>
+<span class="normal">1660</span>
+<span class="normal">1661</span>
+<span class="normal">1662</span>
+<span class="normal">1663</span>
+<span class="normal">1664</span>
+<span class="normal">1665</span>
+<span class="normal">1666</span>
+<span class="normal">1667</span>
+<span class="normal">1668</span>
+<span class="normal">1669</span>
+<span class="normal">1670</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">unique_ele_ids_from_branch</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">ix_branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
@@ -8719,19 +9253,19 @@ the presence of Jupyter.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1601</span>
-<span class="normal">1602</span>
-<span class="normal">1603</span>
-<span class="normal">1604</span>
-<span class="normal">1605</span>
-<span class="normal">1606</span>
-<span class="normal">1607</span>
-<span class="normal">1608</span>
-<span class="normal">1609</span>
-<span class="normal">1610</span>
-<span class="normal">1611</span>
-<span class="normal">1612</span>
-<span class="normal">1613</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">unique_ele_ids_from_superuniverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1691</span>
+<span class="normal">1692</span>
+<span class="normal">1693</span>
+<span class="normal">1694</span>
+<span class="normal">1695</span>
+<span class="normal">1696</span>
+<span class="normal">1697</span>
+<span class="normal">1698</span>
+<span class="normal">1699</span>
+<span class="normal">1700</span>
+<span class="normal">1701</span>
+<span class="normal">1702</span>
+<span class="normal">1703</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">unique_ele_ids_from_superuniverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Retrieve element IDs from all universes in the Tao superuniverse.</span>
 
@@ -8822,24 +9356,24 @@ the presence of Jupyter.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1582</span>
-<span class="normal">1583</span>
-<span class="normal">1584</span>
-<span class="normal">1585</span>
-<span class="normal">1586</span>
-<span class="normal">1587</span>
-<span class="normal">1588</span>
-<span class="normal">1589</span>
-<span class="normal">1590</span>
-<span class="normal">1591</span>
-<span class="normal">1592</span>
-<span class="normal">1593</span>
-<span class="normal">1594</span>
-<span class="normal">1595</span>
-<span class="normal">1596</span>
-<span class="normal">1597</span>
-<span class="normal">1598</span>
-<span class="normal">1599</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">unique_ele_ids_from_universe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1672</span>
+<span class="normal">1673</span>
+<span class="normal">1674</span>
+<span class="normal">1675</span>
+<span class="normal">1676</span>
+<span class="normal">1677</span>
+<span class="normal">1678</span>
+<span class="normal">1679</span>
+<span class="normal">1680</span>
+<span class="normal">1681</span>
+<span class="normal">1682</span>
+<span class="normal">1683</span>
+<span class="normal">1684</span>
+<span class="normal">1685</span>
+<span class="normal">1686</span>
+<span class="normal">1687</span>
+<span class="normal">1688</span>
+<span class="normal">1689</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">unique_ele_ids_from_universe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Retrieve element IDs from all branches in a universe.</span>
 
