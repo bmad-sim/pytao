@@ -80,6 +80,7 @@ class AllPlotRegionsInUseError(Exception):
 
 
 T = TypeVar("T")
+TGraph = TypeVar("TGraph", bound="GraphBase")
 
 
 def _clean_pytao_output(dct: dict, typ: type[T]) -> T:
@@ -1290,6 +1291,60 @@ class GraphManager(ABC):
         """The lattice layout graph.  Placed if not already available."""
         return self.get_lattice_layout_graph()
 
+    def _get_placed_graph(
+        self,
+        graph_cls: type[TGraph],
+        template_name: str,
+        ix_uni: int | None,
+    ) -> TGraph:
+        """
+        Find (or place) the sole `graph_cls` graph, re-pointing its universe.
+
+        Parameters
+        ----------
+        graph_cls : type
+            The graph class to search regions for.
+        template_name : str
+            The template to place if no such graph exists yet.
+        ix_uni : int, optional
+            Universe the graph should show.  If it differs from what the graph
+            currently shows, the graph is re-pointed with
+            `set graph ... ix_universe` and rebuilt.  `None` leaves the graph
+            untouched.
+        """
+        graph = next(
+            (
+                region_graph
+                for region in self.regions.values()
+                for region_graph in region
+                if isinstance(region_graph, graph_cls)
+            ),
+            None,
+        )
+        if graph is None:
+            (graph,) = self.place(template_name)
+            assert isinstance(graph, graph_cls)
+
+        if isinstance(graph, LatticeLayoutGraph):
+            # `universe` has negative (default universe) indices resolved.
+            current_ix_uni = graph.universe
+        else:
+            current_ix_uni = graph.info["ix_universe"]
+
+        if ix_uni is None or current_ix_uni == ix_uni:
+            return graph
+
+        self.tao.cmd(
+            f"set graph {graph.region_name}.{graph.graph_name} ix_universe = {ix_uni}"
+        )
+        for updated in self.update_region(
+            region_name=graph.region_name,
+            template_name=graph.template_name or template_name,
+        ):
+            if isinstance(updated, graph_cls):
+                return updated
+        raise RuntimeError(f"{graph_cls.__name__} not found after universe change")
+
     def get_lattice_layout_graph(self, ix_uni: int | None = None) -> LatticeLayoutGraph:
         """
         Get the lattice layout graph, placing it if not already available.
@@ -1297,44 +1352,20 @@ class GraphManager(ABC):
         Parameters
         ----------
         ix_uni : int, optional
-            Universe whose lattice the layout should show
+            Universe whose lattice the layout should show.
             A negative index is resolved to the default universe.
 
         Returns
         -------
         LatticeLayoutGraph
         """
-        graph = None
-        for region in self.regions.values():
-            for region_graph in region:
-                if isinstance(region_graph, LatticeLayoutGraph):
-                    graph = region_graph
-                    break
-            if graph is not None:
-                break
-
-        if graph is None:
-            (graph,) = self.place(self.layout_template)
-            assert isinstance(graph, LatticeLayoutGraph)
-
-        if ix_uni is None:
-            return graph
-        if ix_uni < 0:
+        if ix_uni is not None and ix_uni < 0:
             ix_uni = self.tao.default_universe
-        if graph.universe == ix_uni:
-            return graph
-
-        self.tao.cmd(
-            f"set graph {graph.region_name}.{graph.graph_name} ix_universe = {ix_uni}"
+        return self._get_placed_graph(
+            LatticeLayoutGraph,
+            template_name=self.layout_template,
+            ix_uni=ix_uni,
         )
-        graphs = self.update_region(
-            region_name=graph.region_name,
-            template_name=graph.template_name or self.layout_template,
-        )
-        for graph in graphs:
-            if isinstance(graph, LatticeLayoutGraph):
-                return graph
-        raise RuntimeError("Lattice layout graph not found after universe change")
 
     @property
     def floor_plan_graph(self) -> FloorPlanGraph:
@@ -1355,33 +1386,11 @@ class GraphManager(ABC):
         -------
         FloorPlanGraph
         """
-        graph = None
-        for region in self.regions.values():
-            for region_graph in region:
-                if isinstance(region_graph, FloorPlanGraph):
-                    graph = region_graph
-                    break
-            if graph is not None:
-                break
-
-        if graph is None:
-            (graph,) = self.place(self.floor_plan_template)
-            assert isinstance(graph, FloorPlanGraph)
-
-        if ix_uni is None or graph.info["ix_universe"] == ix_uni:
-            return graph
-
-        self.tao.cmd(
-            f"set graph {graph.region_name}.{graph.graph_name} ix_universe = {ix_uni}"
+        return self._get_placed_graph(
+            FloorPlanGraph,
+            template_name=self.floor_plan_template,
+            ix_uni=ix_uni,
         )
-        graphs = self.update_region(
-            region_name=graph.region_name,
-            template_name=graph.template_name or self.floor_plan_template,
-        )
-        for graph in graphs:
-            if isinstance(graph, FloorPlanGraph):
-                return graph
-        raise RuntimeError("Floor plan graph not found after universe change")
 
     def get_region_to_place_template(self, template_name: str) -> str:
         """Get a region for placing the graph."""
