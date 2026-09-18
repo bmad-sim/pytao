@@ -1422,6 +1422,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#pytao.Tao.default_universe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        default_universe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#pytao.Tao.matplotlib" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1988,6 +1999,17 @@
     <span class="md-ellipsis">
       
         bokeh
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pytao.Tao.default_universe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        default_universe
       
     </span>
   </a>
@@ -3129,6 +3151,32 @@ initializes.  Subsequent calls to <code>init()</code> will override this variabl
 
 
 
+<h5 id="pytao.Tao.default_universe" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">pytao.Tao.default_universe</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+      <small class="doc doc-label doc-label-writable"><code>writable</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">default_universe</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Get the index of Tao's default universe (<code>s%global%default_universe</code>).</p>
+<p>Graphs and curves with <code>ix_universe = -1</code> refer to this universe.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
 <h5 id="pytao.Tao.matplotlib" class="doc doc-heading">
             <span class="doc doc-object-name doc-attribute-name">pytao.Tao.matplotlib</span>
 
@@ -3373,13 +3421,7 @@ PyTao's command-line entrypoint.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1778</span>
-<span class="normal">1779</span>
-<span class="normal">1780</span>
-<span class="normal">1781</span>
-<span class="normal">1782</span>
-<span class="normal">1783</span>
-<span class="normal">1784</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1784</span>
 <span class="normal">1785</span>
 <span class="normal">1786</span>
 <span class="normal">1787</span>
@@ -3422,7 +3464,13 @@ PyTao's command-line entrypoint.</p>
 <span class="normal">1824</span>
 <span class="normal">1825</span>
 <span class="normal">1826</span>
-<span class="normal">1827</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">archive</span><span class="p">(</span>
+<span class="normal">1827</span>
+<span class="normal">1828</span>
+<span class="normal">1829</span>
+<span class="normal">1830</span>
+<span class="normal">1831</span>
+<span class="normal">1832</span>
+<span class="normal">1833</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">archive</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">directory</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"run_tao"</span><span class="p">,</span>
@@ -4453,13 +4501,7 @@ the full comb data.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1186</span>
-<span class="normal">1187</span>
-<span class="normal">1188</span>
-<span class="normal">1189</span>
-<span class="normal">1190</span>
-<span class="normal">1191</span>
-<span class="normal">1192</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1192</span>
 <span class="normal">1193</span>
 <span class="normal">1194</span>
 <span class="normal">1195</span>
@@ -4646,7 +4688,13 @@ the full comb data.</p>
 <span class="normal">1376</span>
 <span class="normal">1377</span>
 <span class="normal">1378</span>
-<span class="normal">1379</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ele</span><span class="p">(</span>
+<span class="normal">1379</span>
+<span class="normal">1380</span>
+<span class="normal">1381</span>
+<span class="normal">1382</span>
+<span class="normal">1383</span>
+<span class="normal">1384</span>
+<span class="normal">1385</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ele</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ele_id</span><span class="p">:</span> <span class="n">AnyElementID</span><span class="p">,</span>
     <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"1"</span><span class="p">,</span>
@@ -5476,13 +5524,7 @@ the full comb data.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1381</span>
-<span class="normal">1382</span>
-<span class="normal">1383</span>
-<span class="normal">1384</span>
-<span class="normal">1385</span>
-<span class="normal">1386</span>
-<span class="normal">1387</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1387</span>
 <span class="normal">1388</span>
 <span class="normal">1389</span>
 <span class="normal">1390</span>
@@ -5734,7 +5776,13 @@ the full comb data.</p>
 <span class="normal">1636</span>
 <span class="normal">1637</span>
 <span class="normal">1638</span>
-<span class="normal">1639</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">eles</span><span class="p">(</span>
+<span class="normal">1639</span>
+<span class="normal">1640</span>
+<span class="normal">1641</span>
+<span class="normal">1642</span>
+<span class="normal">1643</span>
+<span class="normal">1644</span>
+<span class="normal">1645</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">eles</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ele_id</span><span class="p">:</span> <span class="n">AnyElementID</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">AnyElementID</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"1"</span><span class="p">,</span>
@@ -6133,14 +6181,14 @@ is currently being tracked.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1099</span>
-<span class="normal">1100</span>
-<span class="normal">1101</span>
-<span class="normal">1102</span>
-<span class="normal">1103</span>
-<span class="normal">1104</span>
-<span class="normal">1105</span>
-<span class="normal">1106</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_active_beam_track_element</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1105</span>
+<span class="normal">1106</span>
+<span class="normal">1107</span>
+<span class="normal">1108</span>
+<span class="normal">1109</span>
+<span class="normal">1110</span>
+<span class="normal">1111</span>
+<span class="normal">1112</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_active_beam_track_element</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get the active element index being tracked.</span>
 
@@ -6242,13 +6290,7 @@ is currently being tracked.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1761</span>
-<span class="normal">1762</span>
-<span class="normal">1763</span>
-<span class="normal">1764</span>
-<span class="normal">1765</span>
-<span class="normal">1766</span>
-<span class="normal">1767</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1767</span>
 <span class="normal">1768</span>
 <span class="normal">1769</span>
 <span class="normal">1770</span>
@@ -6257,7 +6299,13 @@ is currently being tracked.</p>
 <span class="normal">1773</span>
 <span class="normal">1774</span>
 <span class="normal">1775</span>
-<span class="normal">1776</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">ix_branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TaoConfig</span><span class="p">:</span>
+<span class="normal">1776</span>
+<span class="normal">1777</span>
+<span class="normal">1778</span>
+<span class="normal">1779</span>
+<span class="normal">1780</span>
+<span class="normal">1781</span>
+<span class="normal">1782</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">ix_branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TaoConfig</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get a configuration object representing the state of Tao.</span>
 
@@ -7560,7 +7608,7 @@ Equivalent to Tao's comma-delimited form:
 
 
 </h5>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">plot</span><span class="p">(</span><span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layout_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">share_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">plot</span><span class="p">(</span><span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layout_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">share_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -7784,6 +7832,23 @@ to select a backend.</p>
                   <code>&#34;bokeh&#34;</code>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>ix_uni</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Plot data from this universe.  Sets the graph-level <code>ix_universe</code>,
+which every curve inherits unless it has its own <code>ix_universe</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -7912,7 +7977,13 @@ to select a backend.</p>
 <span class="normal">1057</span>
 <span class="normal">1058</span>
 <span class="normal">1059</span>
-<span class="normal">1060</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
+<span class="normal">1060</span>
+<span class="normal">1061</span>
+<span class="normal">1062</span>
+<span class="normal">1063</span>
+<span class="normal">1064</span>
+<span class="normal">1065</span>
+<span class="normal">1066</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">template</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -7924,6 +7995,7 @@ to select a backend.</p>
     <span class="n">share_x</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">grid</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -7972,6 +8044,9 @@ to select a backend.</p>
 <span class="sd">    backend : {"bokeh", "mpl"}, optional</span>
 <span class="sd">        The backend to use.  Auto-detects Jupyter and availability of bokeh</span>
 <span class="sd">        to select a backend.</span>
+<span class="sd">    ix_uni : int, optional</span>
+<span class="sd">        Plot data from this universe.  Sets the graph-level ``ix_universe``,</span>
+<span class="sd">        which every curve inherits unless it has its own ``ix_universe``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -7989,6 +8064,8 @@ to select a backend.</p>
         <span class="n">kwargs</span><span class="p">[</span><span class="s2">"layout_height"</span><span class="p">]</span> <span class="o">=</span> <span class="n">layout_height</span>
     <span class="k">if</span> <span class="n">share_x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">kwargs</span><span class="p">[</span><span class="s2">"share_x"</span><span class="p">]</span> <span class="o">=</span> <span class="n">share_x</span>
+    <span class="k">if</span> <span class="n">ix_uni</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">"ix_uni"</span><span class="p">]</span> <span class="o">=</span> <span class="n">ix_uni</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">template</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_plot</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">plot_all</span><span class="p">(</span>
@@ -8132,13 +8209,7 @@ to select a backend.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1062</span>
-<span class="normal">1063</span>
-<span class="normal">1064</span>
-<span class="normal">1065</span>
-<span class="normal">1066</span>
-<span class="normal">1067</span>
-<span class="normal">1068</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1068</span>
 <span class="normal">1069</span>
 <span class="normal">1070</span>
 <span class="normal">1071</span>
@@ -8167,7 +8238,13 @@ to select a backend.</p>
 <span class="normal">1094</span>
 <span class="normal">1095</span>
 <span class="normal">1096</span>
-<span class="normal">1097</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_field</span><span class="p">(</span>
+<span class="normal">1097</span>
+<span class="normal">1098</span>
+<span class="normal">1099</span>
+<span class="normal">1100</span>
+<span class="normal">1101</span>
+<span class="normal">1102</span>
+<span class="normal">1103</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_field</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ele_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -8700,13 +8777,7 @@ the presence of Jupyter.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1108</span>
-<span class="normal">1109</span>
-<span class="normal">1110</span>
-<span class="normal">1111</span>
-<span class="normal">1112</span>
-<span class="normal">1113</span>
-<span class="normal">1114</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1114</span>
 <span class="normal">1115</span>
 <span class="normal">1116</span>
 <span class="normal">1117</span>
@@ -8776,7 +8847,13 @@ the presence of Jupyter.</p>
 <span class="normal">1181</span>
 <span class="normal">1182</span>
 <span class="normal">1183</span>
-<span class="normal">1184</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">track_beam</span><span class="p">(</span>
+<span class="normal">1184</span>
+<span class="normal">1185</span>
+<span class="normal">1186</span>
+<span class="normal">1187</span>
+<span class="normal">1188</span>
+<span class="normal">1189</span>
+<span class="normal">1190</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">track_beam</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">track_start</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">track_end</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -8944,13 +9021,7 @@ the presence of Jupyter.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1705</span>
-<span class="normal">1706</span>
-<span class="normal">1707</span>
-<span class="normal">1708</span>
-<span class="normal">1709</span>
-<span class="normal">1710</span>
-<span class="normal">1711</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1711</span>
 <span class="normal">1712</span>
 <span class="normal">1713</span>
 <span class="normal">1714</span>
@@ -8998,7 +9069,13 @@ the presence of Jupyter.</p>
 <span class="normal">1756</span>
 <span class="normal">1757</span>
 <span class="normal">1758</span>
-<span class="normal">1759</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">unique_ele_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">selectors</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">1759</span>
+<span class="normal">1760</span>
+<span class="normal">1761</span>
+<span class="normal">1762</span>
+<span class="normal">1763</span>
+<span class="normal">1764</span>
+<span class="normal">1765</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">unique_ele_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">selectors</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Retrieve unique element IDs based on universe/branch-selectors and/or specific IDs.</span>
 
@@ -9147,13 +9224,7 @@ the presence of Jupyter.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1641</span>
-<span class="normal">1642</span>
-<span class="normal">1643</span>
-<span class="normal">1644</span>
-<span class="normal">1645</span>
-<span class="normal">1646</span>
-<span class="normal">1647</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1647</span>
 <span class="normal">1648</span>
 <span class="normal">1649</span>
 <span class="normal">1650</span>
@@ -9176,7 +9247,13 @@ the presence of Jupyter.</p>
 <span class="normal">1667</span>
 <span class="normal">1668</span>
 <span class="normal">1669</span>
-<span class="normal">1670</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">unique_ele_ids_from_branch</span><span class="p">(</span>
+<span class="normal">1670</span>
+<span class="normal">1671</span>
+<span class="normal">1672</span>
+<span class="normal">1673</span>
+<span class="normal">1674</span>
+<span class="normal">1675</span>
+<span class="normal">1676</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">unique_ele_ids_from_branch</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">ix_branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
@@ -9253,19 +9330,19 @@ the presence of Jupyter.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1691</span>
-<span class="normal">1692</span>
-<span class="normal">1693</span>
-<span class="normal">1694</span>
-<span class="normal">1695</span>
-<span class="normal">1696</span>
-<span class="normal">1697</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1697</span>
 <span class="normal">1698</span>
 <span class="normal">1699</span>
 <span class="normal">1700</span>
 <span class="normal">1701</span>
 <span class="normal">1702</span>
-<span class="normal">1703</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">unique_ele_ids_from_superuniverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="normal">1703</span>
+<span class="normal">1704</span>
+<span class="normal">1705</span>
+<span class="normal">1706</span>
+<span class="normal">1707</span>
+<span class="normal">1708</span>
+<span class="normal">1709</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">unique_ele_ids_from_superuniverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Retrieve element IDs from all universes in the Tao superuniverse.</span>
 
@@ -9356,13 +9433,7 @@ the presence of Jupyter.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1672</span>
-<span class="normal">1673</span>
-<span class="normal">1674</span>
-<span class="normal">1675</span>
-<span class="normal">1676</span>
-<span class="normal">1677</span>
-<span class="normal">1678</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1678</span>
 <span class="normal">1679</span>
 <span class="normal">1680</span>
 <span class="normal">1681</span>
@@ -9373,7 +9444,13 @@ the presence of Jupyter.</p>
 <span class="normal">1686</span>
 <span class="normal">1687</span>
 <span class="normal">1688</span>
-<span class="normal">1689</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">unique_ele_ids_from_universe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="normal">1689</span>
+<span class="normal">1690</span>
+<span class="normal">1691</span>
+<span class="normal">1692</span>
+<span class="normal">1693</span>
+<span class="normal">1694</span>
+<span class="normal">1695</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">unique_ele_ids_from_universe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Retrieve element IDs from all branches in a universe.</span>
 

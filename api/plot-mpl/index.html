@@ -1909,10 +1909,10 @@
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>pytao/plotting/plot.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1221</span>
-<span class="normal">1222</span>
-<span class="normal">1223</span>
-<span class="normal">1224</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1261</span>
+<span class="normal">1262</span>
+<span class="normal">1263</span>
+<span class="normal">1264</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tao</span> <span class="o">=</span> <span class="n">tao</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">regions</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_to_place</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1940,7 +1940,7 @@
 
 
 </h7>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">plot</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tight_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layout_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">share_x</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">curves</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">plot</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tight_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layout_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">share_x</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">curves</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2189,6 +2189,22 @@ applied to the placed graph prior to plotting.</p>
                   <code>None</code>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>ix_uni</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Plot data from this universe.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -2239,11 +2255,7 @@ applied to the placed graph prior to plotting.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/mpl.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">629</span>
-<span class="normal">630</span>
-<span class="normal">631</span>
-<span class="normal">632</span>
-<span class="normal">633</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">633</span>
 <span class="normal">634</span>
 <span class="normal">635</span>
 <span class="normal">636</span>
@@ -2386,7 +2398,14 @@ applied to the placed graph prior to plotting.</p>
 <span class="normal">773</span>
 <span class="normal">774</span>
 <span class="normal">775</span>
-<span class="normal">776</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
+<span class="normal">776</span>
+<span class="normal">777</span>
+<span class="normal">778</span>
+<span class="normal">779</span>
+<span class="normal">780</span>
+<span class="normal">781</span>
+<span class="normal">782</span>
+<span class="normal">783</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">template</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -2404,6 +2423,7 @@ applied to the placed graph prior to plotting.</p>
     <span class="n">settings</span><span class="p">:</span> <span class="n">TaoGraphSettings</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">curves</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">TaoCurveSettings</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">axes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot a graph with Matplotlib.</span>
@@ -2444,6 +2464,8 @@ applied to the placed graph prior to plotting.</p>
 <span class="sd">        applied to the placed graph prior to plotting.</span>
 <span class="sd">    settings : TaoGraphSettings, optional</span>
 <span class="sd">        Graph customization settings.</span>
+<span class="sd">    ix_uni : int, optional</span>
+<span class="sd">        Plot data from this universe.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -2461,6 +2483,7 @@ applied to the placed graph prior to plotting.</p>
         <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">,</span>
         <span class="n">xlim</span><span class="o">=</span><span class="n">xlim</span><span class="p">,</span>
         <span class="n">ylim</span><span class="o">=</span><span class="n">ylim</span><span class="p">,</span>
+        <span class="n">ix_uni</span><span class="o">=</span><span class="n">ix_uni</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">graphs</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">UnsupportedGraphError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No supported plots from this template: </span><span class="si">{</span><span class="n">template</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
@@ -2472,8 +2495,10 @@ applied to the placed graph prior to plotting.</p>
         <span class="ow">and</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">LatticeLayoutGraph</span><span class="p">)</span> <span class="k">for</span> <span class="n">graph</span> <span class="ow">in</span> <span class="n">graphs</span><span class="p">)</span>
         <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">is_s_plot</span> <span class="k">for</span> <span class="n">graph</span> <span class="ow">in</span> <span class="n">graphs</span><span class="p">)</span>
     <span class="p">):</span>
-        <span class="n">layout_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lattice_layout_graph</span>
-        <span class="n">graphs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layout_graph</span><span class="p">)</span>
+        <span class="n">graphs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="o">*</span><span class="n">graphs</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_lattice_layout_graph</span><span class="p">(</span><span class="n">ix_uni</span><span class="o">=</span><span class="n">ix_uni</span><span class="p">),</span>
+        <span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">include_layout</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -2504,9 +2529,6 @@ applied to the placed graph prior to plotting.</p>
             <span class="p">)</span>
         <span class="n">axes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">gs</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
         <span class="k">assert</span> <span class="n">axes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-
-    <span class="k">if</span> <span class="n">include_layout</span><span class="p">:</span>
-        <span class="n">layout_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lattice_layout_graph</span>
 
     <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">graph</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">graphs</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
@@ -2670,14 +2692,7 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/mpl.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">778</span>
-<span class="normal">779</span>
-<span class="normal">780</span>
-<span class="normal">781</span>
-<span class="normal">782</span>
-<span class="normal">783</span>
-<span class="normal">784</span>
-<span class="normal">785</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">785</span>
 <span class="normal">786</span>
 <span class="normal">787</span>
 <span class="normal">788</span>
@@ -2735,7 +2750,14 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
 <span class="normal">840</span>
 <span class="normal">841</span>
 <span class="normal">842</span>
-<span class="normal">843</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_field</span><span class="p">(</span>
+<span class="normal">843</span>
+<span class="normal">844</span>
+<span class="normal">845</span>
+<span class="normal">846</span>
+<span class="normal">847</span>
+<span class="normal">848</span>
+<span class="normal">849</span>
+<span class="normal">850</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_field</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ele_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -2815,7 +2837,7 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
 
 
 </h7>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">plot_grid</span><span class="p">(</span><span class="n">templates</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">include_layout</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tight_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">share_x</span><span class="o">=</span><span class="s1">'col'</span><span class="p">,</span> <span class="n">layout_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">curves</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">plot_grid</span><span class="p">(</span><span class="n">templates</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">include_layout</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tight_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">share_x</span><span class="o">=</span><span class="s1">'col'</span><span class="p">,</span> <span class="n">layout_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">curves</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3064,6 +3086,22 @@ placed graphs prior to plotting.</p>
                   <code>None</code>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>ix_uni</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Plot data from this universe for every graph in the grid.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -3262,7 +3300,11 @@ placed graphs prior to plotting.</p>
 <span class="normal">624</span>
 <span class="normal">625</span>
 <span class="normal">626</span>
-<span class="normal">627</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_grid</span><span class="p">(</span>
+<span class="normal">627</span>
+<span class="normal">628</span>
+<span class="normal">629</span>
+<span class="normal">630</span>
+<span class="normal">631</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_grid</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">templates</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">grid</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
@@ -3280,6 +3322,7 @@ placed graphs prior to plotting.</p>
     <span class="n">settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">TaoGraphSettings</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">axes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">Axes</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot graphs on a grid with Matplotlib.</span>
@@ -3320,6 +3363,8 @@ placed graphs prior to plotting.</p>
 <span class="sd">        Graph customization settings, per graph.</span>
 <span class="sd">    save : pathlib.Path or str, optional</span>
 <span class="sd">        Save the plot to the given filename.</span>
+<span class="sd">    ix_uni : int, optional</span>
+<span class="sd">        Plot data from this universe for every graph in the grid.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -3338,6 +3383,7 @@ placed graphs prior to plotting.</p>
         <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">,</span>
         <span class="n">xlim</span><span class="o">=</span><span class="n">xlim</span><span class="p">,</span>
         <span class="n">ylim</span><span class="o">=</span><span class="n">ylim</span><span class="p">,</span>
+        <span class="n">ix_uni</span><span class="o">=</span><span class="n">ix_uni</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span> <span class="o">=</span> <span class="n">grid</span>
     <span class="n">height_ratios</span> <span class="o">=</span> <span class="kc">None</span>
@@ -3385,7 +3431,7 @@ placed graphs prior to plotting.</p>
         <span class="n">setup_matplotlib_ticks</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">user_xlim</span><span class="o">=</span><span class="n">xl</span><span class="p">,</span> <span class="n">user_ylim</span><span class="o">=</span><span class="n">yl</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">include_layout</span><span class="p">:</span>
-        <span class="n">layout_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lattice_layout_graph</span>
+        <span class="n">layout_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_lattice_layout_graph</span><span class="p">(</span><span class="n">ix_uni</span><span class="o">=</span><span class="n">ix_uni</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncols</span><span class="p">):</span>
             <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">col</span><span class="p">]</span>
             <span class="n">plot</span><span class="p">(</span><span class="n">layout_graph</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>

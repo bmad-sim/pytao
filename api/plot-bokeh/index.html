@@ -1977,7 +1977,7 @@
 
 
 </h5>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">BokehAppCreator</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="n">graphs</span><span class="p">,</span> <span class="n">share_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_variables</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_layout</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">graph_sizing_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layout_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">BokehAppCreator</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="n">graphs</span><span class="p">,</span> <span class="n">share_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_variables</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_layout</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">graph_sizing_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layout_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2000,8 +2000,7 @@ callbacks resulting from user interaction.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1308</span>
-<span class="normal">1309</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1309</span>
 <span class="normal">1310</span>
 <span class="normal">1311</span>
 <span class="normal">1312</span>
@@ -2045,7 +2044,10 @@ callbacks resulting from user interaction.</p>
 <span class="normal">1350</span>
 <span class="normal">1351</span>
 <span class="normal">1352</span>
-<span class="normal">1353</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">1353</span>
+<span class="normal">1354</span>
+<span class="normal">1355</span>
+<span class="normal">1356</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">manager</span><span class="p">:</span> <span class="n">BokehGraphManager</span> <span class="o">|</span> <span class="n">NotebookGraphManager</span><span class="p">,</span>
     <span class="n">graphs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AnyGraph</span><span class="p">],</span>
@@ -2059,6 +2061,7 @@ callbacks resulting from user interaction.</p>
     <span class="n">layout_height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">xlim</span><span class="p">:</span> <span class="n">OptionalLimit</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">OptionalLimit</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ylim</span><span class="p">:</span> <span class="n">OptionalLimit</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">OptionalLimit</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">graphs</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"BokehAppCreator requires 1 or more graph"</span><span class="p">)</span>
@@ -2089,6 +2092,7 @@ callbacks resulting from user interaction.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">graph_sizing_mode</span> <span class="o">=</span> <span class="n">graph_sizing_mode</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">include_layout</span> <span class="o">=</span> <span class="n">include_layout</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">layout_height</span> <span class="o">=</span> <span class="n">layout_height</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ix_uni</span> <span class="o">=</span> <span class="n">ix_uni</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">xlim</span> <span class="o">=</span> <span class="n">fix_grid_limits</span><span class="p">(</span><span class="n">xlim</span><span class="p">,</span> <span class="n">num_graphs</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">graphs</span><span class="p">))</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">ylim</span> <span class="o">=</span> <span class="n">fix_grid_limits</span><span class="p">(</span><span class="n">ylim</span><span class="p">,</span> <span class="n">num_graphs</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">graphs</span><span class="p">))</span>
 </code></pre></div></td></tr></table></div>
@@ -2125,15 +2129,15 @@ callbacks resulting from user interaction.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1355</span>
-<span class="normal">1356</span>
-<span class="normal">1357</span>
-<span class="normal">1358</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1358</span>
 <span class="normal">1359</span>
 <span class="normal">1360</span>
 <span class="normal">1361</span>
 <span class="normal">1362</span>
-<span class="normal">1363</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BokehAppState</span><span class="p">:</span>
+<span class="normal">1363</span>
+<span class="normal">1364</span>
+<span class="normal">1365</span>
+<span class="normal">1366</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BokehAppState</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Create an independent application state based on the graph data."""</span>
     <span class="n">pairs</span><span class="p">,</span> <span class="n">layout_pairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_figures</span><span class="p">()</span>
     <span class="n">grid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grid_figures</span><span class="p">(</span><span class="n">pairs</span><span class="p">,</span> <span class="n">layout_pairs</span><span class="p">)</span>
@@ -2185,10 +2189,10 @@ callbacks resulting from user interaction.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>pytao/plotting/plot.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1221</span>
-<span class="normal">1222</span>
-<span class="normal">1223</span>
-<span class="normal">1224</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1261</span>
+<span class="normal">1262</span>
+<span class="normal">1263</span>
+<span class="normal">1264</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tao</span> <span class="o">=</span> <span class="n">tao</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">regions</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_to_place</span> <span class="o">=</span> <span class="p">{}</span>
@@ -2216,7 +2220,7 @@ callbacks resulting from user interaction.</p>
 
 
 </h7>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">plot</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sizing_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layout_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">share_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">curves</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">plot</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sizing_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layout_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">share_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">curves</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2449,6 +2453,22 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
                   <code>None</code>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>ix_uni</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Plot data from this universe.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -2488,17 +2508,7 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1884</span>
-<span class="normal">1885</span>
-<span class="normal">1886</span>
-<span class="normal">1887</span>
-<span class="normal">1888</span>
-<span class="normal">1889</span>
-<span class="normal">1890</span>
-<span class="normal">1891</span>
-<span class="normal">1892</span>
-<span class="normal">1893</span>
-<span class="normal">1894</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1894</span>
 <span class="normal">1895</span>
 <span class="normal">1896</span>
 <span class="normal">1897</span>
@@ -2582,7 +2592,22 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
 <span class="normal">1975</span>
 <span class="normal">1976</span>
 <span class="normal">1977</span>
-<span class="normal">1978</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
+<span class="normal">1978</span>
+<span class="normal">1979</span>
+<span class="normal">1980</span>
+<span class="normal">1981</span>
+<span class="normal">1982</span>
+<span class="normal">1983</span>
+<span class="normal">1984</span>
+<span class="normal">1985</span>
+<span class="normal">1986</span>
+<span class="normal">1987</span>
+<span class="normal">1988</span>
+<span class="normal">1989</span>
+<span class="normal">1990</span>
+<span class="normal">1991</span>
+<span class="normal">1992</span>
+<span class="normal">1993</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">template</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -2598,6 +2623,7 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
     <span class="n">save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">curves</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">TaoCurveSettings</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">settings</span><span class="p">:</span> <span class="n">TaoGraphSettings</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">AnyGraph</span><span class="p">],</span> <span class="n">BokehAppCreator</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot a graph with Bokeh.</span>
@@ -2636,6 +2662,8 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
 <span class="sd">    save : str or bool, optional</span>
 <span class="sd">        Save the plot to a static HTML file with the given name.</span>
 <span class="sd">        If `True`, saves to a filename based on the plot title.</span>
+<span class="sd">    ix_uni : int, optional</span>
+<span class="sd">        Plot data from this universe.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -2650,6 +2678,7 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
         <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">,</span>
         <span class="n">xlim</span><span class="o">=</span><span class="n">xlim</span><span class="p">,</span>
         <span class="n">ylim</span><span class="o">=</span><span class="n">ylim</span><span class="p">,</span>
+        <span class="n">ix_uni</span><span class="o">=</span><span class="n">ix_uni</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">graphs</span><span class="p">:</span>
@@ -2668,6 +2697,7 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
         <span class="n">graph_sizing_mode</span><span class="o">=</span><span class="n">sizing_mode</span><span class="p">,</span>
         <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="n">xlim</span><span class="p">],</span>
         <span class="n">ylim</span><span class="o">=</span><span class="p">[</span><span class="n">ylim</span><span class="p">],</span>
+        <span class="n">ix_uni</span><span class="o">=</span><span class="n">ix_uni</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
@@ -2862,22 +2892,7 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1980</span>
-<span class="normal">1981</span>
-<span class="normal">1982</span>
-<span class="normal">1983</span>
-<span class="normal">1984</span>
-<span class="normal">1985</span>
-<span class="normal">1986</span>
-<span class="normal">1987</span>
-<span class="normal">1988</span>
-<span class="normal">1989</span>
-<span class="normal">1990</span>
-<span class="normal">1991</span>
-<span class="normal">1992</span>
-<span class="normal">1993</span>
-<span class="normal">1994</span>
-<span class="normal">1995</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1995</span>
 <span class="normal">1996</span>
 <span class="normal">1997</span>
 <span class="normal">1998</span>
@@ -2935,7 +2950,22 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
 <span class="normal">2050</span>
 <span class="normal">2051</span>
 <span class="normal">2052</span>
-<span class="normal">2053</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_field</span><span class="p">(</span>
+<span class="normal">2053</span>
+<span class="normal">2054</span>
+<span class="normal">2055</span>
+<span class="normal">2056</span>
+<span class="normal">2057</span>
+<span class="normal">2058</span>
+<span class="normal">2059</span>
+<span class="normal">2060</span>
+<span class="normal">2061</span>
+<span class="normal">2062</span>
+<span class="normal">2063</span>
+<span class="normal">2064</span>
+<span class="normal">2065</span>
+<span class="normal">2066</span>
+<span class="normal">2067</span>
+<span class="normal">2068</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_field</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ele_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -3023,7 +3053,7 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
 
 
 </h7>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">plot_grid</span><span class="p">(</span><span class="n">templates</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">include_layout</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">share_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layout_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">curves</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">plot_grid</span><span class="p">(</span><span class="n">templates</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">include_layout</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">share_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layout_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">curves</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3254,6 +3284,22 @@ placed graphs prior to plotting.</p>
                   <code>None</code>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>ix_uni</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Plot data from this universe for every graph in the grid.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -3293,12 +3339,7 @@ placed graphs prior to plotting.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1793</span>
-<span class="normal">1794</span>
-<span class="normal">1795</span>
-<span class="normal">1796</span>
-<span class="normal">1797</span>
-<span class="normal">1798</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1798</span>
 <span class="normal">1799</span>
 <span class="normal">1800</span>
 <span class="normal">1801</span>
@@ -3382,7 +3423,17 @@ placed graphs prior to plotting.</p>
 <span class="normal">1879</span>
 <span class="normal">1880</span>
 <span class="normal">1881</span>
-<span class="normal">1882</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_grid</span><span class="p">(</span>
+<span class="normal">1882</span>
+<span class="normal">1883</span>
+<span class="normal">1884</span>
+<span class="normal">1885</span>
+<span class="normal">1886</span>
+<span class="normal">1887</span>
+<span class="normal">1888</span>
+<span class="normal">1889</span>
+<span class="normal">1890</span>
+<span class="normal">1891</span>
+<span class="normal">1892</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_grid</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">templates</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">grid</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
@@ -3398,6 +3449,7 @@ placed graphs prior to plotting.</p>
     <span class="n">curves</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">CurveIndexToCurve</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">settings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">TaoGraphSettings</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot graphs on a grid with Bokeh.</span>
@@ -3434,6 +3486,8 @@ placed graphs prior to plotting.</p>
 <span class="sd">        Graph customization settings, per graph.</span>
 <span class="sd">    save : pathlib.Path or str, optional</span>
 <span class="sd">        Save the plot to the given filename.</span>
+<span class="sd">    ix_uni : int, optional</span>
+<span class="sd">        Plot data from this universe for every graph in the grid.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -3447,6 +3501,7 @@ placed graphs prior to plotting.</p>
         <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">,</span>
         <span class="n">xlim</span><span class="o">=</span><span class="n">xlim</span><span class="p">,</span>
         <span class="n">ylim</span><span class="o">=</span><span class="n">ylim</span><span class="p">,</span>
+        <span class="n">ix_uni</span><span class="o">=</span><span class="n">ix_uni</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">figsize</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -3464,6 +3519,7 @@ placed graphs prior to plotting.</p>
         <span class="n">include_layout</span><span class="o">=</span><span class="n">include_layout</span><span class="p">,</span>
         <span class="n">xlim</span><span class="o">=</span><span class="n">xlim</span><span class="p">,</span>
         <span class="n">ylim</span><span class="o">=</span><span class="n">ylim</span><span class="p">,</span>
+        <span class="n">ix_uni</span><span class="o">=</span><span class="n">ix_uni</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
@@ -3551,12 +3607,7 @@ placed graphs prior to plotting.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1771</span>
-<span class="normal">1772</span>
-<span class="normal">1773</span>
-<span class="normal">1774</span>
-<span class="normal">1775</span>
-<span class="normal">1776</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1776</span>
 <span class="normal">1777</span>
 <span class="normal">1778</span>
 <span class="normal">1779</span>
@@ -3571,7 +3622,12 @@ placed graphs prior to plotting.</p>
 <span class="normal">1788</span>
 <span class="normal">1789</span>
 <span class="normal">1790</span>
-<span class="normal">1791</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_bokeh_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">AnyGraph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnyBokehGraph</span><span class="p">:</span>
+<span class="normal">1791</span>
+<span class="normal">1792</span>
+<span class="normal">1793</span>
+<span class="normal">1794</span>
+<span class="normal">1795</span>
+<span class="normal">1796</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_bokeh_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">AnyGraph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnyBokehGraph</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a Bokeh graph instance from the backend-agnostic AnyGraph version.</span>
 
@@ -3635,10 +3691,10 @@ placed graphs prior to plotting.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>pytao/plotting/plot.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1221</span>
-<span class="normal">1222</span>
-<span class="normal">1223</span>
-<span class="normal">1224</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1261</span>
+<span class="normal">1262</span>
+<span class="normal">1263</span>
+<span class="normal">1264</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tao</span> <span class="o">=</span> <span class="n">tao</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">regions</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_to_place</span> <span class="o">=</span> <span class="p">{}</span>
@@ -3666,7 +3722,7 @@ placed graphs prior to plotting.</p>
 
 
 </h7>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">plot</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sizing_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layout_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">share_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">notebook_handle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">curves</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">plot</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sizing_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layout_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">share_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">notebook_handle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">curves</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3915,6 +3971,22 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
                   <code>None</code>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>ix_uni</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Plot data from this universe.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -3944,26 +4016,7 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2141</span>
-<span class="normal">2142</span>
-<span class="normal">2143</span>
-<span class="normal">2144</span>
-<span class="normal">2145</span>
-<span class="normal">2146</span>
-<span class="normal">2147</span>
-<span class="normal">2148</span>
-<span class="normal">2149</span>
-<span class="normal">2150</span>
-<span class="normal">2151</span>
-<span class="normal">2152</span>
-<span class="normal">2153</span>
-<span class="normal">2154</span>
-<span class="normal">2155</span>
-<span class="normal">2156</span>
-<span class="normal">2157</span>
-<span class="normal">2158</span>
-<span class="normal">2159</span>
-<span class="normal">2160</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2160</span>
 <span class="normal">2161</span>
 <span class="normal">2162</span>
 <span class="normal">2163</span>
@@ -4030,7 +4083,30 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
 <span class="normal">2224</span>
 <span class="normal">2225</span>
 <span class="normal">2226</span>
-<span class="normal">2227</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
+<span class="normal">2227</span>
+<span class="normal">2228</span>
+<span class="normal">2229</span>
+<span class="normal">2230</span>
+<span class="normal">2231</span>
+<span class="normal">2232</span>
+<span class="normal">2233</span>
+<span class="normal">2234</span>
+<span class="normal">2235</span>
+<span class="normal">2236</span>
+<span class="normal">2237</span>
+<span class="normal">2238</span>
+<span class="normal">2239</span>
+<span class="normal">2240</span>
+<span class="normal">2241</span>
+<span class="normal">2242</span>
+<span class="normal">2243</span>
+<span class="normal">2244</span>
+<span class="normal">2245</span>
+<span class="normal">2246</span>
+<span class="normal">2247</span>
+<span class="normal">2248</span>
+<span class="normal">2249</span>
+<span class="normal">2250</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">template</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -4048,6 +4124,7 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
     <span class="n">save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">curves</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">TaoCurveSettings</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">settings</span><span class="p">:</span> <span class="n">TaoGraphSettings</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">AnyGraph</span><span class="p">],</span> <span class="n">BokehAppCreator</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot a graph with Bokeh.</span>
@@ -4088,6 +4165,8 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
 <span class="sd">    save : str or bool, optional</span>
 <span class="sd">        Save the plot to a static HTML file with the given name.</span>
 <span class="sd">        If `True`, saves to a filename based on the plot title.</span>
+<span class="sd">    ix_uni : int, optional</span>
+<span class="sd">        Plot data from this universe.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -4106,6 +4185,7 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
         <span class="n">curves</span><span class="o">=</span><span class="n">curves</span><span class="p">,</span>
         <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">,</span>
         <span class="n">share_x</span><span class="o">=</span><span class="n">share_x</span><span class="p">,</span>
+        <span class="n">ix_uni</span><span class="o">=</span><span class="n">ix_uni</span><span class="p">,</span>
         <span class="n">save</span><span class="o">=</span><span class="n">save</span><span class="p">,</span>
     <span class="p">)</span>
 
@@ -4269,30 +4349,7 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2229</span>
-<span class="normal">2230</span>
-<span class="normal">2231</span>
-<span class="normal">2232</span>
-<span class="normal">2233</span>
-<span class="normal">2234</span>
-<span class="normal">2235</span>
-<span class="normal">2236</span>
-<span class="normal">2237</span>
-<span class="normal">2238</span>
-<span class="normal">2239</span>
-<span class="normal">2240</span>
-<span class="normal">2241</span>
-<span class="normal">2242</span>
-<span class="normal">2243</span>
-<span class="normal">2244</span>
-<span class="normal">2245</span>
-<span class="normal">2246</span>
-<span class="normal">2247</span>
-<span class="normal">2248</span>
-<span class="normal">2249</span>
-<span class="normal">2250</span>
-<span class="normal">2251</span>
-<span class="normal">2252</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2252</span>
 <span class="normal">2253</span>
 <span class="normal">2254</span>
 <span class="normal">2255</span>
@@ -4312,7 +4369,30 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
 <span class="normal">2269</span>
 <span class="normal">2270</span>
 <span class="normal">2271</span>
-<span class="normal">2272</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_field</span><span class="p">(</span>
+<span class="normal">2272</span>
+<span class="normal">2273</span>
+<span class="normal">2274</span>
+<span class="normal">2275</span>
+<span class="normal">2276</span>
+<span class="normal">2277</span>
+<span class="normal">2278</span>
+<span class="normal">2279</span>
+<span class="normal">2280</span>
+<span class="normal">2281</span>
+<span class="normal">2282</span>
+<span class="normal">2283</span>
+<span class="normal">2284</span>
+<span class="normal">2285</span>
+<span class="normal">2286</span>
+<span class="normal">2287</span>
+<span class="normal">2288</span>
+<span class="normal">2289</span>
+<span class="normal">2290</span>
+<span class="normal">2291</span>
+<span class="normal">2292</span>
+<span class="normal">2293</span>
+<span class="normal">2294</span>
+<span class="normal">2295</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_field</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ele_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -4370,7 +4450,7 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
 
 
 </h7>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">plot_grid</span><span class="p">(</span><span class="n">templates</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">curves</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_layout</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">share_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layout_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">plot_grid</span><span class="p">(</span><span class="n">templates</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">curves</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_layout</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">share_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layout_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -4617,6 +4697,22 @@ placed graphs prior to plotting.</p>
                   <code>None</code>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>ix_uni</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Plot data from this universe for every graph in the grid.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -4656,22 +4752,7 @@ placed graphs prior to plotting.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2059</span>
-<span class="normal">2060</span>
-<span class="normal">2061</span>
-<span class="normal">2062</span>
-<span class="normal">2063</span>
-<span class="normal">2064</span>
-<span class="normal">2065</span>
-<span class="normal">2066</span>
-<span class="normal">2067</span>
-<span class="normal">2068</span>
-<span class="normal">2069</span>
-<span class="normal">2070</span>
-<span class="normal">2071</span>
-<span class="normal">2072</span>
-<span class="normal">2073</span>
-<span class="normal">2074</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2074</span>
 <span class="normal">2075</span>
 <span class="normal">2076</span>
 <span class="normal">2077</span>
@@ -4736,7 +4817,26 @@ placed graphs prior to plotting.</p>
 <span class="normal">2136</span>
 <span class="normal">2137</span>
 <span class="normal">2138</span>
-<span class="normal">2139</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_grid</span><span class="p">(</span>
+<span class="normal">2139</span>
+<span class="normal">2140</span>
+<span class="normal">2141</span>
+<span class="normal">2142</span>
+<span class="normal">2143</span>
+<span class="normal">2144</span>
+<span class="normal">2145</span>
+<span class="normal">2146</span>
+<span class="normal">2147</span>
+<span class="normal">2148</span>
+<span class="normal">2149</span>
+<span class="normal">2150</span>
+<span class="normal">2151</span>
+<span class="normal">2152</span>
+<span class="normal">2153</span>
+<span class="normal">2154</span>
+<span class="normal">2155</span>
+<span class="normal">2156</span>
+<span class="normal">2157</span>
+<span class="normal">2158</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_grid</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">templates</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">grid</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
@@ -4753,6 +4853,7 @@ placed graphs prior to plotting.</p>
     <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot graphs on a grid with Bokeh.</span>
@@ -4791,6 +4892,8 @@ placed graphs prior to plotting.</p>
 <span class="sd">        Graph customization settings, per graph.</span>
 <span class="sd">    save : pathlib.Path or str, optional</span>
 <span class="sd">        Save the plot to the given filename.</span>
+<span class="sd">    ix_uni : int, optional</span>
+<span class="sd">        Plot data from this universe for every graph in the grid.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -4812,6 +4915,7 @@ placed graphs prior to plotting.</p>
         <span class="n">ylim</span><span class="o">=</span><span class="n">ylim</span><span class="p">,</span>
         <span class="n">layout_height</span><span class="o">=</span><span class="n">layout_height</span><span class="p">,</span>
         <span class="n">save</span><span class="o">=</span><span class="n">save</span><span class="p">,</span>
+        <span class="n">ix_uni</span><span class="o">=</span><span class="n">ix_uni</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="nb">vars</span><span class="p">:</span>
         <span class="n">app</span><span class="o">.</span><span class="n">variables</span> <span class="o">=</span> <span class="n">Variable</span><span class="o">.</span><span class="n">from_tao_all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tao</span><span class="p">)</span>
