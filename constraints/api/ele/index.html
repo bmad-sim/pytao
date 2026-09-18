@@ -1211,10 +1211,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pytao.constraints.observables.EleMinObservable" class="md-nav__link">
+  <a href="#pytao.constraints.observables.EleReduceObservable" class="md-nav__link">
     <span class="md-ellipsis">
       
-        EleMinObservable
+        EleReduceObservable
       
     </span>
   </a>
@@ -1222,10 +1222,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pytao.constraints.observables.EleMaxObservable" class="md-nav__link">
+  <a href="#pytao.constraints.observables.ele.ReduceMode" class="md-nav__link">
     <span class="md-ellipsis">
       
-        EleMaxObservable
+        ReduceMode
       
     </span>
   </a>
@@ -1249,15 +1249,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#operators-and-results" class="md-nav__link">
+  <a href="#operators" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Operators and Results
+        Operators
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Operators and Results">
+    <nav class="md-nav" aria-label="Operators">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1272,32 +1272,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pytao.constraints.observables.EleLessThanResult" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        EleLessThanResult
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#pytao.constraints.observables.EleLessThan" class="md-nav__link">
     <span class="md-ellipsis">
       
         EleLessThan
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pytao.constraints.observables.EleIsCloseResult" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        EleIsCloseResult
       
     </span>
   </a>
@@ -1916,10 +1894,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pytao.constraints.observables.EleMinObservable" class="md-nav__link">
+  <a href="#pytao.constraints.observables.EleReduceObservable" class="md-nav__link">
     <span class="md-ellipsis">
       
-        EleMinObservable
+        EleReduceObservable
       
     </span>
   </a>
@@ -1927,10 +1905,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pytao.constraints.observables.EleMaxObservable" class="md-nav__link">
+  <a href="#pytao.constraints.observables.ele.ReduceMode" class="md-nav__link">
     <span class="md-ellipsis">
       
-        EleMaxObservable
+        ReduceMode
       
     </span>
   </a>
@@ -1954,15 +1932,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#operators-and-results" class="md-nav__link">
+  <a href="#operators" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Operators and Results
+        Operators
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Operators and Results">
+    <nav class="md-nav" aria-label="Operators">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1977,32 +1955,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pytao.constraints.observables.EleLessThanResult" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        EleLessThanResult
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#pytao.constraints.observables.EleLessThan" class="md-nav__link">
     <span class="md-ellipsis">
       
         EleLessThan
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pytao.constraints.observables.EleIsCloseResult" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        EleIsCloseResult
       
     </span>
   </a>
@@ -2134,25 +2090,24 @@
 <h1 id="element-constraints">Element Constraints</h1>
 <p>An <code>EleObservation</code> contains the output of a <code>tao.ele(...)</code> call (ie Twiss parameters, reference energy, floor positions, etc.).
 The observation may be evaluted from a single element in a lattice with <code>EleObservable</code>.
-The min and max of the values in the element can be evaluated using <code>EleMinObservable</code> and <code>EleMaxObservable</code>.</p>
+A reduction (min, max, or avg) of the values over the tracking elements of a lattice can be evaluated using <code>EleReduceObservable</code>, with the reduction selected by its <code>operator</code> field.
+User-defined values are provided with <code>EleLiteral</code>.</p>
 <h2 id="observation-classes">Observation Classes</h2>
 <pre class="mermaid"><code>flowchart TD
     LatticeObservable([LatticeObservable]) --&gt; Observable([Observable])
     LiteralObservable([LiteralObservable]) --&gt; Observable
     EleObservable[EleObservable] --&gt; LatticeObservable
-    EleMaxObservable[EleMaxObservable] --&gt; LatticeObservable
-    EleMinObservable[EleMinObservable] --&gt; LatticeObservable
+    EleReduceObservable[EleReduceObservable] --&gt; LatticeObservable
     EleLiteral[EleLiteral] --&gt; LiteralObservable
     IsClose([IsClose]) --&gt; Comparison([Comparison])
     IsLess([IsLess]) --&gt; Comparison
     EleIsClose[EleIsClose] --&gt; IsClose
     EleLessThan[EleLessThan] --&gt; IsLess
     EleObservable -. creates .-&gt; EleObservation[EleObservation]
-    EleMaxObservable -. creates .-&gt; EleObservation
-    EleMinObservable -. creates .-&gt; EleObservation
+    EleReduceObservable -. creates .-&gt; EleObservation
     EleLiteral -. creates .-&gt; EleObservation
-    EleIsClose -. creates .-&gt; EleIsCloseResult[EleIsCloseResult]
-    EleLessThan -. creates .-&gt; EleLessThanResult[EleLessThanResult]</code></pre>
+    EleIsClose -. creates .-&gt; ComparisonResult([ComparisonResult])
+    EleLessThan -. creates .-&gt; ComparisonResult</code></pre>
 
 
 <div class="doc doc-object doc-class">
@@ -2168,7 +2123,7 @@ The min and max of the values in the element can be evaluated using <code>EleMin
 
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="pytao.constraints.observables.base.Observation">Observation</span></code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="pytao.constraints.observables.Observation (pytao.constraints.observables.base.Observation)" href="../#pytao.constraints.observables.Observation">Observation</a></code></p>
 
 
 
@@ -2187,7 +2142,7 @@ The min and max of the values in the element can be evaluated using <code>EleMin
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleObservation.obs_type">obs_type</span></code></td>
+            <td><code><span title="pytao.constraints.observables.EleObservation.type">type</span></code></td>
             <td>
                   <code><span title="str">str</span></code>
             </td>
@@ -2272,7 +2227,7 @@ The min and max of the values in the element can be evaluated using <code>EleMin
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleObservable.obs_type">obs_type</span></code></td>
+            <td><code><span title="pytao.constraints.observables.EleObservable.type">type</span></code></td>
             <td>
                   <code><span title="str">str</span></code>
             </td>
@@ -2351,8 +2306,8 @@ The min and max of the values in the element can be evaluated using <code>EleMin
 
 
 
-<h4 id="pytao.constraints.observables.EleMinObservable" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">pytao.constraints.observables.EleMinObservable</span>
+<h4 id="pytao.constraints.observables.EleReduceObservable" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">pytao.constraints.observables.EleReduceObservable</span>
 
 
 </h4>
@@ -2364,7 +2319,7 @@ The min and max of the values in the element can be evaluated using <code>EleMin
 
 
 
-        <p>Observable yielding the per-field minimum across all tracking elements.</p>
+        <p>Observable that performs a reduction across all tracking elements</p>
 
 
 <p><span class="doc-section-title">Attributes:</span></p>
@@ -2378,18 +2333,18 @@ The min and max of the values in the element can be evaluated using <code>EleMin
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleMinObservable.obs_type">obs_type</span></code></td>
+            <td><code><span title="pytao.constraints.observables.EleReduceObservable.type">type</span></code></td>
             <td>
                   <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Discriminator literal. Always <code>"ele_min"</code>.</p>
+                <p>Discriminator literal. Always <code>"ele_reduce"</code>.</p>
               </div>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleMinObservable.ix_uni">ix_uni</span></code></td>
+            <td><code><span title="pytao.constraints.observables.EleReduceObservable.ix_uni">ix_uni</span></code></td>
             <td>
                   <code><span title="int">int</span></code>
             </td>
@@ -2400,13 +2355,37 @@ The min and max of the values in the element can be evaluated using <code>EleMin
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleMinObservable.ix_branch">ix_branch</span></code></td>
+            <td><code><span title="pytao.constraints.observables.EleReduceObservable.ix_branch">ix_branch</span></code></td>
             <td>
                   <code><span title="int">int</span></code>
             </td>
             <td>
               <div class="doc-md-description">
                 <p>Branch index.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="pytao.constraints.observables.EleReduceObservable.begin_ele">begin_ele</span></code></td>
+            <td>
+                  <code>(<span title="str">str</span> | <span title="int">int</span> | None, <span title="optional">optional</span>)</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Starting element name or index.  None implies first element.
+By default None.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="pytao.constraints.observables.EleReduceObservable.end_ele">end_ele</span></code></td>
+            <td>
+                  <code>(<span title="str">str</span> | <span title="int">int</span> | None, <span title="optional">optional</span>)</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Ending element name or index.  None implies end element.
+By default None.</p>
               </div>
             </td>
           </tr>
@@ -2446,8 +2425,8 @@ The min and max of the values in the element can be evaluated using <code>EleMin
 
 
 
-<h4 id="pytao.constraints.observables.EleMaxObservable" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">pytao.constraints.observables.EleMaxObservable</span>
+<h4 id="pytao.constraints.observables.ele.ReduceMode" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">pytao.constraints.observables.ele.ReduceMode</span>
 
 
 </h4>
@@ -2455,58 +2434,9 @@ The min and max of the values in the element can be evaluated using <code>EleMin
 
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="pytao.constraints.observables.LatticeObservable (pytao.constraints.observables.base.LatticeObservable)" href="../#pytao.constraints.observables.LatticeObservable">LatticeObservable</a>[<a class="autorefs autorefs-internal" title="pytao.constraints.observables.EleObservation (pytao.constraints.observables.ele.EleObservation)" href="#pytao.constraints.observables.EleObservation">EleObservation</a>]</code></p>
+              Bases: <code><span title="str">str</span></code>, <code><span title="enum.Enum">Enum</span></code></p>
 
 
-
-        <p>Observable yielding the per-field maximum across all tracking elements.</p>
-
-
-<p><span class="doc-section-title">Attributes:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleMaxObservable.obs_type">obs_type</span></code></td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Discriminator literal. Always <code>"ele_max"</code>.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleMaxObservable.ix_uni">ix_uni</span></code></td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Universe index.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleMaxObservable.ix_branch">ix_branch</span></code></td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Branch index.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
 
 
 
@@ -2569,7 +2499,7 @@ The min and max of the values in the element can be evaluated using <code>EleMin
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleLiteral.obs_type">obs_type</span></code></td>
+            <td><code><span title="pytao.constraints.observables.EleLiteral.type">type</span></code></td>
             <td>
                   <code><span title="str">str</span></code>
             </td>
@@ -2741,7 +2671,8 @@ The min and max of the values in the element can be evaluated using <code>EleMin
 
     </div>
 
-</div><h3 id="operators-and-results">Operators and Results</h3>
+</div><h3 id="operators">Operators</h3>
+<p>Both operators produce a <a href="../#pytao.constraints.observables.ComparisonResult"><code>ComparisonResult</code></a> whose <code>checks</code> are keyed by the field names listed below.</p>
 
 
 <div class="doc doc-object doc-class">
@@ -2757,7 +2688,7 @@ The min and max of the values in the element can be evaluated using <code>EleMin
 
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="pytao.constraints.observables.base.IsClose">IsClose</span>[<a class="autorefs autorefs-internal" title="pytao.constraints.observables.EleObservation (pytao.constraints.observables.ele.EleObservation)" href="#pytao.constraints.observables.EleObservation">EleObservation</a>]</code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="pytao.constraints.observables.IsClose (pytao.constraints.observables.base.IsClose)" href="../#pytao.constraints.observables.IsClose">IsClose</a>[<a class="autorefs autorefs-internal" title="pytao.constraints.observables.EleObservation (pytao.constraints.observables.ele.EleObservation)" href="#pytao.constraints.observables.EleObservation">EleObservation</a>]</code></p>
 
 
 
@@ -2943,223 +2874,6 @@ The min and max of the values in the element can be evaluated using <code>EleMin
 
 
 
-<h4 id="pytao.constraints.observables.EleLessThanResult" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">pytao.constraints.observables.EleLessThanResult</span>
-
-
-</h4>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="pytao.constraints.observables.base.IsLessResult">IsLessResult</span></code></p>
-
-
-
-        <p>Result of an EleLessThan comparison with per-field less-than check results.</p>
-<p>Each field is <code>None</code> if the corresponding component was not checked.</p>
-
-
-<p><span class="doc-section-title">Attributes:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleLessThanResult.result_type">result_type</span></code></td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Discriminator literal. Always <code>"ele_is_less"</code>.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleLessThanResult.beta_a">beta_a</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Mode A beta function.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleLessThanResult.alpha_a">alpha_a</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Mode A alpha function.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleLessThanResult.beta_b">beta_b</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Mode B beta function.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleLessThanResult.alpha_b">alpha_b</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Mode B alpha function.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleLessThanResult.eta_x">eta_x</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Horizontal dispersion.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleLessThanResult.etap_x">etap_x</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Horizontal dispersion slope.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleLessThanResult.eta_y">eta_y</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Vertical dispersion.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleLessThanResult.etap_y">etap_y</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Vertical dispersion slope.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleLessThanResult.ref_energy">ref_energy</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Total reference energy.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleLessThanResult.p0c">p0c</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Reference momentum.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleLessThanResult.floor_x">floor_x</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Global floor x coordinate.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleLessThanResult.floor_y">floor_y</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Global floor y coordinate.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleLessThanResult.floor_z">floor_z</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Global floor z coordinate.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
 <h4 id="pytao.constraints.observables.EleLessThan" class="doc doc-heading">
             <span class="doc doc-object-name doc-class-name">pytao.constraints.observables.EleLessThan</span>
 
@@ -3169,7 +2883,7 @@ The min and max of the values in the element can be evaluated using <code>EleMin
 
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="pytao.constraints.observables.base.IsLess">IsLess</span>[<a class="autorefs autorefs-internal" title="pytao.constraints.observables.EleObservation (pytao.constraints.observables.ele.EleObservation)" href="#pytao.constraints.observables.EleObservation">EleObservation</a>]</code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="pytao.constraints.observables.IsLess (pytao.constraints.observables.base.IsLess)" href="../#pytao.constraints.observables.IsLess">IsLess</a>[<a class="autorefs autorefs-internal" title="pytao.constraints.observables.EleObservation (pytao.constraints.observables.ele.EleObservation)" href="#pytao.constraints.observables.EleObservation">EleObservation</a>]</code></p>
 
 
 
@@ -3327,212 +3041,6 @@ The min and max of the values in the element can be evaluated using <code>EleMin
             <td>
               <div class="doc-md-description">
                 <p>Check global floor z coordinate.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h4 id="pytao.constraints.observables.EleIsCloseResult" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">pytao.constraints.observables.EleIsCloseResult</span>
-
-
-</h4>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="pytao.constraints.observables.base.IsCloseResult">IsCloseResult</span></code></p>
-
-
-
-        <p>Result of an EleIsClose comparison with per-field check results.</p>
-<p>Each field is <code>None</code> if the corresponding comparison was not run.</p>
-
-
-<p><span class="doc-section-title">Attributes:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleIsCloseResult.result_type">result_type</span></code></td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Discriminator literal. Always <code>"ele_is_close"</code>.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleIsCloseResult.twiss_a">twiss_a</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Mode A Twiss comparison (beta_a, alpha_a).</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleIsCloseResult.twiss_b">twiss_b</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Mode B Twiss comparison (beta_b, alpha_b).</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleIsCloseResult.eta_x">eta_x</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Horizontal dispersion.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleIsCloseResult.etap_x">etap_x</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Horizontal dispersion slope.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleIsCloseResult.eta_y">eta_y</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Vertical dispersion.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleIsCloseResult.etap_y">etap_y</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Vertical dispersion slope.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleIsCloseResult.ref_energy">ref_energy</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Total reference energy (e_tot).</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleIsCloseResult.p0c">p0c</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Reference momentum.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleIsCloseResult.orbit">orbit</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Orbit, as 6D vector.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleIsCloseResult.floor_x">floor_x</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Global floor x coordinate.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleIsCloseResult.floor_y">floor_y</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Global floor y coordinate.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.EleIsCloseResult.floor_z">floor_z</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Global floor z coordinate.</p>
               </div>
             </td>
           </tr>
@@ -3755,9 +3263,9 @@ The min and max of the values in the element can be evaluated using <code>EleMin
     EleIsCloseConstraint[EleIsCloseConstraint] --&gt; IsCloseConstraint
     EleLessThanConstraint[EleLessThanConstraint] --&gt; IsLessConstraint
     EleRegressionConstraint[EleRegressionConstraint] --&gt; RegressionConstraint
-    EleIsCloseConstraint -. creates .-&gt; EleIsCloseResult[EleIsCloseResult]
-    EleLessThanConstraint -. creates .-&gt; EleLessThanResult[EleLessThanResult]
-    EleRegressionConstraint -. creates .-&gt; EleIsCloseResult</code></pre>
+    EleIsCloseConstraint -. creates .-&gt; ComparisonResult([ComparisonResult])
+    EleLessThanConstraint -. creates .-&gt; ComparisonResult
+    EleRegressionConstraint -. creates .-&gt; ComparisonResult</code></pre>
 
 
 <div class="doc doc-object doc-class">
@@ -3773,7 +3281,7 @@ The min and max of the values in the element can be evaluated using <code>EleMin
 
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="pytao.constraints.config.IsCloseConstraint">IsCloseConstraint</span>[<a class="autorefs autorefs-internal" title="pytao.constraints.observables.EleIsClose" href="#pytao.constraints.observables.EleIsClose">EleIsClose</a>]</code></p>
+              Bases: <code><span title="pytao.constraints.config.IsCloseConstraint">IsCloseConstraint</span>[<span title="pytao.constraints.config.EleObservables">EleObservables</span>, <a class="autorefs autorefs-internal" title="pytao.constraints.observables.EleIsClose" href="#pytao.constraints.observables.EleIsClose">EleIsClose</a>]</code></p>
 
 
 
@@ -3791,7 +3299,7 @@ The min and max of the values in the element can be evaluated using <code>EleMin
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.config.EleIsCloseConstraint.constraint_type">constraint_type</span></code></td>
+            <td><code><span title="pytao.constraints.config.EleIsCloseConstraint.type">type</span></code></td>
             <td>
                   <code><span title="str">str</span></code>
             </td>
@@ -3879,7 +3387,7 @@ The min and max of the values in the element can be evaluated using <code>EleMin
 
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="pytao.constraints.config.IsLessConstraint">IsLessConstraint</span>[<a class="autorefs autorefs-internal" title="pytao.constraints.observables.EleLessThan" href="#pytao.constraints.observables.EleLessThan">EleLessThan</a>]</code></p>
+              Bases: <code><span title="pytao.constraints.config.IsLessConstraint">IsLessConstraint</span>[<span title="pytao.constraints.config.EleObservables">EleObservables</span>, <a class="autorefs autorefs-internal" title="pytao.constraints.observables.EleLessThan" href="#pytao.constraints.observables.EleLessThan">EleLessThan</a>]</code></p>
 
 
 
@@ -3897,7 +3405,7 @@ The min and max of the values in the element can be evaluated using <code>EleMin
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.config.EleLessThanConstraint.constraint_type">constraint_type</span></code></td>
+            <td><code><span title="pytao.constraints.config.EleLessThanConstraint.type">type</span></code></td>
             <td>
                   <code><span title="str">str</span></code>
             </td>
@@ -4003,7 +3511,7 @@ The min and max of the values in the element can be evaluated using <code>EleMin
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.config.EleRegressionConstraint.constraint_type">constraint_type</span></code></td>
+            <td><code><span title="pytao.constraints.config.EleRegressionConstraint.type">type</span></code></td>
             <td>
                   <code><span title="str">str</span></code>
             </td>

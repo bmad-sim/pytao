@@ -1255,15 +1255,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#operators-and-results" class="md-nav__link">
+  <a href="#operators" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Operators and Results
+        Operators
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Operators and Results">
+    <nav class="md-nav" aria-label="Operators">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1278,32 +1278,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pytao.constraints.observables.DatumIsCloseResult" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DatumIsCloseResult
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#pytao.constraints.observables.DatumLessThan" class="md-nav__link">
     <span class="md-ellipsis">
       
         DatumLessThan
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pytao.constraints.observables.DatumLessThanResult" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DatumLessThanResult
       
     </span>
   </a>
@@ -1871,15 +1849,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#operators-and-results" class="md-nav__link">
+  <a href="#operators" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Operators and Results
+        Operators
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Operators and Results">
+    <nav class="md-nav" aria-label="Operators">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1894,32 +1872,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pytao.constraints.observables.DatumIsCloseResult" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DatumIsCloseResult
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#pytao.constraints.observables.DatumLessThan" class="md-nav__link">
     <span class="md-ellipsis">
       
         DatumLessThan
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pytao.constraints.observables.DatumLessThanResult" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DatumLessThanResult
       
     </span>
   </a>
@@ -2011,7 +1967,8 @@
 
 <h1 id="datum-constraints">Datum Constraints</h1>
 <p>A <code>DatumObservation</code> stores the output of a tao datum.
-These can be defined and evaluated on the fly using a <code>DatumObservable</code>.</p>
+These can be defined and evaluated on the fly using a <code>DatumObservable</code>.
+User-defined values are provided with <code>DatumLiteral</code>.</p>
 <h2 id="observation-classes">Observation Classes</h2>
 <pre class="mermaid"><code>flowchart TD
     LatticeObservable([LatticeObservable]) --&gt; Observable([Observable])
@@ -2024,8 +1981,8 @@ These can be defined and evaluated on the fly using a <code>DatumObservable</cod
     DatumLessThan[DatumLessThan] --&gt; IsLess
     DatumObservable -. creates .-&gt; DatumObservation[DatumObservation]
     DatumLiteral -. creates .-&gt; DatumObservation
-    DatumIsClose -. creates .-&gt; DatumIsCloseResult[DatumIsCloseResult]
-    DatumLessThan -. creates .-&gt; DatumLessThanResult[DatumLessThanResult]</code></pre>
+    DatumIsClose -. creates .-&gt; ComparisonResult([ComparisonResult])
+    DatumLessThan -. creates .-&gt; ComparisonResult</code></pre>
 
 
 <div class="doc doc-object doc-class">
@@ -2041,7 +1998,7 @@ These can be defined and evaluated on the fly using a <code>DatumObservable</cod
 
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="pytao.constraints.observables.base.Observation">Observation</span></code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="pytao.constraints.observables.Observation (pytao.constraints.observables.base.Observation)" href="../#pytao.constraints.observables.Observation">Observation</a></code></p>
 
 
 
@@ -2059,7 +2016,7 @@ These can be defined and evaluated on the fly using a <code>DatumObservable</cod
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.DatumObservation.obs_type">obs_type</span></code></td>
+            <td><code><span title="pytao.constraints.observables.DatumObservation.type">type</span></code></td>
             <td>
                   <code><span title="str">str</span></code>
             </td>
@@ -2155,7 +2112,7 @@ These can be defined and evaluated on the fly using a <code>DatumObservable</cod
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.DatumObservable.obs_type">obs_type</span></code></td>
+            <td><code><span title="pytao.constraints.observables.DatumObservable.type">type</span></code></td>
             <td>
                   <code><span title="str">str</span></code>
             </td>
@@ -2294,7 +2251,7 @@ These can be defined and evaluated on the fly using a <code>DatumObservable</cod
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.DatumLiteral.obs_type">obs_type</span></code></td>
+            <td><code><span title="pytao.constraints.observables.DatumLiteral.type">type</span></code></td>
             <td>
                   <code><span title="str">str</span></code>
             </td>
@@ -2356,7 +2313,8 @@ These can be defined and evaluated on the fly using a <code>DatumObservable</cod
 
     </div>
 
-</div><h3 id="operators-and-results">Operators and Results</h3>
+</div><h3 id="operators">Operators</h3>
+<p>Both operators produce a <a href="../#pytao.constraints.observables.ComparisonResult"><code>ComparisonResult</code></a> whose <code>checks</code> are keyed by the field names listed below.</p>
 
 
 <div class="doc doc-object doc-class">
@@ -2372,7 +2330,7 @@ These can be defined and evaluated on the fly using a <code>DatumObservable</cod
 
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="pytao.constraints.observables.base.IsClose">IsClose</span>[<a class="autorefs autorefs-internal" title="pytao.constraints.observables.DatumObservation (pytao.constraints.observables.datum.DatumObservation)" href="#pytao.constraints.observables.DatumObservation">DatumObservation</a>]</code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="pytao.constraints.observables.IsClose (pytao.constraints.observables.base.IsClose)" href="../#pytao.constraints.observables.IsClose">IsClose</a>[<a class="autorefs autorefs-internal" title="pytao.constraints.observables.DatumObservation (pytao.constraints.observables.datum.DatumObservation)" href="#pytao.constraints.observables.DatumObservation">DatumObservation</a>]</code></p>
 
 
 
@@ -2448,102 +2406,6 @@ These can be defined and evaluated on the fly using a <code>DatumObservable</cod
 
 
 
-<h4 id="pytao.constraints.observables.DatumIsCloseResult" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">pytao.constraints.observables.DatumIsCloseResult</span>
-
-
-</h4>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="pytao.constraints.observables.base.IsCloseResult">IsCloseResult</span></code></p>
-
-
-
-        <p>Result of a DatumIsClose comparison with per-field check results.</p>
-<p>Each field is <code>None</code> if the corresponding comparison was not run.</p>
-
-
-<p><span class="doc-section-title">Attributes:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.DatumIsCloseResult.result_type">result_type</span></code></td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Discriminator literal. Always <code>"datum_is_close"</code>.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.DatumIsCloseResult.model_value">model_value</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Model value comparison result.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.DatumIsCloseResult.design_value">design_value</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Design value comparison result.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
 <h4 id="pytao.constraints.observables.DatumLessThan" class="doc doc-heading">
             <span class="doc doc-object-name doc-class-name">pytao.constraints.observables.DatumLessThan</span>
 
@@ -2553,7 +2415,7 @@ These can be defined and evaluated on the fly using a <code>DatumObservable</cod
 
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="pytao.constraints.observables.base.IsLess">IsLess</span>[<a class="autorefs autorefs-internal" title="pytao.constraints.observables.DatumObservation (pytao.constraints.observables.datum.DatumObservation)" href="#pytao.constraints.observables.DatumObservation">DatumObservation</a>]</code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="pytao.constraints.observables.IsLess (pytao.constraints.observables.base.IsLess)" href="../#pytao.constraints.observables.IsLess">IsLess</a>[<a class="autorefs autorefs-internal" title="pytao.constraints.observables.DatumObservation (pytao.constraints.observables.datum.DatumObservation)" href="#pytao.constraints.observables.DatumObservation">DatumObservation</a>]</code></p>
 
 
 
@@ -2623,102 +2485,6 @@ These can be defined and evaluated on the fly using a <code>DatumObservable</cod
 
     </div>
 
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h4 id="pytao.constraints.observables.DatumLessThanResult" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">pytao.constraints.observables.DatumLessThanResult</span>
-
-
-</h4>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="pytao.constraints.observables.base.IsLessResult">IsLessResult</span></code></p>
-
-
-
-        <p>Result of a DatumLessThan comparison with per-field less-than check results.</p>
-<p>Each field is <code>None</code> if the corresponding component was not checked.</p>
-
-
-<p><span class="doc-section-title">Attributes:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.DatumLessThanResult.result_type">result_type</span></code></td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Discriminator literal. Always <code>"datum_is_less"</code>.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.DatumLessThanResult.model_value">model_value</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Model value comparison result.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.observables.DatumLessThanResult.design_value">design_value</span></code></td>
-            <td>
-                  <code><span title="pytao.constraints.observables.base.CheckResult">CheckResult</span> or None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Design value comparison result.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
 </div><h2 id="constraints-classes">Constraints Classes</h2>
 <pre class="mermaid"><code>flowchart TD
     ComparisonConstraint([ComparisonConstraint]) --&gt; Constraint([Constraint])
@@ -2728,9 +2494,9 @@ These can be defined and evaluated on the fly using a <code>DatumObservable</cod
     DatumIsCloseConstraint[DatumIsCloseConstraint] --&gt; IsCloseConstraint
     DatumLessThanConstraint[DatumLessThanConstraint] --&gt; IsLessConstraint
     DatumRegressionConstraint[DatumRegressionConstraint] --&gt; RegressionConstraint
-    DatumIsCloseConstraint -. creates .-&gt; DatumIsCloseResult[DatumIsCloseResult]
-    DatumLessThanConstraint -. creates .-&gt; DatumLessThanResult[DatumLessThanResult]
-    DatumRegressionConstraint -. creates .-&gt; DatumIsCloseResult</code></pre>
+    DatumIsCloseConstraint -. creates .-&gt; ComparisonResult([ComparisonResult])
+    DatumLessThanConstraint -. creates .-&gt; ComparisonResult
+    DatumRegressionConstraint -. creates .-&gt; ComparisonResult</code></pre>
 
 
 <div class="doc doc-object doc-class">
@@ -2746,7 +2512,7 @@ These can be defined and evaluated on the fly using a <code>DatumObservable</cod
 
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="pytao.constraints.config.IsCloseConstraint">IsCloseConstraint</span>[<a class="autorefs autorefs-internal" title="pytao.constraints.observables.DatumIsClose" href="#pytao.constraints.observables.DatumIsClose">DatumIsClose</a>]</code></p>
+              Bases: <code><span title="pytao.constraints.config.IsCloseConstraint">IsCloseConstraint</span>[<span title="pytao.constraints.config.DatumObservables">DatumObservables</span>, <a class="autorefs autorefs-internal" title="pytao.constraints.observables.DatumIsClose" href="#pytao.constraints.observables.DatumIsClose">DatumIsClose</a>]</code></p>
 
 
 
@@ -2764,7 +2530,7 @@ These can be defined and evaluated on the fly using a <code>DatumObservable</cod
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.config.DatumIsCloseConstraint.constraint_type">constraint_type</span></code></td>
+            <td><code><span title="pytao.constraints.config.DatumIsCloseConstraint.type">type</span></code></td>
             <td>
                   <code><span title="str">str</span></code>
             </td>
@@ -2852,7 +2618,7 @@ These can be defined and evaluated on the fly using a <code>DatumObservable</cod
 
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="pytao.constraints.config.IsLessConstraint">IsLessConstraint</span>[<a class="autorefs autorefs-internal" title="pytao.constraints.observables.DatumLessThan" href="#pytao.constraints.observables.DatumLessThan">DatumLessThan</a>]</code></p>
+              Bases: <code><span title="pytao.constraints.config.IsLessConstraint">IsLessConstraint</span>[<span title="pytao.constraints.config.DatumObservables">DatumObservables</span>, <a class="autorefs autorefs-internal" title="pytao.constraints.observables.DatumLessThan" href="#pytao.constraints.observables.DatumLessThan">DatumLessThan</a>]</code></p>
 
 
 
@@ -2870,7 +2636,7 @@ These can be defined and evaluated on the fly using a <code>DatumObservable</cod
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.config.DatumLessThanConstraint.constraint_type">constraint_type</span></code></td>
+            <td><code><span title="pytao.constraints.config.DatumLessThanConstraint.type">type</span></code></td>
             <td>
                   <code><span title="str">str</span></code>
             </td>
@@ -2976,7 +2742,7 @@ These can be defined and evaluated on the fly using a <code>DatumObservable</cod
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code><span title="pytao.constraints.config.DatumRegressionConstraint.constraint_type">constraint_type</span></code></td>
+            <td><code><span title="pytao.constraints.config.DatumRegressionConstraint.type">type</span></code></td>
             <td>
                   <code><span title="str">str</span></code>
             </td>

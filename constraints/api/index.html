@@ -1608,6 +1608,28 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#pytao.constraints.observables.Observation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pytao.constraints.observables.Observable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#pytao.constraints.observables.LatticeObservable" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1642,6 +1664,67 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Operators and Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pytao.constraints.observables.Comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pytao.constraints.observables.IsClose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IsClose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pytao.constraints.observables.IsLess" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IsLess
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pytao.constraints.observables.ComparisonResult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ComparisonResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pytao.constraints.observables.CheckResult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CheckResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1694,6 +1777,8 @@ These include:</p>
 <li><a href="ele/">Element Observation Constraints</a></li>
 <li><a href="datum/">Datum Observation Constraints</a></li>
 </ul>
+<p>All concrete classes carry a <code>type</code> discriminator field which selects them in the YAML configuration file.
+The discriminator is always serialized, even when defaults are otherwise excluded, so that saved observations and results can be loaded back unambiguously.</p>
 <h2 id="base-classes">Base Classes</h2>
 <h3 id="observations-and-observables">Observations and Observables</h3>
 <p>The principle object in the constraints tool is an <code>Observation</code>.
@@ -1705,13 +1790,13 @@ Constraints are designed to maximally tolerate and report missing data allowing 
 It also means that the <code>obs_map</code> may be saved to disk and loaded later for regression tests.</p>
 <pre class="mermaid"><code>classDiagram
     class Observation
-    class Observable~ObsT~
-    class LatticeObservable~ObsT~ {
+    class Observable~ObservationT~
+    class LatticeObservable~ObservationT~ {
         +str lattice_id
-        +__call__(tao) ObsT
+        +__call__(tao) ObservationT
     }
-    class LiteralObservable~ObsT~ {
-        +__call__() ObsT
+    class LiteralObservable~ObservationT~ {
+        +__call__() ObservationT
     }
     Observable &lt;|-- LatticeObservable
     Observable &lt;|-- LiteralObservable
@@ -1719,6 +1804,140 @@ It also means that the <code>obs_map</code> may be saved to disk and loaded late
     LatticeObservable ..&gt; Observation : creates
     LiteralObservable ..&gt; Observation : creates</code></pre>
 
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="pytao.constraints.observables.Observation" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">pytao.constraints.observables.Observation</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pytao.constraints.pydantic.ConstraintsBase">ConstraintsBase</span></code></p>
+
+
+
+        <p>Base class for all observation outputs.</p>
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><span title="pytao.constraints.observables.Observation.elapsed_time">elapsed_time</span></code></td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Wall-clock time taken to produce the observation, in seconds.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="pytao.constraints.observables.Observation.created_at">created_at</span></code></td>
+            <td>
+                  <code><span title="datetime.datetime">datetime</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>UTC timestamp at which the observation was created.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="pytao.constraints.observables.Observable" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">pytao.constraints.observables.Observable</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pytao.constraints.pydantic.ConstraintsBase">ConstraintsBase</span></code>, <code><span title="typing.Generic">Generic</span>[<span title="pytao.constraints.observables.base.ObservationT">ObservationT</span>]</code></p>
+
+
+
+        <p>Abstract base for all observables.</p>
+<p>Generic over <code>ObservationT</code>, the <code>Observation</code> subclass this observable produces.
+All observable instances are frozen (immutable) Pydantic models.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
 
 <div class="doc doc-object doc-class">
 
@@ -1733,7 +1952,7 @@ It also means that the <code>obs_map</code> may be saved to disk and loaded late
 
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="pytao.constraints.observables.base.Observable">Observable</span>[<span title="pytao.constraints.observables.base.ObsT">ObsT</span>]</code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="pytao.constraints.observables.Observable (pytao.constraints.observables.base.Observable)" href="#pytao.constraints.observables.Observable">Observable</a>[<span title="pytao.constraints.observables.base.ObservationT">ObservationT</span>]</code></p>
 
 
 
@@ -1807,7 +2026,7 @@ It also means that the <code>obs_map</code> may be saved to disk and loaded late
 
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="pytao.constraints.observables.base.Observable">Observable</span>[<span title="pytao.constraints.observables.base.ObsT">ObsT</span>]</code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="pytao.constraints.observables.Observable (pytao.constraints.observables.base.Observable)" href="#pytao.constraints.observables.Observable">Observable</a>[<span title="pytao.constraints.observables.base.ObservationT">ObservationT</span>]</code></p>
 
 
 
@@ -1843,15 +2062,16 @@ It also means that the <code>obs_map</code> may be saved to disk and loaded late
 
 </div><h3 id="operators-and-results">Operators and Results</h3>
 <p>Comparisons are defined between two <code>Observation</code> objects of the same type in the form of operators.
-Each operator produces a typed result containing per-field <code>CheckResult</code> entries.</p>
+A <code>Comparison</code> is generic over the <code>Observation</code> type it acts on.
+<code>IsClose</code> marks approximate equality operators and <code>IsLess</code> marks component-wise less-than operators.
+Every operator produces the same <code>ComparisonResult</code>, which holds an optional <code>error</code> string and a <code>checks</code> dictionary of per-field <code>CheckResult</code> entries keyed by field name.
+The <code>is_satisfied</code> property is computed from these: it is <code>False</code> when an error is set, and otherwise <code>True</code> when every check passed (including when nothing was checked).</p>
 <pre class="mermaid"><code>classDiagram
-    class Comparison
-    class IsClose~ObsT~ {
-        +__call__(a, b) IsCloseResult
+    class Comparison~ObservationT~ {
+        +compare(a, b) ComparisonResult
     }
-    class IsLess~ObsT~ {
-        +__call__(a, b) IsLessResult
-    }
+    class IsClose~ObservationT~
+    class IsLess~ObservationT~
     Comparison &lt;|-- IsClose
     Comparison &lt;|-- IsLess
 
@@ -1859,20 +2079,334 @@ Each operator produces a typed result containing per-field <code>CheckResult</co
         +bool passed
         +str detail
     }
-    class IsCloseResult {
-        +bool is_satisfied
-    }
-    class IsLessResult {
+    class ComparisonResult {
+        +str error
+        +dict checks
         +bool is_satisfied
     }
 
-    IsClose ..&gt; IsCloseResult : produces
-    IsLess ..&gt; IsLessResult : produces
-    IsCloseResult *-- CheckResult
-    IsLessResult *-- CheckResult</code></pre>
-<h3 id="constraint-hierarchy">Constraint Hierarchy</h3>
+    Comparison ..&gt; ComparisonResult : produces
+    ComparisonResult *-- CheckResult</code></pre>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="pytao.constraints.observables.Comparison" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">pytao.constraints.observables.Comparison</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pytao.constraints.pydantic.ConstraintsBase">ConstraintsBase</span></code>, <code><span title="typing.Generic">Generic</span>[<span title="pytao.constraints.observables.base.ObservationT">ObservationT</span>]</code></p>
+
+
+
+        <p>Abstract base for comparison operators between two observations.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="pytao.constraints.observables.IsClose" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">pytao.constraints.observables.IsClose</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="pytao.constraints.observables.Comparison (pytao.constraints.observables.base.Comparison)" href="#pytao.constraints.observables.Comparison">Comparison</a>[<span title="pytao.constraints.observables.base.ObservationT">ObservationT</span>]</code></p>
+
+
+
+        <p>Approximate equality operator between two observations.</p>
+<p>This class retained to restrict RegressionConstraints to only IsClose operations</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="pytao.constraints.observables.IsLess" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">pytao.constraints.observables.IsLess</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="pytao.constraints.observables.Comparison (pytao.constraints.observables.base.Comparison)" href="#pytao.constraints.observables.Comparison">Comparison</a>[<span title="pytao.constraints.observables.base.ObservationT">ObservationT</span>]</code></p>
+
+
+
+        <p>Component-wise less-than operator between two observations.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="pytao.constraints.observables.ComparisonResult" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">pytao.constraints.observables.ComparisonResult</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pytao.constraints.pydantic.ConstraintsBase">ConstraintsBase</span></code></p>
+
+
+
+        <p>Result of a constraint comparison.</p>
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><span title="pytao.constraints.observables.ComparisonResult.error">error</span></code></td>
+            <td>
+                  <code><span title="str">str</span> or None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Set to a non-empty string when evaluation failed (e.g. a Tao error).
+When set, <code>is_satisfied</code> returns <code>False</code> regardless of per-field results.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="pytao.constraints.observables.ComparisonResult.checks">checks</span></code></td>
+            <td>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <a class="autorefs autorefs-internal" title="pytao.constraints.observables.CheckResult (pytao.constraints.observables.base.CheckResult)" href="#pytao.constraints.observables.CheckResult">CheckResult</a>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Per-field check results, keyed by field name. Only fields that were
+actually checked are present.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="pytao.constraints.observables.CheckResult" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">pytao.constraints.observables.CheckResult</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pytao.constraints.pydantic.ConstraintsBase">ConstraintsBase</span></code></p>
+
+
+
+        <p>Result of a single scalar or array comparison check.</p>
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><span title="pytao.constraints.observables.CheckResult.passed">passed</span></code></td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether the check passed.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="pytao.constraints.observables.CheckResult.detail">detail</span></code></td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Human-readable detail shown on failure.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div><h3 id="constraint-hierarchy">Constraint Hierarchy</h3>
 <p><code>Constraint</code> is the abstract base for all checks.
 <code>ComparisonConstraint</code> objects compare two live observations against each other.
+They are generic over the observable type accepted by <code>obs_a</code> and <code>obs_b</code> and over the comparison operator type, so the concrete element and datum constraints only need to declare their <code>type</code> discriminator and defaults.
+The <code>comparison</code> field may hold either an operator or the name of an entry in the config file's shared <code>comparisons</code> section.
 <code>RegressionConstraint</code> objects allow the definition of pure regression tests.
 These don't show up in test results unless there is a comparison set of observations saved from a previous run of the tool. 
 Note: regression tests are also automatically defined for constraints involving an equality operator.</p>
@@ -1881,38 +2415,34 @@ Note: regression tests are also automatically defined for constraints involving 
         &lt;&lt;abstract&gt;&gt;
         +str description
         +str comment
-        +required_observables() frozenset
-        +error_result(error)
+        +required_observables frozenset
+        +error_result(error) ComparisonResult
     }
     class ComparisonConstraint {
         &lt;&lt;abstract&gt;&gt;
-        +is_satisfied(observations)
+        +ObservableT obs_a
+        +ObservableT obs_b
+        +CompT comparison
+        +is_satisfied(observations) ComparisonResult
     }
     class IsCloseConstraint {
-        +IsClose comparison
+        +bool regression_check
     }
-    class IsLessConstraint {
-        +IsLess comparison
-    }
+    class IsLessConstraint
     class RegressionConstraint {
         &lt;&lt;abstract&gt;&gt;
         +IsClose comparison
-        +evaluate(current, reference)
+        +evaluate(current, reference) ComparisonResult
     }
-    class IsCloseResult {
-        +bool is_satisfied
-    }
-    class IsLessResult {
-        +bool is_satisfied
-    }
+    class ComparisonResult
 
     Constraint &lt;|-- ComparisonConstraint
     Constraint &lt;|-- RegressionConstraint
     ComparisonConstraint &lt;|-- IsCloseConstraint
     ComparisonConstraint &lt;|-- IsLessConstraint
-    IsCloseConstraint ..&gt; IsCloseResult : produces
-    IsLessConstraint ..&gt; IsLessResult : produces
-    RegressionConstraint ..&gt; IsCloseResult : produces</code></pre>
+    IsCloseConstraint ..&gt; ComparisonResult : produces
+    IsLessConstraint ..&gt; ComparisonResult : produces
+    RegressionConstraint ..&gt; ComparisonResult : produces</code></pre>
 
 
 

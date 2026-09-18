@@ -1088,6 +1088,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#shared-comparisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shared Comparisons
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#regression-tests" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1695,6 +1706,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#shared-comparisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shared Comparisons
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#regression-tests" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1742,7 +1764,7 @@
 <h1 id="configuration-file">Configuration File</h1>
 <p>On this page, we document the configuration file used in the CLI tool.</p>
 <h2 id="general-structure">General Structure</h2>
-<p>The constraints file consists of two main sections.
+<p>The constraints file consists of two main sections and one optional section.
 A <code>lattices</code> block used to define the Bmad lattices probed by the tool
 Each lattice has a <code>lattice_id</code> associated with it which is how it will be referenced by the constraints later on.
 It is helpful to pick descriptive names in the same vein as the naming of variables.
@@ -1758,7 +1780,7 @@ These are passed to <code>Tao</code> when the lattice is loaded.</p>
 There are two ways that constraints may be defined.
 For smaller projects, a simple list of the constraints will suffice.
 <div class="highlight"><pre><span></span><code><span class="nt">constraints</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">constraint_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 <span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 <span class="w">    </span><span class="nt">comment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 </code></pre></div></p>
@@ -1766,24 +1788,28 @@ For smaller projects, a simple list of the constraints will suffice.
 When the constraints tool is run, these groups will be propagated to the results and output will also be grouped.
 <div class="highlight"><pre><span></span><code><span class="nt">constraints</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">Treaty-Points</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">constraint_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 <span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 <span class="w">      </span><span class="nt">comment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 <span class="w">  </span><span class="nt">Sanity-Checks</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">constraint_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 <span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 <span class="w">      </span><span class="nt">comment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 </code></pre></div></p>
+<p>The optional <code>comparisons</code> section holds reusable comparison operator settings which constraints may reference by name.
+It is described in <a href="#shared-comparisons">Shared Comparisons</a> below.</p>
+<p>Every polymorphic object in the config file (constraints, observables, comparison operators, and Twiss comparison methods) is selected with the same <code>type</code> key.</p>
 <h2 id="constraints">Constraints</h2>
-<p>Constraints are distinguished by the <code>constraint_type</code> field and a complete listing of all constraint types can be found in the <a href="../api/">API documentation</a>.
+<p>Constraints are distinguished by the <code>type</code> field and a complete listing of all constraint types can be found in the <a href="../api/">API documentation</a>.
 All constraints allow the fields <code>description</code> and <code>comment</code> which allow for human-readable documentation of the constraints.
 A <code>description</code> is a short string of text which is included in the constraint tool's output whenever the constraint is referenced.
 The <code>comment</code> is meant to be a longer description or explanation of what the constraint does and is output on violation of the constraint (as well as being included in saved artifacts).</p>
 <p>We will quickly explore the element approximate equality constraint (<code>EleIsCloseConstraint</code>) as a prototypical example of defining constraints.
-After writing the <code>constraint_type</code> (in this case <code>ele_eq</code> from <a href="../api/ele/#pytao.constraints.config.EleIsCloseConstraint">API docs</a>), we also define the two observables it acts on and (optionally) any configuration for the comparison operator.
+After writing the <code>type</code> (in this case <code>ele_eq</code> from <a href="../api/ele/#pytao.constraints.config.EleIsCloseConstraint">API docs</a>), we also define the two observables it acts on and (optionally) any configuration for the comparison operator.
 Constraints are organized by <code>Observation</code> type and they accept any observable that outputs the right object.</p>
-<p>For an <code>EleIsCloseConstraint</code> we have a choice of several observables: <code>ele</code>, which evaluates the properties of a single element; <code>ele_literal</code>, which is a user-defined value; and <code>ele_min</code> and <code>ele_max</code>, which evaluate element-wise min/max values over a single lattice.
-These are distinguished by <code>obs_type</code> and the correct values can be found in the <a href="../api/ele/#observables">API docs</a>.
+<p>For an <code>EleIsCloseConstraint</code> we have a choice of several observables: <code>ele</code>, which evaluates the properties of a single element; <code>ele_literal</code>, which is a user-defined value; and <code>ele_reduce</code>, which reduces each property over the tracking elements of a single lattice.
+The reduction is chosen with the <code>operator</code> field, which accepts <code>min</code>, <code>max</code>, or <code>avg</code>, and may be restricted to a range of elements with the optional <code>begin_ele</code> and <code>end_ele</code> fields.
+Observables are distinguished by <code>type</code> and the correct values can be found in the <a href="../api/ele/#observables">API docs</a>.
 We also define the other fields in the chosen observable. 
 For example, for the <code>EleObservable</code> we must reference the lattice and element to perform the measurement on.
 In the <code>ele_literal</code> observable, we list the values of the properties we are defining.</p>
@@ -1791,19 +1817,19 @@ In the <code>ele_literal</code> observable, we list the values of the properties
 Tolerances can be set for the approximate comparison operator.
 Checks can also be disabled or enabled as needed (for example, enabling floor comparisons or disabling checks against literal fields that are not defined).</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Fields common to all constraints</span>
-<span class="nt">constraint_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele_eq</span>
+<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele_eq</span>
 <span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Short description, used in labels</span>
 <span class="nt">comment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Longer comment included on error and in reports.</span>
 
 <span class="c1"># First observable, a measurement on element `END` in lattice `lat_a`</span>
 <span class="nt">obs_a</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">obs_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele</span>
 <span class="w">    </span><span class="nt">lattice_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lat_a</span>
 <span class="w">    </span><span class="nt">ele_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">END</span>
 
 <span class="c1"># Second observable, a literal value</span>
 <span class="nt">obs_b</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">obs_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele_literal</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele_literal</span>
 <span class="w">    </span><span class="nt">beta_a</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span>
 <span class="w">    </span><span class="nt">beta_b</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">32</span>
 <span class="w">    </span><span class="nt">floor_z</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42</span>
@@ -1819,6 +1845,31 @@ Checks can also be disabled or enabled as needed (for example, enabling floor co
 <span class="w">        </span><span class="nt">atol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1e-6</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 </code></pre></div>
+<p>The result of any comparison is a <code>ComparisonResult</code>.
+It holds an optional <code>error</code> string (set when an observation was missing or Tao failed) and a <code>checks</code> mapping from field name to a per-field <code>CheckResult</code> with <code>passed</code> and <code>detail</code> entries.
+A constraint is satisfied when there is no error and every check passed.</p>
+<h2 id="shared-comparisons">Shared Comparisons</h2>
+<p>When many constraints use the same comparison settings, the settings may be defined once in the top-level <code>comparisons</code> section and referenced by name from the <code>comparison</code> field of a constraint.
+Each entry is a comparison operator selected by <code>type</code> (for example <code>ele_is_close</code>, <code>ele_is_less</code>, <code>datum_is_close</code>, or <code>datum_is_less</code>) and must match the operator expected by the constraint that references it.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">comparisons</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">beta_only</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele_is_less</span>
+<span class="w">    </span><span class="nt">beta_a</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">beta_b</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="nt">constraints</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele_lt</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lat_a beta sanity check</span>
+<span class="w">    </span><span class="nt">obs_a</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele_reduce</span>
+<span class="w">      </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">max</span>
+<span class="w">      </span><span class="nt">lattice_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lat_a</span>
+<span class="w">    </span><span class="nt">obs_b</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele_literal</span>
+<span class="w">      </span><span class="nt">beta_a</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span>
+<span class="w">      </span><span class="nt">beta_b</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span>
+<span class="w">    </span><span class="nt">comparison</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">beta_only</span>
+</code></pre></div>
 <h2 id="regression-tests">Regression Tests</h2>
 <p>The constraints tool enables regression tests through the saving of all observations made during the checks and then loading them in subsequent runs.
 These will show up in a separate section of the output and results artifact.
@@ -1827,11 +1878,11 @@ Implicit regression tests can be turned off with <code>regression_check: false</
 Users may optionally define their own regression checks at additional points using the <code>RegressionConstraint</code> objects.
 These are constraints in their own right and are defined in the constraints section, but only have one observable and don't get run unless a comparison file is provided.</p>
 <p>The following is an example of an element regression test.
-<div class="highlight"><pre><span></span><code><span class="nt">constraint_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele_reg</span>
+<div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele_reg</span>
 <span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">End of lat_a</span>
 <span class="nt">comment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Check for changes at the end of lat_a</span>
 <span class="nt">obs</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">obs_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele</span>
 <span class="w">    </span><span class="nt">lattice_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lat_a</span>
 <span class="w">    </span><span class="nt">ele_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">END</span>
 </code></pre></div></p>
@@ -1847,40 +1898,41 @@ We give an example below.
 <span class="w">    </span><span class="nt">lattice_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lattices/lat_c.lat.bmad</span>
 
 <span class="nt">constraints</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">constraint_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele_eq</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele_eq</span>
 <span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Short description, lat_a, lat_b treaty point</span>
 <span class="w">    </span><span class="nt">comment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Longer comment included on error and in reports. eg Please rerun `tune_matcher.tao` in event of failure.</span>
 <span class="w">    </span><span class="nt">obs_a</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">obs_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele</span>
 <span class="w">      </span><span class="nt">lattice_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lat_a</span>
 <span class="w">      </span><span class="nt">ele_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">END</span>
 <span class="w">    </span><span class="nt">obs_b</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">obs_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele</span>
 <span class="w">      </span><span class="nt">lattice_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lat_b</span>
 <span class="w">      </span><span class="nt">ele_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BEGINNING</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">constraint_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele_lt</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele_lt</span>
 <span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lat_a beta sanity check</span>
 <span class="w">    </span><span class="nt">obs_a</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">obs_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele_max</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele_reduce</span>
+<span class="w">      </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">max</span>
 <span class="w">      </span><span class="nt">lattice_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lat_a</span>
 <span class="w">    </span><span class="nt">obs_b</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">obs_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele_literal</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ele_literal</span>
 <span class="w">      </span><span class="nt">beta_a</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span>
 <span class="w">      </span><span class="nt">beta_b</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span>
 <span class="w">    </span><span class="nt">comparison</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">beta_a</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="nt">beta_b</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">constraint_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datum_eq</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datum_eq</span>
 <span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Datum and literal example</span>
 <span class="w">    </span><span class="nt">obs_a</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">obs_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datum</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datum</span>
 <span class="w">      </span><span class="nt">lattice_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lat_a</span>
 <span class="w">      </span><span class="nt">data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r56_compaction</span>
 <span class="w">      </span><span class="nt">ele_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">END</span>
 <span class="w">    </span><span class="nt">obs_b</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">obs_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datum_literal</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datum_literal</span>
 <span class="w">      </span><span class="nt">model_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.04448e-08</span>
 <span class="w">      </span><span class="nt">design_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 </code></pre></div></p>
