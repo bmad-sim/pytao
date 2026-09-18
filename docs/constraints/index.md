@@ -18,15 +18,15 @@ lattices:
     lattice_file: lat_b.lat.bmad
 
 constraints:
-  - constraint_type: ele_eq
+  - type: ele_eq
     description: My first equality constraint!
     comment: Longer text describing the constraint for documentation purposes
     obs_a:
-      obs_type: ele
+      type: ele
       lattice_id: lat_a
       ele_id: element_a
     obs_b:
-      obs_type: ele
+      type: ele
       lattice_id: lat_b
       ele_id: element_b
 ```

@@ -10,6 +10,8 @@ These include:
 - [Element Observation Constraints](ele.md)
 - [Datum Observation Constraints](datum.md)
 
+All concrete classes carry a `type` discriminator field which selects them in the YAML configuration file.
+The discriminator is always serialized, even when defaults are otherwise excluded, so that saved observations and results can be loaded back unambiguously.
 
 ## Base Classes
 
@@ -27,13 +29,13 @@ It also means that the `obs_map` may be saved to disk and loaded later for regre
 ```mermaid
 classDiagram
     class Observation
-    class Observable~ObsT~
-    class LatticeObservable~ObsT~ {
+    class Observable~ObservationT~
+    class LatticeObservable~ObservationT~ {
         +str lattice_id
-        +__call__(tao) ObsT
+        +__call__(tao) ObservationT
     }
-    class LiteralObservable~ObsT~ {
-        +__call__() ObsT
+    class LiteralObservable~ObservationT~ {
+        +__call__() ObservationT
     }
     Observable <|-- LatticeObservable
     Observable <|-- LiteralObservable
@@ -42,23 +44,26 @@ classDiagram
     LiteralObservable ..> Observation : creates
 ```
 
+#### ::: pytao.constraints.observables.Observation
+#### ::: pytao.constraints.observables.Observable
 #### ::: pytao.constraints.observables.LatticeObservable
 #### ::: pytao.constraints.observables.LiteralObservable
 
 ### Operators and Results
 
 Comparisons are defined between two `Observation` objects of the same type in the form of operators.
-Each operator produces a typed result containing per-field `CheckResult` entries.
+A `Comparison` is generic over the `Observation` type it acts on.
+`IsClose` marks approximate equality operators and `IsLess` marks component-wise less-than operators.
+Every operator produces the same `ComparisonResult`, which holds an optional `error` string and a `checks` dictionary of per-field `CheckResult` entries keyed by field name.
+The `is_satisfied` property is computed from these: it is `False` when an error is set, and otherwise `True` when every check passed (including when nothing was checked).
 
 ```mermaid
 classDiagram
-    class Comparison
-    class IsClose~ObsT~ {
-        +__call__(a, b) IsCloseResult
+    class Comparison~ObservationT~ {
+        +compare(a, b) ComparisonResult
     }
-    class IsLess~ObsT~ {
-        +__call__(a, b) IsLessResult
-    }
+    class IsClose~ObservationT~
+    class IsLess~ObservationT~
     Comparison <|-- IsClose
     Comparison <|-- IsLess
 
@@ -66,23 +71,28 @@ classDiagram
         +bool passed
         +str detail
     }
-    class IsCloseResult {
-        +bool is_satisfied
-    }
-    class IsLessResult {
+    class ComparisonResult {
+        +str error
+        +dict checks
         +bool is_satisfied
     }
 
-    IsClose ..> IsCloseResult : produces
-    IsLess ..> IsLessResult : produces
-    IsCloseResult *-- CheckResult
-    IsLessResult *-- CheckResult
+    Comparison ..> ComparisonResult : produces
+    ComparisonResult *-- CheckResult
 ```
+
+#### ::: pytao.constraints.observables.Comparison
+#### ::: pytao.constraints.observables.IsClose
+#### ::: pytao.constraints.observables.IsLess
+#### ::: pytao.constraints.observables.ComparisonResult
+#### ::: pytao.constraints.observables.CheckResult
 
 ### Constraint Hierarchy
 
 `Constraint` is the abstract base for all checks.
 `ComparisonConstraint` objects compare two live observations against each other.
+They are generic over the observable type accepted by `obs_a` and `obs_b` and over the comparison operator type, so the concrete element and datum constraints only need to declare their `type` discriminator and defaults.
+The `comparison` field may hold either an operator or the name of an entry in the config file's shared `comparisons` section.
 `RegressionConstraint` objects allow the definition of pure regression tests.
 These don't show up in test results unless there is a comparison set of observations saved from a previous run of the tool. 
 Note: regression tests are also automatically defined for constraints involving an equality operator.
@@ -93,36 +103,32 @@ classDiagram
         <<abstract>>
         +str description
         +str comment
-        +required_observables() frozenset
-        +error_result(error)
+        +required_observables frozenset
+        +error_result(error) ComparisonResult
     }
     class ComparisonConstraint {
         <<abstract>>
-        +is_satisfied(observations)
+        +ObservableT obs_a
+        +ObservableT obs_b
+        +CompT comparison
+        +is_satisfied(observations) ComparisonResult
     }
     class IsCloseConstraint {
-        +IsClose comparison
+        +bool regression_check
     }
-    class IsLessConstraint {
-        +IsLess comparison
-    }
+    class IsLessConstraint
     class RegressionConstraint {
         <<abstract>>
         +IsClose comparison
-        +evaluate(current, reference)
+        +evaluate(current, reference) ComparisonResult
     }
-    class IsCloseResult {
-        +bool is_satisfied
-    }
-    class IsLessResult {
-        +bool is_satisfied
-    }
+    class ComparisonResult
 
     Constraint <|-- ComparisonConstraint
     Constraint <|-- RegressionConstraint
     ComparisonConstraint <|-- IsCloseConstraint
     ComparisonConstraint <|-- IsLessConstraint
-    IsCloseConstraint ..> IsCloseResult : produces
-    IsLessConstraint ..> IsLessResult : produces
-    RegressionConstraint ..> IsCloseResult : produces
+    IsCloseConstraint ..> ComparisonResult : produces
+    IsLessConstraint ..> ComparisonResult : produces
+    RegressionConstraint ..> ComparisonResult : produces
 ```
