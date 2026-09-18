@@ -1,10 +1,11 @@
 import time
 from datetime import datetime, timezone
-from pydantic import ConfigDict, Field, model_validator
+from typing import Generic, TypeVar
 
-from pytao.constraints.pydantic import ConstraintsBase
+from pydantic import ConfigDict, Field, computed_field, model_validator
+
 from pytao import Tao
-from typing import Generic, Literal, TypeVar
+from pytao.constraints.pydantic import ConstraintsBase
 
 
 class CheckResult(ConstraintsBase):
@@ -46,24 +47,28 @@ class Observation(ConstraintsBase):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
-ObsT = TypeVar("ObsT", bound=Observation)
+ObservationT = TypeVar("ObservationT", bound=Observation)
 
 
-class Observable(ConstraintsBase, Generic[ObsT]):
+class Observable(ConstraintsBase, Generic[ObservationT]):
     """Abstract base for all observables.
 
-    Generic over ``ObsT``, the ``Observation`` subclass this observable produces.
+    Generic over ``ObservationT``, the ``Observation`` subclass this observable produces.
     All observable instances are frozen (immutable) Pydantic models.
     """
 
     model_config = ConfigDict(frozen=True)
 
     @property
-    def label(self) -> str:
-        return ""
+    def label(self) -> str: ...
+
+    def observe(self, *args, **kwargs) -> ObservationT: ...
 
 
-class LatticeObservable(Observable[ObsT]):
+ObservableT = TypeVar("ObservableT", bound=Observable)
+
+
+class LatticeObservable(Observable[ObservationT]):
     """Observable that fetches data from a lattice via Tao.
 
     Subclasses implement ``_make_observation`` to retrieve and package data.
@@ -80,9 +85,9 @@ class LatticeObservable(Observable[ObsT]):
     def label(self) -> str:
         return self.lattice_id
 
-    def _make_observation(self, tao: Tao) -> ObsT: ...
+    def _make_observation(self, tao: Tao) -> ObservationT: ...
 
-    def observe(self, tao: Tao) -> ObsT:
+    def observe(self, tao: Tao) -> ObservationT:
         created_at = datetime.now(timezone.utc)
         t0 = time.perf_counter()
         result = self._make_observation(tao)
@@ -91,15 +96,15 @@ class LatticeObservable(Observable[ObsT]):
         return result
 
 
-class LiteralObservable(Observable[ObsT]):
+class LiteralObservable(Observable[ObservationT]):
     """Observable whose observation is a constant value independent of the lattice.
 
     Subclasses implement ``_make_observation`` to build the fixed observation.
     """
 
-    def _make_observation(self) -> ObsT: ...
+    def _make_observation(self) -> ObservationT: ...
 
-    def observe(self) -> ObsT:
+    def observe(self) -> ObservationT:
         created_at = datetime.now(timezone.utc)
         t0 = time.perf_counter()
         result = self._make_observation()
@@ -109,16 +114,20 @@ class LiteralObservable(Observable[ObsT]):
 
 
 class ComparisonResult(ConstraintsBase):
-    """Base class for all constraint check results.
+    """Result of a constraint comparison.
 
     Attributes
     ----------
     error : str or None
         Set to a non-empty string when evaluation failed (e.g. a Tao error).
         When set, ``is_satisfied`` returns ``False`` regardless of per-field results.
+    checks : dict[str, CheckResult]
+        Per-field check results, keyed by field name. Only fields that were
+        actually checked are present.
     """
 
     error: str | None = None
+    checks: dict[str, CheckResult] = Field(default_factory=dict)
 
     @model_validator(mode="before")
     @classmethod
@@ -127,56 +136,41 @@ class ComparisonResult(ConstraintsBase):
             data.pop("is_satisfied", None)
         return data
 
+    @computed_field
     @property
     def is_satisfied(self) -> bool:
-        return not bool(self.error)
+        if bool(self.error):
+            return False
+
+        check_results = self.check_results()
+
+        # Preserve existing behavior: we are satisfied even if no CheckResults are found
+        if not check_results:
+            return True
+
+        return all(check_results.values())
 
     def check_results(self) -> dict[str, CheckResult]:
-        return {
-            name: getattr(self, name)
-            for name in type(self).model_fields
-            if isinstance(getattr(self, name), CheckResult)
-        }
+        return self.checks
 
 
-ResultT = TypeVar("ResultT", bound=ComparisonResult)
-
-
-class Comparison(ConstraintsBase, Generic[ResultT]):
+class Comparison(ConstraintsBase, Generic[ObservationT]):
     """Abstract base for comparison operators between two observations."""
 
+    def compare(self, obja: ObservationT, objb: ObservationT) -> ComparisonResult: ...
 
-class IsCloseResult(ComparisonResult):
-    """Base result type for approximate-equality comparisons.
 
-    Attributes
-    ----------
-    result_type : str
-        Discriminator literal. Always ``"is_close"``.
+class IsClose(Comparison[ObservationT]):
+    """
+    Approximate equality operator between two observations.
+
+    This class retained to restrict RegressionConstraints to only IsClose operations
     """
 
-    result_type: Literal["is_close"] = "is_close"
+    def compare(self, obja: ObservationT, objb: ObservationT) -> ComparisonResult: ...
 
 
-class IsClose(Comparison[IsCloseResult], Generic[ObsT]):
-    """Approximate equality operator between two observations."""
-
-    def compare(self, obja: ObsT, objb: ObsT) -> IsCloseResult: ...
-
-
-class IsLessResult(ComparisonResult):
-    """Base result type for less-than comparisons.
-
-    Attributes
-    ----------
-    result_type : str
-        Discriminator literal. Always ``"is_less"``.
-    """
-
-    result_type: Literal["is_less"] = "is_less"
-
-
-class IsLess(Comparison[IsLessResult], Generic[ObsT]):
+class IsLess(Comparison[ObservationT]):
     """Component-wise less-than operator between two observations."""
 
-    def compare(self, obja: ObsT, objb: ObsT) -> IsLessResult: ...
+    def compare(self, obja: ObservationT, objb: ObservationT) -> ComparisonResult: ...

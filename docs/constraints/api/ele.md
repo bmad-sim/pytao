@@ -2,7 +2,8 @@
 
 An `EleObservation` contains the output of a `tao.ele(...)` call (ie Twiss parameters, reference energy, floor positions, etc.).
 The observation may be evaluted from a single element in a lattice with `EleObservable`.
-The min and max of the values in the element can be evaluated using `EleMinObservable` and `EleMaxObservable`.
+A reduction (min, max, or avg) of the values over the tracking elements of a lattice can be evaluated using `EleReduceObservable`, with the reduction selected by its `operator` field.
+User-defined values are provided with `EleLiteral`.
 
 ## Observation Classes
 
@@ -11,19 +12,17 @@ flowchart TD
     LatticeObservable([LatticeObservable]) --> Observable([Observable])
     LiteralObservable([LiteralObservable]) --> Observable
     EleObservable[EleObservable] --> LatticeObservable
-    EleMaxObservable[EleMaxObservable] --> LatticeObservable
-    EleMinObservable[EleMinObservable] --> LatticeObservable
+    EleReduceObservable[EleReduceObservable] --> LatticeObservable
     EleLiteral[EleLiteral] --> LiteralObservable
     IsClose([IsClose]) --> Comparison([Comparison])
     IsLess([IsLess]) --> Comparison
     EleIsClose[EleIsClose] --> IsClose
     EleLessThan[EleLessThan] --> IsLess
     EleObservable -. creates .-> EleObservation[EleObservation]
-    EleMaxObservable -. creates .-> EleObservation
-    EleMinObservable -. creates .-> EleObservation
+    EleReduceObservable -. creates .-> EleObservation
     EleLiteral -. creates .-> EleObservation
-    EleIsClose -. creates .-> EleIsCloseResult[EleIsCloseResult]
-    EleLessThan -. creates .-> EleLessThanResult[EleLessThanResult]
+    EleIsClose -. creates .-> ComparisonResult([ComparisonResult])
+    EleLessThan -. creates .-> ComparisonResult
 ```
 
 #### ::: pytao.constraints.observables.EleObservation
@@ -31,16 +30,16 @@ flowchart TD
 ### Observables
 
 #### ::: pytao.constraints.observables.EleObservable
-#### ::: pytao.constraints.observables.EleMinObservable
-#### ::: pytao.constraints.observables.EleMaxObservable
+#### ::: pytao.constraints.observables.EleReduceObservable
+#### ::: pytao.constraints.observables.ele.ReduceMode
 #### ::: pytao.constraints.observables.EleLiteral
 
-### Operators and Results
+### Operators
+
+Both operators produce a [`ComparisonResult`](index.md#pytao.constraints.observables.ComparisonResult) whose `checks` are keyed by the field names listed below.
 
 #### ::: pytao.constraints.observables.EleIsClose
-#### ::: pytao.constraints.observables.EleLessThanResult
 #### ::: pytao.constraints.observables.EleLessThan
-#### ::: pytao.constraints.observables.EleIsCloseResult
 
 ### Operator Helper Classes
 
@@ -58,9 +57,9 @@ flowchart TD
     EleIsCloseConstraint[EleIsCloseConstraint] --> IsCloseConstraint
     EleLessThanConstraint[EleLessThanConstraint] --> IsLessConstraint
     EleRegressionConstraint[EleRegressionConstraint] --> RegressionConstraint
-    EleIsCloseConstraint -. creates .-> EleIsCloseResult[EleIsCloseResult]
-    EleLessThanConstraint -. creates .-> EleLessThanResult[EleLessThanResult]
-    EleRegressionConstraint -. creates .-> EleIsCloseResult
+    EleIsCloseConstraint -. creates .-> ComparisonResult([ComparisonResult])
+    EleLessThanConstraint -. creates .-> ComparisonResult
+    EleRegressionConstraint -. creates .-> ComparisonResult
 ```
 
 #### ::: pytao.constraints.config.EleIsCloseConstraint

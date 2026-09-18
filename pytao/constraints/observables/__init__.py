@@ -7,21 +7,16 @@ from .base import (
     Comparison,
     ComparisonResult,
     IsClose,
-    IsCloseResult,
     IsLess,
-    IsLessResult,
     LatticeObservable,
     LiteralObservable,
     Observable,
     Observation,
-    ResultT,
 )
 from .datum import (
     DataSource,
     DatumIsClose,
-    DatumIsCloseResult,
     DatumLessThan,
-    DatumLessThanResult,
     DatumLiteral,
     DatumObservable,
     DatumObservation,
@@ -29,12 +24,9 @@ from .datum import (
 )
 from .ele import (
     EleIsClose,
-    EleIsCloseResult,
     EleLessThan,
-    EleLessThanResult,
     EleLiteral,
-    EleMaxObservable,
-    EleMinObservable,
+    EleReduceObservable,
     EleObservable,
     EleObservation,
     TolComparison,
@@ -48,16 +40,15 @@ from .twiss import (
 AnyObservable = Annotated[
     Union[
         EleObservable,
-        EleMaxObservable,
-        EleMinObservable,
+        EleReduceObservable,
         DatumObservable,
         EleLiteral,
         DatumLiteral,
     ],
-    Field(discriminator="obs_type"),
+    Field(discriminator="type"),
 ]
 AnyObservation = Annotated[
-    Union[EleObservation, DatumObservation], Field(discriminator="obs_type")
+    Union[EleObservation, DatumObservation], Field(discriminator="type")
 ]
 AnyComparison = Annotated[
     Union[
@@ -66,22 +57,9 @@ AnyComparison = Annotated[
         EleLessThan,
         DatumLessThan,
     ],
-    Field(discriminator="comp_type"),
+    Field(discriminator="type"),
 ]
-AnyComparisonResult = Annotated[
-    Union[
-        EleIsCloseResult,
-        DatumIsCloseResult,
-        EleLessThanResult,
-        DatumLessThanResult,
-        IsCloseResult,
-        IsLessResult,
-    ],
-    Field(discriminator="result_type"),
-]
-
 __all__ = [
-    "AnyComparisonResult",
     "AnyObservable",
     "AnyObservation",
     "AnyTwissComparison",
@@ -91,31 +69,23 @@ __all__ = [
     "ComparisonResult",
     "DataSource",
     "DatumIsClose",
-    "DatumIsCloseResult",
     "DatumLessThan",
-    "DatumLessThanResult",
     "DatumLiteral",
     "DatumObservable",
     "DatumObservation",
     "EleIsClose",
-    "EleIsCloseResult",
     "EleLessThan",
-    "EleLessThanResult",
     "EleLiteral",
-    "EleMaxObservable",
-    "EleMinObservable",
+    "EleReduceObservable",
     "EleObservable",
     "EleObservation",
     "EvalPoint",
     "IsClose",
-    "IsCloseResult",
     "IsLess",
-    "IsLessResult",
     "LatticeObservable",
     "LiteralObservable",
     "Observable",
     "Observation",
-    "ResultT",
     "TolComparison",
     "TwissComparisonMethod",
 ]

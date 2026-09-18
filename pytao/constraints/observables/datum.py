@@ -3,22 +3,18 @@ from __future__ import annotations
 from enum import Enum
 from typing import Literal
 
-
-from pydantic import computed_field
-
 from pytao import Tao
-from pytao.errors import TaoCommandError
 from pytao.constraints.observables.base import (
     CheckResult,
+    ComparisonResult,
     IsClose,
-    IsCloseResult,
     IsLess,
-    IsLessResult,
     LatticeObservable,
     LiteralObservable,
     Observation,
 )
 from pytao.constraints.observables.ele import TolComparison
+from pytao.errors import TaoCommandError
 
 
 class DataSource(str, Enum):
@@ -48,7 +44,7 @@ class DatumObservation(Observation):
 
     Attributes
     ----------
-    obs_type : str
+    type : str
         Discriminator literal. Always ``"datum"``.
     model_value : float
         Model value of the datum.
@@ -56,37 +52,9 @@ class DatumObservation(Observation):
         Design value of the datum.
     """
 
-    obs_type: Literal["datum"] = "datum"
+    type: Literal["datum"] = "datum"
     model_value: float
     design_value: float
-
-
-class DatumIsCloseResult(IsCloseResult):
-    """Result of a DatumIsClose comparison with per-field check results.
-
-    Each field is ``None`` if the corresponding comparison was not run.
-
-    Attributes
-    ----------
-    result_type : str
-        Discriminator literal. Always ``"datum_is_close"``.
-    model_value : CheckResult or None
-        Model value comparison result.
-    design_value : CheckResult or None
-        Design value comparison result.
-    """
-
-    result_type: Literal["datum_is_close"] = "datum_is_close"
-    model_value: CheckResult | None = None
-    design_value: CheckResult | None = None
-
-    @computed_field
-    @property
-    def is_satisfied(self) -> bool:
-        if not super().is_satisfied:
-            return False
-        ran = [r for r in [self.model_value, self.design_value] if r is not None]
-        return all(ran) if ran else True
 
 
 class DatumIsClose(IsClose[DatumObservation]):
@@ -102,48 +70,20 @@ class DatumIsClose(IsClose[DatumObservation]):
         Comparison for the design value.
     """
 
-    comp_type: Literal["datum_is_close"] = "datum_is_close"
+    type: Literal["datum_is_close"] = "datum_is_close"
     model_value_test: TolComparison | None = TolComparison()
     design_value_test: TolComparison | None = None
 
-    def compare(self, obja: DatumObservation, objb: DatumObservation) -> DatumIsCloseResult:
-        model_value = None
-        design_value = None
-
+    def compare(self, obja: DatumObservation, objb: DatumObservation) -> ComparisonResult:
+        checks = {}
         if self.model_value_test is not None:
-            model_value = self.model_value_test(obja.model_value, objb.model_value)
+            checks["model_value"] = self.model_value_test(obja.model_value, objb.model_value)
         if self.design_value_test is not None:
-            design_value = self.design_value_test(obja.design_value, objb.design_value)
+            checks["design_value"] = self.design_value_test(
+                obja.design_value, objb.design_value
+            )
 
-        return DatumIsCloseResult(model_value=model_value, design_value=design_value)
-
-
-class DatumLessThanResult(IsLessResult):
-    """Result of a DatumLessThan comparison with per-field less-than check results.
-
-    Each field is ``None`` if the corresponding component was not checked.
-
-    Attributes
-    ----------
-    result_type : str
-        Discriminator literal. Always ``"datum_is_less"``.
-    model_value : CheckResult or None
-        Model value comparison result.
-    design_value : CheckResult or None
-        Design value comparison result.
-    """
-
-    result_type: Literal["datum_is_less"] = "datum_is_less"
-    model_value: CheckResult | None = None
-    design_value: CheckResult | None = None
-
-    @computed_field
-    @property
-    def is_satisfied(self) -> bool:
-        if not super().is_satisfied:
-            return False
-        ran = [r for r in [self.model_value, self.design_value] if r is not None]
-        return all(ran) if ran else True
+        return ComparisonResult(checks=checks)
 
 
 class DatumLessThan(IsLess[DatumObservation]):
@@ -159,7 +99,7 @@ class DatumLessThan(IsLess[DatumObservation]):
         Check design value.
     """
 
-    comp_type: Literal["datum_is_less"] = "datum_is_less"
+    type: Literal["datum_is_less"] = "datum_is_less"
     model_value: bool = True
     design_value: bool = False
 
@@ -169,14 +109,13 @@ class DatumLessThan(IsLess[DatumObservation]):
             passed=passed, detail="" if passed else f"a={va:.6g} not < b={vb:.6g}"
         )
 
-    def compare(self, obja: DatumObservation, objb: DatumObservation) -> DatumLessThanResult:
-        model_value = (
-            self._check(obja.model_value, objb.model_value) if self.model_value else None
-        )
-        design_value = (
-            self._check(obja.design_value, objb.design_value) if self.design_value else None
-        )
-        return DatumLessThanResult(model_value=model_value, design_value=design_value)
+    def compare(self, obja: DatumObservation, objb: DatumObservation) -> ComparisonResult:
+        checks = {}
+        if self.model_value:
+            checks["model_value"] = self._check(obja.model_value, objb.model_value)
+        if self.design_value:
+            checks["design_value"] = self._check(obja.design_value, objb.design_value)
+        return ComparisonResult(checks=checks)
 
 
 class DatumLiteral(LiteralObservable[DatumObservation]):
@@ -184,7 +123,7 @@ class DatumLiteral(LiteralObservable[DatumObservation]):
 
     Attributes
     ----------
-    obs_type : str
+    type : str
         Discriminator literal. Always ``"datum_literal"``.
     model_value : float
         Model value for the produced observation.
@@ -192,7 +131,7 @@ class DatumLiteral(LiteralObservable[DatumObservation]):
         Design value for the produced observation.
     """
 
-    obs_type: Literal["datum_literal"] = "datum_literal"
+    type: Literal["datum_literal"] = "datum_literal"
     model_value: float
     design_value: float
 
@@ -209,7 +148,7 @@ class DatumObservable(LatticeObservable[DatumObservation]):
 
     Attributes
     ----------
-    obs_type : str
+    type : str
         Discriminator literal. Always ``"datum"``.
     data_type : str
         Tao datum data type (e.g. ``"orbit.x"``).
@@ -225,7 +164,7 @@ class DatumObservable(LatticeObservable[DatumObservation]):
         Source of the data (lat, data, var, or beam).
     """
 
-    obs_type: Literal["datum"] = "datum"
+    type: Literal["datum"] = "datum"
     data_type: str
     ele_name: str
     ele_start_name: str = ""

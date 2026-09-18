@@ -2,6 +2,7 @@
 
 A `DatumObservation` stores the output of a tao datum.
 These can be defined and evaluated on the fly using a `DatumObservable`.
+User-defined values are provided with `DatumLiteral`.
 
 ## Observation Classes
 
@@ -17,8 +18,8 @@ flowchart TD
     DatumLessThan[DatumLessThan] --> IsLess
     DatumObservable -. creates .-> DatumObservation[DatumObservation]
     DatumLiteral -. creates .-> DatumObservation
-    DatumIsClose -. creates .-> DatumIsCloseResult[DatumIsCloseResult]
-    DatumLessThan -. creates .-> DatumLessThanResult[DatumLessThanResult]
+    DatumIsClose -. creates .-> ComparisonResult([ComparisonResult])
+    DatumLessThan -. creates .-> ComparisonResult
 ```
 
 
@@ -29,12 +30,12 @@ flowchart TD
 #### ::: pytao.constraints.observables.DatumObservable
 #### ::: pytao.constraints.observables.DatumLiteral
 
-### Operators and Results
+### Operators
+
+Both operators produce a [`ComparisonResult`](index.md#pytao.constraints.observables.ComparisonResult) whose `checks` are keyed by the field names listed below.
 
 #### ::: pytao.constraints.observables.DatumIsClose
-#### ::: pytao.constraints.observables.DatumIsCloseResult
 #### ::: pytao.constraints.observables.DatumLessThan
-#### ::: pytao.constraints.observables.DatumLessThanResult
 
 ## Constraints Classes
 
@@ -47,9 +48,9 @@ flowchart TD
     DatumIsCloseConstraint[DatumIsCloseConstraint] --> IsCloseConstraint
     DatumLessThanConstraint[DatumLessThanConstraint] --> IsLessConstraint
     DatumRegressionConstraint[DatumRegressionConstraint] --> RegressionConstraint
-    DatumIsCloseConstraint -. creates .-> DatumIsCloseResult[DatumIsCloseResult]
-    DatumLessThanConstraint -. creates .-> DatumLessThanResult[DatumLessThanResult]
-    DatumRegressionConstraint -. creates .-> DatumIsCloseResult
+    DatumIsCloseConstraint -. creates .-> ComparisonResult([ComparisonResult])
+    DatumLessThanConstraint -. creates .-> ComparisonResult
+    DatumRegressionConstraint -. creates .-> ComparisonResult
 ```
 
 #### ::: pytao.constraints.config.DatumIsCloseConstraint

@@ -128,14 +128,14 @@
         "observables": [
           {
             "lattice_id": "lat_b",
-            "obs_type": "ele",
+            "type": "ele",
             "ele_id": "BEGINNING",
             "ix_uni": 1,
             "ix_branch": 0
           },
           {
             "lattice_id": "lat_a",
-            "obs_type": "ele",
+            "type": "ele",
             "ele_id": "END",
             "ix_uni": 1,
             "ix_branch": 0
@@ -145,46 +145,44 @@
         "comment": "Longer comment included on error and in reports. eg Please rerun `tune_matcher.tao` in event of failure.",
         "result": {
           "error": null,
-          "result_type": "ele_is_close",
-          "twiss_a": {
-            "passed": true,
-            "detail": ""
+          "checks": {
+            "twiss_a": {
+              "passed": true,
+              "detail": ""
+            },
+            "twiss_b": {
+              "passed": true,
+              "detail": ""
+            },
+            "eta_x": {
+              "passed": true,
+              "detail": ""
+            },
+            "etap_x": {
+              "passed": true,
+              "detail": ""
+            },
+            "eta_y": {
+              "passed": true,
+              "detail": ""
+            },
+            "etap_y": {
+              "passed": true,
+              "detail": ""
+            },
+            "ref_energy": {
+              "passed": true,
+              "detail": ""
+            },
+            "p0c": {
+              "passed": true,
+              "detail": ""
+            },
+            "orbit": {
+              "passed": true,
+              "detail": ""
+            }
           },
-          "twiss_b": {
-            "passed": true,
-            "detail": ""
-          },
-          "eta_x": {
-            "passed": true,
-            "detail": ""
-          },
-          "etap_x": {
-            "passed": true,
-            "detail": ""
-          },
-          "eta_y": {
-            "passed": true,
-            "detail": ""
-          },
-          "etap_y": {
-            "passed": true,
-            "detail": ""
-          },
-          "ref_energy": {
-            "passed": true,
-            "detail": ""
-          },
-          "p0c": {
-            "passed": true,
-            "detail": ""
-          },
-          "orbit": {
-            "passed": true,
-            "detail": ""
-          },
-          "floor_x": null,
-          "floor_y": null,
-          "floor_z": null,
           "is_satisfied": true
         }
       },
@@ -193,14 +191,14 @@
         "observables": [
           {
             "lattice_id": "lat_c",
-            "obs_type": "ele",
+            "type": "ele",
             "ele_id": "BEGINNING",
             "ix_uni": 1,
             "ix_branch": 0
           },
           {
             "lattice_id": "lat_a",
-            "obs_type": "ele",
+            "type": "ele",
             "ele_id": "END",
             "ix_uni": 1,
             "ix_branch": 0
@@ -210,54 +208,55 @@
         "comment": "",
         "result": {
           "error": null,
-          "result_type": "ele_is_close",
-          "twiss_a": {
-            "passed": true,
-            "detail": ""
-          },
-          "twiss_b": {
-            "passed": false,
-            "detail": "bmag=1.0862 outside [0.99, 1.01]  (beta0=4.625, alpha0=1.375)  (beta1=3.625, alpha1=1.375)"
-          },
-          "eta_x": {
-            "passed": true,
-            "detail": ""
-          },
-          "etap_x": {
-            "passed": true,
-            "detail": ""
-          },
-          "eta_y": {
-            "passed": true,
-            "detail": ""
-          },
-          "etap_y": {
-            "passed": true,
-            "detail": ""
-          },
-          "ref_energy": {
-            "passed": false,
-            "detail": "a=5e+09, b=4e+09, diff=1.000e+09"
-          },
-          "p0c": {
-            "passed": false,
-            "detail": "a=5e+09, b=4e+09, diff=1.000e+09"
-          },
-          "orbit": {
-            "passed": true,
-            "detail": ""
-          },
-          "floor_x": {
-            "passed": true,
-            "detail": ""
-          },
-          "floor_y": {
-            "passed": true,
-            "detail": ""
-          },
-          "floor_z": {
-            "passed": false,
-            "detail": "a=1, b=0, diff=1.000e+00"
+          "checks": {
+            "twiss_a": {
+              "passed": true,
+              "detail": ""
+            },
+            "twiss_b": {
+              "passed": false,
+              "detail": "bmag=1.0862 outside [0.99, 1.01]  (beta0=4.625, alpha0=1.375)  (beta1=3.625, alpha1=1.375)"
+            },
+            "eta_x": {
+              "passed": true,
+              "detail": ""
+            },
+            "etap_x": {
+              "passed": true,
+              "detail": ""
+            },
+            "eta_y": {
+              "passed": true,
+              "detail": ""
+            },
+            "etap_y": {
+              "passed": true,
+              "detail": ""
+            },
+            "ref_energy": {
+              "passed": false,
+              "detail": "a=5e+09, b=4e+09, diff=1.000e+09"
+            },
+            "p0c": {
+              "passed": false,
+              "detail": "a=5e+09, b=4e+09, diff=1.000e+09"
+            },
+            "orbit": {
+              "passed": true,
+              "detail": ""
+            },
+            "floor_x": {
+              "passed": true,
+              "detail": ""
+            },
+            "floor_y": {
+              "passed": true,
+              "detail": ""
+            },
+            "floor_z": {
+              "passed": false,
+              "detail": "a=1, b=0, diff=1.000e+00"
+            }
           },
           "is_satisfied": false
         }
@@ -266,7 +265,7 @@
         "label": "lat_a[max] < literal",
         "observables": [
           {
-            "obs_type": "ele_literal",
+            "type": "ele_literal",
             "beta_a": 200.0,
             "alpha_a": null,
             "beta_b": 200.0,
@@ -282,7 +281,8 @@
           },
           {
             "lattice_id": "lat_a",
-            "obs_type": "ele_max",
+            "type": "ele_reduce",
+            "operator": "max",
             "ix_uni": 1,
             "ix_branch": 0,
             "begin_ele": null,
@@ -293,26 +293,16 @@
         "comment": "",
         "result": {
           "error": null,
-          "result_type": "ele_is_less",
-          "beta_a": {
-            "passed": true,
-            "detail": ""
+          "checks": {
+            "beta_a": {
+              "passed": true,
+              "detail": ""
+            },
+            "beta_b": {
+              "passed": true,
+              "detail": ""
+            }
           },
-          "alpha_a": null,
-          "beta_b": {
-            "passed": true,
-            "detail": ""
-          },
-          "alpha_b": null,
-          "eta_x": null,
-          "etap_x": null,
-          "eta_y": null,
-          "etap_y": null,
-          "ref_energy": null,
-          "p0c": null,
-          "floor_x": null,
-          "floor_y": null,
-          "floor_z": null,
           "is_satisfied": true
         }
       },
@@ -321,7 +311,7 @@
         "observables": [
           {
             "lattice_id": "lat_a",
-            "obs_type": "datum",
+            "type": "datum",
             "data_type": "r56_compaction",
             "ele_name": "END",
             "ele_start_name": "",
@@ -330,8 +320,8 @@
             "data_source": "lat"
           },
           {
-            "obs_type": "datum_literal",
-            "model_value": 1.04448e-8,
+            "type": "datum_literal",
+            "model_value": 1.04448e-08,
             "design_value": 0.0
           }
         ],
@@ -339,12 +329,12 @@
         "comment": "",
         "result": {
           "error": null,
-          "result_type": "datum_is_close",
-          "model_value": {
-            "passed": true,
-            "detail": ""
+          "checks": {
+            "model_value": {
+              "passed": true,
+              "detail": ""
+            }
           },
-          "design_value": null,
           "is_satisfied": true
         }
       }

@@ -3,14 +3,13 @@ from __future__ import annotations
 from collections.abc import Iterator
 from datetime import datetime
 
-from pytao.constraints.pydantic import ConstraintsBase
-
 from pytao.constraints.observables import (
-    AnyComparisonResult,
     AnyObservable,
     AnyObservation,
+    ComparisonResult,
     LatticeObservable,
 )
+from pytao.constraints.pydantic import ConstraintsBase
 from pytao.startup import TaoStartup
 
 
@@ -19,7 +18,7 @@ class ConstraintResult(ConstraintsBase):
     observables: list[AnyObservable]
     description: str = ""
     comment: str = ""
-    result: AnyComparisonResult
+    result: ComparisonResult
 
 
 class RegressionResult(ConstraintsBase):
@@ -28,7 +27,7 @@ class RegressionResult(ConstraintsBase):
     description: str = ""
     comment: str = ""
     observable: AnyObservable
-    result: AnyComparisonResult
+    result: ComparisonResult
 
 
 class SavedEntry(ConstraintsBase):

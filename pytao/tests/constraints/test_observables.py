@@ -5,11 +5,11 @@ import pytest
 from pytao import SubprocessTao
 from pytao.constraints.observables.datum import DatumLiteral, DatumObservable, DatumObservation
 from pytao.constraints.observables.ele import (
-    EleMaxObservable,
-    EleMinObservable,
+    EleReduceObservable,
     EleObservable,
     EleLiteral,
     EleObservation,
+    ReduceMode,
 )
 
 DATA_DIR = pathlib.Path(__file__).parent / "data"
@@ -46,8 +46,8 @@ def test_literal_observable(obs, expected_type):
     [
         EleObservable(lattice_id="lat_a", ele_id="BEGINNING"),
         EleObservable(lattice_id="lat_a", ele_id="END"),
-        EleMaxObservable(lattice_id="lat_a"),
-        EleMinObservable(lattice_id="lat_a"),
+        EleReduceObservable(lattice_id="lat_a", operator=ReduceMode.MAX),
+        EleReduceObservable(lattice_id="lat_a", operator=ReduceMode.MIN),
     ],
 )
 def test_ele_lattice_observable(tao, obs):
