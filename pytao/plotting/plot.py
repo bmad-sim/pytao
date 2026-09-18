@@ -55,6 +55,7 @@ from .util import fix_grid_limits
 
 if typing.TYPE_CHECKING:
     from .. import Tao
+    from .modern_layout import ModernLayoutConfig
 
 logger = logging.getLogger(__name__)
 
@@ -1164,16 +1165,24 @@ def make_graph(
     graph_name: str,
     template_name: str | None = None,
     template_graph_index: int | None = None,
+    layout_style: ModernLayoutConfig | None = None,
 ) -> AnyGraph:
     graph_info = get_plot_graph_info(tao, region_name, graph_name)
     graph_type = graph_info["graph^type"]
 
     logger.debug(f"Creating graph {region_name}.{graph_name} ({graph_type})")
 
+    extra: dict = {}
     if graph_type == "floor_plan":
         cls = FloorPlanGraph
     elif graph_type == "lat_layout":
-        cls = LatticeLayoutGraph
+        if layout_style is not None:
+            from .modern_layout import ModernLatticeLayoutGraph
+
+            cls = ModernLatticeLayoutGraph
+            extra["config"] = layout_style
+        else:
+            cls = LatticeLayoutGraph
     elif graph_type == "key_table":
         raise UnsupportedGraphError(graph_type)
     else:
@@ -1186,6 +1195,7 @@ def make_graph(
         info=graph_info,
         template_name=template_name,
         template_graph_index=template_graph_index,
+        **extra,
     )
 
 
@@ -1202,7 +1212,15 @@ def find_unused_plot_region(tao: Tao, skip: set[str]) -> str:
     raise AllPlotRegionsInUseError("No more available plot regions.")
 
 
-AnyGraph = Union[BasicGraph, LatticeLayoutGraph, FloorPlanGraph]
+if typing.TYPE_CHECKING:
+    from .modern_layout import ModernLatticeLayoutGraph
+
+AnyGraph = Union[
+    BasicGraph,
+    LatticeLayoutGraph,
+    FloorPlanGraph,
+    "ModernLatticeLayoutGraph",
+]
 
 
 class GraphManager(ABC):
@@ -1222,6 +1240,53 @@ class GraphManager(ABC):
         self.tao = tao
         self.regions = {}
         self._to_place = {}
+        self._layout_style_override: ModernLayoutConfig | None = None
+        self._layout_style_set: bool = False
+
+    @property
+    def layout_style(self) -> ModernLayoutConfig | None:
+        """Modern-layout config used for ``lat_layout`` graphs.
+
+        Reads through to the backend module's ``_Defaults.layout_style``
+        unless explicitly set on this manager instance (including being set
+        to ``None``).
+        """
+        if self._layout_style_set:
+            return self._layout_style_override
+        return self._default_layout_style()
+
+    @layout_style.setter
+    def layout_style(self, value: ModernLayoutConfig | None) -> None:
+        prev = self.layout_style
+        self._layout_style_override = value
+        self._layout_style_set = True
+        if value is not prev:
+            self._evict_layout_graphs()
+
+    @layout_style.deleter
+    def layout_style(self) -> None:
+        prev = self.layout_style
+        self._layout_style_override = None
+        self._layout_style_set = False
+        if self.layout_style is not prev:
+            self._evict_layout_graphs()
+
+    def _default_layout_style(self) -> ModernLayoutConfig | None:
+        """Backend-supplied default. Base manager has none."""
+        return None
+
+    def _evict_layout_graphs(self) -> None:
+        """Drop any cached lattice-layout graphs so they get replaced."""
+        from .modern_layout import ModernLatticeLayoutGraph
+
+        layout_types: tuple[type, ...] = (LatticeLayoutGraph, ModernLatticeLayoutGraph)
+        for region_name in list(self.regions):
+            graphs = self.regions[region_name]
+            kept = [g for g in graphs if not isinstance(g, layout_types)]
+            if not kept:
+                del self.regions[region_name]
+            elif len(kept) != len(graphs):
+                self.regions[region_name] = list(kept)
 
     def tao_init_hook(self) -> None:
         """Tao has reinitialized; clear our state."""
@@ -1249,13 +1314,16 @@ class GraphManager(ABC):
     @property
     def lattice_layout_graph(self) -> LatticeLayoutGraph:
         """The lattice layout graph.  Placed if not already available."""
+        from .modern_layout import ModernLatticeLayoutGraph
+
+        layout_types: tuple[type, ...] = (LatticeLayoutGraph, ModernLatticeLayoutGraph)
         for region in self.regions.values():
             for graph in region:
-                if isinstance(graph, LatticeLayoutGraph):
+                if isinstance(graph, layout_types):
                     return graph
 
         (graph,) = self.place(self.layout_template)
-        assert isinstance(graph, LatticeLayoutGraph)
+        assert isinstance(graph, layout_types)
         return graph
 
     @property
@@ -1731,6 +1799,7 @@ class GraphManager(ABC):
             graph_name=graph_name,
             template_name=template_name,
             template_graph_index=template_graph_index,
+            layout_style=self.layout_style,
         )
 
     @abstractmethod
