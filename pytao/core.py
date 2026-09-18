@@ -23,13 +23,12 @@ from .errors import (
     set_log_mode,
 )
 from .util import parsers as _pytao_parsers
-# from .util.parameters import tao_parameter_dict
 
 if TYPE_CHECKING:
     from .subproc import SubprocessTao
     from .tao import Tao
 
-    AnyTao = Union[Tao, SubprocessTao]
+    AnyTao = Tao | SubprocessTao
 
 logger = logging.getLogger(__name__)
 AnyPath = Union[pathlib.Path, str]
@@ -466,19 +465,22 @@ class TaoCore:
 
         special_parser = getattr(_pytao_parsers, f"parse_{method_name}", None)
 
+        if raw_output is None:
+            return None
+
         try:
             if special_parser and callable(special_parser):
                 return special_parser(raw_output, cmd=cmd)
-            if isinstance(raw_output, np.ndarray) or raw_output is None:
+            if isinstance(raw_output, np.ndarray):
                 return raw_output
             return _pytao_parsers.parse_tao_python_data(raw_output)
         except Exception as ex:
             if raises:
-                setattr(ex, "tao_output", raw_output)
+                ex.tao_output = raw_output
                 if isinstance(ex, TaoCommandError):
                     raise
                 new_ex = TaoCommandError(f"Failed to parse output from command {cmd!r}: {ex}")
-                setattr(new_ex, "inner_exc", ex)
+                new_ex.inner_exc = ex
                 raise new_ex from ex
             logger.exception(
                 "Failed to parse string data with custom parser. Returning raw value."
@@ -516,7 +518,7 @@ class TaoCore:
         finally:
             self.reset_output()
 
-    def _read_array(self, dtype: type[float] | type[int]) -> np.ndarray:
+    def _read_array(self, dtype: type[float | int]) -> np.ndarray:
         """
         Read the array from Tao's shared memory.
 
@@ -556,7 +558,7 @@ class TaoCore:
     def _get_array(
         self,
         cmd: str,
-        dtype: type[float] | type[int],
+        dtype: type[float | int],
         raises: bool,
     ) -> np.ndarray | None:
         """
@@ -847,7 +849,7 @@ def configure_logging(
     def add_handler(handler: logging.Handler, handler_level: int | str) -> None:
         handler.setLevel(handler_level)
         handler.setFormatter(formatter)
-        setattr(handler, "_pytao_handler_", True)
+        handler._pytao_handler_ = True  # type: ignore
         logger.addHandler(handler)
 
     if console:
@@ -867,6 +869,6 @@ def configure_logging_from_env():
     Only applies if PYTAO_LOG and/or PYTAO_LOG_FILE are set in the environment.
     """
     if not _logging_configured_once and any(
-        env in os.environ for env in {"PYTAO_LOG", "PYTAO_LOG_FILE"}
+        env in os.environ for env in ("PYTAO_LOG", "PYTAO_LOG_FILE")
     ):
         configure_logging()
