@@ -42,8 +42,8 @@ PlotCurveSymbolInfo = TypedDict(
 PlotCurveInfo = TypedDict(
     "PlotCurveInfo",
     {
-        "-1^ix_branch": int,
-        "-1^ix_bunch": int,
+        "ix_branch": int,
+        "ix_bunch": int,
         "component": str,
         "data_source": str,
         "data_type": str,
@@ -91,7 +91,7 @@ class PlotRegionInfo(TypedDict):
 PlotGraphInfo = TypedDict(
     "PlotGraphInfo",
     {
-        "-1^ix_branch": int,
+        "ix_branch": int,
         "clip": bool,
         "draw_axes": bool,
         "draw_curve_legend": bool,

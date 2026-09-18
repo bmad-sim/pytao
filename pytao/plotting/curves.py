@@ -142,10 +142,26 @@ class TaoCurveSettings(pydantic.BaseModel, extra="forbid", validate_assignment=T
         self,
         region_name: str,
         graph_name: str,
-        curve_index: int,
+        curve_name: str,
     ) -> list[str]:
+        """
+        Generate the ``set curve`` commands to apply these settings.
+
+        Parameters
+        ----------
+        region_name : str
+            The placed region name.
+        graph_name : str
+            The graph name within the region.
+        curve_name : str
+            The Tao curve name (e.g. ``"x"`` or ``"c1"``).
+
+        Returns
+        -------
+        list of str
+        """
         return [
-            f"set curve {region_name}.{graph_name}.c{curve_index} {key} = {value}"
+            f"set curve {region_name}.{graph_name}.{curve_name} {key} = {value}"
             for key, value in self.model_dump().items()
             if value is not None
         ]

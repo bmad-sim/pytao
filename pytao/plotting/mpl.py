@@ -494,6 +494,7 @@ class MatplotlibGraphManager(GraphManager):
         settings: list[TaoGraphSettings] | None = None,
         save: bool | str | pathlib.Path | None = None,
         axes: list[list[matplotlib.axes.Axes]] | None = None,
+        ix_uni: int | None = None,
     ):
         """
         Plot graphs on a grid with Matplotlib.
@@ -534,6 +535,8 @@ class MatplotlibGraphManager(GraphManager):
             Graph customization settings, per graph.
         save : pathlib.Path or str, optional
             Save the plot to the given filename.
+        ix_uni : int, optional
+            Plot data from this universe for every graph in the grid.
 
         Returns
         -------
@@ -552,6 +555,7 @@ class MatplotlibGraphManager(GraphManager):
             settings=settings,
             xlim=xlim,
             ylim=ylim,
+            ix_uni=ix_uni,
         )
         nrows, ncols = grid
         height_ratios = None
@@ -599,7 +603,7 @@ class MatplotlibGraphManager(GraphManager):
             setup_matplotlib_ticks(graph, ax, user_xlim=xl, user_ylim=yl)
 
         if include_layout:
-            layout_graph = self.lattice_layout_graph
+            layout_graph = self.get_lattice_layout_graph(ix_uni=ix_uni)
             for col in range(ncols):
                 ax = axes[-1][col]
                 plot(layout_graph, ax)
@@ -644,6 +648,7 @@ class MatplotlibGraphManager(GraphManager):
         settings: TaoGraphSettings | None = None,
         curves: dict[int, TaoCurveSettings] | None = None,
         axes: list[matplotlib.axes.Axes] | None = None,
+        ix_uni: int | None = None,
     ):
         """
         Plot a graph with Matplotlib.
@@ -684,6 +689,8 @@ class MatplotlibGraphManager(GraphManager):
             applied to the placed graph prior to plotting.
         settings : TaoGraphSettings, optional
             Graph customization settings.
+        ix_uni : int, optional
+            Plot data from this universe.
 
         Returns
         -------
@@ -701,6 +708,7 @@ class MatplotlibGraphManager(GraphManager):
             settings=settings,
             xlim=xlim,
             ylim=ylim,
+            ix_uni=ix_uni,
         )
         if not graphs:
             raise UnsupportedGraphError(f"No supported plots from this template: {template}")
@@ -712,8 +720,10 @@ class MatplotlibGraphManager(GraphManager):
             and not any(isinstance(graph, LatticeLayoutGraph) for graph in graphs)
             and any(graph.is_s_plot for graph in graphs)
         ):
-            layout_graph = self.lattice_layout_graph
-            graphs.append(layout_graph)
+            graphs = [
+                *graphs,
+                self.get_lattice_layout_graph(ix_uni=ix_uni),
+            ]
         else:
             include_layout = False
 
@@ -744,9 +754,6 @@ class MatplotlibGraphManager(GraphManager):
                 )
             axes = list(gs[:, 0])
             assert axes is not None
-
-        if include_layout:
-            layout_graph = self.lattice_layout_graph
 
         for ax, graph in zip(axes, graphs):
             try:

@@ -1300,6 +1300,7 @@ class BokehAppCreator:
     height: int | None
     include_layout: bool
     layout_height: int | None
+    ix_uni: int | None
     xlim: list[OptionalLimit]
     ylim: list[OptionalLimit]
     figures: list[figure]
@@ -1319,6 +1320,7 @@ class BokehAppCreator:
         layout_height: int | None = None,
         xlim: OptionalLimit | Sequence[OptionalLimit] = None,
         ylim: OptionalLimit | Sequence[OptionalLimit] = None,
+        ix_uni: int | None = None,
     ) -> None:
         if not len(graphs):
             raise ValueError("BokehAppCreator requires 1 or more graph")
@@ -1349,6 +1351,7 @@ class BokehAppCreator:
         self.graph_sizing_mode = graph_sizing_mode
         self.include_layout = include_layout
         self.layout_height = layout_height
+        self.ix_uni = ix_uni
         self.xlim = fix_grid_limits(xlim, num_graphs=len(graphs))
         self.ylim = fix_grid_limits(ylim, num_graphs=len(graphs))
 
@@ -1387,7 +1390,9 @@ class BokehAppCreator:
         if not self.include_layout:
             layout_pairs = []
         else:
-            lattice_layout = self.manager.to_bokeh_graph(self.manager.lattice_layout_graph)
+            lattice_layout = self.manager.to_bokeh_graph(
+                self.manager.get_lattice_layout_graph(ix_uni=self.ix_uni)
+            )
             layout_pairs = [
                 BGraphAndFigure(
                     fig=lattice_layout.create_figure(
@@ -1705,7 +1710,7 @@ class Variable:
         return [
             cls.from_tao(
                 tao=tao,
-                name=f'{var_info["name"]}[{idx}]',
+                name=f"{var_info['name']}[{idx}]",
                 parameter=parameter,
             )
             for var_info in tao.var_general()
@@ -1806,6 +1811,7 @@ class BokehGraphManager(GraphManager):
         curves: list[CurveIndexToCurve] | None = None,
         settings: list[TaoGraphSettings] | None = None,
         save: bool | str | pathlib.Path | None = None,
+        ix_uni: int | None = None,
     ):
         """
         Plot graphs on a grid with Bokeh.
@@ -1842,6 +1848,8 @@ class BokehGraphManager(GraphManager):
             Graph customization settings, per graph.
         save : pathlib.Path or str, optional
             Save the plot to the given filename.
+        ix_uni : int, optional
+            Plot data from this universe for every graph in the grid.
 
         Returns
         -------
@@ -1855,6 +1863,7 @@ class BokehGraphManager(GraphManager):
             settings=settings,
             xlim=xlim,
             ylim=ylim,
+            ix_uni=ix_uni,
         )
 
         if figsize is not None:
@@ -1872,6 +1881,7 @@ class BokehGraphManager(GraphManager):
             include_layout=include_layout,
             xlim=xlim,
             ylim=ylim,
+            ix_uni=ix_uni,
         )
 
         if save:
@@ -1897,6 +1907,7 @@ class BokehGraphManager(GraphManager):
         save: bool | str | pathlib.Path | None = None,
         curves: dict[int, TaoCurveSettings] | None = None,
         settings: TaoGraphSettings | None = None,
+        ix_uni: int | None = None,
     ) -> tuple[list[AnyGraph], BokehAppCreator]:
         """
         Plot a graph with Bokeh.
@@ -1935,6 +1946,8 @@ class BokehGraphManager(GraphManager):
         save : str or bool, optional
             Save the plot to a static HTML file with the given name.
             If `True`, saves to a filename based on the plot title.
+        ix_uni : int, optional
+            Plot data from this universe.
 
         Returns
         -------
@@ -1949,6 +1962,7 @@ class BokehGraphManager(GraphManager):
             settings=settings,
             xlim=xlim,
             ylim=ylim,
+            ix_uni=ix_uni,
         )
 
         if not graphs:
@@ -1967,6 +1981,7 @@ class BokehGraphManager(GraphManager):
             graph_sizing_mode=sizing_mode,
             xlim=[xlim],
             ylim=[ylim],
+            ix_uni=ix_uni,
         )
 
         if save:
@@ -2073,6 +2088,7 @@ class NotebookGraphManager(BokehGraphManager):
         width: int | None = None,
         height: int | None = None,
         save: bool | str | pathlib.Path | None = None,
+        ix_uni: int | None = None,
     ):
         """
         Plot graphs on a grid with Bokeh.
@@ -2111,6 +2127,8 @@ class NotebookGraphManager(BokehGraphManager):
             Graph customization settings, per graph.
         save : pathlib.Path or str, optional
             Save the plot to the given filename.
+        ix_uni : int, optional
+            Plot data from this universe for every graph in the grid.
 
         Returns
         -------
@@ -2132,6 +2150,7 @@ class NotebookGraphManager(BokehGraphManager):
             ylim=ylim,
             layout_height=layout_height,
             save=save,
+            ix_uni=ix_uni,
         )
         if vars:
             app.variables = Variable.from_tao_all(self.tao)
@@ -2156,6 +2175,7 @@ class NotebookGraphManager(BokehGraphManager):
         save: bool | str | pathlib.Path | None = None,
         curves: dict[int, TaoCurveSettings] | None = None,
         settings: TaoGraphSettings | None = None,
+        ix_uni: int | None = None,
     ) -> tuple[list[AnyGraph], BokehAppCreator]:
         """
         Plot a graph with Bokeh.
@@ -2196,6 +2216,8 @@ class NotebookGraphManager(BokehGraphManager):
         save : str or bool, optional
             Save the plot to a static HTML file with the given name.
             If `True`, saves to a filename based on the plot title.
+        ix_uni : int, optional
+            Plot data from this universe.
 
         Returns
         -------
@@ -2214,6 +2236,7 @@ class NotebookGraphManager(BokehGraphManager):
             curves=curves,
             settings=settings,
             share_x=share_x,
+            ix_uni=ix_uni,
             save=save,
         )
 
