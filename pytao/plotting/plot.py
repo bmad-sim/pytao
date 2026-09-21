@@ -29,6 +29,7 @@ from .curves import (
     PlotHistogram,
     TaoCurveSettings,
 )
+from .ele_methods import ElementMethodsPlotData
 from .patches import (
     PlotPatch,
     PlotPatchArc,
@@ -1900,5 +1901,17 @@ class GraphManager(ABC):
         colormap: str | None = None,
         radius: float = 0.015,
         num_points: int = 100,
+    ) -> Any:
+        pass
+
+    @abstractmethod
+    def plot_ele_methods(
+        self,
+        data: ElementMethodsPlotData,
+        *,
+        columns: Sequence[str] | None = None,
+        show_names: bool = True,
+        show_csr_ds_step: bool | None = None,
+        include_layout: bool = True,
     ) -> Any:
         pass
