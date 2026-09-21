@@ -780,23 +780,11 @@ class LatticeLayoutGraph(GraphBase):
             universe = tao.default_universe
         else:
             universe = raw_ix_universe
-        branch = info["ix_branch"]
-        try:
-            all_elem_info = tao.plot_lat_layout(ix_uni=universe, ix_branch=branch)
-        except Exception as ex:
-            if branch != -1:
-                raise
+        branch = max(info["ix_branch"], 0)  # bug where branch might be -1
 
-            logger.debug(
-                f"Lat layout failed for universe={universe} branch={branch}; trying branch 0"
-            )
-            try:
-                all_elem_info = tao.plot_lat_layout(ix_uni=universe, ix_branch=0)
-            except Exception:
-                logger.error(f"Failed to plot layout: {ex}")
-                raise
-
-        all_elem_info = cast(list[PlotLatLayoutInfo], all_elem_info)
+        all_elem_info = cast(
+            list[PlotLatLayoutInfo], tao.plot_lat_layout(ix_uni=universe, ix_branch=branch)
+        )
 
         ele_y2s = [elem["y2"] for elem in all_elem_info]
         y2_floor = -max(ele_y2s) if ele_y2s else 0.0  # Note negative sign
