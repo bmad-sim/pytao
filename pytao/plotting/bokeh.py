@@ -12,6 +12,7 @@ from collections.abc import Sequence
 from typing import (
     ClassVar,
     Generic,
+    Literal,
     NamedTuple,
     Optional,
     TypeVar,
@@ -114,6 +115,7 @@ class _Defaults:
     show_sliders: bool = True
     line_width_scale: float = 0.5
     floor_line_width_scale: float = 0.5
+    resources: Literal["inline", "cdn"] = "cdn"
 
     @classmethod
     def get_size_for_class(
@@ -1215,6 +1217,47 @@ AnyBokehGraph = Union[BokehBasicGraph, BokehLatticeLayoutGraph, BokehFloorPlanGr
 UIGridLayoutList = list[Optional[bokeh.models.UIElement]]
 
 
+def save_plot(
+    obj,
+    filename: AnyPath = "",
+    *,
+    title: str | None = None,
+    width: int | None = None,
+    height: int | None = None,
+    format: Literal["html", "png", "svg"] | None = None,
+) -> pathlib.Path | None:
+    title = title or "PyTao plot"
+
+    if not format:
+        format = "html"
+        if filename:
+            format = pathlib.Path(filename).suffix.removeprefix(".").lower() or "html"
+
+    if not filename:
+        filename = f"{title}.html"
+    if not pathlib.Path(filename).suffix:
+        filename = f"{filename}.{format}"
+
+    if format not in ("html", "png", "svg"):
+        raise ValueError(
+            f"Unsupported format for saving: {format}. 'html', 'png', 'svg' are supported."
+        )
+
+    filename = pathlib.Path(filename)
+
+    if format == "html":
+        source = bokeh.embed.file_html(obj, title=title, resources=_Defaults.resources)
+        filename.write_text(source)
+    elif format == "png":
+        bokeh.io.export_png(obj, filename=filename)
+    elif format == "svg":
+        bokeh.io.export_svg(obj, filename=filename)
+    else:
+        raise NotImplementedError(format)
+
+    return pathlib.Path(filename)
+
+
 class BokehAppState:
     pairs: list[BGraphAndFigure]
     layout_pairs: list[BGraphAndFigure]
@@ -1269,16 +1312,11 @@ class BokehAppState:
         title: str | None = None,
         width: int | None = None,
         height: int | None = None,
+        format: Literal["html", "png", "svg"] | None = None,
     ) -> pathlib.Path | None:
         title = title or self.pairs[0].bgraph.graph.title or f"plot-{time.time()}"
-        if not filename:
-            filename = f"{title}.html"
-        if not pathlib.Path(filename).suffix:
-            filename = f"{filename}.html"
-        source = self.to_html(title=title, width=width, height=height)
-        with open(filename, "w") as fp:
-            fp.write(source)
-        return pathlib.Path(filename)
+        layout = self.to_gridplot(width=width, height=height)
+        return save_plot(layout, filename, title=title, width=width, format=format)
 
 
 def _widgets_to_rows(widgets: Sequence[bokeh.models.UIElement], per_row: int):
@@ -2298,10 +2336,8 @@ class BokehGraphManager(GraphManager):
 
         if save:
             if save is True:
-                save = f"{ele_id}_field.html"
-            if not pathlib.Path(save).suffix:
-                save = f"{save}.html"
-            filename = bokeh.io.save(fig, filename=save)
+                save = f"{ele_id}_field"
+            filename = save_plot(fig, filename=save)
             logger.info(f"Saving plot to {filename!r}")
 
         return field, fig
@@ -2409,9 +2445,7 @@ class BokehGraphManager(GraphManager):
         if save:
             if save is True:
                 save = "ele_methods.html"
-            if not pathlib.Path(save).suffix:
-                save = f"{save}.html"
-            filename = bokeh.io.save(ui, filename=save)
+            filename = save_plot(ui, filename=save)
             logger.info(f"Saving plot to {filename!r}")
 
         return data, ui
