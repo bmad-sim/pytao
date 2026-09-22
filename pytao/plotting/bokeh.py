@@ -12,6 +12,7 @@ from collections.abc import Sequence
 from typing import (
     ClassVar,
     Generic,
+    Literal,
     NamedTuple,
     Optional,
     TypeVar,
@@ -26,6 +27,7 @@ import bokeh.io
 import bokeh.layouts
 import bokeh.models
 import bokeh.plotting
+import bokeh.transform
 
 # TODO remove mpl dep - only used in a single spot
 import matplotlib
@@ -41,6 +43,7 @@ from typing_extensions import NotRequired, TypedDict
 from ..core import AnyPath, TaoCommandError
 from . import floor_plan_shapes, pgplot, util
 from .curves import CurveIndexToCurve, PlotCurveLine, PlotCurveSymbols, TaoCurveSettings
+from .ele_methods import ElementMethodsPlotData, color_for_value, is_garbage_value
 from .fields import ElementField
 from .layout_shapes import LayoutShape
 from .patches import (
@@ -112,6 +115,7 @@ class _Defaults:
     show_sliders: bool = True
     line_width_scale: float = 0.5
     floor_line_width_scale: float = 0.5
+    resources: Literal["inline", "cdn"] = "cdn"
 
     @classmethod
     def get_size_for_class(
@@ -148,6 +152,7 @@ def set_defaults(
     show_sliders: bool | None = None,
     line_width_scale: float | None = None,
     floor_line_width_scale: float | None = None,
+    resources: Literal["inline", "cdn"] | None = None,
 ):
     """
     Change defaults used for Bokeh plots.
@@ -191,6 +196,11 @@ def set_defaults(
         Plot line width scaling factor applied to Tao's line width.
     floor_line_width_scale : float, default=0.5
         Floor plan line width scaling factor applied to Tao's line width.
+    resources : "cdn" or "inline", optional
+        When saving Bokeh plots to HTML, make the file fully standalone
+        ("inline") by saving everything necessary to load the page in the file,
+        or retrieve shared scripts and resources from online ("cdn") when
+        the page is opened.
     """
 
     if width is not None:
@@ -231,6 +241,10 @@ def set_defaults(
         _Defaults.line_width_scale = float(line_width_scale)
     if floor_line_width_scale is not None:
         _Defaults.floor_line_width_scale = float(floor_line_width_scale)
+    if resources is not None:
+        if resources not in ("cdn", "inline"):
+            raise ValueError(f"Unexpected value for 'resources': {resources}")
+        _Defaults.resources = resources
     return {
         key: value
         for key, value in vars(_Defaults).items()
@@ -1203,6 +1217,47 @@ AnyBokehGraph = Union[BokehBasicGraph, BokehLatticeLayoutGraph, BokehFloorPlanGr
 UIGridLayoutList = list[Optional[bokeh.models.UIElement]]
 
 
+def save_plot(
+    obj,
+    filename: AnyPath = "",
+    *,
+    title: str | None = None,
+    width: int | None = None,
+    height: int | None = None,
+    format: Literal["html", "png", "svg"] | None = None,
+) -> pathlib.Path | None:
+    title = title or "PyTao plot"
+
+    if not format:
+        format = "html"
+        if filename:
+            format = pathlib.Path(filename).suffix.removeprefix(".").lower() or "html"
+
+    if not filename:
+        filename = f"{title}.html"
+    if not pathlib.Path(filename).suffix:
+        filename = f"{filename}.{format}"
+
+    if format not in ("html", "png", "svg"):
+        raise ValueError(
+            f"Unsupported format for saving: {format}. 'html', 'png', 'svg' are supported."
+        )
+
+    filename = pathlib.Path(filename)
+
+    if format == "html":
+        source = bokeh.embed.file_html(obj, title=title, resources=_Defaults.resources)
+        filename.write_text(source)
+    elif format == "png":
+        bokeh.io.export_png(obj, filename=filename)
+    elif format == "svg":
+        bokeh.io.export_svg(obj, filename=filename)
+    else:
+        raise NotImplementedError(format)
+
+    return pathlib.Path(filename)
+
+
 class BokehAppState:
     pairs: list[BGraphAndFigure]
     layout_pairs: list[BGraphAndFigure]
@@ -1257,16 +1312,11 @@ class BokehAppState:
         title: str | None = None,
         width: int | None = None,
         height: int | None = None,
+        format: Literal["html", "png", "svg"] | None = None,
     ) -> pathlib.Path | None:
         title = title or self.pairs[0].bgraph.graph.title or f"plot-{time.time()}"
-        if not filename:
-            filename = f"{title}.html"
-        if not pathlib.Path(filename).suffix:
-            filename = f"{filename}.html"
-        source = self.to_html(title=title, width=width, height=height)
-        with open(filename, "w") as fp:
-            fp.write(source)
-        return pathlib.Path(filename)
+        layout = self.to_gridplot(width=width, height=height)
+        return save_plot(layout, filename, title=title, width=width, format=format)
 
 
 def _widgets_to_rows(widgets: Sequence[bokeh.models.UIElement], per_row: int):
@@ -1764,6 +1814,233 @@ def _clean_tao_exception_for_user(text: str, command: str) -> str:
     return "\n".join(line for line in lines if line.strip())
 
 
+def _draw_method_lanes(
+    data: ElementMethodsPlotData,
+    columns: list[str],
+    fig: figure,
+    lane_height: float,
+) -> list[bokeh.models.GlyphRenderer]:
+    """
+    Draw one horizontal lane of colored blocks per method column.
+
+    Contiguous elements with the same value are merged into a single block;
+    per-element blocks would show antialiasing seams as vertical stripes on
+    large lattices.
+
+    Returns the glyph renderers, for use in the legend.
+    """
+    blocks: dict[str, list] = {
+        key: [] for key in ("s_start", "s_end", "lane", "column", "value", "name")
+    }
+    zero_length: dict[str, list] = {
+        key: [] for key in ("s", "lane", "column", "value", "name")
+    }
+    for lane, col in enumerate(columns):
+        for first, last, value in data.value_runs(col):
+            if first == last:
+                name = data.names[first]
+            else:
+                name = (
+                    f"{data.names[first]} … {data.names[last]} ({last - first + 1} elements)"
+                )
+            if data.s_end[last] > data.s_start[first]:
+                blocks["s_start"].append(data.s_start[first])
+                blocks["s_end"].append(data.s_end[last])
+                blocks["lane"].append(lane)
+                blocks["column"].append(col)
+                blocks["value"].append(value)
+                blocks["name"].append(name)
+            else:
+                zero_length["s"].append(data.s_start[first])
+                zero_length["lane"].append(lane)
+                zero_length["column"].append(col)
+                zero_length["value"].append(value)
+                zero_length["name"].append(name)
+
+    def styles(values: list[str]) -> dict[str, list]:
+        return {
+            "color": [color_for_value(value) for value in values],
+            # Outline in the fill color: adjacent blocks would otherwise show
+            # an antialiasing seam.
+            "edge": [
+                "black" if is_garbage_value(value) else color_for_value(value)
+                for value in values
+            ],
+            "hatch": ["/" if is_garbage_value(value) else " " for value in values],
+        }
+
+    block_renderer = fig.hbar(
+        y="lane",
+        left="s_start",
+        right="s_end",
+        height=lane_height,
+        fill_color="color",
+        line_color="edge",
+        hatch_pattern="hatch",
+        hatch_color="black",
+        source=ColumnDataSource({**blocks, **styles(blocks["value"])}),
+        name="method_blocks",
+    )
+    renderers = [block_renderer]
+    if zero_length["s"]:
+        zero_length["s_start"] = zero_length["s_end"] = zero_length["s"]
+        renderers.append(
+            fig.segment(
+                x0="s",
+                x1="s",
+                y0=bokeh.transform.dodge("lane", -lane_height / 2),
+                y1=bokeh.transform.dodge("lane", lane_height / 2),
+                line_color="color",
+                line_width=1.0,
+                source=ColumnDataSource({**zero_length, **styles(zero_length["value"])}),
+                name="method_zero_length",
+            )
+        )
+
+    fig.add_tools(
+        bokeh.models.HoverTool(
+            renderers=renderers,
+            tooltips=[
+                ("element(s)", "@name"),
+                ("method", "@column"),
+                ("value", "@value"),
+                ("s start [m]", "@s_start"),
+                ("s end [m]", "@s_end"),
+            ],
+        )
+    )
+
+    fig.yaxis.ticker = bokeh.models.FixedTicker(ticks=list(range(len(columns))))
+    fig.yaxis.major_label_overrides = dict(enumerate(columns))
+    fig.y_range = bokeh.models.Range1d(len(columns) - 0.5, -0.5)
+    fig.ygrid.visible = False
+    return renderers
+
+
+def _draw_method_transition_names(
+    data: ElementMethodsPlotData,
+    columns: list[str],
+    fig: figure,
+) -> None:
+    """Mark per-lane method transitions and label the elements on either side."""
+    lines: dict[str, list] = {"x": [], "y0": [], "y1": []}
+    labels: dict[int, dict[str, list]] = {
+        side: {"x": [], "y": [], "text": [], "color": []} for side in (-1, 1)
+    }
+
+    for lane, col in enumerate(columns):
+        for idx, before, after in data.value_transitions(col):
+            boundary = data.s_end[idx]
+            lines["x"].append(boundary)
+            lines["y0"].append(lane - 0.5)
+            lines["y1"].append(lane + 0.5)
+            for side, name, value in (
+                (-1, data.names[idx], before),
+                (1, data.names[idx + 1], after),
+            ):
+                labels[side]["x"].append(boundary)
+                labels[side]["y"].append(lane)
+                labels[side]["text"].append(name)
+                labels[side]["color"].append(color_for_value(value))
+
+    if not lines["x"]:
+        return
+
+    fig.segment(
+        x0="x",
+        x1="x",
+        y0="y0",
+        y1="y1",
+        line_color="black",
+        line_width=0.75,
+        source=ColumnDataSource(lines),
+    )
+    for side, label_data in labels.items():
+        fig.text(
+            x="x",
+            y="y",
+            text="text",
+            text_color="color",
+            angle=math.pi / 2,
+            x_offset=3 * side,
+            text_align="center",
+            text_baseline="bottom" if side < 0 else "top",
+            text_font_size="0.65em",
+            background_fill_color="white",
+            background_fill_alpha=0.85,
+            padding=2,
+            source=ColumnDataSource(label_data),
+        )
+
+
+def _draw_method_legend(
+    fig: figure,
+    renderers: list[bokeh.models.GlyphRenderer],
+) -> None:
+    """
+    Add a legend of the method values drawn by the given lane renderers.
+
+    The legend floats inside the plot frame so the figure width stays matched
+    with the other rows; per-lane context is available via the hover tool.
+
+    Legend items reference the lane renderers by data index: data-less "dummy"
+    renderers do not reliably draw legend swatches.
+    """
+    value_to_swatch: dict[str, tuple[bokeh.models.GlyphRenderer, int]] = {}
+    for renderer in renderers:
+        for index, value in enumerate(renderer.data_source.data["value"]):
+            value_to_swatch.setdefault(value, (renderer, index))
+
+    items = [
+        bokeh.models.LegendItem(label=value, renderers=[renderer], index=index)
+        for value, (renderer, index) in sorted(value_to_swatch.items())
+    ]
+    fig.add_layout(
+        bokeh.models.Legend(
+            items=items,
+            glyph_height=14,
+            glyph_width=14,
+            label_text_font_size="0.75em",
+        )
+    )
+
+
+def _method_settings_caption(
+    data: ElementMethodsPlotData, margin_left: int
+) -> bokeh.models.Div:
+    """Global space charge/CSR settings as a caption below the plots."""
+    text = " · ".join(line for lines in data.settings_summary.values() for line in lines)
+    return bokeh.models.Div(
+        text=text,
+        styles={
+            "color": "#555555",
+            "font-size": "0.75em",
+            "margin-left": f"{margin_left}px",
+        },
+    )
+
+
+def _draw_csr_ds_step(data: ElementMethodsPlotData, fig: figure) -> None:
+    """Draw `csr_ds_step` vs s, colored by each element's `csr_method`."""
+    source: dict[str, list] = {"s_start": [], "s_end": [], "step": [], "color": []}
+    for s_start, s_end, step, value in data.csr_ds_step_segments():
+        source["s_start"].append(s_start)
+        source["s_end"].append(s_end)
+        source["step"].append(step)
+        source["color"].append(color_for_value(value) if value is not None else "#888888")
+
+    fig.segment(
+        x0="s_start",
+        x1="s_end",
+        y0="step",
+        y1="step",
+        line_color="color",
+        line_width=2.0,
+        source=ColumnDataSource(source),
+    )
+    fig.yaxis.axis_label = "csr_ds_step [m]"
+
+
 class BokehGraphManager(GraphManager):
     """Bokeh backend graph manager - for non-Jupyter contexts."""
 
@@ -2059,13 +2336,119 @@ class BokehGraphManager(GraphManager):
 
         if save:
             if save is True:
-                save = f"{ele_id}_field.html"
-            if not pathlib.Path(save).suffix:
-                save = f"{save}.html"
-            filename = bokeh.io.save(fig, filename=save)
+                save = f"{ele_id}_field"
+            filename = save_plot(fig, filename=save)
             logger.info(f"Saving plot to {filename!r}")
 
         return field, fig
+
+    def plot_ele_methods(
+        self,
+        data: ElementMethodsPlotData,
+        *,
+        columns: Sequence[str] | None = None,
+        show_names: bool = True,
+        show_csr_ds_step: bool | None = None,
+        include_layout: bool = True,
+        lane_height: float = 0.8,
+        width: int | None = None,
+        height: int | None = None,
+        layout_height: int | None = None,
+        save: bool | str | pathlib.Path | None = None,
+    ):
+        """
+        Plot element method settings as categorical lanes along the beamline.
+
+        Each method (e.g., `tracking_method`) becomes a horizontal lane, with
+        each element drawn as a block spanning its longitudinal extent, colored
+        by the method value.
+
+        Parameters
+        ----------
+        data : ElementMethodsPlotData
+            Per-element method data, gathered via
+            `ElementMethodsPlotData.from_tao`.
+        columns : sequence of str, optional
+            Method columns to plot, in order.  Defaults to all categorical
+            columns with data for the selected elements.
+        show_names : bool, default=True
+            Label method transitions with the element names before and after
+            the transition point.
+        show_csr_ds_step : bool, optional
+            Add a subplot of `csr_ds_step` vs s.  The default (`None`) shows
+            it only when CSR is active for at least one selected element.
+        include_layout : bool, default=True
+            Include a lattice layout plot at the bottom.
+        lane_height : float, default=0.8
+            Height of each lane's blocks, where lanes are spaced 1.0 apart.
+        width : int, optional
+            Width of each plot in pixels.
+        height : int, optional
+            Height of the lane plot in pixels.  Defaults to scaling with the
+            number of lanes.
+        layout_height : int, optional
+            Height of the layout plot in pixels.
+        save : pathlib.Path or str, optional
+            Save the plot to the given filename.
+
+        Returns
+        -------
+        ElementMethodsPlotData
+        bokeh.layouts.column
+        """
+        columns = data.validate_columns(columns)
+
+        if show_csr_ds_step is None:
+            show_csr_ds_step = data.csr_on
+
+        lanes_fig = figure(
+            tools=_Defaults.tools,
+            toolbar_location="above",
+            x_range=bokeh.models.Range1d(min(data.s_start), max(data.s_end)),
+        )
+        lane_renderers = _draw_method_lanes(data, columns, lanes_fig, lane_height)
+        if show_names:
+            _draw_method_transition_names(data, columns, lanes_fig)
+        _draw_method_legend(lanes_fig, lane_renderers)
+        lanes_fig.frame_height = height or max(150, 32 * len(columns))
+
+        figs = [lanes_fig]
+        if show_csr_ds_step:
+            csr_fig = figure(tools=lanes_fig.tools, toolbar_location=None)
+            _draw_csr_ds_step(data, csr_fig)
+            csr_fig.frame_height = 120
+            figs.append(csr_fig)
+
+        if include_layout:
+            layout_fig = BokehLatticeLayoutGraph(
+                self, self.lattice_layout_graph
+            ).create_figure(toolbar_location=None)
+            layout_fig.frame_height = layout_height or _Defaults.layout_height
+            figs.append(layout_fig)
+
+        min_border_left = max(80, 8 * max(len(col) for col in columns) + 24)
+        for fig in figs:
+            fig.frame_width = width or _Defaults.width
+            fig.min_border_left = min_border_left
+
+        share_x_axes(figs)
+        figs[-1].xaxis.axis_label = "s [m]"
+
+        ui = bokeh.layouts.column(
+            [
+                lanes_fig,
+                _method_settings_caption(data, margin_left=min_border_left),
+                *figs[1:],
+            ]
+        )
+
+        if save:
+            if save is True:
+                save = "ele_methods.html"
+            filename = save_plot(ui, filename=save)
+            logger.info(f"Saving plot to {filename!r}")
+
+        return data, ui
 
 
 class NotebookGraphManager(BokehGraphManager):
@@ -2293,6 +2676,36 @@ class NotebookGraphManager(BokehGraphManager):
         bokeh.plotting.show(fig, notebook_handle=True)
 
         return field, fig
+
+    def plot_ele_methods(
+        self,
+        data: ElementMethodsPlotData,
+        *,
+        columns: Sequence[str] | None = None,
+        show_names: bool = True,
+        show_csr_ds_step: bool | None = None,
+        include_layout: bool = True,
+        lane_height: float = 0.8,
+        width: int | None = None,
+        height: int | None = None,
+        layout_height: int | None = None,
+        save: bool | str | pathlib.Path | None = None,
+    ):
+        data, ui = super().plot_ele_methods(
+            data,
+            columns=columns,
+            show_names=show_names,
+            show_csr_ds_step=show_csr_ds_step,
+            include_layout=include_layout,
+            lane_height=lane_height,
+            width=width,
+            height=height,
+            layout_height=layout_height,
+            save=save,
+        )
+        bokeh.plotting.show(ui, notebook_handle=True)
+
+        return data, ui
 
 
 @functools.cache

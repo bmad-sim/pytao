@@ -11,6 +11,8 @@ import matplotlib.axes
 import matplotlib.axis
 import matplotlib.cm
 import matplotlib.collections
+import matplotlib.legend
+import matplotlib.lines
 import matplotlib.patches
 import matplotlib.path
 import matplotlib.pyplot as plt
@@ -20,6 +22,7 @@ import numpy as np
 
 from . import floor_plan_shapes, layout_shapes, pgplot
 from .curves import PlotCurveLine, PlotCurveSymbols, PlotHistogram, TaoCurveSettings
+from .ele_methods import ElementMethodsPlotData, color_for_value, is_garbage_value
 from .fields import ElementField
 from .patches import (
     PlotPatch,
@@ -467,6 +470,171 @@ def plot(graph: AnyGraph, ax: matplotlib.axes.Axes | None = None) -> matplotlib.
     return ax
 
 
+def _draw_method_lanes(
+    data: ElementMethodsPlotData,
+    columns: list[str],
+    ax: matplotlib.axes.Axes,
+    lane_height: float,
+) -> None:
+    """
+    Draw one horizontal lane of colored blocks per method column.
+
+    Contiguous elements with the same value are merged into a single block;
+    per-element blocks would show antialiasing seams as vertical stripes on
+    large lattices.
+    """
+    for lane, col in enumerate(columns):
+        runs = data.value_runs(col)
+        for value in sorted({value for _, _, value in runs}):
+            color = color_for_value(value)
+            garbage = is_garbage_value(value)
+            spans = [
+                (data.s_start[first], data.s_end[last] - data.s_start[first])
+                for first, last, run_value in runs
+                if run_value == value and data.s_end[last] > data.s_start[first]
+            ]
+            if spans:
+                ax.broken_barh(
+                    spans,
+                    (lane - lane_height / 2, lane_height),
+                    facecolors=color,
+                    edgecolors="black" if garbage else "none",
+                    hatch="///" if garbage else None,
+                )
+            zero_length = [
+                data.s_start[first]
+                for first, last, run_value in runs
+                if run_value == value and data.s_end[last] <= data.s_start[first]
+            ]
+            if zero_length:
+                ax.vlines(
+                    zero_length,
+                    lane - lane_height / 2,
+                    lane + lane_height / 2,
+                    colors=color,
+                    linewidths=1.0,
+                )
+
+    ax.set_yticks(range(len(columns)))
+    ax.set_yticklabels(columns)
+    ax.set_ylim(len(columns) - 0.5, -0.5)
+    ax.grid(axis="x", alpha=0.3)
+    ax.set_axisbelow(True)
+
+
+def _draw_method_transition_names(
+    data: ElementMethodsPlotData,
+    columns: list[str],
+    ax: matplotlib.axes.Axes,
+) -> None:
+    """Mark per-lane method transitions and label the elements on either side."""
+
+    def draw_name(name: str, value: str, side: int):
+        color = color_for_value(value)
+        if color in ("white", "#00000000"):
+            # I haven't settled on the color scheme yet
+            color = "black"
+        ax.annotate(
+            name,
+            xy=(boundary, lane),
+            xytext=(3 * side, 0),
+            textcoords="offset points",
+            rotation=90,
+            rotation_mode="anchor",
+            ha="center",
+            va="bottom" if side < 0 else "top",
+            fontsize="x-small",
+            color=color,
+            bbox={
+                "boxstyle": "round,pad=0.15",
+                "facecolor": "white",
+                "edgecolor": "none",
+                "alpha": 0.85,
+            },
+            clip_on=True,
+            zorder=4,
+        )
+
+    for lane, col in enumerate(columns):
+        for idx, before, after in data.value_transitions(col):
+            boundary = data.s_end[idx]
+            ax.vlines(
+                boundary,
+                lane - 0.5,
+                lane + 0.5,
+                colors="black",
+                linewidths=0.75,
+                zorder=3,
+            )
+            draw_name(data.names[idx], before, -1)
+            draw_name(data.names[idx + 1], after, 1)
+
+
+def _draw_lane_legends(
+    data: ElementMethodsPlotData,
+    columns: list[str],
+    ax: matplotlib.axes.Axes,
+) -> None:
+    """
+    Add a small legend of each lane's values next to that lane.
+
+    Related global settings are attached to their lanes: the space charge mesh
+    to `space_charge_method`, and the CSR mesh/binning to `csr_method`.
+    """
+    lane_info = data.settings_summary
+
+    for lane, col in enumerate(columns):
+        handles: list[matplotlib.patches.Patch | matplotlib.lines.Line2D] = [
+            matplotlib.patches.Patch(
+                facecolor=color_for_value(value),
+                edgecolor="black" if is_garbage_value(value) else "none",
+                hatch="///" if is_garbage_value(value) else None,
+                label=value,
+            )
+            for value in sorted({v for v in data.methods[col] if v is not None})
+        ]
+        handles.extend(
+            matplotlib.lines.Line2D([], [], linestyle="none", label=line)
+            for line in lane_info.get(col, [])
+        )
+        if not handles:
+            continue
+
+        legend = matplotlib.legend.Legend(
+            ax,
+            handles,
+            [handle.get_label() for handle in handles],
+            loc="center left",
+            # Anchor at the lane's vertical center, just right of the axes.
+            bbox_to_anchor=(1.01, (len(columns) - 0.5 - lane) / len(columns)),
+            frameon=False,
+            fontsize="x-small",
+            ncols=2,
+            handlelength=1.0,
+            handletextpad=0.4,
+            columnspacing=0.8,
+            borderaxespad=0.0,
+        )
+        ax.add_artist(legend)
+        # add_artist clips to the axes patch, which would hide the legend and
+        # exclude it from tight-bbox calculations.
+        legend.set_clip_on(False)
+
+
+def _draw_csr_ds_step(data: ElementMethodsPlotData, ax: matplotlib.axes.Axes) -> None:
+    """Draw `csr_ds_step` vs s, colored by each element's `csr_method`."""
+    segments = data.csr_ds_step_segments()
+    if segments:
+        s_start, s_end, steps, csr_methods = zip(*segments)
+        colors = [
+            color_for_value(value) if value is not None else "#888888" for value in csr_methods
+        ]
+        ax.hlines(steps, s_start, s_end, colors=colors, linewidths=2.0)
+    ax.set_ylabel("csr_ds_step [m]")
+    ax.grid(axis="x", alpha=0.3)
+    ax.set_axisbelow(True)
+
+
 class MatplotlibGraphManager(GraphManager):
     """Matplotlib backend graph manager."""
 
@@ -848,3 +1016,139 @@ class MatplotlibGraphManager(GraphManager):
                 fig.savefig(save)
 
         return field, fig, ax
+
+    def plot_ele_methods(
+        self,
+        data: ElementMethodsPlotData,
+        *,
+        columns: Sequence[str] | None = None,
+        show_names: bool = True,
+        show_csr_ds_step: bool | None = None,
+        include_layout: bool = True,
+        lane_height: float = 0.8,
+        figsize: tuple[float, float] | None = None,
+        width: float | None = None,
+        height: float | None = None,
+        layout_height: float | None = None,
+        ax: matplotlib.axes.Axes | None = None,
+        save: bool | str | pathlib.Path | None = None,
+    ):
+        """
+        Plot element method settings as categorical lanes along the beamline.
+
+        Each method (e.g., `tracking_method`) becomes a horizontal lane, with
+        each element drawn as a block spanning its longitudinal extent, colored
+        by the method value.
+
+        Parameters
+        ----------
+        data : ElementMethodsPlotData
+            Per-element method data, gathered via
+            `ElementMethodsPlotData.from_tao`.
+        columns : sequence of str, optional
+            Method columns to plot, in order.  Defaults to all categorical
+            columns with data for the selected elements.
+        show_names : bool, default=True
+            Label method transitions with the element names before and after
+            the transition point.
+        show_csr_ds_step : bool, optional
+            Add a subplot of `csr_ds_step` vs s.  The default (`None`) shows
+            it only when CSR is active for at least one selected element.
+        include_layout : bool, default=True
+            Include a lattice layout plot at the bottom.
+        lane_height : float, default=0.8
+            Height of each lane's blocks, where lanes are spaced 1.0 apart.
+        figsize : (float, float), optional
+            Figure size.  Takes precedence over `width` and `height`.
+        width : float, optional
+            Width of the whole plot.
+        height : float, optional
+            Height of the whole plot.
+        layout_height : float, optional
+            Normalized height of the layout plot - assuming the lane plot is
+            of height 1.  Defaults to about half the height of a single lane
+            (`0.5 / len(columns)`).
+        ax : matplotlib.axes.Axes, optional
+            The axes to place the lanes in.  Only supported with
+            `include_layout=False` and `show_csr_ds_step=False`.
+        save : pathlib.Path or str, optional
+            Save the plot to the given filename.
+
+        Returns
+        -------
+        ElementMethodsPlotData
+        matplotlib.figure.Figure
+        list of matplotlib.axes.Axes
+        """
+        columns = data.validate_columns(columns)
+
+        if show_csr_ds_step is None:
+            show_csr_ds_step = data.csr_on
+
+        nrows = 1 + int(show_csr_ds_step) + int(include_layout)
+        if ax is not None:
+            if nrows > 1:
+                raise ValueError(
+                    "A user-specified axis is only supported with "
+                    "include_layout=False and show_csr_ds_step=False"
+                )
+            fig = ax.figure
+            axes = [ax]
+        else:
+            layout_height = layout_height or 0.5 / len(columns)
+
+            if figsize is None and width is None and height is None:
+                lanes_inches = max(2.0, 0.45 * len(columns) + 1.2)
+                figsize = (
+                    12.0,
+                    lanes_inches
+                    + (1.5 if show_csr_ds_step else 0.0)
+                    + (lanes_inches * layout_height if include_layout else 0.0),
+                )
+            else:
+                figsize = get_figsize(figsize, width, height)
+
+            height_ratios = [1.0]
+            if show_csr_ds_step:
+                height_ratios.append(0.4)
+            if include_layout:
+                height_ratios.append(layout_height)
+
+            fig, gs = plt.subplots(
+                nrows=nrows,
+                ncols=1,
+                sharex=True,
+                height_ratios=height_ratios,
+                figsize=figsize,
+                squeeze=False,
+            )
+            axes = list(gs[:, 0])
+
+        lanes_ax = axes[0]
+        _draw_method_lanes(data, columns, lanes_ax, lane_height)
+        if show_names:
+            _draw_method_transition_names(data, columns, lanes_ax)
+        _draw_lane_legends(data, columns, lanes_ax)
+
+        if show_csr_ds_step:
+            _draw_csr_ds_step(data, axes[1])
+
+        if include_layout:
+            plot(self.lattice_layout_graph, ax=axes[-1])
+
+        lanes_ax.set_xlim(min(data.s_start), max(data.s_end))
+        axes[-1].set_xlabel("s [m]")
+
+        if fig is not None:
+            if ax is None:
+                fig.tight_layout()
+
+            if save:
+                if save is True:
+                    save = "ele_methods.png"
+                if not pathlib.Path(save).suffix:
+                    save = f"{save}.png"
+                logger.info(f"Saving plot to {save!r}")
+                fig.savefig(save, bbox_inches="tight")
+
+        return data, fig, axes
