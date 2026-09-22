@@ -148,6 +148,7 @@ def set_defaults(
     show_sliders: bool | None = None,
     line_width_scale: float | None = None,
     floor_line_width_scale: float | None = None,
+    resources: Literal["inline", "cdn"] | None = None,
 ):
     """
     Change defaults used for Bokeh plots.
@@ -191,6 +192,11 @@ def set_defaults(
         Plot line width scaling factor applied to Tao's line width.
     floor_line_width_scale : float, default=0.5
         Floor plan line width scaling factor applied to Tao's line width.
+    resources : "cdn" or "inline", optional
+        When saving Bokeh plots to HTML, make the file fully standalone
+        ("inline") by saving everything necessary to load the page in the file,
+        or retrieve shared scripts and resources from online ("cdn") when
+        the page is opened.
     """
 
     if width is not None:
@@ -231,6 +237,10 @@ def set_defaults(
         _Defaults.line_width_scale = float(line_width_scale)
     if floor_line_width_scale is not None:
         _Defaults.floor_line_width_scale = float(floor_line_width_scale)
+    if resources is not None:
+        if resources not in ("cdn", "inline"):
+            raise ValueError(f"Unexpected value for 'resources': {resources}")
+        _Defaults.resources = resources
     return {
         key: value
         for key, value in vars(_Defaults).items()
