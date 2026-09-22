@@ -1,0 +1,24 @@
+! Minimal two-branch lattice: branch 0 (MAIN) forks to branch 1 (XLINE).
+no_digested
+beginning[beta_a] = 10
+beginning[beta_b] = 10
+beginning[e_tot] = 1e9
+parameter[geometry] = open
+parameter[particle] = electron
+
+d1: drift, l = 1
+f1: fork, to_line = xline
+q1: quadrupole, l = 0.5, k1 = 0.3
+
+d2: drift, l = 2
+
+xline: line = (d2)
+xline[geometry] = open
+xline[particle] = electron
+xline[e_tot] = 1e9
+xline[beta_a] = 10
+xline[beta_b] = 10
+
+main: line = (d1, f1, q1)
+
+use, main
