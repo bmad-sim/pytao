@@ -1,6 +1,7 @@
 import pytest
 
 from ..errors import TaoMessage, capture_messages_from_functions, filter_output_lines
+from ..util.paths import set_design_lattice
 
 
 @pytest.mark.parametrize(
@@ -138,3 +139,81 @@ def test_capture_messages_from_functions(
     expected_messages: list[TaoMessage],
 ) -> None:
     assert capture_messages_from_functions(lines) == (expected_lines, expected_messages)
+
+
+@pytest.mark.parametrize(
+    ("line", "expected_line"),
+    [
+        pytest.param(
+            '  design_lattice(1)%file = "old.bmad"',
+            '  design_lattice(1)%file = "new.bmad"',
+            id="typical",
+        ),
+        pytest.param(
+            'design_lattice(1)%file="old.bmad"',
+            'design_lattice(1)%file = "new.bmad"',
+            id="no-whitespace",
+        ),
+        pytest.param(
+            "\tdesign_lattice( 1 ) % file  =  'old.bmad'",
+            '\tdesign_lattice( 1 ) % file = "new.bmad"',
+            id="extra-whitespace",
+        ),
+        pytest.param(
+            '  Design_Lattice(1)%File = "old.bmad"',
+            '  Design_Lattice(1)%File = "new.bmad"',
+            id="mixed-case",
+        ),
+    ],
+)
+def test_set_design_lattice(line: str, expected_line: str) -> None:
+    init_contents = f"""\
+&tao_design_lattice
+  n_universes = 1
+{line}
+/
+"""
+    assert (
+        set_design_lattice(init_contents, "new.bmad")
+        == f"""\
+&tao_design_lattice
+  n_universes = 1
+{expected_line}
+/
+"""
+    )
+
+
+def test_set_design_lattice_other_index() -> None:
+    init_contents = """\
+&tao_design_lattice
+  n_universes = 2
+  design_lattice(1)%file = "one.bmad"
+  design_lattice(2)%file = "two.bmad"
+/
+"""
+    assert (
+        set_design_lattice(init_contents, "new.bmad", index=2)
+        == """\
+&tao_design_lattice
+  n_universes = 2
+  design_lattice(1)%file = "one.bmad"
+  design_lattice(2)%file = "new.bmad"
+/
+"""
+    )
+
+
+def test_set_design_lattice_adds_namelist() -> None:
+    assert (
+        set_design_lattice("&tao_params\n/\n", "new.bmad")
+        == """\
+&tao_design_lattice
+  n_universes = 1
+  design_lattice(1)%file = "new.bmad"
+/
+
+&tao_params
+/
+"""
+    )

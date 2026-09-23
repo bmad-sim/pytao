@@ -123,6 +123,7 @@ use, fodo1
 
 
 def test_startup_from_lattice_contents() -> None:
+    # back-compat for now
     with SubprocessTao.from_lattice_contents(fodo_lattice, noplot=True) as tao:
         ids = tao.unique_ele_ids(sort_by=None)
         names = [tao.ele_head(ele_id)["name"] for ele_id in ids]
@@ -136,6 +137,67 @@ def test_startup_from_lattice_contents() -> None:
         "Q2",
         "END",
     ]
+
+
+fodo_init_file = """
+&tao_design_lattice
+  n_universes = 1
+  design_lattice(1)%file = "to_be_replaced.bmad"
+/
+"""
+
+fodo_plot_file = """
+&tao_template_plot
+  plot%name = "custom_layout"
+  plot%n_graph = 1
+/
+
+&tao_template_graph
+  graph_index = 1
+  graph%name = "g"
+  graph%type = "lat_layout"
+  graph%box = 1, 1, 1, 1
+  graph%n_curve = 0
+/
+"""
+
+
+def test_startup_from_init_file_contents() -> None:
+    with SubprocessTao.from_contents(
+        lattice_contents=fodo_lattice,
+        init_file_contents=fodo_init_file,
+        noplot=True,
+    ) as tao:
+        # The placeholder design_lattice(1)%file was replaced with `fodo_lattice`
+        assert tao.ele_gen_attribs("Q1")["K1"] != 0.0
+
+
+def test_startup_from_plot_file_contents() -> None:
+    with SubprocessTao.from_contents(
+        lattice_contents=fodo_lattice,
+        init_file_contents=fodo_init_file,
+        plot_file_contents=fodo_plot_file,
+        noplot=True,
+    ) as tao:
+        assert "custom_layout" in tao.plot_list("t")
+
+
+def test_startup_from_contents_requires_contents() -> None:
+    with pytest.raises(ValueError):
+        Tao.from_contents()
+
+
+@pytest.mark.parametrize(
+    ("contents_key", "file_key"),
+    [
+        pytest.param("lattice_contents", "lattice_file"),
+        pytest.param("init_file_contents", "init_file"),
+        pytest.param("plot_file_contents", "plot_file"),
+    ],
+)
+def test_startup_from_contents_conflicts_with_file(contents_key: str, file_key: str) -> None:
+    with pytest.raises(ValueError):
+        Tao.from_contents(**{contents_key: "contents", file_key: "some_file"})
 
 
 def test_startup_lattice_file2(tmp_path: pathlib.Path) -> None:
