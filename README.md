@@ -2,33 +2,20 @@
 
 [PyTao](<(https://bmad-sim.github.io/pytao/index.html)>) is Python interface for [Tao](https://www.classe.cornell.edu/bmad/tao.html), which is based on the Bmad subroutine library for relativistic charged–particle and X-ray simulations in accelerators and storage rings.
 
-Documentation for Bmad and Tao, as well as information for downloading the code if needed is given on the [Bmad website](https://www.classe.cornell.edu/bmad).
-
 | **`Documentation`**                                                                                                         |
 | --------------------------------------------------------------------------------------------------------------------------- |
 | [![Documentation](https://img.shields.io/badge/pytao-examples-green.svg)](https://bmad-sim.github.io/pytao/examples/basic/) |
-| [![Documentation](https://img.shields.io/badge/api-reference-blue.svg)](https://bmad-sim.github.io/pytao/api/pytao/)        |
+| [![Documentation](https://img.shields.io/badge/api-reference-blue.svg)](https://bmad-sim.github.io/pytao/api/tao/)          |
 
 ## Installation
 
-See the [PyTao installation instructions](https://bmad-sim.github.io/pytao/installation/) for details. The preferred installation method is using conda:
+See the [PyTao installation instructions](https://bmad-sim.github.io/pytao/installation/) for details. The preferred installation method is using conda, which includes everything you need to run PyTao (including Bmad itself):
 
 ```
 conda install -c conda-forge pytao
 ```
 
-Currently PyTao requires an installed Bmad distribution compiled with the `ACC_ENABLE_SHARED="Y"` or `ACC_ENABLE_SHARED_ONLY="Y"` flag. This can be set in the `bmad_dist/util/dist_prefs` file (the default setting is fine).
-
 ## Current Build status and Release Info
-
-<table><tr><td>All platforms:</td>
-    <td>
-      <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=12517&branchName=master">
-        <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pytao-feedstock?branchName=master">
-      </a>
-    </td>
-  </tr>
-</table>
 
 | Name                                                                                                           | Downloads                                                                                                           | Version                                                                                                           | Platforms                                                                                                           |
 | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
@@ -37,6 +24,7 @@ Currently PyTao requires an installed Bmad distribution compiled with the `ACC_E
 ## Resources
 
 [Bmad website](https://www.classe.cornell.edu/bmad)
+[Bmad source code](https://github.com/bmad-sim/bmad-ecosystem)
 
 ## Quickstart
 
@@ -80,7 +68,7 @@ On the command line, use `--pylog` (e.g. `pytao --pylog DEBUG -init tao.init`). 
 [logging documentation](https://bmad-sim.github.io/pytao/usage/#logging) for the full details,
 including writing to a file and controlling how Tao's own message levels map to Python logging.
 
-## Release process
+## For developers: the release process
 
 To release a new PyTao version with updated bindings for the Fortran functions:
 
