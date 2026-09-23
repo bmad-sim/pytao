@@ -4,6 +4,7 @@ import contextlib
 import io
 import logging
 import os
+import pathlib
 import pickle
 import queue
 import struct
@@ -22,6 +23,7 @@ from ._shmem_compat import SharedMemory
 from .errors import TaoCommandError, TaoInitializationError
 from .startup import TaoStartup
 from .tao import Tao
+from .util import normalize_path
 
 logger = logging.getLogger(__name__)
 
@@ -160,11 +162,13 @@ class _TaoPipe:
     _fifo: io.BufferedReader | None
     _subprocess_monitor_thread: threading.Thread | None
     _subprocess_env: dict[str, str]
+    _subprocess_cwd: pathlib.Path
     _beam_track_shm: SharedMemory
 
-    def __init__(self, env: dict[str, str]):
+    def __init__(self, env: dict[str, str], cwd: pathlib.Path):
         self._init_queue = queue.Queue(maxsize=1)
         self._subprocess_env = env.copy()
+        self._subprocess_cwd = cwd
         shm = SharedMemory(create=True, size=_BEAM_TRACK_SHM_SIZE, track=False)
         if shm.buf is not None:
             struct.pack_into(_BEAM_TRACK_SHM_FMT, shm.buf, 0, -1)
@@ -218,6 +222,7 @@ class _TaoPipe:
                     ],
                     stdin=subprocess.PIPE,
                     env=self._subprocess_env,
+                    cwd=self._subprocess_cwd,
                 )
             except Exception as ex:
                 # Report the exception back to the main thread so it can be
@@ -455,6 +460,12 @@ class SubprocessTao(Tao):
     env : dict[str, str] or None, optional
         Environment variables to use for the subprocess.  If None, defaults to
         `os.environ`.
+    cwd : pathlib.Path or str, optional
+        The current working directory to use when spawning the subprocess.
+        Any filenames used in initializing Tao will be relative to this.
+        Supports environment variables and home directory (`~`) references.
+        By default, this is the current working directory of your Python
+        process.
 
     Attributes
     ----------
@@ -467,18 +478,27 @@ class SubprocessTao(Tao):
     """
 
     _subproc_pipe_: _TaoPipe | None
+    subprocess_env: dict[str, str]
+    subprocess_cwd: pathlib.Path
 
-    def __init__(self, *args, env: dict[str, str] | None = None, **kwargs):
+    def __init__(
+        self,
+        *args,
+        env: dict[str, str] | None = None,
+        cwd: str | pathlib.Path | None = None,
+        **kwargs,
+    ):
         self._subproc_pipe_ = None
         self.subprocess_env = dict(env if env is not None else os.environ)
+        self.subprocess_cwd = normalize_path(cwd) if cwd is not None else pathlib.Path(".")
 
         try:
             super().__init__(*args, **kwargs)
         except Exception:
             try:
                 self.close_subprocess()
-            except Exception:
-                pass
+            except Exception as ex:
+                logger.debug("Failed to close subprocess: %s", ex)
             raise
 
     @property
@@ -598,7 +618,7 @@ class SubprocessTao(Tao):
         self._reset_graph_managers()
         if not self.subprocess_alive:
             logger.debug("Reinitializing Tao subprocess")
-            self._subproc_pipe_ = _TaoPipe(env=self.subprocess_env)
+            self._subproc_pipe_ = _TaoPipe(env=self.subprocess_env, cwd=self.subprocess_cwd)
 
         return self._send_command_through_pipe("init", startup.tao_init, raises=True)
 
