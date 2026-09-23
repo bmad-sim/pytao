@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import os
+import pathlib
 import sys
 import time
 from collections.abc import Callable, Generator
@@ -13,6 +15,7 @@ from ..core import is_in_subprocess
 from ..errors import TaoCommandError, filter_tao_messages_context
 from ..subproc import SubprocessErrorResult, SupportedKwarg, TaoDisconnectedError, _get_result
 from ..tao import Tao
+from ..util import normalize_path
 
 
 def test_context_manager_alive():
@@ -289,3 +292,27 @@ def test_send_receive_custom_main_module():
         assert pipe is not None
         with pytest.raises(ValueError, match="not in an importable module"):
             pipe.send_receive_custom(local_func, {})
+
+
+def _get_cwd(tao: Tao) -> str:
+    return os.getcwd()
+
+
+CSR_BEAM_TRACKING_DIR = "$ACC_ROOT_DIR/regression_tests/pipe_test/csr_beam_tracking"
+
+
+def test_subprocess_cwd_relative_init_file():
+    with SubprocessTao(init_file="tao.init", cwd=CSR_BEAM_TRACKING_DIR, noplot=True) as tao:
+        expected = normalize_path(CSR_BEAM_TRACKING_DIR)
+        assert tao.subprocess_cwd == expected
+        assert pathlib.Path(tao.subprocess_call(_get_cwd)).resolve() == expected.resolve()
+        assert len(tao.lat_list("*", "ele.name"))
+
+
+def test_subprocess_cwd_default(tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.chdir(tmp_path)
+    with SubprocessTao(
+        init_file=f"{CSR_BEAM_TRACKING_DIR}/tao.init",
+        noplot=True,
+    ) as tao:
+        assert pathlib.Path(tao.subprocess_call(_get_cwd)).resolve() == tmp_path.resolve()
