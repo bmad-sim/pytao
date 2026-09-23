@@ -164,12 +164,22 @@ fodo_plot_file = """
 
 def test_startup_from_init_file_contents() -> None:
     with SubprocessTao.from_contents(
-        lattice_contents=fodo_lattice,
+        contents=fodo_lattice,
         init_file_contents=fodo_init_file,
         noplot=True,
     ) as tao:
         # The placeholder design_lattice(1)%file was replaced with `fodo_lattice`
         assert tao.ele_gen_attribs("Q1")["K1"] != 0.0
+
+
+def test_startup_from_init_file_contents_raises() -> None:
+    with pytest.raises(ValueError):
+        SubprocessTao.from_contents(
+            contents=fodo_lattice,
+            lattice_contents="foo",  # <- both kwargs
+            init_file_contents=fodo_init_file,
+            noplot=True,
+        )
 
 
 def test_startup_from_plot_file_contents() -> None:
