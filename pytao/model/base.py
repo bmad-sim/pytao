@@ -630,8 +630,13 @@ def load_model_data(
     if format == "yaml":
         import yaml  # NOTE: yaml is not a required dependency
 
+        try:
+            loader = yaml.CSafeLoader
+        except AttributeError:
+            loader = yaml.SafeLoader
+
         with open(fname, "rt") as fp:
-            return yaml.safe_load(fp)
+            return yaml.load(fp, Loader=loader)
     elif format == "msgpack":
         import ormsgpack
 
@@ -752,10 +757,15 @@ def dump_model(
         mode="json",
     )
     if format == "yaml":
-        with fname.open("wt") as fp:
-            import yaml  # NOTE: yaml is not a required dependency
+        import yaml  # NOTE: yaml is not a required dependency
 
-            yaml.safe_dump(data, fp)
+        try:
+            dumper = yaml.CSafeDumper
+        except AttributeError:
+            dumper = yaml.SafeDumper
+
+        with fname.open("wt") as fp:
+            yaml.dump(data, fp, Dumper=dumper)
     elif format in ("json.gz", "json"):
         options = 0
         if indent:
