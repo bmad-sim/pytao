@@ -2,19 +2,17 @@ from __future__ import annotations
 
 import contextlib
 import datetime
-import orjson
 import gzip
 import logging
 import os
-import re
 import pathlib
+import re
 import textwrap
-from collections.abc import Generator
+from collections.abc import Generator, Iterable
 from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    Iterable,
     Literal,
     NamedTuple,
     TypeVar,
@@ -22,15 +20,14 @@ from typing import (
 )
 
 import numpy as np
+import orjson
 import pydantic
 from pydantic.fields import FieldInfo
+from rich.pretty import pretty_repr
 from typing_extensions import Self, override
 
 from ..errors import TaoCommandError
 from .types import ArgumentType, _PydanticNDArray
-
-from rich.pretty import pretty_repr
-
 
 if TYPE_CHECKING:
     from pytao import Tao
