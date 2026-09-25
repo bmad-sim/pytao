@@ -624,9 +624,9 @@ def test_lattice_write(
         ),
     ],
 )
-def test_format_from_filename(filename: str, expected_format: str) -> None:
-    fn_path = pathlib.Path(filename)
-    assert ArchiveFormat.from_filename(fn_path) == expected_format
+@pytest.mark.parametrize("to_filename", [str, pathlib.Path], ids=["str", "path"])
+def test_format_from_filename(filename: str, expected_format: str, to_filename) -> None:
+    assert ArchiveFormat.from_filename(to_filename(filename)) == expected_format
 
 
 def test_sr_wake_longitudinal():

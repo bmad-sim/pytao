@@ -12,6 +12,7 @@ import yaml
 from pytao.model import Comb, Element, ElementHead, Lattice
 from pytao.model.base import (
     ArchiveFormat,
+    ArchiveFormatLike,
     date_coded_rename,
     dump_model,
     load_model,
@@ -45,14 +46,53 @@ def test_round_trip_from_extension(
     assert Comb.from_file(fn) == comb
 
 
+@pytest.mark.parametrize("as_str", [False, True], ids=["enum", "str"])
 def test_round_trip_with_explicit_format(
-    tmp_path: pathlib.Path, comb: Comb, format: ArchiveFormat
+    tmp_path: pathlib.Path, comb: Comb, format: ArchiveFormat, as_str: bool
 ) -> None:
-    # An extension that `format_from_filename` would call "json":
+    # An extension that `ArchiveFormat.from_filename` would call "json":
     fn = tmp_path / "comb.dat"
-    dump_model(fn, comb, format=format)
+    format_like: ArchiveFormatLike = format.value if as_str else format  # type: ignore[assignment]
+    dump_model(fn, comb, format=format_like)
 
-    assert load_model(fn, Comb, format=format) == comb
+    assert load_model(fn, Comb, format=format_like) == comb
+
+
+def test_extension_maps_back_to_format(format: ArchiveFormat) -> None:
+    assert ArchiveFormat.from_filename(f"comb{format.extension}") == format
+
+
+@pytest.mark.parametrize(
+    "filename, format_like, expected",
+    [
+        pytest.param(
+            "comb.yaml",
+            ArchiveFormat.msgpack,
+            ArchiveFormat.msgpack,
+            id="enum_overrides_filename",
+        ),
+        pytest.param(
+            "comb.yaml", "json.gz", ArchiveFormat.json_gz, id="str_overrides_filename"
+        ),
+        pytest.param("comb.yaml", None, ArchiveFormat.yaml, id="none_uses_filename"),
+        pytest.param(
+            pathlib.Path("comb.msgpack"), None, ArchiveFormat.msgpack, id="none_uses_path"
+        ),
+    ],
+)
+def test_from_format_or_file(
+    filename: str | pathlib.Path,
+    format_like: ArchiveFormatLike | None,
+    expected: ArchiveFormat,
+) -> None:
+    result = ArchiveFormat.from_format_or_file(filename, format_like)
+    assert result is expected
+
+
+@pytest.mark.parametrize("format_like", ["hdf5", "", "YAML"])
+def test_from_format_or_file_rejects_invalid(format_like: str) -> None:
+    with pytest.raises(ValueError):
+        ArchiveFormat.from_format_or_file("comb.json", format_like)  # type: ignore[arg-type]
 
 
 def test_dump_returns_dumped_data(
@@ -181,6 +221,20 @@ def test_load_unsupported_format(tmp_path: pathlib.Path, comb: Comb) -> None:
 def test_dump_unsupported_format(tmp_path: pathlib.Path, comb: Comb) -> None:
     with pytest.raises(ValueError):
         dump_model(tmp_path / "comb.hdf5", comb, format="hdf5")  # type: ignore
+
+
+def test_dump_unsupported_format_keeps_existing_file(
+    tmp_path: pathlib.Path, comb: Comb
+) -> None:
+    fn = tmp_path / "comb.json"
+    dump_model(fn, comb)
+    original = fn.read_bytes()
+
+    with pytest.raises(ValueError):
+        dump_model(fn, comb, backup_existing=True, format="hdf5")  # type: ignore
+
+    assert [path.name for path in tmp_path.iterdir()] == [fn.name]
+    assert fn.read_bytes() == original
 
 
 def test_backup_existing(tmp_path: pathlib.Path, comb: Comb, format: ArchiveFormat) -> None:
