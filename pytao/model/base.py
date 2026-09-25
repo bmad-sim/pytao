@@ -9,7 +9,7 @@ import pathlib
 import re
 import textwrap
 from collections.abc import Generator, Iterable
-from enum import StrEnum, auto
+from enum import Enum
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -588,15 +588,15 @@ class TaoSettableModel(TaoModel):
 T = TypeVar("T", bound=pydantic.BaseModel)
 
 
-class ArchiveFormat(StrEnum):
-    yaml = auto()
+class ArchiveFormat(str, Enum):
+    yaml = "yaml"
     json_gz = "json.gz"
-    json = auto()
-    msgpack = auto()
+    json = "json"
+    msgpack = "msgpack"
 
     @property
     def extension(self):
-        return f".{self}"
+        return f".{self.value}"
 
     @classmethod
     def from_filename(cls, fn: pathlib.Path | str) -> ArchiveFormat:
