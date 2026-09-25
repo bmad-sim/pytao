@@ -174,13 +174,13 @@ def test_load_unsupported_format(tmp_path: pathlib.Path, comb: Comb) -> None:
     fn = tmp_path / "comb.json"
     dump_model(fn, comb)
 
-    with pytest.raises(NotImplementedError):
-        load_model_data(fn, format=cast(ArchiveFormat, "hdf5"))
+    with pytest.raises(ValueError):
+        load_model_data(fn, format="hdf5")  # type: ignore
 
 
 def test_dump_unsupported_format(tmp_path: pathlib.Path, comb: Comb) -> None:
-    with pytest.raises(NotImplementedError):
-        dump_model(tmp_path / "comb.hdf5", comb, format=cast(ArchiveFormat, "hdf5"))
+    with pytest.raises(ValueError):
+        dump_model(tmp_path / "comb.hdf5", comb, format="hdf5")  # type: ignore
 
 
 def test_backup_existing(tmp_path: pathlib.Path, comb: Comb, format: ArchiveFormat) -> None:

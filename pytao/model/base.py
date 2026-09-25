@@ -600,6 +600,17 @@ class ArchiveFormat(str, Enum):
         return f".{self.value}"
 
     @classmethod
+    def from_format_or_file(
+        cls, filename: pathlib.Path | str, format: ArchiveFormatLike | None
+    ) -> ArchiveFormat:
+        if isinstance(format, ArchiveFormat):
+            return format
+        if isinstance(format, str):
+            return ArchiveFormat(format)
+
+        return ArchiveFormat.from_filename(filename)
+
+    @classmethod
     def from_filename(cls, fn: pathlib.Path | str) -> ArchiveFormat:
         fn = pathlib.Path(fn)
         if fn.suffix.lower() in (".msgpack", ".mpk"):
@@ -640,7 +651,7 @@ def load_model_data(
     """
     fname = pathlib.Path(filename)
 
-    format = ArchiveFormat(format) if format else ArchiveFormat.from_filename(fname)
+    format = ArchiveFormat.from_format_or_file(fname, format)
 
     if format == ArchiveFormat.yaml:
         import yaml  # NOTE: yaml is not a required dependency
@@ -745,7 +756,7 @@ def dump_model(
     """
     fname = pathlib.Path(filename)
 
-    format = ArchiveFormat(format) if format else ArchiveFormat.from_filename(fname)
+    format = ArchiveFormat.from_format_or_file(fname, format)
 
     if backup_existing:
         date_coded_rename(fname, datefmt=datefmt)
