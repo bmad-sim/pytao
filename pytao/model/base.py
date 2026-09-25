@@ -9,11 +9,11 @@ import pathlib
 import re
 import textwrap
 from collections.abc import Generator, Iterable
+from enum import StrEnum, auto
 from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    Literal,
     NamedTuple,
     TypeVar,
     cast,
@@ -586,19 +586,35 @@ class TaoSettableModel(TaoModel):
 
 
 T = TypeVar("T", bound=pydantic.BaseModel)
-ArchiveFormat = Literal["yaml", "json.gz", "json", "msgpack"]
 
 
+class ArchiveFormat(StrEnum):
+    yaml = auto()
+    json_gz = "json.gz"
+    json = auto()
+    msgpack = auto()
+
+    @property
+    def extension(self):
+        return f".{self}"
+
+    @classmethod
+    def from_filename(cls, fn: pathlib.Path | str) -> ArchiveFormat:
+        fn = pathlib.Path(fn)
+        if fn.suffix.lower() in (".msgpack", ".mpk"):
+            return ArchiveFormat.msgpack
+        if fn.suffix.lower() in (".yml", ".yaml"):
+            return ArchiveFormat.yaml
+
+        suffixes = [suffix.lower() for suffix in fn.suffixes][-2:]
+        if suffixes == [".json", ".gz"]:
+            return ArchiveFormat.json_gz
+        return ArchiveFormat.json
+
+
+# Back-compat; can we remove?
 def format_from_filename(fn: pathlib.Path) -> ArchiveFormat:
-    if fn.suffix.lower() in (".msgpack", ".mpk"):
-        return "msgpack"
-    if fn.suffix.lower() in (".yml", ".yaml"):
-        return "yaml"
-
-    suffixes = [suffix.lower() for suffix in fn.suffixes][-2:]
-    if suffixes == [".json", ".gz"]:
-        return "json.gz"
-    return "json"
+    return ArchiveFormat.from_filename(fn)
 
 
 def load_model_data(
@@ -627,7 +643,7 @@ def load_model_data(
 
     format = format or format_from_filename(fname)
 
-    if format == "yaml":
+    if format == ArchiveFormat.yaml:
         import yaml  # NOTE: yaml is not a required dependency
 
         try:
@@ -637,17 +653,17 @@ def load_model_data(
 
         with open(fname, "rt") as fp:
             return yaml.load(fp, Loader=loader)
-    elif format == "msgpack":
+    elif format == ArchiveFormat.msgpack:
         import ormsgpack
 
         data = ormsgpack.unpackb(fname.read_bytes(), option=ormsgpack.OPT_NON_STR_KEYS)
         if not raw:
             _msgpack_restore_ndarrays(data)
         return data
-    elif format == "json.gz":
+    elif format == ArchiveFormat.json_gz:
         with gzip.open(fname, "rb") as fp:
             return orjson.loads(fp.read())
-    elif format == "json":
+    elif format == ArchiveFormat.json:
         return orjson.loads(fname.read_bytes())
     raise NotImplementedError(format)
 
@@ -756,7 +772,7 @@ def dump_model(
         exclude_computed_fields=True,
         mode="json",
     )
-    if format == "yaml":
+    if format == ArchiveFormat.yaml:
         import yaml  # NOTE: yaml is not a required dependency
 
         try:
@@ -766,7 +782,7 @@ def dump_model(
 
         with fname.open("wt") as fp:
             yaml.dump(data, fp, Dumper=dumper)
-    elif format in ("json.gz", "json"):
+    elif format in (ArchiveFormat.json_gz, ArchiveFormat.json):
         options = 0
         if indent:
             options |= orjson.OPT_INDENT_2
@@ -774,7 +790,7 @@ def dump_model(
             options |= orjson.OPT_SORT_KEYS
         dumped = orjson.dumps(data, option=options)
 
-        if format == "json.gz":
+        if format == ArchiveFormat.json_gz:
             with gzip.open(fname, "wb") as fp:
                 fp.write(dumped)
         else:
