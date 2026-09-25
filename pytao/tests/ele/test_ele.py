@@ -10,7 +10,7 @@ import pytest
 import pytao
 from pytao import SubprocessTao
 from pytao.model.base import TaoBaseModel, format_from_filename
-from pytao.model.ele import Element, Lattice
+from pytao.model.ele import Comb, Element, Lattice
 from pytao.model.ele.ele import (
     _used_unique_element_indices,
     get_element_index,
@@ -376,7 +376,8 @@ def test_cbeta_tracking(cbeta_ffag_tao: SubprocessTao, pytao_stats: _PytaoStatis
     lat.by_element_name
 
 
-def test_ele_comb(pytao_stats: _PytaoStatistics):
+@pytest.fixture(scope="module")
+def comb_tao():
     startup = get_regression_test("tao.init_optics_matching")
     with startup.run_context(use_subprocess=True) as tao:
         conf = tao.get_config()
@@ -395,16 +396,58 @@ def test_ele_comb(pytao_stats: _PytaoStatistics):
 
         # make sure we actually have bunch comb data
         assert len(tao.bunch_comb("x"))
+        yield tao
 
-        # compare the two constructors, ensuring tao.ele() and
-        # from_tao_tracking give the same result
-        full_lat = Lattice.from_tao_tracking(tao, comb=True)
 
-        assert full_lat.elements[0].name == "BEGINNING"
-        assert len(full_lat.elements[0].comb.s)
+@pytest.fixture
+def comb_from_tao_calls(monkeypatch: pytest.MonkeyPatch) -> list[dict]:
+    calls = []
+    orig = Comb.from_tao.__func__
 
-        tao_ele = tao.ele("BEGINNING", comb=True)
-        assert tao_ele.comb == full_lat.elements[0].comb
+    def from_tao(cls, tao, **kwargs):
+        calls.append(kwargs)
+        return orig(cls, tao, **kwargs)
+
+    monkeypatch.setattr(Comb, "from_tao", classmethod(from_tao))
+    return calls
+
+
+def test_ele_comb(comb_tao: SubprocessTao, pytao_stats: _PytaoStatistics):
+    # compare the two constructors, ensuring tao.ele() and
+    # from_tao_tracking give the same result
+    full_lat = Lattice.from_tao_tracking(comb_tao, comb=True)
+
+    assert full_lat.elements[0].name == "BEGINNING"
+    assert len(full_lat.elements[0].comb.s)
+
+    tao_ele = comb_tao.ele("BEGINNING", comb=True)
+    assert tao_ele.comb == full_lat.elements[0].comb
+
+
+def test_eles_comb_queried_once(comb_tao: SubprocessTao, comb_from_tao_calls: list[dict]):
+    eles = comb_tao.eles("1:5", comb=True)
+    assert len(eles) == 5
+    assert len(comb_from_tao_calls) == 1
+    assert comb_from_tao_calls[0]["ix_uni"] == 1
+    assert comb_from_tao_calls[0]["ix_branch"] == 0
+
+    for ele in eles:
+        assert ele.comb == comb_tao.ele(ele.ele_id, comb=True).comb
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        pytest.param({"comb": False}, id="comb-false"),
+        pytest.param({"defaults": False}, id="no-defaults"),
+        pytest.param({"comb": True, "comb_data": Comb()}, id="explicit-comb-data"),
+    ],
+)
+def test_eles_comb_not_queried(
+    comb_tao: SubprocessTao, comb_from_tao_calls: list[dict], kwargs: dict
+):
+    comb_tao.eles("1:5", **kwargs)
+    assert not comb_from_tao_calls
 
 
 def test_lattice_track_start(cbeta_ffag_tao: SubprocessTao, pytao_stats: _PytaoStatistics):

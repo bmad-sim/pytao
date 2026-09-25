@@ -490,7 +490,7 @@ class Comb(TaoModel, extra="allow"):
             Comb data.
         """
         if check_ds_save:
-            if tao.beam(ix_branch)["ds_save"] <= 0:
+            if tao.beam(ix_branch, ix_uni=str(ix_uni))["ds_save"] <= 0:
                 return cls()
 
         args = {"ix_uni": ix_uni, "ix_branch": ix_branch, "ix_bunch": ix_bunch}
