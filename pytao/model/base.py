@@ -2,19 +2,18 @@ from __future__ import annotations
 
 import contextlib
 import datetime
-import orjson
 import gzip
 import logging
 import os
-import re
 import pathlib
+import re
 import textwrap
-from collections.abc import Generator
+from collections.abc import Generator, Iterable
+from enum import Enum
 from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    Iterable,
     Literal,
     NamedTuple,
     TypeVar,
@@ -22,15 +21,14 @@ from typing import (
 )
 
 import numpy as np
+import orjson
 import pydantic
 from pydantic.fields import FieldInfo
+from rich.pretty import pretty_repr
 from typing_extensions import Self, override
 
 from ..errors import TaoCommandError
 from .types import ArgumentType, _PydanticNDArray
-
-from rich.pretty import pretty_repr
-
 
 if TYPE_CHECKING:
     from pytao import Tao
@@ -135,7 +133,7 @@ class TaoBaseModel(
         exclude_defaults: bool = True,
         backup_existing: bool = True,
         datefmt: str = DEFAULT_DATEFMT,
-        format: ArchiveFormat | None = None,
+        format: ArchiveFormatLike | None = None,
         indent: bool = False,
         sort_keys: bool = False,
     ):
@@ -178,7 +176,7 @@ class TaoBaseModel(
         cls,
         filename: str | pathlib.Path,
         *,
-        format: ArchiveFormat | None = None,
+        format: ArchiveFormatLike | None = None,
     ) -> Self:
         """
         Load Tao model data from a previously-written file.
@@ -589,25 +587,50 @@ class TaoSettableModel(TaoModel):
 
 
 T = TypeVar("T", bound=pydantic.BaseModel)
-ArchiveFormat = Literal["yaml", "json.gz", "json", "msgpack"]
 
 
-def format_from_filename(fn: pathlib.Path) -> ArchiveFormat:
-    if fn.suffix.lower() in (".msgpack", ".mpk"):
-        return "msgpack"
-    if fn.suffix.lower() in (".yml", ".yaml"):
-        return "yaml"
+class ArchiveFormat(str, Enum):
+    yaml = "yaml"
+    json_gz = "json.gz"
+    json = "json"
+    msgpack = "msgpack"
 
-    suffixes = [suffix.lower() for suffix in fn.suffixes][-2:]
-    if suffixes == [".json", ".gz"]:
-        return "json.gz"
-    return "json"
+    @property
+    def extension(self) -> str:
+        return f".{self.value}"
+
+    @classmethod
+    def from_format_or_file(
+        cls, filename: pathlib.Path | str, format: ArchiveFormatLike | None
+    ) -> ArchiveFormat:
+        if isinstance(format, ArchiveFormat):
+            return format
+        if isinstance(format, str):
+            return ArchiveFormat(format)
+
+        return ArchiveFormat.from_filename(filename)
+
+    @classmethod
+    def from_filename(cls, fn: pathlib.Path | str) -> ArchiveFormat:
+        fn = pathlib.Path(fn)
+        if fn.suffix.lower() in (".msgpack", ".mpk"):
+            return ArchiveFormat.msgpack
+        if fn.suffix.lower() in (".yml", ".yaml"):
+            return ArchiveFormat.yaml
+
+        suffixes = [suffix.lower() for suffix in fn.suffixes][-2:]
+        if suffixes == [".json", ".gz"]:
+            return ArchiveFormat.json_gz
+        return ArchiveFormat.json
+
+
+ArchiveFormatLike = Literal["yaml", "json.gz", "json", "msgpack"] | ArchiveFormat
 
 
 def load_model_data(
     filename: str | pathlib.Path,
     *,
-    format: ArchiveFormat | None = None,
+    format: ArchiveFormatLike | None = None,
     raw: bool = False,
 ):
     """
@@ -628,24 +651,29 @@ def load_model_data(
     """
     fname = pathlib.Path(filename)
 
-    format = format or format_from_filename(fname)
+    format = ArchiveFormat.from_format_or_file(fname, format)
 
-    if format == "yaml":
+    if format == ArchiveFormat.yaml:
         import yaml  # NOTE: yaml is not a required dependency
 
+        try:
+            loader = yaml.CSafeLoader
+        except AttributeError:
+            loader = yaml.SafeLoader
+
         with open(fname, "rt") as fp:
-            return yaml.safe_load(fp)
-    elif format == "msgpack":
+            return yaml.load(fp, Loader=loader)
+    elif format == ArchiveFormat.msgpack:
         import ormsgpack
 
         data = ormsgpack.unpackb(fname.read_bytes(), option=ormsgpack.OPT_NON_STR_KEYS)
         if not raw:
             _msgpack_restore_ndarrays(data)
         return data
-    elif format == "json.gz":
+    elif format == ArchiveFormat.json_gz:
         with gzip.open(fname, "rb") as fp:
             return orjson.loads(fp.read())
-    elif format == "json":
+    elif format == ArchiveFormat.json:
         return orjson.loads(fname.read_bytes())
     raise NotImplementedError(format)
 
@@ -654,7 +682,7 @@ def load_model(
     filename: str | pathlib.Path,
     cls: type[T],
     *,
-    format: ArchiveFormat | None = None,
+    format: ArchiveFormatLike | None = None,
 ) -> T:
     """
     Read the model from a file in JSON, YAML, or msgpack format.
@@ -698,7 +726,7 @@ def dump_model(
     exclude_defaults: bool = True,
     backup_existing: bool = True,
     datefmt: str = DEFAULT_DATEFMT,
-    format: ArchiveFormat | None = None,
+    format: ArchiveFormatLike | None = None,
     indent: bool = False,
     sort_keys: bool = False,
 ):
@@ -728,12 +756,12 @@ def dump_model(
     """
     fname = pathlib.Path(filename)
 
-    format = format or format_from_filename(fname)
+    format = ArchiveFormat.from_format_or_file(fname, format)
 
     if backup_existing:
         date_coded_rename(fname, datefmt=datefmt)
 
-    if format == "msgpack":
+    if format == ArchiveFormat.msgpack:
         import ormsgpack
 
         data = model.model_dump(
@@ -754,12 +782,17 @@ def dump_model(
         exclude_computed_fields=True,
         mode="json",
     )
-    if format == "yaml":
-        with fname.open("wt") as fp:
-            import yaml  # NOTE: yaml is not a required dependency
+    if format == ArchiveFormat.yaml:
+        import yaml  # NOTE: yaml is not a required dependency
 
-            yaml.safe_dump(data, fp)
-    elif format in ("json.gz", "json"):
+        try:
+            dumper = yaml.CSafeDumper
+        except AttributeError:
+            dumper = yaml.SafeDumper
+
+        with fname.open("wt") as fp:
+            yaml.dump(data, fp, Dumper=dumper)
+    elif format in (ArchiveFormat.json_gz, ArchiveFormat.json):
         options = 0
         if indent:
             options |= orjson.OPT_INDENT_2
@@ -767,7 +800,7 @@ def dump_model(
             options |= orjson.OPT_SORT_KEYS
         dumped = orjson.dumps(data, option=options)
 
-        if format == "json.gz":
+        if format == ArchiveFormat.json_gz:
             with gzip.open(fname, "wb") as fp:
                 fp.write(dumped)
         else:
