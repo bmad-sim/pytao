@@ -18,14 +18,7 @@ from pytao.model.base import (
     load_model_data,
 )
 
-all_formats: list[ArchiveFormat] = ["yaml", "json", "json.gz", "msgpack"]
-
-extension_by_format: dict[ArchiveFormat, str] = {
-    "yaml": ".yaml",
-    "json": ".json",
-    "json.gz": ".json.gz",
-    "msgpack": ".msgpack",
-}
+extension_by_format: dict[ArchiveFormat, str] = {fmt: fmt.extension for fmt in ArchiveFormat}
 
 
 @pytest.fixture
@@ -37,7 +30,7 @@ def comb() -> Comb:
     )
 
 
-@pytest.fixture(params=all_formats)
+@pytest.fixture(params=list(ArchiveFormat))
 def format(request: pytest.FixtureRequest) -> ArchiveFormat:
     return cast(ArchiveFormat, request.param)
 

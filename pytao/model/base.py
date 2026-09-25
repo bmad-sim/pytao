@@ -14,6 +14,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
+    Literal,
     NamedTuple,
     TypeVar,
     cast,
@@ -132,7 +133,7 @@ class TaoBaseModel(
         exclude_defaults: bool = True,
         backup_existing: bool = True,
         datefmt: str = DEFAULT_DATEFMT,
-        format: ArchiveFormat | None = None,
+        format: ArchiveFormatLike | None = None,
         indent: bool = False,
         sort_keys: bool = False,
     ):
@@ -175,7 +176,7 @@ class TaoBaseModel(
         cls,
         filename: str | pathlib.Path,
         *,
-        format: ArchiveFormat | None = None,
+        format: ArchiveFormatLike | None = None,
     ) -> Self:
         """
         Load Tao model data from a previously-written file.
@@ -595,7 +596,7 @@ class ArchiveFormat(str, Enum):
     msgpack = "msgpack"
 
     @property
-    def extension(self):
+    def extension(self) -> str:
         return f".{self.value}"
 
     @classmethod
@@ -612,15 +613,13 @@ class ArchiveFormat(str, Enum):
         return ArchiveFormat.json
 
 
-# Back-compat; can we remove?
-def format_from_filename(fn: pathlib.Path) -> ArchiveFormat:
-    return ArchiveFormat.from_filename(fn)
+ArchiveFormatLike = Literal["yaml", "json.gz", "json", "msgpack"] | ArchiveFormat
 
 
 def load_model_data(
     filename: str | pathlib.Path,
     *,
-    format: ArchiveFormat | None = None,
+    format: ArchiveFormatLike | None = None,
     raw: bool = False,
 ):
     """
@@ -641,7 +640,7 @@ def load_model_data(
     """
     fname = pathlib.Path(filename)
 
-    format = format or format_from_filename(fname)
+    format = ArchiveFormat(format) if format else ArchiveFormat.from_filename(fname)
 
     if format == ArchiveFormat.yaml:
         import yaml  # NOTE: yaml is not a required dependency
@@ -672,7 +671,7 @@ def load_model(
     filename: str | pathlib.Path,
     cls: type[T],
     *,
-    format: ArchiveFormat | None = None,
+    format: ArchiveFormatLike | None = None,
 ) -> T:
     """
     Read the model from a file in JSON, YAML, or msgpack format.
@@ -716,7 +715,7 @@ def dump_model(
     exclude_defaults: bool = True,
     backup_existing: bool = True,
     datefmt: str = DEFAULT_DATEFMT,
-    format: ArchiveFormat | None = None,
+    format: ArchiveFormatLike | None = None,
     indent: bool = False,
     sort_keys: bool = False,
 ):
@@ -746,12 +745,12 @@ def dump_model(
     """
     fname = pathlib.Path(filename)
 
-    format = format or format_from_filename(fname)
+    format = ArchiveFormat(format) if format else ArchiveFormat.from_filename(fname)
 
     if backup_existing:
         date_coded_rename(fname, datefmt=datefmt)
 
-    if format == "msgpack":
+    if format == ArchiveFormat.msgpack:
         import ormsgpack
 
         data = model.model_dump(
