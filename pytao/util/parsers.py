@@ -801,10 +801,18 @@ def parse_complete(lines, cmd="") -> CompleteResult:
     dict
         With keys ``word`` (the partial token being completed), ``context``
         (``"LIST"``, ``"FILE"``, or ``"NONE"``), and ``matches`` (full
-        replacement candidates for ``word``).
+        replacement candidates for ``word``, in Tao's order).
     """
-    word, _, context = lines[0].rpartition(";")
-    return CompleteResult(word=word, context=context, matches=lines[1:])
+    data = parse_tao_python_data(lines, clean_key=False)
+    match_keys = sorted(
+        (key for key in data if key.startswith("match[")),
+        key=lambda key: int(key[len("match[") : -1]),
+    )
+    return CompleteResult(
+        word=data.get("word", ""),
+        context=data.get("context", "NONE"),
+        matches=[data[key] for key in match_keys],
+    )
 
 
 def parse_constraints(lines, cmd="") -> list[ConstraintDataInfo] | list[ConstraintVarInfo]:
