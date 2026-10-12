@@ -36,8 +36,10 @@ from .patches import (
 from .plot import (
     AnyGraph,
     BasicGraph,
+    FloorPlanElement,
     FloorPlanGraph,
     GraphManager,
+    LatticeLayoutElement,
     LatticeLayoutGraph,
     PlotAnnotation,
     PlotCurve,
@@ -403,6 +405,80 @@ def plot_floor_plan_shape(
             plot_patch(patch, ax, line_width_scale=line_width_scale)
 
 
+def plot_lat_layout_elements(
+    elements: Sequence[LatticeLayoutElement],
+    ax: matplotlib.axes.Axes | None = None,
+    *,
+    line_width_scale: float | None = None,
+) -> matplotlib.axes.Axes:
+    """
+    Draw lattice layout elements as Tao does in a `lat_layout` graph.
+
+    Parameters
+    ----------
+    elements : sequence of LatticeLayoutElement
+    ax : matplotlib.axes.Axes, optional
+        Axes to draw on.  A new figure is created if not specified.
+    line_width_scale : float, optional
+
+    Returns
+    -------
+    matplotlib.axes.Axes
+    """
+    if ax is None:
+        _, ax = plt.subplots()
+    if line_width_scale is None:
+        line_width_scale = _Defaults.line_width_scale
+
+    ax.axhline(y=0, color="black", linewidth=1)
+    for elem in elements:
+        if elem.shape is not None:
+            plot_layout_shape(elem.shape, ax, line_width_scale=line_width_scale)
+        for annotation in elem.annotations:
+            plot_annotation(annotation, ax)
+
+    ax.autoscale_view()
+    ax.yaxis.set_visible(False)
+    ax.grid(visible=False)
+    return ax
+
+
+def plot_floor_plan_elements(
+    elements: Sequence[FloorPlanElement],
+    ax: matplotlib.axes.Axes | None = None,
+    *,
+    line_width_scale: float | None = None,
+) -> matplotlib.axes.Axes:
+    """
+    Draw floor plan elements as Tao does in a `floor_plan` graph.
+
+    Parameters
+    ----------
+    elements : sequence of FloorPlanElement
+    ax : matplotlib.axes.Axes, optional
+        Axes to draw on.  A new figure is created if not specified.
+    line_width_scale : float, optional
+
+    Returns
+    -------
+    matplotlib.axes.Axes
+    """
+    if ax is None:
+        _, ax = plt.subplots()
+    if line_width_scale is None:
+        line_width_scale = _Defaults.floor_line_width_scale
+
+    ax.set_aspect("equal")
+    for elem in elements:
+        if elem.shape is not None:
+            plot_floor_plan_shape(elem.shape, ax, line_width_scale=line_width_scale)
+        for annotation in elem.annotations:
+            plot_annotation(annotation, ax)
+
+    ax.autoscale_view()
+    return ax
+
+
 def plot(graph: AnyGraph, ax: matplotlib.axes.Axes | None = None) -> matplotlib.axes.Axes:
     if ax is None:
         _, ax = plt.subplots()
@@ -420,42 +496,9 @@ def plot(graph: AnyGraph, ax: matplotlib.axes.Axes | None = None) -> matplotlib.
             ax.legend()
 
     elif isinstance(graph, LatticeLayoutGraph):
-        ax.axhline(y=0, color="Black", linewidth=1)
-
-        for elem in graph.elements:
-            if elem.shape is not None:
-                plot_layout_shape(elem.shape, ax, line_width_scale=_Defaults.line_width_scale)
-            # ax.add_collection(
-            #     matplotlib.collections.LineCollection(
-            #         elem.lines,
-            #         colors=pgplot.mpl_color(elem.color),
-            #         linewidths=elem.width,
-            #     )
-            # )
-            # for patch in elem.patches:
-            #     plot_patch(patch, ax)
-            for annotation in elem.annotations:
-                plot_annotation(annotation, ax)
-
-        # Invisible line to give the lat layout enough vertical space.
-        # Without this, the tops and bottoms of shapes could be cut off
-        # ax.plot([0, 0], [-1.7 * self.y_max, 1.3 * self.y_max], alpha=0)
-        ax.yaxis.set_visible(False)
-
-        # ax.set_xticks([elem.info["ele_s_start"] for elem in self.elements])
-        # ax.set_xticklabels([elem.info["label_name"] for elem in self.elements], rotation=90)
-        ax.grid(visible=False)
+        plot_lat_layout_elements(graph.elements, ax)
     elif isinstance(graph, FloorPlanGraph):
-        ax.set_aspect("equal")
-        for elem in graph.elements:
-            if elem.shape is not None:
-                plot_floor_plan_shape(
-                    elem.shape,
-                    ax,
-                    line_width_scale=_Defaults.floor_line_width_scale,
-                )
-            for annotation in elem.annotations:
-                plot_annotation(annotation, ax)
+        plot_floor_plan_elements(graph.elements, ax)
 
         for line in graph.building_walls.lines:
             plot_curve_line(line, ax, line_width_scale=_Defaults.floor_line_width_scale)
@@ -630,7 +673,7 @@ def _draw_csr_ds_step(data: ElementMethodsPlotData, ax: matplotlib.axes.Axes) ->
             color_for_value(value) if value is not None else "#888888" for value in csr_methods
         ]
         ax.hlines(steps, s_start, s_end, colors=colors, linewidths=2.0)
-    ax.set_ylabel("csr_ds_step [m]")
+    ax.set_ylabel("csr_ds_step (m)")
     ax.grid(axis="x", alpha=0.3)
     ax.set_axisbelow(True)
 
@@ -1137,7 +1180,7 @@ class MatplotlibGraphManager(GraphManager):
             plot(self.lattice_layout_graph, ax=axes[-1])
 
         lanes_ax.set_xlim(min(data.s_start), max(data.s_end))
-        axes[-1].set_xlabel("s [m]")
+        axes[-1].set_xlabel("s (m)")
 
         if fig is not None:
             if ax is None:

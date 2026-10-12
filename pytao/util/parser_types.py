@@ -213,6 +213,18 @@ class SlaveControlInfo(TypedDict):
     value: float | None
 
 
+class EleShapeInfo(TypedDict):
+    ix_shape: int
+    shape: str
+    color: str
+    line_width: int
+    y1: float
+    y2: float
+    label_name: str
+    draw: bool
+    multi: bool
+
+
 class PlotLatLayoutInfo(TypedDict):
     ix_branch: int
     ix_ele: int

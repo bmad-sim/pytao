@@ -26,6 +26,7 @@ from .sections import (
     ElementMat6,
     ElementMethods,
     ElementPhoton,
+    ElementShapes,
     ElementSpinTaylor,
     ElementTaylor,
     ElementWake,
@@ -573,6 +574,8 @@ class Element(TaoBaseModel, extra="forbid"):
         Orbit attributes.
     photon : ElementPhoton or None
         Photon attributes.
+    shapes : ElementShapes or None
+        Shapes Tao uses to draw the element in lat_layout and floor_plan graphs.
     spin_taylor : ElementSpinTaylor or None
         Spin Taylor map.
     taylor : ElementTaylor or None
@@ -608,6 +611,7 @@ class Element(TaoBaseModel, extra="forbid"):
         "multipoles",
         "orbit",
         "photon",
+        "shapes",
         "spin_taylor",
         "taylor",
         "twiss",
@@ -642,6 +646,7 @@ class Element(TaoBaseModel, extra="forbid"):
     multipoles: AnyElementMultipoles | None = None
     orbit: tao_classes.ElementOrbit | None = None
     photon: ElementPhoton | None = None
+    shapes: ElementShapes | None = None
     spin_taylor: ElementSpinTaylor | None = None
     taylor: ElementTaylor | None = None
     twiss: tao_classes.ElementTwiss | None = None
@@ -708,6 +713,7 @@ class Element(TaoBaseModel, extra="forbid"):
         multipoles: bool | FillDefault = FillDefault("multipoles"),  # noqa: B008
         orbit: bool | FillDefault = FillDefault("orbit"),  # noqa: B008
         photon: bool | FillDefault = FillDefault("photon"),  # noqa: B008
+        shapes: bool | FillDefault = FillDefault("shapes"),  # noqa: B008
         spin_taylor: bool | FillDefault = FillDefault("spin_taylor"),  # noqa: B008
         taylor: bool | FillDefault = FillDefault("taylor"),  # noqa: B008
         twiss: bool | FillDefault = FillDefault("twiss"),  # noqa: B008
@@ -733,7 +739,7 @@ class Element(TaoBaseModel, extra="forbid"):
         {'ac_kicker', 'attrs', 'bunch_params', 'cartesian_map',
         'chamber_walls', 'control_vars', 'cylindrical_map', 'elec_multipoles',
         'floor', 'gen_gradients', 'grid_field', 'lord_slave', 'mat6',
-        'methods', 'multipoles', 'orbit', 'photon', 'spin_taylor', 'taylor',
+        'methods', 'multipoles', 'orbit', 'photon', 'shapes', 'spin_taylor', 'taylor',
         'twiss', 'wake', 'wall3d'}
 
         With the following, the default will change to only query `attrs`:
@@ -814,6 +820,8 @@ class Element(TaoBaseModel, extra="forbid"):
             Fill orbit data.
         photon : bool, optional
             Fill photon data.
+        shapes : bool, optional
+            Fill lat_layout/floor_plan drawing shapes.
         spin_taylor : bool, optional
             Fill spin Taylor map data.
         taylor : bool, optional
@@ -865,6 +873,7 @@ class Element(TaoBaseModel, extra="forbid"):
             multipoles=should_fill(multipoles),
             orbit=should_fill(orbit),
             photon=should_fill(photon),
+            shapes=should_fill(shapes),
             spin_taylor=should_fill(spin_taylor),
             taylor=should_fill(taylor),
             twiss=should_fill(twiss),
@@ -1086,6 +1095,10 @@ class Element(TaoBaseModel, extra="forbid"):
             self.methods = None
 
     @_pytao_stats.time_decorator
+    def _fill_shapes(self, tao: Tao):
+        self.shapes = ElementShapes.from_tao(tao, ele=self.ele_id, which=self.which)
+
+    @_pytao_stats.time_decorator
     def _fill_spin_taylor(self, tao: Tao):
         if self.head.has_spin_taylor:
             self.spin_taylor = ElementSpinTaylor.from_tao(
@@ -1123,6 +1136,7 @@ class Element(TaoBaseModel, extra="forbid"):
         methods: bool = True,
         photon: bool = True,
         orbit: bool = True,
+        shapes: bool = True,
         spin_taylor: bool = True,
         taylor: bool = True,
         twiss: bool = True,
@@ -1169,6 +1183,8 @@ class Element(TaoBaseModel, extra="forbid"):
             Fill generalized gradient per-curve derivative tables.
         methods : bool, default=True
             Fill tracking/calculation method settings.
+        shapes : bool, default=True
+            Fill lat_layout/floor_plan drawing shapes.
         spin_taylor : bool, default=True
             Fill spin Taylor map data.
         taylor : bool, default=True
@@ -1251,6 +1267,8 @@ class Element(TaoBaseModel, extra="forbid"):
                 self._fill_gen_gradients(tao, curves=gen_gradient_curves)
         if methods and should_update(self.methods):
             self._fill_methods(tao)
+        if shapes and should_update(self.shapes):
+            self._fill_shapes(tao)
         if spin_taylor and should_update(self.spin_taylor):
             self._fill_spin_taylor(tao)
         if taylor and should_update(self.taylor):

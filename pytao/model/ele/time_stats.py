@@ -33,6 +33,7 @@ class _PytaoStatistics(pydantic.BaseModel):
     lord_slave: _PytaoStatisticsCall = _PytaoStatisticsCall()
     methods: _PytaoStatisticsCall = _PytaoStatisticsCall()
     photon: _PytaoStatisticsCall = _PytaoStatisticsCall()
+    shapes: _PytaoStatisticsCall = _PytaoStatisticsCall()
     orbit: _PytaoStatisticsCall = _PytaoStatisticsCall()
     spin_taylor: _PytaoStatisticsCall = _PytaoStatisticsCall()
     taylor: _PytaoStatisticsCall = _PytaoStatisticsCall()

@@ -52,10 +52,11 @@ from .types import (
     Point,
     WaveParams,
 )
-from .util import fix_grid_limits
+from .util import fix_grid_limits, floor_to_screen
 
 if typing.TYPE_CHECKING:
     from .. import Tao
+    from ..model import Element
 
 logger = logging.getLogger(__name__)
 
@@ -668,12 +669,12 @@ class LatticeLayoutElement:
         graph_info: PlotGraphInfo,
         info: PlotLatLayoutInfo,
         y2_floor: float,
-        plot_page: PlotPage,
     ):
         s1 = info["ele_s_start"]
         s2 = info["ele_s_end"]
-        y1 = info["y1"] * plot_page["lat_layout_shape_scale"]
-        y2 = -info["y2"] * plot_page["lat_layout_shape_scale"]  # Note negative sign.
+        # Tao applies lat_layout_shape_scale before returning plot_lat_layout data.
+        y1 = info["y1"]
+        y2 = -info["y2"]  # Note negative sign.
         width = info["line_width"]
         color = info["color"]
         shape = info["shape"]
@@ -765,9 +766,6 @@ class LatticeLayoutGraph(GraphBase):
             except ValueError:
                 raise NoLayoutError(f"No layout named {region_name}.{graph_name}") from None
 
-        if plot_page is None:
-            plot_page = cast(PlotPage, tao.plot_page())
-
         region_info = _clean_pytao_output(tao.plot1(region_name), PlotRegionInfo)
 
         graph_type = info["graph^type"]
@@ -794,7 +792,6 @@ class LatticeLayoutGraph(GraphBase):
                 graph_info=info,
                 info=elem,
                 y2_floor=y2_floor,
-                plot_page=plot_page,
             )
             for elem in all_elem_info
         ]
@@ -1175,6 +1172,165 @@ class FloorPlanGraph(GraphBase):
             ylim=(info["y_min"], info["y_max"]),
             draw_legend=info["draw_curve_legend"],
         )
+
+
+def lat_layout_elements_from_elements(
+    elements: Sequence[Element],
+    *,
+    shape_scale: float = 1.0,
+    x_min: float | None = None,
+    x_max: float | None = None,
+) -> list[LatticeLayoutElement]:
+    """
+    Build lattice layout drawing elements from `Element` instances, without a live Tao.
+
+    Parameters
+    ----------
+    elements : sequence of Element
+        Elements must have `shapes` filled.  Elements with no drawn lat_layout
+        shape are skipped.
+    shape_scale : float, default=1.0
+        Tao's `plot_page%lat_layout_shape_scale`.
+    x_min, x_max : float, optional
+        Horizontal plot range, used to draw elements that wrap around the end
+        of a circular lattice.  Defaults to the s range of `elements`.
+    """
+    infos: list[PlotLatLayoutInfo] = []
+    for ele in elements:
+        if ele.shapes is None:
+            continue
+        for shape in ele.shapes.lat_layout:
+            if not shape.draw:
+                continue
+            infos.append(
+                {
+                    "ix_branch": ele.head.ix_branch,
+                    "ix_ele": ele.head.ix_ele,
+                    "ele_s_start": ele.head.s_start,
+                    "ele_s_end": ele.head.s,
+                    "line_width": float(shape.line_width),
+                    "shape": shape.shape,
+                    "y1": shape.y1 * shape_scale,
+                    "y2": shape.y2 * shape_scale,
+                    "color": shape.color,
+                    "label_name": shape.label_name,
+                }
+            )
+
+    if not infos:
+        return []
+
+    if x_min is None:
+        x_min = min(min(info["ele_s_start"], info["ele_s_end"]) for info in infos)
+    if x_max is None:
+        x_max = max(max(info["ele_s_start"], info["ele_s_end"]) for info in infos)
+
+    # from_info only reads the x range from the graph info.
+    graph_info = cast(PlotGraphInfo, {"x_min": x_min, "x_max": x_max})
+    y2_floor = -max(info["y2"] for info in infos)  # Note negative sign
+    return [
+        LatticeLayoutElement.from_info(graph_info=graph_info, info=info, y2_floor=y2_floor)
+        for info in infos
+    ]
+
+
+def floor_plan_elements_from_elements(
+    elements: Sequence[Element],
+    *,
+    view: str = "zx",
+    rotation: float = 0.0,
+    shape_scale: float = 1.0,
+    size_is_absolute: bool = False,
+) -> list[FloorPlanElement]:
+    """
+    Build floor plan drawing elements from `Element` instances, without a live Tao.
+
+    Parameters
+    ----------
+    elements : sequence of Element
+        Elements must have `floor` and `shapes` filled, and `attrs` for sbends.
+        Elements without floor positions are skipped.
+    view : str, default="zx"
+        Tao's `floor_plan%view`.
+    rotation : float, default=0.0
+        Tao's `floor_plan%rotation`, in full turns.
+    shape_scale : float, default=1.0
+        Tao's `plot_page%floor_plan_shape_scale`.
+    size_is_absolute : bool, default=False
+        Tao's `floor_plan%size_is_absolute`.
+    """
+    # Same convention as FloorPlanElement.from_info.
+    if size_is_absolute or shape_scale == 1.0:
+        scale = 1 / 72.0
+    else:
+        scale = 1.0
+
+    result: list[FloorPlanElement] = []
+    for ele in elements:
+        if ele.shapes is None or ele.floor is None:
+            continue
+        begin = ele.floor.beginning.actual
+        end = ele.floor.end.actual
+        if begin is None or end is None:
+            continue
+
+        x1, y1, angle_start = floor_to_screen(
+            begin.x, begin.y, begin.z, begin.theta, begin.phi, view=view, rotation=rotation
+        )
+        x2, y2, angle_end = floor_to_screen(
+            end.x, end.y, end.z, end.theta, end.phi, view=view, rotation=rotation
+        )
+
+        is_sbend = ele.head.key.lower() == "sbend"
+        attrs = ele.attribs if is_sbend and ele.attrs is not None else {}
+        shapes = [shape for shape in ele.shapes.floor_plan if shape.draw]
+        for shape in shapes or [None]:
+            info: FloorPlanElementInfo = {
+                "branch_index": ele.head.ix_branch,
+                "index": ele.head.ix_ele,
+                "ele_key": ele.head.key,
+                "end1_r1": x1,
+                "end1_r2": y1,
+                "end1_theta": angle_start,
+                "end2_r1": x2,
+                "end2_r2": y2,
+                "end2_theta": angle_end,
+                "line_width": float(shape.line_width) if shape else 0.0,
+                "shape": shape.shape if shape else "",
+                "y1": shape.y1 * shape_scale if shape else 0.0,
+                "y2": shape.y2 * shape_scale if shape else 0.0,
+                "color": shape.color if shape else "",
+                "label_name": shape.label_name if shape else "",
+            }
+            if is_sbend:
+                info["ele_l"] = float(attrs.get("L", 0.0))
+                info["ele_angle"] = float(attrs.get("angle", 0.0))
+                info["ele_e1"] = float(attrs.get("e1", 0.0))
+                info["ele_e"] = float(attrs.get("e2", 0.0))
+
+            result.append(
+                FloorPlanElement._from_info(
+                    info,
+                    branch_index=info["branch_index"],
+                    index=info["index"],
+                    ele_key=info["ele_key"],
+                    x1=x1,
+                    y1=y1,
+                    angle_start=angle_start,
+                    x2=x2,
+                    y2=y2,
+                    angle_end=angle_end,
+                    line_width=info["line_width"],
+                    shape=info["shape"],
+                    off1=info["y1"] * scale,
+                    off2=info["y2"] * scale,
+                    color=info["color"],
+                    label_name=info["label_name"],
+                    rel_angle_start=info.get("ele_e1", 0.0),
+                    rel_angle_end=info.get("ele_e", 0.0),
+                )
+            )
+    return result
 
 
 def get_plots_in_region(tao: Tao, region_name: str):

@@ -668,6 +668,100 @@ class ElementMethods(TaoModel, extra="forbid"):
     longitudinal_orientation: int | None = None
 
 
+class ElementShape(TaoBaseModel, extra="forbid"):
+    """
+    One shape Tao uses to draw an element in a lat_layout or floor_plan.
+
+    Attributes
+    ----------
+    ix_shape : int
+        Index of the matched shape in Tao's `shape_list` for this graph type.
+    shape : str
+        Shape name as configured, possibly with a prefix such as `var:box`.
+    color : str
+    line_width : int
+    y1 : float
+        Vertical extent above the axis, before the plot page shape scale.
+    y2 : float
+        Vertical extent below the axis, before the plot page shape scale.
+    label_name : str
+        Resolved label text (empty when the shape has no label).
+    draw : bool
+        Whether Tao draws this shape.  Undrawn matches are reported so the
+        full shape configuration is available; only drawn ones are plotted.
+    multi : bool
+        Whether Tao continues matching further shapes after this one.
+    """
+
+    ix_shape: int
+    shape: str
+    color: str
+    line_width: int
+    y1: float
+    y2: float
+    label_name: str
+    draw: bool
+    multi: bool
+
+    @property
+    def prefix(self) -> str:
+        """Shape prefix such as `var` or `asym_var`; empty if none."""
+        prefix, _, _ = self.shape.rpartition(":")
+        return prefix
+
+    @property
+    def base_shape(self) -> str:
+        """Shape name with any prefix removed (e.g. `box`)."""
+        _, _, base = self.shape.rpartition(":")
+        return base
+
+
+class ElementShapes(TaoBaseModel, extra="forbid"):
+    """
+    Shapes Tao uses to draw an element, per graph type.
+
+    Each list is empty when no configured shape matches the element.  It
+    holds every match up to and including the first drawn, non-`multi` one;
+    entries with `draw=False` are not drawn by Tao.
+
+    Attributes
+    ----------
+    which : "base", "model", or "design"
+    lat_layout : list of ElementShape
+    floor_plan : list of ElementShape
+    """
+
+    which: Which = pydantic.Field(frozen=True)
+    lat_layout: list[ElementShape] = Field(default_factory=list)
+    floor_plan: list[ElementShape] = Field(default_factory=list)
+
+    @classmethod
+    def from_tao(cls, tao: Tao, ele: AnyElementID, *, which: Which = "model") -> ElementShapes:
+        """
+        Query Tao for the lat_layout and floor_plan shapes of an element.
+
+        Parameters
+        ----------
+        tao : Tao
+        ele : int, str, or ElementID
+        which : "base", "model", or "design", default="model"
+        """
+        from .ele import to_ele_id
+
+        ele_id = to_ele_id(ele)
+        return cls(
+            which=which,
+            lat_layout=[
+                ElementShape(**info)
+                for info in tao.ele_shape(ele_id, who="lat_layout", which=which)
+            ],
+            floor_plan=[
+                ElementShape(**info)
+                for info in tao.ele_shape(ele_id, who="floor_plan", which=which)
+            ],
+        )
+
+
 def _taylor_terms_to_arrays(terms: list[dict]) -> tuple[np.ndarray, np.ndarray]:
     """Convert row-oriented Taylor term dictionaries to (coef, exponents) arrays."""
     coef = np.asarray([term["coef"] for term in terms], dtype=float)

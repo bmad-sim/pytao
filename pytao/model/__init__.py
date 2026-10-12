@@ -1,11 +1,10 @@
 from __future__ import annotations
+
 from ._generated import (
     Beam,
     BeamInit,
     BmadCom,
     ElementBunchParams,
-    # ElementCartesianMap, <- handled in ele
-    ElementChamberWall as ElementChamberWallOne,  # <- handled in ele
     # ElementCylindricalMap, <- handled in ele
     ElementElecMultipoles,
     ElementElecMultipoles_Data,
@@ -17,12 +16,12 @@ from ._generated import (
     # ElementMat6, <- handled in ele
     ElementMat6Error,
     ElementMat6Vec0,
-    ElementMultipoles_Data,
     ElementMultipoles,
-    ElementMultipolesAB_Data,
+    ElementMultipoles_Data,
     ElementMultipolesAB,
-    ElementMultipolesScaled_Data,
+    ElementMultipolesAB_Data,
     ElementMultipolesScaled,
+    ElementMultipolesScaled_Data,
     ElementOrbit,
     ElementPhotonBase,
     ElementPhotonCurvature,
@@ -32,19 +31,23 @@ from ._generated import (
     ElementWakeSrLong,
     ElementWakeSrTrans,
     ElementWall3DBase,
-    ElementWall3DTable_Data,
     ElementWall3DTable,
+    ElementWall3DTable_Data,
     SpaceChargeCom,
     TaoGlobal,
+)
+from ._generated import (
+    # ElementCartesianMap, <- handled in ele
+    ElementChamberWall as ElementChamberWallOne,  # <- handled in ele
 )
 from .base import (
     ArchiveFormat,
     TaoBaseModel,
     TaoModel,
     TaoSettableModel,
-    load_model_data,
-    load_model,
     dump_model,
+    load_model,
+    load_model_data,
 )
 from .config import TaoConfig, TaylorMap
 from .ele import (
@@ -76,6 +79,8 @@ from .ele import (
     ElementNotFoundError,
     ElementPhoton,
     ElementRange,
+    ElementShape,
+    ElementShapes,
     ElementSpinTaylor,
     ElementSpinTaylorComponent,
     ElementTaylor,
@@ -90,8 +95,7 @@ from .ele import (
     PhotonWho,
     Which,
 )
-
-from .types import FloatSequence, IntSequence, ArgumentType
+from .types import ArgumentType, FloatSequence, IntSequence
 
 __all__ = [
     "AnyElementAcKicker",
@@ -146,6 +150,8 @@ __all__ = [
     "ElementPhotonCurvature",
     "ElementPhotonMaterial",
     "ElementRange",
+    "ElementShape",
+    "ElementShapes",
     "ElementSpinTaylor",
     "ElementSpinTaylorComponent",
     "ElementTaylor",

@@ -129,3 +129,58 @@ def fix_grid_limits(
         return res[:num_graphs]
 
     return res + [res[-1]] * (num_graphs - len(res))
+
+
+def floor_to_screen(
+    x: float,
+    y: float,
+    z: float,
+    theta: float,
+    phi: float,
+    *,
+    view: str = "zx",
+    rotation: float = 0.0,
+) -> tuple[float, float, float]:
+    """
+    Project a floor position onto floor plan screen coordinates.
+
+    This mirrors Tao's `tao_floor_to_screen_coords`: two floor axes are
+    selected by `view` and the result is rotated by `rotation` turns.
+
+    Parameters
+    ----------
+    x, y, z : float
+        Floor position.
+    theta, phi : float
+        Floor orientation angles.
+    view : str, default="zx"
+        Two characters from "xyz" selecting the screen horizontal and
+        vertical axes, as in Tao's `floor_plan%view`.
+    rotation : float, default=0.0
+        Counter-clockwise rotation in units of full turns, as in Tao's
+        `floor_plan%rotation`.
+
+    Returns
+    -------
+    x_screen, y_screen, theta_screen : float
+    """
+    position = {"x": x, "y": y, "z": z}
+    orientation = {
+        "x": np.sin(theta) * np.cos(phi),
+        "y": np.sin(phi),
+        "z": np.cos(theta) * np.cos(phi),
+    }
+    try:
+        horiz, vert = view[0], view[1]
+        px, py = position[horiz], position[vert]
+        ox, oy = orientation[horiz], orientation[vert]
+    except (IndexError, KeyError):
+        raise ValueError(f"view must be two characters from 'xyz'; got {view!r}") from None
+
+    angle = 2.0 * np.pi * rotation
+    cos, sin = np.cos(angle), np.sin(angle)
+    return (
+        float(px * cos - py * sin),
+        float(px * sin + py * cos),
+        float(np.arctan2(oy, ox) + angle),
+    )

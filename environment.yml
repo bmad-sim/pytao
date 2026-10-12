@@ -4,7 +4,7 @@ channels:
   - conda-forge
 dependencies:
   - python >=3.10
-  - bmad >=20260712.0
+  - bmad >=20261009.0
   - bokeh
   - h5py
   - httpcore >=1.0.9 # addresses a typing issue when launching jupyter lab
@@ -25,6 +25,7 @@ dependencies:
   - mkdocs-material
   - mkdocstrings
   - mkdocstrings-python
+  - pymdown-extensions <12 # Highlight api change issue
   - pygments
   - pytest
   - pytest-cov

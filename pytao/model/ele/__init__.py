@@ -34,6 +34,7 @@ from .ele import (
     ElementNotFoundError,
     ElementPhoton,
     ElementRange,
+    ElementShapes,
     ElementSpinTaylor,
     ElementSpinTaylorComponent,
     ElementTaylor,
@@ -49,6 +50,7 @@ from .ele import (
     Which,
     to_ele_id,
 )
+from .sections import ElementShape
 
 __all__ = [
     "AnyElementAcKicker",
@@ -79,6 +81,8 @@ __all__ = [
     "ElementNotFoundError",
     "ElementPhoton",
     "ElementRange",
+    "ElementShape",
+    "ElementShapes",
     "ElementSpinTaylor",
     "ElementSpinTaylorComponent",
     "ElementTaylor",

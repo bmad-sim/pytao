@@ -33,7 +33,7 @@ import bokeh.transform
 import matplotlib
 import matplotlib.patches
 import numpy as np
-from bokeh.core.enums import SizingModeType
+from bokeh.core.enums import LocationType, SizingModeType
 from bokeh.document.callbacks import EventCallback
 from bokeh.models.sources import ColumnDataSource
 from bokeh.plotting import figure
@@ -863,6 +863,181 @@ class BokehGraphBase(ABC, Generic[TGraph]):
         raise NotImplementedError()
 
 
+def lat_layout_figure(
+    elements: Sequence[LatticeLayoutElement],
+    *,
+    tools: str | None = None,
+    toolbar_location: LocationType = "above",
+    title: str = "",
+    x_axis_label: str = "",
+    sizing_mode: SizingModeType = "inherit",
+    aspect_ratio: float | None = None,
+    width: int | None = None,
+    height: int | None = None,
+    line_width_scale: float | None = None,
+) -> figure:
+    """
+    Create a figure of lattice layout elements, as Tao draws a `lat_layout` graph.
+
+    Parameters
+    ----------
+    elements : sequence of LatticeLayoutElement
+    tools : str, optional
+        Bokeh tools string.  Defaults to the lattice layout tools setting.
+    toolbar_location : str, default="above"
+    title : str, default=""
+    x_axis_label : str, default=""
+    sizing_mode : SizingModeType, default="inherit"
+    aspect_ratio : float, optional
+        Width / height.
+    width, height : int, optional
+    line_width_scale : float, optional
+
+    Returns
+    -------
+    bokeh.plotting.figure
+    """
+    if tools is None:
+        tools = _Defaults.lattice_layout_tools
+    if line_width_scale is None:
+        line_width_scale = _Defaults.line_width_scale
+
+    add_named_hover_tool = isinstance(tools, str) and "hover" in tools.split(",")
+    if add_named_hover_tool:
+        tools = ",".join(tool for tool in tools.split(",") if tool != "hover")
+
+    fig = figure(
+        title=pgplot.mathjax_string(title),
+        x_axis_label=pgplot.mathjax_string(x_axis_label),
+        toolbar_location=toolbar_location,
+        tools=tools,
+        aspect_ratio=aspect_ratio,
+        sizing_mode=sizing_mode,
+        width=width,
+        height=height,
+    )
+
+    box_zoom = get_tool_from_figure(fig, bokeh.models.BoxZoomTool)
+    if box_zoom is not None:
+        box_zoom.match_aspect = False
+
+    fig.xaxis.ticker = bokeh.models.FixedTicker(
+        ticks=[elem.info["ele_s_start"] for elem in elements],
+        minor_ticks=[elem.info["ele_s_end"] for elem in elements],
+    )
+    fig.xaxis.major_label_overrides = {
+        elem.info["ele_s_start"]: elem.info["label_name"] for elem in elements
+    }
+    fig.xaxis.major_label_orientation = math.pi / 4
+    fig.yaxis.ticker = []
+    fig.yaxis.visible = False
+
+    _draw_layout_elems(
+        fig, list(elements), skip_labels=True, line_width_scale=line_width_scale
+    )
+
+    if add_named_hover_tool:
+        hover = bokeh.models.HoverTool(
+            renderers=get_hoverable_renderers(fig),
+            tooltips=[
+                ("name", "@name"),
+                ("s start (m)", "@s_start"),
+                ("s end (m)", "@s_end"),
+            ],
+            mode="vline",
+        )
+        fig.add_tools(hover)
+
+    fig.renderers.append(
+        bokeh.models.Span(location=0, dimension="width", line_color="black", line_width=1)
+    )
+    return fig
+
+
+def floor_plan_figure(
+    elements: Sequence[FloorPlanElement],
+    *,
+    tools: str | None = None,
+    toolbar_location: str = "above",
+    title: str = "",
+    x_axis_label: str = "",
+    y_axis_label: str = "",
+    sizing_mode: SizingModeType = "inherit",
+    width: int | None = None,
+    height: int | None = None,
+    line_width_scale: float | None = None,
+    annotate_elements: bool | None = None,
+) -> figure:
+    """
+    Create a figure of floor plan elements, as Tao draws a `floor_plan` graph.
+
+    Parameters
+    ----------
+    elements : sequence of FloorPlanElement
+    tools : str, optional
+        Bokeh tools string.  Defaults to the floor plan tools setting.
+    toolbar_location : str, default="above"
+    title : str, default=""
+    x_axis_label, y_axis_label : str, default=""
+    sizing_mode : SizingModeType, default="inherit"
+    width, height : int, optional
+    line_width_scale : float, optional
+    annotate_elements : bool, optional
+        Draw element name labels.  Defaults to the floor plan annotation setting.
+
+    Returns
+    -------
+    bokeh.plotting.figure
+    """
+    if tools is None:
+        tools = _Defaults.floor_plan_tools
+    if line_width_scale is None:
+        line_width_scale = _Defaults.floor_line_width_scale
+    if annotate_elements is None:
+        annotate_elements = _Defaults.floor_plan_annotate_elements
+
+    add_named_hover_tool = isinstance(tools, str) and "hover" in tools.split(",")
+    if add_named_hover_tool:
+        tools = ",".join(tool for tool in tools.split(",") if tool != "hover")
+
+    fig = figure(
+        title=pgplot.mathjax_string(title),
+        x_axis_label=pgplot.mathjax_string(x_axis_label),
+        y_axis_label=pgplot.mathjax_string(y_axis_label),
+        toolbar_location=toolbar_location,
+        tools=tools,
+        sizing_mode=sizing_mode,
+        width=width,
+        height=height,
+        # This is vitally important for glyphs to render properly.
+        # Compare how a circle centered at (0, 0) with a radius 1
+        # looks with/without this setting
+        match_aspect=True,
+    )
+
+    box_zoom = get_tool_from_figure(fig, bokeh.models.BoxZoomTool)
+    if box_zoom is not None:
+        box_zoom.match_aspect = True
+
+    _draw_floor_plan_shapes(fig, list(elements), line_width_scale=line_width_scale)
+
+    if add_named_hover_tool:
+        hover = bokeh.models.HoverTool(
+            renderers=get_hoverable_renderers(fig),
+            tooltips=[("name", "@name")],
+        )
+        fig.add_tools(hover)
+
+    if annotate_elements:
+        _draw_annotations(
+            fig,
+            {elem.name: elem.annotations for elem in elements},
+            font_size=_Defaults.floor_plan_font_size,
+            skip_labels=False,
+        )
+    return fig
+
+
 class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
     graph_type: ClassVar[str] = "lat_layout"
     graph: LatticeLayoutGraph
@@ -899,63 +1074,17 @@ class BokehLatticeLayoutGraph(BokehGraphBase[LatticeLayoutGraph]):
         self,
         *,
         tools: str | None = None,
-        toolbar_location: str = "above",
+        toolbar_location: LocationType = "above",
     ) -> figure:
-        if tools is None:
-            tools = _Defaults.lattice_layout_tools
-
-        add_named_hover_tool = isinstance(tools, str) and "hover" in tools.split(",")
-        if add_named_hover_tool:
-            tools = ",".join(tool for tool in tools.split(",") if tool != "hover")
-
         graph = self.graph
-        fig = figure(
-            title=pgplot.mathjax_string(graph.title),
-            x_axis_label=pgplot.mathjax_string(graph.xlabel),
-            # y_axis_label=pgplot.mathjax_string(graph.ylabel),
-            toolbar_location=toolbar_location,
+        fig = lat_layout_figure(
+            graph.elements,
             tools=tools,
-            aspect_ratio=self.aspect_ratio,
+            toolbar_location=toolbar_location,
+            title=graph.title,
+            x_axis_label=graph.xlabel,
             sizing_mode=self.sizing_mode,
-        )
-
-        box_zoom = get_tool_from_figure(fig, bokeh.models.BoxZoomTool)
-        if box_zoom is not None:
-            box_zoom.match_aspect = False
-
-        fig.xaxis.ticker = bokeh.models.FixedTicker(
-            ticks=[elem.info["ele_s_start"] for elem in graph.elements],
-            minor_ticks=[elem.info["ele_s_end"] for elem in graph.elements],
-        )
-        fig.xaxis.major_label_overrides = {
-            elem.info["ele_s_start"]: elem.info["label_name"] for elem in graph.elements
-        }
-        fig.xaxis.major_label_orientation = math.pi / 4
-        fig.yaxis.ticker = []
-        fig.yaxis.visible = False
-
-        _draw_layout_elems(
-            fig,
-            self.graph.elements,
-            skip_labels=True,
-            line_width_scale=_Defaults.line_width_scale,
-        )
-
-        if add_named_hover_tool:
-            hover = bokeh.models.HoverTool(
-                renderers=get_hoverable_renderers(fig),
-                tooltips=[
-                    ("name", "@name"),
-                    ("s start [m]", "@s_start"),
-                    ("s end [m]", "@s_end"),
-                ],
-                mode="vline",
-            )
-
-            fig.add_tools(hover)
-
-        fig.renderers.append(
-            bokeh.models.Span(location=0, dimension="width", line_color="black", line_width=1)
+            aspect_ratio=self.aspect_ratio,
         )
 
         if self.x_range is not None:
@@ -1055,7 +1184,7 @@ class BokehBasicGraph(BokehGraphBase[BasicGraph]):
         self,
         *,
         tools: str | None = None,
-        toolbar_location: str = "above",
+        toolbar_location: LocationType = "above",
         sizing_mode: SizingModeType = "inherit",
     ) -> figure:
         graph = self.graph
@@ -1114,58 +1243,24 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         self,
         *,
         tools: str | None = None,
-        toolbar_location: str = "above",
+        toolbar_location: LocationType = "above",
         sizing_mode: SizingModeType = "inherit",
     ) -> figure:
-        if tools is None:
-            tools = _Defaults.floor_plan_tools
-
-        add_named_hover_tool = isinstance(tools, str) and "hover" in tools.split(",")
-        if add_named_hover_tool:
-            tools = ",".join(tool for tool in tools.split(",") if tool != "hover")
-
         graph = self.graph
-        fig = figure(
-            title=pgplot.mathjax_string(graph.title),
-            x_axis_label=pgplot.mathjax_string(graph.xlabel),
-            y_axis_label=pgplot.mathjax_string(graph.ylabel),
-            toolbar_location=toolbar_location,
+        # TODO: specifying limits for floor plans can cause malformed glyphs.
+        # Setting x_range/y_range apparently does away with `match_aspect`,
+        # so self.x_range/self.y_range are intentionally not applied here.
+        fig = floor_plan_figure(
+            graph.elements,
             tools=tools,
+            toolbar_location=toolbar_location,
+            title=graph.title,
+            x_axis_label=graph.xlabel,
+            y_axis_label=graph.ylabel,
             sizing_mode=sizing_mode,
             width=self.width,
             height=self.height,
-            # This is vitally important for glyphs to render properly.
-            # Compare how a circle centered at (0, 0) with a radius 1
-            # looks with/without this setting
-            match_aspect=True,
         )
-        # TODO: specifying limits for floor plans can cause malformed glyphs.
-        # Setting x_range/y_range apparently does away with `match_aspect`.
-        # if self.x_range is not None:
-        #     fig.x_range = self.x_range
-        # if self.y_range is not None:
-        #     fig.y_range = self.y_range
-
-        box_zoom = get_tool_from_figure(fig, bokeh.models.BoxZoomTool)
-        if box_zoom is not None:
-            box_zoom.match_aspect = True
-
-        _draw_floor_plan_shapes(
-            fig,
-            self.graph.elements,
-            line_width_scale=_Defaults.floor_line_width_scale,
-        )
-
-        if add_named_hover_tool:
-            hover = bokeh.models.HoverTool(
-                renderers=get_hoverable_renderers(fig),
-                tooltips=[
-                    ("name", "@name"),
-                    # ("Position [m]", "(@x, @y)"),
-                ],
-            )
-
-            fig.add_tools(hover)
 
         for line in self.graph.building_walls.lines:
             _plot_curve_line(fig, line)
@@ -1180,13 +1275,6 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
         if orbits is not None:
             _plot_curve_symbols(fig, orbits.curve, name="floor_orbits")
 
-        if _Defaults.floor_plan_annotate_elements:
-            _draw_annotations(
-                fig,
-                {elem.name: elem.annotations for elem in self.graph.elements},
-                font_size=_Defaults.floor_plan_font_size,
-                skip_labels=False,
-            )
         _draw_limit_border(fig, graph.xlim, graph.ylim, alpha=0.1)
         return fig
 
@@ -1904,8 +1992,8 @@ def _draw_method_lanes(
                 ("element(s)", "@name"),
                 ("method", "@column"),
                 ("value", "@value"),
-                ("s start [m]", "@s_start"),
-                ("s end [m]", "@s_end"),
+                ("s start (m)", "@s_start"),
+                ("s end (m)", "@s_end"),
             ],
         )
     )
@@ -2038,7 +2126,7 @@ def _draw_csr_ds_step(data: ElementMethodsPlotData, fig: figure) -> None:
         line_width=2.0,
         source=ColumnDataSource(source),
     )
-    fig.yaxis.axis_label = "csr_ds_step [m]"
+    fig.yaxis.axis_label = "csr_ds_step (m)"
 
 
 class BokehGraphManager(GraphManager):
@@ -2432,7 +2520,7 @@ class BokehGraphManager(GraphManager):
             fig.min_border_left = min_border_left
 
         share_x_axes(figs)
-        figs[-1].xaxis.axis_label = "s [m]"
+        figs[-1].xaxis.axis_label = "s (m)"
 
         ui = bokeh.layouts.column(
             [

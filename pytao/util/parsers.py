@@ -28,6 +28,7 @@ from .parser_types import (
     EleGenGradientDerivInfo,
     EleGridFieldPointInfo,
     EleLordSlaveInfo,
+    EleShapeInfo,
     EleSpinTaylorInfo,
     EmFieldResult,
     EnumInfo,
@@ -1590,6 +1591,30 @@ def parse_plot_lat_layout(lines, cmd="") -> list[PlotLatLayoutInfo]:
             "y2": float,
             "color": str,
             "label_name": str,
+        },
+    )
+
+
+def parse_ele_shape(lines, cmd="") -> list[EleShapeInfo]:
+    """
+    Parse ele:shape results.
+
+    Returns
+    -------
+    list of dict
+    """
+    return _parse_by_keys_to_types(
+        lines,
+        {
+            "ix_shape": int,
+            "shape": str,
+            "color": str,
+            "line_width": int,
+            "y1": float,
+            "y2": float,
+            "label_name": str,
+            "draw": bool,
+            "multi": bool,
         },
     )
 
