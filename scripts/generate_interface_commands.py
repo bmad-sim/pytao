@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# coding: utf-8
 
 import datetime
 import json
@@ -433,12 +432,18 @@ def write_tests():
         if len(tests) == 0:
             print(f"No examples found for: {method}")
 
+        existing_tests = set()
         for test_name, test_meta in tests.items():
+            while test_name in existing_tests:
+                test_name = f"{test_name}_"
+
             args = [f"{k}='{v}'" for k, v in test_meta["args"].items()]
             args.append("verbose=True")
             test_code = f"""
-with ensure_successful_parsing(caplog):
-    with new_tao(tao_cls, '{test_meta["init"]}', external_plotting=False) as tao:
+with (
+    ensure_successful_parsing(caplog),
+    new_tao(tao_cls, '{test_meta["init"]}', external_plotting=False) as tao,
+):
         tao.{clean_method}({", ".join(args)})
             """
             method_template = f"""
