@@ -4164,6 +4164,17 @@ values.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
+            <td><code><span title="pytao.model.Element.shapes">shapes</span></code></td>
+            <td>
+                  <code><span title="pytao.model.ele.sections.ElementShapes">ElementShapes</span> or None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Shapes Tao uses to draw the element in lat_layout and floor_plan graphs.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
             <td><code><span title="pytao.model.Element.spin_taylor">spin_taylor</span></code></td>
             <td>
                   <code><span title="pytao.model.ele.sections.ElementSpinTaylor">ElementSpinTaylor</span> or None</code>
@@ -4346,7 +4357,7 @@ values.</p>
 
 
 </h5>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">fill</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">head</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ac_kicker</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bunch_params</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cartesian_map</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cartesian_map_terms</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">comb</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">control_vars</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cylindrical_map</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cylindrical_map_terms</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">elec_multipoles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">floor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gen_gradients</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gen_gradient_curves</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">lord_slave</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">photon</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">orbit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">spin_taylor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">taylor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">twiss</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">grid_field</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">grid_field_points</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mat6</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">chamber_walls</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">wall3d</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">wall3d_table</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">multipoles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">wake</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">comb_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">fill</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">head</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ac_kicker</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bunch_params</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cartesian_map</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cartesian_map_terms</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">comb</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">control_vars</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cylindrical_map</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cylindrical_map_terms</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">elec_multipoles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">floor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gen_gradients</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gen_gradient_curves</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">lord_slave</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">photon</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">orbit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shapes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">spin_taylor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">taylor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">twiss</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">grid_field</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">grid_field_points</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mat6</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">chamber_walls</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">wall3d</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">wall3d_table</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">multipoles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">wake</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">comb_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -4567,6 +4578,22 @@ values.</p>
             <td>
               <div class="doc-md-description">
                 <p>Fill tracking/calculation method settings.</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>shapes</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill lat_layout/floor_plan drawing shapes.</p>
               </div>
             </td>
             <td>
@@ -4887,20 +4914,7 @@ data.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/ele/ele.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1104</span>
-<span class="normal">1105</span>
-<span class="normal">1106</span>
-<span class="normal">1107</span>
-<span class="normal">1108</span>
-<span class="normal">1109</span>
-<span class="normal">1110</span>
-<span class="normal">1111</span>
-<span class="normal">1112</span>
-<span class="normal">1113</span>
-<span class="normal">1114</span>
-<span class="normal">1115</span>
-<span class="normal">1116</span>
-<span class="normal">1117</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1117</span>
 <span class="normal">1118</span>
 <span class="normal">1119</span>
 <span class="normal">1120</span>
@@ -5071,7 +5085,25 @@ data.</p>
 <span class="normal">1285</span>
 <span class="normal">1286</span>
 <span class="normal">1287</span>
-<span class="normal">1288</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">fill</span><span class="p">(</span>
+<span class="normal">1288</span>
+<span class="normal">1289</span>
+<span class="normal">1290</span>
+<span class="normal">1291</span>
+<span class="normal">1292</span>
+<span class="normal">1293</span>
+<span class="normal">1294</span>
+<span class="normal">1295</span>
+<span class="normal">1296</span>
+<span class="normal">1297</span>
+<span class="normal">1298</span>
+<span class="normal">1299</span>
+<span class="normal">1300</span>
+<span class="normal">1301</span>
+<span class="normal">1302</span>
+<span class="normal">1303</span>
+<span class="normal">1304</span>
+<span class="normal">1305</span>
+<span class="normal">1306</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">fill</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -5093,6 +5125,7 @@ data.</p>
     <span class="n">methods</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">photon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">orbit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">shapes</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">spin_taylor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">taylor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">twiss</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -5139,6 +5172,8 @@ data.</p>
 <span class="sd">        Fill generalized gradient per-curve derivative tables.</span>
 <span class="sd">    methods : bool, default=True</span>
 <span class="sd">        Fill tracking/calculation method settings.</span>
+<span class="sd">    shapes : bool, default=True</span>
+<span class="sd">        Fill lat_layout/floor_plan drawing shapes.</span>
 <span class="sd">    spin_taylor : bool, default=True</span>
 <span class="sd">        Fill spin Taylor map data.</span>
 <span class="sd">    taylor : bool, default=True</span>
@@ -5221,6 +5256,8 @@ data.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">_fill_gen_gradients</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">curves</span><span class="o">=</span><span class="n">gen_gradient_curves</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">methods</span> <span class="ow">and</span> <span class="n">should_update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">methods</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fill_methods</span><span class="p">(</span><span class="n">tao</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">shapes</span> <span class="ow">and</span> <span class="n">should_update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shapes</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fill_shapes</span><span class="p">(</span><span class="n">tao</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">spin_taylor</span> <span class="ow">and</span> <span class="n">should_update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spin_taylor</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fill_spin_taylor</span><span class="p">(</span><span class="n">tao</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">taylor</span> <span class="ow">and</span> <span class="n">should_update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taylor</span><span class="p">):</span>
@@ -5274,7 +5311,7 @@ data.</p>
   </span>
 
 </h5>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_tao</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">ele</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">'model'</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ac_kicker</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'ac_kicker'</span><span class="p">),</span> <span class="n">attrs</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'attrs'</span><span class="p">),</span> <span class="n">bunch_params</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'bunch_params'</span><span class="p">),</span> <span class="n">cartesian_map</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'cartesian_map'</span><span class="p">),</span> <span class="n">cartesian_map_terms</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'cartesian_map_terms'</span><span class="p">),</span> <span class="n">chamber_walls</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'chamber_walls'</span><span class="p">),</span> <span class="n">comb</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'comb'</span><span class="p">),</span> <span class="n">control_vars</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'control_vars'</span><span class="p">),</span> <span class="n">cylindrical_map</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'cylindrical_map'</span><span class="p">),</span> <span class="n">cylindrical_map_terms</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'cylindrical_map_terms'</span><span class="p">),</span> <span class="n">elec_multipoles</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'elec_multipoles'</span><span class="p">),</span> <span class="n">floor</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'floor'</span><span class="p">),</span> <span class="n">gen_gradients</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'gen_gradients'</span><span class="p">),</span> <span class="n">gen_gradient_curves</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'gen_gradient_curves'</span><span class="p">),</span> <span class="n">grid_field</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'grid_field'</span><span class="p">),</span> <span class="n">grid_field_points</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'grid_field_points'</span><span class="p">),</span> <span class="n">lord_slave</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'lord_slave'</span><span class="p">),</span> <span class="n">mat6</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'mat6'</span><span class="p">),</span> <span class="n">methods</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'methods'</span><span class="p">),</span> <span class="n">multipoles</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'multipoles'</span><span class="p">),</span> <span class="n">orbit</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'orbit'</span><span class="p">),</span> <span class="n">photon</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'photon'</span><span class="p">),</span> <span class="n">spin_taylor</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'spin_taylor'</span><span class="p">),</span> <span class="n">taylor</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'taylor'</span><span class="p">),</span> <span class="n">twiss</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'twiss'</span><span class="p">),</span> <span class="n">wake</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'wake'</span><span class="p">),</span> <span class="n">wall3d</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'wall3d'</span><span class="p">),</span> <span class="n">wall3d_table</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'wall3d_table'</span><span class="p">),</span> <span class="n">comb_data</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_tao</span><span class="p">(</span><span class="n">tao</span><span class="p">,</span> <span class="n">ele</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">'model'</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ac_kicker</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'ac_kicker'</span><span class="p">),</span> <span class="n">attrs</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'attrs'</span><span class="p">),</span> <span class="n">bunch_params</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'bunch_params'</span><span class="p">),</span> <span class="n">cartesian_map</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'cartesian_map'</span><span class="p">),</span> <span class="n">cartesian_map_terms</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'cartesian_map_terms'</span><span class="p">),</span> <span class="n">chamber_walls</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'chamber_walls'</span><span class="p">),</span> <span class="n">comb</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'comb'</span><span class="p">),</span> <span class="n">control_vars</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'control_vars'</span><span class="p">),</span> <span class="n">cylindrical_map</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'cylindrical_map'</span><span class="p">),</span> <span class="n">cylindrical_map_terms</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'cylindrical_map_terms'</span><span class="p">),</span> <span class="n">elec_multipoles</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'elec_multipoles'</span><span class="p">),</span> <span class="n">floor</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'floor'</span><span class="p">),</span> <span class="n">gen_gradients</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'gen_gradients'</span><span class="p">),</span> <span class="n">gen_gradient_curves</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'gen_gradient_curves'</span><span class="p">),</span> <span class="n">grid_field</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'grid_field'</span><span class="p">),</span> <span class="n">grid_field_points</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'grid_field_points'</span><span class="p">),</span> <span class="n">lord_slave</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'lord_slave'</span><span class="p">),</span> <span class="n">mat6</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'mat6'</span><span class="p">),</span> <span class="n">methods</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'methods'</span><span class="p">),</span> <span class="n">multipoles</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'multipoles'</span><span class="p">),</span> <span class="n">orbit</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'orbit'</span><span class="p">),</span> <span class="n">photon</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'photon'</span><span class="p">),</span> <span class="n">shapes</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'shapes'</span><span class="p">),</span> <span class="n">spin_taylor</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'spin_taylor'</span><span class="p">),</span> <span class="n">taylor</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'taylor'</span><span class="p">),</span> <span class="n">twiss</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'twiss'</span><span class="p">),</span> <span class="n">wake</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'wake'</span><span class="p">),</span> <span class="n">wall3d</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'wall3d'</span><span class="p">),</span> <span class="n">wall3d_table</span><span class="o">=</span><span class="n"><span title="pytao.model.ele.ele.FillDefault">FillDefault</span></span><span class="p">(</span><span class="s1">'wall3d_table'</span><span class="p">),</span> <span class="n">comb_data</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -5296,7 +5333,7 @@ print(Element.DEFAULTS)
 {'ac_kicker', 'attrs', 'bunch_params', 'cartesian_map',
 'chamber_walls', 'control_vars', 'cylindrical_map', 'elec_multipoles',
 'floor', 'gen_gradients', 'grid_field', 'lord_slave', 'mat6',
-'methods', 'multipoles', 'orbit', 'photon', 'spin_taylor', 'taylor',
+'methods', 'multipoles', 'orbit', 'photon', 'shapes', 'spin_taylor', 'taylor',
 'twiss', 'wake', 'wall3d'}</p>
 </blockquote>
 </blockquote>
@@ -5774,6 +5811,22 @@ the full comb data.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
+                <code>shapes</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill lat_layout/floor_plan drawing shapes.</p>
+              </div>
+            </td>
+            <td>
+                  <code><span title="pytao.model.ele.ele.FillDefault">FillDefault</span>(&#39;shapes&#39;)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
                 <code>spin_taylor</code>
             </td>
             <td>
@@ -5874,12 +5927,7 @@ the full comb data.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/ele/ele.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">680</span>
-<span class="normal">681</span>
-<span class="normal">682</span>
-<span class="normal">683</span>
-<span class="normal">684</span>
-<span class="normal">685</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">685</span>
 <span class="normal">686</span>
 <span class="normal">687</span>
 <span class="normal">688</span>
@@ -6071,7 +6119,16 @@ the full comb data.</p>
 <span class="normal">874</span>
 <span class="normal">875</span>
 <span class="normal">876</span>
-<span class="normal">877</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">877</span>
+<span class="normal">878</span>
+<span class="normal">879</span>
+<span class="normal">880</span>
+<span class="normal">881</span>
+<span class="normal">882</span>
+<span class="normal">883</span>
+<span class="normal">884</span>
+<span class="normal">885</span>
+<span class="normal">886</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span>
     <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">,</span>
@@ -6102,6 +6159,7 @@ the full comb data.</p>
     <span class="n">multipoles</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"multipoles"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
     <span class="n">orbit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"orbit"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
     <span class="n">photon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"photon"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">shapes</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"shapes"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
     <span class="n">spin_taylor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"spin_taylor"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
     <span class="n">taylor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"taylor"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
     <span class="n">twiss</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">FillDefault</span> <span class="o">=</span> <span class="n">FillDefault</span><span class="p">(</span><span class="s2">"twiss"</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
@@ -6127,7 +6185,7 @@ the full comb data.</p>
 <span class="sd">    {'ac_kicker', 'attrs', 'bunch_params', 'cartesian_map',</span>
 <span class="sd">    'chamber_walls', 'control_vars', 'cylindrical_map', 'elec_multipoles',</span>
 <span class="sd">    'floor', 'gen_gradients', 'grid_field', 'lord_slave', 'mat6',</span>
-<span class="sd">    'methods', 'multipoles', 'orbit', 'photon', 'spin_taylor', 'taylor',</span>
+<span class="sd">    'methods', 'multipoles', 'orbit', 'photon', 'shapes', 'spin_taylor', 'taylor',</span>
 <span class="sd">    'twiss', 'wake', 'wall3d'}</span>
 
 <span class="sd">    With the following, the default will change to only query `attrs`:</span>
@@ -6208,6 +6266,8 @@ the full comb data.</p>
 <span class="sd">        Fill orbit data.</span>
 <span class="sd">    photon : bool, optional</span>
 <span class="sd">        Fill photon data.</span>
+<span class="sd">    shapes : bool, optional</span>
+<span class="sd">        Fill lat_layout/floor_plan drawing shapes.</span>
 <span class="sd">    spin_taylor : bool, optional</span>
 <span class="sd">        Fill spin Taylor map data.</span>
 <span class="sd">    taylor : bool, optional</span>
@@ -6259,6 +6319,7 @@ the full comb data.</p>
         <span class="n">multipoles</span><span class="o">=</span><span class="n">should_fill</span><span class="p">(</span><span class="n">multipoles</span><span class="p">),</span>
         <span class="n">orbit</span><span class="o">=</span><span class="n">should_fill</span><span class="p">(</span><span class="n">orbit</span><span class="p">),</span>
         <span class="n">photon</span><span class="o">=</span><span class="n">should_fill</span><span class="p">(</span><span class="n">photon</span><span class="p">),</span>
+        <span class="n">shapes</span><span class="o">=</span><span class="n">should_fill</span><span class="p">(</span><span class="n">shapes</span><span class="p">),</span>
         <span class="n">spin_taylor</span><span class="o">=</span><span class="n">should_fill</span><span class="p">(</span><span class="n">spin_taylor</span><span class="p">),</span>
         <span class="n">taylor</span><span class="o">=</span><span class="n">should_fill</span><span class="p">(</span><span class="n">taylor</span><span class="p">),</span>
         <span class="n">twiss</span><span class="o">=</span><span class="n">should_fill</span><span class="p">(</span><span class="n">twiss</span><span class="p">),</span>
@@ -6510,27 +6571,27 @@ by name, key (element type), and index.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/ele/ele.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1540</span>
-<span class="normal">1541</span>
-<span class="normal">1542</span>
-<span class="normal">1543</span>
-<span class="normal">1544</span>
-<span class="normal">1545</span>
-<span class="normal">1546</span>
-<span class="normal">1547</span>
-<span class="normal">1548</span>
-<span class="normal">1549</span>
-<span class="normal">1550</span>
-<span class="normal">1551</span>
-<span class="normal">1552</span>
-<span class="normal">1553</span>
-<span class="normal">1554</span>
-<span class="normal">1555</span>
-<span class="normal">1556</span>
-<span class="normal">1557</span>
-<span class="normal">1558</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1558</span>
 <span class="normal">1559</span>
-<span class="normal">1560</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">1560</span>
+<span class="normal">1561</span>
+<span class="normal">1562</span>
+<span class="normal">1563</span>
+<span class="normal">1564</span>
+<span class="normal">1565</span>
+<span class="normal">1566</span>
+<span class="normal">1567</span>
+<span class="normal">1568</span>
+<span class="normal">1569</span>
+<span class="normal">1570</span>
+<span class="normal">1571</span>
+<span class="normal">1572</span>
+<span class="normal">1573</span>
+<span class="normal">1574</span>
+<span class="normal">1575</span>
+<span class="normal">1576</span>
+<span class="normal">1577</span>
+<span class="normal">1578</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_file</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
@@ -6681,25 +6742,7 @@ by name, key (element type), and index.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/ele/ele.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1364</span>
-<span class="normal">1365</span>
-<span class="normal">1366</span>
-<span class="normal">1367</span>
-<span class="normal">1368</span>
-<span class="normal">1369</span>
-<span class="normal">1370</span>
-<span class="normal">1371</span>
-<span class="normal">1372</span>
-<span class="normal">1373</span>
-<span class="normal">1374</span>
-<span class="normal">1375</span>
-<span class="normal">1376</span>
-<span class="normal">1377</span>
-<span class="normal">1378</span>
-<span class="normal">1379</span>
-<span class="normal">1380</span>
-<span class="normal">1381</span>
-<span class="normal">1382</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1382</span>
 <span class="normal">1383</span>
 <span class="normal">1384</span>
 <span class="normal">1385</span>
@@ -6721,7 +6764,25 @@ by name, key (element type), and index.</p>
 <span class="normal">1401</span>
 <span class="normal">1402</span>
 <span class="normal">1403</span>
-<span class="normal">1404</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">1404</span>
+<span class="normal">1405</span>
+<span class="normal">1406</span>
+<span class="normal">1407</span>
+<span class="normal">1408</span>
+<span class="normal">1409</span>
+<span class="normal">1410</span>
+<span class="normal">1411</span>
+<span class="normal">1412</span>
+<span class="normal">1413</span>
+<span class="normal">1414</span>
+<span class="normal">1415</span>
+<span class="normal">1416</span>
+<span class="normal">1417</span>
+<span class="normal">1418</span>
+<span class="normal">1419</span>
+<span class="normal">1420</span>
+<span class="normal">1421</span>
+<span class="normal">1422</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao_eles</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span>
     <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">,</span>
@@ -6974,25 +7035,7 @@ the last element in the lattice.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/ele/ele.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1477</span>
-<span class="normal">1478</span>
-<span class="normal">1479</span>
-<span class="normal">1480</span>
-<span class="normal">1481</span>
-<span class="normal">1482</span>
-<span class="normal">1483</span>
-<span class="normal">1484</span>
-<span class="normal">1485</span>
-<span class="normal">1486</span>
-<span class="normal">1487</span>
-<span class="normal">1488</span>
-<span class="normal">1489</span>
-<span class="normal">1490</span>
-<span class="normal">1491</span>
-<span class="normal">1492</span>
-<span class="normal">1493</span>
-<span class="normal">1494</span>
-<span class="normal">1495</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1495</span>
 <span class="normal">1496</span>
 <span class="normal">1497</span>
 <span class="normal">1498</span>
@@ -7035,7 +7078,25 @@ the last element in the lattice.</p>
 <span class="normal">1535</span>
 <span class="normal">1536</span>
 <span class="normal">1537</span>
-<span class="normal">1538</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">1538</span>
+<span class="normal">1539</span>
+<span class="normal">1540</span>
+<span class="normal">1541</span>
+<span class="normal">1542</span>
+<span class="normal">1543</span>
+<span class="normal">1544</span>
+<span class="normal">1545</span>
+<span class="normal">1546</span>
+<span class="normal">1547</span>
+<span class="normal">1548</span>
+<span class="normal">1549</span>
+<span class="normal">1550</span>
+<span class="normal">1551</span>
+<span class="normal">1552</span>
+<span class="normal">1553</span>
+<span class="normal">1554</span>
+<span class="normal">1555</span>
+<span class="normal">1556</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao_tracking</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span>
     <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">,</span>
@@ -7281,25 +7342,7 @@ This does not need to be a unique element itself.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/ele/ele.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1406</span>
-<span class="normal">1407</span>
-<span class="normal">1408</span>
-<span class="normal">1409</span>
-<span class="normal">1410</span>
-<span class="normal">1411</span>
-<span class="normal">1412</span>
-<span class="normal">1413</span>
-<span class="normal">1414</span>
-<span class="normal">1415</span>
-<span class="normal">1416</span>
-<span class="normal">1417</span>
-<span class="normal">1418</span>
-<span class="normal">1419</span>
-<span class="normal">1420</span>
-<span class="normal">1421</span>
-<span class="normal">1422</span>
-<span class="normal">1423</span>
-<span class="normal">1424</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1424</span>
 <span class="normal">1425</span>
 <span class="normal">1426</span>
 <span class="normal">1427</span>
@@ -7350,7 +7393,25 @@ This does not need to be a unique element itself.</p>
 <span class="normal">1472</span>
 <span class="normal">1473</span>
 <span class="normal">1474</span>
-<span class="normal">1475</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">1475</span>
+<span class="normal">1476</span>
+<span class="normal">1477</span>
+<span class="normal">1478</span>
+<span class="normal">1479</span>
+<span class="normal">1480</span>
+<span class="normal">1481</span>
+<span class="normal">1482</span>
+<span class="normal">1483</span>
+<span class="normal">1484</span>
+<span class="normal">1485</span>
+<span class="normal">1486</span>
+<span class="normal">1487</span>
+<span class="normal">1488</span>
+<span class="normal">1489</span>
+<span class="normal">1490</span>
+<span class="normal">1491</span>
+<span class="normal">1492</span>
+<span class="normal">1493</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao_unique</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span>
     <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">,</span>
@@ -7716,8 +7777,7 @@ branch, key, name, match number, and offset.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/ele/ele.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">386</span>
-<span class="normal">387</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">387</span>
 <span class="normal">388</span>
 <span class="normal">389</span>
 <span class="normal">390</span>
@@ -7814,7 +7874,8 @@ branch, key, name, match number, and offset.</p>
 <span class="normal">481</span>
 <span class="normal">482</span>
 <span class="normal">483</span>
-<span class="normal">484</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">484</span>
+<span class="normal">485</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ElementID</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Construct an ElementID from the Tao string representation.</span>
@@ -7997,8 +8058,7 @@ an intersection of elements.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/ele/ele.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">486</span>
-<span class="normal">487</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">487</span>
 <span class="normal">488</span>
 <span class="normal">489</span>
 <span class="normal">490</span>
@@ -8021,7 +8081,8 @@ an intersection of elements.</p>
 <span class="normal">507</span>
 <span class="normal">508</span>
 <span class="normal">509</span>
-<span class="normal">510</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">510</span>
+<span class="normal">511</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao_any</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">split_range</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ElementID</span> <span class="o">|</span> <span class="n">ElementList</span> <span class="o">|</span> <span class="n">ElementIntersection</span> <span class="o">|</span> <span class="n">ElementRange</span><span class="p">:</span>
@@ -8128,8 +8189,7 @@ an intersection of elements.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/ele/ele.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">326</span>
-<span class="normal">327</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">327</span>
 <span class="normal">328</span>
 <span class="normal">329</span>
 <span class="normal">330</span>
@@ -8186,7 +8246,8 @@ an intersection of elements.</p>
 <span class="normal">381</span>
 <span class="normal">382</span>
 <span class="normal">383</span>
-<span class="normal">384</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">384</span>
+<span class="normal">385</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao_old_syntax</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ElementID</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Convert a Tao old syntax Element identifier.</span>
@@ -12989,8 +13050,7 @@ ElementList.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/ele/ele.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">120</span>
-<span class="normal">121</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">121</span>
 <span class="normal">122</span>
 <span class="normal">123</span>
 <span class="normal">124</span>
@@ -13015,7 +13075,8 @@ ElementList.</p>
 <span class="normal">143</span>
 <span class="normal">144</span>
 <span class="normal">145</span>
-<span class="normal">146</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">146</span>
+<span class="normal">147</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ElementRange</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Convert a Tao representation of comma-delimited elements to an</span>
@@ -13198,8 +13259,7 @@ ElementList.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/ele/ele.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">166</span>
-<span class="normal">167</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">167</span>
 <span class="normal">168</span>
 <span class="normal">169</span>
 <span class="normal">170</span>
@@ -13214,7 +13274,8 @@ ElementList.</p>
 <span class="normal">179</span>
 <span class="normal">180</span>
 <span class="normal">181</span>
-<span class="normal">182</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">182</span>
+<span class="normal">183</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ElementList</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Convert a Tao representation of comma-delimited elements to an</span>
@@ -13386,8 +13447,7 @@ ElementList.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/model/ele/ele.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">197</span>
-<span class="normal">198</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">198</span>
 <span class="normal">199</span>
 <span class="normal">200</span>
 <span class="normal">201</span>
@@ -13401,7 +13461,8 @@ ElementList.</p>
 <span class="normal">209</span>
 <span class="normal">210</span>
 <span class="normal">211</span>
-<span class="normal">212</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">212</span>
+<span class="normal">213</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ElementIntersection</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create an ElementIntersection instance from a Tao format, ampersand-delimited string.</span>

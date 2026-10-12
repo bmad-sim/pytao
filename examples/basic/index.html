@@ -2742,7 +2742,7 @@ Twiss at end of element:
   Alpha           -0.65684269   -35.88090507  |  -0.16215590   0.00350748     -0.09239803   0.03194118
   Gamma (1/m)      1.04874257    56.21479084  |   Gamma_c =   0.99967091       Mode_Flip = F
   dBeta/dpz       26.58647780    61.04444633  |   W_a =    20.10620561
-  dAlpha/dpz      -7.80964929  -147.23369111  |   W_b =    51.73788297
+  dAlpha/dpz      -7.80964929  -147.23369112  |   W_b =    51.73788298
   Phi (rad)        0.59356744     1.53299607            X              Y              Z
   Eta (m)         -0.02444701     0.00048948    -0.02453413     0.00007931     0.00000000
   Etap            -0.03262121    -0.00146703    -0.03270256    -0.00198053     1.00000000
@@ -3039,6 +3039,7 @@ Tracking: Electron,   State: Alive,  bmad_com[spin_tracking_on] = F
  'multipoles',
  'orbit',
  'photon',
+ 'shapes',
  'spin_taylor',
  'taylor',
  'twiss',
@@ -3269,12 +3270,12 @@ ele1.attrs["L"].units</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[13]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>{'x': 0.00310868994973819,
- 'px': 0.00344601640995989,
- 'y': 0.00018321175239914,
- 'py': 0.000248952325118158,
- 'z': -0.000403684038665232,
- 'pz': -7.17213865857442e-06,
+<pre>{'x': 0.00310868994973876,
+ 'px': 0.00344601640996015,
+ 'y': 0.000183211752399116,
+ 'py': 0.000248952325118155,
+ 'z': -0.000403684038665356,
+ 'pz': -7.17213865691916e-06,
  'spin': array([0., 0., 0.]),
  'field': array([0., 0.]),
  'phase': array([0., 0.]),
@@ -3338,9 +3339,9 @@ ele1.attrs["L"].units</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[14]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>array([ 2.81129919e-03, -1.06243941e-03,  1.37712949e-04,  3.08052132e-04,
-       -3.66410982e-04, -3.42737812e-04, -9.80307127e-06,  1.28290108e-03,
-        2.66261121e-03,  2.68374458e-03])</pre>
+<pre>array([ 2.81129919e-03, -1.06243941e-03,  1.37712951e-04,  3.08052140e-04,
+       -3.66410989e-04, -3.42737820e-04, -9.80307681e-06,  1.28290108e-03,
+        2.66261122e-03,  2.68374459e-03])</pre>
 </div>
 </div>
 </div>
@@ -3757,6 +3758,7 @@ cmd
 cmd_integer
 cmd_real
 cmds
+complete
 constraints
 da_aperture
 da_params
@@ -3796,6 +3798,7 @@ ele_multipoles
 ele_orbit
 ele_param
 ele_photon
+ele_shape
 ele_spin_taylor
 ele_taylor
 ele_twiss
@@ -3944,7 +3947,7 @@ wave
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[23]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>155</pre>
+<pre>157</pre>
 </div>
 </div>
 </div>
@@ -4913,7 +4916,7 @@ Error in tao_pipe_cmd:
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[41]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>['[ERROR | 2026-SEP-25 21:17:36] tao_command:',
+<pre>['[ERROR | 2026-OCT-12 21:25:05] tao_command:',
  '    UNRECOGNIZED COMMAND: invalid_command']</pre>
 </div>
 </div>
@@ -5212,15 +5215,15 @@ will show information on the "pipe ele:orbit" subcommand.
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[47]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>['x;REAL;F; -1.66698178808152E-05',
- 'px;REAL;F;  2.38956895409344E-03',
- 'y;REAL;F;  1.05487569250671E-06',
- 'py;REAL;F;  1.77703588955956E-06',
- 'z;REAL;F; -3.98929150181109E-04',
- 'pz;REAL;F; -7.16337075709370E-06',
+<pre>['x;REAL;F; -1.66698178810011E-05',
+ 'px;REAL;F;  2.38956895409283E-03',
+ 'y;REAL;F;  1.05487569248895E-06',
+ 'py;REAL;F;  1.77703588956489E-06',
+ 'z;REAL;F; -3.98929149983235E-04',
+ 'pz;REAL;F; -7.16337076985985E-06',
  'spin;REAL_ARR;F;  0.00000000000000E+00;  0.00000000000000E+00;  0.00000000000000E+00',
  'field;REAL_ARR;F;  0.00000000000000E+00;  0.00000000000000E+00',
- 'phase;REAL_ARR;F;  9.01322977867567E-04;  0.00000000000000E+00',
+ 'phase;REAL_ARR;F;  9.01322979826123E-04;  0.00000000000000E+00',
  's;REAL;F;  7.68426421416168E+02',
  't;REAL;F;  2.56319599936047E-06',
  'charge;REAL;F;  0.00000000000000E+00',
