@@ -94,10 +94,7 @@ def ipython_shell(tao: AnyTao) -> None:
     # except IOError:
     #     tao_history = []
 
-    ipshell = InteractiveShellEmbed(
-        config=cfg,
-        banner1="Entering Tao interactive shell. Type commands as in Tao.",
-    )
+    ipshell = InteractiveShellEmbed(config=cfg, display_banner=False)
 
     def tao_pipe_completer(ipython, event):
         """Tab completion driven by Tao's own completion engine (pipe complete)."""
@@ -114,6 +111,10 @@ def ipython_shell(tao: AnyTao) -> None:
     # tokens, so tokens like "orbit.x" or "2@q1" must not be split further.
     ipshell.Completer.splitter.delims = " \t"
 
+    print(
+        "Entering Tao interactive shell. Type commands as you would in Tao (e.g., 'show lattice')."
+    )
+    print()
     print("Type 'exit', 'quit', or press Ctrl-D on a blank line to return to IPython mode.")
 
     def preprocess_line(line: str) -> str:
