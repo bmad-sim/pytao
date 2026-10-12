@@ -20,6 +20,7 @@ dependencies:
   - rich
   - tqdm
   # Developer
+  - markdown >3.10,<3.11
   - mkdocs
   - mkdocs-jupyter
   - mkdocs-material
