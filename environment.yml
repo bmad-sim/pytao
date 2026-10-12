@@ -25,6 +25,7 @@ dependencies:
   - mkdocs-material
   - mkdocstrings
   - mkdocstrings-python
+  - pymdown-extensions <12 # Highlight api change issue
   - pygments
   - pytest
   - pytest-cov
