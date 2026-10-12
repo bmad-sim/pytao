@@ -185,10 +185,6 @@ def parse_command_list_help(command_list_tex: str):
     }
 
 
-def generate_autocompletion(command_list_tex: str):
-    return parse_command_list_help(command_list_tex)
-
-
 def generate_params(params):
     """
     Generates the list of parameters for the Tao Python method.
@@ -357,9 +353,6 @@ def write_interface_commands():
 
     """
         cmds_to_module.append(method_template)
-
-    command_to_usage = generate_autocompletion(os.path.join(tao_docs, "command-list.tex"))
-    cmds_to_module.append(f"_autocomplete_usage_ = {command_to_usage!r}")
 
     with open(CMDS_OUTPUT, "w") as out:
         out.writelines(cmds_to_module)
