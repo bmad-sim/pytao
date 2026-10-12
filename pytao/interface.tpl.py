@@ -11,6 +11,7 @@ from .util.parser_types import (  # noqa: F401
     BuildingWallGlobalInfo,
     BuildingWallGraphInfo,
     BuildingWallInfo,
+    CompleteResult,
     ConstraintDataInfo,
     ConstraintVarInfo,
     DataD1ArrayInfo,
