@@ -96,3 +96,34 @@ def make_readline_completer(tao) -> Callable[[str, int], str | None]:
         return None
 
     return completer
+
+
+def make_prompt_toolkit_completer(tao):
+    """
+    Build a ``prompt_toolkit`` completer backed by Tao's completion engine.
+
+    Unlike IPython's completer stack, this completes on a blank line too, so
+    an empty prompt offers the full list of Tao commands.
+
+    Parameters
+    ----------
+    tao : Tao
+        The Tao instance to query.
+
+    Returns
+    -------
+    prompt_toolkit.completion.Completer
+    """
+    from prompt_toolkit.completion import Completer, Completion
+
+    class TaoCompleter(Completer):
+        def get_completions(self, document, complete_event):
+            try:
+                word, matches = line_candidates(tao, document.text_before_cursor)
+            except Exception:
+                logger.debug("Tao completion failed", exc_info=True)
+                return
+            for match in matches:
+                yield Completion(match, start_position=-len(word))
+
+    return TaoCompleter()

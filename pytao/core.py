@@ -23,7 +23,12 @@ from .errors import (
     set_log_mode,
 )
 from .util import parsers as _pytao_parsers
-from .util.completion import line_candidates, make_readline_completer
+from .util.completion import (
+    line_candidates,
+    make_prompt_toolkit_completer,
+    make_readline_completer,
+)
+
 # from .util.parameters import tao_parameter_dict
 
 if TYPE_CHECKING:
@@ -62,24 +67,11 @@ def ipython_shell(tao: AnyTao) -> None:
     cfg = Config()
     cfg.TerminalInteractiveShell.prompts_class = TaoPrompt
     cfg.TerminalInteractiveShell.confirm_exit = False
-
-    # Remove standard completion stuff from Jedi:
-    cfg.IPCompleter.use_jedi = False
-
-    cfg.IPCompleter.disable_matchers = [
-        "IPCompleter.latex_name_matcher",
-        # "IPCompleter.unicode_name_matcher",
-        "back_latex_name_matcher",
-        "back_unicode_name_matcher",
-        # "IPCompleter.fwd_unicode_matcher",
-        "IPCompleter.magic_config_matcher",
-        "IPCompleter.magic_color_matcher",
-        # "IPCompleter.custom_completer_matcher",
-        "IPCompleter.dict_key_matcher",
-        "IPCompleter.magic_matcher",
-        "IPCompleter.python_matcher",
-        "IPCompleter.file_matcher",  # <- TODO can we use this in a restricted way?
-        "IPCompleter.python_func_kw_matcher",
+    # IPython binds Tab to indentation when the cursor is in leading whitespace
+    # (including an empty line), which would shadow completion entirely.
+    # Removing it falls back to prompt_toolkit's default menu-complete.
+    cfg.TerminalInteractiveShell.shortcuts = [
+        {"command": "IPython:shortcuts.indent_buffer", "new_keys": []},
     ]
 
     pytao_config = pathlib.Path("~/.config/.pytao").expanduser()
@@ -96,20 +88,10 @@ def ipython_shell(tao: AnyTao) -> None:
 
     ipshell = InteractiveShellEmbed(config=cfg, display_banner=False)
 
-    def tao_pipe_completer(ipython, event):
-        """Tab completion driven by Tao's own completion engine (pipe complete)."""
-        line = getattr(event, "text_until_cursor", event.line)
-        try:
-            _, matches = line_candidates(tao, line)
-        except Exception:
-            logger.debug("Tao completion failed", exc_info=True)
-            return None
-        return matches
-
-    ipshell.set_hook("complete_command", tao_pipe_completer, re_key="^")
-    # Tao completion candidates are full replacements for blank-delimited
-    # tokens, so tokens like "orbit.x" or "2@q1" must not be split further.
-    ipshell.Completer.splitter.delims = " \t"
+    # Bypass IPython's completer stack entirely: it refuses to complete on a
+    # blank line, but an empty Tao prompt should list every Tao command.
+    if ipshell.pt_app is not None:
+        ipshell.pt_app.completer = make_prompt_toolkit_completer(tao)
 
     print(
         "Entering Tao interactive shell. Type commands as you would in Tao (e.g., 'show lattice')."
