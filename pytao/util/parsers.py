@@ -15,6 +15,7 @@ from .parser_types import (
     BuildingWallGlobalInfo,
     BuildingWallGraphInfo,
     BuildingWallInfo,
+    CompleteResult,
     ConstraintDataInfo,
     ConstraintVarInfo,
     DataD1ArrayInfo,
@@ -783,6 +784,34 @@ def parse_building_wall_graph(lines, cmd="") -> list[BuildingWallGraphInfo]:
             "offset_y": float,
             "radius": float,
         },
+    )
+
+
+def parse_complete(lines, cmd="") -> CompleteResult:
+    """
+    Parse pipe complete results.
+
+    Parameters
+    ----------
+    lines : list of str
+        The output of the 'pipe complete' command to parse.
+
+    Returns
+    -------
+    dict
+        With keys ``word`` (the partial token being completed), ``context``
+        (``"LIST"``, ``"FILE"``, or ``"NONE"``), and ``matches`` (full
+        replacement candidates for ``word``, in Tao's order).
+    """
+    data = parse_tao_python_data(lines, clean_key=False)
+    match_keys = sorted(
+        (key for key in data if key.startswith("match[")),
+        key=lambda key: int(key[len("match[") : -1]),
+    )
+    return CompleteResult(
+        word=data.get("word", ""),
+        context=data.get("context", "NONE"),
+        matches=[data[key] for key in match_keys],
     )
 
 

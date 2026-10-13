@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# coding: utf-8
 
 import datetime
 import json
@@ -186,10 +185,6 @@ def parse_command_list_help(command_list_tex: str):
     }
 
 
-def generate_autocompletion(command_list_tex: str):
-    return parse_command_list_help(command_list_tex)
-
-
 def generate_params(params):
     """
     Generates the list of parameters for the Tao Python method.
@@ -359,9 +354,6 @@ def write_interface_commands():
     """
         cmds_to_module.append(method_template)
 
-    command_to_usage = generate_autocompletion(os.path.join(tao_docs, "command-list.tex"))
-    cmds_to_module.append(f"_autocomplete_usage_ = {command_to_usage!r}")
-
     with open(CMDS_OUTPUT, "w") as out:
         out.writelines(cmds_to_module)
 
@@ -433,12 +425,18 @@ def write_tests():
         if len(tests) == 0:
             print(f"No examples found for: {method}")
 
+        existing_tests = set()
         for test_name, test_meta in tests.items():
+            while test_name in existing_tests:
+                test_name = f"{test_name}_"
+
             args = [f"{k}='{v}'" for k, v in test_meta["args"].items()]
             args.append("verbose=True")
             test_code = f"""
-with ensure_successful_parsing(caplog):
-    with new_tao(tao_cls, '{test_meta["init"]}', external_plotting=False) as tao:
+with (
+    ensure_successful_parsing(caplog),
+    new_tao(tao_cls, '{test_meta["init"]}', external_plotting=False) as tao,
+):
         tao.{clean_method}({", ".join(args)})
             """
             method_template = f"""

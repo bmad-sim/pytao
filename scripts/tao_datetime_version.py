@@ -1,3 +1,5 @@
+import datetime
+
 import pytao
 
 tao = pytao.Tao(
@@ -5,4 +7,5 @@ tao = pytao.Tao(
     noplot=True,
 )
 date = tao.version(as_date=True)
+assert isinstance(date, datetime.datetime)
 print(f"datetime.datetime({date.year}, {date.month}, {date.day})")
