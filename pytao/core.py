@@ -29,8 +29,6 @@ from .util.completion import (
     make_readline_completer,
 )
 
-# from .util.parameters import tao_parameter_dict
-
 if TYPE_CHECKING:
     from .subproc import SubprocessTao
     from .tao import Tao
@@ -493,10 +491,13 @@ class TaoCore:
 
         special_parser = getattr(_pytao_parsers, f"parse_{method_name}", None)
 
+        if raw_output is None:
+            return None
+
         try:
             if special_parser and callable(special_parser):
                 return special_parser(raw_output, cmd=cmd)
-            if isinstance(raw_output, np.ndarray) or raw_output is None:
+            if isinstance(raw_output, np.ndarray):
                 return raw_output
             return _pytao_parsers.parse_tao_python_data(raw_output)
         except Exception as ex:
@@ -874,7 +875,7 @@ def configure_logging(
     def add_handler(handler: logging.Handler, handler_level: int | str) -> None:
         handler.setLevel(handler_level)
         handler.setFormatter(formatter)
-        handler._pytao_handler_ = True
+        handler._pytao_handler_ = True  # type: ignore
         logger.addHandler(handler)
 
     if console:
