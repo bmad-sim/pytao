@@ -2066,8 +2066,9 @@ class GraphManager(ABC):
         data: ElementMethodsPlotData,
         *,
         columns: Sequence[str] | None = None,
-        show_names: bool = True,
+        show_names: bool = False,
         show_csr_ds_step: bool | None = None,
         include_layout: bool = True,
+        xlim: Limit | None = None,
     ) -> Any:
         pass

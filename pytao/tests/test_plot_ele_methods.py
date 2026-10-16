@@ -70,6 +70,9 @@ def test_plot_ele_methods():
         assert len(with_zero.names) > len(data.names)
         assert any(start == end for start, end in zip(with_zero.s_start, with_zero.s_end))
 
+        tao.plot_ele_methods(xlim=(1.0, 5.0), show_names=True)
+        assert tuple(tao.last_plot[2][0].get_xlim()) == (1.0, 5.0)
+
         with pytest.raises(ValueError, match="not_a_method"):
             tao.plot_ele_methods(columns=["not_a_method"])
 
@@ -135,3 +138,7 @@ def test_plot_ele_methods_bokeh():
 
         tao.plot_ele_methods(backend="bokeh", show_csr_ds_step=False, include_layout=False)
         assert len(tao.last_plot[1].children) == 2  # lanes + settings caption
+
+        tao.plot_ele_methods(backend="bokeh", xlim=(1.0, 5.0), show_names=True)
+        x_range = tao.last_plot[1].children[0].x_range
+        assert (x_range.start, x_range.end) == (1.0, 5.0)
