@@ -2435,9 +2435,10 @@ class BokehGraphManager(GraphManager):
         data: ElementMethodsPlotData,
         *,
         columns: Sequence[str] | None = None,
-        show_names: bool = True,
+        show_names: bool = False,
         show_csr_ds_step: bool | None = None,
         include_layout: bool = True,
+        xlim: Limit | None = None,
         lane_height: float = 0.8,
         width: int | None = None,
         height: int | None = None,
@@ -2459,7 +2460,7 @@ class BokehGraphManager(GraphManager):
         columns : sequence of str, optional
             Method columns to plot, in order.  Defaults to all categorical
             columns with data for the selected elements.
-        show_names : bool, default=True
+        show_names : bool, default=False
             Label method transitions with the element names before and after
             the transition point.
         show_csr_ds_step : bool, optional
@@ -2467,6 +2468,8 @@ class BokehGraphManager(GraphManager):
             it only when CSR is active for at least one selected element.
         include_layout : bool, default=True
             Include a lattice layout plot at the bottom.
+        xlim : (float, float), optional
+            X axis (s) limits.  Defaults to the extent of the selected elements.
         lane_height : float, default=0.8
             Height of each lane's blocks, where lanes are spaced 1.0 apart.
         width : int, optional
@@ -2492,7 +2495,7 @@ class BokehGraphManager(GraphManager):
         lanes_fig = figure(
             tools=_Defaults.tools,
             toolbar_location="above",
-            x_range=bokeh.models.Range1d(min(data.s_start), max(data.s_end)),
+            x_range=bokeh.models.Range1d(*(xlim or (min(data.s_start), max(data.s_end)))),
         )
         lane_renderers = _draw_method_lanes(data, columns, lanes_fig, lane_height)
         if show_names:
@@ -2770,9 +2773,10 @@ class NotebookGraphManager(BokehGraphManager):
         data: ElementMethodsPlotData,
         *,
         columns: Sequence[str] | None = None,
-        show_names: bool = True,
+        show_names: bool = False,
         show_csr_ds_step: bool | None = None,
         include_layout: bool = True,
+        xlim: Limit | None = None,
         lane_height: float = 0.8,
         width: int | None = None,
         height: int | None = None,
@@ -2785,6 +2789,7 @@ class NotebookGraphManager(BokehGraphManager):
             show_names=show_names,
             show_csr_ds_step=show_csr_ds_step,
             include_layout=include_layout,
+            xlim=xlim,
             lane_height=lane_height,
             width=width,
             height=height,

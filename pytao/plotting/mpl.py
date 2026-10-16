@@ -1065,9 +1065,10 @@ class MatplotlibGraphManager(GraphManager):
         data: ElementMethodsPlotData,
         *,
         columns: Sequence[str] | None = None,
-        show_names: bool = True,
+        show_names: bool = False,
         show_csr_ds_step: bool | None = None,
         include_layout: bool = True,
+        xlim: Limit | None = None,
         lane_height: float = 0.8,
         figsize: tuple[float, float] | None = None,
         width: float | None = None,
@@ -1091,7 +1092,7 @@ class MatplotlibGraphManager(GraphManager):
         columns : sequence of str, optional
             Method columns to plot, in order.  Defaults to all categorical
             columns with data for the selected elements.
-        show_names : bool, default=True
+        show_names : bool, default=False
             Label method transitions with the element names before and after
             the transition point.
         show_csr_ds_step : bool, optional
@@ -1099,6 +1100,8 @@ class MatplotlibGraphManager(GraphManager):
             it only when CSR is active for at least one selected element.
         include_layout : bool, default=True
             Include a lattice layout plot at the bottom.
+        xlim : (float, float), optional
+            X axis (s) limits.  Defaults to the extent of the selected elements.
         lane_height : float, default=0.8
             Height of each lane's blocks, where lanes are spaced 1.0 apart.
         figsize : (float, float), optional
@@ -1179,7 +1182,7 @@ class MatplotlibGraphManager(GraphManager):
         if include_layout:
             plot(self.lattice_layout_graph, ax=axes[-1])
 
-        lanes_ax.set_xlim(min(data.s_start), max(data.s_end))
+        lanes_ax.set_xlim(xlim or (min(data.s_start), max(data.s_end)))
         axes[-1].set_xlabel("s (m)")
 
         if fig is not None:
