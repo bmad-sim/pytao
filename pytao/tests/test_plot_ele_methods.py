@@ -142,3 +142,29 @@ def test_plot_ele_methods_bokeh():
         tao.plot_ele_methods(backend="bokeh", xlim=(1.0, 5.0), show_names=True)
         x_range = tao.last_plot[1].children[0].x_range
         assert (x_range.start, x_range.end) == (1.0, 5.0)
+
+
+def test_plot_ele_methods_from_elements():
+    from ..model import Lattice
+    from ..plotting.mpl import plot_ele_methods
+    from ..plotting.plot import lat_layout_elements_from_elements
+
+    example = get_example("csr_beam_tracking")
+    with example.run_context(use_subprocess=True) as tao:
+        lattice = Lattice.from_tao_tracking(tao, attrs=True, methods=True, shapes=True)
+        sc_com = tao.get_config().space_charge_com
+        from_tao = ElementMethodsPlotData.from_tao(tao)
+
+    data = ElementMethodsPlotData.from_elements(lattice.elements, space_charge_com=sc_com)
+    assert data == from_tao
+
+    layout = lat_layout_elements_from_elements(lattice.elements)
+    assert layout
+    _data, fig, axes = plot_ele_methods(data, layout=layout, xlim=(1.0, 5.0))
+    assert len(axes) == 3  # lanes + csr_ds_step + layout
+    assert axes[-1].collections or axes[-1].patches
+    assert tuple(axes[0].get_xlim()) == (1.0, 5.0)
+    fig.savefig(test_artifacts / "test_plot_ele_methods-from_elements.png")
+
+    _data, _fig, axes = plot_ele_methods(data, show_csr_ds_step=False)
+    assert len(axes) == 1
