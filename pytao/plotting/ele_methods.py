@@ -10,6 +10,7 @@ from pydantic import dataclasses
 
 if typing.TYPE_CHECKING:
     from .. import Tao
+    from ..model import Element, SpaceChargeCom
     from ..model.ele import Which
 
 
@@ -245,9 +246,6 @@ class ElementMethodsPlotData:
             Include zero-length elements.
         """
 
-        conf = tao.get_config()
-        sc_com = conf.space_charge_com
-
         # Lord elements overlap their slaves longitudinally, which would draw
         # conflicting blocks on top of each other.
         elements = tao.eles(
@@ -260,6 +258,40 @@ class ElementMethodsPlotData:
             attrs=True,
             methods=True,
         )
+        try:
+            return cls.from_elements(
+                elements,
+                space_charge_com=tao.get_config().space_charge_com,
+                include_zero_length=include_zero_length,
+            )
+        except ValueError:
+            raise ValueError(f"No elements with method data matched: {ele_id!r}") from None
+
+    @classmethod
+    def from_elements(
+        cls,
+        elements: Sequence[Element],
+        *,
+        space_charge_com: SpaceChargeCom,
+        include_zero_length: bool = False,
+    ) -> ElementMethodsPlotData:
+        """
+        Gather element method settings from `Element` instances, without Tao.
+
+        Elements must have `methods` and `attrs` filled (e.g., from an archived
+        `Lattice`).  Lord elements should not be included, as they overlap
+        their slaves longitudinally.
+
+        Parameters
+        ----------
+        elements : sequence of Element
+        space_charge_com : SpaceChargeCom
+            Global space charge/CSR settings, for the settings summary and the
+            default `csr_ds_step` of elements that do not set their own.
+        include_zero_length : bool, default=False
+            Include zero-length elements.
+        """
+        sc_com = space_charge_com
 
         ix_eles: list[int] = []
         names: list[str] = []
@@ -294,7 +326,7 @@ class ElementMethodsPlotData:
         }
 
         if not names or not methods:
-            raise ValueError(f"No elements with method data matched: {ele_id!r}")
+            raise ValueError("No elements with method data")
 
         return cls(
             ix_eles=ix_eles,

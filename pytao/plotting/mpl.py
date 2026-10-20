@@ -513,6 +513,146 @@ def plot(graph: AnyGraph, ax: matplotlib.axes.Axes | None = None) -> matplotlib.
     return ax
 
 
+def plot_ele_methods(
+    data: ElementMethodsPlotData,
+    *,
+    layout: Sequence[LatticeLayoutElement] | None = None,
+    columns: Sequence[str] | None = None,
+    show_names: bool = False,
+    show_csr_ds_step: bool | None = None,
+    xlim: Limit | None = None,
+    lane_height: float = 0.8,
+    figsize: tuple[float, float] | None = None,
+    width: float | None = None,
+    height: float | None = None,
+    layout_height: float | None = None,
+    ax: matplotlib.axes.Axes | None = None,
+    save: bool | str | pathlib.Path | None = None,
+):
+    """
+    Plot element method settings as categorical lanes along the beamline.
+
+    Each method (e.g., `tracking_method`) becomes a horizontal lane, with
+    each element drawn as a block spanning its longitudinal extent, colored
+    by the method value.
+
+    Parameters
+    ----------
+    data : ElementMethodsPlotData
+        Per-element method data.
+    layout : sequence of LatticeLayoutElement, optional
+        Lattice layout elements to draw in a strip at the bottom (`axes[-1]`).
+        See `lat_layout_elements_from_elements` or `LatticeLayoutGraph.elements`.
+    columns : sequence of str, optional
+        Method columns to plot, in order.  Defaults to all categorical
+        columns with data for the selected elements.
+    show_names : bool, default=False
+        Label method transitions with the element names before and after
+        the transition point.
+    show_csr_ds_step : bool, optional
+        Add a subplot of `csr_ds_step` vs s.  The default (`None`) shows
+        it only when CSR is active for at least one selected element.
+    xlim : (float, float), optional
+        X axis (s) limits.  Defaults to the extent of the selected elements.
+    lane_height : float, default=0.8
+        Height of each lane's blocks, where lanes are spaced 1.0 apart.
+    figsize : (float, float), optional
+        Figure size.  Takes precedence over `width` and `height`.
+    width : float, optional
+        Width of the whole plot.
+    height : float, optional
+        Height of the whole plot.
+    layout_height : float, optional
+        Normalized height of the layout plot - assuming the lane plot is
+        of height 1.  Defaults to about half the height of a single lane
+        (`0.5 / len(columns)`).
+    ax : matplotlib.axes.Axes, optional
+        The axes to place the lanes in.  Only supported without `layout`
+        and with `show_csr_ds_step=False`.
+    save : pathlib.Path or str, optional
+        Save the plot to the given filename.
+
+    Returns
+    -------
+    ElementMethodsPlotData
+    matplotlib.figure.Figure
+    list of matplotlib.axes.Axes
+    """
+    columns = data.validate_columns(columns)
+
+    if show_csr_ds_step is None:
+        show_csr_ds_step = data.csr_on
+
+    include_layout = layout is not None
+    nrows = 1 + int(show_csr_ds_step) + int(include_layout)
+    if ax is not None:
+        if nrows > 1:
+            raise ValueError(
+                "A user-specified axis is only supported without a layout "
+                "and with show_csr_ds_step=False"
+            )
+        fig = ax.figure
+        axes = [ax]
+    else:
+        layout_height = layout_height or 0.5 / len(columns)
+
+        if figsize is None and width is None and height is None:
+            lanes_inches = max(2.0, 0.45 * len(columns) + 1.2)
+            figsize = (
+                12.0,
+                lanes_inches
+                + (1.5 if show_csr_ds_step else 0.0)
+                + (lanes_inches * layout_height if include_layout else 0.0),
+            )
+        else:
+            figsize = get_figsize(figsize, width, height)
+
+        height_ratios = [1.0]
+        if show_csr_ds_step:
+            height_ratios.append(0.4)
+        if include_layout:
+            height_ratios.append(layout_height)
+
+        fig, gs = plt.subplots(
+            nrows=nrows,
+            ncols=1,
+            sharex=True,
+            height_ratios=height_ratios,
+            figsize=figsize,
+            squeeze=False,
+        )
+        axes = list(gs[:, 0])
+
+    lanes_ax = axes[0]
+    _draw_method_lanes(data, columns, lanes_ax, lane_height)
+    if show_names:
+        _draw_method_transition_names(data, columns, lanes_ax)
+    _draw_lane_legends(data, columns, lanes_ax)
+
+    if show_csr_ds_step:
+        _draw_csr_ds_step(data, axes[1])
+
+    if layout is not None:
+        plot_lat_layout_elements(layout, axes[-1])
+
+    lanes_ax.set_xlim(xlim or (min(data.s_start), max(data.s_end)))
+    axes[-1].set_xlabel("s (m)")
+
+    if fig is not None:
+        if ax is None:
+            fig.tight_layout()
+
+        if save:
+            if save is True:
+                save = "ele_methods.png"
+            if not pathlib.Path(save).suffix:
+                save = f"{save}.png"
+            logger.info(f"Saving plot to {save!r}")
+            fig.savefig(save, bbox_inches="tight")
+
+    return data, fig, axes
+
+
 def _draw_method_lanes(
     data: ElementMethodsPlotData,
     columns: list[str],
@@ -1065,9 +1205,10 @@ class MatplotlibGraphManager(GraphManager):
         data: ElementMethodsPlotData,
         *,
         columns: Sequence[str] | None = None,
-        show_names: bool = True,
+        show_names: bool = False,
         show_csr_ds_step: bool | None = None,
         include_layout: bool = True,
+        xlim: Limit | None = None,
         lane_height: float = 0.8,
         figsize: tuple[float, float] | None = None,
         width: float | None = None,
@@ -1083,6 +1224,8 @@ class MatplotlibGraphManager(GraphManager):
         each element drawn as a block spanning its longitudinal extent, colored
         by the method value.
 
+        See the module-level `plot_ele_methods` for a Tao-free version.
+
         Parameters
         ----------
         data : ElementMethodsPlotData
@@ -1091,7 +1234,7 @@ class MatplotlibGraphManager(GraphManager):
         columns : sequence of str, optional
             Method columns to plot, in order.  Defaults to all categorical
             columns with data for the selected elements.
-        show_names : bool, default=True
+        show_names : bool, default=False
             Label method transitions with the element names before and after
             the transition point.
         show_csr_ds_step : bool, optional
@@ -1099,6 +1242,8 @@ class MatplotlibGraphManager(GraphManager):
             it only when CSR is active for at least one selected element.
         include_layout : bool, default=True
             Include a lattice layout plot at the bottom.
+        xlim : (float, float), optional
+            X axis (s) limits.  Defaults to the extent of the selected elements.
         lane_height : float, default=0.8
             Height of each lane's blocks, where lanes are spaced 1.0 apart.
         figsize : (float, float), optional
@@ -1123,75 +1268,18 @@ class MatplotlibGraphManager(GraphManager):
         matplotlib.figure.Figure
         list of matplotlib.axes.Axes
         """
-        columns = data.validate_columns(columns)
-
-        if show_csr_ds_step is None:
-            show_csr_ds_step = data.csr_on
-
-        nrows = 1 + int(show_csr_ds_step) + int(include_layout)
-        if ax is not None:
-            if nrows > 1:
-                raise ValueError(
-                    "A user-specified axis is only supported with "
-                    "include_layout=False and show_csr_ds_step=False"
-                )
-            fig = ax.figure
-            axes = [ax]
-        else:
-            layout_height = layout_height or 0.5 / len(columns)
-
-            if figsize is None and width is None and height is None:
-                lanes_inches = max(2.0, 0.45 * len(columns) + 1.2)
-                figsize = (
-                    12.0,
-                    lanes_inches
-                    + (1.5 if show_csr_ds_step else 0.0)
-                    + (lanes_inches * layout_height if include_layout else 0.0),
-                )
-            else:
-                figsize = get_figsize(figsize, width, height)
-
-            height_ratios = [1.0]
-            if show_csr_ds_step:
-                height_ratios.append(0.4)
-            if include_layout:
-                height_ratios.append(layout_height)
-
-            fig, gs = plt.subplots(
-                nrows=nrows,
-                ncols=1,
-                sharex=True,
-                height_ratios=height_ratios,
-                figsize=figsize,
-                squeeze=False,
-            )
-            axes = list(gs[:, 0])
-
-        lanes_ax = axes[0]
-        _draw_method_lanes(data, columns, lanes_ax, lane_height)
-        if show_names:
-            _draw_method_transition_names(data, columns, lanes_ax)
-        _draw_lane_legends(data, columns, lanes_ax)
-
-        if show_csr_ds_step:
-            _draw_csr_ds_step(data, axes[1])
-
-        if include_layout:
-            plot(self.lattice_layout_graph, ax=axes[-1])
-
-        lanes_ax.set_xlim(min(data.s_start), max(data.s_end))
-        axes[-1].set_xlabel("s (m)")
-
-        if fig is not None:
-            if ax is None:
-                fig.tight_layout()
-
-            if save:
-                if save is True:
-                    save = "ele_methods.png"
-                if not pathlib.Path(save).suffix:
-                    save = f"{save}.png"
-                logger.info(f"Saving plot to {save!r}")
-                fig.savefig(save, bbox_inches="tight")
-
-        return data, fig, axes
+        return plot_ele_methods(
+            data,
+            layout=self.lattice_layout_graph.elements if include_layout else None,
+            columns=columns,
+            show_names=show_names,
+            show_csr_ds_step=show_csr_ds_step,
+            xlim=xlim,
+            lane_height=lane_height,
+            figsize=figsize,
+            width=width,
+            height=height,
+            layout_height=layout_height,
+            ax=ax,
+            save=save,
+        )
