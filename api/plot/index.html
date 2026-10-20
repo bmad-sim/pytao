@@ -6875,8 +6875,7 @@ skipping elements without a value.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/ele_methods.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">171</span>
-<span class="normal">172</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">172</span>
 <span class="normal">173</span>
 <span class="normal">174</span>
 <span class="normal">175</span>
@@ -6885,7 +6884,8 @@ skipping elements without a value.</p>
 <span class="normal">178</span>
 <span class="normal">179</span>
 <span class="normal">180</span>
-<span class="normal">181</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">csr_ds_step_segments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]]:</span>
+<span class="normal">181</span>
+<span class="normal">182</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">csr_ds_step_segments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    `csr_ds_step` segments as `(s_start, s_end, step, csr_method)` tuples,</span>
 <span class="sd">    skipping elements without a value.</span>
@@ -6896,6 +6896,246 @@ skipping elements without a value.</p>
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">csr_ds_step</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">step</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
     <span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h7 id="pytao.plotting.ele_methods.ElementMethodsPlotData.from_elements" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">pytao.plotting.ele_methods.ElementMethodsPlotData.from_elements</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h7>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_elements</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">space_charge_com</span><span class="p">,</span> <span class="n">include_zero_length</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Gather element method settings from <code>Element</code> instances, without Tao.</p>
+<p>Elements must have <code>methods</code> and <code>attrs</code> filled (e.g., from an archived
+<code>Lattice</code>).  Lord elements should not be included, as they overlap
+their slaves longitudinally.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>elements</code>
+            </td>
+            <td>
+                  <code>sequence of Element</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>space_charge_com</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="pytao.model.SpaceChargeCom" href="../config/#pytao.model.SpaceChargeCom">SpaceChargeCom</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Global space charge/CSR settings, for the settings summary and the
+default <code>csr_ds_step</code> of elements that do not set their own.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>include_zero_length</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Include zero-length elements.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>pytao/plotting/ele_methods.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">from_elements</span><span class="p">(</span>
+    <span class="bp">cls</span><span class="p">,</span>
+    <span class="n">elements</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Element</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">space_charge_com</span><span class="p">:</span> <span class="n">SpaceChargeCom</span><span class="p">,</span>
+    <span class="n">include_zero_length</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ElementMethodsPlotData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Gather element method settings from `Element` instances, without Tao.</span>
+
+<span class="sd">    Elements must have `methods` and `attrs` filled (e.g., from an archived</span>
+<span class="sd">    `Lattice`).  Lord elements should not be included, as they overlap</span>
+<span class="sd">    their slaves longitudinally.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    elements : sequence of Element</span>
+<span class="sd">    space_charge_com : SpaceChargeCom</span>
+<span class="sd">        Global space charge/CSR settings, for the settings summary and the</span>
+<span class="sd">        default `csr_ds_step` of elements that do not set their own.</span>
+<span class="sd">    include_zero_length : bool, default=False</span>
+<span class="sd">        Include zero-length elements.</span>
+<span class="sd">    """</span>
+    <span class="n">sc_com</span> <span class="o">=</span> <span class="n">space_charge_com</span>
+
+    <span class="n">ix_eles</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">names</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">s_start</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">s_end</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">csr_ds_step</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">methods</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="n">col</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">METHOD_COLUMNS</span><span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">ele</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">ele</span><span class="p">:</span> <span class="n">ele</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">s</span><span class="p">):</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="n">ele</span><span class="o">.</span><span class="n">attribs</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"L"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">length</span> <span class="o">&lt;=</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">include_zero_length</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="n">ix_eles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ele</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">ix_ele</span><span class="p">)</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ele</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">s_start</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ele</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">s_start</span><span class="p">)</span>
+        <span class="n">s_end</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ele</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="c1"># csr_ds_step 0 -&gt; use default from sc com</span>
+        <span class="n">csr_ds_step</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"csr_ds_step"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span> <span class="ow">or</span> <span class="n">sc_com</span><span class="o">.</span><span class="n">ds_track_step</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">METHOD_COLUMNS</span><span class="p">:</span>
+            <span class="n">methods</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="nb">getattr</span><span class="p">(</span><span class="n">ele</span><span class="o">.</span><span class="n">methods</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span> <span class="k">if</span> <span class="n">ele</span><span class="o">.</span><span class="n">methods</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="p">)</span>
+
+    <span class="n">methods</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">col</span><span class="p">:</span> <span class="n">values</span>
+        <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">methods</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">names</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">methods</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"No elements with method data"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+        <span class="n">ix_eles</span><span class="o">=</span><span class="n">ix_eles</span><span class="p">,</span>
+        <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">,</span>
+        <span class="n">s_start</span><span class="o">=</span><span class="n">s_start</span><span class="p">,</span>
+        <span class="n">s_end</span><span class="o">=</span><span class="n">s_end</span><span class="p">,</span>
+        <span class="n">methods</span><span class="o">=</span><span class="n">methods</span><span class="p">,</span>
+        <span class="n">csr_ds_step</span><span class="o">=</span><span class="n">csr_ds_step</span><span class="p">,</span>
+        <span class="n">ds_track_step</span><span class="o">=</span><span class="n">sc_com</span><span class="o">.</span><span class="n">ds_track_step</span><span class="p">,</span>
+        <span class="n">space_charge_mesh_size</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">sc_com</span><span class="o">.</span><span class="n">space_charge_mesh_size</span><span class="p">),</span>
+        <span class="n">csr3d_mesh_size</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">sc_com</span><span class="o">.</span><span class="n">csr3d_mesh_size</span><span class="p">),</span>
+        <span class="n">n_bin</span><span class="o">=</span><span class="n">sc_com</span><span class="o">.</span><span class="n">n_bin</span><span class="p">,</span>
+    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -7037,8 +7277,7 @@ Only tracking elements are considered; lord elements are excluded.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/ele_methods.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">218</span>
-<span class="normal">219</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">219</span>
 <span class="normal">220</span>
 <span class="normal">221</span>
 <span class="normal">222</span>
@@ -7087,49 +7326,7 @@ Only tracking elements are considered; lord elements are excluded.</p>
 <span class="normal">265</span>
 <span class="normal">266</span>
 <span class="normal">267</span>
-<span class="normal">268</span>
-<span class="normal">269</span>
-<span class="normal">270</span>
-<span class="normal">271</span>
-<span class="normal">272</span>
-<span class="normal">273</span>
-<span class="normal">274</span>
-<span class="normal">275</span>
-<span class="normal">276</span>
-<span class="normal">277</span>
-<span class="normal">278</span>
-<span class="normal">279</span>
-<span class="normal">280</span>
-<span class="normal">281</span>
-<span class="normal">282</span>
-<span class="normal">283</span>
-<span class="normal">284</span>
-<span class="normal">285</span>
-<span class="normal">286</span>
-<span class="normal">287</span>
-<span class="normal">288</span>
-<span class="normal">289</span>
-<span class="normal">290</span>
-<span class="normal">291</span>
-<span class="normal">292</span>
-<span class="normal">293</span>
-<span class="normal">294</span>
-<span class="normal">295</span>
-<span class="normal">296</span>
-<span class="normal">297</span>
-<span class="normal">298</span>
-<span class="normal">299</span>
-<span class="normal">300</span>
-<span class="normal">301</span>
-<span class="normal">302</span>
-<span class="normal">303</span>
-<span class="normal">304</span>
-<span class="normal">305</span>
-<span class="normal">306</span>
-<span class="normal">307</span>
-<span class="normal">308</span>
-<span class="normal">309</span>
-<span class="normal">310</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">268</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_tao</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span>
     <span class="n">tao</span><span class="p">:</span> <span class="n">Tao</span><span class="p">,</span>
@@ -7159,9 +7356,6 @@ Only tracking elements are considered; lord elements are excluded.</p>
 <span class="sd">        Include zero-length elements.</span>
 <span class="sd">    """</span>
 
-    <span class="n">conf</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
-    <span class="n">sc_com</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">space_charge_com</span>
-
     <span class="c1"># Lord elements overlap their slaves longitudinally, which would draw</span>
     <span class="c1"># conflicting blocks on top of each other.</span>
     <span class="n">elements</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">eles</span><span class="p">(</span>
@@ -7174,54 +7368,14 @@ Only tracking elements are considered; lord elements are excluded.</p>
         <span class="n">attrs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">methods</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
-
-    <span class="n">ix_eles</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">names</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">s_start</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">s_end</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">csr_ds_step</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">methods</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="n">col</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">METHOD_COLUMNS</span><span class="p">}</span>
-
-    <span class="k">for</span> <span class="n">ele</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">ele</span><span class="p">:</span> <span class="n">ele</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">s</span><span class="p">):</span>
-        <span class="n">attrs</span> <span class="o">=</span> <span class="n">ele</span><span class="o">.</span><span class="n">attribs</span>
-        <span class="n">length</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"L"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">length</span> <span class="o">&lt;=</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">include_zero_length</span><span class="p">:</span>
-            <span class="k">continue</span>
-
-        <span class="n">ix_eles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ele</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">ix_ele</span><span class="p">)</span>
-        <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ele</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="n">s_start</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ele</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">s_start</span><span class="p">)</span>
-        <span class="n">s_end</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ele</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
-
-        <span class="c1"># csr_ds_step 0 -&gt; use default from sc com</span>
-        <span class="n">csr_ds_step</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"csr_ds_step"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span> <span class="ow">or</span> <span class="n">sc_com</span><span class="o">.</span><span class="n">ds_track_step</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">METHOD_COLUMNS</span><span class="p">:</span>
-            <span class="n">methods</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="nb">getattr</span><span class="p">(</span><span class="n">ele</span><span class="o">.</span><span class="n">methods</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span> <span class="k">if</span> <span class="n">ele</span><span class="o">.</span><span class="n">methods</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
-            <span class="p">)</span>
-
-    <span class="n">methods</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">col</span><span class="p">:</span> <span class="n">values</span>
-        <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">methods</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">)</span>
-    <span class="p">}</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">names</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">methods</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No elements with method data matched: </span><span class="si">{</span><span class="n">ele_id</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
-        <span class="n">ix_eles</span><span class="o">=</span><span class="n">ix_eles</span><span class="p">,</span>
-        <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">,</span>
-        <span class="n">s_start</span><span class="o">=</span><span class="n">s_start</span><span class="p">,</span>
-        <span class="n">s_end</span><span class="o">=</span><span class="n">s_end</span><span class="p">,</span>
-        <span class="n">methods</span><span class="o">=</span><span class="n">methods</span><span class="p">,</span>
-        <span class="n">csr_ds_step</span><span class="o">=</span><span class="n">csr_ds_step</span><span class="p">,</span>
-        <span class="n">ds_track_step</span><span class="o">=</span><span class="n">sc_com</span><span class="o">.</span><span class="n">ds_track_step</span><span class="p">,</span>
-        <span class="n">space_charge_mesh_size</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">sc_com</span><span class="o">.</span><span class="n">space_charge_mesh_size</span><span class="p">),</span>
-        <span class="n">csr3d_mesh_size</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">sc_com</span><span class="o">.</span><span class="n">csr3d_mesh_size</span><span class="p">),</span>
-        <span class="n">n_bin</span><span class="o">=</span><span class="n">sc_com</span><span class="o">.</span><span class="n">n_bin</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_elements</span><span class="p">(</span>
+            <span class="n">elements</span><span class="p">,</span>
+            <span class="n">space_charge_com</span><span class="o">=</span><span class="n">tao</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span><span class="o">.</span><span class="n">space_charge_com</span><span class="p">,</span>
+            <span class="n">include_zero_length</span><span class="o">=</span><span class="n">include_zero_length</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No elements with method data matched: </span><span class="si">{</span><span class="n">ele_id</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -7246,8 +7400,7 @@ Only tracking elements are considered; lord elements are excluded.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/ele_methods.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">120</span>
-<span class="normal">121</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">121</span>
 <span class="normal">122</span>
 <span class="normal">123</span>
 <span class="normal">124</span>
@@ -7260,7 +7413,8 @@ Only tracking elements are considered; lord elements are excluded.</p>
 <span class="normal">131</span>
 <span class="normal">132</span>
 <span class="normal">133</span>
-<span class="normal">134</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">columns</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="normal">134</span>
+<span class="normal">135</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">columns</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""Resolve and validate the method columns to plot."""</span>
     <span class="k">if</span> <span class="n">columns</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">methods</span><span class="p">)</span>
@@ -7301,8 +7455,7 @@ drawn as a single block, as <code>(first_index, last_index, value)</code> tuples
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/ele_methods.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">136</span>
-<span class="normal">137</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">137</span>
 <span class="normal">138</span>
 <span class="normal">139</span>
 <span class="normal">140</span>
@@ -7320,7 +7473,8 @@ drawn as a single block, as <code>(first_index, last_index, value)</code> tuples
 <span class="normal">152</span>
 <span class="normal">153</span>
 <span class="normal">154</span>
-<span class="normal">155</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">value_runs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="normal">155</span>
+<span class="normal">156</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">value_runs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Contiguous runs of equal, non-None method values for a column.</span>
 
@@ -7366,8 +7520,7 @@ boundary between elements <code>index</code> and <code>index + 1</code>, i.e. <c
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/ele_methods.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">157</span>
-<span class="normal">158</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">158</span>
 <span class="normal">159</span>
 <span class="normal">160</span>
 <span class="normal">161</span>
@@ -7378,7 +7531,8 @@ boundary between elements <code>index</code> and <code>index + 1</code>, i.e. <c
 <span class="normal">166</span>
 <span class="normal">167</span>
 <span class="normal">168</span>
-<span class="normal">169</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">value_transitions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="normal">169</span>
+<span class="normal">170</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">value_transitions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Method value changes between adjacent elements for a column.</span>
 
@@ -7424,14 +7578,14 @@ boundary between elements <code>index</code> and <code>index + 1</code>, i.e. <c
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/ele_methods.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">76</span>
-<span class="normal">77</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">77</span>
 <span class="normal">78</span>
 <span class="normal">79</span>
 <span class="normal">80</span>
 <span class="normal">81</span>
 <span class="normal">82</span>
-<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">color_for_value</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">83</span>
+<span class="normal">84</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">color_for_value</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Get the display color for a categorical method value."""</span>
     <span class="n">key</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="k">try</span><span class="p">:</span>
@@ -7463,9 +7617,9 @@ boundary between elements <code>index</code> and <code>index + 1</code>, i.e. <c
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/ele_methods.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">is_garbage_value</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">is_garbage_value</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""A "GARBAGE!" method value indicates an issue with bmad itself."""</span>
     <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"garbage!"</span>
 </code></pre></div></td></tr></table></div>
