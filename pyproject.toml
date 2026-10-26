@@ -43,8 +43,9 @@ pytao = "pytao.cli:main"
 pytao-constraints = "pytao.constraints.main:main"
 
 [project.optional-dependencies]
-all = []
-test = ["pytest", "pytest-cov"]
+fork = ["cloudpickle"]
+all = ["cloudpickle"]
+test = ["pytest", "pytest-cov", "cloudpickle"]
 
 [project.urls]
 Homepage = "https://www.classe.cornell.edu/bmad/tao.html"
