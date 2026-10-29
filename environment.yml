@@ -30,5 +30,5 @@ dependencies:
   - pygments
   - pytest
   - pytest-cov
-  - pip
+  - pip >=26.2.2
   - pyyaml
