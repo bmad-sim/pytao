@@ -16,6 +16,7 @@ from typing import (
     ClassVar,
     Literal,
     NamedTuple,
+    Self,
     TypeVar,
     cast,
 )
@@ -25,7 +26,7 @@ import orjson
 import pydantic
 from pydantic.fields import FieldInfo
 from rich.pretty import pretty_repr
-from typing_extensions import Self, override
+from typing_extensions import override
 
 from ..errors import TaoCommandError
 from .types import ArgumentType, _PydanticNDArray

@@ -5,7 +5,6 @@ import threading
 from multiprocessing import resource_tracker as _mprt
 from multiprocessing import shared_memory as _mpshm
 
-
 if sys.version_info >= (3, 13):
     SharedMemory = _mpshm.SharedMemory
 else:

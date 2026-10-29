@@ -5,8 +5,7 @@ from functools import cached_property
 from typing import Literal, Union
 
 import numpy as np
-import pydantic.dataclasses as dataclasses
-from pydantic import ConfigDict
+from pydantic import ConfigDict, dataclasses
 
 from . import util
 from .curves import PlotCurveLine

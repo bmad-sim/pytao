@@ -16,8 +16,7 @@ from typing import (
 )
 
 import numpy as np
-import pydantic.dataclasses as dataclasses
-from pydantic import ConfigDict
+from pydantic import ConfigDict, dataclasses
 from pydantic.fields import Field
 
 from ..errors import TaoCommandError

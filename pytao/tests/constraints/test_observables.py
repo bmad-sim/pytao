@@ -5,10 +5,10 @@ import pytest
 from pytao import SubprocessTao
 from pytao.constraints.observables.datum import DatumLiteral, DatumObservable, DatumObservation
 from pytao.constraints.observables.ele import (
-    EleReduceObservable,
-    EleObservable,
     EleLiteral,
+    EleObservable,
     EleObservation,
+    EleReduceObservable,
     ReduceMode,
 )
 

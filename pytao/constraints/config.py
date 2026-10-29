@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Annotated, Any, Generic, Literal, TypeVar, Union, cast
+from typing import Annotated, Any, Generic, Literal, TypeVar, cast
 
 from pydantic import Field, model_validator
 
@@ -15,9 +15,9 @@ from pytao.constraints.observables import (
     EleIsClose,
     EleLessThan,
     EleLiteral,
-    EleReduceObservable,
     EleObservable,
     EleObservation,
+    EleReduceObservable,
     IsClose,
     IsLess,
     LatticeObservable,
@@ -34,12 +34,12 @@ CompT = TypeVar("CompT", bound=Comparison[Any])
 
 
 EleObservables = Annotated[
-    Union[EleObservable, EleReduceObservable, EleLiteral],
+    EleObservable | EleReduceObservable | EleLiteral,
     Field(discriminator="type"),
 ]
 
 DatumObservables = Annotated[
-    Union[DatumObservable, DatumLiteral],
+    DatumObservable | DatumLiteral,
     Field(discriminator="type"),
 ]
 
@@ -482,14 +482,12 @@ class DatumRegressionConstraint(RegressionConstraint[DatumIsClose]):
 
 
 AnyConstraint = Annotated[
-    Union[
-        EleIsCloseConstraint,
-        EleLessThanConstraint,
-        DatumIsCloseConstraint,
-        DatumLessThanConstraint,
-        EleRegressionConstraint,
-        DatumRegressionConstraint,
-    ],
+    EleIsCloseConstraint
+    | EleLessThanConstraint
+    | DatumIsCloseConstraint
+    | DatumLessThanConstraint
+    | EleRegressionConstraint
+    | DatumRegressionConstraint,
     Field(discriminator="type"),
 ]
 

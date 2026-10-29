@@ -1,7 +1,7 @@
 from __future__ import annotations
+
 import logging
 
-from .startup import TaoStartup
 from .core import (
     TaoCommandError,
     TaoInitializationError,
@@ -15,6 +15,7 @@ from .errors import (
     get_log_mode,
     set_log_mode,
 )
+from .startup import TaoStartup
 from .subproc import AnyTao, SubprocessTao
 from .tao import Tao
 

@@ -3,11 +3,10 @@ from __future__ import annotations
 import pathlib
 from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, ClassVar, Literal, cast
+from typing import TYPE_CHECKING, Any, ClassVar, Literal, Self, cast
 
 import pydantic
 from pydantic import Field
-from typing_extensions import Self
 
 from .. import _generated as tao_classes
 from ..base import ArchiveFormat, TaoBaseModel

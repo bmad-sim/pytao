@@ -3,7 +3,7 @@ import logging
 import sys
 import time
 import traceback
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
@@ -59,7 +59,7 @@ def run(
     tuple[SavedObservations, ConstraintResultsGroup]
         Saved lattice observations and the full constraint results.
     """
-    started_at = datetime.now(timezone.utc)
+    started_at = datetime.now(UTC)
 
     needed = config.required_lattice_observables
     literal_obs = config.required_literal_observables
@@ -169,7 +169,7 @@ def run(
 
     return saved, ConstraintResultsGroup(
         started_at=started_at,
-        finished_at=datetime.now(timezone.utc),
+        finished_at=datetime.now(UTC),
         lattices=lattice_results,
         constraints=constraint_results,
         regression=regression_results,

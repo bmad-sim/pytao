@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import operator
 import pathlib
-from typing import Generator
+from collections.abc import Generator
 
 import numpy as np
 import pytest

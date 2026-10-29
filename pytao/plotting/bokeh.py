@@ -14,7 +14,7 @@ from typing import (
     Generic,
     Literal,
     NamedTuple,
-    Optional,
+    NotRequired,
     TypeVar,
     Union,
     cast,
@@ -38,7 +38,7 @@ from bokeh.document.callbacks import EventCallback
 from bokeh.models.sources import ColumnDataSource
 from bokeh.plotting import figure
 from pydantic.dataclasses import dataclass
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import TypedDict
 
 from ..core import AnyPath, TaoCommandError
 from . import floor_plan_shapes, pgplot, util
@@ -1302,7 +1302,7 @@ class BokehFloorPlanGraph(BokehGraphBase[FloorPlanGraph]):
 AnyBokehGraph = Union[BokehBasicGraph, BokehLatticeLayoutGraph, BokehFloorPlanGraph]
 
 
-UIGridLayoutList = list[Optional[bokeh.models.UIElement]]
+UIGridLayoutList = list[bokeh.models.UIElement | None]
 
 
 def save_plot(
@@ -1463,9 +1463,9 @@ class BokehAppCreator:
         if not len(graphs):
             raise ValueError("BokehAppCreator requires 1 or more graph")
 
-        if any(isinstance(graph, LatticeLayoutGraph) for graph in graphs):
-            include_layout = False
-        elif not any(graph.is_s_plot for graph in graphs):
+        if any(isinstance(graph, LatticeLayoutGraph) for graph in graphs) or not any(
+            graph.is_s_plot for graph in graphs
+        ):
             include_layout = False
 
         if not grid:

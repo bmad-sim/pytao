@@ -21,9 +21,9 @@ if TYPE_CHECKING:
 import argparse
 import sys
 from collections.abc import Sequence
-from typing import ClassVar
+from typing import ClassVar, Self
 
-from typing_extensions import Self, override
+from typing_extensions import override
 
 logger = logging.getLogger(__name__)
 
@@ -509,7 +509,7 @@ class TaoStartup:
         shortened flags if they are not ambiguous.
         """
         tao_init_parts = self.tao_init.split()
-        return any(part.startswith(flag) for part in tao_init_parts for flag in {"-i", "-la"})
+        return any(part.startswith(flag) for part in tao_init_parts for flag in ("-i", "-la"))
 
     @property
     def tao_init(self) -> str:

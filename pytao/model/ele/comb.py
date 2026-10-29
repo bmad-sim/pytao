@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import pathlib
 import typing
+from typing import Self
 
 import numpy as np
-from typing_extensions import Self
 
 from ..base import ArchiveFormat, TaoModel, load_model_data
 from ..types import NDArray, deserialize_ndarray, empty_ndarray

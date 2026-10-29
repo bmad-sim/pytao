@@ -9,7 +9,6 @@ from .. import SubprocessTao, Tao, TaoStartup, filter_tao_messages_context
 from ..plotting import mpl
 from ..plotting.curves import TaoCurveSettings
 from ..plotting.util import fix_grid_limits
-
 from .conftest import (
     BackendName,
     get_example,
