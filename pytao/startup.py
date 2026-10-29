@@ -97,9 +97,8 @@ class TaoArgumentParser(argparse.ArgumentParser):
         except SystemExit as ex:
             if self.exit_on_error:
                 raise
-            # Python 3.10 and 3.11 only seem to hit this scenario. We
-            # eat the exception here and reraise with an appropriate
-            # one.
+            # Python 3.11 only seems to hit this scenario. We eat the exception
+            # here and reraise with an appropriate one.
             raise argparse.ArgumentError(argument=None, message=str(ex)) from None
 
 
