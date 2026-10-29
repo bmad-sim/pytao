@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import pathlib
 from collections.abc import Sequence
-from typing import TYPE_CHECKING, Annotated, Any, Union
+from typing import TYPE_CHECKING, Annotated, Any, NotRequired, Union
 
 import numpy as np
 import pydantic
 import pydantic_core
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import TypedDict
 
 if TYPE_CHECKING:
     from beamphysics import ParticleGroup

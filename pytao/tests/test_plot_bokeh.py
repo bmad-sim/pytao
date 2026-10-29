@@ -128,68 +128,65 @@ def test_bokeh_smoke_create_full_app(request: pytest.FixtureRequest):
 
 
 def test_bokeh_update_button(request: pytest.FixtureRequest, caplog: pytest.LogCaptureFixture):
-    with caplog.at_level(logging.ERROR):
-        with optics_matching(request) as (tao, _):
-            (_alpha, _beta), app = tao.bokeh.plot_grid(
-                ["alpha", "beta"], grid=(2, 1), include_layout=True
-            )
+    with caplog.at_level(logging.ERROR), optics_matching(request) as (tao, _):
+        (_alpha, _beta), app = tao.bokeh.plot_grid(
+            ["alpha", "beta"], grid=(2, 1), include_layout=True
+        )
 
-            state = app.create_state()
-            button: bokeh.models.Button = app._add_update_button(state)
+        state = app.create_state()
+        button: bokeh.models.Button = app._add_update_button(state)
 
-            caplog.clear()
-            # NOTE: this is internal bokeh API and may break at some point
-            # I think that's OK in the context of a test suite
-            button._trigger_event(bokeh.events.ButtonClick(button))
+        caplog.clear()
+        # NOTE: this is internal bokeh API and may break at some point
+        # I think that's OK in the context of a test suite
+        button._trigger_event(bokeh.events.ButtonClick(button))
 
     assert not caplog.messages
 
 
 def test_bokeh_num_points(request: pytest.FixtureRequest, caplog: pytest.LogCaptureFixture):
-    with caplog.at_level(logging.ERROR):
-        with optics_matching(request) as (tao, _):
-            (_alpha, _beta), app = tao.bokeh.plot_grid(
-                ["alpha", "beta"], grid=(2, 1), include_layout=True
-            )
+    with caplog.at_level(logging.ERROR), optics_matching(request) as (tao, _):
+        (_alpha, _beta), app = tao.bokeh.plot_grid(
+            ["alpha", "beta"], grid=(2, 1), include_layout=True
+        )
 
-            state = app.create_state()
-            slider: bokeh.models.Slider = app._add_num_points_slider(state)
+        state = app.create_state()
+        slider: bokeh.models.Slider = app._add_num_points_slider(state)
 
-            caplog.clear()
-            slider.trigger("value", 0, 10)
-            slider.trigger("value", 0, 100)
-            assert not caplog.messages
+        caplog.clear()
+        slider.trigger("value", 0, 10)
+        slider.trigger("value", 0, 100)
+        assert not caplog.messages
 
-            caplog.clear()
-            slider.trigger("value", 0, -1)
-            assert len(caplog.messages)
+        caplog.clear()
+        slider.trigger("value", 0, -1)
+        assert len(caplog.messages)
 
 
 def test_bokeh_range_updates(request: pytest.FixtureRequest, caplog: pytest.LogCaptureFixture):
-    with caplog.at_level(logging.ERROR):
-        with optics_matching(request) as (tao, _):
-            (_alpha, _beta), app = tao.bokeh.plot_grid(
-                ["alpha", "beta"], grid=(2, 1), include_layout=True
-            )
+    with caplog.at_level(logging.ERROR), optics_matching(request) as (tao, _):
+        (_alpha, _beta), app = tao.bokeh.plot_grid(
+            ["alpha", "beta"], grid=(2, 1), include_layout=True
+        )
 
-            state = app.create_state()
+        state = app.create_state()
 
-            cbs = app._monitor_range_updates(state)
+        cbs = app._monitor_range_updates(state)
 
-            caplog.clear()
-            for cb in cbs:
-                cb(bokeh.events.RangesUpdate(model=None, x0=0, x1=10))
-            assert not caplog.messages
+        caplog.clear()
+        for cb in cbs:
+            cb(bokeh.events.RangesUpdate(model=None, x0=0, x1=10))
+        assert not caplog.messages
 
-            caplog.clear()
-            for cb in cbs:
-                cb(bokeh.events.RangesUpdate(model=None, x0=10, x1=0))
-            assert len(caplog.messages)
+        caplog.clear()
+        for cb in cbs:
+            cb(bokeh.events.RangesUpdate(model=None, x0=10, x1=0))
+        assert len(caplog.messages)
 
-            caplog.clear()
-            for cb in cbs:
-                cb(bokeh.events.RangesUpdate(model=None, x0=10, x1=None))
-            assert len(caplog.messages)
+        caplog.clear()
+        for cb in cbs:
+            cb(bokeh.events.RangesUpdate(model=None, x0=10, x1=None))
+        assert len(caplog.messages)
 
 
 def get_notebook_graph_manager(tao: AnyTao, monkeypatch: pytest.MonkeyPatch):
@@ -215,41 +212,40 @@ def test_bokeh_notebook_plot_vars(
     monkeypatch: pytest.MonkeyPatch,
     grid: bool,
 ):
-    with caplog.at_level(logging.ERROR):
-        with optics_matching(request) as (tao, _):
-            gm = get_notebook_graph_manager(tao, monkeypatch)
-            if grid:
-                _, app = gm.plot_grid(["alpha", "beta"], grid=(2, 1), vars=True)
-            else:
-                _, app = gm.plot("alpha", vars=True)
+    with caplog.at_level(logging.ERROR), optics_matching(request) as (tao, _):
+        gm = get_notebook_graph_manager(tao, monkeypatch)
+        if grid:
+            _, app = gm.plot_grid(["alpha", "beta"], grid=(2, 1), vars=True)
+        else:
+            _, app = gm.plot("alpha", vars=True)
 
-            state = app.create_state()
+        state = app.create_state()
 
-            status_label = bokeh.models.PreText()
+        status_label = bokeh.models.PreText()
 
-            def try_value(var: Variable, value: float) -> None:
-                var.ui_update(
-                    "",
-                    0.0,
-                    value,
-                    tao=tao,
-                    status_label=status_label,
-                    pairs=state.pairs,
-                )
+        def try_value(var: Variable, value: float) -> None:
+            var.ui_update(
+                "",
+                0.0,
+                value,
+                tao=tao,
+                status_label=status_label,
+                pairs=state.pairs,
+            )
 
-            def set_value_raise(*args, **kwargs):
-                raise RuntimeError("raised")
+        def set_value_raise(*args, **kwargs):
+            raise RuntimeError("raised")
 
-            for var in app.variables:
-                status_label.text = ""
-                try_value(var, value=var.value)
-                assert not str(status_label.text)
+        for var in app.variables:
+            status_label.text = ""
+            try_value(var, value=var.value)
+            assert not str(status_label.text)
 
-            for var in app.variables:
-                status_label.text = ""
-                monkeypatch.setattr(var, "set_value", set_value_raise)
-                try_value(var, value=var.value)
-                assert "raised" in str(status_label.text)
+        for var in app.variables:
+            status_label.text = ""
+            monkeypatch.setattr(var, "set_value", set_value_raise)
+            try_value(var, value=var.value)
+            assert "raised" in str(status_label.text)
 
 
 def test_bokeh_floor_orbits(

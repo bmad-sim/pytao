@@ -14,10 +14,10 @@ import tempfile
 import threading
 import weakref
 from collections.abc import Callable
-from typing import Any, Literal, Optional, Union, cast
+from typing import Any, Literal, NotRequired, Union, cast
 
 import numpy as np
-from typing_extensions import NotRequired, TypedDict, override
+from typing_extensions import TypedDict, override
 
 from ._shmem_compat import SharedMemory
 from .errors import TaoCommandError, TaoInitializationError
@@ -63,8 +63,6 @@ SubprocessResult = Union[SubprocessSuccessResult, SubprocessErrorResult]
 
 class TaoDisconnectedError(Exception):
     """The Tao subprocess quit, crashed, or otherwise disconnected."""
-
-    pass
 
 
 def write_pickled_data(file, data):
@@ -632,7 +630,7 @@ class SubprocessTao(Tao):
     def cmd_real(self, cmd: str, raises: bool = True) -> np.ndarray | None:
         """Runs a command, and returns a floating point array."""
         return cast(
-            Optional[np.ndarray],
+            np.ndarray | None,
             self._send_command_through_pipe("cmd_real", cmd, raises=raises),
         )
 
@@ -640,7 +638,7 @@ class SubprocessTao(Tao):
     def cmd_integer(self, cmd: str, raises: bool = True) -> np.ndarray | None:
         """Runs a command, and returns an integer array."""
         return cast(
-            Optional[np.ndarray],
+            np.ndarray | None,
             self._send_command_through_pipe("cmd_integer", cmd, raises=raises),
         )
 

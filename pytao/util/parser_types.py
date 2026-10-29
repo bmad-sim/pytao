@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Any, Literal, NotRequired
 
 import numpy as np
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import TypedDict
 
 
 class MatrixResult(TypedDict):

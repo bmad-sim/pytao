@@ -1,5 +1,5 @@
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Generic, TypeVar
 
 from pydantic import ConfigDict, Field, computed_field, model_validator
@@ -44,7 +44,7 @@ class Observation(ConstraintsBase):
     """
 
     elapsed_time: float = 0.0
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
 ObservationT = TypeVar("ObservationT", bound=Observation)
@@ -88,7 +88,7 @@ class LatticeObservable(Observable[ObservationT]):
     def _make_observation(self, tao: Tao) -> ObservationT: ...
 
     def observe(self, tao: Tao) -> ObservationT:
-        created_at = datetime.now(timezone.utc)
+        created_at = datetime.now(UTC)
         t0 = time.perf_counter()
         result = self._make_observation(tao)
         result.elapsed_time = time.perf_counter() - t0
@@ -105,7 +105,7 @@ class LiteralObservable(Observable[ObservationT]):
     def _make_observation(self) -> ObservationT: ...
 
     def observe(self) -> ObservationT:
-        created_at = datetime.now(timezone.utc)
+        created_at = datetime.now(UTC)
         t0 = time.perf_counter()
         result = self._make_observation()
         result.elapsed_time = time.perf_counter() - t0

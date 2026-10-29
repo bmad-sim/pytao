@@ -1,8 +1,8 @@
 import pathlib
 
 import pytest
-
 from beamphysics import ParticleGroup
+
 from pytao import SubprocessTao, Tao
 
 

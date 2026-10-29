@@ -6,7 +6,6 @@ from unittest.mock import patch
 from pytao.constraints.main import main
 from pytao.constraints.results import ConstraintResultsGroup
 
-
 DATA_DIR = pathlib.Path(__file__).parent / "data"
 OUT_PATH = DATA_DIR / "reference_results.json"
 

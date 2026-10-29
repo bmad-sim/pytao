@@ -11,7 +11,7 @@ from __future__ import annotations
 import glob
 import logging
 import os
-from typing import Callable
+from collections.abc import Callable
 
 logger = logging.getLogger(__name__)
 

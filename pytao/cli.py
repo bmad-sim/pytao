@@ -6,9 +6,10 @@ import logging
 import os
 import sys
 from typing import Any
-import pytao
 
 from pydantic import ConfigDict, dataclasses
+
+import pytao
 
 from .core import configure_logging
 from .errors import TaoInitializationError
@@ -19,8 +20,8 @@ logger = logging.getLogger("pytao")
 
 class VersionAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
-        from . import __version__ as version
         from . import SubprocessTao
+        from . import __version__ as version
 
         print(f"PyTao {version}")
 

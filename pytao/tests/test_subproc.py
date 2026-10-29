@@ -158,14 +158,16 @@ def tao_custom_command_sleep(tao: Tao, delay: float):
 
 
 def test_custom_command_timeout(subproc_tao: SubprocessTao) -> None:
-    with SubprocessTao(
-        init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/csr_beam_tracking/tao.init",
-        noplot=True,
-    ) as tao:
-        with pytest.raises(TimeoutError):
-            with tao.timeout(0.1):
-                res = tao.subprocess_call(tao_custom_command_sleep, delay=10.0)
-                print("subproc result was", res)
+    with (
+        SubprocessTao(
+            init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/csr_beam_tracking/tao.init",
+            noplot=True,
+        ) as tao,
+        pytest.raises(TimeoutError),
+        tao.timeout(0.1),
+    ):
+        res = tao.subprocess_call(tao_custom_command_sleep, delay=10.0)
+        print("subproc result was", res)
 
 
 def test_custom_command_timeout_success(subproc_tao: SubprocessTao) -> None:

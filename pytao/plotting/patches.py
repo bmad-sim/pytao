@@ -8,7 +8,7 @@ from typing import (
 
 import numpy as np
 import pydantic
-import pydantic.dataclasses as dataclasses
+from pydantic import dataclasses
 from pydantic.fields import Field
 
 from . import pgplot, util
@@ -106,9 +106,7 @@ class PlotPatchArc(PlotPatchBase):
             < np.arctan2(c0y, c0x)
             < np.arctan2((my - mpy), (mx - mpx))
             and k_radii < 0
-        ):
-            center = (c0x, c0y)
-        elif k_radii > 0:
+        ) or k_radii > 0:
             center = (c0x, c0y)
         else:
             center = (c1x, c1y)

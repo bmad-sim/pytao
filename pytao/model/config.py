@@ -4,10 +4,10 @@ import copy
 import logging
 import pathlib
 import typing
-from typing import ClassVar, cast
+from typing import ClassVar, Self, cast
 
 import pydantic
-from typing_extensions import Self, override
+from typing_extensions import override
 
 from ..startup import TaoStartup
 from ._generated import (

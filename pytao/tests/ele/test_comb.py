@@ -8,8 +8,8 @@ import numpy as np
 import pytest
 
 from pytao import SubprocessTao
-from pytao.model.base import _msgpack_default
 from pytao.model import Comb, Element, ElementHead, Lattice
+from pytao.model.base import _msgpack_default
 from pytao.model.ele.comb import (
     combine_combs,
     load_combs_from_lattice_data,

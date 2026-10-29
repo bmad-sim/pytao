@@ -3,8 +3,7 @@ from __future__ import annotations
 from abc import ABC
 from typing import Literal, Union
 
-import pydantic.dataclasses as dataclasses
-from pydantic import ConfigDict
+from pydantic import ConfigDict, dataclasses
 
 from .curves import PlotCurveLine
 from .patches import (

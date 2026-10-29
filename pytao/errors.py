@@ -304,8 +304,6 @@ class TaoInvalidArgumentsError(TaoInitializationError):
 class TaoSharedLibraryNotFoundError(TaoException, RuntimeError):
     """The Tao shared library (i.e., libtao.so) was not found."""
 
-    pass
-
 
 class TaoCommandError(TaoExceptionWithOutput, RuntimeError):
     """

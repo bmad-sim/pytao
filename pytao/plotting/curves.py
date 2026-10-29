@@ -6,7 +6,7 @@ from typing import (
 )
 
 import pydantic
-import pydantic.dataclasses as dataclasses
+from pydantic import dataclasses
 
 _dcls_config = pydantic.ConfigDict()
 

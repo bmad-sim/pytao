@@ -1,4 +1,4 @@
-from typing import Annotated, Union
+from typing import Annotated
 
 from pydantic import Field
 
@@ -26,9 +26,9 @@ from .ele import (
     EleIsClose,
     EleLessThan,
     EleLiteral,
-    EleReduceObservable,
     EleObservable,
     EleObservation,
+    EleReduceObservable,
     TolComparison,
 )
 from .twiss import (
@@ -38,25 +38,12 @@ from .twiss import (
 )
 
 AnyObservable = Annotated[
-    Union[
-        EleObservable,
-        EleReduceObservable,
-        DatumObservable,
-        EleLiteral,
-        DatumLiteral,
-    ],
+    EleObservable | EleReduceObservable | DatumObservable | EleLiteral | DatumLiteral,
     Field(discriminator="type"),
 ]
-AnyObservation = Annotated[
-    Union[EleObservation, DatumObservation], Field(discriminator="type")
-]
+AnyObservation = Annotated[EleObservation | DatumObservation, Field(discriminator="type")]
 AnyComparison = Annotated[
-    Union[
-        EleIsClose,
-        DatumIsClose,
-        EleLessThan,
-        DatumLessThan,
-    ],
+    EleIsClose | DatumIsClose | EleLessThan | DatumLessThan,
     Field(discriminator="type"),
 ]
 __all__ = [
@@ -76,9 +63,9 @@ __all__ = [
     "EleIsClose",
     "EleLessThan",
     "EleLiteral",
-    "EleReduceObservable",
     "EleObservable",
     "EleObservation",
+    "EleReduceObservable",
     "EvalPoint",
     "IsClose",
     "IsLess",
