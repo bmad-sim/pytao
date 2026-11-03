@@ -14,9 +14,12 @@ from .util.parser_types import (  # noqa: F401
     CompleteResult,
     ConstraintDataInfo,
     ConstraintVarInfo,
+    DaApertureInfo,
     DataD1ArrayInfo,
     DataDArrayInfo,
     DataParameterLineInfo,
+    EleAcKickerAmpVsTimeInfo,
+    EleAcKickerFrequencyInfo,
     EleAcKickerResult,
     EleCartesianMapInfo,
     EleChamberWallInfo,
@@ -48,6 +51,7 @@ from .util.parser_types import (  # noqa: F401
     VarSlaveInfo,
     VarV1ArrayDataInfo,
     VarVArrayLineResult,
+    WaveKickInfo,
 )
 
 logger = logging.getLogger(__name__)
