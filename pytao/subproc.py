@@ -13,17 +13,23 @@ import sys
 import tempfile
 import threading
 import weakref
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from typing import Any, Literal, NotRequired, Union, cast
 
 import numpy as np
 from typing_extensions import TypedDict, override
 
 from ._shmem_compat import SharedMemory
-from .errors import TaoCommandError, TaoInitializationError
+from .errors import TaoCommandError, TaoForkError, TaoInitializationError
+from .fork import R, T, decode_fork_payloads, resolve_max_workers
 from .startup import TaoStartup
 from .tao import Tao
 from .util import normalize_path
+
+try:
+    import cloudpickle
+except ImportError:
+    cloudpickle = None
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +42,7 @@ Command = Literal[
     "cmd_real",
     "cmd_integer",
     "function",
+    "fork_map",
 ]
 SupportedKwarg = Union[float, int, str, bool, bytes, dict, list, tuple, set, np.ndarray]
 
@@ -129,6 +136,43 @@ def _get_result(
         return tao_output
 
     raise RuntimeError(f"Unexpected pipe response: {value}")
+
+
+def _importable_function_name(func: Callable) -> str:
+    """Qualified `module.name` of `func`, or raise if the subprocess could not import it."""
+    if not callable(func):
+        raise ValueError(f"Object of type {type(func).__name__} is not callable")
+    if not func.__module__ or func.__module__ == "__main__":
+        raise ValueError(f"Function {func.__name__} is not in an importable module")
+    if func.__name__ in {"<lambda>", "__lambda__"}:
+        raise ValueError(f"Function {func.__name__} is a lambda function")
+    if "<locals>" in getattr(func, "__qualname__", ""):
+        raise ValueError(f"Function {func.__name__} is a nested function")
+    return f"{func.__module__}.{func.__name__}"
+
+
+def _pickle_for_subprocess(obj: Any) -> bytes:
+    """
+    Pickle `obj` for the Tao subprocess.
+
+    Falls back to the slower cloudpickle for lambdas, closures, and `__main__`
+    objects, which plain pickle references by a name the subprocess lacks.
+    """
+    try:
+        data = pickle.dumps(obj, protocol=pickle.HIGHEST_PROTOCOL)
+    except Exception as ex:
+        if cloudpickle is None:
+            raise ValueError(
+                f"{ex}. Install cloudpickle (`pip install pytao[fork]`) to send "
+                f"lambdas, closures, or objects defined in `__main__` to the subprocess."
+            ) from ex
+        return cloudpickle.dumps(obj, protocol=pickle.HIGHEST_PROTOCOL)
+
+    if cloudpickle is not None and b"__main__" in data:
+        # Re-pickle so cloudpickle embeds `__main__` definitions.  A false
+        # positive on the text "__main__" only costs a re-pickle.
+        return cloudpickle.dumps(obj, protocol=pickle.HIGHEST_PROTOCOL)
+    return data
 
 
 _BEAM_TRACK_SHM_FMT = "i"
@@ -334,14 +378,9 @@ class _TaoPipe:
             The final deserialized result of the command - which may be an ndarray,
             a list of dictionaries, a list of strings, and so on.
         """
-        if not callable(func):
-            raise ValueError(f"Object of type{type(func).__name__} is not callable")
-        if not func.__module__ or func.__module__ == "__main__":
-            raise ValueError(f"Function {func.__name__} is not in an importable module")
-        if func.__name__ == "__lambda__":
-            raise ValueError(f"Function {func.__name__} is a lambda function")
+        func_name = _importable_function_name(func)
         try:
-            self._send("function", f"{func.__module__}.{func.__name__}", **kwargs)
+            self._send("function", func_name, **kwargs)
             received = self._receive()
             return _get_result(received, propagate_exceptions=True)
         except BrokenPipeError:
@@ -349,6 +388,45 @@ class _TaoPipe:
                 f"Function {func.__name__}() was unable to complete as the subprocess "
                 f"has already exited."
             )
+
+    def send_receive_fork_map(
+        self,
+        func: Callable,
+        items: Iterable,
+        *,
+        max_workers: int | None,
+        timeout: float | None,
+        raises: bool,
+    ) -> list:
+        """
+        Run `fork_map` in the subprocess and decode its results here.
+
+        `func` and `items` are pre-pickled so the subprocess unpickles them
+        inside its error handling.  A `TaoForkError`/`TimeoutError` returned
+        as the result is re-raised.
+        """
+        func_payload = _pickle_for_subprocess(func)
+        items_payload = _pickle_for_subprocess(list(items))
+        try:
+            self._send(
+                "fork_map",
+                "",
+                func=func_payload,
+                items=items_payload,
+                max_workers=max_workers,
+                timeout=timeout,
+                raises=raises,
+            )
+            received = self._receive()
+        except BrokenPipeError:
+            raise TaoCommandError(
+                "fork_map was unable to complete as the subprocess has already exited."
+            ) from None
+
+        result = _get_result(received, propagate_exceptions=True)
+        if isinstance(result, BaseException):
+            raise result
+        return decode_fork_payloads(result, raises)
 
 
 @contextlib.contextmanager
@@ -506,6 +584,16 @@ class SubprocessTao(Tao):
             return False
         return self._subproc_pipe_.alive
 
+    def _require_pipe(self) -> _TaoPipe:
+        """The pipe to the running subprocess, or raise `TaoDisconnectedError`."""
+        pipe = self._subproc_pipe_
+        if pipe is None or not pipe.alive:
+            raise TaoDisconnectedError(
+                "Tao subprocess is no longer running. Make a new `SubprocessTao` "
+                "object or reinitialize with `.init()`."
+            )
+        return pipe
+
     def close_subprocess(self, *, force: bool = False) -> None:
         """Close the Tao subprocess."""
         if self._subproc_pipe_ is not None:
@@ -566,13 +654,7 @@ class SubprocessTao(Tao):
         Uncaught errors in the subprocess will be propagated regardless of
         ``raises``.
         """
-        if not self.subprocess_alive:
-            raise TaoDisconnectedError(
-                "Tao subprocess is no longer running. Make a new `SubprocessTao` "
-                "object or reinitialize with `.init()`."
-            )
-        assert self._subproc_pipe_ is not None
-        output, result = self._subproc_pipe_.send_receive(command, tao_cmdline)
+        output, result = self._require_pipe().send_receive(command, tao_cmdline)
         output_lines = output.splitlines()
         self._last_output = output_lines
 
@@ -602,13 +684,76 @@ class SubprocessTao(Tao):
         `tao` object, and the remainder of the arguments are user-specified by
         keyword only.
         """
-        if not self.subprocess_alive:
-            raise TaoDisconnectedError(
-                "Tao subprocess is no longer running. Make a new `SubprocessTao` "
-                "object or reinitialize with `.init()`."
-            )
-        assert self._subproc_pipe_ is not None
-        return self._subproc_pipe_.send_receive_custom(func, kwargs)
+        return self._require_pipe().send_receive_custom(func, kwargs)
+
+    def fork_map(
+        self,
+        func: Callable[[Tao, T], R],
+        items: Iterable[T],
+        *,
+        max_workers: int | None = None,
+        timeout: float | None = None,
+        raises: bool = True,
+    ) -> list[R | TaoForkError]:
+        """
+        Run `func(tao, item)` for each item in a forked copy of the Tao subprocess.
+
+        Each child starts from a copy of the current Tao state, so nothing is
+        re-initialized and changes in one child never affect another or this
+        object.  Only the subprocess is forked, never the calling process.
+
+        Parameters
+        ----------
+        func : callable
+            Called as `func(tao, item)` in the child; the return value must be
+            picklable.  Lambdas, closures, and `__main__` functions need the
+            `cloudpickle` extra (`pip install pytao[fork]`); otherwise `func`
+            must be importable by name, as with `subprocess_call`.
+        items : iterable
+            Items to process.  Results keep this order.
+        max_workers : int, optional
+            Concurrent children.  Defaults to the CPU count; negative values
+            count back from it (`-1` leaves one CPU free).  Zero is invalid.
+        timeout : float, optional
+            Overall limit in seconds.  On expiry all children are killed and
+            `TimeoutError` is raised.
+        raises : bool, default=True
+            If True, the first failure raises `TaoForkError` and kills the
+            rest.  If False, failures are returned in place as `TaoForkError`.
+
+        Returns
+        -------
+        list
+            One entry per item, in input order.
+
+        Raises
+        ------
+        TaoForkError
+            A child failed, crashed, or returned an unreadable result.
+        TimeoutError
+        NotImplementedError
+            No `os.fork()` on this platform (Windows).
+
+        Notes
+        -----
+        Use `noplot=True` or external plotting; Tao plot windows are not
+        fork-safe.  libtao links OpenMP, so with many workers pass
+        `env={**os.environ, "OMP_NUM_THREADS": "1"}` to avoid oversubscription.
+
+        Examples
+        --------
+        >>> def scan(tao, k1):
+        ...     tao.cmd(f"set ele Q1 k1 = {k1}")
+        ...     return tao.ele_twiss("Q2")["beta_a"]
+        >>> tao.fork_map(scan, np.linspace(0.0, 2.0, 21), max_workers=4)
+        """
+        return self._require_pipe().send_receive_fork_map(
+            func,
+            items,
+            max_workers=resolve_max_workers(max_workers),
+            timeout=timeout,
+            raises=raises,
+        )
 
     def _init_backend(self, startup: TaoStartup):
         # Backend initialization: this is the hook for either Tao or SubprocessTao

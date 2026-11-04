@@ -322,6 +322,46 @@ class TaoCommandError(TaoExceptionWithOutput, RuntimeError):
     tao_output: str
 
 
+class TaoForkError(TaoCommandError):
+    """
+    A `SubprocessTao.fork_map` child failed for one item.
+
+    Attributes
+    ----------
+    index : int
+        Index of the failed item.
+    error_cls : str
+        Exception class name raised in the child, if any.
+    child_traceback : str
+        Formatted child traceback, if any.
+    exit_code : int or None
+        Child exit code; negative means killed by that signal.
+    tao_output : str
+        Raw Tao output from the child, if available.
+    """
+
+    index: int
+    error_cls: str
+    child_traceback: str
+    exit_code: int | None
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        tao_output: str = "",
+        index: int = -1,
+        error_cls: str = "",
+        child_traceback: str = "",
+        exit_code: int | None = None,
+    ):
+        super().__init__(message, tao_output=tao_output)
+        self.index = index
+        self.error_cls = error_cls
+        self.child_traceback = child_traceback
+        self.exit_code = exit_code
+
+
 error_filter_context: contextvars.ContextVar[TaoErrorFilterContext | None] = (
     contextvars.ContextVar("error_filter_context", default=None)
 )
