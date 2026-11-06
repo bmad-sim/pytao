@@ -17,7 +17,7 @@ from pydantic import Field
 from ...util.parsers import Attr, parse_tao_python_data_with_units
 from .. import _generated as tao_classes
 from ..base import TaoBaseModel, TaoModel
-from ..types import ComplexNDArray, NDArray
+from ..types import ComplexNDArray, NDArray, empty_ndarray
 
 if TYPE_CHECKING:
     from pytao import Tao
@@ -469,11 +469,78 @@ class ElementSrWakeData(TaoModel):
         return cls(**base_data, table=table_data)
 
 
+class ElementSrZLongWakeData(TaoModel):
+    """
+    Per-element tabulated short-range longitudinal (`z_long`) wake.
+
+    Attributes
+    ----------
+    dz : float
+        Distance between table points.
+    z0 : float
+        Wake extent is [-z0, z0].
+    smoothing_sigma : float
+        0 => no smoothing.
+    position_dependence : str
+        Longitudinal position dependence (`none`, `x_leading`, ...).
+    time_based : bool
+        Was the input time-based?
+    n_pt : int
+        Number of table points.
+    table : NDArray
+        `(n_pt, 2)` array of `(z, W(z))` rows, with `z(i) = -z0 + i * dz`.
+    """
+
+    _tao_command_attr_: ClassVar[str] = "ele_wake"
+    _tao_command_default_args_: ClassVar[dict[str, Any]] = {}
+    dz: float = 0.0
+    z0: float = 0.0
+    smoothing_sigma: float = 0.0
+    position_dependence: str = "none"
+    time_based: bool = False
+    n_pt: int = 0
+    table: NDArray = Field(default_factory=empty_ndarray, validate_default=True)
+
+    @pydantic.field_validator("table", mode="after")
+    @classmethod
+    def _normalize_table(cls, value: np.ndarray) -> np.ndarray:
+        # JSON/YAML archives round-trip through tolist(); keep (n, 2) even when empty.
+        return np.asarray(value, dtype=float).reshape(-1, 2)
+
+    @property
+    def z(self) -> np.ndarray:
+        """Table positions `z` [m]."""
+        return self.table[:, 0]
+
+    @property
+    def w(self) -> np.ndarray:
+        """Table wake values `W(z)`."""
+        return self.table[:, 1]
+
+    @classmethod
+    def from_tao(
+        cls,
+        tao: Tao,
+        ele: AnyElementID,
+        *,
+        which: Which,
+    ):
+        from .ele import to_ele_id
+
+        ele_id = to_ele_id(ele)
+        base_data: dict = tao.ele_wake(ele_id, who="sr_z_long", which=which)  # type: ignore
+        table_data = tao.ele_wake(ele_id, who="sr_z_long_table", which=which)
+        return cls(**base_data, table=table_data)
+
+
 class ElementWake(tao_classes.ElementWakeBase, extra="forbid"):
+    """Element wake settings and short/long-range wake data."""
+
     which: Which = pydantic.Field(frozen=True)
 
     sr_long: ElementSrWakeData | None = None
     sr_trans: ElementSrWakeData | None = None
+    sr_z_long: ElementSrZLongWakeData | None = None
     lr_mode: list[list[str | float]] | None = None
 
     @pydantic.field_validator("sr_long", "sr_trans", mode="before")
@@ -506,11 +573,14 @@ class ElementWake(tao_classes.ElementWakeBase, extra="forbid"):
         base = tao_classes.ElementWakeBase.from_tao(tao, ele_id=ele, which=which)
         sr_long = None
         sr_trans = None
+        sr_z_long = None
         lr_mode = None
         if base.has_sr_long:
             sr_long = ElementSrWakeData.from_tao(tao, ele, which=which, who="longitudinal")
         if base.has_sr_trans:
             sr_trans = ElementSrWakeData.from_tao(tao, ele, which=which, who="transverse")
+        if base.has_sr_z_long:
+            sr_z_long = ElementSrZLongWakeData.from_tao(tao, ele, which=which)
         if base.has_lr_mode:
             lr_mode: list[list[str | float]] = tao.ele_wake(
                 ele, which=which, who="lr_mode_table"
@@ -522,6 +592,7 @@ class ElementWake(tao_classes.ElementWakeBase, extra="forbid"):
             which=which,
             sr_long=sr_long,
             sr_trans=sr_trans,
+            sr_z_long=sr_z_long,
             lr_mode=lr_mode,
             **data,
         )
