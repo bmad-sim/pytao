@@ -72,7 +72,7 @@ Tao(
   plot_file="file_name",                # Plotting initialization file
   prompt_color="color",                 # Set color of prompt string. Default is blue.
   reverse=True,                         # Reverse lattice element order?
-  rf_on=True,                           # Use "--rf_on" to turn off RF (default is now RF on)
+  rf_on=True,                           # True: -rf_on, False: --rf_on, None (default): use init file
   quiet=True,                           # Suppress terminal output when running a command file?
   slice_lattice="ele_list",             # Discards elements from lattice that are not in the list
   start_branch_at="ele_name",           # Start lattice branch at element.
@@ -81,6 +81,12 @@ Tao(
   var_file="file_name",                 # Define variables for plotting and optimization
 )
 ```
+
+`disable_smooth_line_calc`, `no_rad_int`, `no_stopping`, `noplot` and `rf_on`
+default to `None`, which leaves the setting from the init file's `tao_params`
+in effect. `True` passes `-switch` and `False` passes the negated `--switch`,
+so `rf_on=False` turns RF off even if the init file turns it on. The same
+switches may also be given in the `init` string, e.g. `init="-init tao.init -rf_on"`.
 
 Note that `quiet` mode may cause portions of PyTao to function improperly. See
 upstream [issue](https://github.com/bmad-sim/bmad-ecosystem/issues/1380).
