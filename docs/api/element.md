@@ -82,6 +82,14 @@ These are the data classes that populate the fields of `Element`.
 
 ::: pytao.model.ElementWake
 
+### ElementSrWakeData
+
+::: pytao.model.ElementSrWakeData
+
+### ElementSrZLongWakeData
+
+::: pytao.model.ElementSrZLongWakeData
+
 ### ElementWall3D
 
 ::: pytao.model.ElementWall3D
