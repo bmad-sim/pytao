@@ -11,7 +11,7 @@ dependencies = [
   "h5py",
   "ipython",
   "matplotlib",
-  "numpy",
+  "numpy>=2.2",
   "openpmd-beamphysics>=0.17.0",
   "orjson",
   "ormsgpack>=1.12.2",

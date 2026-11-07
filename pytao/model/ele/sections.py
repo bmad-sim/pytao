@@ -31,26 +31,74 @@ ChamberWallWho = Literal["x", "y"]
 FloorWhere = Literal["beginning", "center", "end"]
 
 
+def w_matrix_from_angles(theta, phi, psi) -> np.ndarray:
+    """
+    Bmad orientation matrix W from the floor angles.
+
+    A port of Bmad's `floor_angles_to_w_mat`. The columns of W are the local
+    x, y and z axes expressed in the global frame, so that
+    `global = R + W @ local`.
+
+    Parameters
+    ----------
+    theta : float or array_like
+        Azimuth (yaw) angle (rad), in the global (X, Z) plane.
+    phi : float or array_like
+        Pitch (elevation) angle (rad).
+    psi : float or array_like
+        Roll angle (rad) about the local z axis.
+
+    Returns
+    -------
+    numpy.ndarray
+        Shape `(3, 3)` for scalar angles, or `(..., 3, 3)` for arrays.
+    """
+    theta, phi, psi = np.broadcast_arrays(
+        np.asarray(theta, dtype=float),
+        np.asarray(phi, dtype=float),
+        np.asarray(psi, dtype=float),
+    )
+    s_the, c_the = np.sin(theta), np.cos(theta)
+    s_phi, c_phi = np.sin(phi), np.cos(phi)
+    s_psi, c_psi = np.sin(psi), np.cos(psi)
+
+    w = np.empty((*theta.shape, 3, 3))
+    w[..., 0, 0] = c_the * c_psi - s_the * s_phi * s_psi
+    w[..., 0, 1] = -c_the * s_psi - s_the * s_phi * c_psi
+    w[..., 0, 2] = s_the * c_phi
+    w[..., 1, 0] = c_phi * s_psi
+    w[..., 1, 1] = c_phi * c_psi
+    w[..., 1, 2] = s_phi
+    w[..., 2, 0] = -s_the * c_psi - c_the * s_phi * s_psi
+    w[..., 2, 1] = s_the * s_psi - c_the * s_phi * c_psi
+    w[..., 2, 2] = c_the * c_phi
+    return w
+
+
 class ElementFloorPosition(TaoBaseModel, extra="forbid"):
     """
     Represents the position and orientation of an element on the floor in a 3D space.
 
+    A point with element-local coordinates `local` is at
+    `[x, y, z] + wmat @ local` in the global floor frame.
+
     Attributes
     ----------
     x : float, default 0.0
-        The x-coordinate of the position.
+        The global X position (m).
     y : float, default 0.0
-        The y-coordinate of the position.
+        The global Y (vertical) position (m).
     z : float, default 0.0
-        The z-coordinate of the position.
+        The global Z position (m).
     theta : float, default 0.0
-        The rotation around the x-axis in radians.
+        Azimuth (yaw) angle (rad), in the horizontal (X, Z) plane.
     phi : float, default 0.0
-        The rotation around the y-axis in radians.
+        Pitch (elevation) angle (rad).
     psi : float, default 0.0
-        The rotation around the z-axis in radians.
-    wmat : list of list of float, default empty list
-        The transformation matrix representing the orientation of the element.
+        Roll angle (rad) about the local z axis.
+    wmat : numpy.ndarray
+        The 3x3 orientation matrix W. Its columns are the local x, y and z axes
+        in the global frame.
     """
 
     x: float = 0.0

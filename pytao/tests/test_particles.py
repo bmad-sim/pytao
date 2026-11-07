@@ -1,10 +1,12 @@
 import pathlib
 
+import numpy as np
 import pytest
 from beamphysics import ParticleGroup
 
 from pytao import SubprocessTao, Tao
 from pytao.tao import PARTICLE_EXTRAS
+from pytao.model import Lattice
 
 
 @pytest.fixture(scope="function")
@@ -115,8 +117,6 @@ def csr_tao():
     "key", ["s", "ix_branch", "ix_ele", "location", "p0c", "spin_x", "spin_y", "spin_z"]
 )
 def test_particles_extras_match_write_beam(csr_tao: Tao, tmp_path: pathlib.Path, key: str):
-    if not hasattr(ParticleGroup, key):
-        pytest.skip(f"beamphysics lacks optional particle key {key!r}")
     fn = tmp_path / "beam.h5"
     csr_tao.cmd(f"write beam -at end {fn}")
     expected = ParticleGroup(str(fn))
@@ -149,3 +149,83 @@ def test_bunch_data_extras_selection(csr_tao: Tao, kwargs: dict, expected: set[s
 def test_bunch_data_extras_unknown(csr_tao: Tao):
     with pytest.raises(ValueError, match="Unsupported extras"):
         csr_tao.bunch_data("end", extras=["bogus"])
+
+
+floor_extras = ["ix_ele", "ix_branch", "location", "s"]
+
+
+def _positions(P: ParticleGroup) -> np.ndarray:
+    return np.stack([P.x, P.y, P.z], axis=-1)
+
+
+def test_element_particles_to_floor(csr_tao: Tao):
+    P = csr_tao.particles("m1", extras=floor_extras)
+    ele = csr_tao.ele("m1")
+    Pf = ele.particles_to_floor(P)
+
+    reference = ele.floor.end.reference
+    # m1 sits after part of a bend, so the conversion includes a rotation.
+    assert not np.allclose(reference.wmat[:, 2], [0, 0, 1])
+    expected = _positions(P) @ reference.wmat.T + [reference.x, reference.y, reference.z]
+    np.testing.assert_allclose(_positions(Pf), expected, atol=1e-14)
+    np.testing.assert_allclose(Pf.p, P.p)
+    np.testing.assert_array_equal(Pf.t, P.t)
+
+    table = csr_tao.floor_table()
+    np.testing.assert_allclose(
+        _positions(table.particles_to_floor(P)), _positions(Pf), atol=1e-14
+    )
+
+
+def test_element_particles_to_floor_checks_index(csr_tao: Tao):
+    P = csr_tao.particles("m1", extras=floor_extras)
+    with pytest.raises(ValueError, match="ix_ele"):
+        csr_tao.ele("Mar.CSR").particles_to_floor(P)
+
+
+def test_lattice_floor_table(csr_tao: Tao, tmp_path: pathlib.Path):
+    P1 = csr_tao.particles("Mar.CSR", extras=floor_extras)
+    P2 = csr_tao.particles("m1", extras=floor_extras)
+    P = P1 + P2
+
+    lat = Lattice.from_tao_eles(
+        csr_tao, ["Mar.CSR", "m1"], defaults=False, floor=True, attrs=True
+    )
+    Pf = lat.floor_table().particles_to_floor(P)
+    expected = np.concatenate(
+        [
+            _positions(csr_tao.ele("Mar.CSR").particles_to_floor(P1)),
+            _positions(csr_tao.ele("m1").particles_to_floor(P2)),
+        ]
+    )
+    np.testing.assert_allclose(_positions(Pf), expected, atol=1e-14)
+
+    # Saved and reloaded, the lattice converts without Tao.
+    lat.write(tmp_path / "lat.json")
+    offline = Lattice.from_file(tmp_path / "lat.json")
+    np.testing.assert_array_equal(
+        _positions(offline.floor_table().particles_to_floor(P)), _positions(Pf)
+    )
+
+
+def test_particles_to_floor_needs_filled_elements(csr_tao: Tao):
+    P = csr_tao.particles("m1", extras=floor_extras)
+    lat = Lattice.from_tao_eles(csr_tao, ["m1"], defaults=False)
+    with pytest.raises(ValueError, match="Fill it first"):
+        lat.floor_table()
+    with pytest.raises(ValueError, match="Fill it first"):
+        lat.elements[0].particles_to_floor(P)
+
+
+def test_floor_table_unknown_element(csr_tao: Tao):
+    P = csr_tao.particles("m1", extras=floor_extras)
+    lat = Lattice.from_tao_eles(csr_tao, ["Mar.CSR"], defaults=False, floor=True)
+    with pytest.raises(ValueError, match=r"\(0, 4\)"):
+        lat.floor_table().particles_to_floor(P)
+
+
+def test_tao_particles_never_carry_slice_index(csr_tao: Tao):
+    """Particles tracked through Bmad's temporary element slices keep the parent's index."""
+    for ele_id in ["Mar.CSR", "m1", "Mar.END", "end"]:
+        P = csr_tao.particles(ele_id, extras=["ix_ele"])
+        assert np.all(P.ix_ele >= 0), ele_id

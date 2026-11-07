@@ -19,6 +19,18 @@ by name, key (element type), and index.
 
 ::: pytao.model.Lattice
 
+## FloorTable
+
+Per-element floor geometry for converting particles from element-local to
+floor coordinates, with or without a running Tao. Build one with
+`Tao.floor_table()` or `Lattice.floor_table()`.
+
+::: pytao.model.FloorTable
+
+### w_matrix_from_angles
+
+::: pytao.model.w_matrix_from_angles
+
 ## ElementID
 
 Parses and represents Tao's element identifier syntax, including universe,
