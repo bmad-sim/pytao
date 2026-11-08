@@ -1707,24 +1707,31 @@ def parse_shape_list(lines, cmd="") -> list[ShapeListInfo]:
 
     Keys match those on `shape_set` for convenience.
 
+    Tao versions that include the shape offset output a 10th field, returned
+    as ``shape_offset``. Older versions output 9 fields and the key is omitted.
+
     Returns
     -------
     list of dict
     """
-    return _parse_by_keys_to_types(
-        lines,
-        {
-            "shape_index": int,
-            "ele_name": str,
-            "shape": str,
-            "color": str,
-            "shape_size": float,
-            "type_label": str,
-            "shape_draw": bool,
-            "multi_shape": bool,
-            "line_width": int,
-        },
-    )
+    keys = {
+        "shape_index": int,
+        "ele_name": str,
+        "shape": str,
+        "color": str,
+        "shape_size": float,
+        "type_label": str,
+        "shape_draw": bool,
+        "multi_shape": bool,
+        "line_width": int,
+    }
+    with_offset = {**keys, "shape_offset": float}
+    result = []
+    for line in lines:
+        n_fields = len(line.split(";"))
+        key_to_type = with_offset if n_fields == len(with_offset) else keys
+        result.extend(_parse_by_keys_to_types([line], key_to_type))
+    return result
 
 
 def parse_shape_pattern_list(
