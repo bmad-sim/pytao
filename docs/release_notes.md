@@ -1,3 +1,51 @@
+# Unreleased
+
+## New Features
+
+### Read-only optimization introspection (`pytao.optimize`)
+
+A new subpackage that reads a live `Tao` instance and reports its
+optimization setup as structured Python objects — the variables and datums
+Tao would use for optimization, plus their bounds, weights, and merit types.
+
+```python
+from pytao import Tao
+from pytao.optimize import TaoOptimizationProblem
+
+tao = Tao(init_file="tao.init", noplot=True)
+problem = TaoOptimizationProblem.from_tao(tao)
+
+problem.n_var           # number of active optimization variables
+problem.n_data          # number of active datums
+problem.x0              # initial variable vector
+problem.bounds          # list of (low, high) tuples; ±inf allowed
+problem.weights         # per-datum merit weights
+problem.variables       # list[VariableInfo]
+problem.datums          # list[DatumInfo]
+```
+
+Highlights:
+
+- Filters to `useit_opt = True` entries, i.e. what Tao itself would pass to
+  its internal optimizers.
+- Translates Tao's ±1e30 "no limit" sentinels to ±inf so downstream
+  optimizer libraries see standard unbounded-side semantics.
+- Rejects negative weights at construction — catches a class of user errors
+  at the boundary rather than silently producing NaNs later.
+- Multi-universe aware: with no argument, `from_tao` reads Tao's live
+  `s%global%default_universe`; pass `universe=N` to pin the snapshot to
+  a specific universe.
+- Built on `TaoBaseModel` (Pydantic) — `problem.variables` and
+  `problem.datums` are immutable tuples of frozen models, so the
+  snapshot cannot drift out of sync with `x0`, `bounds`, and `weights`.
+  JSON / YAML / msgpack round-tripping comes for free via the standard
+  `.write()` / `.from_file()` helpers.
+
+This is the first slice of a larger Python-driven optimization workflow.
+Follow-up releases will add merit evaluation, Jacobian access, and SciPy
+adapters (`run_scipy_minimize`, `run_scipy_least_squares`). See the
+[optimization guide](optimize.md) for a walkthrough.
+
 # v1.0.0
 
 ## New Features
