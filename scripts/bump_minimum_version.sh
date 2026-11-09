@@ -2,6 +2,25 @@
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 
+usage() {
+  echo "Usage: $0 [BMAD_CONDA_VERSION]"
+  echo "  BMAD_CONDA_VERSION  Minimum bmad conda version (default: 'show version' date, e.g. 20260710.0)"
+}
+
+case "$1" in
+-h | --help)
+  usage
+  exit 0
+  ;;
+esac
+
+if [ $# -gt 1 ]; then
+  usage
+  exit 1
+fi
+
+bmad_conda_version=$1
+
 cd "$SCRIPT_DIR" || exit 1
 
 set -e
@@ -22,17 +41,16 @@ else
 fi
 
 datetime=$(python "$SCRIPT_DIR"/tao_datetime_version.py)
-# Conda package versions are the bmad git tag with '-' replaced by '.' for
-# PEP 440 compatibility (tag 20260710-0 -> conda 20260710.0).
-bmad_conda_version=$(conda list --json | jq -r '.[] | select(.name=="bmad") | .version')
-
 if [ -z "$datetime" ]; then
   echo "Unable to determine version using pytao"
   exit 1
 fi
+
+# Conda package versions are the bmad git tag with '-' replaced by '.'
+# (e.g., 20260710-0 -> conda 20260710.0)
 if [ -z "$bmad_conda_version" ]; then
-  echo "Unable to determine version using 'conda'"
-  exit 1
+  # shellcheck disable=SC2046
+  bmad_conda_version=$(printf "%04d%02d%02d.0" $(echo "$datetime" | "$SED" -E 's/[^0-9]+/ /g'))
 fi
 
 echo "Updating minimum version to:"
@@ -47,12 +65,5 @@ cd $SCRIPT_DIR/.. || exit 1
 cd $SCRIPT_DIR || exit 1
 python generate_interface_commands.py
 
-if [ -n "$bmad_conda_version" ]; then
-  BMAD_TAG=$(echo "$bmad_conda_version" | $SED -e 's/\./-/')
-else
-  BMAD_TAG=$(cd "$ACC_ROOT_DIR" && git describe --tags)
-fi
-
-if [ -n "$BMAD_TAG" ]; then
-  echo "git commit -am 'MAINT: regenerate for Bmad $BMAD_TAG'"
-fi
+BMAD_TAG=$(echo "$bmad_conda_version" | $SED -e 's/\./-/')
+echo "git commit -am 'MAINT: regenerate for Bmad $BMAD_TAG'"
