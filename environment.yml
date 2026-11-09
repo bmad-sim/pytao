@@ -19,6 +19,7 @@ dependencies:
   - pydantic >=2.12.5
   - rich
   - tqdm
+  - cloudpickle
   # Developer
   - markdown >3.10,<3.11
   - mkdocs
