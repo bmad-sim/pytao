@@ -6,7 +6,6 @@ This file is auto-generated; do not hand-edit it.
 from __future__ import annotations
 
 import logging
-from collections.abc import Sequence
 from typing import (
     Any,
     ClassVar,
@@ -22,6 +21,7 @@ from .base import (
 from .types import (
     FloatSequence,
     IntSequence,
+    Sequence,
 )
 
 logger = logging.getLogger(__name__)
