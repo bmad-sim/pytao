@@ -9,6 +9,7 @@ from ..util.parsers import (
 )
 from ..util.parsers import (
     parse_derivative,
+    parse_shape_list,
     parse_show_version,
     parse_tao_python_data,
 )
@@ -501,6 +502,28 @@ def test_shape_list_1(tao_cls: type[AnyTao]):
         tao_cls, init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/cesr/tao.init"
     ) as tao:
         assert "shape_index" in tao.shape_list(who="floor_plan")[0]
+
+
+def test_parse_shape_list(monkeypatch):
+    lines = [
+        "1;lcavity::*;xbox;red;   4.0000E+001;none;T;F;1;0.1",
+        "2;quadrupole::*;xbox;magenta;   3.0000E+001;name;T;F;2;0.25",
+    ]
+    old, new = parse_shape_list(lines)
+    assert old == {
+        "shape_index": 1,
+        "ele_name": "lcavity::*",
+        "shape": "xbox",
+        "color": "red",
+        "shape_size": 40.0,
+        "type_label": "none",
+        "shape_draw": True,
+        "multi_shape": False,
+        "line_width": 1,
+        "shape_offset": 0.1,
+    }
+    assert new["shape_offset"] == 0.25
+    assert new["line_width"] == 2 and new["multi_shape"] is False
 
 
 def test_shape_pattern_list_1(tao_cls: type[AnyTao]):

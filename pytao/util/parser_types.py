@@ -261,6 +261,7 @@ class ShapeListInfo(TypedDict):
     shape_draw: bool
     multi_shape: bool
     line_width: int
+    shape_offset: float
 
 
 class VarGeneralInfo(TypedDict):

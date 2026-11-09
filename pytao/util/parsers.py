@@ -1723,6 +1723,7 @@ def parse_shape_list(lines, cmd="") -> list[ShapeListInfo]:
             "shape_draw": bool,
             "multi_shape": bool,
             "line_width": int,
+            "shape_offset": float,
         },
     )
 
