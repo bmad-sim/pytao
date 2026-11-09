@@ -276,7 +276,7 @@ def make_tao_init(init: str, *, quiet: bool | Quiet = False, **kwargs) -> str:
 
     for name, value in kwargs.items():
         switch = f"-{name}"
-        if switch in result or f"-{switch}" in result:
+        if switch in result:
             continue
         if value is False and name in TRISTATE_SWITCHES:
             result.append(f"-{switch}")
