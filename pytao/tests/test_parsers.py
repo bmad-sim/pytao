@@ -504,13 +504,9 @@ def test_shape_list_1(tao_cls: type[AnyTao]):
         assert "shape_index" in tao.shape_list(who="floor_plan")[0]
 
 
-@pytest.mark.parametrize("ensure_count", [False, True])
-def test_parse_shape_list_with_and_without_offset(monkeypatch, ensure_count: bool):
-    from ..util.parsers import Settings
-
-    monkeypatch.setattr(Settings, "ensure_count", ensure_count)
+def test_parse_shape_list(monkeypatch):
     lines = [
-        "1;lcavity::*;xbox;red;   4.0000E+001;none;T;F;1",  # Tao without the offset
+        "1;lcavity::*;xbox;red;   4.0000E+001;none;T;F;1;0.1",
         "2;quadrupole::*;xbox;magenta;   3.0000E+001;name;T;F;2;0.25",
     ]
     old, new = parse_shape_list(lines)
@@ -524,6 +520,7 @@ def test_parse_shape_list_with_and_without_offset(monkeypatch, ensure_count: boo
         "shape_draw": True,
         "multi_shape": False,
         "line_width": 1,
+        "shape_offset": 0.1,
     }
     assert new["shape_offset"] == 0.25
     assert new["line_width"] == 2 and new["multi_shape"] is False
