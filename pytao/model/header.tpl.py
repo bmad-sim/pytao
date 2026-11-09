@@ -21,6 +21,7 @@ from .base import (
 from .types import (
     FloatSequence,  # noqa: F401
     IntSequence,  # noqa: F401
+    Sequence,  # noqa: F401
 )
 
 logger = logging.getLogger(__name__)
