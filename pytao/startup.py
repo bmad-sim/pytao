@@ -30,13 +30,13 @@ logger = logging.getLogger(__name__)
 AnyPath = Union[pathlib.Path, str]
 Quiet = Literal["all", "warnings"]
 
-#: Boolean switches whose negated form (``--switch``) differs from omitting
-#: the switch.  For these, Tao uses the init file's ``tao_params`` setting when
-#: the switch is absent, while ``-switch`` and ``--switch`` force the
-#: corresponding global one way or the other (see ``tao_init_global``).
-#: These are represented as tri-state ``bool | None`` fields: ``None`` omits the
-#: switch, ``True`` emits ``-switch`` and ``False`` emits ``--switch``.
-#: For all other boolean switches, ``--switch`` is equivalent to omitting it.
+# Boolean switches whose negated form (`--switch`) differs from omitting
+# the switch. For these, Tao uses the init file's `tao_params` setting when
+# the switch is absent, while `-switch` and `--switch` force the
+# corresponding global one way or the other (see `tao_init_global`).
+# These are represented as tri-state `bool | None` fields: `None` omits the
+# switch, `True` emits `-switch` and `False` emits `--switch`.
+# For all other boolean switches, `--switch` is equivalent to omitting it.
 TRISTATE_SWITCHES: frozenset[str] = frozenset(
     {
         "disable_smooth_line_calc",
@@ -267,7 +267,7 @@ def make_tao_init(init: str, *, quiet: bool | Quiet = False, **kwargs) -> str:
         mapped to their respective values.
         Only added as an argument if not empty and not False, except that
         False for a switch in `TRISTATE_SWITCHES` adds the negated form
-        (``--switch``).
+        (`--switch`).
     """
     result = shlex.split(init)
 
@@ -328,7 +328,10 @@ class TaoStartup:
         Debug mode for Wizards
     disable_smooth_line_calc : bool or None, default=None
         Disable the smooth line calc used in plotting.
-        None (default): keep init file setting; False: pass ``--disable_smooth_line_calc``.
+        True: pass `-disable_smooth_line_calc` (smooth line calc off).
+        False: pass `--disable_smooth_line_calc` (smooth line calc on).
+        None: pass neither and use the init file setting, or Tao's
+        default (smooth line calc on) if no init file is used.
     external_plotting : bool, default=False
         Tells Tao that plotting is done externally to Tao.
     geometry : "wxh" or (width, height) tuple, optional
@@ -348,17 +351,26 @@ class TaoStartup:
         Write startup debugging info
     no_stopping : bool or None, default=None
         For debugging : Prevents Tao from exiting on errors.
-        None (default): keep init file setting; False: pass ``--no_stopping``.
+        True: pass `-no_stopping` (do not stop on errors).
+        False: pass `--no_stopping` (stop on errors).
+        None: pass neither and use the init file setting, or Tao's
+        default (stop on errors) if no init file is used.
     noinit : bool, default=False
         Do not use Tao init file.
     noplot : bool or None, default=None
         Do not open a plotting window.
-        None (default): keep init file setting; False: pass ``--noplot``.
+        True: pass `-noplot` (plotting off).
+        False: pass `--noplot` (plotting on).
+        None: pass neither and use the init file setting, or Tao's
+        default (plotting on) if no init file is used.
     nostartup : bool, default=False
         Do not open a startup command file
     no_rad_int : bool or None, default=None
         Do not do any radiation integrals calculations.
-        None (default): keep init file setting; False: pass ``--no_rad_int``.
+        True: pass `-no_rad_int` (radiation integrals off).
+        False: pass `--no_rad_int` (radiation integrals on).
+        None: pass neither and use the init file setting, or Tao's
+        default (radiation integrals on) if no init file is used.
     plot_file : str or pathlib.Path, default=None
         Plotting initialization file
     prompt_color : str, optional
@@ -367,7 +379,10 @@ class TaoStartup:
         Reverse lattice element order?
     rf_on : bool or None, default=None
         Turn RF on.
-        None (default): keep init file setting; False: pass ``--rf_on``.
+        True: pass `-rf_on` (RF on).
+        False: pass `--rf_on` (RF off).
+        None: pass neither and use the init file setting, or Tao's
+        default (RF on) if no init file is used.
     quiet : bool or "all" or "warnings", default=False
         Suppress terminal output when running a command file.
         For backward compatibility, True is equivalent to "all".

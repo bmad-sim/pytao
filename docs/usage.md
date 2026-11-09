@@ -84,7 +84,9 @@ Tao(
 
 `disable_smooth_line_calc`, `no_rad_int`, `no_stopping`, `noplot` and `rf_on`
 default to `None`, which leaves the setting from the init file's `tao_params`
-in effect. `True` passes `-switch` and `False` passes the negated `--switch`,
+in effect. If no init file is used (e.g. only `lattice_file` is given), `None`
+falls back to Tao's defaults: smooth line calc on, stop on errors, plotting on,
+radiation integrals on and RF on. `True` passes `-switch` and `False` passes the negated `--switch`,
 so `rf_on=False` turns RF off even if the init file turns it on. The same
 switches may also be given in the `init` string, e.g. `init="-init tao.init -rf_on"`.
 
