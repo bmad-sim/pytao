@@ -4,7 +4,7 @@ import pytest
 
 from ..errors import TaoInitializationError, TaoInvalidArgumentsError
 from ..model.ele.ele import ElementNotFoundError
-from ..startup import TaoStartup
+from ..startup import TRISTATE_SWITCHES, TaoStartup
 from ..subproc import SubprocessTao
 from ..tao import Tao
 from .conftest import get_regression_test
@@ -314,8 +314,11 @@ def test_lattice_file2_with_path_prefix() -> None:
             ["-prompt_color", "red"], "prompt_color", "red", id="override_arg_prompt_color"
         ),
         pytest.param(["-quiet", "warnings"], "quiet", "warnings", id="choices_arg_quiet"),
-        pytest.param([], "rf_on", True, id="default_flag_rf_on_is_true"),
+        pytest.param([], "rf_on", None, id="default_flag_rf_on_is_none"),
+        pytest.param(["-rf_on"], "rf_on", True, id="flag_rf_on_is_true"),
         pytest.param(["--rf_on"], "rf_on", False, id="negated_flag_rf_on_is_false"),
+        pytest.param([], "noplot", None, id="default_flag_noplot_is_none"),
+        pytest.param(["--noplot"], "noplot", False, id="negated_flag_noplot_is_false"),
     ],
 )
 def test_tao_parser_mapping_to_dataclass(
@@ -324,6 +327,46 @@ def test_tao_parser_mapping_to_dataclass(
     parsed_dataclass = TaoStartup.from_cli_args(cli_args)
     actual_value = getattr(parsed_dataclass, expected_attribute)
     assert actual_value == expected_value
+
+
+@pytest.mark.parametrize("name", sorted(TRISTATE_SWITCHES))
+@pytest.mark.parametrize(
+    "switch, kwargs, expected",
+    [
+        pytest.param("", {}, None, id="absent"),
+        pytest.param("-{name}", {}, "-{name}", id="init-string"),
+        pytest.param("--{name}", {}, "--{name}", id="init-string-negated"),
+        pytest.param("", {"value": True}, "-{name}", id="kwarg-true"),
+        pytest.param("", {"value": False}, "--{name}", id="kwarg-false"),
+    ],
+)
+def test_tristate_switch_reaches_tao_init(
+    name: str, switch: str, kwargs: dict, expected: str | None
+) -> None:
+    init = f"-lat foo.bmad {switch.format(name=name)}"
+    if kwargs:
+        startup = TaoStartup(init=init, **{name: kwargs["value"]})
+    else:
+        startup = TaoStartup(init=init)
+    parts = startup.tao_init.split()
+    positive, negated = f"-{name}", f"--{name}"
+    if expected is None:
+        assert positive not in parts
+        assert negated not in parts
+    elif expected.startswith("--"):
+        assert negated in parts
+        assert positive not in parts
+    else:
+        assert positive in parts
+        assert negated not in parts
+
+
+def test_negated_plain_switch_is_omitted() -> None:
+    # For switches not in TRISTATE_SWITCHES, `--x` is the same as no switch.
+    startup = TaoStartup(init="-lat foo.bmad -debug --debug")
+    assert startup.debug is False
+    assert "-debug" not in startup.tao_init.split()
+    assert "--debug" not in startup.tao_init.split()
 
 
 def test_tao_parser_unsupported_choice():
@@ -426,3 +469,47 @@ def test_evaluate_string_list(tao: Tao):
     result = tao.evaluate("lat::sigma.x[0:5]", flags="")
     assert result is not None
     assert len(result) == 6
+
+
+RF_LATTICE = """
+beginning[beta_a] = 10
+beginning[beta_b] = 10
+beginning[e_tot] = 1e9
+parameter[geometry] = open
+d: drift, l = 1
+c: rfcavity, l = 1, voltage = 1e6, rf_frequency = 500e6
+lat: line = (d, c, d)
+use, lat
+"""
+
+
+@pytest.mark.parametrize("init_file_rf_on", [True, False], ids=["init-T", "init-F"])
+@pytest.mark.parametrize(
+    "switch, kwargs, expected",
+    [
+        pytest.param("", {}, None, id="absent"),
+        pytest.param("-rf_on", {}, True, id="-rf_on"),
+        pytest.param("--rf_on", {}, False, id="--rf_on"),
+        pytest.param("", {"rf_on": True}, True, id="rf_on=True"),
+        pytest.param("", {"rf_on": False}, False, id="rf_on=False"),
+    ],
+)
+def test_rf_on_switch_overrides_init_file(
+    tmp_path: pathlib.Path,
+    init_file_rf_on: bool,
+    switch: str,
+    kwargs: dict,
+    expected: bool | None,
+) -> None:
+    # Absent: Tao uses the init file's global%rf_on.  -rf_on / --rf_on force it.
+    (tmp_path / "lat.bmad").write_text(RF_LATTICE)
+    flag = "T" if init_file_rf_on else "F"
+    init_file = tmp_path / "tao.init"
+    init_file.write_text(
+        "&tao_start\n  n_universes = 1\n/\n"
+        f'&tao_design_lattice\n  design_lattice(1)%file = "{tmp_path / "lat.bmad"}"\n/\n'
+        f"&tao_params\n  global%rf_on = {flag}\n/\n"
+    )
+    with SubprocessTao(init=f"-init {init_file} -noplot {switch}", **kwargs) as tao:
+        rf_on = tao.tao_global()["rf_on"]
+    assert rf_on == (init_file_rf_on if expected is None else expected)
