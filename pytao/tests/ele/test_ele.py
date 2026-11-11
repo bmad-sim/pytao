@@ -9,8 +9,8 @@ import pytest
 
 import pytao
 from pytao import SubprocessTao
-from pytao.model.base import ArchiveFormat, TaoBaseModel
-from pytao.model.ele import Element, Lattice
+from pytao.model.base import ArchiveFormat, TaoBaseModel, dump_model
+from pytao.model.ele import Element, ElementSrWakeData, ElementWake, Lattice
 from pytao.model.ele.ele import (
     _used_unique_element_indices,
     get_element_index,
@@ -696,6 +696,7 @@ def test_sr_wake_transverse():
 
         assert wake.sr_long is not None
         assert wake.sr_trans is not None
+        assert wake.sr_z_long is None
         assert wake.sr_long.table is not None
         assert wake.sr_trans.table is not None
         # sr_long checks
@@ -902,3 +903,100 @@ def test_ndarray_validate(
     d = {"arr": arr.tolist()}
     restored = cls.model_validate(d)
     assert holder == restored
+
+
+SR_Z_LONG_TABLE = [
+    [-4e-05, 4e14],
+    [-3e-05, 3e14],
+    [-2e-05, 2e14],
+    [-1e-05, 1e14],
+    [0.0, 5e13],
+    [1e-05, 0.0],
+    [2e-05, 0.0],
+    [3e-05, 0.0],
+    [4e-05, 0.0],
+]
+
+
+@pytest.fixture(scope="module")
+def sr_z_long_wake() -> ElementWake:
+    with SubprocessTao(
+        init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/tao.init_wake", noplot=True
+    ) as tao:
+        wake = tao.ele("zw", wake=True).wake
+    assert wake is not None
+    return wake
+
+
+def test_sr_wake_z_long(sr_z_long_wake: ElementWake) -> None:
+    wake = sr_z_long_wake
+    assert wake.has_sr_z_long is True
+    assert wake.sr_z_long is not None
+
+    np.testing.assert_allclose(wake.sr_z_long.dz, 1e-5)
+    np.testing.assert_allclose(wake.sr_z_long.z0, 4e-5)
+    np.testing.assert_allclose(wake.sr_z_long.smoothing_sigma, 0.0)
+    assert wake.sr_z_long.position_dependence == "none"
+    assert wake.sr_z_long.time_based is False
+    assert wake.sr_z_long.n_pt == 9
+
+    assert wake.sr_z_long.table.shape == (9, 2)
+    np.testing.assert_allclose(wake.sr_z_long.table, SR_Z_LONG_TABLE)
+    np.testing.assert_allclose(wake.sr_z_long.z, np.asarray(SR_Z_LONG_TABLE)[:, 0])
+    np.testing.assert_allclose(wake.sr_z_long.w, np.asarray(SR_Z_LONG_TABLE)[:, 1])
+
+    # Only a z_long wake is defined, yet Tao still reports these as present.
+    assert wake.has_sr_long is True
+    assert wake.has_sr_trans is True
+    assert wake.sr_long is not None
+    assert wake.sr_trans is not None
+    assert wake.sr_long.table == []
+    assert wake.sr_trans.table == []
+
+
+def test_sr_wake_z_long_model_round_trip(sr_z_long_wake: ElementWake) -> None:
+    restored = ElementWake.model_validate(sr_z_long_wake.model_dump())
+    assert restored == sr_z_long_wake
+    assert restored.sr_z_long is not None
+    np.testing.assert_allclose(restored.sr_z_long.table, SR_Z_LONG_TABLE)
+
+
+@pytest.mark.parametrize("format", list(ArchiveFormat))
+def test_sr_wake_z_long_archive_round_trip(
+    tmp_path: pathlib.Path, sr_z_long_wake: ElementWake, format: ArchiveFormat
+) -> None:
+    fn = tmp_path / f"wake.{format.value}"
+    dump_model(fn, sr_z_long_wake)
+    restored = ElementWake.from_file(fn)
+    assert restored == sr_z_long_wake
+    assert restored.sr_z_long is not None
+    assert restored.sr_z_long.table.shape == (9, 2)
+    np.testing.assert_allclose(restored.sr_z_long.table, SR_Z_LONG_TABLE)
+
+
+def test_sr_wake_loads_pre_sr_z_long_dump() -> None:
+    # Dump shape from before `sr_z_long` existed: no key for it, and the
+    # legacy generated class names for the short-range sections.
+    legacy = {
+        "__class_name__": "ElementWake",
+        "which": "model",
+        "has#sr_long": True,
+        "has#sr_trans": False,
+        "has#lr_mode": False,
+        "sr_long": {"__class_name__": "ElementWakeSrLong", "z_ref": 0.0},
+        "sr_trans": None,
+        "lr_mode": None,
+    }
+    wake = ElementWake.model_validate(legacy)
+    assert wake.sr_z_long is None
+    assert wake.has_sr_z_long is False
+    assert isinstance(wake.sr_long, ElementSrWakeData)
+    assert wake.sr_trans is None
+
+
+def test_sr_z_long_empty_table_shape() -> None:
+    from pytao.model import ElementSrZLongWakeData
+
+    assert ElementSrZLongWakeData().table.shape == (0, 2)
+    assert ElementSrZLongWakeData(table=[]).table.shape == (0, 2)
+    assert ElementSrZLongWakeData(table=[[1.0, 2.0]]).table.shape == (1, 2)

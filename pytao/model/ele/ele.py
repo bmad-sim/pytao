@@ -47,6 +47,7 @@ from .sections import ElementFloorPosition as ElementFloorPosition
 from .sections import ElementGenGradientCurve as ElementGenGradientCurve
 from .sections import ElementSpinTaylorComponent as ElementSpinTaylorComponent
 from .sections import ElementSrWakeData as ElementSrWakeData
+from .sections import ElementSrZLongWakeData as ElementSrZLongWakeData
 from .sections import ElementTaylorSection as ElementTaylorSection
 from .sections import FloorWhere as FloorWhere
 from .sections import PhotonWho as PhotonWho
