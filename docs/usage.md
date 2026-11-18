@@ -100,6 +100,55 @@ with SubprocessTao(lattice_file) as tao:
 Once the `with` block ends, the subprocess will automatically be closed and cleaned up.
 For manual lifetime control, use `tao.close_subprocess()`.
 
+### Parallel parameter scans with `fork_map`
+
+Scanning a parameter or tracking many variations of the same lattice does not
+need a fresh Tao process for each case. `SubprocessTao.fork_map` forks the
+already-initialized Tao subprocess once per item: each child starts from a copy
+of the current state, runs your function, and sends the result back. The parent
+and the other children are never affected, so there is no need to undo your
+changes.
+
+```python
+import numpy as np
+from pytao import SubprocessTao
+
+def scan(tao, k1):
+    tao.cmd(f"set ele Q1 k1 = {k1}")
+    return tao.ele_twiss("Q2")["beta_a"]
+
+with SubprocessTao(init_file="$ACC_ROOT_DIR/bmad-doc/tao_examples/optics_matching/tao.init", noplot=True) as tao:
+    betas = tao.fork_map(scan, np.linspace(0.0, 2.0, 21), max_workers=4)
+```
+
+Results are returned in the same order as the items. By default the first
+failure raises `TaoForkError` (with `.index`, `.error_cls`, `.child_traceback`
+and `.tao_output`) and kills the remaining children. Pass `raises=False` to get
+the error objects in place instead:
+
+```python
+results = tao.fork_map(scan, k1_values, raises=False)
+good = [r for r in results if not isinstance(r, TaoForkError)]
+```
+
+Notes:
+
+- Use `noplot=True` or pytao's external plotting in the forking process; Tao's
+  own plot windows are not fork-safe. Do not draw with a GUI backend inside the
+  function.
+- The Tao library links OpenMP. For many workers, set `OMP_NUM_THREADS=1`, for
+  example `SubprocessTao(env={**os.environ, "OMP_NUM_THREADS": "1"})`.
+- The function is sent to the subprocess: install the `cloudpickle` extra
+  (`pip install pytao[fork]`) to use functions defined in a notebook or script,
+  lambdas, or closures. Without it, the function must be importable by name, as
+  with `subprocess_call`.
+- `fork_map` is only available on `SubprocessTao`. The Tao subprocess is a
+  process pytao controls, with no GUI, event loop, or user threads, so forking
+  it is safe. Forking your main Python process (a Jupyter kernel, for example)
+  is not, so the plain `Tao` class does not offer it.
+- `timeout` applies to the whole call; when it expires all running children are
+  killed and `TimeoutError` is raised.
+
 ## PyTao on the command-line
 
 PyTao has a simple IPython entrypoint, giving you quick access to Tao in Python.
@@ -287,7 +336,7 @@ Additionally, you may be required to:
 | Variable                | Default   | Description                                                                                                                                                                                                           |
 | ----------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `PYTAO_LOG_MODE`        | `quiet`   | How Tao message levels are translated to Python logging levels. `quiet` logs non-error Tao messages at `DEBUG`; `matching` translates each to its closest Python equivalent. See [Logging](#logging).                 |
-| `PYTAO_LOG`             | `WARNING` | Default `level` for `configure_logging` (and the `pytao` CLI when `--pylog` is not given). Set to an empty string to leave logging unconfigured.                                                                       |
+| `PYTAO_LOG`             | `WARNING` | Default `level` for `configure_logging` (and the `pytao` CLI when `--pylog` is not given). Set to an empty string to leave logging unconfigured.                                                                      |
 | `PYTAO_LOG_FILE`        | (unset)   | Default `filename` for `configure_logging` (and the `pytao` CLI when `--pylog-file` is not given). The file captures `DEBUG` and above; console output stays at the `level`.                                          |
 | `PYTAO_PLOT`            | `tao`     | Plotting backend for the `pytao` CLI: `tao`, `mpl`, or `bokeh`. Takes precedence over `--pyplot`.                                                                                                                     |
 | `PYTAO_FILTER_TAB`      | `y`       | Filter tab completion on PyTao model classes, hiding private and pydantic-internal attributes. Set to `n` to show all attributes. Also toggleable at runtime with `pytao.model.base.toggle_tab_completion_filtering`. |
