@@ -4,6 +4,7 @@ import pytest
 from beamphysics import ParticleGroup
 
 from pytao import SubprocessTao, Tao
+from pytao.tao import PARTICLE_EXTRAS
 
 
 @pytest.fixture(scope="function")
@@ -130,6 +131,19 @@ def test_bunch_data_extras_all(csr_tao: Tao):
     for key in ["s", "ix_branch", "ix_ele", "location", "p0c", "spin_x", "charge_state"]:
         assert len(data[key]) == n
     assert set(data["charge_state"]) == {-1}
+
+
+@pytest.mark.parametrize(
+    ("kwargs", "expected"),
+    [
+        pytest.param({}, {"p0c"}, id="default"),
+        pytest.param({"extras": False}, set(), id="false"),
+        pytest.param({"extras": ["s"]}, {"s"}, id="explicit"),
+    ],
+)
+def test_bunch_data_extras_selection(csr_tao: Tao, kwargs: dict, expected: set[str]):
+    data = csr_tao.bunch_data("end", **kwargs)
+    assert set(data) & set(PARTICLE_EXTRAS) == expected
 
 
 def test_bunch_data_extras_unknown(csr_tao: Tao):
