@@ -13,7 +13,7 @@ dependencies:
   - matplotlib
   - numpy
   - numpydoc
-  - openpmd-beamphysics >=0.14.1
+  - openpmd-beamphysics >=0.17.0
   - orjson
   - ormsgpack
   - pydantic >=2.12.5

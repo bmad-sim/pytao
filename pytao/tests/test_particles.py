@@ -4,6 +4,7 @@ import pytest
 from beamphysics import ParticleGroup
 
 from pytao import SubprocessTao, Tao
+from pytao.tao import PARTICLE_EXTRAS
 
 
 @pytest.fixture(scope="function")
@@ -99,3 +100,52 @@ def test_initial_particles_set_by_filename(
     P1 = tao.get_initial_particles()
     assert P1 is not None
     assert len(P1) == 5
+
+
+@pytest.fixture(scope="module")
+def csr_tao():
+    with SubprocessTao(
+        init_file="$ACC_ROOT_DIR/regression_tests/pipe_test/csr_beam_tracking/tao.init",
+        noplot=True,
+    ) as tao:
+        yield tao
+
+
+@pytest.mark.parametrize(
+    "key", ["s", "ix_branch", "ix_ele", "location", "p0c", "spin_x", "spin_y", "spin_z"]
+)
+def test_particles_extras_match_write_beam(csr_tao: Tao, tmp_path: pathlib.Path, key: str):
+    if not hasattr(ParticleGroup, key):
+        pytest.skip(f"beamphysics lacks optional particle key {key!r}")
+    fn = tmp_path / "beam.h5"
+    csr_tao.cmd(f"write beam -at end {fn}")
+    expected = ParticleGroup(str(fn))
+    P = csr_tao.particles("end", extras=[key])
+    assert getattr(P, key) == pytest.approx(getattr(expected, key))
+
+
+def test_bunch_data_extras_all(csr_tao: Tao):
+    data = csr_tao.bunch_data("end", extras=True)
+    assert "id" not in data  # ix_user is unset
+    n = len(data["x"])
+    for key in ["s", "ix_branch", "ix_ele", "location", "p0c", "spin_x", "charge_state"]:
+        assert len(data[key]) == n
+    assert set(data["charge_state"]) == {-1}
+
+
+@pytest.mark.parametrize(
+    ("kwargs", "expected"),
+    [
+        pytest.param({}, {"p0c"}, id="default"),
+        pytest.param({"extras": False}, set(), id="false"),
+        pytest.param({"extras": ["s"]}, {"s"}, id="explicit"),
+    ],
+)
+def test_bunch_data_extras_selection(csr_tao: Tao, kwargs: dict, expected: set[str]):
+    data = csr_tao.bunch_data("end", **kwargs)
+    assert set(data) & set(PARTICLE_EXTRAS) == expected
+
+
+def test_bunch_data_extras_unknown(csr_tao: Tao):
+    with pytest.raises(ValueError, match="Unsupported extras"):
+        csr_tao.bunch_data("end", extras=["bogus"])
