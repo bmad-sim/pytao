@@ -20,11 +20,11 @@ import matplotlib.text
 import matplotlib.ticker
 import numpy as np
 
-from ..errors import TaoCommandError
 from . import floor_plan_shapes, layout_shapes, pgplot
 from .curves import PlotCurveLine, PlotCurveSymbols, PlotHistogram, TaoCurveSettings
 from .ele_methods import ElementMethodsPlotData, color_for_value, is_garbage_value
 from .fields import ElementField
+from .floor_beam import FloorBeamEnvelope, find_floor_plan_graph
 from .patches import (
     PlotPatch,
     PlotPatchArc,
@@ -1254,52 +1254,19 @@ class MatplotlibGraphManager(GraphManager):
         NotImplementedError
             If the floor plan is rotated.
         """
-        from ..model.floor import FloorTable
-
         graphs, fig, axes = self.plot(template, include_layout=False, ix_uni=ix_uni, **kwargs)
-        for graph, ax in zip(graphs, axes):
-            if isinstance(graph, FloorPlanGraph):
-                break
-        else:
-            raise ValueError(f"Template {template!r} has no floor plan graph")
-        if graph.info["floor_plan_rotation"]:
-            raise NotImplementedError("Rotated floor plans are not supported")
-        view = graph.info["floor_plan_view"].lower()
-
-        uni = "" if ix_uni is None else str(ix_uni)
-
-        def comb(who: str) -> np.ndarray:
-            return np.asarray(self.tao.bunch_comb(who, ix_uni=uni, ix_branch=str(ix_branch)))
-
-        try:
-            s = comb("s")
-        except TaoCommandError as ex:
-            raise ValueError(
-                "No beam statistics are saved. Set `beam%comb_ds_save` and track a beam "
-                "(see `Tao.track_beam`)."
-            ) from ex
-        x, y = comb("x"), comb("y")
-        dx = n_sigma * np.sqrt(comb("sigma.11")) if "x" in view else 0.0
-        dy = n_sigma * np.sqrt(comb("sigma.33")) if "y" in view else 0.0
-
-        table = FloorTable.from_tao(self.tao, ix_branch=ix_branch, ix_uni=uni)
-
-        def to_floor(x: np.ndarray, y: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-            floor = table.points_to_floor(s, x, y, magnification=magnification)
-            return floor[:, "xyz".index(view[0])], floor[:, "xyz".index(view[1])]
-
-        h_center, v_center = to_floor(x, y)
-        h_lower, v_lower = to_floor(x - dx, y - dy)
-        h_upper, v_upper = to_floor(x + dx, y + dy)
-        ax.fill(
-            np.concatenate([h_lower, h_upper[::-1]]),
-            np.concatenate([v_lower, v_upper[::-1]]),
-            color=color,
-            alpha=alpha,
-            zorder=5,
-            label=rf"$\pm {n_sigma:g}\sigma$",
+        index, graph = find_floor_plan_graph(graphs, template)
+        envelope = FloorBeamEnvelope.from_tao(
+            self.tao,
+            graph,
+            n_sigma=n_sigma,
+            magnification=magnification,
+            ix_uni=ix_uni,
+            ix_branch=ix_branch,
         )
-        ax.plot(h_center, v_center, color="black", linewidth=0.8, zorder=6, label="Centroid")
+        ax = axes[index]
+        ax.fill(*envelope.outline.T, color=color, alpha=alpha, zorder=5, label=envelope.label)
+        ax.plot(*envelope.centroid.T, color="black", linewidth=0.8, zorder=6, label="Centroid")
         return graphs, fig, axes
 
     def plot_ele_methods(

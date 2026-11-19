@@ -342,13 +342,10 @@ ln: line = (d1, b1, f1, d2,""",
             np.testing.assert_allclose(end, floor["Reference"], atol=1e-14)
 
 
-def test_plot_floor_beam():
-    import matplotlib.pyplot as plt
-
+@pytest.fixture(scope="module")
+def beam_tao():
+    """A Tao with a tracked beam and beam statistics saved along the lattice."""
     with SubprocessTao.from_contents(TILTED_LATTICE, plot="mpl") as tao:
-        with pytest.raises(ValueError, match="No beam statistics"):
-            tao.matplotlib.plot_floor_beam()
-
         conf = tao.get_config()
         conf.beam_init.n_particle = 50
         conf.beam_init.a_norm_emit = 1e-6
@@ -357,22 +354,63 @@ def test_plot_floor_beam():
         conf.beam.comb_ds_save = 0.1
         conf.set(tao)
         tao.track_beam(use_progress_bar=False)
+        yield tao
 
-        _, _, (ax,) = tao.matplotlib.plot_floor_beam()
-        _, _, (magnified,) = tao.matplotlib.plot_floor_beam(magnification=100)
 
-        s = tao.bunch_comb("s")
-        reference = tao.floor_table().points_to_floor(s)
+@pytest.fixture(scope="module")
+def reference_orbit(beam_tao: SubprocessTao) -> np.ndarray:
+    """Floor plan (Z, X) of the reference orbit at each point with beam statistics."""
+    floor = beam_tao.floor_table().points_to_floor(beam_tao.bunch_comb("s"))
+    return floor[:, [2, 0]]
+
+
+def test_plot_floor_beam_needs_tracked_beam():
+    with (
+        SubprocessTao.from_contents(TILTED_LATTICE, plot="mpl") as tao,
+        pytest.raises(ValueError, match="No beam statistics"),
+    ):
+        tao.matplotlib.plot_floor_beam()
+
+
+def test_plot_floor_beam_mpl(beam_tao: SubprocessTao, reference_orbit: np.ndarray):
+    import matplotlib.pyplot as plt
+
+    _, _, (ax,) = beam_tao.matplotlib.plot_floor_beam()
+    _, _, (magnified,) = beam_tao.matplotlib.plot_floor_beam(magnification=100)
 
     def envelope_width(ax) -> float:
-        (band,) = ax.patches[-1:]
-        return np.ptp(band.get_xy()[:, 1])
+        return np.ptp(ax.patches[-1].get_xy()[:, 1])
 
     (centroid,) = [line for line in ax.lines if line.get_label() == "Centroid"]
-    # The floor plan is drawn Z across and X up; the centroid follows the reference orbit.
-    np.testing.assert_allclose(centroid.get_xdata(), reference[:, 2], atol=1e-6)
-    np.testing.assert_allclose(centroid.get_ydata(), reference[:, 0], atol=1e-6)
+    np.testing.assert_allclose(centroid.get_xydata(), reference_orbit, atol=1e-6)
     assert envelope_width(magnified) > envelope_width(ax)
+    plt.close("all")
+
+
+def test_plot_floor_beam_bokeh(beam_tao: SubprocessTao, reference_orbit: np.ndarray):
+    pytest.importorskip("bokeh")
+
+    def envelope_width(fig) -> float:
+        (envelope,) = fig.select(name="floor_beam_envelope")
+        return np.ptp(envelope.data_source.data["y"])
+
+    _, fig = beam_tao.bokeh.plot_floor_beam()
+    _, magnified = beam_tao.bokeh.plot_floor_beam(magnification=100)
+
+    (centroid,) = fig.select(name="floor_beam_centroid")
+    data = centroid.data_source.data
+    np.testing.assert_allclose(
+        np.stack([data["x"], data["y"]], axis=-1), reference_orbit, atol=1e-6
+    )
+    assert envelope_width(magnified) > envelope_width(fig)
+
+
+def test_tao_plot_floor_beam(beam_tao: SubprocessTao):
+    import matplotlib.pyplot as plt
+
+    beam_tao.plot_floor_beam(backend="mpl", n_sigma=2)
+    _, _, (ax,) = beam_tao.last_plot
+    assert "±2σ" in [patch.get_label() for patch in ax.patches]
     plt.close("all")
 
 
