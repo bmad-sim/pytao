@@ -24,7 +24,7 @@ from . import floor_plan_shapes, layout_shapes, pgplot
 from .curves import PlotCurveLine, PlotCurveSymbols, PlotHistogram, TaoCurveSettings
 from .ele_methods import ElementMethodsPlotData, color_for_value, is_garbage_value
 from .fields import ElementField
-from .floor_beam import FloorBeamEnvelope, find_floor_plan_graph
+from .floor_beam import BeamExtent, FloorBeamEnvelope, find_floor_plan_graph
 from .patches import (
     PlotPatch,
     PlotPatchArc,
@@ -1205,6 +1205,7 @@ class MatplotlibGraphManager(GraphManager):
         self,
         template: str = "floor_plan",
         *,
+        extent: BeamExtent = "minmax",
         n_sigma: float = 3.0,
         magnification: float = 1.0,
         ix_uni: int | None = None,
@@ -1226,8 +1227,13 @@ class MatplotlibGraphManager(GraphManager):
         ----------
         template : str, optional
             Floor plan template to draw. Default is "floor_plan".
+        extent : {"minmax", "sigma"}, optional
+            What the envelope shows. "minmax" (the default) is the full extent
+            of the beam, from its outermost particle on each side. "sigma" is
+            `n_sigma` RMS beam sizes either side of the centroid.
         n_sigma : float, optional
-            Half-width of the envelope in beam sigmas. Default is 3.
+            Half-width of the envelope in beam sigmas, for `extent="sigma"`.
+            Default is 3.
         magnification : float, optional
             Scale the beam's offsets from the reference orbit by this factor,
             to make a small beam visible at the scale of the machine. The
@@ -1267,6 +1273,7 @@ class MatplotlibGraphManager(GraphManager):
         envelope = FloorBeamEnvelope.from_tao(
             self.tao,
             graph,
+            extent=extent,
             n_sigma=n_sigma,
             magnification=magnification,
             ix_uni=ix_uni,

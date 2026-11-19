@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Self
+from typing import TYPE_CHECKING, Literal, Self
 
 import numpy as np
 
@@ -14,6 +14,9 @@ from .types import Limit
 
 if TYPE_CHECKING:
     from ..tao import Tao
+
+
+BeamExtent = Literal["minmax", "sigma"]
 
 
 @dataclass
@@ -27,14 +30,14 @@ class FloorBeamEnvelope:
         Shape `(n, 2)` horizontal and vertical plot coordinates of the centroid.
     lower, upper : numpy.ndarray
         Shape `(n, 2)` plot coordinates of the two edges of the envelope.
-    n_sigma : float
-        Half-width of the envelope in beam sigmas.
+    label : str
+        Description of the envelope, for a legend.
     """
 
     centroid: np.ndarray
     lower: np.ndarray
     upper: np.ndarray
-    n_sigma: float
+    label: str
 
     @property
     def outline(self) -> np.ndarray:
@@ -54,16 +57,13 @@ class FloorBeamEnvelope:
         margin = padding * max(high - low)
         return (low[0] - margin, high[0] + margin), (low[1] - margin, high[1] + margin)
 
-    @property
-    def label(self) -> str:
-        return f"±{self.n_sigma:g}σ"
-
     @classmethod
     def from_tao(
         cls,
         tao: Tao,
         graph: FloorPlanGraph,
         *,
+        extent: BeamExtent = "minmax",
         n_sigma: float = 3.0,
         magnification: float = 1.0,
         ix_uni: int | None = None,
@@ -77,8 +77,13 @@ class FloorBeamEnvelope:
         tao : Tao
         graph : FloorPlanGraph
             The floor plan the envelope will be drawn on.
+        extent : {"minmax", "sigma"}, optional
+            What the envelope shows. "minmax" (the default) is the full extent
+            of the beam, from its outermost particle on each side. "sigma" is
+            `n_sigma` RMS beam sizes either side of the centroid.
         n_sigma : float, optional
-            Half-width of the envelope in beam sigmas. Default is 3.
+            Half-width of the envelope in beam sigmas, for `extent="sigma"`.
+            Default is 3.
         magnification : float, optional
             Scale the beam's offsets from the reference orbit by this factor.
         ix_uni : int, optional
@@ -89,7 +94,7 @@ class FloorBeamEnvelope:
         Raises
         ------
         ValueError
-            If no beam statistics are saved.
+            If no beam statistics are saved, or `extent` is not recognized.
         NotImplementedError
             If the floor plan is rotated.
         """
@@ -113,8 +118,25 @@ class FloorBeamEnvelope:
                 "(see `Tao.track_beam`)."
             ) from ex
         x, y = comb("x"), comb("y")
-        dx = n_sigma * np.sqrt(comb("sigma.11")) if "x" in view else 0.0
-        dy = n_sigma * np.sqrt(comb("sigma.33")) if "y" in view else 0.0
+        # Offsets of the two envelope edges from the centroid, in local x and y.
+        if extent == "minmax":
+            edges = {
+                "x": (comb("rel_min.1"), comb("rel_max.1")),
+                "y": (comb("rel_min.3"), comb("rel_max.3")),
+            }
+            label = "Beam extent"
+        elif extent == "sigma":
+            sigma = {
+                "x": n_sigma * np.sqrt(comb("sigma.11")),
+                "y": n_sigma * np.sqrt(comb("sigma.33")),
+            }
+            edges = {axis: (-size, size) for axis, size in sigma.items()}
+            label = f"±{n_sigma:g}σ"
+        else:
+            raise ValueError(f"Unknown extent {extent!r}; expected 'minmax' or 'sigma'")
+        (x_lower, x_upper), (y_lower, y_upper) = (
+            edges[axis] if axis in view else (0.0, 0.0) for axis in "xy"
+        )
 
         table = FloorTable.from_tao(tao, ix_branch=ix_branch, ix_uni=uni)
 
@@ -123,9 +145,9 @@ class FloorBeamEnvelope:
 
         return cls(
             centroid=to_plot(x, y),
-            lower=to_plot(x - dx, y - dy),
-            upper=to_plot(x + dx, y + dy),
-            n_sigma=n_sigma,
+            lower=to_plot(x + x_lower, y + y_lower),
+            upper=to_plot(x + x_upper, y + y_upper),
+            label=label,
         )
 
 

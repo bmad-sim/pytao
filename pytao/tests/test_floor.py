@@ -418,6 +418,37 @@ def test_plot_floor_beam_mpl(beam_tao: SubprocessTao, reference_orbit: np.ndarra
     plt.close("all")
 
 
+def test_floor_beam_extent(beam_tao: SubprocessTao):
+    from pytao.plotting.floor_beam import FloorBeamEnvelope
+
+    (graph,) = beam_tao.matplotlib.prepare_graphs_by_name(template_name="floor_plan")
+
+    def half_widths(**kwargs) -> tuple[FloorBeamEnvelope, np.ndarray, np.ndarray]:
+        envelope = FloorBeamEnvelope.from_tao(beam_tao, graph, **kwargs)
+        return (
+            envelope,
+            np.linalg.norm(envelope.centroid - envelope.lower, axis=1),
+            np.linalg.norm(envelope.upper - envelope.centroid, axis=1),
+        )
+
+    # The tilted bends turn local x slightly out of the plane of the floor plan.
+    tilt = 2e-3
+
+    minmax, lower, upper = half_widths()
+    assert minmax.label == "Beam extent"
+    np.testing.assert_allclose(lower, -beam_tao.bunch_comb("rel_min.1"), rtol=tilt)
+    np.testing.assert_allclose(upper, beam_tao.bunch_comb("rel_max.1"), rtol=tilt)
+
+    sigma, lower, upper = half_widths(extent="sigma", n_sigma=2)
+    assert sigma.label == "±2σ"
+    expected = 2 * np.sqrt(beam_tao.bunch_comb("sigma.11"))
+    np.testing.assert_allclose(lower, expected, rtol=tilt)
+    np.testing.assert_allclose(upper, expected, rtol=tilt)
+
+    with pytest.raises(ValueError, match="Unknown extent"):
+        half_widths(extent="bogus")
+
+
 def test_plot_floor_beam_bokeh(beam_tao: SubprocessTao, reference_orbit: np.ndarray):
     pytest.importorskip("bokeh")
 
@@ -444,7 +475,7 @@ def test_plot_floor_beam_bokeh(beam_tao: SubprocessTao, reference_orbit: np.ndar
 def test_tao_plot_floor_beam(beam_tao: SubprocessTao):
     import matplotlib.pyplot as plt
 
-    beam_tao.plot_floor_beam(backend="mpl", n_sigma=2)
+    beam_tao.plot_floor_beam(backend="mpl", extent="sigma", n_sigma=2)
     _, _, (ax,) = beam_tao.last_plot
     assert "±2σ" in [patch.get_label() for patch in ax.patches]
     plt.close("all")
