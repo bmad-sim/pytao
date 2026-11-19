@@ -401,7 +401,12 @@ def test_plot_floor_beam_mpl(beam_tao: SubprocessTao, reference_orbit: np.ndarra
     import matplotlib.pyplot as plt
 
     _, _, (ax,) = beam_tao.matplotlib.plot_floor_beam()
-    _, _, (magnified,) = beam_tao.matplotlib.plot_floor_beam(magnification=100)
+    _, _, (magnified,) = beam_tao.matplotlib.plot_floor_beam(magnification=100, legend=False)
+    assert [text.get_text() for text in ax.get_legend().get_texts()] == [
+        "Beam extent",
+        "Centroid",
+    ]
+    assert magnified.get_legend() is None
 
     def envelope_width(ax) -> float:
         return np.ptp(ax.patches[-1].get_xy()[:, 1])
@@ -483,7 +488,9 @@ def test_plot_floor_beam_bokeh(beam_tao: SubprocessTao, reference_orbit: np.ndar
         return np.ptp(envelope.data_source.data["y"])
 
     _, fig = beam_tao.bokeh.plot_floor_beam()
-    _, magnified = beam_tao.bokeh.plot_floor_beam(magnification=100)
+    _, magnified = beam_tao.bokeh.plot_floor_beam(magnification=100, legend=False)
+    assert fig.legend.visible
+    assert not magnified.legend.visible
 
     (centroid,) = fig.select(name="floor_beam_centroid")
     data = centroid.data_source.data

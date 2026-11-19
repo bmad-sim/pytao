@@ -1216,6 +1216,7 @@ class MatplotlibGraphManager(GraphManager):
         ix_branch: int = 0,
         zoom: bool = False,
         zoom_padding: float = 0.1,
+        legend: bool = True,
         color: str = "C1",
         alpha: float = 0.6,
         **kwargs,
@@ -1255,6 +1256,8 @@ class MatplotlibGraphManager(GraphManager):
         zoom_padding : float, optional
             Margin to leave around the beam when zooming, as a fraction of its
             extent. Default is 0.1.
+        legend : bool, optional
+            Show a legend for the envelope and centroid. Default is True.
         color : str, optional
             Envelope color.
         alpha : float, optional
@@ -1298,6 +1301,8 @@ class MatplotlibGraphManager(GraphManager):
             for axis in (ax.xaxis, ax.yaxis):
                 axis.set_major_locator(matplotlib.ticker.AutoLocator())
                 axis.set_major_formatter(matplotlib.ticker.ScalarFormatter())
+        if legend:
+            ax.legend()
         return graphs, fig, axes
 
     def plot_ele_methods(

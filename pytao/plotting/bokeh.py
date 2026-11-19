@@ -2371,6 +2371,7 @@ class BokehGraphManager(GraphManager):
         ix_branch: int = 0,
         zoom: bool = False,
         zoom_padding: float = 0.1,
+        legend: bool = True,
         color: str = "orange",
         alpha: float = 0.6,
         width: int | None = None,
@@ -2414,6 +2415,8 @@ class BokehGraphManager(GraphManager):
         zoom_padding : float, optional
             Margin to leave around the beam when zooming, as a fraction of its
             extent. Default is 0.1.
+        legend : bool, optional
+            Show a legend for the envelope and centroid. Default is True.
         color : str, optional
             Envelope color.
         alpha : float, optional
@@ -2477,6 +2480,7 @@ class BokehGraphManager(GraphManager):
             legend_label="Centroid",
             name="floor_beam_centroid",
         )
+        fig.legend.visible = legend
 
         if save:
             if save is True:
