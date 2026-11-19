@@ -45,6 +45,7 @@ from . import floor_plan_shapes, pgplot, util
 from .curves import CurveIndexToCurve, PlotCurveLine, PlotCurveSymbols, TaoCurveSettings
 from .ele_methods import ElementMethodsPlotData, color_for_value, is_garbage_value
 from .fields import ElementField
+from .floor_beam import BeamExtent, FloorBeamEnvelope, find_floor_plan_graph
 from .layout_shapes import LayoutShape
 from .patches import (
     PlotPatch,
@@ -74,6 +75,7 @@ from .util import Limit, OptionalLimit, fix_grid_limits
 
 if typing.TYPE_CHECKING:
     from .. import Tao
+    from ..model.ele.comb import Comb
 
 
 logger = logging.getLogger(__name__)
@@ -2357,6 +2359,137 @@ class BokehGraphManager(GraphManager):
 
         return graphs, app
 
+    def plot_floor_beam(
+        self,
+        template: str = "floor_plan",
+        *,
+        comb: Comb | None = None,
+        extent: BeamExtent = "minmax",
+        n_sigma: float = 3.0,
+        magnification: float = 1.0,
+        ix_uni: int | None = None,
+        ix_branch: int = 0,
+        zoom: bool = False,
+        zoom_padding: float = 0.1,
+        legend: bool = True,
+        color: str = "orange",
+        alpha: float = 0.6,
+        width: int | None = None,
+        height: int | None = None,
+        xlim: tuple[float, float] | None = None,
+        ylim: tuple[float, float] | None = None,
+        save: bool | str | pathlib.Path | None = None,
+    ):
+        """
+        Plot the tracked beam's centroid and envelope on top of a floor plan.
+
+        Uses the beam statistics Tao saves along the lattice when tracking a
+        beam with `beam%comb_ds_save` set (see `Tao.bunch_comb`), converted to
+        floor coordinates with a `FloorTable`.
+
+        Parameters
+        ----------
+        template : str, optional
+            Floor plan template to draw. Default is "floor_plan".
+        comb : Comb, optional
+            Beam statistics to use, such as from `Comb.from_tao` or a slice of
+            one. By default, the statistics are fetched from Tao.
+        extent : {"minmax", "sigma"}, optional
+            What the envelope shows. "minmax" (the default) is the full extent
+            of the beam, from its outermost particle on each side. "sigma" is
+            `n_sigma` RMS beam sizes either side of the centroid.
+        n_sigma : float, optional
+            Half-width of the envelope in beam sigmas, for `extent="sigma"`.
+            Default is 3.
+        magnification : float, optional
+            Scale the beam's offsets from the reference orbit by this factor,
+            to make a small beam visible at the scale of the machine. The
+            floor plan itself is not scaled. Default is 1.
+        ix_uni : int, optional
+            Universe index. Default is the current universe.
+        ix_branch : int, optional
+            Branch the beam was tracked through. Default is 0.
+        zoom : bool, optional
+            Zoom in on the beam instead of showing the whole floor plan, for a
+            beam tracked through part of a larger lattice. Default is False.
+        zoom_padding : float, optional
+            Margin to leave around the beam when zooming, as a fraction of its
+            extent. Default is 0.1.
+        legend : bool, optional
+            Show a legend for the envelope and centroid. Default is True.
+        color : str, optional
+            Envelope color.
+        alpha : float, optional
+            Envelope opacity.
+        width : int, optional
+        height : int, optional
+        xlim : (float, float), optional
+        ylim : (float, float), optional
+        save : pathlib.Path or str, optional
+            Save the plot to the given filename.
+
+        Returns
+        -------
+        list of graphs
+
+        figure
+
+        Raises
+        ------
+        ValueError
+            If the template has no floor plan, or no beam statistics are saved.
+        NotImplementedError
+            If the floor plan is rotated.
+        """
+        graphs = self.prepare_graphs_by_name(
+            template_name=template, xlim=xlim, ylim=ylim, ix_uni=ix_uni
+        )
+        _, graph = find_floor_plan_graph(graphs, template)
+        envelope = FloorBeamEnvelope.from_tao(
+            self.tao,
+            graph,
+            comb=comb,
+            extent=extent,
+            n_sigma=n_sigma,
+            magnification=magnification,
+            ix_uni=ix_uni,
+            ix_branch=ix_branch,
+        )
+        fig = BokehFloorPlanGraph(
+            manager=self,
+            graph=graph,
+            width=width or _Defaults.width,
+            height=height or _Defaults.height,
+        ).create_figure()
+        envelope_renderer = fig.patch(
+            *envelope.outline.T,
+            fill_color=color,
+            fill_alpha=alpha,
+            line_alpha=0.0,
+            legend_label=envelope.label,
+            name="floor_beam_envelope",
+        )
+        if zoom:
+            # Auto-ranging on the envelope alone keeps the figure's matched aspect.
+            for data_range in (fig.x_range, fig.y_range):
+                data_range.renderers = [envelope_renderer]
+                data_range.range_padding = zoom_padding
+        fig.line(
+            *envelope.centroid.T,
+            line_color="black",
+            legend_label="Centroid",
+            name="floor_beam_centroid",
+        )
+        fig.legend.visible = legend
+
+        if save:
+            if save is True:
+                save = "floor_beam"
+            filename = save_plot(fig, filename=save)
+            logger.info(f"Saving plot to {filename!r}")
+
+        return graphs, fig
+
     def plot_field(
         self,
         ele_id: str,
@@ -2722,6 +2855,12 @@ class NotebookGraphManager(BokehGraphManager):
             notebook_handle=notebook_handle,
         )
         return graphs, app
+
+    @functools.wraps(BokehGraphManager.plot_floor_beam)
+    def plot_floor_beam(self, template: str = "floor_plan", **kwargs):
+        graphs, fig = super().plot_floor_beam(template, **kwargs)
+        bokeh.plotting.show(fig, notebook_handle=True)
+        return graphs, fig
 
     def plot_field(
         self,
