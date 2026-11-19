@@ -266,7 +266,7 @@ class FloorTable(TaoBaseModel):
     def particles_to_floor(
         self, P: ParticleGroup, *, magnification: float = 1.0
     ) -> ParticleGroup:
-        """
+        r"""
         Convert particles from element-local to floor coordinates.
 
         Each particle is placed using its element (`ix_branch`, `ix_ele`) and
@@ -302,6 +302,112 @@ class FloorTable(TaoBaseModel):
         NotImplementedError
             For a particle inside an element with no simple interior geometry,
             such as a patch, or for a particle in a reversed element.
+
+        Notes
+        -----
+        **Input momenta.** `P.px`, `P.py` and `P.pz` must be the real-space
+        components of the momentum vector in the local frame. They are rotated
+        as a vector, so normalized or canonical phase-space momenta give wrong
+        results.
+
+        Bmad's own phase-space vector $(x, p_x, y, p_y, z, p_z)$ is not
+        suitable as it stands. Elements 2 and 4 are the transverse momenta
+        scaled by the reference momentum $P_0$, and element 6 is the scaled
+        deviation of the momentum *magnitude* $P$, not a component:
+
+        $$
+        p_x = \frac{P_x}{P_0}, \qquad
+        p_y = \frac{P_y}{P_0}, \qquad
+        p_z = \frac{P - P_0}{P_0} .
+        $$
+
+        Convert it to Bmad's *time coordinates*, as defined in the Bmad manual,
+        whose momenta are the vector components this method needs:
+
+        $$
+        P_x = p_x P_0, \qquad
+        P_y = p_y P_0, \qquad
+        P_z = \sqrt{P^2 - P_x^2 - P_y^2}
+        \quad \text{with} \quad P = (1 + p_z) \, P_0 .
+        $$
+
+        `Tao.particles` and `Tao.bunch_data` already do this, so a
+        `ParticleGroup` from either can be passed in directly.
+
+        **Frames.** A floor pose $(X, Y, Z, \theta, \phi, \psi)$ gives an
+        origin $\mathbf{R} = (X, Y, Z)$ and an orientation matrix
+        $\mathbf{W}(\theta, \phi, \psi)$ whose columns are the local axes in
+        the floor frame (see `w_matrix_from_angles`). The table holds one pose
+        at each element's entrance and one at its exit.
+
+        **At an end** (`location` -1 or 1), with $\mathbf{R}_0$ and
+        $\mathbf{W}_0$ the pose at that end, a particle at local position
+        $\mathbf{r} = (m x, m y, z)$ with momentum
+        $\mathbf{P} = (P_x, P_y, P_z)$ maps to
+
+        $$
+        \mathbf{r}_\mathrm{floor} = \mathbf{R}_0 + \mathbf{W}_0 \, \mathbf{r},
+        \qquad
+        \mathbf{P}_\mathrm{floor} = \mathbf{W}_0 \, \mathbf{P},
+        $$
+
+        where $m$ is `magnification`.
+
+        **Inside an element** (`location` 0), the particle is first expressed
+        in the element's exit frame, a distance $\Delta s = s_\mathrm{exit} - s$
+        downstream. With curvature $g$, bend angle $\alpha = g \, \Delta s$ and
+        reference tilt $\tau$,
+
+        $$
+        \mathbf{S} = \mathbf{R}_z(\tau) \, \mathbf{R}_y(\alpha) \,
+        \mathbf{R}_z(\tau)^\mathsf{T},
+        \qquad
+        \mathbf{L} = -\Delta s \; \mathbf{R}_z(\tau)
+        \begin{pmatrix}
+        \sin\frac{\alpha}{2} \, \operatorname{sinc}\frac{\alpha}{2} \\
+        0 \\
+        \operatorname{sinc}\alpha
+        \end{pmatrix},
+        $$
+
+        with $\operatorname{sinc} u = \sin u / u$ and
+
+        $$
+        \mathbf{R}_y(\alpha) =
+        \begin{pmatrix}
+        \cos\alpha & 0 & \sin\alpha \\
+        0 & 1 & 0 \\
+        -\sin\alpha & 0 & \cos\alpha
+        \end{pmatrix},
+        \qquad
+        \mathbf{R}_z(\tau) =
+        \begin{pmatrix}
+        \cos\tau & -\sin\tau & 0 \\
+        \sin\tau & \cos\tau & 0 \\
+        0 & 0 & 1
+        \end{pmatrix} .
+        $$
+
+        Then, with $\mathbf{R}_\mathrm{exit}$ and $\mathbf{W}_\mathrm{exit}$
+        the exit pose,
+
+        $$
+        \mathbf{r}_\mathrm{floor} = \mathbf{R}_\mathrm{exit}
+        + \mathbf{W}_\mathrm{exit} \left( \mathbf{S} \, \mathbf{r} + \mathbf{L} \right),
+        \qquad
+        \mathbf{P}_\mathrm{floor} = \mathbf{W}_\mathrm{exit} \, \mathbf{S} \, \mathbf{P} .
+        $$
+
+        For a straight element $g = 0$, so $\mathbf{S}$ is the identity and
+        $\mathbf{L} = (0, 0, -\Delta s)$: a shift back along the local $z$ axis.
+        For a bend, $\mathbf{L}$ is the chord of the arc,
+        $\mathbf{R}_z(\tau) \, \big( (\cos\alpha - 1) / g, \; 0, \; -\sin\alpha / g \big)$.
+        This is Bmad's `bend_shift`; writing it with sinc covers both cases
+        without dividing by $g$.
+
+        The rotations preserve the magnitude of the momentum. Positions are
+        where each particle is at its own time `t`; nothing is drifted to a
+        common time.
         """
         from beamphysics import ParticleGroup
 
@@ -359,7 +465,7 @@ class FloorTable(TaoBaseModel):
         ix_branch: int | None = None,
         magnification: float = 1.0,
     ) -> np.ndarray:
-        """
+        r"""
         Convert points along a branch from local to floor coordinates.
 
         Each point is placed inside the element that contains its `s` position.
@@ -392,6 +498,35 @@ class FloorTable(TaoBaseModel):
         NotImplementedError
             For a point inside an element with no simple interior geometry,
             such as a patch, or for a point in a reversed element.
+
+        Notes
+        -----
+        The table holds each element's exit position $s_i$. A point at $s$
+        belongs to the first element $i$ of the branch with $s_i \ge s$, and
+        lies a distance
+
+        $$
+        \Delta s = s_i - s
+        $$
+
+        upstream of that element's exit. It is then converted as a particle
+        inside the element is in `particles_to_floor`, with local position
+        $\mathbf{r} = (m x, m y, 0)$ where $m$ is `magnification`:
+
+        $$
+        \mathbf{r}_\mathrm{floor} = \mathbf{R}_\mathrm{exit}
+        + \mathbf{W}_\mathrm{exit} \left( \mathbf{S} \, \mathbf{r} + \mathbf{L} \right) .
+        $$
+
+        $\mathbf{R}_\mathrm{exit}$ and $\mathbf{W}_\mathrm{exit}$ are the
+        element's exit pose, and $\mathbf{S}$ and $\mathbf{L}$ are the rotation
+        and shift along the element over $\Delta s$, given in
+        `particles_to_floor`. With $x = y = 0$ the result is the reference
+        orbit, $\mathbf{R}_\mathrm{exit} + \mathbf{W}_\mathrm{exit} \, \mathbf{L}$.
+
+        A point exactly at a boundary, $s = s_i$, uses the upstream element,
+        for which $\Delta s = 0$. The table does not hold where the first
+        element starts, so a point before it is extrapolated upstream.
         """
         branches = np.unique(self.ix_branch).tolist()
         if ix_branch is None:
