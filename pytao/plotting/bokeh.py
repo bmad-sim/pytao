@@ -2366,6 +2366,8 @@ class BokehGraphManager(GraphManager):
         magnification: float = 1.0,
         ix_uni: int | None = None,
         ix_branch: int = 0,
+        zoom: bool = False,
+        zoom_padding: float = 0.1,
         color: str = "orange",
         alpha: float = 0.6,
         width: int | None = None,
@@ -2395,6 +2397,12 @@ class BokehGraphManager(GraphManager):
             Universe index. Default is the current universe.
         ix_branch : int, optional
             Branch the beam was tracked through. Default is 0.
+        zoom : bool, optional
+            Zoom in on the beam instead of showing the whole floor plan, for a
+            beam tracked through part of a larger lattice. Default is False.
+        zoom_padding : float, optional
+            Margin to leave around the beam when zooming, as a fraction of its
+            extent. Default is 0.1.
         color : str, optional
             Envelope color.
         alpha : float, optional
@@ -2437,7 +2445,7 @@ class BokehGraphManager(GraphManager):
             width=width or _Defaults.width,
             height=height or _Defaults.height,
         ).create_figure()
-        fig.patch(
+        envelope_renderer = fig.patch(
             *envelope.outline.T,
             fill_color=color,
             fill_alpha=alpha,
@@ -2445,6 +2453,11 @@ class BokehGraphManager(GraphManager):
             legend_label=envelope.label,
             name="floor_beam_envelope",
         )
+        if zoom:
+            # Auto-ranging on the envelope alone keeps the figure's matched aspect.
+            for data_range in (fig.x_range, fig.y_range):
+                data_range.renderers = [envelope_renderer]
+                data_range.range_padding = zoom_padding
         fig.line(
             *envelope.centroid.T,
             line_color="black",

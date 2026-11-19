@@ -116,6 +116,7 @@ def table_from_branch(branch) -> FloorTable:
             ele.value[pb.REF_TILT_TOT] if key in BEND_KEYS else 0.0
             for ele, key in zip(eles, keys)
         ],
+        orientation=[ele.orientation for ele in eles],
         beginning=[end[0], *end[:-1]],
         end=end,
     )

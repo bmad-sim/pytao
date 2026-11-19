@@ -36,6 +36,7 @@ def make_table(n: int = 1, **columns) -> FloorTable:
         "s": [1.0] * n,
         "g": [0.0] * n,
         "ref_tilt": [0.0] * n,
+        "orientation": [1] * n,
         "beginning": [[0.0] * 6] * n,
         "end": [[0.0, 0.0, 1.0, 0.0, 0.0, 0.0]] * n,
     }
@@ -279,6 +280,30 @@ def test_particles_to_floor_magnification(quarter_bend: FloorTable):
     np.testing.assert_allclose(positions(magnified), positions(expected))
 
 
+def test_reversed_elements_not_supported():
+    table = make_table(
+        n=2, ix_ele=[1, 2], name=["FWD", "REV"], s=[1.0, 2.0], orientation=[1, -1]
+    )
+    table.particles_to_floor(make_particles(ix_ele=1))
+    table.points_to_floor([0.5])
+    with pytest.raises(NotImplementedError, match="Reversed elements .* REV"):
+        table.particles_to_floor(make_particles(ix_ele=2))
+    with pytest.raises(NotImplementedError, match="Reversed elements .* REV"):
+        table.points_to_floor([1.5])
+
+
+def test_reversed_lattice_from_tao():
+    reversed_lattice = TILTED_LATTICE.replace("use, ln", "rev: line = (--ln)\nuse, rev")
+    assert reversed_lattice != TILTED_LATTICE
+    with SubprocessTao.from_contents(reversed_lattice, noplot=True) as tao:
+        table = tao.floor_table()
+        assert set(table.orientation.tolist()) == {-1}
+        with pytest.raises(NotImplementedError, match="Reversed elements"):
+            table.points_to_floor([0.5])
+        with pytest.raises(NotImplementedError, match="Reversed elements"):
+            tao.ele("b2").particles_to_floor(make_particles(ix_ele=5))
+
+
 def test_column_lengths_checked():
     table = make_table(n=2, ix_ele=[1, 2])
     with pytest.raises(ValueError, match="FloorTable columns must all have the same length"):
@@ -384,6 +409,12 @@ def test_plot_floor_beam_mpl(beam_tao: SubprocessTao, reference_orbit: np.ndarra
     (centroid,) = [line for line in ax.lines if line.get_label() == "Centroid"]
     np.testing.assert_allclose(centroid.get_xydata(), reference_orbit, atol=1e-6)
     assert envelope_width(magnified) > envelope_width(ax)
+
+    _, _, (zoomed,) = beam_tao.matplotlib.plot_floor_beam(zoom=True, zoom_padding=0.0)
+    outline = zoomed.patches[-1].get_xy()
+    np.testing.assert_allclose(zoomed.get_xlim(), [outline[:, 0].min(), outline[:, 0].max()])
+    np.testing.assert_allclose(zoomed.get_ylim(), [outline[:, 1].min(), outline[:, 1].max()])
+    assert np.ptp(zoomed.get_ylim()) < np.ptp(ax.get_ylim())
     plt.close("all")
 
 
@@ -403,6 +434,11 @@ def test_plot_floor_beam_bokeh(beam_tao: SubprocessTao, reference_orbit: np.ndar
         np.stack([data["x"], data["y"]], axis=-1), reference_orbit, atol=1e-6
     )
     assert envelope_width(magnified) > envelope_width(fig)
+
+    _, zoomed = beam_tao.bokeh.plot_floor_beam(zoom=True, zoom_padding=0.2)
+    assert zoomed.x_range.renderers == zoomed.select(name="floor_beam_envelope")
+    assert zoomed.y_range.range_padding == 0.2
+    assert fig.x_range.renderers != zoomed.x_range.renderers
 
 
 def test_tao_plot_floor_beam(beam_tao: SubprocessTao):

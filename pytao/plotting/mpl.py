@@ -1209,6 +1209,8 @@ class MatplotlibGraphManager(GraphManager):
         magnification: float = 1.0,
         ix_uni: int | None = None,
         ix_branch: int = 0,
+        zoom: bool = False,
+        zoom_padding: float = 0.1,
         color: str = "C1",
         alpha: float = 0.6,
         **kwargs,
@@ -1234,6 +1236,12 @@ class MatplotlibGraphManager(GraphManager):
             Universe index. Default is the current universe.
         ix_branch : int, optional
             Branch the beam was tracked through. Default is 0.
+        zoom : bool, optional
+            Zoom in on the beam instead of showing the whole floor plan, for a
+            beam tracked through part of a larger lattice. Default is False.
+        zoom_padding : float, optional
+            Margin to leave around the beam when zooming, as a fraction of its
+            extent. Default is 0.1.
         color : str, optional
             Envelope color.
         alpha : float, optional
@@ -1267,6 +1275,14 @@ class MatplotlibGraphManager(GraphManager):
         ax = axes[index]
         ax.fill(*envelope.outline.T, color=color, alpha=alpha, zorder=5, label=envelope.label)
         ax.plot(*envelope.centroid.T, color="black", linewidth=0.8, zorder=6, label="Centroid")
+        if zoom:
+            xlim, ylim = envelope.limits(zoom_padding)
+            ax.set_xlim(kwargs.get("xlim") or xlim)
+            ax.set_ylim(kwargs.get("ylim") or ylim)
+            # Tao's fixed ticks are spaced for the whole floor plan.
+            for axis in (ax.xaxis, ax.yaxis):
+                axis.set_major_locator(matplotlib.ticker.AutoLocator())
+                axis.set_major_formatter(matplotlib.ticker.ScalarFormatter())
         return graphs, fig, axes
 
     def plot_ele_methods(

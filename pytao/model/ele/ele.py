@@ -1365,7 +1365,7 @@ class Element(TaoBaseModel, extra="forbid"):
         Raises
         ------
         ValueError
-            If `floor`, or `attrs` for a bend, is not filled, or if the
+            If `floor`, `methods`, or `attrs` for a bend, is not filled, or if the
             particles' `ix_ele` or `ix_branch` records name another element.
         """
         from ..floor import FloorTable
@@ -1423,7 +1423,7 @@ class Lattice(TaoBaseModel):
 
         Elements need `floor` filled, and bends `attrs` as well. For a lattice
         holding only what this needs, use
-        `Lattice.from_tao_eles(tao, eles, defaults=False, floor=True, attrs=True)`.
+        `Lattice.from_tao_eles(tao, eles, defaults=False, floor=True, attrs=True, methods=True)`.
         """
         from ..floor import FloorTable
 

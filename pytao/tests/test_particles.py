@@ -189,7 +189,7 @@ def test_lattice_floor_table(csr_tao: Tao, tmp_path: pathlib.Path):
     P = P1 + P2
 
     lat = Lattice.from_tao_eles(
-        csr_tao, ["Mar.CSR", "m1"], defaults=False, floor=True, attrs=True
+        csr_tao, ["Mar.CSR", "m1"], defaults=False, floor=True, attrs=True, methods=True
     )
     Pf = lat.floor_table().particles_to_floor(P)
     expected = np.concatenate(
@@ -219,7 +219,7 @@ def test_particles_to_floor_needs_filled_elements(csr_tao: Tao):
 
 def test_floor_table_unknown_element(csr_tao: Tao):
     P = csr_tao.particles("m1", extras=floor_extras)
-    lat = Lattice.from_tao_eles(csr_tao, ["Mar.CSR"], defaults=False, floor=True)
+    lat = Lattice.from_tao_eles(csr_tao, ["Mar.CSR"], defaults=False, floor=True, methods=True)
     with pytest.raises(ValueError, match=r"\(0, 4\)"):
         lat.floor_table().particles_to_floor(P)
 

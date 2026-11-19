@@ -118,6 +118,7 @@ class FloorTable(TaoBaseModel):
     | `name`, `key`         |          | Element name and key, e.g. `SBend`            |
     | `s`                   | m        | Exit s-position                               |
     | `g`, `ref_tilt`       | 1/m, rad | Bend curvature and tilt; 0 for non-bends      |
+    | `orientation`         |          | 1, or -1 for a reversed element               |
     | `beginning`, `end`    | m, rad   | Entrance and exit floor poses, shape `(n, 6)` |
 
     Each pose is `(x, y, z, theta, phi, psi)`, as in `ElementFloorPosition`.
@@ -127,7 +128,8 @@ class FloorTable(TaoBaseModel):
     `FloorTable.from_elements` (or `Lattice.floor_table`), save it with `write`
     (json, yaml, msgpack), and load it later with `from_file`.
 
-    Reversed elements (orientation -1) are not supported.
+    Reversed elements (orientation -1) are listed but cannot be converted:
+    particles or points in one raise `NotImplementedError`.
     """
 
     which: Which = "model"
@@ -138,6 +140,7 @@ class FloorTable(TaoBaseModel):
     s: NDArray
     g: NDArray
     ref_tilt: NDArray
+    orientation: NDArray
     beginning: NDArray
     end: NDArray
 
@@ -211,14 +214,15 @@ class FloorTable(TaoBaseModel):
         """
         Build a table from pytao `Element`s with `floor` filled.
 
-        Bends also need `attrs` filled for their curvature and tilt. Lords with
-        slaves, which have no floor pose of their own, are skipped since
-        particles are never in them.
+        Elements also need `methods` filled for their orientation, and bends
+        `attrs` for their curvature and tilt. Lords with slaves, which have no
+        floor pose of their own, are skipped since particles are never in them.
 
         Raises
         ------
         ValueError
-            If an element's `floor`, or a bend's `attrs`, is not filled.
+            If an element's `floor` or `methods`, or a bend's `attrs`, is not
+            filled.
         """
         rows: dict[tuple[int, int], dict[str, Any]] = {}
         for ele in elements:
@@ -232,6 +236,11 @@ class FloorTable(TaoBaseModel):
             end = ele.floor.end.reference
             if beginning is None or end is None:
                 continue
+            if ele.methods is None:
+                raise ValueError(
+                    f"`methods` is unavailable for {head.name}. Fill it first using the "
+                    f"Tao object (see `Element.fill`)"
+                )
 
             g = ref_tilt = 0.0
             if head.key.lower() in BEND_KEYS:
@@ -246,6 +255,7 @@ class FloorTable(TaoBaseModel):
                 "s": head.s,
                 "g": g,
                 "ref_tilt": ref_tilt,
+                "orientation": ele.methods.longitudinal_orientation or 1,
                 "beginning": _pose(beginning),
                 "end": _pose(end),
             }
@@ -291,12 +301,13 @@ class FloorTable(TaoBaseModel):
             the table, or a particle inside an element has no `s`.
         NotImplementedError
             For a particle inside an element with no simple interior geometry,
-            such as a patch.
+            such as a patch, or for a particle in a reversed element.
         """
         from beamphysics import ParticleGroup
 
         row = self._particle_rows(P)
         n = len(row)
+        self._check_orientation(row)
         location = (
             np.asarray(P.location, dtype=int)
             if "location" in P
@@ -380,7 +391,7 @@ class FloorTable(TaoBaseModel):
             end of the branch.
         NotImplementedError
             For a point inside an element with no simple interior geometry,
-            such as a patch.
+            such as a patch, or for a point in a reversed element.
         """
         branches = np.unique(self.ix_branch).tolist()
         if ix_branch is None:
@@ -408,6 +419,7 @@ class FloorTable(TaoBaseModel):
         # The first element whose exit is at or past each point contains it.
         row = rows[np.searchsorted(self.s[rows], s)]
         ds = self.s[row] - s
+        self._check_orientation(row)
         self._check_interior(row[ds > 0])
         position, _ = _local_to_floor(
             pose=self.end[row],
@@ -420,6 +432,16 @@ class FloorTable(TaoBaseModel):
             momentum=np.zeros((len(s), 3)),
         )
         return position
+
+    def _check_orientation(self, rows: np.ndarray) -> None:
+        reversed_names = sorted(
+            self.name[i] for i in np.unique(rows) if self.orientation[i] == -1
+        )
+        if reversed_names:
+            raise NotImplementedError(
+                f"Reversed elements (orientation -1) are not supported: "
+                f"{', '.join(reversed_names)}"
+            )
 
     def _check_interior(self, rows: np.ndarray) -> None:
         unsupported = sorted(
@@ -503,6 +525,10 @@ def _branch_columns(
         "s": lat_list("*", "ele.s"),
         "g": g,
         "ref_tilt": ref_tilt,
+        "orientation": [
+            int(value)
+            for value in lat_list("*", "ele.orientation", flags="-track_only -index_order")
+        ],
         "beginning": np.concatenate([end[:1], end[:-1]]),
         "end": end,
     }

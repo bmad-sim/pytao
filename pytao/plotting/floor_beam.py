@@ -10,6 +10,7 @@ import numpy as np
 
 from ..errors import TaoCommandError
 from .plot import AnyGraph, FloorPlanGraph
+from .types import Limit
 
 if TYPE_CHECKING:
     from ..tao import Tao
@@ -39,6 +40,19 @@ class FloorBeamEnvelope:
     def outline(self) -> np.ndarray:
         """Shape `(2 n, 2)` polygon enclosing the envelope."""
         return np.concatenate([self.lower, self.upper[::-1]])
+
+    def limits(self, padding: float = 0.1) -> tuple[Limit, Limit]:
+        """
+        Horizontal and vertical plot limits that just contain the envelope.
+
+        Parameters
+        ----------
+        padding : float, optional
+            Margin on every side, as a fraction of the larger extent.
+        """
+        low, high = self.outline.min(axis=0), self.outline.max(axis=0)
+        margin = padding * max(high - low)
+        return (low[0] - margin, high[0] + margin), (low[1] - margin, high[1] + margin)
 
     @property
     def label(self) -> str:
