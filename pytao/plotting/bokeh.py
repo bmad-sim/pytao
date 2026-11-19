@@ -75,6 +75,7 @@ from .util import Limit, OptionalLimit, fix_grid_limits
 
 if typing.TYPE_CHECKING:
     from .. import Tao
+    from ..model.ele.comb import Comb
 
 
 logger = logging.getLogger(__name__)
@@ -2362,6 +2363,7 @@ class BokehGraphManager(GraphManager):
         self,
         template: str = "floor_plan",
         *,
+        comb: Comb | None = None,
         extent: BeamExtent = "minmax",
         n_sigma: float = 3.0,
         magnification: float = 1.0,
@@ -2388,6 +2390,9 @@ class BokehGraphManager(GraphManager):
         ----------
         template : str, optional
             Floor plan template to draw. Default is "floor_plan".
+        comb : Comb, optional
+            Beam statistics to use, such as from `Comb.from_tao` or a slice of
+            one. By default, the statistics are fetched from Tao.
         extent : {"minmax", "sigma"}, optional
             What the envelope shows. "minmax" (the default) is the full extent
             of the beam, from its outermost particle on each side. "sigma" is
@@ -2440,6 +2445,7 @@ class BokehGraphManager(GraphManager):
         envelope = FloorBeamEnvelope.from_tao(
             self.tao,
             graph,
+            comb=comb,
             extent=extent,
             n_sigma=n_sigma,
             magnification=magnification,

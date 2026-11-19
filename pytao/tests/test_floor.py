@@ -449,6 +449,32 @@ def test_floor_beam_extent(beam_tao: SubprocessTao):
         half_widths(extent="bogus")
 
 
+@pytest.mark.parametrize("extent", ["minmax", "sigma"])
+def test_floor_beam_from_comb(beam_tao: SubprocessTao, extent: str):
+    from pytao.model import Comb
+    from pytao.plotting.floor_beam import FloorBeamEnvelope
+
+    (graph,) = beam_tao.matplotlib.prepare_graphs_by_name(template_name="floor_plan")
+    comb = Comb.from_tao(beam_tao)
+    expected = FloorBeamEnvelope.from_tao(beam_tao, graph, extent=extent)
+
+    for envelope in (
+        FloorBeamEnvelope.from_tao(beam_tao, graph, comb=comb, extent=extent),
+        FloorBeamEnvelope.from_comb(comb, beam_tao.floor_table(), extent=extent),
+    ):
+        assert envelope.label == expected.label
+        np.testing.assert_allclose(envelope.outline, expected.outline)
+        np.testing.assert_allclose(envelope.centroid, expected.centroid)
+
+    half = comb.slice_by_s(0.0, comb.s.max() / 2)
+    sliced = FloorBeamEnvelope.from_tao(beam_tao, graph, comb=half, extent=extent)
+    assert 0 < len(sliced.centroid) < len(expected.centroid)
+    np.testing.assert_allclose(sliced.centroid, expected.centroid[: len(sliced.centroid)])
+
+    with pytest.raises(ValueError, match="No beam statistics"):
+        FloorBeamEnvelope.from_tao(beam_tao, graph, comb=Comb())
+
+
 def test_plot_floor_beam_bokeh(beam_tao: SubprocessTao, reference_orbit: np.ndarray):
     pytest.importorskip("bokeh")
 
@@ -475,6 +501,9 @@ def test_plot_floor_beam_bokeh(beam_tao: SubprocessTao, reference_orbit: np.ndar
 def test_tao_plot_floor_beam(beam_tao: SubprocessTao):
     import matplotlib.pyplot as plt
 
+    from pytao.model import Comb
+
+    beam_tao.plot_floor_beam(backend="mpl", comb=Comb.from_tao(beam_tao))
     beam_tao.plot_floor_beam(backend="mpl", extent="sigma", n_sigma=2)
     _, _, (ax,) = beam_tao.last_plot
     assert "±2σ" in [patch.get_label() for patch in ax.patches]

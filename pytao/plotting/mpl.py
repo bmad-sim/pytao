@@ -5,7 +5,7 @@ import logging
 import pathlib
 import time
 from collections.abc import Sequence
-from typing import ClassVar, Literal
+from typing import TYPE_CHECKING, ClassVar, Literal
 
 import matplotlib.axes
 import matplotlib.axis
@@ -49,6 +49,9 @@ from .plot import (
 from .settings import TaoGraphSettings
 from .types import Limit, OptionalLimit, Point
 from .util import fix_grid_limits
+
+if TYPE_CHECKING:
+    from ..model.ele.comb import Comb
 
 logger = logging.getLogger(__name__)
 
@@ -1205,6 +1208,7 @@ class MatplotlibGraphManager(GraphManager):
         self,
         template: str = "floor_plan",
         *,
+        comb: Comb | None = None,
         extent: BeamExtent = "minmax",
         n_sigma: float = 3.0,
         magnification: float = 1.0,
@@ -1227,6 +1231,9 @@ class MatplotlibGraphManager(GraphManager):
         ----------
         template : str, optional
             Floor plan template to draw. Default is "floor_plan".
+        comb : Comb, optional
+            Beam statistics to use, such as from `Comb.from_tao` or a slice of
+            one. By default, the statistics are fetched from Tao.
         extent : {"minmax", "sigma"}, optional
             What the envelope shows. "minmax" (the default) is the full extent
             of the beam, from its outermost particle on each side. "sigma" is
@@ -1273,6 +1280,7 @@ class MatplotlibGraphManager(GraphManager):
         envelope = FloorBeamEnvelope.from_tao(
             self.tao,
             graph,
+            comb=comb,
             extent=extent,
             n_sigma=n_sigma,
             magnification=magnification,
