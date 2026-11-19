@@ -157,6 +157,14 @@ class FloorTable(TaoBaseModel):
     def __len__(self) -> int:
         return len(self.ix_ele)
 
+    def __repr__(self) -> str:
+        branches = np.unique(self.ix_branch).tolist()
+        where = f"branch {branches[0]}" if len(branches) == 1 else f"branches {branches}"
+        return (
+            f"<FloorTable which={self.which} with {len(self)} elements "
+            f"({np.count_nonzero(self.g)} bends) in {where}>"
+        )
+
     @classmethod
     def from_tao(
         cls,
@@ -245,7 +253,9 @@ class FloorTable(TaoBaseModel):
         names = [name for name in cls.model_fields if name != "which"]
         return cls(which=which, **{name: [row[name] for row in ordered] for name in names})
 
-    def particles_to_floor(self, P: ParticleGroup) -> ParticleGroup:
+    def particles_to_floor(
+        self, P: ParticleGroup, *, magnification: float = 1.0
+    ) -> ParticleGroup:
         """
         Convert particles from element-local to floor coordinates.
 
@@ -262,6 +272,10 @@ class FloorTable(TaoBaseModel):
             Particles with an `ix_ele` record, which may be omitted when the
             table holds a single element. `ix_branch` may be omitted when the
             table holds a single branch. Particles inside an element need `s`.
+        magnification : float, optional
+            Scale the local `x` and `y` offsets from the reference orbit by this
+            factor before converting, to make a small beam visible when drawn
+            at the scale of the machine. Default is 1.
 
         Returns
         -------
@@ -296,16 +310,7 @@ class FloorTable(TaoBaseModel):
         ds = np.zeros(n)
         inside = location == INSIDE
         if inside.any():
-            unsupported = sorted(
-                f"{self.name[i]} ({self.key[i]})"
-                for i in np.unique(row[inside])
-                if self.key[i].lower() in NO_INTERIOR_KEYS
-            )
-            if unsupported:
-                raise NotImplementedError(
-                    f"Particles inside {', '.join(unsupported)} cannot be converted; "
-                    f"only the upstream and downstream ends are supported."
-                )
+            self._check_interior(row[inside])
             if "s" not in P:
                 raise ValueError(
                     "Particles inside an element (location 0) need an `s` record to "
@@ -319,7 +324,7 @@ class FloorTable(TaoBaseModel):
             g=self.g[row],
             ref_tilt=self.ref_tilt[row],
             ds=ds,
-            position=np.stack([P.x, P.y, P.z], axis=-1),
+            position=np.stack([magnification * P.x, magnification * P.y, P.z], axis=-1),
             momentum=np.stack([P.px, P.py, P.pz], axis=-1),
         )
         return ParticleGroup(
@@ -333,6 +338,100 @@ class FloorTable(TaoBaseModel):
                 "pz": momentum[:, 2],
             }
         )
+
+    def points_to_floor(
+        self,
+        s: np.ndarray,
+        x: np.ndarray | float = 0.0,
+        y: np.ndarray | float = 0.0,
+        *,
+        ix_branch: int | None = None,
+        magnification: float = 1.0,
+    ) -> np.ndarray:
+        """
+        Convert points along a branch from local to floor coordinates.
+
+        Each point is placed inside the element that contains its `s` position.
+        Use this for anything known as a function of `s`, such as an orbit or
+        a beam envelope.
+
+        Parameters
+        ----------
+        s : numpy.ndarray
+            Shape `(n,)` longitudinal positions (m).
+        x, y : numpy.ndarray or float, optional
+            Local offsets (m) from the reference orbit at each `s`. Default is 0,
+            the reference orbit itself.
+        ix_branch : int, optional
+            Branch the points are in. May be omitted when the table holds a
+            single branch.
+        magnification : float, optional
+            Scale `x` and `y` by this factor before converting. Default is 1.
+
+        Returns
+        -------
+        numpy.ndarray
+            Shape `(n, 3)` floor `(x, y, z)` positions (m).
+
+        Raises
+        ------
+        ValueError
+            If `ix_branch` is ambiguous or not in the table, or `s` is past the
+            end of the branch.
+        NotImplementedError
+            For a point inside an element with no simple interior geometry,
+            such as a patch.
+        """
+        branches = np.unique(self.ix_branch).tolist()
+        if ix_branch is None:
+            if len(branches) != 1:
+                raise ValueError(
+                    f"`ix_branch` is required; the table has branches {branches}."
+                )
+            ix_branch = branches[0]
+        rows = np.flatnonzero(self.ix_branch == ix_branch)
+        if len(rows) == 0:
+            raise ValueError(f"Branch {ix_branch} is not in the table; it has {branches}.")
+        rows = rows[np.argsort(self.s[rows], kind="stable")]
+
+        s, x, y = np.broadcast_arrays(np.atleast_1d(np.asarray(s, dtype=float)), x, y)
+        # The table holds exit positions only, so the start of the first
+        # element is unknown and there is no lower bound to check.
+        s_max = self.s[rows[-1]]
+        if np.any(s > s_max + 1e-9 * max(1.0, abs(s_max))):
+            raise ValueError(
+                f"`s` must not be past the end of branch {ix_branch} at {s_max} m; "
+                f"got up to {s.max()} m."
+            )
+        s = np.minimum(s, s_max)
+
+        # The first element whose exit is at or past each point contains it.
+        row = rows[np.searchsorted(self.s[rows], s)]
+        ds = self.s[row] - s
+        self._check_interior(row[ds > 0])
+        position, _ = _local_to_floor(
+            pose=self.end[row],
+            g=self.g[row],
+            ref_tilt=self.ref_tilt[row],
+            ds=ds,
+            position=np.stack(
+                [magnification * x, magnification * y, np.zeros_like(s)], axis=-1
+            ),
+            momentum=np.zeros((len(s), 3)),
+        )
+        return position
+
+    def _check_interior(self, rows: np.ndarray) -> None:
+        unsupported = sorted(
+            f"{self.name[i]} ({self.key[i]})"
+            for i in np.unique(rows)
+            if self.key[i].lower() in NO_INTERIOR_KEYS
+        )
+        if unsupported:
+            raise NotImplementedError(
+                f"Points inside {', '.join(unsupported)} cannot be converted; "
+                f"only the upstream and downstream ends are supported."
+            )
 
     def _particle_rows(self, P: ParticleGroup) -> np.ndarray:
         if "ix_ele" not in P:

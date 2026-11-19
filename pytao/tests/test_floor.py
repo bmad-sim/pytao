@@ -202,6 +202,83 @@ def test_ambiguous_branch():
     assert len(Pf) == 4
 
 
+def test_repr(quarter_bend: FloorTable):
+    assert (
+        repr(quarter_bend) == "<FloorTable which=model with 1 elements (1 bends) in branch 0>"
+    )
+    table = make_table(n=2, ix_branch=[0, 1])
+    assert (
+        repr(table) == "<FloorTable which=model with 2 elements (0 bends) in branches [0, 1]>"
+    )
+
+
+def test_points_to_floor(quarter_bend: FloorTable):
+    angle = np.array([0.0, 0.3, 0.9, np.pi / 2])
+    x = np.array([0.0, 0.01, -0.02, 0.03])
+    expected = np.stack(
+        [-1 + (1 + x) * np.cos(angle), np.full(4, 0.5), (1 + x) * np.sin(angle)], axis=-1
+    )
+    np.testing.assert_allclose(
+        quarter_bend.points_to_floor(angle, x, 0.5), expected, atol=1e-14
+    )
+    np.testing.assert_allclose(
+        quarter_bend.points_to_floor(angle, x / 4, 0.125, magnification=4),
+        expected,
+        atol=1e-14,
+    )
+
+
+def test_points_to_floor_finds_element():
+    table = make_table(
+        n=3,
+        ix_ele=[1, 2, 3],
+        key=["Drift", "Patch", "Drift"],
+        s=[1.0, 1.0, 2.0],
+        end=[[0, 0, 1, 0, 0, 0], [0.5, 0, 1, 0, 0, 0], [0.5, 0, 2, 0, 0, 0]],
+    )
+    np.testing.assert_allclose(
+        table.points_to_floor([0.25, 1.0, 1.5, 2.0]),
+        [[0, 0, 0.25], [0, 0, 1], [0.5, 0, 1.5], [0.5, 0, 2]],
+    )
+
+
+@pytest.mark.parametrize(
+    ("table", "kwargs", "error", "match"),
+    [
+        pytest.param(
+            make_table(), {"s": [1.5]}, ValueError, "past the end of branch 0", id="past-end"
+        ),
+        pytest.param(
+            make_table(n=2, ix_branch=[0, 1]),
+            {"s": [0.5]},
+            ValueError,
+            "`ix_branch` is required",
+        ),
+        pytest.param(
+            make_table(),
+            {"s": [0.5], "ix_branch": 2},
+            ValueError,
+            "Branch 2 is not in the table",
+        ),
+        pytest.param(
+            make_table(key=["Patch"]), {"s": [0.5]}, NotImplementedError, "Patch", id="patch"
+        ),
+    ],
+)
+def test_points_to_floor_errors(table: FloorTable, kwargs: dict, error: type, match: str):
+    with pytest.raises(error, match=match):
+        table.points_to_floor(**kwargs)
+
+
+def test_particles_to_floor_magnification(quarter_bend: FloorTable):
+    P = make_particles(location=1)
+    magnified = quarter_bend.particles_to_floor(P, magnification=5)
+    expected = quarter_bend.particles_to_floor(
+        make_particles(location=1, x=5 * P.x, y=5 * P.y)
+    )
+    np.testing.assert_allclose(positions(magnified), positions(expected))
+
+
 def test_column_lengths_checked():
     table = make_table(n=2, ix_ele=[1, 2])
     with pytest.raises(ValueError, match="FloorTable columns must all have the same length"):
@@ -263,6 +340,40 @@ ln: line = (d1, b1, f1, d2,""",
         for ix_branch, ix_ele, end in zip(table.ix_branch, table.ix_ele, table.end):
             floor = tao.ele_floor(f"{ix_branch}>>{ix_ele}", where="end")
             np.testing.assert_allclose(end, floor["Reference"], atol=1e-14)
+
+
+def test_plot_floor_beam():
+    import matplotlib.pyplot as plt
+
+    with SubprocessTao.from_contents(TILTED_LATTICE, plot="mpl") as tao:
+        with pytest.raises(ValueError, match="No beam statistics"):
+            tao.matplotlib.plot_floor_beam()
+
+        conf = tao.get_config()
+        conf.beam_init.n_particle = 50
+        conf.beam_init.a_norm_emit = 1e-6
+        conf.beam_init.b_norm_emit = 1e-6
+        conf.beam_init.bunch_charge = 1e-12
+        conf.beam.comb_ds_save = 0.1
+        conf.set(tao)
+        tao.track_beam(use_progress_bar=False)
+
+        _, _, (ax,) = tao.matplotlib.plot_floor_beam()
+        _, _, (magnified,) = tao.matplotlib.plot_floor_beam(magnification=100)
+
+        s = tao.bunch_comb("s")
+        reference = tao.floor_table().points_to_floor(s)
+
+    def envelope_width(ax) -> float:
+        (band,) = ax.patches[-1:]
+        return np.ptp(band.get_xy()[:, 1])
+
+    (centroid,) = [line for line in ax.lines if line.get_label() == "Centroid"]
+    # The floor plan is drawn Z across and X up; the centroid follows the reference orbit.
+    np.testing.assert_allclose(centroid.get_xdata(), reference[:, 2], atol=1e-6)
+    np.testing.assert_allclose(centroid.get_ydata(), reference[:, 0], atol=1e-6)
+    assert envelope_width(magnified) > envelope_width(ax)
+    plt.close("all")
 
 
 @pytest.mark.parametrize("where", ["beginning", "center", "end"])

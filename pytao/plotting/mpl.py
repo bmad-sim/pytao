@@ -20,6 +20,7 @@ import matplotlib.text
 import matplotlib.ticker
 import numpy as np
 
+from ..errors import TaoCommandError
 from . import floor_plan_shapes, layout_shapes, pgplot
 from .curves import PlotCurveLine, PlotCurveSymbols, PlotHistogram, TaoCurveSettings
 from .ele_methods import ElementMethodsPlotData, color_for_value, is_garbage_value
@@ -1199,6 +1200,107 @@ class MatplotlibGraphManager(GraphManager):
                 fig.savefig(save)
 
         return field, fig, ax
+
+    def plot_floor_beam(
+        self,
+        template: str = "floor_plan",
+        *,
+        n_sigma: float = 3.0,
+        magnification: float = 1.0,
+        ix_uni: int | None = None,
+        ix_branch: int = 0,
+        color: str = "C1",
+        alpha: float = 0.6,
+        **kwargs,
+    ):
+        """
+        Plot the tracked beam's centroid and envelope on top of a floor plan.
+
+        Uses the beam statistics Tao saves along the lattice when tracking a
+        beam with `beam%comb_ds_save` set (see `Tao.bunch_comb`), converted to
+        floor coordinates with a `FloorTable`.
+
+        Parameters
+        ----------
+        template : str, optional
+            Floor plan template to draw. Default is "floor_plan".
+        n_sigma : float, optional
+            Half-width of the envelope in beam sigmas. Default is 3.
+        magnification : float, optional
+            Scale the beam's offsets from the reference orbit by this factor,
+            to make a small beam visible at the scale of the machine. The
+            floor plan itself is not scaled. Default is 1.
+        ix_uni : int, optional
+            Universe index. Default is the current universe.
+        ix_branch : int, optional
+            Branch the beam was tracked through. Default is 0.
+        color : str, optional
+            Envelope color.
+        alpha : float, optional
+            Envelope opacity.
+        **kwargs
+            Passed to `plot`, e.g. `figsize`, `xlim`, `ylim` or `axes`.
+
+        Returns
+        -------
+        list of graphs
+        matplotlib.Figure
+        List[matplotlib.axes.Axes]
+
+        Raises
+        ------
+        ValueError
+            If the template has no floor plan, or no beam statistics are saved.
+        NotImplementedError
+            If the floor plan is rotated.
+        """
+        from ..model.floor import FloorTable
+
+        graphs, fig, axes = self.plot(template, include_layout=False, ix_uni=ix_uni, **kwargs)
+        for graph, ax in zip(graphs, axes):
+            if isinstance(graph, FloorPlanGraph):
+                break
+        else:
+            raise ValueError(f"Template {template!r} has no floor plan graph")
+        if graph.info["floor_plan_rotation"]:
+            raise NotImplementedError("Rotated floor plans are not supported")
+        view = graph.info["floor_plan_view"].lower()
+
+        uni = "" if ix_uni is None else str(ix_uni)
+
+        def comb(who: str) -> np.ndarray:
+            return np.asarray(self.tao.bunch_comb(who, ix_uni=uni, ix_branch=str(ix_branch)))
+
+        try:
+            s = comb("s")
+        except TaoCommandError as ex:
+            raise ValueError(
+                "No beam statistics are saved. Set `beam%comb_ds_save` and track a beam "
+                "(see `Tao.track_beam`)."
+            ) from ex
+        x, y = comb("x"), comb("y")
+        dx = n_sigma * np.sqrt(comb("sigma.11")) if "x" in view else 0.0
+        dy = n_sigma * np.sqrt(comb("sigma.33")) if "y" in view else 0.0
+
+        table = FloorTable.from_tao(self.tao, ix_branch=ix_branch, ix_uni=uni)
+
+        def to_floor(x: np.ndarray, y: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+            floor = table.points_to_floor(s, x, y, magnification=magnification)
+            return floor[:, "xyz".index(view[0])], floor[:, "xyz".index(view[1])]
+
+        h_center, v_center = to_floor(x, y)
+        h_lower, v_lower = to_floor(x - dx, y - dy)
+        h_upper, v_upper = to_floor(x + dx, y + dy)
+        ax.fill(
+            np.concatenate([h_lower, h_upper[::-1]]),
+            np.concatenate([v_lower, v_upper[::-1]]),
+            color=color,
+            alpha=alpha,
+            zorder=5,
+            label=rf"$\pm {n_sigma:g}\sigma$",
+        )
+        ax.plot(h_center, v_center, color="black", linewidth=0.8, zorder=6, label="Centroid")
+        return graphs, fig, axes
 
     def plot_ele_methods(
         self,
