@@ -30,6 +30,23 @@ logger = logging.getLogger(__name__)
 AnyPath = Union[pathlib.Path, str]
 Quiet = Literal["all", "warnings"]
 
+# Boolean switches whose negated form (`--switch`) differs from omitting
+# the switch. For these, Tao uses the init file's `tao_params` setting when
+# the switch is absent, while `-switch` and `--switch` force the
+# corresponding global one way or the other (see `tao_init_global`).
+# These are represented as tri-state `bool | None` fields: `None` omits the
+# switch, `True` emits `-switch` and `False` emits `--switch`.
+# For all other boolean switches, `--switch` is equivalent to omitting it.
+TRISTATE_SWITCHES: frozenset[str] = frozenset(
+    {
+        "disable_smooth_line_calc",
+        "no_rad_int",
+        "no_stopping",
+        "noplot",
+        "rf_on",
+    }
+)
+
 
 class TaoArgumentParser(argparse.ArgumentParser):
     """
@@ -123,12 +140,12 @@ def create_tao_cli_parser(
             **kwargs,
         )
 
-    def add_bool_arg(name: str, help_text: str, default: bool = False):
+    def add_bool_arg(name: str, help_text: str):
         # e.g., name = "debug" generates "-debug" and "--debug"
         parser.add_argument(
             f"-{name}",
             action="store_true",
-            default=default,
+            default=None if name in TRISTATE_SWITCHES else False,
             dest=name,
             help=f"{help_text} --{name} to negate.",
         )
@@ -210,7 +227,7 @@ def create_tao_cli_parser(
     add_bool_arg("reverse", "Reverse lattice element order?")
     add_bool_arg("symbol_import", "Import symbols defined in lattice files(s)?")
 
-    add_bool_arg("rf_on", "Use '--rf_on' to turn off RF (default is now RF on).", default=True)
+    add_bool_arg("rf_on", "Turn on RF. Use '--rf_on' to turn off RF.")
 
     parser.add_argument(
         "-help", action="help", help="Display this list of command line options."
@@ -248,7 +265,9 @@ def make_tao_init(init: str, *, quiet: bool | Quiet = False, **kwargs) -> str:
     **kwargs :
         Command-line switches without the leading `-`,
         mapped to their respective values.
-        Only added as an argument if not empty and not False.
+        Only added as an argument if not empty and not False, except that
+        False for a switch in `TRISTATE_SWITCHES` adds the negated form
+        (`--switch`).
     """
     result = shlex.split(init)
 
@@ -258,6 +277,9 @@ def make_tao_init(init: str, *, quiet: bool | Quiet = False, **kwargs) -> str:
     for name, value in kwargs.items():
         switch = f"-{name}"
         if switch in result:
+            continue
+        if value is False and name in TRISTATE_SWITCHES:
+            result.append(f"-{switch}")
             continue
         if not value:
             continue
@@ -304,8 +326,12 @@ class TaoStartup:
         Define data for plotting and optimization
     debug : bool, default=False
         Debug mode for Wizards
-    disable_smooth_line_calc : bool, default=False
-        Disable the smooth line calc used in plotting
+    disable_smooth_line_calc : bool or None, default=None
+        Disable the smooth line calc used in plotting.
+        True: pass `-disable_smooth_line_calc` (smooth line calc off).
+        False: pass `--disable_smooth_line_calc` (smooth line calc on).
+        None: pass neither and use the init file setting, or Tao's
+        default (smooth line calc on) if no init file is used.
     external_plotting : bool, default=False
         Tells Tao that plotting is done externally to Tao.
     geometry : "wxh" or (width, height) tuple, optional
@@ -323,24 +349,40 @@ class TaoStartup:
         `lattice_file` and `lattice_file2`.
     log_startup : bool, default=False
         Write startup debugging info
-    no_stopping : bool, default=False
-        For debugging : Prevents Tao from exiting on errors
+    no_stopping : bool or None, default=None
+        For debugging : Prevents Tao from exiting on errors.
+        True: pass `-no_stopping` (do not stop on errors).
+        False: pass `--no_stopping` (stop on errors).
+        None: pass neither and use the init file setting, or Tao's
+        default (stop on errors) if no init file is used.
     noinit : bool, default=False
         Do not use Tao init file.
-    noplot : bool, default=False
-        Do not open a plotting window
+    noplot : bool or None, default=None
+        Do not open a plotting window.
+        True: pass `-noplot` (plotting off).
+        False: pass `--noplot` (plotting on).
+        None: pass neither and use the init file setting, or Tao's
+        default (plotting on) if no init file is used.
     nostartup : bool, default=False
         Do not open a startup command file
-    no_rad_int : bool, default=False
+    no_rad_int : bool or None, default=None
         Do not do any radiation integrals calculations.
+        True: pass `-no_rad_int` (radiation integrals off).
+        False: pass `--no_rad_int` (radiation integrals on).
+        None: pass neither and use the init file setting, or Tao's
+        default (radiation integrals on) if no init file is used.
     plot_file : str or pathlib.Path, default=None
         Plotting initialization file
     prompt_color : str, optional
         Set color of prompt string. Default is blue.
     reverse : bool, default=False
         Reverse lattice element order?
-    rf_on : bool, default=False
-        Use "--rf_on" to turn off RF (default is now RF on)
+    rf_on : bool or None, default=None
+        Turn RF on.
+        True: pass `-rf_on` (RF on).
+        False: pass `--rf_on` (RF off).
+        None: pass neither and use the init file setting, or Tao's
+        default (RF on) if no init file is used.
     quiet : bool or "all" or "warnings", default=False
         Suppress terminal output when running a command file.
         For backward compatibility, True is equivalent to "all".
@@ -374,7 +416,7 @@ class TaoStartup:
     command: str = ""
     data_file: AnyPath | None = None
     debug: bool = False
-    disable_smooth_line_calc: bool = False
+    disable_smooth_line_calc: bool | None = None
     external_plotting: bool = False
     geometry: str | tuple[int, int] = ""
     hook_init_file: AnyPath | None = None
@@ -382,15 +424,15 @@ class TaoStartup:
     lattice_file: AnyPath | None = None
     lattice_file2: AnyPath | None = None
     log_startup: bool = False
-    no_stopping: bool = False
+    no_stopping: bool | None = None
     noinit: bool = False
-    noplot: bool = False
+    noplot: bool | None = None
     nostartup: bool = False
-    no_rad_int: bool = False
+    no_rad_int: bool | None = None
     plot_file: AnyPath | None = None
     prompt_color: str = "blue"
     reverse: bool = False
-    rf_on: bool = True
+    rf_on: bool | None = None
     quiet: bool | Quiet = False
     slice_lattice: str = ""
     start_branch_at: str = ""
