@@ -144,12 +144,13 @@ Notes:
 - Use `noplot=True` or pytao's external plotting in the forking process; Tao's
   own plot windows are not fork-safe. Do not draw with a GUI backend inside the
   function.
-- The Tao library links OpenMP. For many workers, set `OMP_NUM_THREADS=1`, for
-  example `SubprocessTao(env={**os.environ, "OMP_NUM_THREADS": "1"})`.
-- The function is sent to the subprocess: install the `cloudpickle` extra
-  (`pip install pytao[fork]`) to use functions defined in a notebook or script,
-  lambdas, or closures. Without it, the function must be importable by name, as
-  with `subprocess_call`.
+- The Tao library links OpenMP, and each child runs with one OpenMP thread by
+  default. Pass `omp_num_threads=None` to keep the subprocess's setting, or a
+  larger number, only if your Tao library uses LLVM's `libomp`: with GNU
+  `libgomp` a multi-threaded child can hang.
+- The function, the items, and the results are pickled. Functions and classes
+  defined in a notebook or script, lambdas, and closures all work, as with
+  `subprocess_call`.
 - `fork_map` is only available on `SubprocessTao`. The Tao subprocess is a
   process pytao controls, with no GUI, event loop, or user threads, so forking
   it is safe. Forking your main Python process (a Jupyter kernel, for example)

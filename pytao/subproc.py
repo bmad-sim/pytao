@@ -673,10 +673,11 @@ class SubprocessTao(Tao):
         """
         Run a custom function in the subprocess.
 
-        The function must be readily importable by Python and not a dynamically
-        created function or `lambda`.  The first argument passed will be the
-        `tao` object, and the remainder of the arguments are user-specified by
-        either positional or keyword argument.
+        Any picklable callable works, including a `lambda`, a closure, a
+        `functools.partial`, or a function defined in a notebook or script.
+        The first argument passed will be the `tao` object, and the remainder
+        of the arguments are user-specified by either positional or keyword
+        argument.  The arguments and the return value must be picklable.
         """
         return self._require_pipe().send_receive_custom(func, args, kwargs)
 
