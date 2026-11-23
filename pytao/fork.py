@@ -128,8 +128,7 @@ def _child_main(
                 child_traceback=traceback.format_exc(),
                 exit_code=_EXIT_RAISED,
             )
-            if hasattr(err, "add_note"):
-                err.add_note(f"Child process {err.child_traceback}")
+            err.add_note(f"Child process {err.child_traceback}")
             payload = _pickle_from_subprocess(err)
         # Flush before replying: the parent reaps us once the pipe closes.
         with contextlib.suppress(Exception):
@@ -198,7 +197,8 @@ def decode_fork_payloads(
         except TaoForkError as err:
             if raises:
                 raise
-            results.append(err)
+            # The traceback's frames would keep every raw payload alive.
+            results.append(err.with_traceback(None))
     return results
 
 
@@ -291,7 +291,7 @@ def fork_map_payloads(
             spawn(next(pending))
 
         while live:
-            remaining = None
+            wait = _EXIT_POLL_INTERVAL
             if deadline is not None:
                 remaining = deadline - time.monotonic()
                 if remaining <= 0:
@@ -299,9 +299,6 @@ def fork_map_payloads(
                         f"fork_map timed out after {timeout} s with {len(live)} "
                         f"item(s) still running"
                     )
-
-            wait = _EXIT_POLL_INTERVAL
-            if remaining is not None:
                 wait = min(wait, remaining)
             ready = sel.select(timeout=wait)
             if not ready:

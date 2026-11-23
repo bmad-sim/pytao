@@ -139,9 +139,9 @@ def _pickle_for_subprocess(obj: Any) -> bytes:
     try:
         data = pickle.dumps(obj, protocol=pickle.HIGHEST_PROTOCOL)
     except Exception:  # noqa: BLE001
-        return cloudpickle.dumps(obj, protocol=pickle.HIGHEST_PROTOCOL)
+        data = None
 
-    if b"__main__" in data:
+    if data is None or b"__main__" in data:
         # Re-pickle so cloudpickle embeds `__main__` definitions.  A false
         # positive on the text "__main__" only costs a re-pickle.
         return cloudpickle.dumps(obj, protocol=pickle.HIGHEST_PROTOCOL)
@@ -179,9 +179,7 @@ def _cleanup_shm(shm: SharedMemory) -> None:
 
 def _add_pytao_to_pythonpath(env: dict[str, str]) -> None:
     """Make the subprocess import the same `pytao` source tree as this process."""
-    import pytao
-
-    pytao_src = pathlib.Path(pytao.__file__).parents[1].resolve()
+    pytao_src = pathlib.Path(__file__).parents[1].resolve()
     site_dirs = {
         pathlib.Path(path).resolve()
         for path in (*site.getsitepackages(), site.getusersitepackages())
@@ -305,12 +303,7 @@ class _TaoPipe:
         """Read back the command result from the subprocess."""
         if self._fifo is None:
             raise TaoDisconnectedError("The SubprocessTao pipe is closed")
-        try:
-            return pickle.load(self._fifo)
-        except EOFError:
-            raise TaoDisconnectedError(
-                "Subprocess data transfer reached end of file (EOF)"
-            ) from None
+        return read_pickled_data(self._fifo)
 
     def _init_subprocess(self) -> subprocess.Popen:
         """Initialize the Tao subprocess, the pipe, and monitor thread."""
@@ -404,7 +397,10 @@ class _TaoPipe:
             self._send(
                 "function",
                 "",
-                call=_pickle_for_subprocess((func, args, kwargs)),
+                # Separate from `func`: a `__main__` function takes the
+                # cloudpickle path, which should not re-pickle large arguments.
+                func=_pickle_for_subprocess(func),
+                call_args=_pickle_for_subprocess((args, kwargs)),
             )
             received = self._receive()
             return _get_result(received, propagate_exceptions=True)

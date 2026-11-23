@@ -98,14 +98,12 @@ def _tao_subprocess(output_fifo_filename: str, beam_track_shm_name: str) -> None
     beam_track_stop = threading.Event()
 
     def run_custom_function(message: SubprocessRequest):
-        func, args, kwargs = pickle.loads(message["kwargs"]["call"])
+        func = pickle.loads(message["kwargs"]["func"])
+        args, kwargs = pickle.loads(message["kwargs"]["call_args"])
         return func(tao, *args, **kwargs)
 
     def run_fork_map(message: SubprocessRequest):
-        if tao is None:
-            raise TaoCommandError("Tao object not yet initialized")
-
-        kwargs = message.get("kwargs", {})
+        kwargs = message["kwargs"]
         func = pickle.loads(kwargs["func"])
         items = pickle.loads(kwargs["items"])
 

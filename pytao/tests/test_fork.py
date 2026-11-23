@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import functools
 import os
 import pathlib
 import pickle
@@ -7,7 +8,7 @@ import selectors
 import signal
 import stat
 import time
-from collections.abc import Generator
+from collections.abc import Callable, Generator
 from typing import Any
 
 import cloudpickle
@@ -40,10 +41,24 @@ def plain_tao() -> Generator[Tao]:
         yield tao
 
 
-def fork_map_in_process(tao: Tao, func, items, **kwargs) -> list:
+@pytest.fixture
+def csr_tao() -> Generator[SubprocessTao]:
+    with new_tao(SubprocessTao, CSR_INIT) as tao:
+        yield tao
+
+
+def fork_map_in_process(tao: Tao, func, items, *, raises: bool = True, **kwargs) -> list:
     """The fork core on an in-process Tao; `Tao` itself has no `fork_map`."""
-    raises = kwargs.get("raises", True)
-    return decode_fork_payloads(fork_map_payloads(tao, func, items, **kwargs), raises)
+    payloads = fork_map_payloads(tao, func, items, raises=raises, **kwargs)
+    return decode_fork_payloads(payloads, raises)
+
+
+@pytest.fixture(params=["in_process", "subprocess"])
+def fork_map(request: pytest.FixtureRequest) -> Callable[..., list]:
+    """`fork_map` through the in-process core and through `SubprocessTao`."""
+    if request.param == "in_process":
+        return functools.partial(fork_map_in_process, request.getfixturevalue("plain_tao"))
+    return request.getfixturevalue("tao").fork_map
 
 
 @pytest.fixture
@@ -350,30 +365,19 @@ def test_fork_failure_closes_pipes(plain_tao: Tao, monkeypatch: pytest.MonkeyPat
     assert open_pipe_fds(plain_tao, None) == before
 
 
-def test_core_accepts_closure_and_lambda(plain_tao: Tao) -> None:
+def test_closure_and_lambda(fork_map: Callable[..., list]) -> None:
     offset = 10
 
     def add_offset(tao: Tao, item: int) -> int:
         return item + offset
 
-    assert fork_map_in_process(plain_tao, add_offset, [1, 2]) == [11, 12]
-    assert fork_map_in_process(plain_tao, lambda tao, item: item * 2, [1, 2]) == [2, 4]
+    assert fork_map(add_offset, [1, 2]) == [11, 12]
+    assert fork_map(lambda tao, item: item * 2, [1, 2]) == [2, 4]
 
 
-def test_closure_and_lambda_in_subprocess(tao: SubprocessTao) -> None:
-    offset = 10
-
-    def add_offset(tao: Tao, item: int) -> int:
-        return item + offset
-
-    assert tao.fork_map(add_offset, [1, 2]) == [11, 12]
-    assert tao.fork_map(lambda tao, item: item * 2, [1, 2]) == [2, 4]
-
-
-def test_numpy_result_round_trip() -> None:
-    with new_tao(SubprocessTao, CSR_INIT) as tao:
-        expected = bunch_x(tao, None)
-        (result,) = tao.fork_map(bunch_x, [None])
+def test_numpy_result_round_trip(csr_tao: SubprocessTao) -> None:
+    expected = bunch_x(csr_tao, None)
+    (result,) = csr_tao.fork_map(bunch_x, [None])
     assert isinstance(result, np.ndarray)
     assert np.allclose(result, expected)
 
@@ -397,18 +401,12 @@ def test_fork_error_pickle_round_trip() -> None:
     assert restored.exit_code == -9
 
 
-def test_not_implemented_without_fork(plain_tao: Tao, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delattr(os, "fork")
-    with pytest.raises(NotImplementedError):
-        fork_map_in_process(plain_tao, identity, [1])
-
-
-def test_subprocess_not_implemented_without_fork(
-    tao: SubprocessTao, monkeypatch: pytest.MonkeyPatch
+def test_not_implemented_without_fork(
+    fork_map: Callable[..., list], monkeypatch: pytest.MonkeyPatch
 ) -> None:
     monkeypatch.delattr(os, "fork")
     with pytest.raises(NotImplementedError):
-        tao.fork_map(identity, [1])
+        fork_map(identity, [1])
 
 
 def test_children_do_not_hold_sibling_pipes(tao: SubprocessTao) -> None:
@@ -498,11 +496,10 @@ def test_invalid_omp_num_threads(plain_tao: Tao) -> None:
         fork_map_in_process(plain_tao, identity, [1], omp_num_threads=0)
 
 
-def test_children_track_beam_after_parent_tracked() -> None:
-    with new_tao(SubprocessTao, CSR_INIT) as tao:
-        tao.track_beam(use_progress_bar=False)
-        expected = bunch_x(tao, None)
-        results = tao.fork_map(track_beam_and_read, [None, None], timeout=120.0)
+def test_children_track_beam_after_parent_tracked(csr_tao: SubprocessTao) -> None:
+    csr_tao.track_beam(use_progress_bar=False)
+    expected = bunch_x(csr_tao, None)
+    results = csr_tao.fork_map(track_beam_and_read, [None, None], timeout=120.0)
     for result in results:
         assert np.allclose(result, expected)
 
