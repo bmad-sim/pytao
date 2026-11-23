@@ -68,12 +68,6 @@ class TaoDisconnectedError(Exception):
     """The Tao subprocess quit, crashed, or otherwise disconnected."""
 
 
-def write_pickled_data(file, data):
-    """Write pickled data through the pipe."""
-    pickle.dump(data, file, protocol=pickle.HIGHEST_PROTOCOL)
-    file.flush()
-
-
 def read_pickled_data(pipe):
     """Read pickled data from the pipe."""
     try:
@@ -271,13 +265,19 @@ class _TaoPipe:
         req: SubprocessRequest = {"command": cmd, "arg": argument}
         if kwargs:
             req["kwargs"] = kwargs
-        return write_pickled_data(self._subproc.stdin, req)
+        pickle.dump(req, self._subproc.stdin, protocol=pickle.HIGHEST_PROTOCOL)
+        self._subproc.stdin.flush()
 
     def _receive(self) -> SubprocessResult:
         """Read back the command result from the subprocess."""
         if self._fifo is None:
             raise TaoDisconnectedError("The SubprocessTao pipe is closed")
-        return read_pickled_data(self._fifo)
+        try:
+            return pickle.load(self._fifo)
+        except EOFError:
+            raise TaoDisconnectedError(
+                "Subprocess data transfer reached end of file (EOF)"
+            ) from None
 
     def _init_subprocess(self) -> subprocess.Popen:
         """Initialize the Tao subprocess, the pipe, and monitor thread."""
