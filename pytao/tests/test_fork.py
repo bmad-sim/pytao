@@ -364,15 +364,14 @@ def test_core_accepts_closure_and_lambda(plain_tao: Tao) -> None:
     assert fork_map_in_process(plain_tao, lambda tao, item: item * 2, [1, 2]) == [2, 4]
 
 
-def test_closure_and_lambda_in_subprocess() -> None:
+def test_closure_and_lambda_in_subprocess(tao: SubprocessTao) -> None:
     offset = 10
 
     def add_offset(tao: Tao, item: int) -> int:
         return item + offset
 
-    with new_tao(SubprocessTao, OPTICS_INIT) as tao:
-        assert tao.fork_map(add_offset, [1, 2]) == [11, 12]
-        assert tao.fork_map(lambda tao, item: item * 2, [1, 2]) == [2, 4]
+    assert tao.fork_map(add_offset, [1, 2]) == [11, 12]
+    assert tao.fork_map(lambda tao, item: item * 2, [1, 2]) == [2, 4]
 
 
 def test_numpy_result_round_trip() -> None:
@@ -422,11 +421,10 @@ def test_children_do_not_hold_sibling_pipes(tao: SubprocessTao) -> None:
     assert [len(fds) for fds in results] == [len(baseline)] * 4
 
 
-def test_subprocess_children_detach_from_pipes() -> None:
-    with new_tao(SubprocessTao, OPTICS_INIT) as tao:
-        (fds,) = tao.fork_map(open_pipe_fds, [None])
-        assert len(fds) == 1, "only the child's own result pipe should be open"
-        assert tao.fork_map(stdin_is_devnull, [None]) == [True]
+def test_subprocess_children_detach_from_pipes(tao: SubprocessTao) -> None:
+    (fds,) = tao.fork_map(open_pipe_fds, [None])
+    assert len(fds) == 1, "only the child's own result pipe should be open"
+    assert tao.fork_map(stdin_is_devnull, [None]) == [True]
 
 
 def test_subprocess_timeout_kills_children(tmp_path: pathlib.Path) -> None:
@@ -443,9 +441,8 @@ def test_subprocess_timeout_kills_children(tmp_path: pathlib.Path) -> None:
             os.kill(int(pathlib.Path(pid_file).read_text()), 0)
 
 
-def test_subprocess_items_from_main(main_module_class: type) -> None:
-    with new_tao(SubprocessTao, OPTICS_INIT) as tao:
-        assert tao.fork_map(item_value, [main_module_class(1), main_module_class(2)]) == [1, 2]
+def test_subprocess_items_from_main(tao: SubprocessTao, main_module_class: type) -> None:
+    assert tao.fork_map(item_value, [main_module_class(1), main_module_class(2)]) == [1, 2]
 
 
 def test_subprocess_results_from_main(tao: SubprocessTao, main_module_class: type) -> None:
