@@ -15,7 +15,7 @@ import cloudpickle
 import numpy as np
 import pytest
 
-from .. import SubprocessTao, Tao, TaoForkError
+from .. import SubprocessTao, Tao, TaoForkError, fork
 from ..fork import decode_fork_payloads, fork_map_payloads, resolve_max_workers
 from ..subproc import _pickle_for_subprocess
 from .conftest import new_tao
@@ -207,8 +207,15 @@ def test_max_workers(tao: SubprocessTao, max_workers: int | None) -> None:
 def test_resolve_max_workers(
     monkeypatch: pytest.MonkeyPatch, max_workers: int | None, expected: int
 ) -> None:
-    monkeypatch.setattr(os, "cpu_count", lambda: 8)
+    monkeypatch.setattr(fork, "usable_cpu_count", lambda: 8)
     assert resolve_max_workers(max_workers) == expected
+
+
+def test_usable_cpu_count_honors_affinity(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delattr(os, "process_cpu_count", raising=False)
+    monkeypatch.setattr(os, "sched_getaffinity", lambda pid: {0, 1, 2}, raising=False)
+    monkeypatch.setattr(os, "cpu_count", lambda: 64)
+    assert fork.usable_cpu_count() == 3
 
 
 def test_zero_max_workers(tao: SubprocessTao) -> None:
@@ -287,9 +294,14 @@ def test_timeout_reaps_children(plain_tao: Tao, forked_pids: list[int]) -> None:
     assert_all_reaped(forked_pids)
 
 
-def test_failure_kills_remaining_children(plain_tao: Tao, forked_pids: list[int]) -> None:
+@pytest.mark.parametrize("exit_silently", [False, True])
+def test_failure_kills_remaining_children(
+    plain_tao: Tao, forked_pids: list[int], exit_silently: bool
+) -> None:
     def fail_fast_or_sleep(tao: Tao, item: int) -> int:
         if item == 0:
+            if exit_silently:
+                os._exit(0)
             raise RuntimeError("first")
         time.sleep(30)
         return item

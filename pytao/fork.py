@@ -173,9 +173,18 @@ def _decode_payload(index: int, payload: bytes, exit_code: int) -> Any:
     return value
 
 
+def usable_cpu_count() -> int:
+    """CPUs this process may run on, honoring affinity (SLURM, `taskset`) if possible."""
+    if hasattr(os, "process_cpu_count"):
+        return os.process_cpu_count() or 1
+    if hasattr(os, "sched_getaffinity"):
+        return len(os.sched_getaffinity(0)) or 1
+    return os.cpu_count() or 1
+
+
 def resolve_max_workers(max_workers: int | None) -> int:
     """Worker count: `None` is the CPU count, negative counts back from it; min 1."""
-    cpus = os.cpu_count() or 1
+    cpus = usable_cpu_count()
     if max_workers is None:
         return cpus
     if max_workers == 0:
@@ -264,11 +273,12 @@ def fork_map_payloads(
 
     def finish(child: _Child, status: int) -> None:
         sel.unregister(child.fd)
-        os.close(child.fd)
+        # Before the close: a signal in between must not close the fd twice.
         del live[child.fd]
+        os.close(child.fd)
         exit_code = os.waitstatus_to_exitcode(status)
         payload = bytes(child.buf)
-        if raises and exit_code != _EXIT_OK:
+        if raises and (exit_code != _EXIT_OK or not payload):
             _decode_payload(child.index, payload, exit_code)
         results[child.index] = (payload, exit_code)
         next_index = next(pending, None)
