@@ -10,9 +10,10 @@ import pickle
 import selectors
 import signal
 import sys
+import threading
 import time
 import traceback
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, NoReturn, TypeVar
 
@@ -27,6 +28,43 @@ T = TypeVar("T")
 R = TypeVar("R")
 
 _READ_CHUNK = 1 << 20
+
+# Signals whose handlers may raise in the forking process to unwind `fork_map`.
+_UNWINDING_SIGNALS = (signal.SIGINT, signal.SIGTERM)
+
+
+@contextlib.contextmanager
+def _deferred_signals() -> Iterator[Callable[[], None]]:
+    """
+    Hold back Python signal handlers until the block exits.
+
+    Yields a function that reinstates the handlers early, for a forked child.
+    Blocking the signals with `pthread_sigmask` is not enough: another thread
+    can still receive one, and its handler then runs here in the main thread.
+    """
+    received: list[int] = []
+    previous: dict[int, Any] = {}
+
+    def defer(signum: int, _frame: Any) -> None:
+        received.append(signum)
+
+    def reinstate() -> None:
+        for signum, handler in previous.items():
+            if signal.getsignal(signum) is defer:
+                signal.signal(signum, handler)
+
+    # Handlers only ever run in the main thread, and only it may set them.
+    if threading.current_thread() is threading.main_thread():
+        for signum in _UNWINDING_SIGNALS:
+            if callable(signal.getsignal(signum)):
+                previous[signum] = signal.signal(signum, defer)
+    try:
+        yield reinstate
+    finally:
+        reinstate()
+        for signum in received:
+            signal.raise_signal(signum)
+
 
 # Forked child exit codes
 # 0: A successful child sends its pickled result
@@ -219,22 +257,26 @@ def fork_map_payloads(
         # Avoid duplicating buffered output into the child.
         sys.stdout.flush()
         sys.stderr.flush()
-        read_fd, write_fd = os.pipe()
-        try:
-            pid = os.fork()
-        except BaseException:
-            os.close(read_fd)
+        # A handler that raises between the fork and registering the child
+        # would leave that child running with nothing to kill it.
+        with _deferred_signals() as reinstate_signals:
+            read_fd, write_fd = os.pipe()
+            try:
+                pid = os.fork()
+            except BaseException:
+                os.close(read_fd)
+                os.close(write_fd)
+                raise
+            if pid == 0:
+                reinstate_signals()
+                _child_main(
+                    tao, func, index, items[index], write_fd, [read_fd, *live], omp_num_threads
+                )
+            # Keep no write end, or EOF never arrives.
             os.close(write_fd)
-            raise
-        if pid == 0:
-            _child_main(
-                tao, func, index, items[index], write_fd, [read_fd, *live], omp_num_threads
-            )
-        # Keep no write end, or EOF never arrives.
-        os.close(write_fd)
-        child = _Child(pid=pid, index=index, fd=read_fd)
-        live[read_fd] = child
-        sel.register(read_fd, selectors.EVENT_READ, child)
+            child = _Child(pid=pid, index=index, fd=read_fd)
+            live[read_fd] = child
+            sel.register(read_fd, selectors.EVENT_READ, child)
 
     try:
         for _ in range(workers):
@@ -272,11 +314,12 @@ def fork_map_payloads(
 
         return results
     finally:
-        for child in live.values():
-            with contextlib.suppress(ProcessLookupError):
-                os.kill(child.pid, signal.SIGKILL)
-        for child in live.values():
-            with contextlib.suppress(ChildProcessError):
-                os.waitpid(child.pid, 0)
-            os.close(child.fd)
-        sel.close()
+        with _deferred_signals():
+            for child in live.values():
+                with contextlib.suppress(ProcessLookupError):
+                    os.kill(child.pid, signal.SIGKILL)
+            for child in live.values():
+                with contextlib.suppress(ChildProcessError):
+                    os.waitpid(child.pid, 0)
+                os.close(child.fd)
+            sel.close()

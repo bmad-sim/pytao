@@ -297,6 +297,36 @@ def test_keyboard_interrupt_reaps_children(
     assert_all_reaped(forked_pids)
 
 
+@pytest.mark.parametrize("signum", [signal.SIGINT, signal.SIGTERM])
+def test_signal_right_after_fork_reaps_child(
+    plain_tao: Tao,
+    forked_pids: list[int],
+    monkeypatch: pytest.MonkeyPatch,
+    signum: signal.Signals,
+) -> None:
+    def interrupt(signum, frame):
+        raise KeyboardInterrupt
+
+    recording_fork = os.fork
+
+    def fork_then_signal() -> int:
+        pid = recording_fork()
+        if pid:
+            os.kill(os.getpid(), signum)
+        return pid
+
+    monkeypatch.setattr(os, "fork", fork_then_signal)
+    previous = signal.signal(signum, interrupt)
+    try:
+        with pytest.raises(KeyboardInterrupt):
+            fork_map_in_process(plain_tao, sleep_then_return, [(20.0, 0)])
+    finally:
+        signal.signal(signum, previous)
+
+    assert len(forked_pids) == 1
+    assert_all_reaped(forked_pids)
+
+
 def test_fork_failure_closes_pipes(plain_tao: Tao, monkeypatch: pytest.MonkeyPatch) -> None:
     orig_fork = os.fork
     forks = 0
