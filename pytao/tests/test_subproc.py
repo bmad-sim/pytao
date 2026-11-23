@@ -358,3 +358,17 @@ def _scale(tao: Tao, value: int, scale: int = 1) -> int:
 )
 def test_custom_command_callable_kinds(subproc_tao: SubprocessTao, func: Callable) -> None:
     assert subproc_tao.subprocess_call(func, 3) == 6
+
+
+def test_custom_command_returns_main_module_instance(
+    subproc_tao: SubprocessTao, main_module_class: type
+) -> None:
+    result = subproc_tao.subprocess_call(lambda tao, cls: cls(5), main_module_class)
+    assert isinstance(result, main_module_class)
+    assert result.value == 5
+
+
+def test_custom_command_unpicklable_result(subproc_tao: SubprocessTao) -> None:
+    with pytest.raises(TaoCommandError, match="could not be pickled"):
+        subproc_tao.subprocess_call(lambda tao: (i for i in range(3)))
+    assert subproc_tao.subprocess_call(tao_custom_command, value=1) == 2

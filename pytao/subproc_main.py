@@ -11,6 +11,8 @@ import threading
 import traceback
 import warnings
 
+import cloudpickle
+
 from ._shmem_compat import SharedMemory
 from .core import TaoCommandError
 from .errors import TaoForkError
@@ -23,7 +25,6 @@ from .subproc import (
     SubprocessSuccessResult,
     TaoDisconnectedError,
     read_pickled_data,
-    write_pickled_data,
 )
 from .tao import Tao
 
@@ -75,6 +76,25 @@ def _reset_forked_child(output_fifo_fd: int) -> None:
     devnull = os.open(os.devnull, os.O_RDONLY)
     os.dup2(devnull, 0)
     os.close(devnull)
+
+
+def _pickle_response(response: SubprocessResult) -> bytes:
+    """Pickle `response`, or an error response if its result cannot be pickled."""
+    try:
+        return pickle.dumps(response, protocol=pickle.HIGHEST_PROTOCOL)
+    except Exception:  # noqa: BLE001
+        pass
+    try:
+        # Classes sent by value from the caller's `__main__` only pickle this way.
+        return cloudpickle.dumps(response, protocol=pickle.HIGHEST_PROTOCOL)
+    except Exception as ex:  # noqa: BLE001
+        error: SubprocessErrorResult = {
+            "error": f"The result could not be pickled: {ex}",
+            "error_cls": type(ex).__name__,
+            "traceback": traceback.format_exc(),
+            "tao_output": response.get("tao_output", ""),
+        }
+        return pickle.dumps(error, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 def _tao_subprocess(output_fifo_filename: str, beam_track_shm_name: str) -> None:
@@ -187,7 +207,8 @@ def _tao_subprocess(output_fifo_filename: str, beam_track_shm_name: str) -> None
         os.register_at_fork(after_in_child=lambda: _reset_forked_child(fifo_fd))
         while True:
             message = read_pickled_data(sys.stdin.buffer)
-            write_pickled_data(output_fifo, make_response(message))
+            output_fifo.write(_pickle_response(make_response(message)))
+            output_fifo.flush()
 
 
 if __name__ == "__main__":
