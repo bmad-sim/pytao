@@ -17,12 +17,13 @@ import weakref
 from collections.abc import Callable, Iterable
 from typing import Any, Literal, NotRequired, Union, cast
 
+import cloudpickle
 import numpy as np
 from typing_extensions import TypedDict, override
 
 from ._shmem_compat import SharedMemory
 from .errors import TaoCommandError, TaoForkError, TaoInitializationError
-from .fork import R, T, _pickle_for_subprocess, decode_fork_payloads, resolve_max_workers
+from .fork import R, T, decode_fork_payloads, resolve_max_workers
 from .startup import TaoStartup
 from .tao import Tao
 from .util import normalize_path
@@ -126,6 +127,38 @@ def _get_result(
         return tao_output
 
     raise RuntimeError(f"Unexpected pipe response: {value}")
+
+
+def _pickle_for_subprocess(obj: Any) -> bytes:
+    """
+    Pickle `obj` to send to or from the Tao subprocess.
+
+    Falls back to the slower cloudpickle for lambdas, closures, and `__main__`
+    objects, which plain pickle references by a name the other process lacks.
+    """
+    try:
+        data = pickle.dumps(obj, protocol=pickle.HIGHEST_PROTOCOL)
+    except Exception:  # noqa: BLE001
+        return cloudpickle.dumps(obj, protocol=pickle.HIGHEST_PROTOCOL)
+
+    if b"__main__" in data:
+        # Re-pickle so cloudpickle embeds `__main__` definitions.  A false
+        # positive on the text "__main__" only costs a re-pickle.
+        return cloudpickle.dumps(obj, protocol=pickle.HIGHEST_PROTOCOL)
+    return data
+
+
+def _pickle_from_subprocess(obj: Any) -> bytes:
+    """
+    Pickle `obj` to send back from the Tao subprocess or one of its forks.
+
+    Only objects that plain pickle rejects, such as instances of classes the
+    caller sent by value, need cloudpickle here, so the payload is not scanned.
+    """
+    try:
+        return pickle.dumps(obj, protocol=pickle.HIGHEST_PROTOCOL)
+    except Exception:  # noqa: BLE001
+        return cloudpickle.dumps(obj, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 _BEAM_TRACK_SHM_FMT = "i"

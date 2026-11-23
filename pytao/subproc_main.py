@@ -11,8 +11,6 @@ import threading
 import traceback
 import warnings
 
-import cloudpickle
-
 from ._shmem_compat import SharedMemory
 from .core import TaoCommandError
 from .errors import TaoForkError
@@ -24,6 +22,7 @@ from .subproc import (
     SubprocessResult,
     SubprocessSuccessResult,
     TaoDisconnectedError,
+    _pickle_from_subprocess,
     read_pickled_data,
 )
 from .tao import Tao
@@ -81,12 +80,7 @@ def _reset_forked_child(output_fifo_fd: int) -> None:
 def _pickle_response(response: SubprocessResult) -> bytes:
     """Pickle `response`, or an error response if its result cannot be pickled."""
     try:
-        return pickle.dumps(response, protocol=pickle.HIGHEST_PROTOCOL)
-    except Exception:  # noqa: BLE001
-        pass
-    try:
-        # Classes sent by value from the caller's `__main__` only pickle this way.
-        return cloudpickle.dumps(response, protocol=pickle.HIGHEST_PROTOCOL)
+        return _pickle_from_subprocess(response)
     except Exception as ex:  # noqa: BLE001
         error: SubprocessErrorResult = {
             "error": f"The result could not be pickled: {ex}",

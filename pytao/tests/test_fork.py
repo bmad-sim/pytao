@@ -15,12 +15,8 @@ import numpy as np
 import pytest
 
 from .. import SubprocessTao, Tao, TaoForkError
-from ..fork import (
-    _pickle_for_subprocess,
-    decode_fork_payloads,
-    fork_map_payloads,
-    resolve_max_workers,
-)
+from ..fork import decode_fork_payloads, fork_map_payloads, resolve_max_workers
+from ..subproc import _pickle_for_subprocess
 from .conftest import new_tao
 
 pytestmark = pytest.mark.filterwarnings(

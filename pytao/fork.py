@@ -17,8 +17,6 @@ from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, NoReturn, TypeVar
 
-import cloudpickle
-
 from .errors import TaoForkError
 
 if TYPE_CHECKING:
@@ -83,25 +81,6 @@ class _Child:
     buf: bytearray = field(default_factory=bytearray)
 
 
-def _pickle_for_subprocess(obj: Any) -> bytes:
-    """
-    Pickle `obj` to send to another process.
-
-    Falls back to the slower cloudpickle for lambdas, closures, and `__main__`
-    objects, which plain pickle references by a name the other process lacks.
-    """
-    try:
-        data = pickle.dumps(obj, protocol=pickle.HIGHEST_PROTOCOL)
-    except Exception:  # noqa: BLE001
-        return cloudpickle.dumps(obj, protocol=pickle.HIGHEST_PROTOCOL)
-
-    if b"__main__" in data:
-        # Re-pickle so cloudpickle embeds `__main__` definitions.  A false
-        # positive on the text "__main__" only costs a re-pickle.
-        return cloudpickle.dumps(obj, protocol=pickle.HIGHEST_PROTOCOL)
-    return data
-
-
 def _set_omp_num_threads(tao: Tao, num_threads: int) -> None:
     """
     Limit OpenMP threads in a forked child.
@@ -126,6 +105,9 @@ def _child_main(
     inherited_fds: Iterable[int],
     omp_num_threads: int | None,
 ) -> NoReturn:
+    # `subproc` imports this module, so it cannot be imported at the top.
+    from .subproc import _pickle_from_subprocess
+
     code = _EXIT_RAISED
     try:
         # Sibling read ends would mask EPIPE if the parent dies.
@@ -135,7 +117,7 @@ def _child_main(
         try:
             if omp_num_threads is not None:
                 _set_omp_num_threads(tao, omp_num_threads)
-            payload = _pickle_for_subprocess(func(tao, item))
+            payload = _pickle_from_subprocess(func(tao, item))
             code = _EXIT_OK
         except BaseException as ex:  # noqa: BLE001
             err = TaoForkError(
@@ -148,7 +130,7 @@ def _child_main(
             )
             if hasattr(err, "add_note"):
                 err.add_note(f"Child process {err.child_traceback}")
-            payload = _pickle_for_subprocess(err)
+            payload = _pickle_from_subprocess(err)
         # Flush before replying: the parent reaps us once the pipe closes.
         with contextlib.suppress(Exception):
             sys.stdout.flush()
