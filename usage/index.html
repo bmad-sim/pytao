@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -1920,7 +1920,7 @@ That is, any of the following may be specified to <code>Tao</code>:</p>
   <span class="n">plot_file</span><span class="o">=</span><span class="s2">"file_name"</span><span class="p">,</span>                <span class="c1"># Plotting initialization file</span>
   <span class="n">prompt_color</span><span class="o">=</span><span class="s2">"color"</span><span class="p">,</span>                 <span class="c1"># Set color of prompt string. Default is blue.</span>
   <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                         <span class="c1"># Reverse lattice element order?</span>
-  <span class="n">rf_on</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                           <span class="c1"># Use "--rf_on" to turn off RF (default is now RF on)</span>
+  <span class="n">rf_on</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                           <span class="c1"># True: -rf_on, False: --rf_on, None (default): use init file</span>
   <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                           <span class="c1"># Suppress terminal output when running a command file?</span>
   <span class="n">slice_lattice</span><span class="o">=</span><span class="s2">"ele_list"</span><span class="p">,</span>             <span class="c1"># Discards elements from lattice that are not in the list</span>
   <span class="n">start_branch_at</span><span class="o">=</span><span class="s2">"ele_name"</span><span class="p">,</span>           <span class="c1"># Start lattice branch at element.</span>
@@ -1929,6 +1929,13 @@ That is, any of the following may be specified to <code>Tao</code>:</p>
   <span class="n">var_file</span><span class="o">=</span><span class="s2">"file_name"</span><span class="p">,</span>                 <span class="c1"># Define variables for plotting and optimization</span>
 <span class="p">)</span>
 </code></pre></div>
+<p><code>disable_smooth_line_calc</code>, <code>no_rad_int</code>, <code>no_stopping</code>, <code>noplot</code> and <code>rf_on</code>
+default to <code>None</code>, which leaves the setting from the init file's <code>tao_params</code>
+in effect. If no init file is used (e.g. only <code>lattice_file</code> is given), <code>None</code>
+falls back to Tao's defaults: smooth line calc on, stop on errors, plotting on,
+radiation integrals on and RF on. <code>True</code> passes <code>-switch</code> and <code>False</code> passes the negated <code>--switch</code>,
+so <code>rf_on=False</code> turns RF off even if the init file turns it on. The same
+switches may also be given in the <code>init</code> string, e.g. <code>init="-init tao.init -rf_on"</code>.</p>
 <p>Note that <code>quiet</code> mode may cause portions of PyTao to function improperly. See
 upstream <a href="https://github.com/bmad-sim/bmad-ecosystem/issues/1380">issue</a>.</p>
 <h3 id="subprocesstao-tao-in-a-subprocess"><code>SubprocessTao</code> - Tao in a subprocess</h3>
