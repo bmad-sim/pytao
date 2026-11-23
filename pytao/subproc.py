@@ -748,6 +748,8 @@ class SubprocessTao(Tao):
         ...     return tao.ele_twiss("Q2")["beta_a"]
         >>> tao.fork_map(scan, np.linspace(0.0, 2.0, 21), max_workers=4)
         """
+        if not hasattr(os, "fork"):
+            raise NotImplementedError("fork_map requires os.fork(), which is unavailable here")
         return self._require_pipe().send_receive_fork_map(
             func,
             items,

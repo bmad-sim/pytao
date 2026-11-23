@@ -408,6 +408,14 @@ def test_not_implemented_without_fork(plain_tao: Tao, monkeypatch: pytest.Monkey
         fork_map_in_process(plain_tao, identity, [1])
 
 
+def test_subprocess_not_implemented_without_fork(
+    tao: SubprocessTao, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.delattr(os, "fork")
+    with pytest.raises(NotImplementedError):
+        tao.fork_map(identity, [1])
+
+
 def test_children_do_not_hold_sibling_pipes(tao: SubprocessTao) -> None:
     (baseline,) = tao.fork_map(open_pipe_fds, [None])
     results = tao.fork_map(sleep_then_return_pipe_fds, range(4), max_workers=4)
