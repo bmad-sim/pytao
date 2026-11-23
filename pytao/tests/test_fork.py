@@ -12,10 +12,11 @@ import time
 from collections.abc import Generator
 from typing import Any
 
+import cloudpickle
 import numpy as np
 import pytest
 
-from .. import SubprocessTao, Tao, TaoCommandError, TaoForkError
+from .. import SubprocessTao, Tao, TaoForkError
 from ..fork import decode_fork_payloads, fork_map_payloads, resolve_max_workers
 from ..subproc import _pickle_for_subprocess
 from .conftest import new_tao
@@ -328,7 +329,6 @@ def test_core_accepts_closure_and_lambda(plain_tao: Tao) -> None:
 
 
 def test_closure_and_lambda_in_subprocess() -> None:
-    pytest.importorskip("cloudpickle")
     offset = 10
 
     def add_offset(tao: Tao, item: int) -> int:
@@ -337,20 +337,6 @@ def test_closure_and_lambda_in_subprocess() -> None:
     with new_tao(SubprocessTao, OPTICS_INIT) as tao:
         assert tao.fork_map(add_offset, [1, 2]) == [11, 12]
         assert tao.fork_map(lambda tao, item: item * 2, [1, 2]) == [2, 4]
-
-
-def test_subprocess_without_cloudpickle(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr("pytao.subproc.cloudpickle", None)
-
-    def local_func(tao: Tao, item: int) -> int:
-        return item
-
-    with new_tao(SubprocessTao, OPTICS_INIT) as tao:
-        with pytest.raises(ValueError, match="cloudpickle"):
-            tao.fork_map(local_func, [1])
-        with pytest.raises(ValueError, match="cloudpickle"):
-            tao.fork_map(lambda tao, item: item, [1])
-        assert tao.fork_map(identity, [1, 2]) == [1, 2]
 
 
 def test_numpy_result_round_trip() -> None:
@@ -414,21 +400,8 @@ def test_subprocess_timeout_kills_children(tmp_path: pathlib.Path) -> None:
 
 
 def test_subprocess_items_from_main(main_module_class: type) -> None:
-    pytest.importorskip("cloudpickle")
     with new_tao(SubprocessTao, OPTICS_INIT) as tao:
         assert tao.fork_map(item_value, [main_module_class(1), main_module_class(2)]) == [1, 2]
-
-
-def test_subprocess_survives_unloadable_items(
-    main_module_class: type,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    monkeypatch.setattr("pytao.subproc.cloudpickle", None)
-    with new_tao(SubprocessTao, OPTICS_INIT) as tao:
-        with pytest.raises(TaoCommandError, match="_PytaoForkItem"):
-            tao.fork_map(item_value, [main_module_class(1)])
-        assert tao.subprocess_alive
-        assert tao.fork_map(identity, [1, 2]) == [1, 2]
 
 
 @pytest.mark.parametrize(
@@ -453,7 +426,6 @@ def test_items_use_plain_pickle_when_possible(items: list) -> None:
     ],
 )
 def test_items_fall_back_to_cloudpickle(main_module_class: type, make_items) -> None:
-    cloudpickle = pytest.importorskip("cloudpickle")
     items = make_items(main_module_class)
     assert _pickle_for_subprocess(items) == cloudpickle.dumps(
         items, protocol=pickle.HIGHEST_PROTOCOL
