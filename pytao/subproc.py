@@ -39,7 +39,6 @@ Command = Literal[
     "cmd_real",
     "cmd_integer",
     "function",
-    "lambda",
     "fork_map",
 ]
 SupportedKwarg = Union[float, int, str, bool, bytes, dict, list, tuple, set, np.ndarray]
@@ -134,20 +133,6 @@ def _get_result(
         return tao_output
 
     raise RuntimeError(f"Unexpected pipe response: {value}")
-
-
-def _importable_function_name(func: Callable) -> str:
-    """Qualified `module.name` of `func`, or raise if the subprocess could not import it."""
-    if not callable(func):
-        raise TypeError(f"Object of type {type(func).__name__} is not callable")
-    name = getattr(func, "__name__", "(unknown)")
-    if not func.__module__ or func.__module__ == "__main__":
-        raise ValueError(f"Function {name} is not in an importable module")
-    if name in {"<lambda>", "__lambda__"}:
-        raise ValueError(f"Function {name} is a lambda function")
-    if "<locals>" in getattr(func, "__qualname__", ""):
-        raise ValueError(f"Function {name} is a nested function")
-    return f"{func.__module__}.{name}"
 
 
 def _pickle_for_subprocess(obj: Any) -> bytes:
@@ -300,7 +285,7 @@ class _TaoPipe:
                     self._subprocess_monitor_thread = None
                     self._fifo = None
 
-    def _send(self, cmd: Command, argument: str | bytes, **kwargs: SupportedKwarg):
+    def _send(self, cmd: Command, argument: str, **kwargs: SupportedKwarg):
         """Send `cmd` with `argument` over the pipe."""
         assert self._subproc.stdin is not None
         req: SubprocessRequest = {"command": cmd, "arg": argument}
@@ -399,21 +384,21 @@ class _TaoPipe:
             a list of dictionaries, a list of strings, and so on.
         """
 
-        try:
-            arg = _importable_function_name(func)
-            cmd = "function"
-        except ValueError:
-            cmd = "lambda"
-            arg = _pickle_for_subprocess(func)
+        if not callable(func):
+            raise TypeError(f"Object of type {type(func).__name__} is not callable")
 
         try:
-            self._send(cmd, arg, args=_pickle_for_subprocess((args, kwargs)))
+            self._send(
+                "function",
+                "",
+                call=_pickle_for_subprocess((func, args, kwargs)),
+            )
             received = self._receive()
             return _get_result(received, propagate_exceptions=True)
         except BrokenPipeError:
             raise TaoCommandError(
-                f"Function {func.__name__}() was unable to complete as the subprocess "
-                f"has already exited."
+                f"Function {getattr(func, '__name__', repr(func))}() was unable to complete "
+                f"as the subprocess has already exited."
             )
 
     def send_receive_fork_map(

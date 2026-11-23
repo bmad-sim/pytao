@@ -26,7 +26,6 @@ from .subproc import (
     write_pickled_data,
 )
 from .tao import Tao
-from .util import import_by_name
 
 logger = logging.getLogger(__name__)
 
@@ -84,19 +83,8 @@ def _tao_subprocess(output_fifo_filename: str, beam_track_shm_name: str) -> None
     tao = None
     beam_track_stop = threading.Event()
 
-    def run_custom_function(message: SubprocessRequest, func_name: str):
-        func = import_by_name(func_name)
-        args, kwargs = pickle.loads(message["kwargs"]["args"])
-        return func(tao, *args, **kwargs)
-
-    def run_custom_lambda(message: SubprocessRequest, pickled_func: bytes):
-        # TOOD: I'd like to avoid cloudpickle in the general case due to its
-        # ~50% overhead; but perhaps we revisit for simplicity and then
-        # run_custom_function/run_custom_lambda merge
-        import cloudpickle
-
-        func = cloudpickle.loads(pickled_func)
-        args, kwargs = pickle.loads(message["kwargs"]["args"])
+    def run_custom_function(message: SubprocessRequest):
+        func, args, kwargs = pickle.loads(message["kwargs"]["call"])
         return func(tao, *args, **kwargs)
 
     def run_fork_map(message: SubprocessRequest):
@@ -150,11 +138,7 @@ def _tao_subprocess(output_fifo_filename: str, beam_track_shm_name: str) -> None
 
         if command == "function":
             tao._last_output = []
-            return run_custom_function(message, arg)
-
-        if command == "lambda":
-            tao._last_output = []
-            return run_custom_lambda(message, arg)  # TODO # type: ignore
+            return run_custom_function(message)
 
         if command == "fork_map":
             tao._last_output = []

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import functools
 import os
 import pathlib
 import sys
@@ -329,3 +330,31 @@ def test_custom_command_main_module_args(
     item = main_module_class(2)
     assert subproc_tao.subprocess_call(_get_value, item) == 2
     assert subproc_tao.subprocess_call(_get_value, item=item, scale=3) == 6
+
+
+class _Scaler:
+    def __init__(self, scale: int) -> None:
+        self.scale = scale
+
+    def apply(self, tao: Tao, value: int) -> int:
+        return value * self.scale
+
+    def __call__(self, tao: Tao, value: int) -> int:
+        return value * self.scale
+
+
+def _scale(tao: Tao, value: int, scale: int = 1) -> int:
+    return value * scale
+
+
+@pytest.mark.parametrize(
+    "func",
+    [
+        pytest.param(functools.partial(_scale, scale=2), id="module-function-partial"),
+        pytest.param(lambda tao, value: value * 2, id="lambda"),
+        pytest.param(_Scaler(2).apply, id="bound-method"),
+        pytest.param(_Scaler(2), id="callable-instance"),
+    ],
+)
+def test_custom_command_callable_kinds(subproc_tao: SubprocessTao, func: Callable) -> None:
+    assert subproc_tao.subprocess_call(func, 3) == 6
