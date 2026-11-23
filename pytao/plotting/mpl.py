@@ -5,7 +5,7 @@ import logging
 import pathlib
 import time
 from collections.abc import Sequence
-from typing import ClassVar, Literal
+from typing import TYPE_CHECKING, ClassVar, Literal
 
 import matplotlib.axes
 import matplotlib.axis
@@ -24,6 +24,7 @@ from . import floor_plan_shapes, layout_shapes, pgplot
 from .curves import PlotCurveLine, PlotCurveSymbols, PlotHistogram, TaoCurveSettings
 from .ele_methods import ElementMethodsPlotData, color_for_value, is_garbage_value
 from .fields import ElementField
+from .floor_beam import BeamExtent, FloorBeamEnvelope, find_floor_plan_graph
 from .patches import (
     PlotPatch,
     PlotPatchArc,
@@ -48,6 +49,9 @@ from .plot import (
 from .settings import TaoGraphSettings
 from .types import Limit, OptionalLimit, Point
 from .util import fix_grid_limits
+
+if TYPE_CHECKING:
+    from ..model.ele.comb import Comb
 
 logger = logging.getLogger(__name__)
 
@@ -1199,6 +1203,107 @@ class MatplotlibGraphManager(GraphManager):
                 fig.savefig(save)
 
         return field, fig, ax
+
+    def plot_floor_beam(
+        self,
+        template: str = "floor_plan",
+        *,
+        comb: Comb | None = None,
+        extent: BeamExtent = "minmax",
+        n_sigma: float = 3.0,
+        magnification: float = 1.0,
+        ix_uni: int | None = None,
+        ix_branch: int = 0,
+        zoom: bool = False,
+        zoom_padding: float = 0.1,
+        legend: bool = True,
+        color: str = "C1",
+        alpha: float = 0.6,
+        **kwargs,
+    ):
+        """
+        Plot the tracked beam's centroid and envelope on top of a floor plan.
+
+        Uses the beam statistics Tao saves along the lattice when tracking a
+        beam with `beam%comb_ds_save` set (see `Tao.bunch_comb`), converted to
+        floor coordinates with a `FloorTable`.
+
+        Parameters
+        ----------
+        template : str, optional
+            Floor plan template to draw. Default is "floor_plan".
+        comb : Comb, optional
+            Beam statistics to use, such as from `Comb.from_tao` or a slice of
+            one. By default, the statistics are fetched from Tao.
+        extent : {"minmax", "sigma"}, optional
+            What the envelope shows. "minmax" (the default) is the full extent
+            of the beam, from its outermost particle on each side. "sigma" is
+            `n_sigma` RMS beam sizes either side of the centroid.
+        n_sigma : float, optional
+            Half-width of the envelope in beam sigmas, for `extent="sigma"`.
+            Default is 3.
+        magnification : float, optional
+            Scale the beam's offsets from the reference orbit by this factor,
+            to make a small beam visible at the scale of the machine. The
+            floor plan itself is not scaled. Default is 1.
+        ix_uni : int, optional
+            Universe index. Default is the current universe.
+        ix_branch : int, optional
+            Branch the beam was tracked through. Default is 0.
+        zoom : bool, optional
+            Zoom in on the beam instead of showing the whole floor plan, for a
+            beam tracked through part of a larger lattice. Default is False.
+        zoom_padding : float, optional
+            Margin to leave around the beam when zooming, as a fraction of its
+            extent. Default is 0.1.
+        legend : bool, optional
+            Show a legend for the envelope and centroid. Default is True.
+        color : str, optional
+            Envelope color.
+        alpha : float, optional
+            Envelope opacity.
+        **kwargs
+            Passed to `plot`, e.g. `figsize`, `xlim`, `ylim` or `axes`.
+
+        Returns
+        -------
+        list of graphs
+        matplotlib.Figure
+        List[matplotlib.axes.Axes]
+
+        Raises
+        ------
+        ValueError
+            If the template has no floor plan, or no beam statistics are saved.
+        NotImplementedError
+            If the floor plan is rotated.
+        """
+        graphs, fig, axes = self.plot(template, include_layout=False, ix_uni=ix_uni, **kwargs)
+        index, graph = find_floor_plan_graph(graphs, template)
+        envelope = FloorBeamEnvelope.from_tao(
+            self.tao,
+            graph,
+            comb=comb,
+            extent=extent,
+            n_sigma=n_sigma,
+            magnification=magnification,
+            ix_uni=ix_uni,
+            ix_branch=ix_branch,
+        )
+        ax = axes[index]
+        ax.fill(*envelope.outline.T, color=color, alpha=alpha, zorder=5, label=envelope.label)
+        ax.plot(*envelope.centroid.T, color="black", linewidth=0.8, zorder=6, label="Centroid")
+        if zoom:
+            xlim, ylim = envelope.limits(zoom_padding)
+            ax.set_xlim(kwargs.get("xlim") or xlim)
+            ax.set_ylim(kwargs.get("ylim") or ylim)
+            # Tao's fixed ticks are spaced for the whole floor plan.
+            for axis in (ax.xaxis, ax.yaxis):
+                axis.set_major_locator(matplotlib.ticker.AutoLocator())
+                axis.set_major_formatter(matplotlib.ticker.ScalarFormatter())
+        if legend:
+            ax.legend()
+        return graphs, fig, axes
 
     def plot_ele_methods(
         self,

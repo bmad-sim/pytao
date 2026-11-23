@@ -54,7 +54,11 @@ from .sections import PhotonWho as PhotonWho
 from .time_stats import _pytao_stats
 
 if TYPE_CHECKING:
+    from beamphysics import ParticleGroup
+
     from pytao import Tao
+
+    from ..floor import FloorTable
 
 
 class ElementNotFoundError(Exception):
@@ -1340,6 +1344,40 @@ class Element(TaoBaseModel, extra="forbid"):
 
         return self.mat6.symplectic_error
 
+    def particles_to_floor(self, P: ParticleGroup) -> ParticleGroup:
+        """
+        Convert particles in this element from local to floor coordinates.
+
+        All particles are taken to be in this element. Each is placed by its
+        `location` record (-1 upstream end, 1 downstream end, 0 inside at its
+        `s`), defaulting to the downstream end. See
+        `FloorTable.particles_to_floor` for details.
+
+        Parameters
+        ----------
+        P : ParticleGroup
+
+        Returns
+        -------
+        ParticleGroup
+            A new group in floor coordinates.
+
+        Raises
+        ------
+        ValueError
+            If `floor`, `methods`, or `attrs` for a bend, is not filled, or if the
+            particles' `ix_ele` or `ix_branch` records name another element.
+        """
+        from ..floor import FloorTable
+
+        table = FloorTable.from_elements([self], which=self.which)
+        if len(table) == 0:
+            raise ValueError(
+                f"{self.head.name} is a lord with slaves and has no floor position of "
+                f"its own; use its slave elements (see `floor.end.slaves`)."
+            )
+        return table.particles_to_floor(P)
+
 
 class Lattice(TaoBaseModel):
     """
@@ -1378,6 +1416,18 @@ class Lattice(TaoBaseModel):
     def by_element_index(self) -> dict[int, Element]:
         """A dictionary of element index to `Element`."""
         return {ele.head.ix_ele: ele for ele in self.elements}
+
+    def floor_table(self) -> FloorTable:
+        """
+        The `FloorTable` of this lattice's elements.
+
+        Elements need `floor` filled, and bends `attrs` as well. For a lattice
+        holding only what this needs, use
+        `Lattice.from_tao_eles(tao, eles, defaults=False, floor=True, attrs=True, methods=True)`.
+        """
+        from ..floor import FloorTable
+
+        return FloorTable.from_elements(self.elements, which=self.which)
 
     @classmethod
     def from_tao_eles(

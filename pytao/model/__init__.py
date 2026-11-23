@@ -97,6 +97,8 @@ from .ele import (
     PhotonWho,
     Which,
 )
+from .ele.sections import w_matrix_from_angles
+from .floor import FloorTable
 from .types import ArgumentType, FloatSequence, IntSequence
 
 __all__ = [
@@ -172,6 +174,7 @@ __all__ = [
     "EmptyElementNameError",
     "FillDefault",
     "FloatSequence",
+    "FloorTable",
     "FloorWhere",
     "GeneralAttributes",
     "IntSequence",
@@ -188,4 +191,5 @@ __all__ = [
     "dump_model",
     "load_model",
     "load_model_data",
+    "w_matrix_from_angles",
 ]

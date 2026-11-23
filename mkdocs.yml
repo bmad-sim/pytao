@@ -19,6 +19,7 @@ nav:
       - examples/plot-bokeh-vars.ipynb
       - examples/plot-bokeh-particles.ipynb
       - examples/bunch.ipynb
+      - examples/floor-coordinates.ipynb
       - examples/special_parsers.ipynb
       - examples/fodo.ipynb
       - examples/beam_track_progress_bar.ipynb
@@ -69,6 +70,8 @@ theme:
         name: Switch to light mode
 
 markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
   - pymdownx.highlight
   - pymdownx.superfences:
       custom_fences:
@@ -85,6 +88,10 @@ extra:
 
 extra_css:
   - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
 
 plugins:
   - search
