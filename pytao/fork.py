@@ -28,6 +28,8 @@ T = TypeVar("T")
 R = TypeVar("R")
 
 _READ_CHUNK = 1 << 20
+# How often to check for children that exited without their pipe reaching EOF.
+_EXIT_POLL_INTERVAL = 0.25
 
 # Signals whose handlers may raise in the forking process to unwind `fork_map`.
 _UNWINDING_SIGNALS = (signal.SIGINT, signal.SIGTERM)
@@ -278,6 +280,30 @@ def fork_map_payloads(
             live[read_fd] = child
             sel.register(read_fd, selectors.EVENT_READ, child)
 
+    def finish(child: _Child, status: int) -> None:
+        sel.unregister(child.fd)
+        os.close(child.fd)
+        del live[child.fd]
+        exit_code = os.waitstatus_to_exitcode(status)
+        payload = bytes(child.buf)
+        if raises and exit_code != _EXIT_OK:
+            _decode_payload(child.index, payload, exit_code)
+        results[child.index] = (payload, exit_code)
+        next_index = next(pending, None)
+        if next_index is not None:
+            spawn(next_index)
+
+    def finish_exited() -> None:
+        # EOF never arrives if `func` left a process holding the write end.
+        for child in list(live.values()):
+            pid, status = os.waitpid(child.pid, os.WNOHANG)
+            if pid:
+                os.set_blocking(child.fd, False)
+                with contextlib.suppress(BlockingIOError):
+                    while chunk := os.read(child.fd, _READ_CHUNK):
+                        child.buf += chunk
+                finish(child, status)
+
     try:
         for _ in range(workers):
             spawn(next(pending))
@@ -292,25 +318,20 @@ def fork_map_payloads(
                         f"item(s) still running"
                     )
 
-            for key, _ in sel.select(timeout=remaining):
+            wait = _EXIT_POLL_INTERVAL
+            if remaining is not None:
+                wait = min(wait, remaining)
+            ready = sel.select(timeout=wait)
+            if not ready:
+                finish_exited()
+            for key, _ in ready:
                 child: _Child = key.data
                 chunk = os.read(key.fd, _READ_CHUNK)
                 if chunk:
                     child.buf += chunk
                     continue
-
-                sel.unregister(key.fd)
-                os.close(key.fd)
-                del live[key.fd]
                 _, status = os.waitpid(child.pid, 0)
-                exit_code = os.waitstatus_to_exitcode(status)
-                payload = bytes(child.buf)
-                if raises and exit_code != _EXIT_OK:
-                    _decode_payload(child.index, payload, exit_code)
-                results[child.index] = (payload, exit_code)
-                next_index = next(pending, None)
-                if next_index is not None:
-                    spawn(next_index)
+                finish(child, status)
 
         return results
     finally:

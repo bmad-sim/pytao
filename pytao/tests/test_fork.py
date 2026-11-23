@@ -157,6 +157,15 @@ def track_beam_and_read(tao: Tao, item: Any) -> np.ndarray:
     return bunch_x(tao, item)
 
 
+def leave_process_holding_pipe(tao: Tao, item: Any) -> int:
+    """Leave a process behind that holds this child's result pipe open."""
+    pid = os.fork()
+    if pid == 0:
+        time.sleep(15.0)
+        os._exit(0)
+    return pid
+
+
 def test_independent_results(tao: SubprocessTao) -> None:
     k1_before = float(tao.ele_gen_attribs("Q1")["K1"])
     items = [1.0, 2.0, 3.0]
@@ -495,3 +504,12 @@ def test_children_track_beam_after_parent_tracked() -> None:
         results = tao.fork_map(track_beam_and_read, [None, None], timeout=120.0)
     for result in results:
         assert np.allclose(result, expected)
+
+
+def test_lingering_process_does_not_block_result(tao: SubprocessTao) -> None:
+    t0 = time.monotonic()
+    pids = tao.fork_map(leave_process_holding_pipe, [None, None], timeout=5.0)
+    elapsed = time.monotonic() - t0
+    for pid in pids:
+        os.kill(pid, signal.SIGKILL)
+    assert elapsed < 3.0
