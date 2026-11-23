@@ -565,6 +565,8 @@
       
         
       
+        
+      
     
     
     
@@ -819,6 +821,34 @@
     
   
     Bunch Commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/floor-coordinates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Particles in floor coordinates
   
 
     
@@ -2044,9 +2074,7 @@ callbacks resulting from user interaction.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1447</span>
-<span class="normal">1448</span>
-<span class="normal">1449</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1449</span>
 <span class="normal">1450</span>
 <span class="normal">1451</span>
 <span class="normal">1452</span>
@@ -2091,7 +2119,9 @@ callbacks resulting from user interaction.</p>
 <span class="normal">1491</span>
 <span class="normal">1492</span>
 <span class="normal">1493</span>
-<span class="normal">1494</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">1494</span>
+<span class="normal">1495</span>
+<span class="normal">1496</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">manager</span><span class="p">:</span> <span class="n">BokehGraphManager</span> <span class="o">|</span> <span class="n">NotebookGraphManager</span><span class="p">,</span>
     <span class="n">graphs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AnyGraph</span><span class="p">],</span>
@@ -2173,15 +2203,15 @@ callbacks resulting from user interaction.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1496</span>
-<span class="normal">1497</span>
-<span class="normal">1498</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1498</span>
 <span class="normal">1499</span>
 <span class="normal">1500</span>
 <span class="normal">1501</span>
 <span class="normal">1502</span>
 <span class="normal">1503</span>
-<span class="normal">1504</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BokehAppState</span><span class="p">:</span>
+<span class="normal">1504</span>
+<span class="normal">1505</span>
+<span class="normal">1506</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BokehAppState</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Create an independent application state based on the graph data."""</span>
     <span class="n">pairs</span><span class="p">,</span> <span class="n">layout_pairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_figures</span><span class="p">()</span>
     <span class="n">grid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grid_figures</span><span class="p">(</span><span class="n">pairs</span><span class="p">,</span> <span class="n">layout_pairs</span><span class="p">)</span>
@@ -2552,9 +2582,7 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2259</span>
-<span class="normal">2260</span>
-<span class="normal">2261</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2261</span>
 <span class="normal">2262</span>
 <span class="normal">2263</span>
 <span class="normal">2264</span>
@@ -2651,7 +2679,9 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
 <span class="normal">2355</span>
 <span class="normal">2356</span>
 <span class="normal">2357</span>
-<span class="normal">2358</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
+<span class="normal">2358</span>
+<span class="normal">2359</span>
+<span class="normal">2360</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">template</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -3007,116 +3037,116 @@ number of lanes.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2433</span>
-<span class="normal">2434</span>
-<span class="normal">2435</span>
-<span class="normal">2436</span>
-<span class="normal">2437</span>
-<span class="normal">2438</span>
-<span class="normal">2439</span>
-<span class="normal">2440</span>
-<span class="normal">2441</span>
-<span class="normal">2442</span>
-<span class="normal">2443</span>
-<span class="normal">2444</span>
-<span class="normal">2445</span>
-<span class="normal">2446</span>
-<span class="normal">2447</span>
-<span class="normal">2448</span>
-<span class="normal">2449</span>
-<span class="normal">2450</span>
-<span class="normal">2451</span>
-<span class="normal">2452</span>
-<span class="normal">2453</span>
-<span class="normal">2454</span>
-<span class="normal">2455</span>
-<span class="normal">2456</span>
-<span class="normal">2457</span>
-<span class="normal">2458</span>
-<span class="normal">2459</span>
-<span class="normal">2460</span>
-<span class="normal">2461</span>
-<span class="normal">2462</span>
-<span class="normal">2463</span>
-<span class="normal">2464</span>
-<span class="normal">2465</span>
-<span class="normal">2466</span>
-<span class="normal">2467</span>
-<span class="normal">2468</span>
-<span class="normal">2469</span>
-<span class="normal">2470</span>
-<span class="normal">2471</span>
-<span class="normal">2472</span>
-<span class="normal">2473</span>
-<span class="normal">2474</span>
-<span class="normal">2475</span>
-<span class="normal">2476</span>
-<span class="normal">2477</span>
-<span class="normal">2478</span>
-<span class="normal">2479</span>
-<span class="normal">2480</span>
-<span class="normal">2481</span>
-<span class="normal">2482</span>
-<span class="normal">2483</span>
-<span class="normal">2484</span>
-<span class="normal">2485</span>
-<span class="normal">2486</span>
-<span class="normal">2487</span>
-<span class="normal">2488</span>
-<span class="normal">2489</span>
-<span class="normal">2490</span>
-<span class="normal">2491</span>
-<span class="normal">2492</span>
-<span class="normal">2493</span>
-<span class="normal">2494</span>
-<span class="normal">2495</span>
-<span class="normal">2496</span>
-<span class="normal">2497</span>
-<span class="normal">2498</span>
-<span class="normal">2499</span>
-<span class="normal">2500</span>
-<span class="normal">2501</span>
-<span class="normal">2502</span>
-<span class="normal">2503</span>
-<span class="normal">2504</span>
-<span class="normal">2505</span>
-<span class="normal">2506</span>
-<span class="normal">2507</span>
-<span class="normal">2508</span>
-<span class="normal">2509</span>
-<span class="normal">2510</span>
-<span class="normal">2511</span>
-<span class="normal">2512</span>
-<span class="normal">2513</span>
-<span class="normal">2514</span>
-<span class="normal">2515</span>
-<span class="normal">2516</span>
-<span class="normal">2517</span>
-<span class="normal">2518</span>
-<span class="normal">2519</span>
-<span class="normal">2520</span>
-<span class="normal">2521</span>
-<span class="normal">2522</span>
-<span class="normal">2523</span>
-<span class="normal">2524</span>
-<span class="normal">2525</span>
-<span class="normal">2526</span>
-<span class="normal">2527</span>
-<span class="normal">2528</span>
-<span class="normal">2529</span>
-<span class="normal">2530</span>
-<span class="normal">2531</span>
-<span class="normal">2532</span>
-<span class="normal">2533</span>
-<span class="normal">2534</span>
-<span class="normal">2535</span>
-<span class="normal">2536</span>
-<span class="normal">2537</span>
-<span class="normal">2538</span>
-<span class="normal">2539</span>
-<span class="normal">2540</span>
-<span class="normal">2541</span>
-<span class="normal">2542</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_ele_methods</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2566</span>
+<span class="normal">2567</span>
+<span class="normal">2568</span>
+<span class="normal">2569</span>
+<span class="normal">2570</span>
+<span class="normal">2571</span>
+<span class="normal">2572</span>
+<span class="normal">2573</span>
+<span class="normal">2574</span>
+<span class="normal">2575</span>
+<span class="normal">2576</span>
+<span class="normal">2577</span>
+<span class="normal">2578</span>
+<span class="normal">2579</span>
+<span class="normal">2580</span>
+<span class="normal">2581</span>
+<span class="normal">2582</span>
+<span class="normal">2583</span>
+<span class="normal">2584</span>
+<span class="normal">2585</span>
+<span class="normal">2586</span>
+<span class="normal">2587</span>
+<span class="normal">2588</span>
+<span class="normal">2589</span>
+<span class="normal">2590</span>
+<span class="normal">2591</span>
+<span class="normal">2592</span>
+<span class="normal">2593</span>
+<span class="normal">2594</span>
+<span class="normal">2595</span>
+<span class="normal">2596</span>
+<span class="normal">2597</span>
+<span class="normal">2598</span>
+<span class="normal">2599</span>
+<span class="normal">2600</span>
+<span class="normal">2601</span>
+<span class="normal">2602</span>
+<span class="normal">2603</span>
+<span class="normal">2604</span>
+<span class="normal">2605</span>
+<span class="normal">2606</span>
+<span class="normal">2607</span>
+<span class="normal">2608</span>
+<span class="normal">2609</span>
+<span class="normal">2610</span>
+<span class="normal">2611</span>
+<span class="normal">2612</span>
+<span class="normal">2613</span>
+<span class="normal">2614</span>
+<span class="normal">2615</span>
+<span class="normal">2616</span>
+<span class="normal">2617</span>
+<span class="normal">2618</span>
+<span class="normal">2619</span>
+<span class="normal">2620</span>
+<span class="normal">2621</span>
+<span class="normal">2622</span>
+<span class="normal">2623</span>
+<span class="normal">2624</span>
+<span class="normal">2625</span>
+<span class="normal">2626</span>
+<span class="normal">2627</span>
+<span class="normal">2628</span>
+<span class="normal">2629</span>
+<span class="normal">2630</span>
+<span class="normal">2631</span>
+<span class="normal">2632</span>
+<span class="normal">2633</span>
+<span class="normal">2634</span>
+<span class="normal">2635</span>
+<span class="normal">2636</span>
+<span class="normal">2637</span>
+<span class="normal">2638</span>
+<span class="normal">2639</span>
+<span class="normal">2640</span>
+<span class="normal">2641</span>
+<span class="normal">2642</span>
+<span class="normal">2643</span>
+<span class="normal">2644</span>
+<span class="normal">2645</span>
+<span class="normal">2646</span>
+<span class="normal">2647</span>
+<span class="normal">2648</span>
+<span class="normal">2649</span>
+<span class="normal">2650</span>
+<span class="normal">2651</span>
+<span class="normal">2652</span>
+<span class="normal">2653</span>
+<span class="normal">2654</span>
+<span class="normal">2655</span>
+<span class="normal">2656</span>
+<span class="normal">2657</span>
+<span class="normal">2658</span>
+<span class="normal">2659</span>
+<span class="normal">2660</span>
+<span class="normal">2661</span>
+<span class="normal">2662</span>
+<span class="normal">2663</span>
+<span class="normal">2664</span>
+<span class="normal">2665</span>
+<span class="normal">2666</span>
+<span class="normal">2667</span>
+<span class="normal">2668</span>
+<span class="normal">2669</span>
+<span class="normal">2670</span>
+<span class="normal">2671</span>
+<span class="normal">2672</span>
+<span class="normal">2673</span>
+<span class="normal">2674</span>
+<span class="normal">2675</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_ele_methods</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">ElementMethodsPlotData</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -3411,78 +3441,78 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2360</span>
-<span class="normal">2361</span>
-<span class="normal">2362</span>
-<span class="normal">2363</span>
-<span class="normal">2364</span>
-<span class="normal">2365</span>
-<span class="normal">2366</span>
-<span class="normal">2367</span>
-<span class="normal">2368</span>
-<span class="normal">2369</span>
-<span class="normal">2370</span>
-<span class="normal">2371</span>
-<span class="normal">2372</span>
-<span class="normal">2373</span>
-<span class="normal">2374</span>
-<span class="normal">2375</span>
-<span class="normal">2376</span>
-<span class="normal">2377</span>
-<span class="normal">2378</span>
-<span class="normal">2379</span>
-<span class="normal">2380</span>
-<span class="normal">2381</span>
-<span class="normal">2382</span>
-<span class="normal">2383</span>
-<span class="normal">2384</span>
-<span class="normal">2385</span>
-<span class="normal">2386</span>
-<span class="normal">2387</span>
-<span class="normal">2388</span>
-<span class="normal">2389</span>
-<span class="normal">2390</span>
-<span class="normal">2391</span>
-<span class="normal">2392</span>
-<span class="normal">2393</span>
-<span class="normal">2394</span>
-<span class="normal">2395</span>
-<span class="normal">2396</span>
-<span class="normal">2397</span>
-<span class="normal">2398</span>
-<span class="normal">2399</span>
-<span class="normal">2400</span>
-<span class="normal">2401</span>
-<span class="normal">2402</span>
-<span class="normal">2403</span>
-<span class="normal">2404</span>
-<span class="normal">2405</span>
-<span class="normal">2406</span>
-<span class="normal">2407</span>
-<span class="normal">2408</span>
-<span class="normal">2409</span>
-<span class="normal">2410</span>
-<span class="normal">2411</span>
-<span class="normal">2412</span>
-<span class="normal">2413</span>
-<span class="normal">2414</span>
-<span class="normal">2415</span>
-<span class="normal">2416</span>
-<span class="normal">2417</span>
-<span class="normal">2418</span>
-<span class="normal">2419</span>
-<span class="normal">2420</span>
-<span class="normal">2421</span>
-<span class="normal">2422</span>
-<span class="normal">2423</span>
-<span class="normal">2424</span>
-<span class="normal">2425</span>
-<span class="normal">2426</span>
-<span class="normal">2427</span>
-<span class="normal">2428</span>
-<span class="normal">2429</span>
-<span class="normal">2430</span>
-<span class="normal">2431</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_field</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2493</span>
+<span class="normal">2494</span>
+<span class="normal">2495</span>
+<span class="normal">2496</span>
+<span class="normal">2497</span>
+<span class="normal">2498</span>
+<span class="normal">2499</span>
+<span class="normal">2500</span>
+<span class="normal">2501</span>
+<span class="normal">2502</span>
+<span class="normal">2503</span>
+<span class="normal">2504</span>
+<span class="normal">2505</span>
+<span class="normal">2506</span>
+<span class="normal">2507</span>
+<span class="normal">2508</span>
+<span class="normal">2509</span>
+<span class="normal">2510</span>
+<span class="normal">2511</span>
+<span class="normal">2512</span>
+<span class="normal">2513</span>
+<span class="normal">2514</span>
+<span class="normal">2515</span>
+<span class="normal">2516</span>
+<span class="normal">2517</span>
+<span class="normal">2518</span>
+<span class="normal">2519</span>
+<span class="normal">2520</span>
+<span class="normal">2521</span>
+<span class="normal">2522</span>
+<span class="normal">2523</span>
+<span class="normal">2524</span>
+<span class="normal">2525</span>
+<span class="normal">2526</span>
+<span class="normal">2527</span>
+<span class="normal">2528</span>
+<span class="normal">2529</span>
+<span class="normal">2530</span>
+<span class="normal">2531</span>
+<span class="normal">2532</span>
+<span class="normal">2533</span>
+<span class="normal">2534</span>
+<span class="normal">2535</span>
+<span class="normal">2536</span>
+<span class="normal">2537</span>
+<span class="normal">2538</span>
+<span class="normal">2539</span>
+<span class="normal">2540</span>
+<span class="normal">2541</span>
+<span class="normal">2542</span>
+<span class="normal">2543</span>
+<span class="normal">2544</span>
+<span class="normal">2545</span>
+<span class="normal">2546</span>
+<span class="normal">2547</span>
+<span class="normal">2548</span>
+<span class="normal">2549</span>
+<span class="normal">2550</span>
+<span class="normal">2551</span>
+<span class="normal">2552</span>
+<span class="normal">2553</span>
+<span class="normal">2554</span>
+<span class="normal">2555</span>
+<span class="normal">2556</span>
+<span class="normal">2557</span>
+<span class="normal">2558</span>
+<span class="normal">2559</span>
+<span class="normal">2560</span>
+<span class="normal">2561</span>
+<span class="normal">2562</span>
+<span class="normal">2563</span>
+<span class="normal">2564</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_field</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ele_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -3554,6 +3584,653 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Saving plot to </span><span class="si">{</span><span class="n">filename</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">field</span><span class="p">,</span> <span class="n">fig</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h7 id="pytao.plotting.bokeh.BokehGraphManager.plot_floor_beam" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">pytao.plotting.bokeh.BokehGraphManager.plot_floor_beam</span>
+
+
+</h7>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">plot_floor_beam</span><span class="p">(</span><span class="n">template</span><span class="o">=</span><span class="s1">'floor_plan'</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">comb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="s1">'minmax'</span><span class="p">,</span> <span class="n">n_sigma</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">magnification</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ix_branch</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">zoom_padding</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'orange'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Plot the tracked beam's centroid and envelope on top of a floor plan.</p>
+<p>Uses the beam statistics Tao saves along the lattice when tracking a
+beam with <code>beam%comb_ds_save</code> set (see <code>Tao.bunch_comb</code>), converted to
+floor coordinates with a <code>FloorTable</code>.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>template</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Floor plan template to draw. Default is "floor_plan".</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;floor_plan&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>comb</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="pytao.model.Comb (pytao.model.ele.comb.Comb)" href="../element/#pytao.model.Comb">Comb</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Beam statistics to use, such as from <code>Comb.from_tao</code> or a slice of
+one. By default, the statistics are fetched from Tao.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>extent</code>
+            </td>
+            <td>
+                  <code>(&#39;minmax&#39;, &#39;sigma&#39;)</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>What the envelope shows. "minmax" (the default) is the full extent
+of the beam, from its outermost particle on each side. "sigma" is
+<code>n_sigma</code> RMS beam sizes either side of the centroid.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#34;minmax&#34;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>n_sigma</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Half-width of the envelope in beam sigmas, for <code>extent="sigma"</code>.
+Default is 3.</p>
+              </div>
+            </td>
+            <td>
+                  <code>3.0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>magnification</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Scale the beam's offsets from the reference orbit by this factor,
+to make a small beam visible at the scale of the machine. The
+floor plan itself is not scaled. Default is 1.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1.0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>ix_uni</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Universe index. Default is the current universe.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>ix_branch</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Branch the beam was tracked through. Default is 0.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>zoom</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Zoom in on the beam instead of showing the whole floor plan, for a
+beam tracked through part of a larger lattice. Default is False.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>zoom_padding</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Margin to leave around the beam when zooming, as a fraction of its
+extent. Default is 0.1.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.1</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>legend</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Show a legend for the envelope and centroid. Default is True.</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>color</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Envelope color.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;orange&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>alpha</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Envelope opacity.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.6</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>width</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>height</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>xlim</code>
+            </td>
+            <td>
+                  <code>(<span title="float">float</span>, <span title="float">float</span>)</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>ylim</code>
+            </td>
+            <td>
+                  <code>(<span title="float">float</span>, <span title="float">float</span>)</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>save</code>
+            </td>
+            <td>
+                  <code><span title="pathlib.Path">Path</span> or <span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Save the plot to the given filename.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>list of graphs</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="bokeh.plotting.figure">figure</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the template has no floor plan, or no beam statistics are saved.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="NotImplementedError">NotImplementedError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the floor plan is rotated.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2362</span>
+<span class="normal">2363</span>
+<span class="normal">2364</span>
+<span class="normal">2365</span>
+<span class="normal">2366</span>
+<span class="normal">2367</span>
+<span class="normal">2368</span>
+<span class="normal">2369</span>
+<span class="normal">2370</span>
+<span class="normal">2371</span>
+<span class="normal">2372</span>
+<span class="normal">2373</span>
+<span class="normal">2374</span>
+<span class="normal">2375</span>
+<span class="normal">2376</span>
+<span class="normal">2377</span>
+<span class="normal">2378</span>
+<span class="normal">2379</span>
+<span class="normal">2380</span>
+<span class="normal">2381</span>
+<span class="normal">2382</span>
+<span class="normal">2383</span>
+<span class="normal">2384</span>
+<span class="normal">2385</span>
+<span class="normal">2386</span>
+<span class="normal">2387</span>
+<span class="normal">2388</span>
+<span class="normal">2389</span>
+<span class="normal">2390</span>
+<span class="normal">2391</span>
+<span class="normal">2392</span>
+<span class="normal">2393</span>
+<span class="normal">2394</span>
+<span class="normal">2395</span>
+<span class="normal">2396</span>
+<span class="normal">2397</span>
+<span class="normal">2398</span>
+<span class="normal">2399</span>
+<span class="normal">2400</span>
+<span class="normal">2401</span>
+<span class="normal">2402</span>
+<span class="normal">2403</span>
+<span class="normal">2404</span>
+<span class="normal">2405</span>
+<span class="normal">2406</span>
+<span class="normal">2407</span>
+<span class="normal">2408</span>
+<span class="normal">2409</span>
+<span class="normal">2410</span>
+<span class="normal">2411</span>
+<span class="normal">2412</span>
+<span class="normal">2413</span>
+<span class="normal">2414</span>
+<span class="normal">2415</span>
+<span class="normal">2416</span>
+<span class="normal">2417</span>
+<span class="normal">2418</span>
+<span class="normal">2419</span>
+<span class="normal">2420</span>
+<span class="normal">2421</span>
+<span class="normal">2422</span>
+<span class="normal">2423</span>
+<span class="normal">2424</span>
+<span class="normal">2425</span>
+<span class="normal">2426</span>
+<span class="normal">2427</span>
+<span class="normal">2428</span>
+<span class="normal">2429</span>
+<span class="normal">2430</span>
+<span class="normal">2431</span>
+<span class="normal">2432</span>
+<span class="normal">2433</span>
+<span class="normal">2434</span>
+<span class="normal">2435</span>
+<span class="normal">2436</span>
+<span class="normal">2437</span>
+<span class="normal">2438</span>
+<span class="normal">2439</span>
+<span class="normal">2440</span>
+<span class="normal">2441</span>
+<span class="normal">2442</span>
+<span class="normal">2443</span>
+<span class="normal">2444</span>
+<span class="normal">2445</span>
+<span class="normal">2446</span>
+<span class="normal">2447</span>
+<span class="normal">2448</span>
+<span class="normal">2449</span>
+<span class="normal">2450</span>
+<span class="normal">2451</span>
+<span class="normal">2452</span>
+<span class="normal">2453</span>
+<span class="normal">2454</span>
+<span class="normal">2455</span>
+<span class="normal">2456</span>
+<span class="normal">2457</span>
+<span class="normal">2458</span>
+<span class="normal">2459</span>
+<span class="normal">2460</span>
+<span class="normal">2461</span>
+<span class="normal">2462</span>
+<span class="normal">2463</span>
+<span class="normal">2464</span>
+<span class="normal">2465</span>
+<span class="normal">2466</span>
+<span class="normal">2467</span>
+<span class="normal">2468</span>
+<span class="normal">2469</span>
+<span class="normal">2470</span>
+<span class="normal">2471</span>
+<span class="normal">2472</span>
+<span class="normal">2473</span>
+<span class="normal">2474</span>
+<span class="normal">2475</span>
+<span class="normal">2476</span>
+<span class="normal">2477</span>
+<span class="normal">2478</span>
+<span class="normal">2479</span>
+<span class="normal">2480</span>
+<span class="normal">2481</span>
+<span class="normal">2482</span>
+<span class="normal">2483</span>
+<span class="normal">2484</span>
+<span class="normal">2485</span>
+<span class="normal">2486</span>
+<span class="normal">2487</span>
+<span class="normal">2488</span>
+<span class="normal">2489</span>
+<span class="normal">2490</span>
+<span class="normal">2491</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_floor_beam</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">template</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"floor_plan"</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">comb</span><span class="p">:</span> <span class="n">Comb</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">extent</span><span class="p">:</span> <span class="n">BeamExtent</span> <span class="o">=</span> <span class="s2">"minmax"</span><span class="p">,</span>
+    <span class="n">n_sigma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.0</span><span class="p">,</span>
+    <span class="n">magnification</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ix_branch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">zoom</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">zoom_padding</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">legend</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"orange"</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">,</span>
+    <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">xlim</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ylim</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Plot the tracked beam's centroid and envelope on top of a floor plan.</span>
+
+<span class="sd">    Uses the beam statistics Tao saves along the lattice when tracking a</span>
+<span class="sd">    beam with `beam%comb_ds_save` set (see `Tao.bunch_comb`), converted to</span>
+<span class="sd">    floor coordinates with a `FloorTable`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    template : str, optional</span>
+<span class="sd">        Floor plan template to draw. Default is "floor_plan".</span>
+<span class="sd">    comb : Comb, optional</span>
+<span class="sd">        Beam statistics to use, such as from `Comb.from_tao` or a slice of</span>
+<span class="sd">        one. By default, the statistics are fetched from Tao.</span>
+<span class="sd">    extent : {"minmax", "sigma"}, optional</span>
+<span class="sd">        What the envelope shows. "minmax" (the default) is the full extent</span>
+<span class="sd">        of the beam, from its outermost particle on each side. "sigma" is</span>
+<span class="sd">        `n_sigma` RMS beam sizes either side of the centroid.</span>
+<span class="sd">    n_sigma : float, optional</span>
+<span class="sd">        Half-width of the envelope in beam sigmas, for `extent="sigma"`.</span>
+<span class="sd">        Default is 3.</span>
+<span class="sd">    magnification : float, optional</span>
+<span class="sd">        Scale the beam's offsets from the reference orbit by this factor,</span>
+<span class="sd">        to make a small beam visible at the scale of the machine. The</span>
+<span class="sd">        floor plan itself is not scaled. Default is 1.</span>
+<span class="sd">    ix_uni : int, optional</span>
+<span class="sd">        Universe index. Default is the current universe.</span>
+<span class="sd">    ix_branch : int, optional</span>
+<span class="sd">        Branch the beam was tracked through. Default is 0.</span>
+<span class="sd">    zoom : bool, optional</span>
+<span class="sd">        Zoom in on the beam instead of showing the whole floor plan, for a</span>
+<span class="sd">        beam tracked through part of a larger lattice. Default is False.</span>
+<span class="sd">    zoom_padding : float, optional</span>
+<span class="sd">        Margin to leave around the beam when zooming, as a fraction of its</span>
+<span class="sd">        extent. Default is 0.1.</span>
+<span class="sd">    legend : bool, optional</span>
+<span class="sd">        Show a legend for the envelope and centroid. Default is True.</span>
+<span class="sd">    color : str, optional</span>
+<span class="sd">        Envelope color.</span>
+<span class="sd">    alpha : float, optional</span>
+<span class="sd">        Envelope opacity.</span>
+<span class="sd">    width : int, optional</span>
+<span class="sd">    height : int, optional</span>
+<span class="sd">    xlim : (float, float), optional</span>
+<span class="sd">    ylim : (float, float), optional</span>
+<span class="sd">    save : pathlib.Path or str, optional</span>
+<span class="sd">        Save the plot to the given filename.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of graphs</span>
+
+<span class="sd">    figure</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the template has no floor plan, or no beam statistics are saved.</span>
+<span class="sd">    NotImplementedError</span>
+<span class="sd">        If the floor plan is rotated.</span>
+<span class="sd">    """</span>
+    <span class="n">graphs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prepare_graphs_by_name</span><span class="p">(</span>
+        <span class="n">template_name</span><span class="o">=</span><span class="n">template</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="n">xlim</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">ylim</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="n">ix_uni</span>
+    <span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="n">find_floor_plan_graph</span><span class="p">(</span><span class="n">graphs</span><span class="p">,</span> <span class="n">template</span><span class="p">)</span>
+    <span class="n">envelope</span> <span class="o">=</span> <span class="n">FloorBeamEnvelope</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tao</span><span class="p">,</span>
+        <span class="n">graph</span><span class="p">,</span>
+        <span class="n">comb</span><span class="o">=</span><span class="n">comb</span><span class="p">,</span>
+        <span class="n">extent</span><span class="o">=</span><span class="n">extent</span><span class="p">,</span>
+        <span class="n">n_sigma</span><span class="o">=</span><span class="n">n_sigma</span><span class="p">,</span>
+        <span class="n">magnification</span><span class="o">=</span><span class="n">magnification</span><span class="p">,</span>
+        <span class="n">ix_uni</span><span class="o">=</span><span class="n">ix_uni</span><span class="p">,</span>
+        <span class="n">ix_branch</span><span class="o">=</span><span class="n">ix_branch</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">BokehFloorPlanGraph</span><span class="p">(</span>
+        <span class="n">manager</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span>
+        <span class="n">width</span><span class="o">=</span><span class="n">width</span> <span class="ow">or</span> <span class="n">_Defaults</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+        <span class="n">height</span><span class="o">=</span><span class="n">height</span> <span class="ow">or</span> <span class="n">_Defaults</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">create_figure</span><span class="p">()</span>
+    <span class="n">envelope_renderer</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span>
+        <span class="o">*</span><span class="n">envelope</span><span class="o">.</span><span class="n">outline</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+        <span class="n">fill_color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+        <span class="n">fill_alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
+        <span class="n">line_alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">legend_label</span><span class="o">=</span><span class="n">envelope</span><span class="o">.</span><span class="n">label</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"floor_beam_envelope"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">zoom</span><span class="p">:</span>
+        <span class="c1"># Auto-ranging on the envelope alone keeps the figure's matched aspect.</span>
+        <span class="k">for</span> <span class="n">data_range</span> <span class="ow">in</span> <span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">x_range</span><span class="p">,</span> <span class="n">fig</span><span class="o">.</span><span class="n">y_range</span><span class="p">):</span>
+            <span class="n">data_range</span><span class="o">.</span><span class="n">renderers</span> <span class="o">=</span> <span class="p">[</span><span class="n">envelope_renderer</span><span class="p">]</span>
+            <span class="n">data_range</span><span class="o">.</span><span class="n">range_padding</span> <span class="o">=</span> <span class="n">zoom_padding</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
+        <span class="o">*</span><span class="n">envelope</span><span class="o">.</span><span class="n">centroid</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+        <span class="n">line_color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span>
+        <span class="n">legend_label</span><span class="o">=</span><span class="s2">"Centroid"</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"floor_beam_centroid"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">legend</span><span class="o">.</span><span class="n">visible</span> <span class="o">=</span> <span class="n">legend</span>
+
+    <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">save</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">save</span> <span class="o">=</span> <span class="s2">"floor_beam"</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">save_plot</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">save</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Saving plot to </span><span class="si">{</span><span class="n">filename</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">graphs</span><span class="p">,</span> <span class="n">fig</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3854,9 +4531,7 @@ placed graphs prior to plotting.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2163</span>
-<span class="normal">2164</span>
-<span class="normal">2165</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2165</span>
 <span class="normal">2166</span>
 <span class="normal">2167</span>
 <span class="normal">2168</span>
@@ -3948,7 +4623,9 @@ placed graphs prior to plotting.</p>
 <span class="normal">2254</span>
 <span class="normal">2255</span>
 <span class="normal">2256</span>
-<span class="normal">2257</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_grid</span><span class="p">(</span>
+<span class="normal">2257</span>
+<span class="normal">2258</span>
+<span class="normal">2259</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_grid</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">templates</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">grid</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
@@ -4122,9 +4799,7 @@ placed graphs prior to plotting.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2141</span>
-<span class="normal">2142</span>
-<span class="normal">2143</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2143</span>
 <span class="normal">2144</span>
 <span class="normal">2145</span>
 <span class="normal">2146</span>
@@ -4142,7 +4817,9 @@ placed graphs prior to plotting.</p>
 <span class="normal">2158</span>
 <span class="normal">2159</span>
 <span class="normal">2160</span>
-<span class="normal">2161</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_bokeh_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">AnyGraph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnyBokehGraph</span><span class="p">:</span>
+<span class="normal">2161</span>
+<span class="normal">2162</span>
+<span class="normal">2163</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_bokeh_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">AnyGraph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnyBokehGraph</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a Bokeh graph instance from the backend-agnostic AnyGraph version.</span>
 
@@ -4531,97 +5208,97 @@ If <code>True</code>, saves to a filename based on the plot title.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2634</span>
-<span class="normal">2635</span>
-<span class="normal">2636</span>
-<span class="normal">2637</span>
-<span class="normal">2638</span>
-<span class="normal">2639</span>
-<span class="normal">2640</span>
-<span class="normal">2641</span>
-<span class="normal">2642</span>
-<span class="normal">2643</span>
-<span class="normal">2644</span>
-<span class="normal">2645</span>
-<span class="normal">2646</span>
-<span class="normal">2647</span>
-<span class="normal">2648</span>
-<span class="normal">2649</span>
-<span class="normal">2650</span>
-<span class="normal">2651</span>
-<span class="normal">2652</span>
-<span class="normal">2653</span>
-<span class="normal">2654</span>
-<span class="normal">2655</span>
-<span class="normal">2656</span>
-<span class="normal">2657</span>
-<span class="normal">2658</span>
-<span class="normal">2659</span>
-<span class="normal">2660</span>
-<span class="normal">2661</span>
-<span class="normal">2662</span>
-<span class="normal">2663</span>
-<span class="normal">2664</span>
-<span class="normal">2665</span>
-<span class="normal">2666</span>
-<span class="normal">2667</span>
-<span class="normal">2668</span>
-<span class="normal">2669</span>
-<span class="normal">2670</span>
-<span class="normal">2671</span>
-<span class="normal">2672</span>
-<span class="normal">2673</span>
-<span class="normal">2674</span>
-<span class="normal">2675</span>
-<span class="normal">2676</span>
-<span class="normal">2677</span>
-<span class="normal">2678</span>
-<span class="normal">2679</span>
-<span class="normal">2680</span>
-<span class="normal">2681</span>
-<span class="normal">2682</span>
-<span class="normal">2683</span>
-<span class="normal">2684</span>
-<span class="normal">2685</span>
-<span class="normal">2686</span>
-<span class="normal">2687</span>
-<span class="normal">2688</span>
-<span class="normal">2689</span>
-<span class="normal">2690</span>
-<span class="normal">2691</span>
-<span class="normal">2692</span>
-<span class="normal">2693</span>
-<span class="normal">2694</span>
-<span class="normal">2695</span>
-<span class="normal">2696</span>
-<span class="normal">2697</span>
-<span class="normal">2698</span>
-<span class="normal">2699</span>
-<span class="normal">2700</span>
-<span class="normal">2701</span>
-<span class="normal">2702</span>
-<span class="normal">2703</span>
-<span class="normal">2704</span>
-<span class="normal">2705</span>
-<span class="normal">2706</span>
-<span class="normal">2707</span>
-<span class="normal">2708</span>
-<span class="normal">2709</span>
-<span class="normal">2710</span>
-<span class="normal">2711</span>
-<span class="normal">2712</span>
-<span class="normal">2713</span>
-<span class="normal">2714</span>
-<span class="normal">2715</span>
-<span class="normal">2716</span>
-<span class="normal">2717</span>
-<span class="normal">2718</span>
-<span class="normal">2719</span>
-<span class="normal">2720</span>
-<span class="normal">2721</span>
-<span class="normal">2722</span>
-<span class="normal">2723</span>
-<span class="normal">2724</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2767</span>
+<span class="normal">2768</span>
+<span class="normal">2769</span>
+<span class="normal">2770</span>
+<span class="normal">2771</span>
+<span class="normal">2772</span>
+<span class="normal">2773</span>
+<span class="normal">2774</span>
+<span class="normal">2775</span>
+<span class="normal">2776</span>
+<span class="normal">2777</span>
+<span class="normal">2778</span>
+<span class="normal">2779</span>
+<span class="normal">2780</span>
+<span class="normal">2781</span>
+<span class="normal">2782</span>
+<span class="normal">2783</span>
+<span class="normal">2784</span>
+<span class="normal">2785</span>
+<span class="normal">2786</span>
+<span class="normal">2787</span>
+<span class="normal">2788</span>
+<span class="normal">2789</span>
+<span class="normal">2790</span>
+<span class="normal">2791</span>
+<span class="normal">2792</span>
+<span class="normal">2793</span>
+<span class="normal">2794</span>
+<span class="normal">2795</span>
+<span class="normal">2796</span>
+<span class="normal">2797</span>
+<span class="normal">2798</span>
+<span class="normal">2799</span>
+<span class="normal">2800</span>
+<span class="normal">2801</span>
+<span class="normal">2802</span>
+<span class="normal">2803</span>
+<span class="normal">2804</span>
+<span class="normal">2805</span>
+<span class="normal">2806</span>
+<span class="normal">2807</span>
+<span class="normal">2808</span>
+<span class="normal">2809</span>
+<span class="normal">2810</span>
+<span class="normal">2811</span>
+<span class="normal">2812</span>
+<span class="normal">2813</span>
+<span class="normal">2814</span>
+<span class="normal">2815</span>
+<span class="normal">2816</span>
+<span class="normal">2817</span>
+<span class="normal">2818</span>
+<span class="normal">2819</span>
+<span class="normal">2820</span>
+<span class="normal">2821</span>
+<span class="normal">2822</span>
+<span class="normal">2823</span>
+<span class="normal">2824</span>
+<span class="normal">2825</span>
+<span class="normal">2826</span>
+<span class="normal">2827</span>
+<span class="normal">2828</span>
+<span class="normal">2829</span>
+<span class="normal">2830</span>
+<span class="normal">2831</span>
+<span class="normal">2832</span>
+<span class="normal">2833</span>
+<span class="normal">2834</span>
+<span class="normal">2835</span>
+<span class="normal">2836</span>
+<span class="normal">2837</span>
+<span class="normal">2838</span>
+<span class="normal">2839</span>
+<span class="normal">2840</span>
+<span class="normal">2841</span>
+<span class="normal">2842</span>
+<span class="normal">2843</span>
+<span class="normal">2844</span>
+<span class="normal">2845</span>
+<span class="normal">2846</span>
+<span class="normal">2847</span>
+<span class="normal">2848</span>
+<span class="normal">2849</span>
+<span class="normal">2850</span>
+<span class="normal">2851</span>
+<span class="normal">2852</span>
+<span class="normal">2853</span>
+<span class="normal">2854</span>
+<span class="normal">2855</span>
+<span class="normal">2856</span>
+<span class="normal">2857</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">template</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -4864,50 +5541,50 @@ Matplotlib defaults to "PRGn_r", and bokeh defaults to "".</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2726</span>
-<span class="normal">2727</span>
-<span class="normal">2728</span>
-<span class="normal">2729</span>
-<span class="normal">2730</span>
-<span class="normal">2731</span>
-<span class="normal">2732</span>
-<span class="normal">2733</span>
-<span class="normal">2734</span>
-<span class="normal">2735</span>
-<span class="normal">2736</span>
-<span class="normal">2737</span>
-<span class="normal">2738</span>
-<span class="normal">2739</span>
-<span class="normal">2740</span>
-<span class="normal">2741</span>
-<span class="normal">2742</span>
-<span class="normal">2743</span>
-<span class="normal">2744</span>
-<span class="normal">2745</span>
-<span class="normal">2746</span>
-<span class="normal">2747</span>
-<span class="normal">2748</span>
-<span class="normal">2749</span>
-<span class="normal">2750</span>
-<span class="normal">2751</span>
-<span class="normal">2752</span>
-<span class="normal">2753</span>
-<span class="normal">2754</span>
-<span class="normal">2755</span>
-<span class="normal">2756</span>
-<span class="normal">2757</span>
-<span class="normal">2758</span>
-<span class="normal">2759</span>
-<span class="normal">2760</span>
-<span class="normal">2761</span>
-<span class="normal">2762</span>
-<span class="normal">2763</span>
-<span class="normal">2764</span>
-<span class="normal">2765</span>
-<span class="normal">2766</span>
-<span class="normal">2767</span>
-<span class="normal">2768</span>
-<span class="normal">2769</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_field</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2865</span>
+<span class="normal">2866</span>
+<span class="normal">2867</span>
+<span class="normal">2868</span>
+<span class="normal">2869</span>
+<span class="normal">2870</span>
+<span class="normal">2871</span>
+<span class="normal">2872</span>
+<span class="normal">2873</span>
+<span class="normal">2874</span>
+<span class="normal">2875</span>
+<span class="normal">2876</span>
+<span class="normal">2877</span>
+<span class="normal">2878</span>
+<span class="normal">2879</span>
+<span class="normal">2880</span>
+<span class="normal">2881</span>
+<span class="normal">2882</span>
+<span class="normal">2883</span>
+<span class="normal">2884</span>
+<span class="normal">2885</span>
+<span class="normal">2886</span>
+<span class="normal">2887</span>
+<span class="normal">2888</span>
+<span class="normal">2889</span>
+<span class="normal">2890</span>
+<span class="normal">2891</span>
+<span class="normal">2892</span>
+<span class="normal">2893</span>
+<span class="normal">2894</span>
+<span class="normal">2895</span>
+<span class="normal">2896</span>
+<span class="normal">2897</span>
+<span class="normal">2898</span>
+<span class="normal">2899</span>
+<span class="normal">2900</span>
+<span class="normal">2901</span>
+<span class="normal">2902</span>
+<span class="normal">2903</span>
+<span class="normal">2904</span>
+<span class="normal">2905</span>
+<span class="normal">2906</span>
+<span class="normal">2907</span>
+<span class="normal">2908</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_field</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ele_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -5267,91 +5944,91 @@ placed graphs prior to plotting.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2548</span>
-<span class="normal">2549</span>
-<span class="normal">2550</span>
-<span class="normal">2551</span>
-<span class="normal">2552</span>
-<span class="normal">2553</span>
-<span class="normal">2554</span>
-<span class="normal">2555</span>
-<span class="normal">2556</span>
-<span class="normal">2557</span>
-<span class="normal">2558</span>
-<span class="normal">2559</span>
-<span class="normal">2560</span>
-<span class="normal">2561</span>
-<span class="normal">2562</span>
-<span class="normal">2563</span>
-<span class="normal">2564</span>
-<span class="normal">2565</span>
-<span class="normal">2566</span>
-<span class="normal">2567</span>
-<span class="normal">2568</span>
-<span class="normal">2569</span>
-<span class="normal">2570</span>
-<span class="normal">2571</span>
-<span class="normal">2572</span>
-<span class="normal">2573</span>
-<span class="normal">2574</span>
-<span class="normal">2575</span>
-<span class="normal">2576</span>
-<span class="normal">2577</span>
-<span class="normal">2578</span>
-<span class="normal">2579</span>
-<span class="normal">2580</span>
-<span class="normal">2581</span>
-<span class="normal">2582</span>
-<span class="normal">2583</span>
-<span class="normal">2584</span>
-<span class="normal">2585</span>
-<span class="normal">2586</span>
-<span class="normal">2587</span>
-<span class="normal">2588</span>
-<span class="normal">2589</span>
-<span class="normal">2590</span>
-<span class="normal">2591</span>
-<span class="normal">2592</span>
-<span class="normal">2593</span>
-<span class="normal">2594</span>
-<span class="normal">2595</span>
-<span class="normal">2596</span>
-<span class="normal">2597</span>
-<span class="normal">2598</span>
-<span class="normal">2599</span>
-<span class="normal">2600</span>
-<span class="normal">2601</span>
-<span class="normal">2602</span>
-<span class="normal">2603</span>
-<span class="normal">2604</span>
-<span class="normal">2605</span>
-<span class="normal">2606</span>
-<span class="normal">2607</span>
-<span class="normal">2608</span>
-<span class="normal">2609</span>
-<span class="normal">2610</span>
-<span class="normal">2611</span>
-<span class="normal">2612</span>
-<span class="normal">2613</span>
-<span class="normal">2614</span>
-<span class="normal">2615</span>
-<span class="normal">2616</span>
-<span class="normal">2617</span>
-<span class="normal">2618</span>
-<span class="normal">2619</span>
-<span class="normal">2620</span>
-<span class="normal">2621</span>
-<span class="normal">2622</span>
-<span class="normal">2623</span>
-<span class="normal">2624</span>
-<span class="normal">2625</span>
-<span class="normal">2626</span>
-<span class="normal">2627</span>
-<span class="normal">2628</span>
-<span class="normal">2629</span>
-<span class="normal">2630</span>
-<span class="normal">2631</span>
-<span class="normal">2632</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_grid</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2681</span>
+<span class="normal">2682</span>
+<span class="normal">2683</span>
+<span class="normal">2684</span>
+<span class="normal">2685</span>
+<span class="normal">2686</span>
+<span class="normal">2687</span>
+<span class="normal">2688</span>
+<span class="normal">2689</span>
+<span class="normal">2690</span>
+<span class="normal">2691</span>
+<span class="normal">2692</span>
+<span class="normal">2693</span>
+<span class="normal">2694</span>
+<span class="normal">2695</span>
+<span class="normal">2696</span>
+<span class="normal">2697</span>
+<span class="normal">2698</span>
+<span class="normal">2699</span>
+<span class="normal">2700</span>
+<span class="normal">2701</span>
+<span class="normal">2702</span>
+<span class="normal">2703</span>
+<span class="normal">2704</span>
+<span class="normal">2705</span>
+<span class="normal">2706</span>
+<span class="normal">2707</span>
+<span class="normal">2708</span>
+<span class="normal">2709</span>
+<span class="normal">2710</span>
+<span class="normal">2711</span>
+<span class="normal">2712</span>
+<span class="normal">2713</span>
+<span class="normal">2714</span>
+<span class="normal">2715</span>
+<span class="normal">2716</span>
+<span class="normal">2717</span>
+<span class="normal">2718</span>
+<span class="normal">2719</span>
+<span class="normal">2720</span>
+<span class="normal">2721</span>
+<span class="normal">2722</span>
+<span class="normal">2723</span>
+<span class="normal">2724</span>
+<span class="normal">2725</span>
+<span class="normal">2726</span>
+<span class="normal">2727</span>
+<span class="normal">2728</span>
+<span class="normal">2729</span>
+<span class="normal">2730</span>
+<span class="normal">2731</span>
+<span class="normal">2732</span>
+<span class="normal">2733</span>
+<span class="normal">2734</span>
+<span class="normal">2735</span>
+<span class="normal">2736</span>
+<span class="normal">2737</span>
+<span class="normal">2738</span>
+<span class="normal">2739</span>
+<span class="normal">2740</span>
+<span class="normal">2741</span>
+<span class="normal">2742</span>
+<span class="normal">2743</span>
+<span class="normal">2744</span>
+<span class="normal">2745</span>
+<span class="normal">2746</span>
+<span class="normal">2747</span>
+<span class="normal">2748</span>
+<span class="normal">2749</span>
+<span class="normal">2750</span>
+<span class="normal">2751</span>
+<span class="normal">2752</span>
+<span class="normal">2753</span>
+<span class="normal">2754</span>
+<span class="normal">2755</span>
+<span class="normal">2756</span>
+<span class="normal">2757</span>
+<span class="normal">2758</span>
+<span class="normal">2759</span>
+<span class="normal">2760</span>
+<span class="normal">2761</span>
+<span class="normal">2762</span>
+<span class="normal">2763</span>
+<span class="normal">2764</span>
+<span class="normal">2765</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_grid</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">templates</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">grid</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
@@ -5683,9 +6360,7 @@ placed graphs prior to plotting.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 957</span>
-<span class="normal"> 958</span>
-<span class="normal"> 959</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 959</span>
 <span class="normal"> 960</span>
 <span class="normal"> 961</span>
 <span class="normal"> 962</span>
@@ -5764,7 +6439,9 @@ placed graphs prior to plotting.</p>
 <span class="normal">1035</span>
 <span class="normal">1036</span>
 <span class="normal">1037</span>
-<span class="normal">1038</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">floor_plan_figure</span><span class="p">(</span>
+<span class="normal">1038</span>
+<span class="normal">1039</span>
+<span class="normal">1040</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">floor_plan_figure</span><span class="p">(</span>
     <span class="n">elements</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">FloorPlanElement</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">tools</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -6068,9 +6745,7 @@ placed graphs prior to plotting.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">866</span>
-<span class="normal">867</span>
-<span class="normal">868</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">868</span>
 <span class="normal">869</span>
 <span class="normal">870</span>
 <span class="normal">871</span>
@@ -6156,7 +6831,9 @@ placed graphs prior to plotting.</p>
 <span class="normal">951</span>
 <span class="normal">952</span>
 <span class="normal">953</span>
-<span class="normal">954</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">lat_layout_figure</span><span class="p">(</span>
+<span class="normal">954</span>
+<span class="normal">955</span>
+<span class="normal">956</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">lat_layout_figure</span><span class="p">(</span>
     <span class="n">elements</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">LatticeLayoutElement</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">tools</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -6592,9 +7269,7 @@ the page is opened.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/plotting/bokeh.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">135</span>
-<span class="normal">136</span>
-<span class="normal">137</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">137</span>
 <span class="normal">138</span>
 <span class="normal">139</span>
 <span class="normal">140</span>
@@ -6709,7 +7384,9 @@ the page is opened.</p>
 <span class="normal">249</span>
 <span class="normal">250</span>
 <span class="normal">251</span>
-<span class="normal">252</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_defaults</span><span class="p">(</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_defaults</span><span class="p">(</span>
     <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">stacked_height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -6908,6 +7585,10 @@ the page is opened.</p>
     
     
       <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
       
     
   <script data-mkdocs-jupyter-mathjax="{&quot;url&quot;: &quot;https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-mml-chtml.js&quot;, &quot;version&quot;: 4}">

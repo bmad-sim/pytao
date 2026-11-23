@@ -569,6 +569,8 @@
       
         
       
+        
+      
     
     
     
@@ -865,6 +867,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#particles-in-floor-coordinates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Particles in floor coordinates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#saving-and-loading" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1039,6 +1052,34 @@
     
   
     Bunch Commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../floor-coordinates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Particles in floor coordinates
   
 
     
@@ -1943,6 +1984,17 @@
     <span class="md-ellipsis">
       
         Plotting with Element data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#particles-in-floor-coordinates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Particles in floor coordinates
       
     </span>
   </a>
@@ -3706,7 +3758,7 @@ print("Current defaults:", Element.DEFAULTS)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Current defaults: {'attrs', 'orbit', 'cartesian_map_terms', 'spin_taylor', 'wake', 'methods', 'chamber_walls', 'lord_slave', 'photon', 'gen_gradients', 'gen_gradient_curves', 'taylor', 'mat6', 'shapes', 'control_vars', 'ac_kicker', 'floor', 'twiss', 'wall3d', 'elec_multipoles', 'multipoles', 'grid_field', 'bunch_params', 'cylindrical_map', 'cylindrical_map_terms', 'cartesian_map'}
+<pre>Current defaults: {'photon', 'twiss', 'cartesian_map', 'cartesian_map_terms', 'grid_field', 'lord_slave', 'gen_gradients', 'multipoles', 'taylor', 'shapes', 'spin_taylor', 'chamber_walls', 'wake', 'wall3d', 'mat6', 'elec_multipoles', 'cylindrical_map', 'methods', 'orbit', 'bunch_params', 'floor', 'gen_gradient_curves', 'control_vars', 'cylindrical_map_terms', 'ac_kicker', 'attrs'}
 </pre>
 </div>
 </div>
@@ -4164,7 +4216,8 @@ plt.tight_layout()</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="saving-and-loading">Saving and loading<a class="anchor-link" href="#saving-and-loading">¶</a></h2><p>Element and Lattice objects can be serialized to JSON, compressed JSON, or msgpack (the fastest!).</p>
+<h2 id="particles-in-floor-coordinates">Particles in floor coordinates<a class="anchor-link" href="#particles-in-floor-coordinates">¶</a></h2><p>Bmad particle coordinates are local to the element a particle is in. An element's floor position converts them to global floor coordinates.</p>
+<p>This needs a tracked beam, so this section uses a separate Tao running the CSR beam tracking example.</p>
 </div>
 </div>
 </div>
@@ -4179,6 +4232,153 @@ plt.tight_layout()</div>
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-28">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pytao</span><span class="w"> </span><span class="kn">import</span> <span class="n">SubprocessTao</span>
+
+<span class="n">beam_tao</span> <span class="o">=</span> <span class="n">SubprocessTao</span><span class="p">(</span>
+    <span class="n">init_file</span><span class="o">=</span><span class="s2">"$ACC_ROOT_DIR/bmad-doc/tao_examples/csr_beam_tracking/tao.init"</span><span class="p">,</span> <span class="n">noplot</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">beam_tao</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s2">"set global track_type = beam"</span><span class="p">);</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-28">from pytao import SubprocessTao
+
+beam_tao = SubprocessTao(
+    init_file="$ACC_ROOT_DIR/bmad-doc/tao_examples/csr_beam_tracking/tao.init", noplot=True
+)
+beam_tao.cmd("set global track_type = beam");</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><code>extras=True</code> adds each particle's element index, its location in the element, and its <code>s</code> position. <code>Element.particles_to_floor</code> returns a new <code>ParticleGroup</code> in floor coordinates:</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [29]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-29">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">P</span> <span class="o">=</span> <span class="n">beam_tao</span><span class="o">.</span><span class="n">particles</span><span class="p">(</span><span class="s2">"end"</span><span class="p">,</span> <span class="n">extras</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">P_floor</span> <span class="o">=</span> <span class="n">beam_tao</span><span class="o">.</span><span class="n">ele</span><span class="p">(</span><span class="s2">"end"</span><span class="p">)</span><span class="o">.</span><span class="n">particles_to_floor</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+
+<span class="n">P</span><span class="p">[</span><span class="s2">"mean_x"</span><span class="p">],</span> <span class="n">P_floor</span><span class="p">[</span><span class="s2">"mean_x"</span><span class="p">],</span> <span class="n">P_floor</span><span class="p">[</span><span class="s2">"mean_z"</span><span class="p">]</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-29">P = beam_tao.particles("end", extras=True)
+P_floor = beam_tao.ele("end").particles_to_floor(P)
+
+P["mean_x"], P_floor["mean_x"], P_floor["mean_z"]</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[29]:</div>
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
+<pre>(np.float64(-1.0077897456933386e-07),
+ np.float64(0.0218202743281036),
+ np.float64(0.44291285477782955))</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>For particles in several elements, points inside elements, or converting later without Tao, use a <code>FloorTable</code> (<code>tao.floor_table()</code>). See the <a href="floor-coordinates.ipynb">floor coordinates example</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [30]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-30">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">beam_tao</span><span class="o">.</span><span class="n">close_subprocess</span><span class="p">()</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-30">beam_tao.close_subprocess()</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="saving-and-loading">Saving and loading<a class="anchor-link" href="#saving-and-loading">¶</a></h2><p>Element and Lattice objects can be serialized to JSON, compressed JSON, or msgpack (the fastest!).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [31]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-31">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -4204,7 +4404,7 @@ plt.tight_layout()</div>
 <span class="c1"># Note that the above returns all of the data that was just written to file.</span>
 <span class="c1"># The semicolon at the end suppresses this output in Jupyter notebooks.</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-28">from pathlib import Path
+<div class="clipboard-copy-txt" id="cell-31">from pathlib import Path
 
 lat_subset = Lattice.from_tao_tracking(tao, track_start="1", track_end="20")
 
@@ -4230,10 +4430,10 @@ lat_subset.write(Path("lattice_subset.msgpack"));
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [29]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [32]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-29">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-32">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -4252,7 +4452,7 @@ lat_subset.write(Path("lattice_subset.msgpack"));
     <span class="nb">print</span><span class="p">(</span><span class="s2">"Equal to original?"</span><span class="p">,</span> <span class="n">lat_loaded</span> <span class="o">==</span> <span class="n">lat_subset</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-29"># Load back from any format
+<div class="clipboard-copy-txt" id="cell-32"># Load back from any format
 
 for path in ["lattice_subset.json", "lattice_subset.json.gz", "lattice_subset.msgpack"]:
     print("Loading:", path)
@@ -4295,10 +4495,10 @@ Equal to original? True
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [30]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [33]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-30">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-33">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -4314,7 +4514,7 @@ Equal to original? True
     <span class="k">if</span> <span class="n">fn</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="n">fn</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-30"># Cleanup
+<div class="clipboard-copy-txt" id="cell-33"># Cleanup
 for fn in ["lattice_subset.json", "lattice_subset.json.gz", "lattice_subset.msgpack"]:
     fn = Path(fn)
     if fn.exists():
@@ -4400,6 +4600,10 @@ for fn in ["lattice_subset.json", "lattice_subset.json.gz", "lattice_subset.msgp
     
     
       <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
       
     
   <script data-mkdocs-jupyter-mathjax="{&quot;url&quot;: &quot;https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-mml-chtml.js&quot;, &quot;version&quot;: 4}">

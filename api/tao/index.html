@@ -567,6 +567,8 @@
       
         
       
+        
+      
     
     
     
@@ -821,6 +823,34 @@
     
   
     Bunch Commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/floor-coordinates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Particles in floor coordinates
   
 
     
@@ -1582,6 +1612,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#pytao.Tao.floor_table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        floor_table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#pytao.Tao.from_contents" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1674,6 +1715,17 @@
     <span class="md-ellipsis">
       
         plot_field
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pytao.Tao.plot_floor_beam" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plot_floor_beam
       
     </span>
   </a>
@@ -2177,6 +2229,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#pytao.Tao.floor_table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        floor_table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#pytao.Tao.from_contents" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2269,6 +2332,17 @@
     <span class="md-ellipsis">
       
         plot_field
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pytao.Tao.plot_floor_beam" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plot_floor_beam
       
     </span>
   </a>
@@ -2991,8 +3065,7 @@ initializes.  Subsequent calls to <code>init()</code> will override this variabl
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>pytao/tao.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">182</span>
-<span class="normal">183</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">183</span>
 <span class="normal">184</span>
 <span class="normal">185</span>
 <span class="normal">186</span>
@@ -3071,7 +3144,8 @@ initializes.  Subsequent calls to <code>init()</code> will override this variabl
 <span class="normal">259</span>
 <span class="normal">260</span>
 <span class="normal">261</span>
-<span class="normal">262</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">262</span>
+<span class="normal">263</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">init</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
     <span class="n">so_lib</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
@@ -3463,56 +3537,56 @@ PyTao's command-line entrypoint.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2420</span>
-<span class="normal">2421</span>
-<span class="normal">2422</span>
-<span class="normal">2423</span>
-<span class="normal">2424</span>
-<span class="normal">2425</span>
-<span class="normal">2426</span>
-<span class="normal">2427</span>
-<span class="normal">2428</span>
-<span class="normal">2429</span>
-<span class="normal">2430</span>
-<span class="normal">2431</span>
-<span class="normal">2432</span>
-<span class="normal">2433</span>
-<span class="normal">2434</span>
-<span class="normal">2435</span>
-<span class="normal">2436</span>
-<span class="normal">2437</span>
-<span class="normal">2438</span>
-<span class="normal">2439</span>
-<span class="normal">2440</span>
-<span class="normal">2441</span>
-<span class="normal">2442</span>
-<span class="normal">2443</span>
-<span class="normal">2444</span>
-<span class="normal">2445</span>
-<span class="normal">2446</span>
-<span class="normal">2447</span>
-<span class="normal">2448</span>
-<span class="normal">2449</span>
-<span class="normal">2450</span>
-<span class="normal">2451</span>
-<span class="normal">2452</span>
-<span class="normal">2453</span>
-<span class="normal">2454</span>
-<span class="normal">2455</span>
-<span class="normal">2456</span>
-<span class="normal">2457</span>
-<span class="normal">2458</span>
-<span class="normal">2459</span>
-<span class="normal">2460</span>
-<span class="normal">2461</span>
-<span class="normal">2462</span>
-<span class="normal">2463</span>
-<span class="normal">2464</span>
-<span class="normal">2465</span>
-<span class="normal">2466</span>
-<span class="normal">2467</span>
-<span class="normal">2468</span>
-<span class="normal">2469</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">archive</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2536</span>
+<span class="normal">2537</span>
+<span class="normal">2538</span>
+<span class="normal">2539</span>
+<span class="normal">2540</span>
+<span class="normal">2541</span>
+<span class="normal">2542</span>
+<span class="normal">2543</span>
+<span class="normal">2544</span>
+<span class="normal">2545</span>
+<span class="normal">2546</span>
+<span class="normal">2547</span>
+<span class="normal">2548</span>
+<span class="normal">2549</span>
+<span class="normal">2550</span>
+<span class="normal">2551</span>
+<span class="normal">2552</span>
+<span class="normal">2553</span>
+<span class="normal">2554</span>
+<span class="normal">2555</span>
+<span class="normal">2556</span>
+<span class="normal">2557</span>
+<span class="normal">2558</span>
+<span class="normal">2559</span>
+<span class="normal">2560</span>
+<span class="normal">2561</span>
+<span class="normal">2562</span>
+<span class="normal">2563</span>
+<span class="normal">2564</span>
+<span class="normal">2565</span>
+<span class="normal">2566</span>
+<span class="normal">2567</span>
+<span class="normal">2568</span>
+<span class="normal">2569</span>
+<span class="normal">2570</span>
+<span class="normal">2571</span>
+<span class="normal">2572</span>
+<span class="normal">2573</span>
+<span class="normal">2574</span>
+<span class="normal">2575</span>
+<span class="normal">2576</span>
+<span class="normal">2577</span>
+<span class="normal">2578</span>
+<span class="normal">2579</span>
+<span class="normal">2580</span>
+<span class="normal">2581</span>
+<span class="normal">2582</span>
+<span class="normal">2583</span>
+<span class="normal">2584</span>
+<span class="normal">2585</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">archive</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">directory</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"run_tao"</span><span class="p">,</span>
@@ -3732,8 +3806,7 @@ ix_bunch: 1</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">636</span>
-<span class="normal">637</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">637</span>
 <span class="normal">638</span>
 <span class="normal">639</span>
 <span class="normal">640</span>
@@ -3852,7 +3925,8 @@ ix_bunch: 1</p>
 <span class="normal">753</span>
 <span class="normal">754</span>
 <span class="normal">755</span>
-<span class="normal">756</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">bunch_data</span><span class="p">(</span>
+<span class="normal">756</span>
+<span class="normal">757</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">bunch_data</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ele_id</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -4099,49 +4173,49 @@ and plotting updates.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">949</span>
-<span class="normal">950</span>
-<span class="normal">951</span>
-<span class="normal">952</span>
-<span class="normal">953</span>
-<span class="normal">954</span>
-<span class="normal">955</span>
-<span class="normal">956</span>
-<span class="normal">957</span>
-<span class="normal">958</span>
-<span class="normal">959</span>
-<span class="normal">960</span>
-<span class="normal">961</span>
-<span class="normal">962</span>
-<span class="normal">963</span>
-<span class="normal">964</span>
-<span class="normal">965</span>
-<span class="normal">966</span>
-<span class="normal">967</span>
-<span class="normal">968</span>
-<span class="normal">969</span>
-<span class="normal">970</span>
-<span class="normal">971</span>
-<span class="normal">972</span>
-<span class="normal">973</span>
-<span class="normal">974</span>
-<span class="normal">975</span>
-<span class="normal">976</span>
-<span class="normal">977</span>
-<span class="normal">978</span>
-<span class="normal">979</span>
-<span class="normal">980</span>
-<span class="normal">981</span>
-<span class="normal">982</span>
-<span class="normal">983</span>
-<span class="normal">984</span>
-<span class="normal">985</span>
-<span class="normal">986</span>
-<span class="normal">987</span>
-<span class="normal">988</span>
-<span class="normal">989</span>
-<span class="normal">990</span>
-<span class="normal">991</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">cmds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmds</span><span class="p">,</span> <span class="n">suppress_lattice_calc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">suppress_plotting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 984</span>
+<span class="normal"> 985</span>
+<span class="normal"> 986</span>
+<span class="normal"> 987</span>
+<span class="normal"> 988</span>
+<span class="normal"> 989</span>
+<span class="normal"> 990</span>
+<span class="normal"> 991</span>
+<span class="normal"> 992</span>
+<span class="normal"> 993</span>
+<span class="normal"> 994</span>
+<span class="normal"> 995</span>
+<span class="normal"> 996</span>
+<span class="normal"> 997</span>
+<span class="normal"> 998</span>
+<span class="normal"> 999</span>
+<span class="normal">1000</span>
+<span class="normal">1001</span>
+<span class="normal">1002</span>
+<span class="normal">1003</span>
+<span class="normal">1004</span>
+<span class="normal">1005</span>
+<span class="normal">1006</span>
+<span class="normal">1007</span>
+<span class="normal">1008</span>
+<span class="normal">1009</span>
+<span class="normal">1010</span>
+<span class="normal">1011</span>
+<span class="normal">1012</span>
+<span class="normal">1013</span>
+<span class="normal">1014</span>
+<span class="normal">1015</span>
+<span class="normal">1016</span>
+<span class="normal">1017</span>
+<span class="normal">1018</span>
+<span class="normal">1019</span>
+<span class="normal">1020</span>
+<span class="normal">1021</span>
+<span class="normal">1022</span>
+<span class="normal">1023</span>
+<span class="normal">1024</span>
+<span class="normal">1025</span>
+<span class="normal">1026</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">cmds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmds</span><span class="p">,</span> <span class="n">suppress_lattice_calc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">suppress_plotting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">raises</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Runs a list of commands, optionally suppressing lattice calculations</span>
 <span class="sd">    and plotting updates.</span>
@@ -4812,123 +4886,7 @@ the full comb data.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1660</span>
-<span class="normal">1661</span>
-<span class="normal">1662</span>
-<span class="normal">1663</span>
-<span class="normal">1664</span>
-<span class="normal">1665</span>
-<span class="normal">1666</span>
-<span class="normal">1667</span>
-<span class="normal">1668</span>
-<span class="normal">1669</span>
-<span class="normal">1670</span>
-<span class="normal">1671</span>
-<span class="normal">1672</span>
-<span class="normal">1673</span>
-<span class="normal">1674</span>
-<span class="normal">1675</span>
-<span class="normal">1676</span>
-<span class="normal">1677</span>
-<span class="normal">1678</span>
-<span class="normal">1679</span>
-<span class="normal">1680</span>
-<span class="normal">1681</span>
-<span class="normal">1682</span>
-<span class="normal">1683</span>
-<span class="normal">1684</span>
-<span class="normal">1685</span>
-<span class="normal">1686</span>
-<span class="normal">1687</span>
-<span class="normal">1688</span>
-<span class="normal">1689</span>
-<span class="normal">1690</span>
-<span class="normal">1691</span>
-<span class="normal">1692</span>
-<span class="normal">1693</span>
-<span class="normal">1694</span>
-<span class="normal">1695</span>
-<span class="normal">1696</span>
-<span class="normal">1697</span>
-<span class="normal">1698</span>
-<span class="normal">1699</span>
-<span class="normal">1700</span>
-<span class="normal">1701</span>
-<span class="normal">1702</span>
-<span class="normal">1703</span>
-<span class="normal">1704</span>
-<span class="normal">1705</span>
-<span class="normal">1706</span>
-<span class="normal">1707</span>
-<span class="normal">1708</span>
-<span class="normal">1709</span>
-<span class="normal">1710</span>
-<span class="normal">1711</span>
-<span class="normal">1712</span>
-<span class="normal">1713</span>
-<span class="normal">1714</span>
-<span class="normal">1715</span>
-<span class="normal">1716</span>
-<span class="normal">1717</span>
-<span class="normal">1718</span>
-<span class="normal">1719</span>
-<span class="normal">1720</span>
-<span class="normal">1721</span>
-<span class="normal">1722</span>
-<span class="normal">1723</span>
-<span class="normal">1724</span>
-<span class="normal">1725</span>
-<span class="normal">1726</span>
-<span class="normal">1727</span>
-<span class="normal">1728</span>
-<span class="normal">1729</span>
-<span class="normal">1730</span>
-<span class="normal">1731</span>
-<span class="normal">1732</span>
-<span class="normal">1733</span>
-<span class="normal">1734</span>
-<span class="normal">1735</span>
-<span class="normal">1736</span>
-<span class="normal">1737</span>
-<span class="normal">1738</span>
-<span class="normal">1739</span>
-<span class="normal">1740</span>
-<span class="normal">1741</span>
-<span class="normal">1742</span>
-<span class="normal">1743</span>
-<span class="normal">1744</span>
-<span class="normal">1745</span>
-<span class="normal">1746</span>
-<span class="normal">1747</span>
-<span class="normal">1748</span>
-<span class="normal">1749</span>
-<span class="normal">1750</span>
-<span class="normal">1751</span>
-<span class="normal">1752</span>
-<span class="normal">1753</span>
-<span class="normal">1754</span>
-<span class="normal">1755</span>
-<span class="normal">1756</span>
-<span class="normal">1757</span>
-<span class="normal">1758</span>
-<span class="normal">1759</span>
-<span class="normal">1760</span>
-<span class="normal">1761</span>
-<span class="normal">1762</span>
-<span class="normal">1763</span>
-<span class="normal">1764</span>
-<span class="normal">1765</span>
-<span class="normal">1766</span>
-<span class="normal">1767</span>
-<span class="normal">1768</span>
-<span class="normal">1769</span>
-<span class="normal">1770</span>
-<span class="normal">1771</span>
-<span class="normal">1772</span>
-<span class="normal">1773</span>
-<span class="normal">1774</span>
-<span class="normal">1775</span>
-<span class="normal">1776</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1776</span>
 <span class="normal">1777</span>
 <span class="normal">1778</span>
 <span class="normal">1779</span>
@@ -5010,7 +4968,123 @@ the full comb data.</p>
 <span class="normal">1855</span>
 <span class="normal">1856</span>
 <span class="normal">1857</span>
-<span class="normal">1858</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ele</span><span class="p">(</span>
+<span class="normal">1858</span>
+<span class="normal">1859</span>
+<span class="normal">1860</span>
+<span class="normal">1861</span>
+<span class="normal">1862</span>
+<span class="normal">1863</span>
+<span class="normal">1864</span>
+<span class="normal">1865</span>
+<span class="normal">1866</span>
+<span class="normal">1867</span>
+<span class="normal">1868</span>
+<span class="normal">1869</span>
+<span class="normal">1870</span>
+<span class="normal">1871</span>
+<span class="normal">1872</span>
+<span class="normal">1873</span>
+<span class="normal">1874</span>
+<span class="normal">1875</span>
+<span class="normal">1876</span>
+<span class="normal">1877</span>
+<span class="normal">1878</span>
+<span class="normal">1879</span>
+<span class="normal">1880</span>
+<span class="normal">1881</span>
+<span class="normal">1882</span>
+<span class="normal">1883</span>
+<span class="normal">1884</span>
+<span class="normal">1885</span>
+<span class="normal">1886</span>
+<span class="normal">1887</span>
+<span class="normal">1888</span>
+<span class="normal">1889</span>
+<span class="normal">1890</span>
+<span class="normal">1891</span>
+<span class="normal">1892</span>
+<span class="normal">1893</span>
+<span class="normal">1894</span>
+<span class="normal">1895</span>
+<span class="normal">1896</span>
+<span class="normal">1897</span>
+<span class="normal">1898</span>
+<span class="normal">1899</span>
+<span class="normal">1900</span>
+<span class="normal">1901</span>
+<span class="normal">1902</span>
+<span class="normal">1903</span>
+<span class="normal">1904</span>
+<span class="normal">1905</span>
+<span class="normal">1906</span>
+<span class="normal">1907</span>
+<span class="normal">1908</span>
+<span class="normal">1909</span>
+<span class="normal">1910</span>
+<span class="normal">1911</span>
+<span class="normal">1912</span>
+<span class="normal">1913</span>
+<span class="normal">1914</span>
+<span class="normal">1915</span>
+<span class="normal">1916</span>
+<span class="normal">1917</span>
+<span class="normal">1918</span>
+<span class="normal">1919</span>
+<span class="normal">1920</span>
+<span class="normal">1921</span>
+<span class="normal">1922</span>
+<span class="normal">1923</span>
+<span class="normal">1924</span>
+<span class="normal">1925</span>
+<span class="normal">1926</span>
+<span class="normal">1927</span>
+<span class="normal">1928</span>
+<span class="normal">1929</span>
+<span class="normal">1930</span>
+<span class="normal">1931</span>
+<span class="normal">1932</span>
+<span class="normal">1933</span>
+<span class="normal">1934</span>
+<span class="normal">1935</span>
+<span class="normal">1936</span>
+<span class="normal">1937</span>
+<span class="normal">1938</span>
+<span class="normal">1939</span>
+<span class="normal">1940</span>
+<span class="normal">1941</span>
+<span class="normal">1942</span>
+<span class="normal">1943</span>
+<span class="normal">1944</span>
+<span class="normal">1945</span>
+<span class="normal">1946</span>
+<span class="normal">1947</span>
+<span class="normal">1948</span>
+<span class="normal">1949</span>
+<span class="normal">1950</span>
+<span class="normal">1951</span>
+<span class="normal">1952</span>
+<span class="normal">1953</span>
+<span class="normal">1954</span>
+<span class="normal">1955</span>
+<span class="normal">1956</span>
+<span class="normal">1957</span>
+<span class="normal">1958</span>
+<span class="normal">1959</span>
+<span class="normal">1960</span>
+<span class="normal">1961</span>
+<span class="normal">1962</span>
+<span class="normal">1963</span>
+<span class="normal">1964</span>
+<span class="normal">1965</span>
+<span class="normal">1966</span>
+<span class="normal">1967</span>
+<span class="normal">1968</span>
+<span class="normal">1969</span>
+<span class="normal">1970</span>
+<span class="normal">1971</span>
+<span class="normal">1972</span>
+<span class="normal">1973</span>
+<span class="normal">1974</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ele</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ele_id</span><span class="p">:</span> <span class="n">AnyElementID</span><span class="p">,</span>
     <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -5385,112 +5459,112 @@ in first-seen order.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2285</span>
-<span class="normal">2286</span>
-<span class="normal">2287</span>
-<span class="normal">2288</span>
-<span class="normal">2289</span>
-<span class="normal">2290</span>
-<span class="normal">2291</span>
-<span class="normal">2292</span>
-<span class="normal">2293</span>
-<span class="normal">2294</span>
-<span class="normal">2295</span>
-<span class="normal">2296</span>
-<span class="normal">2297</span>
-<span class="normal">2298</span>
-<span class="normal">2299</span>
-<span class="normal">2300</span>
-<span class="normal">2301</span>
-<span class="normal">2302</span>
-<span class="normal">2303</span>
-<span class="normal">2304</span>
-<span class="normal">2305</span>
-<span class="normal">2306</span>
-<span class="normal">2307</span>
-<span class="normal">2308</span>
-<span class="normal">2309</span>
-<span class="normal">2310</span>
-<span class="normal">2311</span>
-<span class="normal">2312</span>
-<span class="normal">2313</span>
-<span class="normal">2314</span>
-<span class="normal">2315</span>
-<span class="normal">2316</span>
-<span class="normal">2317</span>
-<span class="normal">2318</span>
-<span class="normal">2319</span>
-<span class="normal">2320</span>
-<span class="normal">2321</span>
-<span class="normal">2322</span>
-<span class="normal">2323</span>
-<span class="normal">2324</span>
-<span class="normal">2325</span>
-<span class="normal">2326</span>
-<span class="normal">2327</span>
-<span class="normal">2328</span>
-<span class="normal">2329</span>
-<span class="normal">2330</span>
-<span class="normal">2331</span>
-<span class="normal">2332</span>
-<span class="normal">2333</span>
-<span class="normal">2334</span>
-<span class="normal">2335</span>
-<span class="normal">2336</span>
-<span class="normal">2337</span>
-<span class="normal">2338</span>
-<span class="normal">2339</span>
-<span class="normal">2340</span>
-<span class="normal">2341</span>
-<span class="normal">2342</span>
-<span class="normal">2343</span>
-<span class="normal">2344</span>
-<span class="normal">2345</span>
-<span class="normal">2346</span>
-<span class="normal">2347</span>
-<span class="normal">2348</span>
-<span class="normal">2349</span>
-<span class="normal">2350</span>
-<span class="normal">2351</span>
-<span class="normal">2352</span>
-<span class="normal">2353</span>
-<span class="normal">2354</span>
-<span class="normal">2355</span>
-<span class="normal">2356</span>
-<span class="normal">2357</span>
-<span class="normal">2358</span>
-<span class="normal">2359</span>
-<span class="normal">2360</span>
-<span class="normal">2361</span>
-<span class="normal">2362</span>
-<span class="normal">2363</span>
-<span class="normal">2364</span>
-<span class="normal">2365</span>
-<span class="normal">2366</span>
-<span class="normal">2367</span>
-<span class="normal">2368</span>
-<span class="normal">2369</span>
-<span class="normal">2370</span>
-<span class="normal">2371</span>
-<span class="normal">2372</span>
-<span class="normal">2373</span>
-<span class="normal">2374</span>
-<span class="normal">2375</span>
-<span class="normal">2376</span>
-<span class="normal">2377</span>
-<span class="normal">2378</span>
-<span class="normal">2379</span>
-<span class="normal">2380</span>
-<span class="normal">2381</span>
-<span class="normal">2382</span>
-<span class="normal">2383</span>
-<span class="normal">2384</span>
-<span class="normal">2385</span>
-<span class="normal">2386</span>
-<span class="normal">2387</span>
-<span class="normal">2388</span>
-<span class="normal">2389</span>
-<span class="normal">2390</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ele_ids</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2401</span>
+<span class="normal">2402</span>
+<span class="normal">2403</span>
+<span class="normal">2404</span>
+<span class="normal">2405</span>
+<span class="normal">2406</span>
+<span class="normal">2407</span>
+<span class="normal">2408</span>
+<span class="normal">2409</span>
+<span class="normal">2410</span>
+<span class="normal">2411</span>
+<span class="normal">2412</span>
+<span class="normal">2413</span>
+<span class="normal">2414</span>
+<span class="normal">2415</span>
+<span class="normal">2416</span>
+<span class="normal">2417</span>
+<span class="normal">2418</span>
+<span class="normal">2419</span>
+<span class="normal">2420</span>
+<span class="normal">2421</span>
+<span class="normal">2422</span>
+<span class="normal">2423</span>
+<span class="normal">2424</span>
+<span class="normal">2425</span>
+<span class="normal">2426</span>
+<span class="normal">2427</span>
+<span class="normal">2428</span>
+<span class="normal">2429</span>
+<span class="normal">2430</span>
+<span class="normal">2431</span>
+<span class="normal">2432</span>
+<span class="normal">2433</span>
+<span class="normal">2434</span>
+<span class="normal">2435</span>
+<span class="normal">2436</span>
+<span class="normal">2437</span>
+<span class="normal">2438</span>
+<span class="normal">2439</span>
+<span class="normal">2440</span>
+<span class="normal">2441</span>
+<span class="normal">2442</span>
+<span class="normal">2443</span>
+<span class="normal">2444</span>
+<span class="normal">2445</span>
+<span class="normal">2446</span>
+<span class="normal">2447</span>
+<span class="normal">2448</span>
+<span class="normal">2449</span>
+<span class="normal">2450</span>
+<span class="normal">2451</span>
+<span class="normal">2452</span>
+<span class="normal">2453</span>
+<span class="normal">2454</span>
+<span class="normal">2455</span>
+<span class="normal">2456</span>
+<span class="normal">2457</span>
+<span class="normal">2458</span>
+<span class="normal">2459</span>
+<span class="normal">2460</span>
+<span class="normal">2461</span>
+<span class="normal">2462</span>
+<span class="normal">2463</span>
+<span class="normal">2464</span>
+<span class="normal">2465</span>
+<span class="normal">2466</span>
+<span class="normal">2467</span>
+<span class="normal">2468</span>
+<span class="normal">2469</span>
+<span class="normal">2470</span>
+<span class="normal">2471</span>
+<span class="normal">2472</span>
+<span class="normal">2473</span>
+<span class="normal">2474</span>
+<span class="normal">2475</span>
+<span class="normal">2476</span>
+<span class="normal">2477</span>
+<span class="normal">2478</span>
+<span class="normal">2479</span>
+<span class="normal">2480</span>
+<span class="normal">2481</span>
+<span class="normal">2482</span>
+<span class="normal">2483</span>
+<span class="normal">2484</span>
+<span class="normal">2485</span>
+<span class="normal">2486</span>
+<span class="normal">2487</span>
+<span class="normal">2488</span>
+<span class="normal">2489</span>
+<span class="normal">2490</span>
+<span class="normal">2491</span>
+<span class="normal">2492</span>
+<span class="normal">2493</span>
+<span class="normal">2494</span>
+<span class="normal">2495</span>
+<span class="normal">2496</span>
+<span class="normal">2497</span>
+<span class="normal">2498</span>
+<span class="normal">2499</span>
+<span class="normal">2500</span>
+<span class="normal">2501</span>
+<span class="normal">2502</span>
+<span class="normal">2503</span>
+<span class="normal">2504</span>
+<span class="normal">2505</span>
+<span class="normal">2506</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ele_ids</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="o">*</span><span class="n">selectors</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">no_slaves</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -5726,53 +5800,53 @@ excluding lord elements.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2138</span>
-<span class="normal">2139</span>
-<span class="normal">2140</span>
-<span class="normal">2141</span>
-<span class="normal">2142</span>
-<span class="normal">2143</span>
-<span class="normal">2144</span>
-<span class="normal">2145</span>
-<span class="normal">2146</span>
-<span class="normal">2147</span>
-<span class="normal">2148</span>
-<span class="normal">2149</span>
-<span class="normal">2150</span>
-<span class="normal">2151</span>
-<span class="normal">2152</span>
-<span class="normal">2153</span>
-<span class="normal">2154</span>
-<span class="normal">2155</span>
-<span class="normal">2156</span>
-<span class="normal">2157</span>
-<span class="normal">2158</span>
-<span class="normal">2159</span>
-<span class="normal">2160</span>
-<span class="normal">2161</span>
-<span class="normal">2162</span>
-<span class="normal">2163</span>
-<span class="normal">2164</span>
-<span class="normal">2165</span>
-<span class="normal">2166</span>
-<span class="normal">2167</span>
-<span class="normal">2168</span>
-<span class="normal">2169</span>
-<span class="normal">2170</span>
-<span class="normal">2171</span>
-<span class="normal">2172</span>
-<span class="normal">2173</span>
-<span class="normal">2174</span>
-<span class="normal">2175</span>
-<span class="normal">2176</span>
-<span class="normal">2177</span>
-<span class="normal">2178</span>
-<span class="normal">2179</span>
-<span class="normal">2180</span>
-<span class="normal">2181</span>
-<span class="normal">2182</span>
-<span class="normal">2183</span>
-<span class="normal">2184</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ele_ids_from_branch</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2254</span>
+<span class="normal">2255</span>
+<span class="normal">2256</span>
+<span class="normal">2257</span>
+<span class="normal">2258</span>
+<span class="normal">2259</span>
+<span class="normal">2260</span>
+<span class="normal">2261</span>
+<span class="normal">2262</span>
+<span class="normal">2263</span>
+<span class="normal">2264</span>
+<span class="normal">2265</span>
+<span class="normal">2266</span>
+<span class="normal">2267</span>
+<span class="normal">2268</span>
+<span class="normal">2269</span>
+<span class="normal">2270</span>
+<span class="normal">2271</span>
+<span class="normal">2272</span>
+<span class="normal">2273</span>
+<span class="normal">2274</span>
+<span class="normal">2275</span>
+<span class="normal">2276</span>
+<span class="normal">2277</span>
+<span class="normal">2278</span>
+<span class="normal">2279</span>
+<span class="normal">2280</span>
+<span class="normal">2281</span>
+<span class="normal">2282</span>
+<span class="normal">2283</span>
+<span class="normal">2284</span>
+<span class="normal">2285</span>
+<span class="normal">2286</span>
+<span class="normal">2287</span>
+<span class="normal">2288</span>
+<span class="normal">2289</span>
+<span class="normal">2290</span>
+<span class="normal">2291</span>
+<span class="normal">2292</span>
+<span class="normal">2293</span>
+<span class="normal">2294</span>
+<span class="normal">2295</span>
+<span class="normal">2296</span>
+<span class="normal">2297</span>
+<span class="normal">2298</span>
+<span class="normal">2299</span>
+<span class="normal">2300</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ele_ids_from_branch</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">ix_branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
@@ -5916,40 +5990,40 @@ excluding lord elements.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2227</span>
-<span class="normal">2228</span>
-<span class="normal">2229</span>
-<span class="normal">2230</span>
-<span class="normal">2231</span>
-<span class="normal">2232</span>
-<span class="normal">2233</span>
-<span class="normal">2234</span>
-<span class="normal">2235</span>
-<span class="normal">2236</span>
-<span class="normal">2237</span>
-<span class="normal">2238</span>
-<span class="normal">2239</span>
-<span class="normal">2240</span>
-<span class="normal">2241</span>
-<span class="normal">2242</span>
-<span class="normal">2243</span>
-<span class="normal">2244</span>
-<span class="normal">2245</span>
-<span class="normal">2246</span>
-<span class="normal">2247</span>
-<span class="normal">2248</span>
-<span class="normal">2249</span>
-<span class="normal">2250</span>
-<span class="normal">2251</span>
-<span class="normal">2252</span>
-<span class="normal">2253</span>
-<span class="normal">2254</span>
-<span class="normal">2255</span>
-<span class="normal">2256</span>
-<span class="normal">2257</span>
-<span class="normal">2258</span>
-<span class="normal">2259</span>
-<span class="normal">2260</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ele_ids_from_superuniverse</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2343</span>
+<span class="normal">2344</span>
+<span class="normal">2345</span>
+<span class="normal">2346</span>
+<span class="normal">2347</span>
+<span class="normal">2348</span>
+<span class="normal">2349</span>
+<span class="normal">2350</span>
+<span class="normal">2351</span>
+<span class="normal">2352</span>
+<span class="normal">2353</span>
+<span class="normal">2354</span>
+<span class="normal">2355</span>
+<span class="normal">2356</span>
+<span class="normal">2357</span>
+<span class="normal">2358</span>
+<span class="normal">2359</span>
+<span class="normal">2360</span>
+<span class="normal">2361</span>
+<span class="normal">2362</span>
+<span class="normal">2363</span>
+<span class="normal">2364</span>
+<span class="normal">2365</span>
+<span class="normal">2366</span>
+<span class="normal">2367</span>
+<span class="normal">2368</span>
+<span class="normal">2369</span>
+<span class="normal">2370</span>
+<span class="normal">2371</span>
+<span class="normal">2372</span>
+<span class="normal">2373</span>
+<span class="normal">2374</span>
+<span class="normal">2375</span>
+<span class="normal">2376</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ele_ids_from_superuniverse</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">no_slaves</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -6097,46 +6171,46 @@ excluding lord elements.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2186</span>
-<span class="normal">2187</span>
-<span class="normal">2188</span>
-<span class="normal">2189</span>
-<span class="normal">2190</span>
-<span class="normal">2191</span>
-<span class="normal">2192</span>
-<span class="normal">2193</span>
-<span class="normal">2194</span>
-<span class="normal">2195</span>
-<span class="normal">2196</span>
-<span class="normal">2197</span>
-<span class="normal">2198</span>
-<span class="normal">2199</span>
-<span class="normal">2200</span>
-<span class="normal">2201</span>
-<span class="normal">2202</span>
-<span class="normal">2203</span>
-<span class="normal">2204</span>
-<span class="normal">2205</span>
-<span class="normal">2206</span>
-<span class="normal">2207</span>
-<span class="normal">2208</span>
-<span class="normal">2209</span>
-<span class="normal">2210</span>
-<span class="normal">2211</span>
-<span class="normal">2212</span>
-<span class="normal">2213</span>
-<span class="normal">2214</span>
-<span class="normal">2215</span>
-<span class="normal">2216</span>
-<span class="normal">2217</span>
-<span class="normal">2218</span>
-<span class="normal">2219</span>
-<span class="normal">2220</span>
-<span class="normal">2221</span>
-<span class="normal">2222</span>
-<span class="normal">2223</span>
-<span class="normal">2224</span>
-<span class="normal">2225</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ele_ids_from_universe</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2302</span>
+<span class="normal">2303</span>
+<span class="normal">2304</span>
+<span class="normal">2305</span>
+<span class="normal">2306</span>
+<span class="normal">2307</span>
+<span class="normal">2308</span>
+<span class="normal">2309</span>
+<span class="normal">2310</span>
+<span class="normal">2311</span>
+<span class="normal">2312</span>
+<span class="normal">2313</span>
+<span class="normal">2314</span>
+<span class="normal">2315</span>
+<span class="normal">2316</span>
+<span class="normal">2317</span>
+<span class="normal">2318</span>
+<span class="normal">2319</span>
+<span class="normal">2320</span>
+<span class="normal">2321</span>
+<span class="normal">2322</span>
+<span class="normal">2323</span>
+<span class="normal">2324</span>
+<span class="normal">2325</span>
+<span class="normal">2326</span>
+<span class="normal">2327</span>
+<span class="normal">2328</span>
+<span class="normal">2329</span>
+<span class="normal">2330</span>
+<span class="normal">2331</span>
+<span class="normal">2332</span>
+<span class="normal">2333</span>
+<span class="normal">2334</span>
+<span class="normal">2335</span>
+<span class="normal">2336</span>
+<span class="normal">2337</span>
+<span class="normal">2338</span>
+<span class="normal">2339</span>
+<span class="normal">2340</span>
+<span class="normal">2341</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ele_ids_from_universe</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -6899,123 +6973,7 @@ the full comb data.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1860</span>
-<span class="normal">1861</span>
-<span class="normal">1862</span>
-<span class="normal">1863</span>
-<span class="normal">1864</span>
-<span class="normal">1865</span>
-<span class="normal">1866</span>
-<span class="normal">1867</span>
-<span class="normal">1868</span>
-<span class="normal">1869</span>
-<span class="normal">1870</span>
-<span class="normal">1871</span>
-<span class="normal">1872</span>
-<span class="normal">1873</span>
-<span class="normal">1874</span>
-<span class="normal">1875</span>
-<span class="normal">1876</span>
-<span class="normal">1877</span>
-<span class="normal">1878</span>
-<span class="normal">1879</span>
-<span class="normal">1880</span>
-<span class="normal">1881</span>
-<span class="normal">1882</span>
-<span class="normal">1883</span>
-<span class="normal">1884</span>
-<span class="normal">1885</span>
-<span class="normal">1886</span>
-<span class="normal">1887</span>
-<span class="normal">1888</span>
-<span class="normal">1889</span>
-<span class="normal">1890</span>
-<span class="normal">1891</span>
-<span class="normal">1892</span>
-<span class="normal">1893</span>
-<span class="normal">1894</span>
-<span class="normal">1895</span>
-<span class="normal">1896</span>
-<span class="normal">1897</span>
-<span class="normal">1898</span>
-<span class="normal">1899</span>
-<span class="normal">1900</span>
-<span class="normal">1901</span>
-<span class="normal">1902</span>
-<span class="normal">1903</span>
-<span class="normal">1904</span>
-<span class="normal">1905</span>
-<span class="normal">1906</span>
-<span class="normal">1907</span>
-<span class="normal">1908</span>
-<span class="normal">1909</span>
-<span class="normal">1910</span>
-<span class="normal">1911</span>
-<span class="normal">1912</span>
-<span class="normal">1913</span>
-<span class="normal">1914</span>
-<span class="normal">1915</span>
-<span class="normal">1916</span>
-<span class="normal">1917</span>
-<span class="normal">1918</span>
-<span class="normal">1919</span>
-<span class="normal">1920</span>
-<span class="normal">1921</span>
-<span class="normal">1922</span>
-<span class="normal">1923</span>
-<span class="normal">1924</span>
-<span class="normal">1925</span>
-<span class="normal">1926</span>
-<span class="normal">1927</span>
-<span class="normal">1928</span>
-<span class="normal">1929</span>
-<span class="normal">1930</span>
-<span class="normal">1931</span>
-<span class="normal">1932</span>
-<span class="normal">1933</span>
-<span class="normal">1934</span>
-<span class="normal">1935</span>
-<span class="normal">1936</span>
-<span class="normal">1937</span>
-<span class="normal">1938</span>
-<span class="normal">1939</span>
-<span class="normal">1940</span>
-<span class="normal">1941</span>
-<span class="normal">1942</span>
-<span class="normal">1943</span>
-<span class="normal">1944</span>
-<span class="normal">1945</span>
-<span class="normal">1946</span>
-<span class="normal">1947</span>
-<span class="normal">1948</span>
-<span class="normal">1949</span>
-<span class="normal">1950</span>
-<span class="normal">1951</span>
-<span class="normal">1952</span>
-<span class="normal">1953</span>
-<span class="normal">1954</span>
-<span class="normal">1955</span>
-<span class="normal">1956</span>
-<span class="normal">1957</span>
-<span class="normal">1958</span>
-<span class="normal">1959</span>
-<span class="normal">1960</span>
-<span class="normal">1961</span>
-<span class="normal">1962</span>
-<span class="normal">1963</span>
-<span class="normal">1964</span>
-<span class="normal">1965</span>
-<span class="normal">1966</span>
-<span class="normal">1967</span>
-<span class="normal">1968</span>
-<span class="normal">1969</span>
-<span class="normal">1970</span>
-<span class="normal">1971</span>
-<span class="normal">1972</span>
-<span class="normal">1973</span>
-<span class="normal">1974</span>
-<span class="normal">1975</span>
-<span class="normal">1976</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1976</span>
 <span class="normal">1977</span>
 <span class="normal">1978</span>
 <span class="normal">1979</span>
@@ -7175,7 +7133,123 @@ the full comb data.</p>
 <span class="normal">2133</span>
 <span class="normal">2134</span>
 <span class="normal">2135</span>
-<span class="normal">2136</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">eles</span><span class="p">(</span>
+<span class="normal">2136</span>
+<span class="normal">2137</span>
+<span class="normal">2138</span>
+<span class="normal">2139</span>
+<span class="normal">2140</span>
+<span class="normal">2141</span>
+<span class="normal">2142</span>
+<span class="normal">2143</span>
+<span class="normal">2144</span>
+<span class="normal">2145</span>
+<span class="normal">2146</span>
+<span class="normal">2147</span>
+<span class="normal">2148</span>
+<span class="normal">2149</span>
+<span class="normal">2150</span>
+<span class="normal">2151</span>
+<span class="normal">2152</span>
+<span class="normal">2153</span>
+<span class="normal">2154</span>
+<span class="normal">2155</span>
+<span class="normal">2156</span>
+<span class="normal">2157</span>
+<span class="normal">2158</span>
+<span class="normal">2159</span>
+<span class="normal">2160</span>
+<span class="normal">2161</span>
+<span class="normal">2162</span>
+<span class="normal">2163</span>
+<span class="normal">2164</span>
+<span class="normal">2165</span>
+<span class="normal">2166</span>
+<span class="normal">2167</span>
+<span class="normal">2168</span>
+<span class="normal">2169</span>
+<span class="normal">2170</span>
+<span class="normal">2171</span>
+<span class="normal">2172</span>
+<span class="normal">2173</span>
+<span class="normal">2174</span>
+<span class="normal">2175</span>
+<span class="normal">2176</span>
+<span class="normal">2177</span>
+<span class="normal">2178</span>
+<span class="normal">2179</span>
+<span class="normal">2180</span>
+<span class="normal">2181</span>
+<span class="normal">2182</span>
+<span class="normal">2183</span>
+<span class="normal">2184</span>
+<span class="normal">2185</span>
+<span class="normal">2186</span>
+<span class="normal">2187</span>
+<span class="normal">2188</span>
+<span class="normal">2189</span>
+<span class="normal">2190</span>
+<span class="normal">2191</span>
+<span class="normal">2192</span>
+<span class="normal">2193</span>
+<span class="normal">2194</span>
+<span class="normal">2195</span>
+<span class="normal">2196</span>
+<span class="normal">2197</span>
+<span class="normal">2198</span>
+<span class="normal">2199</span>
+<span class="normal">2200</span>
+<span class="normal">2201</span>
+<span class="normal">2202</span>
+<span class="normal">2203</span>
+<span class="normal">2204</span>
+<span class="normal">2205</span>
+<span class="normal">2206</span>
+<span class="normal">2207</span>
+<span class="normal">2208</span>
+<span class="normal">2209</span>
+<span class="normal">2210</span>
+<span class="normal">2211</span>
+<span class="normal">2212</span>
+<span class="normal">2213</span>
+<span class="normal">2214</span>
+<span class="normal">2215</span>
+<span class="normal">2216</span>
+<span class="normal">2217</span>
+<span class="normal">2218</span>
+<span class="normal">2219</span>
+<span class="normal">2220</span>
+<span class="normal">2221</span>
+<span class="normal">2222</span>
+<span class="normal">2223</span>
+<span class="normal">2224</span>
+<span class="normal">2225</span>
+<span class="normal">2226</span>
+<span class="normal">2227</span>
+<span class="normal">2228</span>
+<span class="normal">2229</span>
+<span class="normal">2230</span>
+<span class="normal">2231</span>
+<span class="normal">2232</span>
+<span class="normal">2233</span>
+<span class="normal">2234</span>
+<span class="normal">2235</span>
+<span class="normal">2236</span>
+<span class="normal">2237</span>
+<span class="normal">2238</span>
+<span class="normal">2239</span>
+<span class="normal">2240</span>
+<span class="normal">2241</span>
+<span class="normal">2242</span>
+<span class="normal">2243</span>
+<span class="normal">2244</span>
+<span class="normal">2245</span>
+<span class="normal">2246</span>
+<span class="normal">2247</span>
+<span class="normal">2248</span>
+<span class="normal">2249</span>
+<span class="normal">2250</span>
+<span class="normal">2251</span>
+<span class="normal">2252</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">eles</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ele_id</span><span class="p">:</span> <span class="n">AnyElementID</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">AnyElementID</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -7461,6 +7535,189 @@ the full comb data.</p>
 <div class="doc doc-object doc-function">
 
 
+<h5 id="pytao.Tao.floor_table" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">pytao.Tao.floor_table</span>
+
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">floor_table</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">ix_branch</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">'model'</span><span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Per-element floor geometry for converting particles to floor coordinates.</p>
+<p>The table can be saved and used later without Tao. See <code>FloorTable</code>.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>ix_branch</code>
+            </td>
+            <td>
+                  <code>int or sequence of int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Branch or branches to include. Default is every branch of the universe.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>ix_uni</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> or <span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Universe index. Default is the current universe.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>which</code>
+            </td>
+            <td>
+                  <code>&#34;base&#34;, &#34;model&#34;, or &#34;design&#34;</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+            <td>
+                  <code>&#34;model&#34;</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="pytao.model.FloorTable (pytao.model.floor.FloorTable)" href="../element/#pytao.model.FloorTable">FloorTable</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">table</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">floor_table</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">P</span> <span class="o">=</span> <span class="n">tao</span><span class="o">.</span><span class="n">particles</span><span class="p">(</span><span class="s2">"end"</span><span class="p">,</span> <span class="n">extras</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Pf</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">particles_to_floor</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+</code></pre></div>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>pytao/tao.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">803</span>
+<span class="normal">804</span>
+<span class="normal">805</span>
+<span class="normal">806</span>
+<span class="normal">807</span>
+<span class="normal">808</span>
+<span class="normal">809</span>
+<span class="normal">810</span>
+<span class="normal">811</span>
+<span class="normal">812</span>
+<span class="normal">813</span>
+<span class="normal">814</span>
+<span class="normal">815</span>
+<span class="normal">816</span>
+<span class="normal">817</span>
+<span class="normal">818</span>
+<span class="normal">819</span>
+<span class="normal">820</span>
+<span class="normal">821</span>
+<span class="normal">822</span>
+<span class="normal">823</span>
+<span class="normal">824</span>
+<span class="normal">825</span>
+<span class="normal">826</span>
+<span class="normal">827</span>
+<span class="normal">828</span>
+<span class="normal">829</span>
+<span class="normal">830</span>
+<span class="normal">831</span>
+<span class="normal">832</span>
+<span class="normal">833</span>
+<span class="normal">834</span>
+<span class="normal">835</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">floor_table</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">ix_branch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
+    <span class="n">which</span><span class="p">:</span> <span class="n">Which</span> <span class="o">=</span> <span class="s2">"model"</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FloorTable</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Per-element floor geometry for converting particles to floor coordinates.</span>
+
+<span class="sd">    The table can be saved and used later without Tao. See `FloorTable`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ix_branch : int or sequence of int, optional</span>
+<span class="sd">        Branch or branches to include. Default is every branch of the universe.</span>
+<span class="sd">    ix_uni : str or int, optional</span>
+<span class="sd">        Universe index. Default is the current universe.</span>
+<span class="sd">    which : "base", "model", or "design", default="model"</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    FloorTable</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; table = tao.floor_table()</span>
+<span class="sd">    &gt;&gt;&gt; P = tao.particles("end", extras=True)</span>
+<span class="sd">    &gt;&gt;&gt; Pf = table.particles_to_floor(P)</span>
+<span class="sd">    """</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.model.floor</span><span class="w"> </span><span class="kn">import</span> <span class="n">FloorTable</span>
+
+    <span class="k">return</span> <span class="n">FloorTable</span><span class="o">.</span><span class="n">from_tao</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ix_branch</span><span class="o">=</span><span class="n">ix_branch</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="n">ix_uni</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="n">which</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h5 id="pytao.Tao.from_contents" class="doc doc-heading">
             <span class="doc doc-object-name doc-function-name">pytao.Tao.from_contents</span>
 
@@ -7681,8 +7938,7 @@ keyword argument matching any specified <code>*_contents</code> argument -
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">484</span>
-<span class="normal">485</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">485</span>
 <span class="normal">486</span>
 <span class="normal">487</span>
 <span class="normal">488</span>
@@ -7792,7 +8048,8 @@ keyword argument matching any specified <code>*_contents</code> argument -
 <span class="normal">592</span>
 <span class="normal">593</span>
 <span class="normal">594</span>
-<span class="normal">595</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">595</span>
+<span class="normal">596</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_contents</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span>
     <span class="n">lattice_contents</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
@@ -7930,14 +8187,14 @@ is currently being tracked.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1424</span>
-<span class="normal">1425</span>
-<span class="normal">1426</span>
-<span class="normal">1427</span>
-<span class="normal">1428</span>
-<span class="normal">1429</span>
-<span class="normal">1430</span>
-<span class="normal">1431</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_active_beam_track_element</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1540</span>
+<span class="normal">1541</span>
+<span class="normal">1542</span>
+<span class="normal">1543</span>
+<span class="normal">1544</span>
+<span class="normal">1545</span>
+<span class="normal">1546</span>
+<span class="normal">1547</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_active_beam_track_element</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get the active element index being tracked.</span>
 
@@ -8039,22 +8296,22 @@ is currently being tracked.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2403</span>
-<span class="normal">2404</span>
-<span class="normal">2405</span>
-<span class="normal">2406</span>
-<span class="normal">2407</span>
-<span class="normal">2408</span>
-<span class="normal">2409</span>
-<span class="normal">2410</span>
-<span class="normal">2411</span>
-<span class="normal">2412</span>
-<span class="normal">2413</span>
-<span class="normal">2414</span>
-<span class="normal">2415</span>
-<span class="normal">2416</span>
-<span class="normal">2417</span>
-<span class="normal">2418</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">ix_branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TaoConfig</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2519</span>
+<span class="normal">2520</span>
+<span class="normal">2521</span>
+<span class="normal">2522</span>
+<span class="normal">2523</span>
+<span class="normal">2524</span>
+<span class="normal">2525</span>
+<span class="normal">2526</span>
+<span class="normal">2527</span>
+<span class="normal">2528</span>
+<span class="normal">2529</span>
+<span class="normal">2530</span>
+<span class="normal">2531</span>
+<span class="normal">2532</span>
+<span class="normal">2533</span>
+<span class="normal">2534</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">ix_branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TaoConfig</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get a configuration object representing the state of Tao.</span>
 
@@ -8218,42 +8475,7 @@ Otherwise, <code>None</code> will be returned.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">802</span>
-<span class="normal">803</span>
-<span class="normal">804</span>
-<span class="normal">805</span>
-<span class="normal">806</span>
-<span class="normal">807</span>
-<span class="normal">808</span>
-<span class="normal">809</span>
-<span class="normal">810</span>
-<span class="normal">811</span>
-<span class="normal">812</span>
-<span class="normal">813</span>
-<span class="normal">814</span>
-<span class="normal">815</span>
-<span class="normal">816</span>
-<span class="normal">817</span>
-<span class="normal">818</span>
-<span class="normal">819</span>
-<span class="normal">820</span>
-<span class="normal">821</span>
-<span class="normal">822</span>
-<span class="normal">823</span>
-<span class="normal">824</span>
-<span class="normal">825</span>
-<span class="normal">826</span>
-<span class="normal">827</span>
-<span class="normal">828</span>
-<span class="normal">829</span>
-<span class="normal">830</span>
-<span class="normal">831</span>
-<span class="normal">832</span>
-<span class="normal">833</span>
-<span class="normal">834</span>
-<span class="normal">835</span>
-<span class="normal">836</span>
-<span class="normal">837</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">837</span>
 <span class="normal">838</span>
 <span class="normal">839</span>
 <span class="normal">840</span>
@@ -8269,7 +8491,42 @@ Otherwise, <code>None</code> will be returned.</p>
 <span class="normal">850</span>
 <span class="normal">851</span>
 <span class="normal">852</span>
-<span class="normal">853</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_initial_particles</span><span class="p">(</span>
+<span class="normal">853</span>
+<span class="normal">854</span>
+<span class="normal">855</span>
+<span class="normal">856</span>
+<span class="normal">857</span>
+<span class="normal">858</span>
+<span class="normal">859</span>
+<span class="normal">860</span>
+<span class="normal">861</span>
+<span class="normal">862</span>
+<span class="normal">863</span>
+<span class="normal">864</span>
+<span class="normal">865</span>
+<span class="normal">866</span>
+<span class="normal">867</span>
+<span class="normal">868</span>
+<span class="normal">869</span>
+<span class="normal">870</span>
+<span class="normal">871</span>
+<span class="normal">872</span>
+<span class="normal">873</span>
+<span class="normal">874</span>
+<span class="normal">875</span>
+<span class="normal">876</span>
+<span class="normal">877</span>
+<span class="normal">878</span>
+<span class="normal">879</span>
+<span class="normal">880</span>
+<span class="normal">881</span>
+<span class="normal">882</span>
+<span class="normal">883</span>
+<span class="normal">884</span>
+<span class="normal">885</span>
+<span class="normal">886</span>
+<span class="normal">887</span>
+<span class="normal">888</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_initial_particles</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -8908,8 +9165,7 @@ default (RF on) if no init file is used.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">267</span>
-<span class="normal">268</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">268</span>
 <span class="normal">269</span>
 <span class="normal">270</span>
 <span class="normal">271</span>
@@ -9123,7 +9379,8 @@ default (RF on) if no init file is used.</p>
 <span class="normal">479</span>
 <span class="normal">480</span>
 <span class="normal">481</span>
-<span class="normal">482</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">init</span><span class="p">(</span>
+<span class="normal">482</span>
+<span class="normal">483</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">init</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -9425,8 +9682,7 @@ with "id" only included when any particle has <code>ix_user</code> set.
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">758</span>
-<span class="normal">759</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">759</span>
 <span class="normal">760</span>
 <span class="normal">761</span>
 <span class="normal">762</span>
@@ -9467,7 +9723,8 @@ with "id" only included when any particle has <code>ix_user</code> set.
 <span class="normal">797</span>
 <span class="normal">798</span>
 <span class="normal">799</span>
-<span class="normal">800</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">particles</span><span class="p">(</span>
+<span class="normal">800</span>
+<span class="normal">801</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">particles</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ele_id</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -9795,42 +10052,7 @@ which every curve inherits unless it has its own <code>ix_universe</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1202</span>
-<span class="normal">1203</span>
-<span class="normal">1204</span>
-<span class="normal">1205</span>
-<span class="normal">1206</span>
-<span class="normal">1207</span>
-<span class="normal">1208</span>
-<span class="normal">1209</span>
-<span class="normal">1210</span>
-<span class="normal">1211</span>
-<span class="normal">1212</span>
-<span class="normal">1213</span>
-<span class="normal">1214</span>
-<span class="normal">1215</span>
-<span class="normal">1216</span>
-<span class="normal">1217</span>
-<span class="normal">1218</span>
-<span class="normal">1219</span>
-<span class="normal">1220</span>
-<span class="normal">1221</span>
-<span class="normal">1222</span>
-<span class="normal">1223</span>
-<span class="normal">1224</span>
-<span class="normal">1225</span>
-<span class="normal">1226</span>
-<span class="normal">1227</span>
-<span class="normal">1228</span>
-<span class="normal">1229</span>
-<span class="normal">1230</span>
-<span class="normal">1231</span>
-<span class="normal">1232</span>
-<span class="normal">1233</span>
-<span class="normal">1234</span>
-<span class="normal">1235</span>
-<span class="normal">1236</span>
-<span class="normal">1237</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1237</span>
 <span class="normal">1238</span>
 <span class="normal">1239</span>
 <span class="normal">1240</span>
@@ -9899,7 +10121,42 @@ which every curve inherits unless it has its own <code>ix_universe</code>.</p>
 <span class="normal">1303</span>
 <span class="normal">1304</span>
 <span class="normal">1305</span>
-<span class="normal">1306</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
+<span class="normal">1306</span>
+<span class="normal">1307</span>
+<span class="normal">1308</span>
+<span class="normal">1309</span>
+<span class="normal">1310</span>
+<span class="normal">1311</span>
+<span class="normal">1312</span>
+<span class="normal">1313</span>
+<span class="normal">1314</span>
+<span class="normal">1315</span>
+<span class="normal">1316</span>
+<span class="normal">1317</span>
+<span class="normal">1318</span>
+<span class="normal">1319</span>
+<span class="normal">1320</span>
+<span class="normal">1321</span>
+<span class="normal">1322</span>
+<span class="normal">1323</span>
+<span class="normal">1324</span>
+<span class="normal">1325</span>
+<span class="normal">1326</span>
+<span class="normal">1327</span>
+<span class="normal">1328</span>
+<span class="normal">1329</span>
+<span class="normal">1330</span>
+<span class="normal">1331</span>
+<span class="normal">1332</span>
+<span class="normal">1333</span>
+<span class="normal">1334</span>
+<span class="normal">1335</span>
+<span class="normal">1336</span>
+<span class="normal">1337</span>
+<span class="normal">1338</span>
+<span class="normal">1339</span>
+<span class="normal">1340</span>
+<span class="normal">1341</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">template</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -10232,84 +10489,84 @@ to select a backend.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1345</span>
-<span class="normal">1346</span>
-<span class="normal">1347</span>
-<span class="normal">1348</span>
-<span class="normal">1349</span>
-<span class="normal">1350</span>
-<span class="normal">1351</span>
-<span class="normal">1352</span>
-<span class="normal">1353</span>
-<span class="normal">1354</span>
-<span class="normal">1355</span>
-<span class="normal">1356</span>
-<span class="normal">1357</span>
-<span class="normal">1358</span>
-<span class="normal">1359</span>
-<span class="normal">1360</span>
-<span class="normal">1361</span>
-<span class="normal">1362</span>
-<span class="normal">1363</span>
-<span class="normal">1364</span>
-<span class="normal">1365</span>
-<span class="normal">1366</span>
-<span class="normal">1367</span>
-<span class="normal">1368</span>
-<span class="normal">1369</span>
-<span class="normal">1370</span>
-<span class="normal">1371</span>
-<span class="normal">1372</span>
-<span class="normal">1373</span>
-<span class="normal">1374</span>
-<span class="normal">1375</span>
-<span class="normal">1376</span>
-<span class="normal">1377</span>
-<span class="normal">1378</span>
-<span class="normal">1379</span>
-<span class="normal">1380</span>
-<span class="normal">1381</span>
-<span class="normal">1382</span>
-<span class="normal">1383</span>
-<span class="normal">1384</span>
-<span class="normal">1385</span>
-<span class="normal">1386</span>
-<span class="normal">1387</span>
-<span class="normal">1388</span>
-<span class="normal">1389</span>
-<span class="normal">1390</span>
-<span class="normal">1391</span>
-<span class="normal">1392</span>
-<span class="normal">1393</span>
-<span class="normal">1394</span>
-<span class="normal">1395</span>
-<span class="normal">1396</span>
-<span class="normal">1397</span>
-<span class="normal">1398</span>
-<span class="normal">1399</span>
-<span class="normal">1400</span>
-<span class="normal">1401</span>
-<span class="normal">1402</span>
-<span class="normal">1403</span>
-<span class="normal">1404</span>
-<span class="normal">1405</span>
-<span class="normal">1406</span>
-<span class="normal">1407</span>
-<span class="normal">1408</span>
-<span class="normal">1409</span>
-<span class="normal">1410</span>
-<span class="normal">1411</span>
-<span class="normal">1412</span>
-<span class="normal">1413</span>
-<span class="normal">1414</span>
-<span class="normal">1415</span>
-<span class="normal">1416</span>
-<span class="normal">1417</span>
-<span class="normal">1418</span>
-<span class="normal">1419</span>
-<span class="normal">1420</span>
-<span class="normal">1421</span>
-<span class="normal">1422</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_ele_methods</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1461</span>
+<span class="normal">1462</span>
+<span class="normal">1463</span>
+<span class="normal">1464</span>
+<span class="normal">1465</span>
+<span class="normal">1466</span>
+<span class="normal">1467</span>
+<span class="normal">1468</span>
+<span class="normal">1469</span>
+<span class="normal">1470</span>
+<span class="normal">1471</span>
+<span class="normal">1472</span>
+<span class="normal">1473</span>
+<span class="normal">1474</span>
+<span class="normal">1475</span>
+<span class="normal">1476</span>
+<span class="normal">1477</span>
+<span class="normal">1478</span>
+<span class="normal">1479</span>
+<span class="normal">1480</span>
+<span class="normal">1481</span>
+<span class="normal">1482</span>
+<span class="normal">1483</span>
+<span class="normal">1484</span>
+<span class="normal">1485</span>
+<span class="normal">1486</span>
+<span class="normal">1487</span>
+<span class="normal">1488</span>
+<span class="normal">1489</span>
+<span class="normal">1490</span>
+<span class="normal">1491</span>
+<span class="normal">1492</span>
+<span class="normal">1493</span>
+<span class="normal">1494</span>
+<span class="normal">1495</span>
+<span class="normal">1496</span>
+<span class="normal">1497</span>
+<span class="normal">1498</span>
+<span class="normal">1499</span>
+<span class="normal">1500</span>
+<span class="normal">1501</span>
+<span class="normal">1502</span>
+<span class="normal">1503</span>
+<span class="normal">1504</span>
+<span class="normal">1505</span>
+<span class="normal">1506</span>
+<span class="normal">1507</span>
+<span class="normal">1508</span>
+<span class="normal">1509</span>
+<span class="normal">1510</span>
+<span class="normal">1511</span>
+<span class="normal">1512</span>
+<span class="normal">1513</span>
+<span class="normal">1514</span>
+<span class="normal">1515</span>
+<span class="normal">1516</span>
+<span class="normal">1517</span>
+<span class="normal">1518</span>
+<span class="normal">1519</span>
+<span class="normal">1520</span>
+<span class="normal">1521</span>
+<span class="normal">1522</span>
+<span class="normal">1523</span>
+<span class="normal">1524</span>
+<span class="normal">1525</span>
+<span class="normal">1526</span>
+<span class="normal">1527</span>
+<span class="normal">1528</span>
+<span class="normal">1529</span>
+<span class="normal">1530</span>
+<span class="normal">1531</span>
+<span class="normal">1532</span>
+<span class="normal">1533</span>
+<span class="normal">1534</span>
+<span class="normal">1535</span>
+<span class="normal">1536</span>
+<span class="normal">1537</span>
+<span class="normal">1538</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_ele_methods</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ele_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"*"</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -10508,42 +10765,42 @@ to select a backend.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1308</span>
-<span class="normal">1309</span>
-<span class="normal">1310</span>
-<span class="normal">1311</span>
-<span class="normal">1312</span>
-<span class="normal">1313</span>
-<span class="normal">1314</span>
-<span class="normal">1315</span>
-<span class="normal">1316</span>
-<span class="normal">1317</span>
-<span class="normal">1318</span>
-<span class="normal">1319</span>
-<span class="normal">1320</span>
-<span class="normal">1321</span>
-<span class="normal">1322</span>
-<span class="normal">1323</span>
-<span class="normal">1324</span>
-<span class="normal">1325</span>
-<span class="normal">1326</span>
-<span class="normal">1327</span>
-<span class="normal">1328</span>
-<span class="normal">1329</span>
-<span class="normal">1330</span>
-<span class="normal">1331</span>
-<span class="normal">1332</span>
-<span class="normal">1333</span>
-<span class="normal">1334</span>
-<span class="normal">1335</span>
-<span class="normal">1336</span>
-<span class="normal">1337</span>
-<span class="normal">1338</span>
-<span class="normal">1339</span>
-<span class="normal">1340</span>
-<span class="normal">1341</span>
-<span class="normal">1342</span>
-<span class="normal">1343</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_field</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1343</span>
+<span class="normal">1344</span>
+<span class="normal">1345</span>
+<span class="normal">1346</span>
+<span class="normal">1347</span>
+<span class="normal">1348</span>
+<span class="normal">1349</span>
+<span class="normal">1350</span>
+<span class="normal">1351</span>
+<span class="normal">1352</span>
+<span class="normal">1353</span>
+<span class="normal">1354</span>
+<span class="normal">1355</span>
+<span class="normal">1356</span>
+<span class="normal">1357</span>
+<span class="normal">1358</span>
+<span class="normal">1359</span>
+<span class="normal">1360</span>
+<span class="normal">1361</span>
+<span class="normal">1362</span>
+<span class="normal">1363</span>
+<span class="normal">1364</span>
+<span class="normal">1365</span>
+<span class="normal">1366</span>
+<span class="normal">1367</span>
+<span class="normal">1368</span>
+<span class="normal">1369</span>
+<span class="normal">1370</span>
+<span class="normal">1371</span>
+<span class="normal">1372</span>
+<span class="normal">1373</span>
+<span class="normal">1374</span>
+<span class="normal">1375</span>
+<span class="normal">1376</span>
+<span class="normal">1377</span>
+<span class="normal">1378</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_field</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ele_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -10588,6 +10845,432 @@ to select a backend.</p>
 <div class="doc doc-object doc-function">
 
 
+<h5 id="pytao.Tao.plot_floor_beam" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">pytao.Tao.plot_floor_beam</span>
+
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">plot_floor_beam</span><span class="p">(</span><span class="n">template</span><span class="o">=</span><span class="s1">'floor_plan'</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">comb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="s1">'minmax'</span><span class="p">,</span> <span class="n">n_sigma</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">magnification</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">ix_uni</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ix_branch</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">zoom_padding</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Plot the tracked beam's centroid and envelope on top of a floor plan.</p>
+<p>Uses the beam statistics Tao saves along the lattice when tracking a
+beam with <code>beam%comb_ds_save</code> set (see <code>Tao.bunch_comb</code>), converted to
+floor coordinates with a <code>FloorTable</code>.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>template</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Floor plan template to draw. Default is "floor_plan".</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;floor_plan&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>comb</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="pytao.model.Comb (pytao.model.ele.Comb)" href="../element/#pytao.model.Comb">Comb</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Beam statistics to use, such as from <code>Comb.from_tao</code> or a slice of
+one. By default, the statistics are fetched from Tao.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>extent</code>
+            </td>
+            <td>
+                  <code>(&#39;minmax&#39;, &#39;sigma&#39;)</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>What the envelope shows. "minmax" (the default) is the full extent
+of the beam, from its outermost particle on each side. "sigma" is
+<code>n_sigma</code> RMS beam sizes either side of the centroid.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#34;minmax&#34;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>n_sigma</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Half-width of the envelope in beam sigmas, for <code>extent="sigma"</code>.
+Default is 3.</p>
+              </div>
+            </td>
+            <td>
+                  <code>3.0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>magnification</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Scale the beam's offsets from the reference orbit by this factor,
+to make a small beam visible at the scale of the machine. The
+floor plan itself is not scaled. Default is 1.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1.0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>ix_uni</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Universe index. Default is the current universe.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>ix_branch</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Branch the beam was tracked through. Default is 0.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>zoom</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Zoom in on the beam instead of showing the whole floor plan, for a
+beam tracked through part of a larger lattice. Default is False.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>zoom_padding</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Margin to leave around the beam when zooming, as a fraction of its
+extent. Default is 0.1.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.1</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>legend</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Show a legend for the envelope and centroid. Default is True.</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>backend</code>
+            </td>
+            <td>
+                  <code>(&#39;bokeh&#39;, &#39;mpl&#39;)</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The backend to use.  Auto-detects Jupyter and availability of bokeh
+to select a backend.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#34;bokeh&#34;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>**kwargs</code>
+            </td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Passed to the backend's <code>plot_floor_beam</code>, e.g. <code>color</code>, <code>alpha</code>,
+<code>xlim</code> or <code>ylim</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>{}</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>To gain access to the resulting plot objects, use the backend's
+<code>plot_floor_beam</code> method directly.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>pytao/tao.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1380</span>
+<span class="normal">1381</span>
+<span class="normal">1382</span>
+<span class="normal">1383</span>
+<span class="normal">1384</span>
+<span class="normal">1385</span>
+<span class="normal">1386</span>
+<span class="normal">1387</span>
+<span class="normal">1388</span>
+<span class="normal">1389</span>
+<span class="normal">1390</span>
+<span class="normal">1391</span>
+<span class="normal">1392</span>
+<span class="normal">1393</span>
+<span class="normal">1394</span>
+<span class="normal">1395</span>
+<span class="normal">1396</span>
+<span class="normal">1397</span>
+<span class="normal">1398</span>
+<span class="normal">1399</span>
+<span class="normal">1400</span>
+<span class="normal">1401</span>
+<span class="normal">1402</span>
+<span class="normal">1403</span>
+<span class="normal">1404</span>
+<span class="normal">1405</span>
+<span class="normal">1406</span>
+<span class="normal">1407</span>
+<span class="normal">1408</span>
+<span class="normal">1409</span>
+<span class="normal">1410</span>
+<span class="normal">1411</span>
+<span class="normal">1412</span>
+<span class="normal">1413</span>
+<span class="normal">1414</span>
+<span class="normal">1415</span>
+<span class="normal">1416</span>
+<span class="normal">1417</span>
+<span class="normal">1418</span>
+<span class="normal">1419</span>
+<span class="normal">1420</span>
+<span class="normal">1421</span>
+<span class="normal">1422</span>
+<span class="normal">1423</span>
+<span class="normal">1424</span>
+<span class="normal">1425</span>
+<span class="normal">1426</span>
+<span class="normal">1427</span>
+<span class="normal">1428</span>
+<span class="normal">1429</span>
+<span class="normal">1430</span>
+<span class="normal">1431</span>
+<span class="normal">1432</span>
+<span class="normal">1433</span>
+<span class="normal">1434</span>
+<span class="normal">1435</span>
+<span class="normal">1436</span>
+<span class="normal">1437</span>
+<span class="normal">1438</span>
+<span class="normal">1439</span>
+<span class="normal">1440</span>
+<span class="normal">1441</span>
+<span class="normal">1442</span>
+<span class="normal">1443</span>
+<span class="normal">1444</span>
+<span class="normal">1445</span>
+<span class="normal">1446</span>
+<span class="normal">1447</span>
+<span class="normal">1448</span>
+<span class="normal">1449</span>
+<span class="normal">1450</span>
+<span class="normal">1451</span>
+<span class="normal">1452</span>
+<span class="normal">1453</span>
+<span class="normal">1454</span>
+<span class="normal">1455</span>
+<span class="normal">1456</span>
+<span class="normal">1457</span>
+<span class="normal">1458</span>
+<span class="normal">1459</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_floor_beam</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">template</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"floor_plan"</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">comb</span><span class="p">:</span> <span class="n">Comb</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">extent</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"minmax"</span><span class="p">,</span> <span class="s2">"sigma"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"minmax"</span><span class="p">,</span>
+    <span class="n">n_sigma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.0</span><span class="p">,</span>
+    <span class="n">magnification</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">ix_uni</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ix_branch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">zoom</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">zoom_padding</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">legend</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Plot the tracked beam's centroid and envelope on top of a floor plan.</span>
+
+<span class="sd">    Uses the beam statistics Tao saves along the lattice when tracking a</span>
+<span class="sd">    beam with `beam%comb_ds_save` set (see `Tao.bunch_comb`), converted to</span>
+<span class="sd">    floor coordinates with a `FloorTable`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    template : str, optional</span>
+<span class="sd">        Floor plan template to draw. Default is "floor_plan".</span>
+<span class="sd">    comb : Comb, optional</span>
+<span class="sd">        Beam statistics to use, such as from `Comb.from_tao` or a slice of</span>
+<span class="sd">        one. By default, the statistics are fetched from Tao.</span>
+<span class="sd">    extent : {"minmax", "sigma"}, optional</span>
+<span class="sd">        What the envelope shows. "minmax" (the default) is the full extent</span>
+<span class="sd">        of the beam, from its outermost particle on each side. "sigma" is</span>
+<span class="sd">        `n_sigma` RMS beam sizes either side of the centroid.</span>
+<span class="sd">    n_sigma : float, optional</span>
+<span class="sd">        Half-width of the envelope in beam sigmas, for `extent="sigma"`.</span>
+<span class="sd">        Default is 3.</span>
+<span class="sd">    magnification : float, optional</span>
+<span class="sd">        Scale the beam's offsets from the reference orbit by this factor,</span>
+<span class="sd">        to make a small beam visible at the scale of the machine. The</span>
+<span class="sd">        floor plan itself is not scaled. Default is 1.</span>
+<span class="sd">    ix_uni : int, optional</span>
+<span class="sd">        Universe index. Default is the current universe.</span>
+<span class="sd">    ix_branch : int, optional</span>
+<span class="sd">        Branch the beam was tracked through. Default is 0.</span>
+<span class="sd">    zoom : bool, optional</span>
+<span class="sd">        Zoom in on the beam instead of showing the whole floor plan, for a</span>
+<span class="sd">        beam tracked through part of a larger lattice. Default is False.</span>
+<span class="sd">    zoom_padding : float, optional</span>
+<span class="sd">        Margin to leave around the beam when zooming, as a fraction of its</span>
+<span class="sd">        extent. Default is 0.1.</span>
+<span class="sd">    legend : bool, optional</span>
+<span class="sd">        Show a legend for the envelope and centroid. Default is True.</span>
+<span class="sd">    backend : {"bokeh", "mpl"}, optional</span>
+<span class="sd">        The backend to use.  Auto-detects Jupyter and availability of bokeh</span>
+<span class="sd">        to select a backend.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Passed to the backend's `plot_floor_beam`, e.g. `color`, `alpha`,</span>
+<span class="sd">        `xlim` or `ylim`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        To gain access to the resulting plot objects, use the backend's</span>
+<span class="sd">        `plot_floor_beam` method directly.</span>
+<span class="sd">    """</span>
+    <span class="n">manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_user_specified_backend</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">last_plot</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">plot_floor_beam</span><span class="p">(</span>
+        <span class="n">template</span><span class="p">,</span>
+        <span class="n">comb</span><span class="o">=</span><span class="n">comb</span><span class="p">,</span>
+        <span class="n">extent</span><span class="o">=</span><span class="n">extent</span><span class="p">,</span>
+        <span class="n">n_sigma</span><span class="o">=</span><span class="n">n_sigma</span><span class="p">,</span>
+        <span class="n">magnification</span><span class="o">=</span><span class="n">magnification</span><span class="p">,</span>
+        <span class="n">ix_uni</span><span class="o">=</span><span class="n">ix_uni</span><span class="p">,</span>
+        <span class="n">ix_branch</span><span class="o">=</span><span class="n">ix_branch</span><span class="p">,</span>
+        <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">,</span>
+        <span class="n">zoom_padding</span><span class="o">=</span><span class="n">zoom_padding</span><span class="p">,</span>
+        <span class="n">legend</span><span class="o">=</span><span class="n">legend</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h5 id="pytao.Tao.plot_page" class="doc doc-heading">
             <span class="doc doc-object-name doc-function-name">pytao.Tao.plot_page</span>
 
@@ -10603,10 +11286,10 @@ to select a backend.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1005</span>
-<span class="normal">1006</span>
-<span class="normal">1007</span>
-<span class="normal">1008</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_page</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1040</span>
+<span class="normal">1041</span>
+<span class="normal">1042</span>
+<span class="normal">1043</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_page</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Get plot page parameters."""</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="s2">"show plot_page"</span>
     <span class="k">return</span> <span class="n">_pytao_parsers</span><span class="o">.</span><span class="n">parse_show_plot_page</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="n">cmd</span><span class="p">),</span> <span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">)</span>
@@ -10744,42 +11427,7 @@ the temporary directory mechanism.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">871</span>
-<span class="normal">872</span>
-<span class="normal">873</span>
-<span class="normal">874</span>
-<span class="normal">875</span>
-<span class="normal">876</span>
-<span class="normal">877</span>
-<span class="normal">878</span>
-<span class="normal">879</span>
-<span class="normal">880</span>
-<span class="normal">881</span>
-<span class="normal">882</span>
-<span class="normal">883</span>
-<span class="normal">884</span>
-<span class="normal">885</span>
-<span class="normal">886</span>
-<span class="normal">887</span>
-<span class="normal">888</span>
-<span class="normal">889</span>
-<span class="normal">890</span>
-<span class="normal">891</span>
-<span class="normal">892</span>
-<span class="normal">893</span>
-<span class="normal">894</span>
-<span class="normal">895</span>
-<span class="normal">896</span>
-<span class="normal">897</span>
-<span class="normal">898</span>
-<span class="normal">899</span>
-<span class="normal">900</span>
-<span class="normal">901</span>
-<span class="normal">902</span>
-<span class="normal">903</span>
-<span class="normal">904</span>
-<span class="normal">905</span>
-<span class="normal">906</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">906</span>
 <span class="normal">907</span>
 <span class="normal">908</span>
 <span class="normal">909</span>
@@ -10820,7 +11468,42 @@ the temporary directory mechanism.</p>
 <span class="normal">944</span>
 <span class="normal">945</span>
 <span class="normal">946</span>
-<span class="normal">947</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_initial_particles</span><span class="p">(</span>
+<span class="normal">947</span>
+<span class="normal">948</span>
+<span class="normal">949</span>
+<span class="normal">950</span>
+<span class="normal">951</span>
+<span class="normal">952</span>
+<span class="normal">953</span>
+<span class="normal">954</span>
+<span class="normal">955</span>
+<span class="normal">956</span>
+<span class="normal">957</span>
+<span class="normal">958</span>
+<span class="normal">959</span>
+<span class="normal">960</span>
+<span class="normal">961</span>
+<span class="normal">962</span>
+<span class="normal">963</span>
+<span class="normal">964</span>
+<span class="normal">965</span>
+<span class="normal">966</span>
+<span class="normal">967</span>
+<span class="normal">968</span>
+<span class="normal">969</span>
+<span class="normal">970</span>
+<span class="normal">971</span>
+<span class="normal">972</span>
+<span class="normal">973</span>
+<span class="normal">974</span>
+<span class="normal">975</span>
+<span class="normal">976</span>
+<span class="normal">977</span>
+<span class="normal">978</span>
+<span class="normal">979</span>
+<span class="normal">980</span>
+<span class="normal">981</span>
+<span class="normal">982</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_initial_particles</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">particles</span><span class="p">:</span> <span class="n">ParticleGroup</span> <span class="o">|</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -11076,83 +11759,83 @@ the presence of Jupyter.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1433</span>
-<span class="normal">1434</span>
-<span class="normal">1435</span>
-<span class="normal">1436</span>
-<span class="normal">1437</span>
-<span class="normal">1438</span>
-<span class="normal">1439</span>
-<span class="normal">1440</span>
-<span class="normal">1441</span>
-<span class="normal">1442</span>
-<span class="normal">1443</span>
-<span class="normal">1444</span>
-<span class="normal">1445</span>
-<span class="normal">1446</span>
-<span class="normal">1447</span>
-<span class="normal">1448</span>
-<span class="normal">1449</span>
-<span class="normal">1450</span>
-<span class="normal">1451</span>
-<span class="normal">1452</span>
-<span class="normal">1453</span>
-<span class="normal">1454</span>
-<span class="normal">1455</span>
-<span class="normal">1456</span>
-<span class="normal">1457</span>
-<span class="normal">1458</span>
-<span class="normal">1459</span>
-<span class="normal">1460</span>
-<span class="normal">1461</span>
-<span class="normal">1462</span>
-<span class="normal">1463</span>
-<span class="normal">1464</span>
-<span class="normal">1465</span>
-<span class="normal">1466</span>
-<span class="normal">1467</span>
-<span class="normal">1468</span>
-<span class="normal">1469</span>
-<span class="normal">1470</span>
-<span class="normal">1471</span>
-<span class="normal">1472</span>
-<span class="normal">1473</span>
-<span class="normal">1474</span>
-<span class="normal">1475</span>
-<span class="normal">1476</span>
-<span class="normal">1477</span>
-<span class="normal">1478</span>
-<span class="normal">1479</span>
-<span class="normal">1480</span>
-<span class="normal">1481</span>
-<span class="normal">1482</span>
-<span class="normal">1483</span>
-<span class="normal">1484</span>
-<span class="normal">1485</span>
-<span class="normal">1486</span>
-<span class="normal">1487</span>
-<span class="normal">1488</span>
-<span class="normal">1489</span>
-<span class="normal">1490</span>
-<span class="normal">1491</span>
-<span class="normal">1492</span>
-<span class="normal">1493</span>
-<span class="normal">1494</span>
-<span class="normal">1495</span>
-<span class="normal">1496</span>
-<span class="normal">1497</span>
-<span class="normal">1498</span>
-<span class="normal">1499</span>
-<span class="normal">1500</span>
-<span class="normal">1501</span>
-<span class="normal">1502</span>
-<span class="normal">1503</span>
-<span class="normal">1504</span>
-<span class="normal">1505</span>
-<span class="normal">1506</span>
-<span class="normal">1507</span>
-<span class="normal">1508</span>
-<span class="normal">1509</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">track_beam</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1549</span>
+<span class="normal">1550</span>
+<span class="normal">1551</span>
+<span class="normal">1552</span>
+<span class="normal">1553</span>
+<span class="normal">1554</span>
+<span class="normal">1555</span>
+<span class="normal">1556</span>
+<span class="normal">1557</span>
+<span class="normal">1558</span>
+<span class="normal">1559</span>
+<span class="normal">1560</span>
+<span class="normal">1561</span>
+<span class="normal">1562</span>
+<span class="normal">1563</span>
+<span class="normal">1564</span>
+<span class="normal">1565</span>
+<span class="normal">1566</span>
+<span class="normal">1567</span>
+<span class="normal">1568</span>
+<span class="normal">1569</span>
+<span class="normal">1570</span>
+<span class="normal">1571</span>
+<span class="normal">1572</span>
+<span class="normal">1573</span>
+<span class="normal">1574</span>
+<span class="normal">1575</span>
+<span class="normal">1576</span>
+<span class="normal">1577</span>
+<span class="normal">1578</span>
+<span class="normal">1579</span>
+<span class="normal">1580</span>
+<span class="normal">1581</span>
+<span class="normal">1582</span>
+<span class="normal">1583</span>
+<span class="normal">1584</span>
+<span class="normal">1585</span>
+<span class="normal">1586</span>
+<span class="normal">1587</span>
+<span class="normal">1588</span>
+<span class="normal">1589</span>
+<span class="normal">1590</span>
+<span class="normal">1591</span>
+<span class="normal">1592</span>
+<span class="normal">1593</span>
+<span class="normal">1594</span>
+<span class="normal">1595</span>
+<span class="normal">1596</span>
+<span class="normal">1597</span>
+<span class="normal">1598</span>
+<span class="normal">1599</span>
+<span class="normal">1600</span>
+<span class="normal">1601</span>
+<span class="normal">1602</span>
+<span class="normal">1603</span>
+<span class="normal">1604</span>
+<span class="normal">1605</span>
+<span class="normal">1606</span>
+<span class="normal">1607</span>
+<span class="normal">1608</span>
+<span class="normal">1609</span>
+<span class="normal">1610</span>
+<span class="normal">1611</span>
+<span class="normal">1612</span>
+<span class="normal">1613</span>
+<span class="normal">1614</span>
+<span class="normal">1615</span>
+<span class="normal">1616</span>
+<span class="normal">1617</span>
+<span class="normal">1618</span>
+<span class="normal">1619</span>
+<span class="normal">1620</span>
+<span class="normal">1621</span>
+<span class="normal">1622</span>
+<span class="normal">1623</span>
+<span class="normal">1624</span>
+<span class="normal">1625</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">track_beam</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">track_start</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">track_end</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -11507,42 +12190,7 @@ apply to all shapes.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1072</span>
-<span class="normal">1073</span>
-<span class="normal">1074</span>
-<span class="normal">1075</span>
-<span class="normal">1076</span>
-<span class="normal">1077</span>
-<span class="normal">1078</span>
-<span class="normal">1079</span>
-<span class="normal">1080</span>
-<span class="normal">1081</span>
-<span class="normal">1082</span>
-<span class="normal">1083</span>
-<span class="normal">1084</span>
-<span class="normal">1085</span>
-<span class="normal">1086</span>
-<span class="normal">1087</span>
-<span class="normal">1088</span>
-<span class="normal">1089</span>
-<span class="normal">1090</span>
-<span class="normal">1091</span>
-<span class="normal">1092</span>
-<span class="normal">1093</span>
-<span class="normal">1094</span>
-<span class="normal">1095</span>
-<span class="normal">1096</span>
-<span class="normal">1097</span>
-<span class="normal">1098</span>
-<span class="normal">1099</span>
-<span class="normal">1100</span>
-<span class="normal">1101</span>
-<span class="normal">1102</span>
-<span class="normal">1103</span>
-<span class="normal">1104</span>
-<span class="normal">1105</span>
-<span class="normal">1106</span>
-<span class="normal">1107</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1107</span>
 <span class="normal">1108</span>
 <span class="normal">1109</span>
 <span class="normal">1110</span>
@@ -11635,7 +12283,42 @@ apply to all shapes.</p>
 <span class="normal">1197</span>
 <span class="normal">1198</span>
 <span class="normal">1199</span>
-<span class="normal">1200</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_plot_shapes</span><span class="p">(</span>
+<span class="normal">1200</span>
+<span class="normal">1201</span>
+<span class="normal">1202</span>
+<span class="normal">1203</span>
+<span class="normal">1204</span>
+<span class="normal">1205</span>
+<span class="normal">1206</span>
+<span class="normal">1207</span>
+<span class="normal">1208</span>
+<span class="normal">1209</span>
+<span class="normal">1210</span>
+<span class="normal">1211</span>
+<span class="normal">1212</span>
+<span class="normal">1213</span>
+<span class="normal">1214</span>
+<span class="normal">1215</span>
+<span class="normal">1216</span>
+<span class="normal">1217</span>
+<span class="normal">1218</span>
+<span class="normal">1219</span>
+<span class="normal">1220</span>
+<span class="normal">1221</span>
+<span class="normal">1222</span>
+<span class="normal">1223</span>
+<span class="normal">1224</span>
+<span class="normal">1225</span>
+<span class="normal">1226</span>
+<span class="normal">1227</span>
+<span class="normal">1228</span>
+<span class="normal">1229</span>
+<span class="normal">1230</span>
+<span class="normal">1231</span>
+<span class="normal">1232</span>
+<span class="normal">1233</span>
+<span class="normal">1234</span>
+<span class="normal">1235</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_plot_shapes</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">ele_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -11819,17 +12502,17 @@ apply to all shapes.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pytao/tao.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 993</span>
-<span class="normal"> 994</span>
-<span class="normal"> 995</span>
-<span class="normal"> 996</span>
-<span class="normal"> 997</span>
-<span class="normal"> 998</span>
-<span class="normal"> 999</span>
-<span class="normal">1000</span>
-<span class="normal">1001</span>
-<span class="normal">1002</span>
-<span class="normal">1003</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">as_date</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1028</span>
+<span class="normal">1029</span>
+<span class="normal">1030</span>
+<span class="normal">1031</span>
+<span class="normal">1032</span>
+<span class="normal">1033</span>
+<span class="normal">1034</span>
+<span class="normal">1035</span>
+<span class="normal">1036</span>
+<span class="normal">1037</span>
+<span class="normal">1038</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">as_date</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get the Bmad/Tao library version.</span>
 
@@ -11921,6 +12604,10 @@ apply to all shapes.</p>
     
     
       <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
       
     
   <script data-mkdocs-jupyter-mathjax="{&quot;url&quot;: &quot;https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-mml-chtml.js&quot;, &quot;version&quot;: 4}">
