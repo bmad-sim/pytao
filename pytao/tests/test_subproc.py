@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import functools
 import os
 import pathlib
 import sys
@@ -276,13 +277,13 @@ def test_send_receive_custom_not_callable():
     ) as tao:
         pipe = tao._subproc_pipe_
         assert pipe is not None
-        with pytest.raises(ValueError, match="not callable"):
-            pipe.send_receive_custom("not_callable", {})  # type: ignore
+        with pytest.raises(TypeError, match="not callable"):
+            pipe.send_receive_custom("not_callable", [], {})  # type: ignore
 
 
 def test_send_receive_custom_main_module():
-    def local_func():
-        pass
+    def local_func(tao):
+        return 1
 
     local_func.__module__ = "__main__"
 
@@ -292,8 +293,7 @@ def test_send_receive_custom_main_module():
     ) as tao:
         pipe = tao._subproc_pipe_
         assert pipe is not None
-        with pytest.raises(ValueError, match="not in an importable module"):
-            pipe.send_receive_custom(local_func, {})
+        assert pipe.send_receive_custom(local_func, [], {}) == 1
 
 
 def _get_cwd(tao: Tao) -> str:
@@ -318,3 +318,75 @@ def test_subprocess_cwd_default(tmp_path: pathlib.Path, monkeypatch: pytest.Monk
         noplot=True,
     ) as tao:
         assert pathlib.Path(tao.subprocess_call(_get_cwd)).resolve() == tmp_path.resolve()
+
+
+def test_sys_path_module_function(tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch):
+    module_dir = tmp_path / "scripts"
+    module_dir.mkdir()
+    (module_dir / "pytao_test_helpers.py").write_text(
+        "def double(tao, x):\n    return 2 * x\n"
+    )
+    monkeypatch.syspath_prepend(str(module_dir))
+    import pytao_test_helpers  # type: ignore[import-not-found]
+
+    try:
+        with SubprocessTao(init_file=f"{CSR_BEAM_TRACKING_DIR}/tao.init", noplot=True) as tao:
+            assert tao.subprocess_call(pytao_test_helpers.double, 3) == 6
+            if hasattr(os, "fork"):
+                assert tao.fork_map(pytao_test_helpers.double, [1, 2]) == [2, 4]
+    finally:
+        del sys.modules["pytao_test_helpers"]
+
+
+def _get_value(tao: Tao, item: Any, *, scale: int = 1) -> int:
+    return item.value * scale
+
+
+def test_custom_command_main_module_args(
+    subproc_tao: SubprocessTao, main_module_class: type
+) -> None:
+    item = main_module_class(2)
+    assert subproc_tao.subprocess_call(_get_value, item) == 2
+    assert subproc_tao.subprocess_call(_get_value, item=item, scale=3) == 6
+
+
+class _Scaler:
+    def __init__(self, scale: int) -> None:
+        self.scale = scale
+
+    def apply(self, tao: Tao, value: int) -> int:
+        return value * self.scale
+
+    def __call__(self, tao: Tao, value: int) -> int:
+        return value * self.scale
+
+
+def _scale(tao: Tao, value: int, scale: int = 1) -> int:
+    return value * scale
+
+
+@pytest.mark.parametrize(
+    "func",
+    [
+        pytest.param(functools.partial(_scale, scale=2), id="module-function-partial"),
+        pytest.param(lambda tao, value: value * 2, id="lambda"),
+        pytest.param(_Scaler(2).apply, id="bound-method"),
+        pytest.param(_Scaler(2), id="callable-instance"),
+    ],
+)
+def test_custom_command_callable_kinds(subproc_tao: SubprocessTao, func: Callable) -> None:
+    assert subproc_tao.subprocess_call(func, 3) == 6
+
+
+def test_custom_command_returns_main_module_instance(
+    subproc_tao: SubprocessTao, main_module_class: type
+) -> None:
+    result = subproc_tao.subprocess_call(lambda tao, cls: cls(5), main_module_class)
+    assert isinstance(result, main_module_class)
+    assert result.value == 5
+
+
+def test_custom_command_unpicklable_result(subproc_tao: SubprocessTao) -> None:
+    with pytest.raises(TaoCommandError, match="could not be pickled"):
+        subproc_tao.subprocess_call(lambda tao: (i for i in range(3)))
+    assert subproc_tao.subprocess_call(tao_custom_command, value=1) == 2

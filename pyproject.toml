@@ -8,6 +8,7 @@ description = "PyTao is the Python interface for Bmad's Tao"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.11"
 dependencies = [
+  "cloudpickle",
   "h5py",
   "ipython",
   "matplotlib",

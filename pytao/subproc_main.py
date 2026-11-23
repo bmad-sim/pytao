@@ -1,13 +1,20 @@
 from __future__ import annotations
 
+import contextlib
 import logging
+import os
+import pickle
+import signal
 import struct
 import sys
 import threading
 import traceback
+import warnings
 
 from ._shmem_compat import SharedMemory
 from .core import TaoCommandError
+from .errors import TaoForkError
+from .fork import fork_map_payloads
 from .subproc import (
     _BEAM_TRACK_SHM_FMT,
     SubprocessErrorResult,
@@ -15,11 +22,10 @@ from .subproc import (
     SubprocessResult,
     SubprocessSuccessResult,
     TaoDisconnectedError,
+    _pickle_from_subprocess,
     read_pickled_data,
-    write_pickled_data,
 )
 from .tao import Tao
-from .util import import_by_name
 
 logger = logging.getLogger(__name__)
 
@@ -40,17 +46,87 @@ def _beam_track_writer(
         shm.close()
 
 
+class _Terminated(BaseException):
+    """Raised on SIGTERM so that `fork_map` unwinds and kills its children."""
+
+
+@contextlib.contextmanager
+def _terminate_unwinds():
+    def handler(signum, _frame):
+        raise _Terminated(signum)
+
+    previous = signal.signal(signal.SIGTERM, handler)
+    try:
+        yield
+    finally:
+        signal.signal(signal.SIGTERM, previous)
+
+
+def _reset_forked_child(output_fifo_fd: int) -> None:
+    """
+    Detach a forked child from this process's request/response pipes.
+
+    An open FIFO copy would delay the parent's EOF; an open stdin could
+    swallow requests.
+    """
+    signal.signal(signal.SIGTERM, signal.SIG_DFL)
+    with contextlib.suppress(OSError):
+        os.close(output_fifo_fd)
+    devnull = os.open(os.devnull, os.O_RDONLY)
+    os.dup2(devnull, 0)
+    os.close(devnull)
+
+
+def _pickle_response(response: SubprocessResult) -> bytes:
+    """Pickle `response`, or an error response if its result cannot be pickled."""
+    try:
+        return _pickle_from_subprocess(response)
+    except Exception as ex:  # noqa: BLE001
+        error: SubprocessErrorResult = {
+            "error": f"The result could not be pickled: {ex}",
+            "error_cls": type(ex).__name__,
+            "traceback": traceback.format_exc(),
+            "tao_output": response.get("tao_output", ""),
+        }
+        return pickle.dumps(error, protocol=pickle.HIGHEST_PROTOCOL)
+
+
 def _tao_subprocess(output_fifo_filename: str, beam_track_shm_name: str) -> None:
     logger.debug("Tao subprocess handler started")
 
     tao = None
     beam_track_stop = threading.Event()
 
-    def run_custom_function(message: SubprocessRequest, *_):
-        func_name = message["arg"]
-        func = import_by_name(func_name)
-        kwargs = message.get("kwargs", {})
-        return func(tao, **kwargs)
+    def run_custom_function(message: SubprocessRequest):
+        func = pickle.loads(message["kwargs"]["func"])
+        args, kwargs = pickle.loads(message["kwargs"]["call_args"])
+        return func(tao, *args, **kwargs)
+
+    def run_fork_map(message: SubprocessRequest):
+        kwargs = message["kwargs"]
+        func = pickle.loads(kwargs["func"])
+        items = pickle.loads(kwargs["items"])
+
+        try:
+            with warnings.catch_warnings(), _terminate_unwinds():
+                # The only Python thread is the lock-free beam-track writer.
+                # OpenMP worker threads do not survive the fork; see
+                # `omp_num_threads`.
+                warnings.filterwarnings(
+                    "ignore", message=".*multi-threaded.*", category=DeprecationWarning
+                )
+                return fork_map_payloads(
+                    tao,
+                    func,
+                    items,
+                    max_workers=kwargs["max_workers"],
+                    timeout=kwargs["timeout"],
+                    raises=kwargs["raises"],
+                    omp_num_threads=kwargs["omp_num_threads"],
+                )
+        except (TaoForkError, TimeoutError) as ex:
+            # Returned, not raised, so the parent re-raises the same type.
+            return ex
 
     def run_tao_command(message: SubprocessRequest):
         nonlocal tao
@@ -77,7 +153,11 @@ def _tao_subprocess(output_fifo_filename: str, beam_track_shm_name: str) -> None
 
         if command == "function":
             tao._last_output = []
-            return run_custom_function(message, arg)
+            return run_custom_function(message)
+
+        if command == "fork_map":
+            tao._last_output = []
+            return run_fork_map(message)
 
         if command == "cmd":
             res = tao.cmd(arg, raises=False)  # sets _last_output
@@ -118,9 +198,12 @@ def _tao_subprocess(output_fifo_filename: str, beam_track_shm_name: str) -> None
                 tao.reset_output()
 
     with open(output_fifo_filename, "wb") as output_fifo:
+        fifo_fd = output_fifo.fileno()
+        os.register_at_fork(after_in_child=lambda: _reset_forked_child(fifo_fd))
         while True:
             message = read_pickled_data(sys.stdin.buffer)
-            write_pickled_data(output_fifo, make_response(message))
+            output_fifo.write(_pickle_response(make_response(message)))
+            output_fifo.flush()
 
 
 if __name__ == "__main__":
@@ -141,3 +224,7 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         logger.debug("Caught KeyboardInterrupt; exiting.")
         exit(0)
+    except _Terminated:
+        # Children are reaped; now die by SIGTERM as if it had never been caught.
+        signal.signal(signal.SIGTERM, signal.SIG_DFL)
+        os.kill(os.getpid(), signal.SIGTERM)
