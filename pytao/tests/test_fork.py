@@ -15,8 +15,12 @@ import numpy as np
 import pytest
 
 from .. import SubprocessTao, Tao, TaoForkError
-from ..fork import decode_fork_payloads, fork_map_payloads, resolve_max_workers
-from ..subproc import _pickle_for_subprocess
+from ..fork import (
+    _pickle_for_subprocess,
+    decode_fork_payloads,
+    fork_map_payloads,
+    resolve_max_workers,
+)
 from .conftest import new_tao
 
 pytestmark = pytest.mark.filterwarnings(
@@ -386,6 +390,14 @@ def test_subprocess_timeout_kills_children(tmp_path: pathlib.Path) -> None:
 def test_subprocess_items_from_main(main_module_class: type) -> None:
     with new_tao(SubprocessTao, OPTICS_INIT) as tao:
         assert tao.fork_map(item_value, [main_module_class(1), main_module_class(2)]) == [1, 2]
+
+
+def test_subprocess_results_from_main(tao: SubprocessTao, main_module_class: type) -> None:
+    items = [main_module_class(1), main_module_class(2)]
+    assert tao.fork_map(identity, items) == items
+    assert tao.fork_map(lambda tao, value: main_module_class(value), [3]) == [
+        main_module_class(3)
+    ]
 
 
 @pytest.mark.parametrize(

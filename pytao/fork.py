@@ -16,6 +16,8 @@ from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, NoReturn, TypeVar
 
+import cloudpickle
+
 from .errors import TaoForkError
 
 if TYPE_CHECKING:
@@ -41,6 +43,25 @@ class _Child:
     buf: bytearray = field(default_factory=bytearray)
 
 
+def _pickle_for_subprocess(obj: Any) -> bytes:
+    """
+    Pickle `obj` to send to another process.
+
+    Falls back to the slower cloudpickle for lambdas, closures, and `__main__`
+    objects, which plain pickle references by a name the other process lacks.
+    """
+    try:
+        data = pickle.dumps(obj, protocol=pickle.HIGHEST_PROTOCOL)
+    except Exception:  # noqa: BLE001
+        return cloudpickle.dumps(obj, protocol=pickle.HIGHEST_PROTOCOL)
+
+    if b"__main__" in data:
+        # Re-pickle so cloudpickle embeds `__main__` definitions.  A false
+        # positive on the text "__main__" only costs a re-pickle.
+        return cloudpickle.dumps(obj, protocol=pickle.HIGHEST_PROTOCOL)
+    return data
+
+
 def _child_main(
     tao: Tao,
     func: Callable,
@@ -56,7 +77,7 @@ def _child_main(
             with contextlib.suppress(OSError):
                 os.close(fd)
         try:
-            payload = pickle.dumps(func(tao, item), protocol=pickle.HIGHEST_PROTOCOL)
+            payload = _pickle_for_subprocess(func(tao, item))
             code = _EXIT_OK
         except BaseException as ex:  # noqa: BLE001
             err = TaoForkError(
@@ -69,7 +90,7 @@ def _child_main(
             )
             if hasattr(err, "add_note"):
                 err.add_note(f"Child process {err.child_traceback}")
-            payload = pickle.dumps(err, protocol=pickle.HIGHEST_PROTOCOL)
+            payload = _pickle_for_subprocess(err)
         # Flush before replying: the parent reaps us once the pipe closes.
         with contextlib.suppress(Exception):
             sys.stdout.flush()
