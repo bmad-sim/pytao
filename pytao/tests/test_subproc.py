@@ -320,6 +320,24 @@ def test_subprocess_cwd_default(tmp_path: pathlib.Path, monkeypatch: pytest.Monk
         assert pathlib.Path(tao.subprocess_call(_get_cwd)).resolve() == tmp_path.resolve()
 
 
+def test_sys_path_module_function(tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch):
+    module_dir = tmp_path / "scripts"
+    module_dir.mkdir()
+    (module_dir / "pytao_test_helpers.py").write_text(
+        "def double(tao, x):\n    return 2 * x\n"
+    )
+    monkeypatch.syspath_prepend(str(module_dir))
+    import pytao_test_helpers  # type: ignore[import-not-found]
+
+    try:
+        with SubprocessTao(init_file=f"{CSR_BEAM_TRACKING_DIR}/tao.init", noplot=True) as tao:
+            assert tao.subprocess_call(pytao_test_helpers.double, 3) == 6
+            if hasattr(os, "fork"):
+                assert tao.fork_map(pytao_test_helpers.double, [1, 2]) == [2, 4]
+    finally:
+        del sys.modules["pytao_test_helpers"]
+
+
 def _get_value(tao: Tao, item: Any, *, scale: int = 1) -> int:
     return item.value * scale
 

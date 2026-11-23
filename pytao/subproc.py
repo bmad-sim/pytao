@@ -7,7 +7,6 @@ import os
 import pathlib
 import pickle
 import queue
-import site
 import struct
 import subprocess
 import sys
@@ -177,19 +176,14 @@ def _cleanup_shm(shm: SharedMemory) -> None:
         pass
 
 
-def _add_pytao_to_pythonpath(env: dict[str, str]) -> None:
-    """Make the subprocess import the same `pytao` source tree as this process."""
-    pytao_src = pathlib.Path(__file__).parents[1].resolve()
-    site_dirs = {
-        pathlib.Path(path).resolve()
-        for path in (*site.getsitepackages(), site.getusersitepackages())
-    }
-    if pytao_src in site_dirs:
-        return
-
+def _forward_sys_path(env: dict[str, str]) -> None:
+    """Give the subprocess this process's `sys.path`."""
+    paths = [os.path.abspath(path) for path in sys.path]
     pythonpath = env.get("PYTHONPATH")
-    env["PYTHONPATH"] = (
-        f"{pytao_src}{os.pathsep}{pythonpath}" if pythonpath else str(pytao_src)
+    if pythonpath:
+        paths.extend(pythonpath.split(os.pathsep))
+    env["PYTHONPATH"] = os.pathsep.join(
+        dict.fromkeys(paths)  # dedupe
     )
 
 
@@ -212,7 +206,7 @@ class _TaoPipe:
     def __init__(self, env: dict[str, str], cwd: pathlib.Path):
         self._init_queue = queue.Queue(maxsize=1)
         self._subprocess_env = env.copy()
-        _add_pytao_to_pythonpath(self._subprocess_env)
+        _forward_sys_path(self._subprocess_env)
         self._subprocess_cwd = cwd
         shm = SharedMemory(create=True, size=_BEAM_TRACK_SHM_SIZE, track=False)
         if shm.buf is not None:
