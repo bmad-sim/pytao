@@ -117,7 +117,9 @@ def _tao_subprocess(output_fifo_filename: str, beam_track_shm_name: str) -> None
 
         try:
             with warnings.catch_warnings(), _terminate_unwinds():
-                # Only the lock-free beam-track thread is running; fork is safe.
+                # The only Python thread is the lock-free beam-track writer.
+                # OpenMP worker threads do not survive the fork; see
+                # `omp_num_threads`.
                 warnings.filterwarnings(
                     "ignore", message=".*multi-threaded.*", category=DeprecationWarning
                 )
@@ -128,6 +130,7 @@ def _tao_subprocess(output_fifo_filename: str, beam_track_shm_name: str) -> None
                     max_workers=kwargs["max_workers"],
                     timeout=kwargs["timeout"],
                     raises=kwargs["raises"],
+                    omp_num_threads=kwargs["omp_num_threads"],
                 )
         except (TaoForkError, TimeoutError) as ex:
             # Returned, not raised, so the parent re-raises the same type.

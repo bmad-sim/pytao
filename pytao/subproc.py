@@ -389,6 +389,7 @@ class _TaoPipe:
         max_workers: int | None,
         timeout: float | None,
         raises: bool,
+        omp_num_threads: int | None,
     ) -> list:
         """
         Run `fork_map` in the subprocess and decode its results here.
@@ -408,6 +409,7 @@ class _TaoPipe:
                 max_workers=max_workers,
                 timeout=timeout,
                 raises=raises,
+                omp_num_threads=omp_num_threads,
             )
             received = self._receive()
         except BrokenPipeError:
@@ -686,6 +688,7 @@ class SubprocessTao(Tao):
         max_workers: int | None = None,
         timeout: float | None = None,
         raises: bool = True,
+        omp_num_threads: int | None = 1,
     ) -> list[R | TaoForkError]:
         """
         Run `func(tao, item)` for each item in a forked copy of the Tao subprocess.
@@ -710,6 +713,9 @@ class SubprocessTao(Tao):
         raises : bool, default=True
             If True, the first failure raises `TaoForkError` and kills the
             rest.  If False, failures are returned in place as `TaoForkError`.
+        omp_num_threads : int or None, default=1
+            OpenMP threads each child may use.  `None` leaves the setting the
+            child inherited; see Notes before using anything but 1.
 
         Returns
         -------
@@ -727,8 +733,13 @@ class SubprocessTao(Tao):
         Notes
         -----
         Use `noplot=True` or external plotting; Tao plot windows are not
-        fork-safe.  libtao links OpenMP, so with many workers pass
-        `env={**os.environ, "OMP_NUM_THREADS": "1"}` to avoid oversubscription.
+        fork-safe.
+
+        libtao links OpenMP, and a forked child has none of the subprocess's
+        OpenMP worker threads.  Children are single-threaded by default, which
+        is safe with every OpenMP runtime and avoids oversubscription.  With
+        more threads, a libtao built against GNU libgomp can hang in a child
+        once the subprocess has run a parallel region; LLVM libomp does not.
 
         Examples
         --------
@@ -743,6 +754,7 @@ class SubprocessTao(Tao):
             max_workers=resolve_max_workers(max_workers),
             timeout=timeout,
             raises=raises,
+            omp_num_threads=omp_num_threads,
         )
 
     def _init_backend(self, startup: TaoStartup):

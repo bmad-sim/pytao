@@ -148,6 +148,15 @@ def bunch_x(tao: Tao, item: Any) -> np.ndarray:
     return tao.bunch1(ele_id="end", coordinate="x", which="model", ix_bunch="1")
 
 
+def omp_max_threads(tao: Tao, item: Any = None) -> int:
+    return tao.so_lib.omp_get_max_threads()
+
+
+def track_beam_and_read(tao: Tao, item: Any) -> np.ndarray:
+    tao.track_beam(use_progress_bar=False)
+    return bunch_x(tao, item)
+
+
 def test_independent_results(tao: SubprocessTao) -> None:
     k1_before = float(tao.ele_gen_attribs("Q1")["K1"])
     items = [1.0, 2.0, 3.0]
@@ -431,3 +440,28 @@ def test_items_fall_back_to_cloudpickle(main_module_class: type, make_items) -> 
 def test_tao_has_no_fork_map() -> None:
     assert not hasattr(Tao, "fork_map")
     assert callable(SubprocessTao.fork_map)
+
+
+def test_children_are_single_threaded_by_default(tao: SubprocessTao) -> None:
+    assert tao.fork_map(omp_max_threads, [None, None]) == [1, 1]
+
+
+def test_omp_num_threads(tao: SubprocessTao) -> None:
+    inherited = tao.subprocess_call(omp_max_threads)
+    assert tao.fork_map(omp_max_threads, [None], omp_num_threads=None) == [inherited]
+    assert tao.fork_map(omp_max_threads, [None], omp_num_threads=2) == [2]
+    assert tao.subprocess_call(omp_max_threads) == inherited
+
+
+def test_invalid_omp_num_threads(plain_tao: Tao) -> None:
+    with pytest.raises(ValueError, match="omp_num_threads"):
+        fork_map_in_process(plain_tao, identity, [1], omp_num_threads=0)
+
+
+def test_children_track_beam_after_parent_tracked() -> None:
+    with new_tao(SubprocessTao, CSR_INIT) as tao:
+        tao.track_beam(use_progress_bar=False)
+        expected = bunch_x(tao, None)
+        results = tao.fork_map(track_beam_and_read, [None, None], timeout=120.0)
+    for result in results:
+        assert np.allclose(result, expected)

@@ -62,6 +62,21 @@ def _pickle_for_subprocess(obj: Any) -> bytes:
     return data
 
 
+def _set_omp_num_threads(tao: Tao, num_threads: int) -> None:
+    """
+    Limit OpenMP threads in a forked child.
+
+    A forked child has none of its parent's OpenMP worker threads.  LLVM's
+    libomp starts over after a fork, but GNU libgomp can block forever in the
+    child's first parallel region; one thread never needs the pool.
+    """
+    try:
+        set_num_threads = tao.so_lib.omp_set_num_threads
+    except AttributeError:
+        return
+    set_num_threads(num_threads)
+
+
 def _child_main(
     tao: Tao,
     func: Callable,
@@ -69,6 +84,7 @@ def _child_main(
     item: Any,
     write_fd: int,
     inherited_fds: Iterable[int],
+    omp_num_threads: int | None,
 ) -> NoReturn:
     code = _EXIT_RAISED
     try:
@@ -77,6 +93,8 @@ def _child_main(
             with contextlib.suppress(OSError):
                 os.close(fd)
         try:
+            if omp_num_threads is not None:
+                _set_omp_num_threads(tao, omp_num_threads)
             payload = _pickle_for_subprocess(func(tao, item))
             code = _EXIT_OK
         except BaseException as ex:  # noqa: BLE001
@@ -170,13 +188,17 @@ def fork_map_payloads(
     max_workers: int | None = None,
     timeout: float | None = None,
     raises: bool = True,
+    omp_num_threads: int | None = 1,
 ) -> list[tuple[bytes, int]]:
     """
     Fork a child per item to run `func(tao, item)`.
 
     Returns `(payload, exit_code)` pairs for `decode_fork_payloads`.  With
-    `raises`, the first failed child raises immediately.
+    `raises`, the first failed child raises immediately.  Each child sets its
+    OpenMP thread count to `omp_num_threads` unless that is `None`.
     """
+    if omp_num_threads is not None and omp_num_threads < 1:
+        raise ValueError("omp_num_threads must be a positive integer or None")
     if not hasattr(os, "fork"):
         raise NotImplementedError("fork_map requires os.fork(), which is unavailable here")
 
@@ -205,7 +227,9 @@ def fork_map_payloads(
             os.close(write_fd)
             raise
         if pid == 0:
-            _child_main(tao, func, index, items[index], write_fd, [read_fd, *live])
+            _child_main(
+                tao, func, index, items[index], write_fd, [read_fd, *live], omp_num_threads
+            )
         # Keep no write end, or EOF never arrives.
         os.close(write_fd)
         child = _Child(pid=pid, index=index, fd=read_fd)
