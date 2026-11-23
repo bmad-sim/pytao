@@ -8,6 +8,7 @@ description = "PyTao is the Python interface for Bmad's Tao"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.11"
 dependencies = [
+  "cloudpickle",
   "h5py",
   "ipython",
   "matplotlib",
@@ -43,9 +44,8 @@ pytao = "pytao.cli:main"
 pytao-constraints = "pytao.constraints.main:main"
 
 [project.optional-dependencies]
-fork = ["cloudpickle"]
-all = ["cloudpickle"]
-test = ["pytest", "pytest-cov", "cloudpickle"]
+all = []
+test = ["pytest", "pytest-cov"]
 
 [project.urls]
 Homepage = "https://www.classe.cornell.edu/bmad/tao.html"

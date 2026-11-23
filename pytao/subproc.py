@@ -7,6 +7,7 @@ import os
 import pathlib
 import pickle
 import queue
+import site
 import struct
 import subprocess
 import sys
@@ -16,6 +17,7 @@ import weakref
 from collections.abc import Callable, Iterable
 from typing import Any, Literal, NotRequired, Union, cast
 
+import cloudpickle
 import numpy as np
 from typing_extensions import TypedDict, override
 
@@ -25,11 +27,6 @@ from .fork import R, T, decode_fork_payloads, resolve_max_workers
 from .startup import TaoStartup
 from .tao import Tao
 from .util import normalize_path
-
-try:
-    import cloudpickle
-except ImportError:
-    cloudpickle = None
 
 logger = logging.getLogger(__name__)
 
@@ -42,6 +39,7 @@ Command = Literal[
     "cmd_real",
     "cmd_integer",
     "function",
+    "lambda",
     "fork_map",
 ]
 SupportedKwarg = Union[float, int, str, bool, bytes, dict, list, tuple, set, np.ndarray]
@@ -141,14 +139,15 @@ def _get_result(
 def _importable_function_name(func: Callable) -> str:
     """Qualified `module.name` of `func`, or raise if the subprocess could not import it."""
     if not callable(func):
-        raise ValueError(f"Object of type {type(func).__name__} is not callable")
+        raise TypeError(f"Object of type {type(func).__name__} is not callable")
+    name = getattr(func, "__name__", "(unknown)")
     if not func.__module__ or func.__module__ == "__main__":
-        raise ValueError(f"Function {func.__name__} is not in an importable module")
-    if func.__name__ in {"<lambda>", "__lambda__"}:
-        raise ValueError(f"Function {func.__name__} is a lambda function")
+        raise ValueError(f"Function {name} is not in an importable module")
+    if name in {"<lambda>", "__lambda__"}:
+        raise ValueError(f"Function {name} is a lambda function")
     if "<locals>" in getattr(func, "__qualname__", ""):
-        raise ValueError(f"Function {func.__name__} is a nested function")
-    return f"{func.__module__}.{func.__name__}"
+        raise ValueError(f"Function {name} is a nested function")
+    return f"{func.__module__}.{name}"
 
 
 def _pickle_for_subprocess(obj: Any) -> bytes:
@@ -160,15 +159,10 @@ def _pickle_for_subprocess(obj: Any) -> bytes:
     """
     try:
         data = pickle.dumps(obj, protocol=pickle.HIGHEST_PROTOCOL)
-    except Exception as ex:
-        if cloudpickle is None:
-            raise ValueError(
-                f"{ex}. Install cloudpickle (`pip install pytao[fork]`) to send "
-                f"lambdas, closures, or objects defined in `__main__` to the subprocess."
-            ) from ex
+    except Exception:  # noqa: BLE001
         return cloudpickle.dumps(obj, protocol=pickle.HIGHEST_PROTOCOL)
 
-    if cloudpickle is not None and b"__main__" in data:
+    if b"__main__" in data:
         # Re-pickle so cloudpickle embeds `__main__` definitions.  A false
         # positive on the text "__main__" only costs a re-pickle.
         return cloudpickle.dumps(obj, protocol=pickle.HIGHEST_PROTOCOL)
@@ -191,6 +185,24 @@ def _cleanup_shm(shm: SharedMemory) -> None:
         pass
 
 
+def _add_pytao_to_pythonpath(env: dict[str, str]) -> None:
+    """Make the subprocess import the same `pytao` source tree as this process."""
+    import pytao
+
+    pytao_src = pathlib.Path(pytao.__file__).parents[1].resolve()
+    site_dirs = {
+        pathlib.Path(path).resolve()
+        for path in (*site.getsitepackages(), site.getusersitepackages())
+    }
+    if pytao_src in site_dirs:
+        return
+
+    pythonpath = env.get("PYTHONPATH")
+    env["PYTHONPATH"] = (
+        f"{pytao_src}{os.pathsep}{pythonpath}" if pythonpath else str(pytao_src)
+    )
+
+
 class _TaoPipe:
     """
     Tao subprocess Pipe helper.
@@ -210,6 +222,7 @@ class _TaoPipe:
     def __init__(self, env: dict[str, str], cwd: pathlib.Path):
         self._init_queue = queue.Queue(maxsize=1)
         self._subprocess_env = env.copy()
+        _add_pytao_to_pythonpath(self._subprocess_env)
         self._subprocess_cwd = cwd
         shm = SharedMemory(create=True, size=_BEAM_TRACK_SHM_SIZE, track=False)
         if shm.buf is not None:
@@ -287,7 +300,7 @@ class _TaoPipe:
                     self._subprocess_monitor_thread = None
                     self._fifo = None
 
-    def _send(self, cmd: Command, argument: str, **kwargs: SupportedKwarg):
+    def _send(self, cmd: Command, argument: str | bytes, **kwargs: SupportedKwarg):
         """Send `cmd` with `argument` over the pipe."""
         assert self._subproc.stdin is not None
         req: SubprocessRequest = {"command": cmd, "arg": argument}
@@ -359,7 +372,12 @@ class _TaoPipe:
                 f"has already exited."
             )
 
-    def send_receive_custom(self, func: Callable, kwargs: dict[str, SupportedKwarg]):
+    def send_receive_custom(
+        self,
+        func: Callable,
+        args: list[SupportedKwarg],
+        kwargs: dict[str, SupportedKwarg],
+    ):
         """
         Run a custom function in the subprocess and retrieve its result.
 
@@ -367,6 +385,8 @@ class _TaoPipe:
         ----------
         func: callable
             The function to call.
+        args : list of SupportedKwarg
+            Positional arguments for the function.
         kwargs : dict of str to SupportedKwarg
             Keyword arguments for the function.
 
@@ -378,9 +398,16 @@ class _TaoPipe:
             The final deserialized result of the command - which may be an ndarray,
             a list of dictionaries, a list of strings, and so on.
         """
-        func_name = _importable_function_name(func)
+
         try:
-            self._send("function", func_name, **kwargs)
+            arg = _importable_function_name(func)
+            cmd = "function"
+        except ValueError:
+            cmd = "lambda"
+            arg = _pickle_for_subprocess(func)
+
+        try:
+            self._send(cmd, arg, args=(args, kwargs))
             received = self._receive()
             return _get_result(received, propagate_exceptions=True)
         except BrokenPipeError:
@@ -675,16 +702,16 @@ class SubprocessTao(Tao):
 
         return result
 
-    def subprocess_call(self, func: Callable, **kwargs):
+    def subprocess_call(self, func: Callable, *args, **kwargs):
         """
         Run a custom function in the subprocess.
 
         The function must be readily importable by Python and not a dynamically
         created function or `lambda`.  The first argument passed will be the
         `tao` object, and the remainder of the arguments are user-specified by
-        keyword only.
+        either positional or keyword argument.
         """
-        return self._require_pipe().send_receive_custom(func, kwargs)
+        return self._require_pipe().send_receive_custom(func, args, kwargs)
 
     def fork_map(
         self,
@@ -706,9 +733,7 @@ class SubprocessTao(Tao):
         ----------
         func : callable
             Called as `func(tao, item)` in the child; the return value must be
-            picklable.  Lambdas, closures, and `__main__` functions need the
-            `cloudpickle` extra (`pip install pytao[fork]`); otherwise `func`
-            must be importable by name, as with `subprocess_call`.
+            picklable.
         items : iterable
             Items to process.  Results keep this order.
         max_workers : int, optional

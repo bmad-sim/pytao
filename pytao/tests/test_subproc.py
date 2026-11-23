@@ -276,13 +276,13 @@ def test_send_receive_custom_not_callable():
     ) as tao:
         pipe = tao._subproc_pipe_
         assert pipe is not None
-        with pytest.raises(ValueError, match="not callable"):
-            pipe.send_receive_custom("not_callable", {})  # type: ignore
+        with pytest.raises(TypeError, match="not callable"):
+            pipe.send_receive_custom("not_callable", [], {})  # type: ignore
 
 
 def test_send_receive_custom_main_module():
-    def local_func():
-        pass
+    def local_func(tao):
+        return 1
 
     local_func.__module__ = "__main__"
 
@@ -292,8 +292,7 @@ def test_send_receive_custom_main_module():
     ) as tao:
         pipe = tao._subproc_pipe_
         assert pipe is not None
-        with pytest.raises(ValueError, match="not in an importable module"):
-            pipe.send_receive_custom(local_func, {})
+        assert pipe.send_receive_custom(local_func, [], {}) == 1
 
 
 def _get_cwd(tao: Tao) -> str:
