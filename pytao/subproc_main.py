@@ -86,7 +86,7 @@ def _tao_subprocess(output_fifo_filename: str, beam_track_shm_name: str) -> None
 
     def run_custom_function(message: SubprocessRequest, func_name: str):
         func = import_by_name(func_name)
-        args, kwargs = message.get("kwargs", {}).get("args", ([], {}))
+        args, kwargs = pickle.loads(message["kwargs"]["args"])
         return func(tao, *args, **kwargs)
 
     def run_custom_lambda(message: SubprocessRequest, pickled_func: bytes):
@@ -96,7 +96,7 @@ def _tao_subprocess(output_fifo_filename: str, beam_track_shm_name: str) -> None
         import cloudpickle
 
         func = cloudpickle.loads(pickled_func)
-        args, kwargs = message.get("kwargs", {}).get("args", ([], {}))
+        args, kwargs = pickle.loads(message["kwargs"]["args"])
         return func(tao, *args, **kwargs)
 
     def run_fork_map(message: SubprocessRequest):

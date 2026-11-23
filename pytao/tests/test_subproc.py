@@ -317,3 +317,15 @@ def test_subprocess_cwd_default(tmp_path: pathlib.Path, monkeypatch: pytest.Monk
         noplot=True,
     ) as tao:
         assert pathlib.Path(tao.subprocess_call(_get_cwd)).resolve() == tmp_path.resolve()
+
+
+def _get_value(tao: Tao, item: Any, *, scale: int = 1) -> int:
+    return item.value * scale
+
+
+def test_custom_command_main_module_args(
+    subproc_tao: SubprocessTao, main_module_class: type
+) -> None:
+    item = main_module_class(2)
+    assert subproc_tao.subprocess_call(_get_value, item) == 2
+    assert subproc_tao.subprocess_call(_get_value, item=item, scale=3) == 6

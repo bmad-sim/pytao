@@ -407,7 +407,7 @@ class _TaoPipe:
             arg = _pickle_for_subprocess(func)
 
         try:
-            self._send(cmd, arg, args=(args, kwargs))
+            self._send(cmd, arg, args=_pickle_for_subprocess((args, kwargs)))
             received = self._receive()
             return _get_result(received, propagate_exceptions=True)
         except BrokenPipeError:

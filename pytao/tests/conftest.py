@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import atexit
 import contextlib
+import dataclasses
 import datetime
 import logging
 import os
 import pathlib
+import sys
 import time
 from collections.abc import Generator, Iterable
 from typing import Literal, TypeVar
@@ -30,6 +32,20 @@ init_files = list(pathlib.Path(os.path.expandvars(regression_test_root)).glob("t
 example_init_files = list(
     path for path in pathlib.Path(os.path.expandvars(example_root)).glob("*/tao.init")
 )
+
+
+@pytest.fixture
+def main_module_class(monkeypatch: pytest.MonkeyPatch) -> type:
+    """A class that pickles by reference to `__main__`, which the subprocess lacks."""
+
+    @dataclasses.dataclass
+    class ForkItem:
+        value: int
+
+    ForkItem.__module__ = "__main__"
+    ForkItem.__qualname__ = ForkItem.__name__ = "_PytaoForkItem"
+    monkeypatch.setattr(sys.modules["__main__"], "_PytaoForkItem", ForkItem, raising=False)
+    return ForkItem
 
 
 @pytest.fixture

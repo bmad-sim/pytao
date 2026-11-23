@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-import dataclasses
 import os
 import pathlib
 import pickle
 import selectors
 import signal
 import stat
-import sys
 import time
 from collections.abc import Generator
 from typing import Any
@@ -62,20 +60,6 @@ def forked_pids(monkeypatch: pytest.MonkeyPatch) -> list[int]:
 
     monkeypatch.setattr(os, "fork", recording_fork)
     return pids
-
-
-@pytest.fixture
-def main_module_class(monkeypatch: pytest.MonkeyPatch) -> type:
-    """A class that pickles by reference to `__main__`, which the subprocess lacks."""
-
-    @dataclasses.dataclass
-    class ForkItem:
-        value: int
-
-    ForkItem.__module__ = "__main__"
-    ForkItem.__qualname__ = ForkItem.__name__ = "_PytaoForkItem"
-    monkeypatch.setattr(sys.modules["__main__"], "_PytaoForkItem", ForkItem, raising=False)
-    return ForkItem
 
 
 def assert_all_reaped(pids: list[int]) -> None:
